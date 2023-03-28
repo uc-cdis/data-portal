@@ -9,6 +9,7 @@ import './FilterDisplay.css';
  * @callback ClickCombineModeHandler
  * @param {'AND' | 'OR'} payload
  */
+
 /**
  * @callback ClickFilterHandler
  * @param {{ anchorField?: string; anchorValue?: string; field: string }} payload
@@ -60,6 +61,7 @@ Pill.propTypes = {
 };
 
 /** @typedef {import('../GuppyComponents/types').FilterConfig} FilterConfig */
+
 /** @typedef {import('../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
@@ -163,7 +165,9 @@ function FilterDisplay({
         >
           <span className='token'>
             <code>{filterInfo[key].label}</code>{' '}
-            {value.selectedValues.length > 1 ? 'is any of ' : 'is '}
+            {value.selectedValues.length > 1
+              ? `is ${value.isExclusion ? 'not' : ''} any of `
+              : `is ${value.isExclusion ? 'not' : ''} `}
           </span>
           <span className='token'>
             {value.selectedValues.length > 1 ? (

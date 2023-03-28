@@ -174,10 +174,15 @@ export const parseDictionaryNodes = (dictionary = {}) => {
 export const getPropertyDescription = (property) => {
   let description;
   if ('description' in property) {
-    description = property.description;
+    return property.description;
   }
-  if ('term' in property) {
-    description = property.term.description;
+  if ('term' in property && property.term !== 'undefined') {
+    if (!Array.isArray(property.term)) {
+      return property.term?.["description"]
+    }
+    else {
+      description = property.term.map(x => x["description"]).join('; ');
+    }
   }
   return description;
 };

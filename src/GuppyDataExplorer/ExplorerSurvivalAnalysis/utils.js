@@ -27,31 +27,24 @@ export function checkIfFilterInScope(consortiums, filter) {
 }
 
 /**
- * @param {string[]} consortiums
  * @param {import('../types').ExplorerFilter} filter
+ * @param {import('./types').DisallowedVariable[]} disallowedVariables
  * @return {boolean}
  */
-export function checkIfFilterHasOptedOutConsortiums(consortiums, filter) {
-  const optedInConsortiums = ['INRG', 'INSTRuCT'];
+export function checkIfFilterHasDisallowedVariables(
+  disallowedVariables,
+  filter
+) {
+  const disallowedFields = disallowedVariables.map((v) => v.field);
 
-  if (!consortiums.length) {
-    return false;
-  }
-  if (!filter.value) {
-    // All Subjects
-    return consortiums.some((c) => !optedInConsortiums.includes(c));
-  } else if (filter.__type === FILTER_TYPE.COMPOSED) {
+  if (filter.__type === FILTER_TYPE.COMPOSED) {
     return filter.value.some((f) =>
-      checkIfFilterHasOptedOutConsortiums(consortiums, f)
+      checkIfFilterHasDisallowedVariables(disallowedVariables, f)
     );
-  } else {
-    for (const [key, val] of Object.entries(filter.value)) {
-      if (key === 'consortium' && val.__type === FILTER_TYPE.OPTION) {
-        return val.selectedValues.some((c) => !optedInConsortiums.includes(c));
-      }
-    }
-    return false;
   }
+  return Object.keys(filter.value ?? {}).some((k) =>
+    disallowedFields.includes(k)
+  );
 }
 
 /**

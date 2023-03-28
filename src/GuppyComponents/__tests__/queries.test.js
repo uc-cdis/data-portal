@@ -25,13 +25,44 @@ describe('Get GQL filter from filter object from', () => {
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
-  test('a simple option filter', async () => {
+  test('a simple option filter', () => {
     const filterState = {
       value: {
         a: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
       },
     };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('a simple exclusion option filter', () => {
+    const filterState = {
+      value: {
+        a: {
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+          isExclusion: true,
+        },
+      },
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          AND: [
+            {
+              '!=': {
+                a: 'foo',
+              },
+            },
+            {
+              '!=': {
+                a: 'bar',
+              },
+            },
+          ],
+        },
+      ],
+    };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
@@ -100,6 +131,45 @@ describe('Get GQL filter from filter object from', () => {
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
+  test('simple filters with exclusion', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        a: {
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+          isExclusion: true,
+        },
+        b: {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+        },
+        c: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+      },
+    };
+    const gqlFilter = {
+      OR: [
+        {
+          AND: [
+            {
+              '!=': {
+                a: 'foo',
+              },
+            },
+            {
+              '!=': {
+                a: 'bar',
+              },
+            },
+          ],
+        },
+        { AND: [{ IN: { b: ['foo'] } }, { IN: { b: ['bar'] } }] },
+        { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
   test('a combine mode only filter', () => {
     const filterState = {
       value: {
@@ -136,6 +206,45 @@ describe('Get GQL filter from filter object from', () => {
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
+  test('a nested exclusion filter', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        'a.b': {
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+          isExclusion: true,
+        },
+      },
+    };
+    const gqlFilter = {
+      OR: [
+        {
+          nested: {
+            path: 'a',
+            OR: [
+              {
+                AND: [
+                  {
+                    '!=': {
+                      b: 'foo',
+                    },
+                  },
+                  {
+                    '!=': {
+                      b: 'bar',
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
   test('nested filters with same parent path', () => {
     const filterState = {
       value: {
@@ -159,6 +268,46 @@ describe('Get GQL filter from filter object from', () => {
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
+  test('nested exclusion filters with same parent path', () => {
+    const filterState = {
+      value: {
+        'a.b': {
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+          isExclusion: true,
+        },
+        'a.c': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+      },
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          nested: {
+            path: 'a',
+            AND: [
+              {
+                AND: [
+                  {
+                    '!=': {
+                      b: 'foo',
+                    },
+                  },
+                  {
+                    '!=': {
+                      b: 'bar',
+                    },
+                  },
+                ],
+              },
+              { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
+            ],
+          },
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
   test('nested filters with different parent paths', () => {
     const filterState = {
       value: {
@@ -172,6 +321,51 @@ describe('Get GQL filter from filter object from', () => {
           nested: {
             path: 'a',
             AND: [{ IN: { b: ['foo', 'bar'] } }],
+          },
+        },
+        {
+          nested: {
+            path: 'c',
+            AND: [{ AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] }],
+          },
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('nested exclusion filters with different parent paths', () => {
+    const filterState = {
+      value: {
+        'a.b': {
+          __type: FILTER_TYPE.OPTION,
+          selectedValues: ['foo', 'bar'],
+          isExclusion: true,
+        },
+        'c.d': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+      },
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          nested: {
+            path: 'a',
+            AND: [
+              {
+                AND: [
+                  {
+                    '!=': {
+                      b: 'foo',
+                    },
+                  },
+                  {
+                    '!=': {
+                      b: 'bar',
+                    },
+                  },
+                ],
+              },
+            ],
           },
         },
         {
@@ -215,6 +409,77 @@ describe('Get GQL filter from filter object from', () => {
                 AND: [
                   { IN: { x: ['y'] } },
                   { OR: [{ IN: { b: ['foo', 'bar'] } }] },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          nested: {
+            path: 'c',
+            OR: [
+              {
+                AND: [
+                  { IN: { x: ['y'] } },
+                  { OR: [{ AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] }] },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('an anchored exclusion filter state', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        'x:y': {
+          __type: FILTER_TYPE.ANCHORED,
+          value: {
+            'a.b': {
+              __type: FILTER_TYPE.OPTION,
+              selectedValues: ['foo', 'bar'],
+              isExclusion: true,
+            },
+            'c.d': {
+              __type: FILTER_TYPE.RANGE,
+              lowerBound: 0,
+              upperBound: 1,
+            },
+          },
+        },
+      },
+    };
+    const gqlFilter = {
+      OR: [
+        {
+          nested: {
+            path: 'a',
+            OR: [
+              {
+                AND: [
+                  { IN: { x: ['y'] } },
+                  {
+                    OR: [
+                      {
+                        AND: [
+                          {
+                            '!=': {
+                              b: 'foo',
+                            },
+                          },
+                          {
+                            '!=': {
+                              b: 'bar',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
             ],
@@ -309,6 +574,59 @@ describe('Get GQL filter from filter object from', () => {
     };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
+
+  test('a simple exclusion composed filter', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('AND'),
+      __type: FILTER_TYPE.COMPOSED,
+      value: [
+        {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            a: {
+              __type: FILTER_TYPE.OPTION,
+              selectedValues: ['foo', 'bar'],
+              isExclusion: true,
+            },
+          },
+        },
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            b: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+          },
+        },
+      ],
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          AND: [
+            {
+              AND: [
+                {
+                  '!=': {
+                    a: 'foo',
+                  },
+                },
+                {
+                  '!=': {
+                    a: 'bar',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          OR: [{ AND: [{ GTE: { b: 0 } }, { LTE: { b: 1 } }] }],
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
   test('a higher-order composed filter', () => {
     const filterState = {
       __combineMode: /** @type {CombineMode} */ ('AND'),
@@ -345,6 +663,69 @@ describe('Get GQL filter from filter object from', () => {
           OR: [
             {
               AND: [{ IN: { a: ['foo', 'bar'] } }],
+            },
+          ],
+        },
+        {
+          OR: [{ AND: [{ GTE: { b: 0 } }, { LTE: { b: 1 } }] }],
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('a higher-order exclusion composed filter', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('AND'),
+      __type: FILTER_TYPE.COMPOSED,
+      value: [
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.COMPOSED,
+          value: [
+            {
+              __combineMode: /** @type {CombineMode} */ ('AND'),
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                a: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['foo', 'bar'],
+                  isExclusion: true,
+                },
+              },
+            },
+          ],
+        },
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            b: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+          },
+        },
+      ],
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          OR: [
+            {
+              AND: [
+                {
+                  AND: [
+                    {
+                      '!=': {
+                        a: 'foo',
+                      },
+                    },
+                    {
+                      '!=': {
+                        a: 'bar',
+                      },
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },

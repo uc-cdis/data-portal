@@ -10,7 +10,7 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 /**
  * @typedef {Object} FilterSetCardProps
  * @property {{ fitted: number; total: number }} [count]
- * @property {ExplorerFilterSet & { isStale: boolean } & {hasOptedOutConsortiums: boolean}} filterSet
+ * @property {ExplorerFilterSet & { isStale: boolean }} filterSet
  * @property {string} label
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClose
  */
@@ -37,24 +37,6 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               mouseLeaveDelay={0}
               overlay={
                 'This Filter Set has been updated and its survival analysis result may be stale. Click "Apply" button at the bottom to update the result.'
-              }
-              placement='top'
-              trigger={['hover', 'focus']}
-            >
-              <FontAwesomeIcon
-                icon='triangle-exclamation'
-                color='var(--pcdc-color__secondary)'
-              />
-            </Tooltip>
-          </button>
-        )}
-        {filterSet.hasOptedOutConsortiums && (
-          <button type='button'>
-            <Tooltip
-              arrowContent={<div className='rc-tooltip-arrow-inner' />}
-              mouseLeaveDelay={0}
-              overlay={
-                'Not all patients in the filter set are represented due to one or more consortiums opting out of participation in the pilot'
               }
               placement='top'
               trigger={['hover', 'focus']}

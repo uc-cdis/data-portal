@@ -93,14 +93,25 @@ export const getPropertyTypeFragment = (
       const matchedTypeItem =
         typeMatchList &&
         typeMatchList.find((matchItem) => matchItem.value === t);
+
       if (matchedTypeItem) {
         return (
-          <li key={i}>
+          <li key={i}> 
             {addHighlightingSpans(t, matchedTypeItem.indices, spanClassName)}
+            {property?.enumDef &&  property?.enumDef.filter((obj) => { return obj?.["enumeration"] === t && obj?.["termDef"]?.["term_url"] && obj?.["termDef"]?.["cde_id"]})
+                        .map((x) => { return (<a href={x["termDef"]["term_url"]} target="_blank"> ({x["termDef"]["cde_id"]}) </a>);})
+            }
           </li>
         );
       }
-      return <li key={i}>{addHighlightingSpans(t, [], spanClassName)}</li>;
+      return (
+        <li key={i}>
+          {addHighlightingSpans(t, [], spanClassName)}
+          {property?.enumDef && property?.enumDef.filter((obj) => { return obj?.["enumeration"] === t && obj?.["termDef"]?.["term_url"] && obj?.["termDef"]?.["cde_id"]})
+                        .map((x) => { return (<a href={x["termDef"]["term_url"]} target="_blank"> ({x["termDef"]["cde_id"]}) </a>);})
+            }
+        </li>
+      );
     });
   }
   return propertyTypeFragment;
