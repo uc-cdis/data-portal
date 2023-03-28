@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, waitFor, getByText, screen } from '@testing-library/react';
+import {
+  render, waitFor, getByText, screen,
+} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
@@ -24,7 +26,7 @@ describe('Execution', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <Execution />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('execution-table')).toBeInTheDocument();
     expect(screen.getByText('Workflow Succeeded')).toBeInTheDocument();
@@ -39,7 +41,7 @@ describe('Execution', () => {
     const { container } = render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <Execution />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(container.getElementsByClassName('ant-spin').length).toBe(1);
   });
@@ -53,11 +55,11 @@ describe('Execution', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <Execution />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     expect(
-      screen.getByText('Error loading data for table')
+      screen.getByText('Error loading data for table'),
     ).toBeInTheDocument();
   });
 
@@ -80,7 +82,7 @@ describe('Execution', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <Execution />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     await waitFor(() => {

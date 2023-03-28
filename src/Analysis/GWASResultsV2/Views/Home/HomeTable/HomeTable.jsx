@@ -46,9 +46,8 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) =>
-        record.DateTimeSubmitted ||
-        `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) => record.DateTimeSubmitted
+        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
     },
     {
       title: 'View Details',
