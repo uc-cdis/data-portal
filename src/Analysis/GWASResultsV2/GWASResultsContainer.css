@@ -8,3 +8,23 @@
   width: 100%;
   margin-top: 30px;
 }
+
+.details-page-container {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.details-page-header {
+  font-size: 20px;
+  color: #2e77b8;
+  margin: 0;
+  padding: 0;
+  margin-left: 15px;
+  display: inline-block;
+  position: absolute;
+  top: -5px;
+}
+
+.details-page-container svg path {
+  fill: #343638;
+}

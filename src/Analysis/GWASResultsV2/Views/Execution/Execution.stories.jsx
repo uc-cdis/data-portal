@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Execution from './Execution';
 import { rest } from 'msw';
+import './../../GWASResultsContainer.css';
 
 export default {
   title: 'Tests2/GWASResults/Views/Execution',
@@ -18,21 +19,14 @@ const mockedQueryClient = new QueryClient({
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
-
-const MockTemplate = () => {
-  return (
-    <QueryClientProvider client={mockedQueryClient}>
-      <SharedContext.Provider
-        value={{
-          selectedRowData,
-          setCurrentView,
-        }}
-      >
-        <Execution />
-      </SharedContext.Provider>
-    </QueryClientProvider>
-  );
+const selectedRowData = {
+  name: 'gwas-workflow-787571537',
+  uid: '4b125c09-9712-486f-bacd-ec1451aae935',
+  startedAt: '2022-02-15T13:00:00Z',
+  phase: 'Failed',
+  DateTimeSubmitted: '2022-02-15T13:30:00Z',
 };
+const { name, uid } = selectedRowData;
 
 const MockedFailureJSON = [
   {
@@ -47,16 +41,37 @@ const MockedFailureJSON = [
   },
 ];
 
-let selectedRowData = {
-  name: 'gwas-workflow-787571537',
-  uid: '4b125c09-9712-486f-bacd-ec1451aae935',
-  startedAt: '2022-02-15T13:00:00Z',
-  phase: 'Error',
-  DateTimeSubmitted: '2022-02-15T13:30:00Z',
+const MockTemplateFailure = () => {
+  return (
+    <QueryClientProvider client={mockedQueryClient}>
+      <SharedContext.Provider
+        value={{
+          selectedRowData,
+          setCurrentView,
+        }}
+      >
+        <Execution />
+      </SharedContext.Provider>
+    </QueryClientProvider>
+  );
 };
-let { name, uid } = selectedRowData;
 
-export const MockedFailure = MockTemplate.bind({});
+const MockTemplateSuccess = () => {
+  return (
+    <QueryClientProvider client={mockedQueryClient}>
+      <SharedContext.Provider
+        value={{
+          selectedRowData: { ...selectedRowData, phase: 'Succeeded' },
+          setCurrentView,
+        }}
+      >
+        <Execution />
+      </SharedContext.Provider>
+    </QueryClientProvider>
+  );
+};
+
+export const MockedFailure = MockTemplateFailure.bind({});
 MockedFailure.parameters = {
   msw: {
     handlers: [
@@ -72,8 +87,7 @@ MockedFailure.parameters = {
   },
 };
 
-selectedRowData.phase = 'Succeeded';
-export const MockedSuccess = MockTemplate.bind({});
+export const MockedSuccess = MockTemplateSuccess.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
@@ -82,6 +96,7 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
+          // Successful executions return an empty array
           return res(ctx.delay(100), ctx.json([]));
         }
       ),
@@ -89,8 +104,7 @@ MockedSuccess.parameters = {
   },
 };
 
-export const MockedError = MockTemplate.bind({});
-selectedRowData.phase = '';
+export const MockedError = MockTemplateFailure.bind({});
 MockedError.parameters = {
   msw: {
     handlers: [
@@ -101,6 +115,7 @@ MockedError.parameters = {
           console.log(argowrapperpath);
           return res(
             ctx.delay(100),
+            // Some errroneous responses can return an error object
             ctx.json({ error: 'Mocked Server error response' })
           );
         }

@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
 import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
-import ExecutionTable from './ExecutionTable';
+import ExecutionTable from './ExecutionTable/ExecutionTable';
 import './Execution.css';
 
 const Execution = () => {
@@ -39,8 +39,10 @@ const Execution = () => {
   console.log(data);
   return (
     <React.Fragment>
-      <ReturnHomeButton />
-      <h1>Execution</h1>
+      <div className='details-page-container'>
+        <ReturnHomeButton />
+        <h1 className='details-page-header'>Execution Details</h1>
+      </div>
       <ExecutionTable />
       <div className='execution-data'>
         <h2>Logs</h2>
@@ -59,21 +61,27 @@ const Execution = () => {
             </p>
           </React.Fragment>
         )}
-        {data.error && JSON.stringify(data)}
-        {data.length > 0
-          && data.map((item) => (
+        {data.error && (
+          <p>
+            <strong>Returned Data contains error message: </strong>
+            <br />
+            {JSON.stringify(data)}
+          </p>
+        )}
+        {data.length > 0 &&
+          !data.error &&
+          data.map((item) => (
             <React.Fragment>
-              <p key={item.uid}>
-                <strong>Name: {item.name}</strong>
+              <p key={item?.name}>
+                <strong>Name: {item?.name}</strong>
                 <br />
-                step_template: {item.step_template}
+                step_template: {item?.step_template}
                 <br />
-                error_message: {item.error_message}
+                error_message: {item?.error_message}
               </p>
               <br />
             </React.Fragment>
           ))}
-        {JSON.stringify(data)}
       </div>
     </React.Fragment>
   );
