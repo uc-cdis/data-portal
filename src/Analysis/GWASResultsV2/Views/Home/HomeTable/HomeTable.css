@@ -1,21 +1,6 @@
 .home-table {
   width: 100%;
 }
-
-.home-table th,
-.home-table td {
-  text-align: left;
-  padding-left: 15px;
-}
-
-.home-table button {
-  margin: 7px 10px 7px 0;
-  width: 100px;
-}
-
-.home-table tr,
-.home-table th,
-.home-table td,
-.home-table {
-  border: 1px solid black;
+.home-table .job-status {
+  min-width: 160px;
 }
