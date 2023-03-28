@@ -13,7 +13,7 @@ const ReturnHomeButton = () => {
       className='return-home-button'
       icon={<ArrowLeftOutlined />}
       onClick={() => setCurrentView(VIEWS.home)}
-    ></Button>
+    />
   );
 };
 export default ReturnHomeButton;

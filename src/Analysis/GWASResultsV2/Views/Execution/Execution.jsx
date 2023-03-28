@@ -5,6 +5,7 @@ import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
 import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
+import PHASES from '../../Utils/PhasesEnumeration';
 import './Execution.css';
 
 const Execution = () => {
@@ -48,13 +49,13 @@ const Execution = () => {
         {data.length === 0 && (
           <React.Fragment>
             <p>
-              {selectedRowData?.phase === 'Succeeded' && (
+              {selectedRowData?.phase === PHASES.Succeeded && (
                 <strong>Workflow Succeeded</strong>
               )}
-              {selectedRowData?.phase === 'Error' && (
+              {selectedRowData?.phase === PHASES.Error && (
                 <strong>Workflow Errored without Error Data</strong>
               )}
-              {selectedRowData?.phase === 'Failed' && (
+              {selectedRowData?.phase === PHASES.Failed && (
                 <strong>Workflow Failed without Error Data</strong>
               )}
             </p>

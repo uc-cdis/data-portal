@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Execution from './Execution';
+import PHASES from '../../Utils/PhasesEnumeration';
 
 jest.mock('react-query');
 
@@ -11,7 +12,7 @@ describe('Execution', () => {
   const selectedRowData = {
     name: 'workflow_name',
     uid: 'workflow_id',
-    phase: 'Succeeded',
+    phase: PHASES.Succeeded,
   };
 
   it('renders the ExecutionTable component', () => {

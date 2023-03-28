@@ -11,7 +11,7 @@ describe('ExecutionTable', () => {
     const { getByText } = render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <ExecutionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(getByText(selectedRowData.name)).toBeInTheDocument();
     expect(getByText(selectedRowData.uid)).toBeInTheDocument();

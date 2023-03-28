@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
+import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
@@ -32,11 +33,11 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       render: (record) => (
         <div className='job-status'>
-          {record.phase === 'Succeeded' && <Icons.Succeeded />}
-          {record.phase === 'Pending' && <Icons.Pending />}
-          {record.phase === 'Running' && <Icons.Running />}
-          {record.phase === 'Error' && <Icons.Error />}
-          {record.phase === 'Failed' && <Icons.Failed />}
+          {record.phase === PHASES.Succeeded && <Icons.Succeeded />}
+          {record.phase === PHASES.Pending && <Icons.Pending />}
+          {record.phase === PHASES.Running && <Icons.Running />}
+          {record.phase === PHASES.Error && <Icons.Error />}
+          {record.phase === PHASES.Failed && <Icons.Failed />}
           {record.phase}
         </div>
       ),
