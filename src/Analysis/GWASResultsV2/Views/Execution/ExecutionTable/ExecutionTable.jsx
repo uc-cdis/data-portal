@@ -6,7 +6,7 @@ const ExecutionTable = () => {
   return (
     <React.Fragment>
       <div className='execution-table-container'>
-        <table className='execution-table'>
+        <table className='execution-table' data-testid='execution-table'>
           <tbody>
             <tr>
               <th>User Given Name</th>

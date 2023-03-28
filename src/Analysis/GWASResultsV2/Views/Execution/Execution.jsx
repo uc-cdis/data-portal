@@ -36,7 +36,6 @@ const Execution = () => {
       </React.Fragment>
     );
   }
-  console.log(data);
   return (
     <React.Fragment>
       <div className='details-page-container'>
@@ -73,11 +72,13 @@ const Execution = () => {
           data.map((item) => (
             <React.Fragment>
               <p key={item?.name}>
-                <strong>Name: {item?.name}</strong>
+                <strong>
+                  Name: <span>{item?.name}</span>
+                </strong>
                 <br />
-                step_template: {item?.step_template}
+                step_template: <span>{item?.step_template}</span>
                 <br />
-                error_message: {item?.error_message}
+                error_message: <span>{item?.error_message}</span>
               </p>
               <br />
             </React.Fragment>
