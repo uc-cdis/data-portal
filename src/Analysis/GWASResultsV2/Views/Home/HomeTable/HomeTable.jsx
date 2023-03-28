@@ -45,8 +45,9 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => record.DateTimeSubmitted
-        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) =>
+        record.DateTimeSubmitted ||
+        `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
     },
     {
       title: 'View Details',
@@ -55,10 +56,7 @@ const HomeTable = ({ data }) => {
         <Space>
           <Button
             onClick={() => {
-              setSelectedRowData({
-                uid: record.uid,
-                name: record.name,
-              });
+              setSelectedRowData(record);
               setCurrentView('execution');
             }}
           >
@@ -66,10 +64,7 @@ const HomeTable = ({ data }) => {
           </Button>
           <Button
             onClick={() => {
-              setSelectedRowData({
-                uid: record.uid,
-                name: record.name,
-              });
+              setSelectedRowData(record);
               setCurrentView('results');
             }}
           >

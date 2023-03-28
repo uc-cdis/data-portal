@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import { rest } from 'msw';
 import Home from './Home';
-import testTableData from '../../TestData/testTableData';
+import TableData from '../../TestData/TableData';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
@@ -21,17 +21,18 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const MockTemplate = () =>
-    <QueryClientProvider client={mockedQueryClient}>
-      <SharedContext.Provider
-        value={{
-          setSelectedRowData,
-          setCurrentView,
-        }}
-      >
-        <Home />
-      </SharedContext.Provider>
-    </QueryClientProvider>
+const MockTemplate = () => (
+  <QueryClientProvider client={mockedQueryClient}>
+    <SharedContext.Provider
+      value={{
+        setSelectedRowData,
+        setCurrentView,
+      }}
+    >
+      <Home />
+    </SharedContext.Provider>
+  </QueryClientProvider>
+);
 
 let requestCount = 0;
 let rowCount = 1;
@@ -53,7 +54,7 @@ const getMockPhase = (requestCount) => {
   }
 };
 
-let workflowList = testTableData;
+let workflowList = TableData;
 
 const getMockWorkflowList = () => {
   requestCount++;
@@ -63,7 +64,7 @@ const getMockWorkflowList = () => {
       name: 'argo-wrapper-workflow-' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
-      startedAt: new Date(new Date() - Math.random()*(1e+12))
+      startedAt: new Date(new Date() - Math.random() * 1e12),
     });
     rowCount++;
   }
@@ -73,7 +74,7 @@ const getMockWorkflowList = () => {
     workflowList[2].phase = gwasStatus.pending;
     workflowList[3].phase = gwasStatus.pending;
   }
-  console.log('workflowList: ',workflowList)
+  console.log('workflowList: ', workflowList);
   return workflowList;
 };
 
