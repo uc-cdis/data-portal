@@ -13,7 +13,7 @@ describe('DetailPageHeader', () => {
     render(
       <SharedContext.Provider value={{ setCurrentView }}>
         <DetailPageHeader pageTitle={pageTitle} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     const titleElement = screen.getByText(pageTitle);
     expect(titleElement).toBeInTheDocument();
