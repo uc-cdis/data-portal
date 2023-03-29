@@ -7,7 +7,7 @@ const Results = () => {
   const { name, uid } = selectedRowData;
   return (
     <React.Fragment>
-      <DetailPageHeader PageTitle={'Results'} />
+      <DetailPageHeader pageTitle={'Results'} />
       <strong>Name: </strong> {name}
       <br />
       <strong>UID: </strong> {uid}

@@ -22,7 +22,7 @@ const Execution = () => {
   if (status === 'loading') {
     return (
       <React.Fragment>
-        <DetailPageHeader PageTitle={'Execution Details'} />
+        <DetailPageHeader pageTitle={'Execution Details'} />
         <div className='spinner-container'>
           <Spin />
         </div>
@@ -32,14 +32,14 @@ const Execution = () => {
   if (status === 'error') {
     return (
       <React.Fragment>
-        <DetailPageHeader PageTitle={'Execution Details'} />
+        <DetailPageHeader pageTitle={'Execution Details'} />
         <h1>Error loading data for table</h1>
       </React.Fragment>
     );
   }
   return (
     <React.Fragment>
-      <DetailPageHeader PageTitle={'Execution Details'} />
+      <DetailPageHeader pageTitle={'Execution Details'} />
       <ExecutionTable />
       <div className='execution-data'>
         <h2>Logs</h2>
@@ -71,9 +71,9 @@ const Execution = () => {
             {JSON.stringify(data)}
           </p>
         )}
-        {data.length > 0 &&
-          !data.error &&
-          data.map((item) => (
+        {data.length > 0
+          && !data.error
+          && data.map((item) => (
             <React.Fragment>
               <p key={item?.name}>
                 <strong>

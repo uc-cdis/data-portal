@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, waitFor, getByText, screen,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
