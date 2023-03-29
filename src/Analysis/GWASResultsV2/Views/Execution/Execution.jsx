@@ -40,18 +40,17 @@ const Execution = () => {
 
   const determineDataLengthZeroOutput = (phase) => {
     if (
-      phase === PHASES.Succeeded ||
-      phase === PHASES.Pending ||
-      phase === PHASES.Running
+      phase === PHASES.Succeeded
+      || phase === PHASES.Pending
+      || phase === PHASES.Running
     ) {
       return <strong>Workflow {phase}</strong>;
-    } else if (phase === PHASES.Error) {
+    } if (phase === PHASES.Error) {
       return <strong>Workflow Errored without Error Data</strong>;
-    } else if (phase === PHASES.Failed) {
+    } if (phase === PHASES.Failed) {
       return <strong>Workflow Failed without Error Data</strong>;
-    } else {
-      return <strong>Issue with workflow phase and no data returned</strong>;
     }
+    return <strong>Issue with workflow phase and no data returned</strong>;
   };
 
   return (
@@ -72,9 +71,9 @@ const Execution = () => {
             {JSON.stringify(data)}
           </p>
         )}
-        {data.length > 0 &&
-          !data.error &&
-          data.map((item) => (
+        {data.length > 0
+          && !data.error
+          && data.map((item) => (
             <React.Fragment key={item?.name}>
               <p>
                 <strong>
