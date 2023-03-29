@@ -3,9 +3,9 @@ import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
-import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
 import PHASES from '../../Utils/PhasesEnumeration';
+import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import './Execution.css';
 
 const Execution = () => {
@@ -22,7 +22,7 @@ const Execution = () => {
   if (status === 'loading') {
     return (
       <React.Fragment>
-        <ReturnHomeButton />
+        <DetailPageHeader PageTitle={'Execution Details'} />
         <div className='spinner-container'>
           <Spin />
         </div>
@@ -32,17 +32,14 @@ const Execution = () => {
   if (status === 'error') {
     return (
       <React.Fragment>
-        <ReturnHomeButton />
+        <DetailPageHeader PageTitle={'Execution Details'} />
         <h1>Error loading data for table</h1>
       </React.Fragment>
     );
   }
   return (
     <React.Fragment>
-      <div className='details-page-container'>
-        <ReturnHomeButton />
-        <h1 className='details-page-header'>Execution Details</h1>
-      </div>
+      <DetailPageHeader PageTitle={'Execution Details'} />
       <ExecutionTable />
       <div className='execution-data'>
         <h2>Logs</h2>
@@ -50,7 +47,13 @@ const Execution = () => {
           <React.Fragment>
             <p>
               {selectedRowData?.phase === PHASES.Succeeded && (
-                <strong>Workflow Succeeded</strong>
+                <strong>Workflow {selectedRowData?.phase}</strong>
+              )}
+              {selectedRowData?.phase === PHASES.Pending && (
+                <strong>Workflow Pending</strong>
+              )}
+              {selectedRowData?.phase === PHASES.Running && (
+                <strong>Workflow Running</strong>
               )}
               {selectedRowData?.phase === PHASES.Error && (
                 <strong>Workflow Errored without Error Data</strong>
@@ -68,9 +71,9 @@ const Execution = () => {
             {JSON.stringify(data)}
           </p>
         )}
-        {data.length > 0
-          && !data.error
-          && data.map((item) => (
+        {data.length > 0 &&
+          !data.error &&
+          data.map((item) => (
             <React.Fragment>
               <p key={item?.name}>
                 <strong>

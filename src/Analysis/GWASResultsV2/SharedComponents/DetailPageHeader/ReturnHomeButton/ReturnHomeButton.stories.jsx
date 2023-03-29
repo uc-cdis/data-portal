@@ -1,5 +1,5 @@
 import React from 'react';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import ReturnHomeButton from './ReturnHomeButton';
 
 export default {

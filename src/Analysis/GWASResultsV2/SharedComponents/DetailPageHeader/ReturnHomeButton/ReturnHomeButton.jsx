@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Button } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import SharedContext from '../../Utils/SharedContext';
-import VIEWS from '../../Utils/ViewsEnumeration';
+import SharedContext from '../../../Utils/SharedContext';
+import VIEWS from '../../../Utils/ViewsEnumeration';
 import './ReturnHomeButton.css';
 
 const ReturnHomeButton = () => {
