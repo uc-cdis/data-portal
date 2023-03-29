@@ -1,7 +1,7 @@
 const TableData = [
   {
     uid: '123',
-    wf_name: 'Use Added WF Name 1',
+    wf_name: 'User Added WF Name 1',
     name: 'Workflow 1',
     startedAt: '2022-02-15T13:00:00Z',
     phase: 'Pending',
@@ -9,7 +9,7 @@ const TableData = [
   },
   {
     uid: '456',
-    wf_name: 'Use Added WF Name 2',
+    wf_name: 'User Added WF Name 2',
     name: 'Workflow 2',
     startedAt: '2022-02-16T10:00:00Z',
     phase: 'Running',
