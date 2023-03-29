@@ -16,15 +16,16 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
     // Check that each of the values from data appear in the dom
     data.forEach((item) => {
-      Object.values(item).forEach((value) => {
-        const textTestNodes = screen.getAllByText(value);
-        expect(textTestNodes[0]).toBeInTheDocument();
-      });
+      expect(screen.getAllByText(item.uid)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.startedAt)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.phase)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.submittedAt)[0]).toBeInTheDocument();
     });
 
     // Check that the execution and results buttons render for each row
