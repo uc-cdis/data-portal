@@ -37,6 +37,23 @@ const Execution = () => {
       </React.Fragment>
     );
   }
+
+  const determineDataLengthZeroOutput = (phase) => {
+    if (
+      phase === PHASES.Succeeded ||
+      phase === PHASES.Pending ||
+      phase === PHASES.Running
+    ) {
+      return <strong>Workflow {phase}</strong>;
+    } else if (phase === PHASES.Error) {
+      return <strong>Workflow Errored without Error Data</strong>;
+    } else if (phase === PHASES.Failed) {
+      return <strong>Workflow Failed without Error Data</strong>;
+    } else {
+      return <strong>Issue with workflow phase and no data returned</strong>;
+    }
+  };
+
   return (
     <React.Fragment>
       <DetailPageHeader pageTitle={'Execution Details'} />
@@ -45,23 +62,7 @@ const Execution = () => {
         <h2>Logs</h2>
         {data.length === 0 && (
           <React.Fragment>
-            <p>
-              {selectedRowData?.phase === PHASES.Succeeded && (
-                <strong>Workflow {selectedRowData?.phase}</strong>
-              )}
-              {selectedRowData?.phase === PHASES.Pending && (
-                <strong>Workflow Pending</strong>
-              )}
-              {selectedRowData?.phase === PHASES.Running && (
-                <strong>Workflow Running</strong>
-              )}
-              {selectedRowData?.phase === PHASES.Error && (
-                <strong>Workflow Errored without Error Data</strong>
-              )}
-              {selectedRowData?.phase === PHASES.Failed && (
-                <strong>Workflow Failed without Error Data</strong>
-              )}
-            </p>
+            <p>{determineDataLengthZeroOutput(selectedRowData?.phase)}</p>
           </React.Fragment>
         )}
         {data.error && (
@@ -71,11 +72,11 @@ const Execution = () => {
             {JSON.stringify(data)}
           </p>
         )}
-        {data.length > 0
-          && !data.error
-          && data.map((item) => (
-            <React.Fragment>
-              <p key={item?.name}>
+        {data.length > 0 &&
+          !data.error &&
+          data.map((item) => (
+            <React.Fragment key={item?.name}>
+              <p>
                 <strong>
                   Name: <span>{item?.name}</span>
                 </strong>

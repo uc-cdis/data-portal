@@ -79,7 +79,6 @@ MockedFailure.parameters = {
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          console.log(argowrapperpath);
           return res(ctx.delay(100), ctx.json(MockedFailureJSON));
         }
       ),
@@ -95,7 +94,6 @@ MockedSuccess.parameters = {
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          console.log(argowrapperpath);
           // Successful executions return an empty array
           return res(ctx.delay(100), ctx.json([]));
         }
@@ -112,7 +110,6 @@ MockedError.parameters = {
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          console.log(argowrapperpath);
           return res(
             ctx.delay(100),
             // Some errroneous responses can return an error object
