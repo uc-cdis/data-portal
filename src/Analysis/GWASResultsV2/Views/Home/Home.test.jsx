@@ -41,7 +41,7 @@ describe('Home component', () => {
     render(testJSX());
     await screen.findByText('Error loading data for table');
     expect(
-      screen.getByText('Error loading data for table')
+      screen.getByText('Error loading data for table'),
     ).toBeInTheDocument();
   });
 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import SharedContext from '../../../Utils/SharedContext';
 import moment from 'moment';
+import SharedContext from '../../../Utils/SharedContext';
 
 const subtractDates = (date1, date2) => {
   const timestamp1 = Date.parse(date1);
@@ -33,7 +33,7 @@ const ExecutionTable = () => {
               <td>
                 {subtractDates(
                   selectedRowData?.finishedAt,
-                  selectedRowData?.startedAt
+                  selectedRowData?.startedAt,
                 )}
               </td>
               <td>{selectedRowData?.phase}</td>

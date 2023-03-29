@@ -21,8 +21,10 @@ const setCurrentView = (input) => {
 };
 const selectedRowData = {
   name: 'gwas-workflow-787571537',
+  wf_name: 'user created name',
   uid: '4b125c09-9712-486f-bacd-ec1451aae935',
   startedAt: '2022-02-15T13:00:00Z',
+  finishedAt: '2022-02-15T14:00:00Z',
   phase: 'Failed',
   DateTimeSubmitted: '2022-02-15T13:30:00Z',
 };
