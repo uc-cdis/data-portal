@@ -1,8 +1,19 @@
 import React, { useContext } from 'react';
 import SharedContext from '../../../Utils/SharedContext';
+import moment from 'moment';
+
+const subtractDates = (date1, date2) => {
+  const timestamp1 = Date.parse(date1);
+  const timestamp2 = Date.parse(date2);
+  const diffInMs = timestamp1 - timestamp2;
+  // See here for more info:
+  // https://momentjscom.readthedocs.io/en/latest/moment/08-durations/03-humanize/
+  return moment.duration(diffInMs).humanize();
+};
 
 const ExecutionTable = () => {
   const { selectedRowData } = useContext(SharedContext);
+  console.log(selectedRowData);
   return (
     <div className='execution-table-container'>
       <table className='execution-table' data-testid='execution-table'>
@@ -16,10 +27,15 @@ const ExecutionTable = () => {
           </tr>
           {selectedRowData && (
             <tr key={selectedRowData?.name}>
+              <td>{selectedRowData?.wf_name}</td>
               <td>{selectedRowData?.name}</td>
-              <td>{selectedRowData?.uid}</td>
               <td>{selectedRowData?.startedAt}</td>
-              <td>Missing Run Time</td>
+              <td>
+                {subtractDates(
+                  selectedRowData?.finishedAt,
+                  selectedRowData?.startedAt
+                )}
+              </td>
               <td>{selectedRowData?.phase}</td>
             </tr>
           )}
