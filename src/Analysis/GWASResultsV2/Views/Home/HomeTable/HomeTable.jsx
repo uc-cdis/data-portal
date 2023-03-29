@@ -18,7 +18,7 @@ const HomeTable = ({ data }) => {
     },
     {
       title: 'Workflow name',
-      dataIndex: 'name',
+      dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
@@ -46,8 +46,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => record.DateTimeSubmitted
-        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) => record.submittedAt,
     },
     {
       title: 'View Details',
