@@ -9,19 +9,19 @@ import {
 describe('Get GQL filter from filter object from', () => {
   test('an undefined filter', () => {
     const filterState = undefined;
-    const gqlFilter = {};
+    const gqlFilter = undefined;
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('an empty filter', () => {
     const filterState = {};
-    const gqlFilter = {};
+    const gqlFilter = undefined;
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('an empty value filter', () => {
     const filterState = { __combindMode: 'AND', value: {} };
-    const gqlFilter = {};
+    const gqlFilter = undefined;
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
