@@ -289,7 +289,8 @@ const DiscoveryDetails = (props: Props) => {
             )
             : null}
             {(
-              props.user.username
+              props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
+            && props.user.username
               && !userHasMethodForServiceOnResource('access', 'study_registration')
               && props.userAuthMapping
             )  ? (
