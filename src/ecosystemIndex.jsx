@@ -368,8 +368,7 @@ async function init() {
                       : null
                   }
 
-
-{
+                  {
                     isEnabled('workspaceRegistration')
                       ? (
                         <Route
@@ -378,8 +377,8 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                              component={ReduxStudyRegistrationRequestForm}
-                              {...props}
+                                component={ReduxStudyRegistrationRequestForm}
+                                {...props}
                               />
                             )
                           }
@@ -387,7 +386,6 @@ async function init() {
                       )
                       : null
                   }
-
 
                   <Route
                     exact

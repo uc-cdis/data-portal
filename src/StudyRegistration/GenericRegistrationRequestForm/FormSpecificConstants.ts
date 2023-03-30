@@ -31,11 +31,14 @@ const WorkSpaceRegister = {
   showGrantNumber: true,
   showDisclaimer: false,
 };
-export const determineSpecificFormInfo = (path: String) => {
+const determineSpecificFormInfo = (path: String) => {
   if (path === '/study-reg/request-access') {
     return StudyRegistrationAccessRequest;
-  } else if (path === '/workspace/register') {
+  }
+  if (path === '/workspace/register') {
     return WorkSpaceRegister;
   }
   return DataDictionarySubmissionRequest;
 };
+
+export default determineSpecificFormInfo;

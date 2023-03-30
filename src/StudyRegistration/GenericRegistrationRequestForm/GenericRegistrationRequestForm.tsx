@@ -9,22 +9,16 @@ import {
   Typography,
   Space,
   Radio,
-  message,
 } from 'antd';
 import { useLocation } from 'react-router-dom';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import {
-  hostname,
-  requestorPath,
-  useArboristUI,
-  studyRegistrationConfig,
-} from '../../localconf';
+import { useArboristUI, studyRegistrationConfig } from '../../localconf';
 import {
   FormSubmissionState,
   StudyRegistrationProps,
 } from '../StudyRegistration';
 import { layout, tailLayout } from './FormLayoutConstants';
-import { determineSpecificFormInfo } from './FormSpecificConstants';
+import determineSpecificFormInfo from './FormSpecificConstants';
 import FormSubmissionUI from './FormSubmissionUI';
 import handleRegisterFormSubmission from './handleRegisterFormSubmission';
 import '../StudyRegistration.css';
@@ -46,7 +40,7 @@ interface LocationState {
 }
 
 const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (
-  props: StudyRegistrationProps
+  props: StudyRegistrationProps,
 ) => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -55,11 +49,11 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
     setFormSubmissionStatus,
   ] = useState<FormSubmissionState | null>(null);
   const [studyNumber, setStudyNumber] = useState<string | undefined | null>(
-    null
+    null,
   );
   const [studyName, setStudyName] = useState<string | undefined | null>(null);
   const [studyUID, setStudyUID] = useState<string | Number | undefined | null>(
-    null
+    null,
   );
   const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<
     string | undefined | null
@@ -90,7 +84,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
       'create',
       'kayako',
       '/kayako',
-      props.userAuthMapping
+      props.userAuthMapping,
     );
   };
 
@@ -105,7 +99,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
       studyRegistrationAuthZ,
       studyNumber,
       studyName,
-      setReqAccessRequestPending
+      setReqAccessRequestPending,
     );
   };
 
@@ -305,14 +299,14 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
             </Space>
           </Form.Item>
 
-          {studyRegistrationConfig.studyRegistrationFormDisclaimerField &&
-            specificFormInfo.showDisclaimer && (
-              <Typography className='study-reg-disclaimer-text'>
-                {parse(
-                  studyRegistrationConfig.studyRegistrationFormDisclaimerField
-                )}
-              </Typography>
-            )}
+          {studyRegistrationConfig.studyRegistrationFormDisclaimerField
+            && specificFormInfo.showDisclaimer && (
+            <Typography className='study-reg-disclaimer-text'>
+              {parse(
+                studyRegistrationConfig.studyRegistrationFormDisclaimerField,
+              )}
+            </Typography>
+          )}
         </Form>
       </div>
     </div>
