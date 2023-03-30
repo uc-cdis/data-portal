@@ -5,6 +5,7 @@ import { createKayakoTicket } from '../../utils';
 
 const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 const handleRegisterFormSubmission = async (
+  specificFormInfo,
   formValues,
   studyUID,
   setFormSubmissionButtonDisabled,
@@ -54,7 +55,9 @@ const handleRegisterFormSubmission = async (
           // request created, now create a kayako ticket
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
-          let subject = `Registration Access Request for ${studyNumber} ${studyName}`;
+          let subject = specificFormInfo.title.includes('Workspace')
+            ? `${specificFormInfo.subjectLine} ADD HOSTNAME VARIABLE HERE APRIL 6!!! `
+            : `${specificFormInfo.subjectLine} ${studyNumber} ${studyName}`;
           if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
             subject = `${subject.substring(
               0,

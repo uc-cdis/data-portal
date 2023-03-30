@@ -8,6 +8,7 @@ const StudyRegistrationAccessRequest = {
   showStudyName: true,
   showGrantNumber: false,
   showDisclaimer: true,
+  subjectLine: 'Study registration access request for',
 };
 const DataDictionarySubmissionRequest = {
   title: 'Data Dictionary Submission Request',
@@ -19,6 +20,7 @@ const DataDictionarySubmissionRequest = {
   showStudyName: true,
   showGrantNumber: false,
   showDisclaimer: true,
+  subjectLine: 'Data dictionary submission access request for',
 };
 const WorkSpaceRegister = {
   title: 'Workspace Registration Access Request',
@@ -30,6 +32,7 @@ const WorkSpaceRegister = {
   showStudyName: false,
   showGrantNumber: true,
   showDisclaimer: false,
+  subjectLine: 'Workspace Access Request for Workspace in',
 };
 const determineSpecificFormInfo = (path: String) => {
   if (path === '/study-reg/request-access') {
