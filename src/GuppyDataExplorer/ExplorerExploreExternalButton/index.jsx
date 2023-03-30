@@ -95,7 +95,7 @@ function ExplorerExploreExternalButton({ filter }) {
       setIsLoading(true);
       const newCommonsInfo = await fetchExternalCommonsInfo({
         path: `/analysis/tools/external/${newSelected.value}`,
-        body: JSON.stringify({ filter: getGQLFilter(filter) }),
+        body: JSON.stringify({ filter: getGQLFilter(filter) ?? {} }),
       });
       setCommonsInfo(newCommonsInfo);
     } catch (e) {
