@@ -662,8 +662,9 @@ export function getGQLFilter(filterState) {
     filterState === undefined ||
     !('value' in filterState) ||
     Object.keys(filterState.value).length === 0
-  )
-    return undefined;
+  ) {
+    return {};
+  }
 
   const combineMode = filterState.__combineMode ?? 'AND';
   if (filterState.__type === FILTER_TYPE.COMPOSED)
