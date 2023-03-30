@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import StudyRegistrationRequestForm from './GenericRegistrationRequestForm/GenericRegistrationRequestForm';
+import GenericRegistrationRequestForm from './GenericRegistrationRequestForm/GenericRegistrationRequestForm';
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
 });
 
 const ReduxStudyRegistrationRequestForm = connect(mapStateToProps)(
-  StudyRegistrationRequestForm,
+  GenericRegistrationRequestForm,
 );
 
 export default ReduxStudyRegistrationRequestForm;
