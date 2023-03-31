@@ -13,7 +13,6 @@ const subtractDates = (date1, date2) => {
 
 const ExecutionTable = () => {
   const { selectedRowData } = useContext(SharedContext);
-  console.log(selectedRowData);
   return (
     <div className='execution-table-container'>
       <table className='execution-table' data-testid='execution-table'>
