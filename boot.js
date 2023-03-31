@@ -1,6 +1,7 @@
 (function () {
   const basename = document.currentScript.getAttribute('basename');
   const cssVersion = document.currentScript.getAttribute('cssVersion');
+  // eslint-disable-next-line no-restricted-globals
   const { pathname } = location;
   const isDevMode = !!pathname.match(/^.*(\/dev\.html)/);
   let buildSrc = '/bundle.js';
