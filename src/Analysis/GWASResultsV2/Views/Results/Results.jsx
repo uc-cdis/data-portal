@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
+import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
-import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 
 const Results = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   return (
     <React.Fragment>
-      <ReturnHomeButton />
-      <h1>Results</h1>
+      <DetailPageHeader pageTitle={'Results'} />
       <strong>Name: </strong> {name}
       <br />
       <strong>UID: </strong> {uid}

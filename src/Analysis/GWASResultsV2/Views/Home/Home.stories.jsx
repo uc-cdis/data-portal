@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import { rest } from 'msw';
 import Home from './Home';
-import testTableData from '../../TestData/testTableData';
+import PHASES from '../../Utils/PhasesEnumeration';
+import TableData from '../../TestData/TableData';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
@@ -21,39 +22,37 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const MockTemplate = () =>
-    <QueryClientProvider client={mockedQueryClient}>
-      <SharedContext.Provider
-        value={{
-          setSelectedRowData,
-          setCurrentView,
-        }}
-      >
-        <Home />
-      </SharedContext.Provider>
-    </QueryClientProvider>
+const MockTemplate = () => (
+  <QueryClientProvider client={mockedQueryClient}>
+    <SharedContext.Provider
+      value={{
+        setSelectedRowData,
+        setCurrentView,
+      }}
+    >
+      <Home />
+    </SharedContext.Provider>
+  </QueryClientProvider>
+);
 
 let requestCount = 0;
 let rowCount = 1;
-const gwasStatus = {
-  pending: 'Pending',
-  running: 'Running',
-  succeeded: 'Succeeded',
-  failed: 'Failed',
-  error: 'Error',
-};
 
 const getMockPhase = (requestCount) => {
-  if (requestCount % 2 == 0) {
-    return gwasStatus.running;
-  } else if (requestCount % 5 == 0) {
-    return gwasStatus.failed;
+  if (requestCount % 2 === 0) {
+    return PHASES.Running;
+  } else if (requestCount % 5 === 0) {
+    return PHASES.Error;
+  } else if (requestCount % 7 === 0) {
+    return PHASES.Failed;
+  } else if (requestCount % 9 === 0) {
+    return PHASES.Pending;
   } else {
-    return gwasStatus.succeeded;
+    return PHASES.Succeeded;
   }
 };
 
-let workflowList = testTableData;
+let workflowList = TableData;
 
 const getMockWorkflowList = () => {
   requestCount++;
@@ -63,17 +62,17 @@ const getMockWorkflowList = () => {
       name: 'argo-wrapper-workflow-' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
-      startedAt: new Date(new Date() - Math.random()*(1e+12))
+      startedAt: new Date(new Date() - Math.random() * 1e12),
     });
     rowCount++;
   }
   // simulate status change of some recent items:
   if (rowCount % 5 == 0) {
     // just some status that is not used in getMockPhase:
-    workflowList[2].phase = gwasStatus.pending;
-    workflowList[3].phase = gwasStatus.pending;
+    workflowList[2].phase = PHASES.Pending;
+    workflowList[3].phase = PHASES.Pending;
   }
-  console.log('workflowList: ',workflowList)
+  console.log('workflowList: ', workflowList);
   return workflowList;
 };
 
