@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
+import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
@@ -17,7 +18,7 @@ const HomeTable = ({ data }) => {
     },
     {
       title: 'Workflow name',
-      dataIndex: 'name',
+      dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
@@ -32,11 +33,11 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       render: (record) => (
         <div className='job-status'>
-          {record.phase === 'Succeeded' && <Icons.Succeeded />}
-          {record.phase === 'Pending' && <Icons.Pending />}
-          {record.phase === 'Running' && <Icons.Running />}
-          {record.phase === 'Error' && <Icons.Error />}
-          {record.phase === 'Failed' && <Icons.Failed />}
+          {record.phase === PHASES.Succeeded && <Icons.Succeeded />}
+          {record.phase === PHASES.Pending && <Icons.Pending />}
+          {record.phase === PHASES.Running && <Icons.Running />}
+          {record.phase === PHASES.Error && <Icons.Error />}
+          {record.phase === PHASES.Failed && <Icons.Failed />}
           {record.phase}
         </div>
       ),
@@ -45,8 +46,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => record.DateTimeSubmitted
-        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) => record.submittedAt,
     },
     {
       title: 'View Details',
@@ -55,10 +55,7 @@ const HomeTable = ({ data }) => {
         <Space>
           <Button
             onClick={() => {
-              setSelectedRowData({
-                uid: record.uid,
-                name: record.name,
-              });
+              setSelectedRowData(record);
               setCurrentView('execution');
             }}
           >
@@ -66,10 +63,7 @@ const HomeTable = ({ data }) => {
           </Button>
           <Button
             onClick={() => {
-              setSelectedRowData({
-                uid: record.uid,
-                name: record.name,
-              });
+              setSelectedRowData(record);
               setCurrentView('results');
             }}
           >
@@ -84,7 +78,6 @@ const HomeTable = ({ data }) => {
       render: () => <ActionsDropdown />,
     },
   ];
-
   return (
     <div className='home-table'>
       <Table

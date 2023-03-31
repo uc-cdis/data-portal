@@ -50,9 +50,9 @@ describe('Home component', () => {
       json: jest.fn().mockResolvedValueOnce(TableData),
     });
     render(testJSX());
-    await screen.findByText(TableData[0].name);
+    await screen.findByText(TableData[0].wf_name);
     TableData.forEach((item) => {
-      expect(screen.getByText(item.name)).toBeInTheDocument();
+      expect(screen.getByText(item.wf_name)).toBeInTheDocument();
     });
   });
 });
