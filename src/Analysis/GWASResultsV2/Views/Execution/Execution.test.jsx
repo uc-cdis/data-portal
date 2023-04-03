@@ -56,7 +56,7 @@ describe('Execution', () => {
       </SharedContext.Provider>,
     );
 
-    await waitFor(()=>expect(screen.getByTestId('error-message')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument());
   });
 
   it('renders the logs when data is fetched successfully', async () => {
