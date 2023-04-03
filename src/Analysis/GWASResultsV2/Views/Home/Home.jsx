@@ -3,7 +3,7 @@ import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
-import ErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
 const Home = () => {
   const refetchInterval = 5000;
@@ -31,7 +31,7 @@ const Home = () => {
     }
     if (status === 'error') {
       return (
-        <ErrorMessage />
+        <LoadingErrorMessage />
       );
     }
     return (
