@@ -6,9 +6,8 @@ import SharedContext from '../../Utils/SharedContext';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
 import PHASES from '../../Utils/PhasesEnumeration';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
-import ErrorMessage from '../../SharedComponents/ErrorMessage/ErrorMessage';
+import ErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 import './Execution.css';
-
 
 const Execution = () => {
   const { selectedRowData } = useContext(SharedContext);
