@@ -75,7 +75,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      render: () => <ActionsDropdown />,
+      render: (record) => <ActionsDropdown record={record} />,
     },
   ];
   return (
