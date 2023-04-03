@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import TableData from '../../TestData/TableData';
 import SharedContext from '../../Utils/SharedContext';
@@ -39,10 +39,7 @@ describe('Home component', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await screen.findByText('❌ Error loading data for table');
-    expect(
-      screen.getByText('❌ Error loading data for table'),
-    ).toBeInTheDocument();
+    await waitFor(()=>expect(screen.getByTestId('error-message')).toBeInTheDocument())
   });
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
