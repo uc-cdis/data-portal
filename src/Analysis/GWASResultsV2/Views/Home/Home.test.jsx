@@ -39,9 +39,9 @@ describe('Home component', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await screen.findByText('Error loading data for table');
+    await screen.findByText('❌ Error loading data for table');
     expect(
-      screen.getByText('Error loading data for table'),
+      screen.getByText('❌ Error loading data for table'),
     ).toBeInTheDocument();
   });
 
