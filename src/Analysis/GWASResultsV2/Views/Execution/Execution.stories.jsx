@@ -104,8 +104,8 @@ MockedSuccess.parameters = {
   },
 };
 
-export const MockedError = MockTemplateFailure.bind({});
-MockedError.parameters = {
+export const MockedErrorObject = MockTemplateFailure.bind({});
+MockedErrorObject.parameters = {
   msw: {
     handlers: [
       rest.get(
@@ -119,6 +119,14 @@ MockedError.parameters = {
           );
         }
       ),
+    ],
+  },
+};
+export const MockedError403Response = MockTemplateFailure.bind({});
+MockedError403Response.parameters = {
+  msw: {
+    handlers: [
+      rest.post('', (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
     ],
   },
 };
