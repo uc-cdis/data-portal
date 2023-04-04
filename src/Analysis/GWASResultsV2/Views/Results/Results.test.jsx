@@ -38,7 +38,7 @@ describe('Results component', () => {
 
     // endpoints not mocked, so it will fail. We expect an error to show up:
     await flushPromises();
-    expect(screen.getByTestId('error-message')).toBeInTheDocument();
+    expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
 
   it('should trigger a call to the pre-signed url endpoint with a correctly parsed "did" on startup', async () => {
