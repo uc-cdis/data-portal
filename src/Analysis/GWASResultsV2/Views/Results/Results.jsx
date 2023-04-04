@@ -32,7 +32,6 @@ const Results = () => {
     queryConfig,
   );
 
-
   const downloadAll = () => {
     fetchPresignedUrlForWorkflowArtifact(
       name,
@@ -114,7 +113,7 @@ const Results = () => {
 
   const displaySpinnerWhileImageLoadsOrErrorIfItFails = () => {
     if (imageLoadFailed) {
-      return (<LoadingErrorMessage message='Failed to load image, invalid image path' />)
+      return (<LoadingErrorMessage message='Failed to load image, invalid image path' />);
     }
     if (imageLoaded) {
       return '';
