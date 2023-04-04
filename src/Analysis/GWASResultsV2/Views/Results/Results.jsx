@@ -32,7 +32,7 @@ const Results = () => {
   );
 
   const displayError = (errorMessage) => (
-    <div>
+    <div data-testid='error-message'>
         ❌ {errorMessage}
     </div>
   );

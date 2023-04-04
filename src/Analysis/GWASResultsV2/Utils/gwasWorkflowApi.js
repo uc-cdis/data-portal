@@ -27,7 +27,6 @@ export const fetchPresignedUrlForWorkflowArtifact = async (
   return getPresignedUrl(JSON.parse(results[0].value).did, 'download');
 };
 
-// TODO - reuse from ../../GWASApp/Utils/cohortMiddlewareApi.js instead?
 export const queryConfig = {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
