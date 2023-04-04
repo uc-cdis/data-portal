@@ -126,7 +126,16 @@ export const MockedError403Response = MockTemplateFailure.bind({});
 MockedError403Response.parameters = {
   msw: {
     handlers: [
-      rest.post('', (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
+      rest.get(
+        `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          return res(
+            ctx.delay(100),
+            ctx.status(403)
+          );
+        }
+      ),
     ],
   },
 };
