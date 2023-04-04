@@ -37,7 +37,8 @@ describe('Results component', () => {
     expect(container.getElementsByClassName('ant-spin').length).toBe(1);
 
     // endpoints not mocked, so it will fail. We expect an error to show up:
-    await screen.findByText('❌ Error getting Manhattan plot');
+    await flushPromises();
+    expect(screen.getByTestId('error-message')).toBeInTheDocument();
   });
 
   it('should trigger a call to the pre-signed url endpoint with a correctly parsed "did" on startup', async () => {
