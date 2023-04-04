@@ -9,6 +9,7 @@ import {
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
 import '../../../GWASApp/GWASApp.css';
+import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
 const Results = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -31,11 +32,6 @@ const Results = () => {
     queryConfig,
   );
 
-  const displayError = (errorMessage) => (
-    <div data-testid='error-message'>
-        ❌ {errorMessage}
-    </div>
-  );
 
   const downloadAll = () => {
     fetchPresignedUrlForWorkflowArtifact(
@@ -92,7 +88,7 @@ const Results = () => {
     return (
       <React.Fragment>
         {displayTopSection()}
-        {displayError('Error getting Manhattan plot')}
+        <LoadingErrorMessage message='Error getting Manhattan plot' />
       </React.Fragment>
     );
   }
@@ -111,14 +107,14 @@ const Results = () => {
     return (
       <React.Fragment>
         {displayTopSection()}
-        {displayError('Failed to load image, no image path')}
+        <LoadingErrorMessage message='Failed to load image, no image path' />
       </React.Fragment>
     );
   }
 
   const displaySpinnerWhileImageLoadsOrErrorIfItFails = () => {
     if (imageLoadFailed) {
-      return displayError('Failed to load image, invalid image path');
+      return (<LoadingErrorMessage message='Failed to load image, invalid image path' />)
     }
     if (imageLoaded) {
       return '';
