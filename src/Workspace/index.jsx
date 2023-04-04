@@ -431,6 +431,10 @@ class Workspace extends React.Component {
   }
 
   handleMenuClick = async (e) => {
+    if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
+      message.error('Can not select pay model. Selected pay model is above limit.');
+      return;
+    }
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
       method: 'POST',
@@ -491,9 +495,9 @@ class Workspace extends React.Component {
               <Menu.Item
                 key={i}
                 id={option.bmh_workspace_id}
-                icon={<UserOutlined />}
+                icon={option.request_status === 'active' ? <UserOutlined /> : <ExclamationCircleOutlined />}
               >
-                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)}`}
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)} \t (${option.request_status})`}
               </Menu.Item>
             ))
           ) : null
@@ -568,12 +572,12 @@ class Workspace extends React.Component {
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Total Charges (USD)'>
-                        <Statistic value={this.state.payModel.current_pay_model?.['total-usage'] || 'N/A'} precision={2} />
+                        <Statistic value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['total-usage'])) ? 'N/A' : this.state.payModel.current_pay_model?.['total-usage']} precision={2} />
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Spending Limit (USD)'>
-                        <Statistic precision={2} value={this.state.payModel.current_pay_model?.['hard-limit'] || 'N/A'} />
+                        <Statistic precision={2} value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['hard-limit'])) ? 'N/A' : this.state.payModel.current_pay_model?.['hard-limit']} />
                       </Card>
                     </Col>
                   </Row>
