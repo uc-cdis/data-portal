@@ -8,8 +8,9 @@ import {
   fetchPresignedUrlForWorkflowArtifact,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
-import '../../../GWASApp/GWASApp.css';
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import '../../../GWASApp/GWASApp.css';
+
 
 const Results = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
