@@ -53,7 +53,7 @@ MockedSuccess.parameters = {
           console.log(argowrapperpath);
           console.log(workflowname);
           return res(
-            ctx.delay(500),
+            ctx.delay(50000),
             ctx.json(WorkflowStatusResponse)
           );
         }
