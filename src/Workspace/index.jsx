@@ -432,7 +432,7 @@ class Workspace extends React.Component {
 
   handleMenuClick = async (e) => {
     if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
-      message.error('Can not select pay model. Selected pay model is above limit.');
+      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@datacommons.io with questions.');
       return;
     }
     await fetchWithCreds({
@@ -511,7 +511,7 @@ class Workspace extends React.Component {
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
-      const overTheLimitPaymodel = this.state.payModel.current_pay_model?.request_status === 'above limit';
+      const isPayModelAboveLimit = this.state.payModel.current_pay_model?.request_status === 'above limit';
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -699,7 +699,7 @@ class Workspace extends React.Component {
                       />
                     )
                     : null}
-                  {overTheLimitPaymodel
+                  {isPayModelAboveLimit
                     ? (
                       <Alert
                         description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
