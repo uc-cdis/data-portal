@@ -17,6 +17,9 @@
   width: 100%;
   margin-top: 30px;
 }
+.loading-error-message {
+  text-align: left;
+}
 .section-header {
   background: #cfdbe6;
   height: 64px;
