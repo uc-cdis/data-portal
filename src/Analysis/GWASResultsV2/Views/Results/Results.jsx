@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
-
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -9,14 +8,13 @@ import {
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
-import '../../../GWASApp/GWASApp.css';
+import './Results.css';
 
 const Results = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
-
   const { data, status } = useQuery(
     [
       'fetchPresignedUrlForWorkflowArtifact',
@@ -57,30 +55,28 @@ const Results = () => {
   };
 
   const displayTopSection = () => (
-    <React.Fragment>
-      <div className='GWASUI-flexRow' style={{ width: '100%' }}>
-        <div className='GWASUI-flexCol'>
+    <section className="results-top">
+      <div className='GWASResults-flex-row'>
+        <div className='GWASResults-flex-col'>
           <DetailPageHeader pageTitle={'Results'} />
         </div>
-        <div className='GWASUI-flexCol'>
+        <div>
           <Button
-            style={{ width: '50%' }}
             onClick={downloadAll}
           >Download All Results
           </Button>
         </div>
       </div>
-      <div className='GWASUI-flexRow' style={{ background: 'rgb(209,219,229)', width: '100%' }}>
-        <div className='GWASUI-flexCol' todo='this is for the QQ plot button' />
-        <div className='GWASUI-flexCol'>
+      <div className='GWASResults-flex-row section-header'>
+        <div className='GWASResults-flex-col' todo='this is for the QQ plot button' />
+        <div>
           <Button
-            style={{ width: '50%' }}
             onClick={downloadManhattanPlot}
           >Download Manhattan Plot
           </Button>
         </div>
       </div>
-    </React.Fragment>
+    </section>
   );
 
   if (status === 'error') {
@@ -95,7 +91,7 @@ const Results = () => {
     return (
       <React.Fragment>
         {displayTopSection()}
-        <div>
+        <div className='spinner-container'>
           Fetching Manhattan plot... <Spin />
         </div>
       </React.Fragment>
@@ -119,28 +115,29 @@ const Results = () => {
       return '';
     }
     return (
-      <div>
+      <div className='spinner-container'>
           Loading... <Spin />
       </div>
     );
   };
 
   return (
-    <React.Fragment>
+    <div className='results-view'>
       {displayTopSection()}
-      <img
-        src={data}
-        alt={'Manhattan plot'}
-        onLoad={() => {
-          setImageLoaded(true);
-        }}
-        onError={() => {
-          setImageLoadFailed(true);
-        }}
-        style={{ height: 450, width: 900 }}
-      />
+      <section className='data-viz'>
+        <img
+          src={data}
+          alt='Manhattan plot'
+          onLoad={() => {
+            setImageLoaded(true);
+          }}
+          onError={() => {
+            setImageLoadFailed(true);
+          }}
+        />
       {displaySpinnerWhileImageLoadsOrErrorIfItFails()}
-    </React.Fragment>
+      </section>
+    </div>
   );
 };
 export default Results;
