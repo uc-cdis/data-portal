@@ -497,7 +497,7 @@ class Workspace extends React.Component {
                 id={option.bmh_workspace_id}
                 icon={option.request_status === 'active' ? <UserOutlined /> : <ExclamationCircleOutlined />}
               >
-                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)} \t (${option.request_status})`}
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)} \t ${option.request_status ? `(${option.request_status})` : ''}`}
               </Menu.Item>
             ))
           ) : null
@@ -511,7 +511,7 @@ class Workspace extends React.Component {
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
-
+      const overTheLimitPaymodel = this.state.payModel.current_pay_model?.request_status === 'above limit';
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -694,6 +694,16 @@ class Workspace extends React.Component {
                             : 'Please link account to additional data resources at the bottom of the page'
                         }
                         type='info'
+                        banner
+                        closable
+                      />
+                    )
+                    : null}
+                  {overTheLimitPaymodel
+                    ? (
+                      <Alert
+                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
+                        type='error'
                         banner
                         closable
                       />
