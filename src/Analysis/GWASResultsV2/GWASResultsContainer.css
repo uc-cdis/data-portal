@@ -1,10 +1,34 @@
 .GWASResults {
   width: 100%;
 }
-
-.GWASResults .spinner-container {
+.GWASResults-flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.GWASResults-flex-col {
+  display: flex;
+  flex: 1;
+}
+.spinner-container {
   text-align: center;
   height: 200px;
   width: 100%;
   margin-top: 30px;
+}
+.section-header {
+  background: #CFDBE6;
+  height: 64px;
+  width: 100%;
+  border: 1px solid #E2E2E3;
+  align-items: center;
+}
+.ant-btn-default {
+  border: 1px solid #2E77B8;
+  border-radius: 4px;
+}
+.ant-btn-default {
+  color: #2E77B8;
+  font-size: 14px;
 }
