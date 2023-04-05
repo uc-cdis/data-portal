@@ -18,17 +18,15 @@
   margin-top: 30px;
 }
 .section-header {
-  background: #CFDBE6;
+  background: #cfdbe6;
   height: 64px;
   width: 100%;
-  border: 1px solid #E2E2E3;
+  border: 1px solid #e2e2e3;
   align-items: center;
 }
 .ant-btn-default {
-  border: 1px solid #2E77B8;
+  border: 1px solid #2e77b8;
   border-radius: 4px;
-}
-.ant-btn-default {
-  color: #2E77B8;
+  color: #2e77b8;
   font-size: 14px;
 }
