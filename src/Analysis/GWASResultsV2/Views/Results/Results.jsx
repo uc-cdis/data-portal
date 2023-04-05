@@ -17,8 +17,9 @@ const Results = () => {
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
     ['fetchPresignedUrlForWorkflowArtifact', name, uid, 'manhattan_plot_index'],
-    () => fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
-    queryConfig,
+    () =>
+      fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
+    queryConfig
   );
 
   const downloadAll = () => {
@@ -112,16 +113,18 @@ const Results = () => {
     <div className='results-view'>
       {displayTopSection()}
       <section className='data-viz'>
-        <img
-          src={data}
-          alt='Manhattan plot'
-          onLoad={() => {
-            setImageLoaded(true);
-          }}
-          onError={() => {
-            setImageLoadFailed(true);
-          }}
-        />
+        {!imageLoadFailed && (
+          <img
+            src={data}
+            alt='Manhattan plot'
+            onLoad={() => {
+              setImageLoaded(true);
+            }}
+            onError={() => {
+              setImageLoadFailed(true);
+            }}
+          />
+        )}
         {displaySpinnerWhileImageLoadsOrErrorIfItFails()}
       </section>
     </div>
