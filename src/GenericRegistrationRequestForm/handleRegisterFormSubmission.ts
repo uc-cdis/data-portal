@@ -1,9 +1,9 @@
-import { doesUserHaveRequestPending } from '../utils';
+import { doesUserHaveRequestPending } from '../StudyRegistration/utils';
 import {
   kayakoConfig, hostname, workspaceRegistrationConfig, requestorPath,
-} from '../../localconf';
-import { fetchWithCreds } from '../../actions';
-import { createKayakoTicket } from '../../utils';
+} from '../localconf';
+import { fetchWithCreds } from '../actions';
+import { createKayakoTicket } from '../utils';
 
 const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 

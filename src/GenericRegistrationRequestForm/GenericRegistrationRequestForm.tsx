@@ -11,17 +11,18 @@ import {
   Radio,
 } from 'antd';
 import { useLocation } from 'react-router-dom';
-import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import { useArboristUI, studyRegistrationConfig } from '../../localconf';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+import { useArboristUI, studyRegistrationConfig } from '../localconf';
 import {
   FormSubmissionState,
   StudyRegistrationProps,
-} from '../StudyRegistration';
-import { layout, tailLayout } from './FormLayoutConstants';
-import determineSpecificFormInfo from './FormSpecificConstants';
+} from './Constants/GenericFormInterfaces';
+import { layout, tailLayout } from './Constants/FormLayoutConstants';
+import determineSpecificFormInfo from './Constants/FormSpecificConstants';
 import FormSubmissionUI from './FormSubmissionUI';
 import handleRegisterFormSubmission from './handleRegisterFormSubmission';
-import '../StudyRegistration.css';
+import './GenericRegistrationRequestForm.css';
+
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -124,13 +125,13 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
   }
 
   return (
-    <div className='study-reg-container'>
-      <div className='study-reg-form-container'>
+    <div className='generic-reg-container'>
+      <div className='generic-reg-form-container'>
         <Form
-          className='study-reg-form'
+          className='generic-reg-form'
           {...layout}
           form={form}
-          name='study-reg-request-form'
+          name='generic-reg-request-form'
           onFinish={onFinish}
           validateMessages={validateMessages}
         >
@@ -139,7 +140,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
             {specificFormInfo.description}
           </Typography>
           <Divider plain />
-          <div className='study-reg-exp-text'>
+          <div className='generic-reg-exp-text'>
             <Text type='danger'>*</Text>
             <Text type='secondary'> Indicates required fields</Text>
           </div>
@@ -302,7 +303,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
 
           {studyRegistrationConfig.studyRegistrationFormDisclaimerField
             && specificFormInfo.showDisclaimer && (
-            <Typography className='study-reg-disclaimer-text'>
+            <Typography className='generic-reg-disclaimer-text'>
               {parse(
                 studyRegistrationConfig.studyRegistrationFormDisclaimerField,
               )}
