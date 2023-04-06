@@ -724,8 +724,9 @@ class Workspace extends React.Component {
                             onClick={() => this.launchWorkspace(option)}
                             isPending={this.state.workspaceID === option.id}
                             isDisabled={
-                              !!this.state.workspaceID
-                              && this.state.workspaceID !== option.id
+                              (!!this.state.workspaceID
+                              && this.state.workspaceID !== option.id)
+                              || isPayModelAboveLimit
                             }
                           />
                         );
