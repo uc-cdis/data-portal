@@ -14,7 +14,7 @@ const handleRegisterFormSubmission = async (
   studyRegistrationAuthZ,
   studyNumber,
   studyName,
-  setReqAccessRequestPending,
+  setReqAccessRequestPending
 ) => {
   // first, check if there is already a pending request in requestor
   try {
@@ -55,13 +55,15 @@ const handleRegisterFormSubmission = async (
           // request created, now create a kayako ticket
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
-          let subject = specificFormInfo.title.includes('Workspace')
-            ? `${specificFormInfo.subjectLine} ADD HOSTNAME VARIABLE HERE APRIL 6!!! `
+          let subject = specificFormInfo.title.includes(
+            'Workspace Registration'
+          )
+            ? `${specificFormInfo.subjectLine} ${hostname}`
             : `${specificFormInfo.subjectLine} ${studyNumber} ${studyName}`;
           if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
             subject = `${subject.substring(
               0,
-              KAYAKO_MAX_SUBJECT_LENGTH - 3,
+              KAYAKO_MAX_SUBJECT_LENGTH - 3
             )}...`;
           }
           let contents = `Request ID: ${data.request_id}\n
@@ -79,13 +81,14 @@ const handleRegisterFormSubmission = async (
             fullName,
             email,
             contents,
-            kayakoConfig?.kayakoDepartmentId,
+            kayakoConfig?.kayakoDepartmentId
           ).then(
             () => setFormSubmissionStatus({ status: 'success' }),
-            (err) => setFormSubmissionStatus({
-              status: 'error',
-              text: err.message,
-            }),
+            (err) =>
+              setFormSubmissionStatus({
+                status: 'error',
+                text: err.message,
+              })
           );
         } else {
           // eslint-disable-next-line no-console
@@ -103,12 +106,13 @@ const handleRegisterFormSubmission = async (
       }
       setReqAccessRequestPending(false);
     })
-    .catch(() => setFormSubmissionStatus({
-      status: 'error',
-      text: `Failed to create a request.
+    .catch(() =>
+      setFormSubmissionStatus({
+        status: 'error',
+        text: `Failed to create a request.
         Please try again later. If
         the error persists, please contact us for help.`,
-    }),
+      })
     );
 };
 export default handleRegisterFormSubmission;
