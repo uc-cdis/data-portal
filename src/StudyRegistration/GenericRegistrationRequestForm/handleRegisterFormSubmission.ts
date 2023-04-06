@@ -1,5 +1,7 @@
 import { doesUserHaveRequestPending } from '../utils';
-import { kayakoConfig, hostname, requestorPath } from '../../localconf';
+import {
+  kayakoConfig, hostname, workspaceRegistrationConfig, requestorPath,
+} from '../../localconf';
 import { fetchWithCreds } from '../../actions';
 import { createKayakoTicket } from '../../utils';
 
@@ -17,11 +19,12 @@ const handleRegisterFormSubmission = async (
   studyName,
   setReqAccessRequestPending,
 ) => {
-  const determineSubject = (specifcFormInfo: {
+  const determineSubjectLine = (specifcFormInfo: {
+    name: string;
     title: string;
     subjectLine: string;
   }) => {
-    if (specifcFormInfo?.title === 'Workspace Registration') {
+    if (specifcFormInfo.name === 'WorkSpaceRegister') {
       return `${specificFormInfo.subjectLine} ${hostname}`;
     }
     return `${specificFormInfo.subjectLine} ${studyNumber} ${studyName}`;
@@ -47,12 +50,22 @@ const handleRegisterFormSubmission = async (
   }
 
   // create a request in requestor
-  const body = {
-    username: props.user.username,
-    resource_id: studyUID,
-    resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
-    role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
-  };
+  // eslint-disable-next-line camelcase
+  let body: { policy_id?: string; username?: any; resource_id?: any; resource_paths?: any[]; role_ids?: string[]; };
+  if (specificFormInfo.name === 'WorkSpaceRegister') {
+    const policeID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
+    body = {
+      policy_id: policeID,
+    };
+  } else {
+    body = {
+      username: props.user.username,
+      resource_id: studyUID,
+      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
+      role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
+    };
+  }
+
   // deepcode ignore Ssrf: studyUID is pulled in from setState into request body,
   // not as URL
   fetchWithCreds({
@@ -66,7 +79,7 @@ const handleRegisterFormSubmission = async (
           // request created, now create a kayako ticket
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
-          let subject = determineSubject(specificFormInfo);
+          let subject = determineSubjectLine(specificFormInfo);
           if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
             subject = `${subject.substring(
               0,

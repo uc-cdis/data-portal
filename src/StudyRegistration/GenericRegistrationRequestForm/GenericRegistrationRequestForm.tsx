@@ -91,6 +91,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
   const onFinish = (values) => {
     setReqAccessRequestPending(true);
     handleRegisterFormSubmission(
+      specificFormInfo,
       values,
       studyUID,
       setFormSubmissionButtonDisabled,

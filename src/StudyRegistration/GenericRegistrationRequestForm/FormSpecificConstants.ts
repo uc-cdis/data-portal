@@ -1,4 +1,5 @@
 const StudyRegistrationAccessRequest = {
+  name: 'StudyRegistration',
   title: 'Study Registration Access Request',
   description:
     'Please fill out this form to request and be approved for access to register your study with the HEAL Platform.',
@@ -11,6 +12,7 @@ const StudyRegistrationAccessRequest = {
   subjectLine: 'Study registration access request for',
 };
 const DataDictionarySubmissionRequest = {
+  name: 'DataDictionarySubmissionRequest',
   title: 'Data Dictionary Submission Request',
   description:
     'Please fill out this form to request access to submit data dictionaries to your study on the HEAL Platform.',
@@ -23,6 +25,7 @@ const DataDictionarySubmissionRequest = {
   subjectLine: 'Data dictionary submission access request for',
 };
 const WorkSpaceRegister = {
+  name: 'WorkSpaceRegister',
   title: 'Workspace Registration Access Request',
   description: `The HEAL workspace provides a standardized computational environment for accessing and analyzing data from HEAL studies.
     Please fill out this form to request access to the workspace and start computing!`,
