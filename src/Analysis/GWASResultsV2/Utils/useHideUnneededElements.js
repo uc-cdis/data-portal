@@ -9,7 +9,8 @@ const useHideUnneededElements = () => {
   useEffect(() => {
     selectorsToHide.forEach((selector) => {
       document.querySelectorAll(selector).forEach((element) => {
-        element.style.display = 'none';
+        const temporaryElement = element;
+        temporaryElement.style.display = 'none';
       });
     });
   }, []);
