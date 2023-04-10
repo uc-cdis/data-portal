@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
-import hideUnneededElements from './Utils/hideUnneededElements';
+import useHideUnneededElements from './Utils/useHideUnneededElements';
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
 
-  hideUnneededElements();
+  useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
-      case VIEWS.home:
-        return <Home />;
-      case VIEWS.results:
-        return <Results />;
-      case VIEWS.execution:
-        return <Execution />;
-      default:
-        return null;
+    case VIEWS.home:
+      return <Home />;
+    case VIEWS.results:
+      return <Results />;
+    case VIEWS.execution:
+      return <Execution />;
+    default:
+      return null;
     }
   };
 

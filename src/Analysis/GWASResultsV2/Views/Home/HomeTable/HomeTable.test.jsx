@@ -16,7 +16,7 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     // Check that each of the values from data that needed to be shown appear in the dom
@@ -27,11 +27,11 @@ describe('HomeTable component', () => {
       expect(screen.getAllByText(item.uid)[0]).toBeInTheDocument();
       expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(startTestDate.toLocaleDateString())[0]
+        screen.getAllByText(startTestDate.toLocaleDateString())[0],
       ).toBeInTheDocument();
       expect(screen.getAllByText(item.phase)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(submittedTestDate.toLocaleDateString())[0]
+        screen.getAllByText(submittedTestDate.toLocaleDateString())[0],
       ).toBeInTheDocument();
     });
 

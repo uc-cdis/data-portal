@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const hideUnneededElements = () => {
+const useHideUnneededElements = () => {
   const selectorsToHide = [
     '.analysis-app__description',
     '.back-link',
@@ -8,11 +8,11 @@ const hideUnneededElements = () => {
   ];
   useEffect(() => {
     selectorsToHide.forEach((selector) => {
-      document.querySelectorAll(selector).forEach(function(element) {
+      document.querySelectorAll(selector).forEach((element) => {
         element.style.display = 'none';
       });
     });
   }, []);
 };
 
-export default hideUnneededElements;
+export default useHideUnneededElements;

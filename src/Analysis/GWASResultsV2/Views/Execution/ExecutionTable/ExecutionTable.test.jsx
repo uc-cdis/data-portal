@@ -13,7 +13,7 @@ describe('ExecutionTable', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <ExecutionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     expect(screen.getByText(selectedRowData.name)).toBeInTheDocument();
