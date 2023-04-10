@@ -1,6 +1,9 @@
 .home-table {
   width: 100%;
 }
+.home-table tr {
+  color: #333;
+}
 .home-table .job-status {
   min-width: 160px;
 }
@@ -22,8 +25,7 @@
   border-radius: 50%;
   height: 25px;
   width: 25px;
-  padding: 5px;
-  transform: scale(1.2);
+  padding: 1px;
 }
 
 .home-table svg[data-icon='ellipsis'] path {
