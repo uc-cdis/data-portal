@@ -1,0 +1,8 @@
+table .date {
+  display: inline-block;
+  min-width: 70px;
+  text-align: right;
+}
+table .date-divider {
+  margin: 0 10px;
+}

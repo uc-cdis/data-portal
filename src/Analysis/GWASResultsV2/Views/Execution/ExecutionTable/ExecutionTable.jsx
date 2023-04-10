@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
+import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 
 const subtractDates = (date1, date2) => {
   const timestamp1 = Date.parse(date1);
@@ -28,11 +29,13 @@ const ExecutionTable = () => {
             <tr key={selectedRowData?.name}>
               <td>{selectedRowData?.wf_name}</td>
               <td>{selectedRowData?.name}</td>
-              <td>{selectedRowData?.startedAt}</td>
+              <td>
+                <DateForTable unformattedDate={selectedRowData?.startedAt} />
+              </td>
               <td>
                 {subtractDates(
                   selectedRowData?.finishedAt,
-                  selectedRowData?.startedAt,
+                  selectedRowData?.startedAt
                 )}
               </td>
               <td>{selectedRowData?.phase}</td>
