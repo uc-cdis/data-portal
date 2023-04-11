@@ -6,7 +6,6 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
@@ -26,7 +25,6 @@ const HomeTable = ({ data }) => {
     },
     {
       title: 'Date/Time Started',
-      // dataIndex: 'startedAt',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
       render: (record) => <DateForTable unformattedDate={record.startedAt} />,
