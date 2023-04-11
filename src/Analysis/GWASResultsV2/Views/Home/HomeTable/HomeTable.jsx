@@ -27,7 +27,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Started',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      render: (record) => <DateForTable unformattedDate={record.startedAt} />,
+      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
     },
     {
       title: 'Job status',
@@ -48,7 +48,9 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       key: 'submittedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
-      render: (record) => <DateForTable unformattedDate={record.submittedAt} />,
+      render: (record) => (
+        <DateForTable utcFormattedDate={record.submittedAt} />
+      ),
     },
     {
       title: 'View Details',

@@ -30,12 +30,12 @@ const ExecutionTable = () => {
               <td>{selectedRowData?.wf_name}</td>
               <td>{selectedRowData?.name}</td>
               <td>
-                <DateForTable unformattedDate={selectedRowData?.startedAt} />
+                <DateForTable utcFormattedDate={selectedRowData?.startedAt} />
               </td>
               <td>
                 {subtractDates(
                   selectedRowData?.finishedAt,
-                  selectedRowData?.startedAt,
+                  selectedRowData?.startedAt
                 )}
               </td>
               <td>{selectedRowData?.phase}</td>
