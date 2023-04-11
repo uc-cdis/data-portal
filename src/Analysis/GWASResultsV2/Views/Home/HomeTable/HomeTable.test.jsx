@@ -22,16 +22,18 @@ describe('HomeTable component', () => {
     // Check that each of the values from data that needed to be shown appear in the dom
     data.forEach((item) => {
       const startTestDate = new Date(item.startedAt);
+      const formattedStartTestDate = startTestDate.toLocaleDateString();
       const submittedTestDate = new Date(item.submittedAt);
+      const formattedSubmittedTestDate = submittedTestDate.toLocaleDateString();
 
       expect(screen.getAllByText(item.uid)[0]).toBeInTheDocument();
       expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(startTestDate.toLocaleDateString())[0],
+        screen.getAllByText(formattedStartTestDate)[0],
       ).toBeInTheDocument();
       expect(screen.getAllByText(item.phase)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(submittedTestDate.toLocaleDateString())[0],
+        screen.getAllByText(formattedSubmittedTestDate)[0],
       ).toBeInTheDocument();
     });
 
