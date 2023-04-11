@@ -1,26 +1,32 @@
 .home-table {
   width: 100%;
 }
+
 .home-table tr {
   color: #333;
 }
+
 .home-table .job-status {
   min-width: 160px;
 }
+
 .home-table th.ant-table-cell {
   background: #e9eef2;
   font-weight: bold;
 }
+
 .home-table thead tr {
   border: 1px solid #e2e2e3;
 }
+
 /* Hide separators in table between thead columns */
 .ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+> tr
+> th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   content: none;
 }
 
+/* Style actions dropdown */
 .home-table svg[data-icon='ellipsis'] {
   border-radius: 50%;
   height: 25px;
@@ -31,6 +37,7 @@
 .home-table svg[data-icon='ellipsis'] path {
   fill: #ab5915;
 }
+
 .home-table .ant-dropdown-trigger:hover svg[data-icon='ellipsis'],
 .home-table .ant-dropdown-trigger:focus svg[data-icon='ellipsis'],
 .home-table .ant-btn-text:hover svg[data-icon='ellipsis'],
@@ -51,9 +58,11 @@
 .home-table .ant-btn-text:focus {
   background: none;
 }
+
 .home-table .ant-dropdown-menu-item:hover {
   background: #e9eef2;
 }
+
 .home-table .anticon-ellipsis {
   transform: scale(1.25);
 }
