@@ -36,6 +36,7 @@
 .home-table .ant-btn-text:hover svg[data-icon='ellipsis'],
 .home-table .ant-btn-text:focus svg[data-icon='ellipsis'] {
   background: #2e77b8;
+  transition: all 0.25s ease-in-out;
 }
 
 .home-table .ant-dropdown-trigger:hover svg[data-icon='ellipsis'] path,
@@ -43,6 +44,7 @@
 .home-table .ant-btn-text:hover svg[data-icon='ellipsis'] path,
 .home-table .ant-btn-text:focus svg[data-icon='ellipsis'] path {
   fill: #fff;
+  transition: all 0.25s ease-in-out;
 }
 
 .home-table .ant-btn-text:hover,
