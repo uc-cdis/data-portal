@@ -47,6 +47,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'submittedAt',
+      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
       render: (record) => <DateForTable unformattedDate={record.submittedAt} />,
     },
     {
