@@ -22,7 +22,8 @@ const HomeTable = ({ data }) => {
       dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-    }, {
+    },
+    {
       title: 'Date/Time Submitted',
       key: 'submittedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
