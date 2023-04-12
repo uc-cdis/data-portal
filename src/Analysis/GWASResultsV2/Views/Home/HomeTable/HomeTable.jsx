@@ -22,12 +22,13 @@ const HomeTable = ({ data }) => {
       dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
-      title: 'Date/Time Started',
-      key: 'startedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
+    }, {
+      title: 'Date/Time Submitted',
+      key: 'submittedAt',
+      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
+      render: (record) => (
+        <DateForTable utcFormattedDate={record.submittedAt} />
+      ),
     },
     {
       title: 'Job status',
@@ -45,12 +46,10 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
-      title: 'Date/Time Submitted',
-      key: 'submittedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
-      render: (record) => (
-        <DateForTable utcFormattedDate={record.submittedAt} />
-      ),
+      title: 'Date/Time Started',
+      key: 'startedAt',
+      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
     },
     {
       title: 'View Details',
