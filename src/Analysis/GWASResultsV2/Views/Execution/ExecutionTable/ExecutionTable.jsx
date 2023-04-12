@@ -35,7 +35,7 @@ const ExecutionTable = () => {
               <td>
                 {subtractDates(
                   selectedRowData?.finishedAt,
-                  selectedRowData?.startedAt
+                  selectedRowData?.startedAt,
                 )}
               </td>
               <td>{selectedRowData?.phase}</td>

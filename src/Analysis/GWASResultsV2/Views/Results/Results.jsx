@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Button } from 'antd';
+import { Spin, Button, Tooltip } from 'antd';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -55,7 +55,7 @@ const Results = () => {
         <div className='GWASResults-flex-col qq-plot-button'>
           <Button>View QQ Plot</Button>
         </div>
-        <Button onClick={downloadManhattanPlot}>Download Manhattan Plot</Button>
+        <Button onClick={downloadManhattanPlot}>View Image in New Tab</Button>
       </div>
     </section>
   );
@@ -109,16 +109,18 @@ const Results = () => {
       {displayTopSection()}
       <section className='data-viz'>
         {!imageLoadFailed && (
-          <img
-            src={data}
-            alt='Manhattan plot'
-            onLoad={() => {
-              setImageLoaded(true);
-            }}
-            onError={() => {
-              setImageLoadFailed(true);
-            }}
-          />
+          <Tooltip title='Right click and select “Save Image As” to download'>
+            <img
+              src={data}
+              alt='Manhattan plot'
+              onLoad={() => {
+                setImageLoaded(true);
+              }}
+              onError={() => {
+                setImageLoadFailed(true);
+              }}
+            />
+          </Tooltip>
         )}
         {displaySpinnerWhileImageLoadsOrErrorIfItFails()}
       </section>
