@@ -7,7 +7,7 @@ const mapStateToProps = (state) => ({
 });
 
 const ReduxGenericAccessRequestForm = connect(mapStateToProps)(
-  GenericAccessRequestForm
+  GenericAccessRequestForm,
 );
 
 export default ReduxGenericAccessRequestForm;
