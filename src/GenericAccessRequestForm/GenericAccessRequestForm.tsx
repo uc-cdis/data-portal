@@ -21,8 +21,7 @@ import { layout, tailLayout } from './Constants/FormLayoutConstants';
 import determineSpecificFormInfo from './Constants/FormSpecificConstants';
 import FormSubmissionUI from './FormSubmissionUI';
 import handleRegisterFormSubmission from './handleRegisterFormSubmission';
-import './GenericRegistrationRequestForm.css';
-
+import './GenericAccessRequestForm.css';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -40,7 +39,7 @@ interface LocationState {
   studyRegistrationAuthZ?: string;
 }
 
-const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (
+const GenericAccessRequestForm: React.FunctionComponent<StudyRegistrationProps> = (
   props: StudyRegistrationProps,
 ) => {
   const [form] = Form.useForm();
@@ -125,13 +124,13 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
   }
 
   return (
-    <div className='generic-reg-container'>
-      <div className='generic-reg-form-container'>
+    <div className='generic-access-container'>
+      <div className='generic-access-form-container'>
         <Form
-          className='generic-reg-form'
+          className='generic-access-form'
           {...layout}
           form={form}
-          name='generic-reg-request-form'
+          name='generic-access-request-form'
           onFinish={onFinish}
           validateMessages={validateMessages}
         >
@@ -140,7 +139,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
             {specificFormInfo.description}
           </Typography>
           <Divider plain />
-          <div className='generic-reg-exp-text'>
+          <div className='generic-access-exp-text'>
             <Text type='danger'>*</Text>
             <Text type='secondary'> Indicates required fields</Text>
           </div>
@@ -303,7 +302,7 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
 
           {studyRegistrationConfig.studyRegistrationFormDisclaimerField
             && specificFormInfo.showDisclaimer && (
-            <Typography className='generic-reg-disclaimer-text'>
+            <Typography className='generic-access-disclaimer-text'>
               {parse(
                 studyRegistrationConfig.studyRegistrationFormDisclaimerField,
               )}
@@ -315,4 +314,4 @@ const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationP
   );
 };
 
-export default GenericRegistrationRequestForm;
+export default GenericAccessRequestForm;
