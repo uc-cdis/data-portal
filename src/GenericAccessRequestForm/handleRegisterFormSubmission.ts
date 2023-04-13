@@ -90,6 +90,10 @@ const handleRegisterFormSubmission = async (
               Grant Number: ${studyNumber}\n
               Study Name: ${studyName}\n
               Environment: ${hostname}`;
+          if (specificFormInfo.name === 'WorkSpaceRegister') {
+            contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
+          }
+
           Object.entries(formValues)
             .filter(([key]) => !key.includes('_doNotInclude'))
             .forEach((entry) => {
