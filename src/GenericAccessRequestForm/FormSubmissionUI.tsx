@@ -8,8 +8,8 @@ const FormSubmissionUI = ({
   setFormSubmissionStatus,
   setReqAccessRequestPending,
 }) => (
-  <div className='study-reg-container'>
-    <div className='study-reg-form-container'>
+  <div className='generic-access-container'>
+    <div className='generic-access-form-container'>
       {formSubmissionStatus.status === 'success' ? (
         <Result
           status={formSubmissionStatus.status}
