@@ -431,6 +431,10 @@ class Workspace extends React.Component {
   }
 
   handleMenuClick = async (e) => {
+    if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
+      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@datacommons.io with questions.');
+      return;
+    }
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
       method: 'POST',
@@ -491,9 +495,9 @@ class Workspace extends React.Component {
               <Menu.Item
                 key={i}
                 id={option.bmh_workspace_id}
-                icon={<UserOutlined />}
+                icon={option.request_status === 'active' ? <UserOutlined /> : <ExclamationCircleOutlined />}
               >
-                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)}`}
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)} \t ${option.request_status ? `(${option.request_status})` : ''}`}
               </Menu.Item>
             ))
           ) : null
@@ -507,7 +511,7 @@ class Workspace extends React.Component {
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
-
+      const isPayModelAboveLimit = this.state.payModel.current_pay_model?.request_status === 'above limit';
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -568,12 +572,12 @@ class Workspace extends React.Component {
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Total Charges (USD)'>
-                        <Statistic value={this.state.payModel.current_pay_model?.['total-usage'] || 'N/A'} precision={2} />
+                        <Statistic value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['total-usage'])) ? 'N/A' : this.state.payModel.current_pay_model?.['total-usage']} precision={2} />
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Spending Limit (USD)'>
-                        <Statistic precision={2} value={this.state.payModel.current_pay_model?.['hard-limit'] || 'N/A'} />
+                        <Statistic precision={2} value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['hard-limit'])) ? 'N/A' : this.state.payModel.current_pay_model?.['hard-limit']} />
                       </Card>
                     </Col>
                   </Row>
@@ -695,6 +699,16 @@ class Workspace extends React.Component {
                       />
                     )
                     : null}
+                  {isPayModelAboveLimit
+                    ? (
+                      <Alert
+                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
+                        type='error'
+                        banner
+                        closable
+                      />
+                    )
+                    : null}
                   <div className='workspace__options'>
                     {
                       this.state.options.map((option, i) => {
@@ -710,8 +724,9 @@ class Workspace extends React.Component {
                             onClick={() => this.launchWorkspace(option)}
                             isPending={this.state.workspaceID === option.id}
                             isDisabled={
-                              !!this.state.workspaceID
-                              && this.state.workspaceID !== option.id
+                              (!!this.state.workspaceID
+                              && this.state.workspaceID !== option.id)
+                              || isPayModelAboveLimit
                             }
                           />
                         );
@@ -735,7 +750,7 @@ class Workspace extends React.Component {
     } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
       if (isEnabled('workspaceRegistration')) {
         console.log('This is navigated to workspace register page');
-        return <Redirect to='/workspace/register' />;
+        return <Redirect to='/workspace/request-access' />;
       }
       return <Redirect to={workspaceErrorUrl} />;
     }

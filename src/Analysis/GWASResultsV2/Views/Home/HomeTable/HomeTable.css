@@ -1,0 +1,6 @@
+.home-table {
+  width: 100%;
+}
+.home-table .job-status {
+  min-width: 160px;
+}

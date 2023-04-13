@@ -28,7 +28,7 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
       }
       metadataToUpdate[STUDY_DATA_FIELD][tagField].push({
         name: updatedValues.repository,
-        category: 'Data Repository"',
+        category: 'Data Repository',
       });
     }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;

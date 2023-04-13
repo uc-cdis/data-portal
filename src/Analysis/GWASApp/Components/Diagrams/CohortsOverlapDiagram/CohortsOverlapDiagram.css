@@ -1,0 +1,114 @@
+/* Vars for Diagram Colors */
+:root {
+  --set1-border-color: #fde725;
+  --set2-border-color: #440154;
+  --set3-border-color: #21918c;
+  --set1-background-color: #fde72540;
+  --set2-background-color: #44015440;
+  --set3-background-color: #21918c40;
+}
+
+.GWASApp .cohorts-overlap-diagram {
+  padding-left: 15px;
+}
+
+.euler-diagram {
+  text-align: center;
+}
+
+.euler-diagram g[data-venn-sets='1'] path {
+  stroke: var(--set1-border-color);
+  stroke-width: 2px;
+}
+
+.euler-diagram g[data-venn-sets='2'] path {
+  stroke: var(--set2-border-color);
+  stroke-width: 2px;
+}
+
+.euler-diagram g[data-venn-sets='3'] path {
+  stroke: var(--set3-border-color);
+  stroke-width: 2px;
+}
+
+.euler-diagram text.label {
+  display: none;
+}
+
+.euler-diagram .venn-area.venn-intersection text.label {
+  display: block;
+}
+
+.euler-diagram .venn-area.venn-intersection text.label tspan {
+  fill: #333;
+  font-size: 12px;
+}
+
+/* legend */
+.euler-diagram-legend .legend-item {
+  position: relative;
+  height: 12px;
+  margin-bottom: 5px;
+}
+
+.euler-diagram-legend .legend-mark {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+}
+
+.euler-diagram-legend .legend-label {
+  position: absolute;
+  left: 15px;
+  color: #333;
+  font-size: 12px;
+}
+
+.legend-mark-1 {
+  background: var(--set1-background-color);
+  border: 1px solid var(--set1-border-color);
+}
+
+.legend-mark-2 {
+  background: var(--set2-background-color);
+  border: 1px solid var(--set2-border-color);
+}
+
+.legend-mark-3 {
+  background: var(--set3-background-color);
+  border: 1px solid var(--set3-border-color);
+}
+
+/* Text Version*/
+.euler-diagram-text-version {
+  text-align: left;
+  height: 362px;
+}
+
+.euler-diagram-text-version h2 {
+  line-height: 0;
+  padding-bottom: 20px;
+}
+
+.euler-diagram-text-version ul {
+  padding-left: 10px;
+}
+
+.euler-diagram-text-version li {
+  list-style-type: disc;
+  font-size: 12px;
+}
+
+/* Text Version Controls */
+.euler-diagram-controls {
+  text-align: left;
+  margin-top: 15px;
+  width: 600px;
+}
+
+.euler-diagram-controls button:focus-visible {
+  outline: #3495ff solid 1px;
+  margin: 0 1px;
+}
