@@ -10,7 +10,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
-
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchAndSetCsrfToken } from './configs';
@@ -63,8 +62,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
-import WorkspaceRegistration from './WorkspaceRegistration';
-import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
+import ReduxGenericAccessRequestForm from './GenericAccessRequestForm/ReduxGenericAccessRequestForm';
 import ReduxDataDictionarySubmission from './StudyRegistration/ReduxDataDictionarySubmission';
 import NotFound from './components/NotFound';
 import ErrorPage403 from './components/ErrorPage403';
@@ -354,30 +352,11 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/workspace/registerOLD'
-                          component={
-                            (props) => (
-                              <ProtectedContent
-                                component={WorkspaceRegistration}
-                                {...props}
-                              />
-                            )
-                          }
-                        />
-                      )
-                      : null
-                  }
-
-                  {
-                    isEnabled('workspaceRegistration')
-                      ? (
-                        <Route
-                          exact
                           path='/workspace/register'
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={ReduxStudyRegistrationRequestForm}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
@@ -554,7 +533,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={ReduxStudyRegistrationRequestForm}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
@@ -590,7 +569,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={ReduxStudyRegistrationRequestForm}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
