@@ -309,7 +309,7 @@ function buildConfig(opts) {
     studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig.minimalFieldMapping.uid;
+    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
   }
   if (!studyRegistrationConfig.dataDictionaryField) {
     studyRegistrationConfig.dataDictionaryField = '';
