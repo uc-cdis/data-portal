@@ -6,6 +6,7 @@ import SharedContext from '../../Utils/SharedContext';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
 import PHASES from '../../Utils/PhasesEnumeration';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
+import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 import './Execution.css';
 
 const Execution = () => {
@@ -33,7 +34,7 @@ const Execution = () => {
     return (
       <React.Fragment>
         <DetailPageHeader pageTitle={'Execution Details'} />
-        <h1>Error loading data for table</h1>
+        <LoadingErrorMessage />
       </React.Fragment>
     );
   }

@@ -3,6 +3,7 @@ import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
+import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
 const Home = () => {
   const refetchInterval = 5000;
@@ -30,9 +31,7 @@ const Home = () => {
     }
     if (status === 'error') {
       return (
-        <React.Fragment>
-          <h1>Error loading data for table</h1>
-        </React.Fragment>
+        <LoadingErrorMessage />
       );
     }
     return (

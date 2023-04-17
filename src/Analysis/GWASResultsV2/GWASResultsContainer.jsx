@@ -4,13 +4,14 @@ import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
-
+import useHideUnneededElements from './Utils/useHideUnneededElements';
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
 
+  useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
