@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
+import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
 
@@ -23,10 +24,12 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Date/Time Started',
-      dataIndex: 'startedAt',
-      key: 'startedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      title: 'Date/Time Submitted',
+      key: 'submittedAt',
+      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
+      render: (record) => (
+        <DateForTable utcFormattedDate={record.submittedAt} />
+      ),
     },
     {
       title: 'Job status',
@@ -44,9 +47,10 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
-      title: 'Date/Time Submitted',
-      key: 'DateTimeSubmitted',
-      render: (record) => record.submittedAt,
+      title: 'Date/Time Started',
+      key: 'startedAt',
+      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
     },
     {
       title: 'View Details',
@@ -75,7 +79,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      render: () => <ActionsDropdown />,
+      render: (record) => <ActionsDropdown record={record} />,
     },
   ];
   return (

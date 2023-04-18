@@ -2,12 +2,10 @@ import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
 import { userAPIPath, jobAPIPath } from '../localconf';
 
-export const getPresignedUrl = (did, method) => {
+export const getPresignedUrl = async (did, method) => {
   const urlPath = `${userAPIPath}data/${method}/${did}`;
-  return fetchWithCreds({ path: urlPath, method: 'GET' },
-  ).then(
-    ({ data }) => data.url,
-  );
+  const { data } = await fetchWithCreds({ path: urlPath, method: 'GET' });
+  return data.url;
 };
 
 export const dispatchJob = (body) => (dispatch) => fetchWithCreds({

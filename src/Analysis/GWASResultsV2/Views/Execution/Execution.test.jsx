@@ -44,7 +44,7 @@ describe('Execution', () => {
     expect(container.getElementsByClassName('ant-spin').length).toBe(1);
   });
 
-  it('renders an error message when there is an error fetching data', () => {
+  it('renders an error message when there is an error fetching data', async () => {
     useQuery.mockReturnValueOnce({
       status: 'error',
       error: new Error('Fetch failed'),
@@ -56,9 +56,7 @@ describe('Execution', () => {
       </SharedContext.Provider>,
     );
 
-    expect(
-      screen.getByText('Error loading data for table'),
-    ).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument());
   });
 
   it('renders the logs when data is fetched successfully', async () => {

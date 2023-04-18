@@ -8,14 +8,17 @@ import TableData from '../../../TestData/TableData';
 describe('ExecutionTable', () => {
   it('renders the selected row data correctly', () => {
     const selectedRowData = TableData[0];
+    const testdate = new Date(selectedRowData.startedAt);
+    const formattedTestDate = testdate.toLocaleDateString();
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <ExecutionTable />
       </SharedContext.Provider>,
     );
+
     expect(screen.getByText(selectedRowData.name)).toBeInTheDocument();
     expect(screen.getByText(selectedRowData.wf_name)).toBeInTheDocument();
-    expect(screen.getByText(selectedRowData.startedAt)).toBeInTheDocument();
+    expect(screen.getByText(formattedTestDate)).toBeInTheDocument();
     expect(screen.getByText(selectedRowData.phase)).toBeInTheDocument();
   });
 });

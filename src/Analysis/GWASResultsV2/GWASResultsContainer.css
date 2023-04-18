@@ -2,9 +2,36 @@
   width: 100%;
 }
 
-.GWASResults .spinner-container {
+.GWASResults-flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.GWASResults-flex-col {
+  display: flex;
+  flex: 1;
+}
+
+.spinner-container {
   text-align: center;
   height: 200px;
   width: 100%;
   margin-top: 30px;
+}
+
+.section-header {
+  background: #cfdbe6;
+  height: 64px;
+  width: 100%;
+  border: 1px solid #e2e2e3;
+  align-items: center;
+}
+
+.ant-btn-default {
+  border: 1px solid #2e77b8;
+  border-radius: 4px;
+  color: #2e77b8;
+  font-size: 14px;
 }

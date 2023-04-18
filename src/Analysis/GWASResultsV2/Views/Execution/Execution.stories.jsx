@@ -104,8 +104,8 @@ MockedSuccess.parameters = {
   },
 };
 
-export const MockedError = MockTemplateFailure.bind({});
-MockedError.parameters = {
+export const MockedErrorObject = MockTemplateFailure.bind({});
+MockedErrorObject.parameters = {
   msw: {
     handlers: [
       rest.get(
@@ -116,6 +116,23 @@ MockedError.parameters = {
             ctx.delay(100),
             // Some errroneous responses can return an error object
             ctx.json({ error: 'Mocked Server error response' })
+          );
+        }
+      ),
+    ],
+  },
+};
+export const MockedError403Response = MockTemplateFailure.bind({});
+MockedError403Response.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          return res(
+            ctx.delay(100),
+            ctx.status(403)
           );
         }
       ),
