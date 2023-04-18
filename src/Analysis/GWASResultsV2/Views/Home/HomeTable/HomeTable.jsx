@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import { Button, Table, Space } from 'antd';
+import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
+const { RangePicker } = DatePicker;
+import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
@@ -10,40 +12,93 @@ import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
+  const initial = {
+    key: 'initial',
+    uid: 'initial',
+    wf_name: 'initial',
+    submittedAt: 'initial',
+    startedAt: 'initial',
+    phase: 'initial',
+  };
+
   const columns = [
     {
       title: 'Run ID',
       dataIndex: 'uid',
       key: 'uid',
       sorter: (a, b) => a.uid.localeCompare(b.uid),
+      render: (value) =>
+        value === 'initial' ? (
+          <Input placeholder='Search by Run ID' suffix={<SearchOutlined />} />
+        ) : (
+          value
+        ),
     },
     {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
+      render: (value) =>
+        value === 'initial' ? (
+          <Input
+            placeholder='Search by Workflow Name'
+            suffix={<SearchOutlined />}
+          />
+        ) : (
+          value
+        ),
     },
     {
       title: 'Date/Time Submitted',
+      dataIndex: 'submittedAt',
       key: 'submittedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
-      render: (record) => (
-        <DateForTable utcFormattedDate={record.submittedAt} />
-      ),
+      render: (value) =>
+        value === 'initial' ? (
+          <RangePicker />
+        ) : (
+          <DateForTable utcFormattedDate={value} />
+        ),
     },
     {
       title: 'Job status',
+      dataIndex: 'phase',
       key: 'phase',
-      render: (record) => (
-        <div className='job-status'>
-          {record.phase === PHASES.Succeeded && <Icons.Succeeded />}
-          {record.phase === PHASES.Pending && <Icons.Pending />}
-          {record.phase === PHASES.Running && <Icons.Running />}
-          {record.phase === PHASES.Error && <Icons.Error />}
-          {record.phase === PHASES.Failed && <Icons.Failed />}
-          {record.phase}
-        </div>
-      ),
+      render: (value) =>
+        value === 'initial' ? (
+          <Select
+            defaultValue='lucy'
+            options={[
+              {
+                value: 'jack',
+                label: 'Jack',
+              },
+              {
+                value: 'lucy',
+                label: 'Lucy',
+              },
+              {
+                value: 'Yiminghe',
+                label: 'yiminghe',
+              },
+              {
+                value: 'disabled',
+                label: 'Disabled',
+                disabled: true,
+              },
+            ]}
+          />
+        ) : (
+          <div className='job-status'>
+            {value === PHASES.Succeeded && <Icons.Succeeded />}
+            {value === PHASES.Pending && <Icons.Pending />}
+            {value === PHASES.Running && <Icons.Running />}
+            {value === PHASES.Error && <Icons.Error />}
+            {value === PHASES.Failed && <Icons.Failed />}
+            {value}
+          </div>
+        ),
       sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
@@ -85,7 +140,7 @@ const HomeTable = ({ data }) => {
   return (
     <div className='home-table'>
       <Table
-        dataSource={[...data]}
+        dataSource={[initial, ...data]}
         columns={columns}
         rowKey={(record) => record.uid}
         pagination={{
