@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { CaretDownOutlined } from '@ant-design/icons';
+import { SearchOutlined, CaretDownOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
@@ -16,6 +15,7 @@ const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
   const initial = {
     key: 'initial',
+    name: 'initial',
     uid: 'initial',
     wf_name: 'initial',
     submittedAt: 'initial',
@@ -30,7 +30,10 @@ const HomeTable = ({ data }) => {
       title: 'Run ID',
       dataIndex: 'uid',
       key: 'uid',
-      sorter: (a, b) => a.uid.localeCompare(b.uid),
+      sorter: (a, b) => {
+        if (a.uid === 'initial' || b.uid === 'initial') return 0;
+        return a.uid.localeCompare(b.uid);
+      },
       render: (value) =>
         value === 'initial' ? (
           <Input placeholder='Search by Run ID' suffix={<SearchOutlined />} />
@@ -42,7 +45,10 @@ const HomeTable = ({ data }) => {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => {
+        if (a.name === 'initial' || b.name === 'initial') return 0;
+        return a.wf_name.localeCompare(b.wf_name);
+      },
       render: (value) =>
         value === 'initial' ? (
           <Input
