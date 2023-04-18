@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
-const { RangePicker } = DatePicker;
 import { SearchOutlined } from '@ant-design/icons';
+import { CaretDownOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
@@ -9,6 +9,8 @@ import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
+
+const { RangePicker } = DatePicker;
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
@@ -19,6 +21,8 @@ const HomeTable = ({ data }) => {
     submittedAt: 'initial',
     startedAt: 'initial',
     phase: 'initial',
+    viewDetails: 'initial',
+    actions: 'initial',
   };
 
   const columns = [
@@ -53,7 +57,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
+      sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       render: (value) =>
         value === 'initial' ? (
           <RangePicker />
@@ -68,24 +72,32 @@ const HomeTable = ({ data }) => {
       render: (value) =>
         value === 'initial' ? (
           <Select
-            defaultValue='lucy'
+            showArrow
+            suffixIcon={<CaretDownOutlined />}
+            mode='multiple'
+            style={{
+              width: '100%',
+            }}
             options={[
               {
-                value: 'jack',
-                label: 'Jack',
+                value: 'Succeeded',
+                label: 'Succeeded',
               },
               {
-                value: 'lucy',
-                label: 'Lucy',
+                value: 'Pending',
+                label: 'Pending',
               },
               {
-                value: 'Yiminghe',
-                label: 'yiminghe',
+                value: 'Running',
+                label: 'Running',
               },
               {
-                value: 'disabled',
-                label: 'Disabled',
-                disabled: true,
+                value: 'Error',
+                label: 'Error',
+              },
+              {
+                value: 'Failed',
+                label: 'Failed',
               },
             ]}
           />
@@ -105,36 +117,46 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Started',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
+      dataIndex: 'startedAt',
+      render: (value) =>
+        value === 'initial' ? (
+          <RangePicker />
+        ) : (
+          <DateForTable utcFormattedDate={value} />
+        ),
     },
     {
       title: 'View Details',
       key: 'viewDetails',
-      render: (record) => (
-        <Space>
-          <Button
-            onClick={() => {
-              setSelectedRowData(record);
-              setCurrentView('execution');
-            }}
-          >
-            Execution
-          </Button>
-          <Button
-            onClick={() => {
-              setSelectedRowData(record);
-              setCurrentView('results');
-            }}
-          >
-            Results
-          </Button>
-        </Space>
-      ),
+      render: (record) =>
+        record.viewDetails === 'initial' ? (
+          ''
+        ) : (
+          <Space>
+            <Button
+              onClick={() => {
+                setSelectedRowData(record);
+                setCurrentView('execution');
+              }}
+            >
+              Execution
+            </Button>
+            <Button
+              onClick={() => {
+                setSelectedRowData(record);
+                setCurrentView('results');
+              }}
+            >
+              Results
+            </Button>
+          </Space>
+        ),
     },
     {
       title: 'Actions',
       key: 'actions',
-      render: (record) => <ActionsDropdown record={record} />,
+      render: (record) =>
+        record.actions === 'initial' ? '' : <ActionsDropdown record={record} />,
     },
   ];
   return (

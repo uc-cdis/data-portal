@@ -21,8 +21,8 @@
 
 /* Hide separators in table between thead columns */
 .ant-table-thead
-> tr
-> th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   content: none;
 }
 
@@ -65,4 +65,13 @@
 
 .home-table .anticon-ellipsis {
   transform: scale(1.25);
+}
+
+.home-table tr.ant-table-row:nth-child(1) {
+  background: #e9eef2;
+}
+.home-table tr.ant-table-row:nth-child(1):hover,
+.ant-table-tbody > tr.ant-table-row:nth-child(1):hover > td,
+.ant-table-tbody > tr.ant-table-row:nth-child(1) > td.ant-table-cell-row-hover {
+  background: #e9eef2 !important;
 }
