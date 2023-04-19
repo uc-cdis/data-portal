@@ -7,17 +7,33 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
+import moment from 'moment';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
-
-  const [runIdSearchTerm, setRunIdSearchTerm] = useState('');
-  const handleRunIdSearchTermChange = (event) => {
-    setRunIdSearchTerm(event.target.value);
+  const [uidSearchTerm, setUidSearchTerm] = useState('');
+  const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
+  const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
+  const handleSearchTermChange = (event, searchTermKey) => {
+    if (searchTermKey === 'uid') {
+      setUidSearchTerm(event.target.value);
+    }
+    if (searchTermKey === 'wf_name') {
+      setWfNameSearchTerm(event.target.value);
+    }
   };
+
+  const handleDateSelectionChange = (event, dateType) => {
+    const startDate = moment.utc(event[0]._d);
+    const endDate = moment.utc(event[1]._d);
+    if (dateType === 'submittedAt') {
+      setSubmittedAtSelections([startDate, endDate]);
+    }
+  };
+
   const initial = {
     key: 'initial',
     name: 'initial',
@@ -42,6 +58,28 @@ const HomeTable = ({ data }) => {
     actions: 'initial',
   };
 
+  const phaseOptions = [
+    {
+      value: 'Succeeded',
+      label: 'Succeeded',
+    },
+    {
+      value: 'Pending',
+      label: 'Pending',
+    },
+    {
+      value: 'Running',
+      label: 'Running',
+    },
+    {
+      value: 'Error',
+      label: 'Error',
+    },
+    {
+      value: 'Failed',
+      label: 'Failed',
+    },
+  ];
   const columns = [
     {
       title: 'Run ID',
@@ -55,8 +93,8 @@ const HomeTable = ({ data }) => {
         value === 'initial' ? (
           <Input
             placeholder='Search by Run ID'
-            value={runIdSearchTerm}
-            onChange={handleRunIdSearchTermChange}
+            value={uidSearchTerm}
+            onChange={(event) => handleSearchTermChange(event, 'uid')}
             suffix={<SearchOutlined />}
           />
         ) : (
@@ -76,6 +114,8 @@ const HomeTable = ({ data }) => {
           <Input
             placeholder='Search by Workflow Name'
             suffix={<SearchOutlined />}
+            vale={wfNameSearchTerm}
+            onChange={(event) => handleSearchTermChange(event, 'wf_name')}
           />
         ) : (
           value
@@ -93,7 +133,12 @@ const HomeTable = ({ data }) => {
       },
       render: (value) =>
         value === 'initial' ? (
-          <RangePicker />
+          <RangePicker
+            showToday={true}
+            onChange={(event) =>
+              event !== null && handleDateSelectionChange(event, 'submittedAt')
+            }
+          />
         ) : (
           <DateForTable utcFormattedDate={value} />
         ),
@@ -111,28 +156,7 @@ const HomeTable = ({ data }) => {
             style={{
               width: '100%',
             }}
-            options={[
-              {
-                value: 'Succeeded',
-                label: 'Succeeded',
-              },
-              {
-                value: 'Pending',
-                label: 'Pending',
-              },
-              {
-                value: 'Running',
-                label: 'Running',
-              },
-              {
-                value: 'Error',
-                label: 'Error',
-              },
-              {
-                value: 'Failed',
-                label: 'Failed',
-              },
-            ]}
+            options={phaseOptions}
           />
         ) : (
           <div className='job-status'>
@@ -201,22 +225,42 @@ const HomeTable = ({ data }) => {
     },
   ];
 
-  const filterRunId = (initData, key, searchTerm) => {
-    return initData.filter((obj) => {
-      return obj[key]
+  const filterBySearchTerm = (initData, key, searchTerm) =>
+    initData.filter((obj) =>
+      obj[key]
         .toString()
         .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+        .includes(searchTerm.toLowerCase())
+    );
+
+  const filterByDateRange = (initData, key, dateSelection) => {
+    return initData.filter((obj) => {
+      const utcDate = moment.utc(obj[key]);
+      return (
+        utcDate.isSameOrAfter(dateSelection[0]) &&
+        utcDate.isSameOrBefore(dateSelection[1])
+      );
     });
   };
+
   const filteredData = () => {
     let filteredDataResult = data;
-    filteredDataResult = filterRunId(
+    filteredDataResult = filterBySearchTerm(
       filteredDataResult,
       'uid',
-      runIdSearchTerm
+      uidSearchTerm
     );
-    console.log('processed filteredDataResult', filteredDataResult);
+    filteredDataResult = filterBySearchTerm(
+      filteredDataResult,
+      'wf_name',
+      wfNameSearchTerm
+    );
+    if (submittedAtSelections.length > 0)
+      filteredDataResult = filterByDateRange(
+        filteredDataResult,
+        'submittedAt',
+        submittedAtSelections
+      );
     return filteredDataResult;
   };
   return (
