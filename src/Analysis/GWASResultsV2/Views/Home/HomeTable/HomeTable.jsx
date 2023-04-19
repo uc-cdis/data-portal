@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined, CaretDownOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -13,6 +13,11 @@ const { RangePicker } = DatePicker;
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
+
+  const [runIdSearchTerm, setRunIdSearchTerm] = useState('');
+  const handleRunIdSearchTermChange = (event) => {
+    setRunIdSearchTerm(event.target.value);
+  };
   const initial = {
     key: 'initial',
     name: 'initial',
@@ -21,6 +26,18 @@ const HomeTable = ({ data }) => {
     submittedAt: 'initial',
     startedAt: 'initial',
     phase: 'initial',
+    viewDetails: 'initial',
+    actions: 'initial',
+  };
+
+  const emptyTableData = {
+    key: 'No Results',
+    name: 'No Results',
+    uid: 'No Results',
+    wf_name: 'No Results',
+    submittedAt: 'No Results',
+    startedAt: 'No Results',
+    phase: 'No Results',
     viewDetails: 'initial',
     actions: 'initial',
   };
@@ -36,7 +53,12 @@ const HomeTable = ({ data }) => {
       },
       render: (value) =>
         value === 'initial' ? (
-          <Input placeholder='Search by Run ID' suffix={<SearchOutlined />} />
+          <Input
+            placeholder='Search by Run ID'
+            value={runIdSearchTerm}
+            onChange={handleRunIdSearchTermChange}
+            suffix={<SearchOutlined />}
+          />
         ) : (
           value
         ),
@@ -122,12 +144,20 @@ const HomeTable = ({ data }) => {
             {value}
           </div>
         ),
-      sorter: (a, b) => a.phase.localeCompare(b.phase),
+      sorter: (a, b) => {
+        if (a.phase === 'initial' || b.phase === 'initial') return 0;
+        return a.phase.localeCompare(b.phase);
+      },
     },
     {
       title: 'Date/Time Started',
       key: 'startedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      // sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      sorter: (a, b) => {
+        if (a.startedAt === 'initial' || b.startedAt === 'initial') return 0;
+        return a.startedAt.localeCompare(b.startedAt);
+      },
+
       dataIndex: 'startedAt',
       render: (value) =>
         value === 'initial' ? (
@@ -170,10 +200,33 @@ const HomeTable = ({ data }) => {
         record.actions === 'initial' ? '' : <ActionsDropdown record={record} />,
     },
   ];
+
+  const filterRunId = (initData, key, searchTerm) => {
+    return initData.filter((obj) => {
+      return obj[key]
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    });
+  };
+  const filteredData = () => {
+    let filteredDataResult = data;
+    filteredDataResult = filterRunId(
+      filteredDataResult,
+      'uid',
+      runIdSearchTerm
+    );
+    console.log('processed filteredDataResult', filteredDataResult);
+    return filteredDataResult;
+  };
   return (
     <div className='home-table'>
       <Table
-        dataSource={[initial, ...data]}
+        dataSource={
+          filteredData().length > 0
+            ? [initial, ...filteredData()]
+            : [initial, ...[emptyTableData]]
+        }
         columns={columns}
         rowKey={(record) => record.uid}
         pagination={{
