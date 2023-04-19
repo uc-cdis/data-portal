@@ -71,7 +71,11 @@
   background: #e9eef2;
 }
 .home-table tr.ant-table-row:nth-child(1):hover,
-.ant-table-tbody > tr.ant-table-row:nth-child(1):hover > td,
-.ant-table-tbody > tr.ant-table-row:nth-child(1) > td.ant-table-cell-row-hover {
-  background: #e9eef2 !important;
+.home-table .ant-table-tbody > tr.ant-table-row:nth-child(1):hover > td,
+.home-table
+  .ant-table-tbody
+  > tr.ant-table-row:nth-child(1)
+  > td.ant-table-cell-row-hover,
+.home-table tr.ant-table-row:nth-child(1) > td.ant-table-column-sort {
+  background: #e9eef2;
 }

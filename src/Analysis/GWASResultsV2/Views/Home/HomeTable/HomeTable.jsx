@@ -63,7 +63,12 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
-      sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
+      // sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
+      sorter: (a, b) => {
+        if (a.submittedAt === 'initial' || b.submittedAt === 'initial')
+          return 0;
+        return a.submittedAt.localeCompare(b.submittedAt);
+      },
       render: (value) =>
         value === 'initial' ? (
           <RangePicker />
