@@ -24,8 +24,8 @@ const DataDictionarySubmissionRequest = {
   showDisclaimer: true,
   subjectLine: 'Data dictionary submission access request for',
 };
-const WorkSpaceRegister = {
-  name: 'WorkSpaceRegister',
+const WorkspaceAccessRequest = {
+  name: 'WorkspaceAccessRequest',
   title: 'Workspace Access Request',
   description: `The HEAL workspace provides a standardized computational environment for accessing and analyzing data from HEAL studies.
     Please fill out this form to request access to the workspace and start computing!`,
@@ -42,7 +42,7 @@ const determineSpecificFormInfo = (path: String) => {
     return StudyRegistrationAccessRequest;
   }
   if (path === '/workspace/register') {
-    return WorkSpaceRegister;
+    return WorkspaceAccessRequest;
   }
   return DataDictionarySubmissionRequest;
 };

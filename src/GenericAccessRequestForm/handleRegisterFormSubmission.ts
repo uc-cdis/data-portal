@@ -24,7 +24,7 @@ const handleRegisterFormSubmission = async (
     title: string;
     subjectLine: string;
   }) => {
-    if (specificFormInfo.name === 'WorkSpaceRegister') {
+    if (specificFormInfo.name === 'WorkspaceAccessRequest') {
       return `${specificFormInfo.subjectLine} ${hostname}`;
     }
     return `${specificFormInfo.subjectLine} ${studyNumber} ${studyName}`;
@@ -52,10 +52,10 @@ const handleRegisterFormSubmission = async (
   // create a request in requestor
   // eslint-disable-next-line camelcase
   let body: { policy_id?: string; username?: any; resource_id?: any; resource_paths?: any[]; role_ids?: string[]; };
-  if (specificFormInfo.name === 'WorkSpaceRegister') {
-    const policeID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
+  if (specificFormInfo.name === 'WorkspaceAccessRequest') {
+    const policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
     body = {
-      policy_id: policeID,
+      policy_id: policyID,
     };
   } else {
     body = {
@@ -90,7 +90,7 @@ const handleRegisterFormSubmission = async (
               Grant Number: ${studyNumber}\n
               Study Name: ${studyName}\n
               Environment: ${hostname}`;
-          if (specificFormInfo.name === 'WorkSpaceRegister') {
+          if (specificFormInfo.name === 'WorkspaceAccessRequest') {
             contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
           }
 
