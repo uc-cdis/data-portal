@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3-selection';
 import * as venn from '@upsetjs/venn.js';
 import './CohortsOverlapDiagram.css';
+import { Button } from 'antd';
 
 const Simple3SetsEulerDiagram = ({
   set1Size,
@@ -63,6 +64,30 @@ const Simple3SetsEulerDiagram = ({
   ];
   const maxDiagramSize = 305;
 
+  const saveImage = () => {
+    console.log('saving image');
+    const html = d3.select("svg")
+      .attr("version", 1.1)
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .node().parentNode.innerHTML;
+    const svgData = 'data:image/svg+xml;base64,'+ btoa(html); //TODO use buf.toString('base64') instead
+
+    const tmpImage = new Image;
+    tmpImage.src = svgData;
+    tmpImage.onload = function() {
+      const hiddenCanvas = document.getElementById("hiddenCanvas");
+      const canvasContext = hiddenCanvas.getContext("2d");
+      canvasContext.drawImage(tmpImage, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+      const canvasData = hiddenCanvas.toDataURL("image/png");
+
+      const a = document.createElement("a");
+      a.download = "euler_diagram.png";
+      a.href = canvasData;
+      a.click();
+    };
+
+  }
+
   useEffect(() => {
     // some basic validation:
     if (
@@ -84,7 +109,11 @@ const Simple3SetsEulerDiagram = ({
   }, [sets]);
 
   return (
-    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
+    <div>
+      <canvas id="hiddenCanvas" style={{display: 'none'}} width={1600} height={800}></canvas>
+      <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
+      <Button onClick={saveImage}>Download Image</Button>
+    </div>
   );
 };
 
