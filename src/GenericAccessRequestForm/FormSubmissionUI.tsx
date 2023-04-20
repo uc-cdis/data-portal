@@ -16,8 +16,11 @@ const FormSubmissionUI = ({
           title={specificFormInfo.resultTitle}
           subTitle={specificFormInfo.resultSubtitle}
           extra={[
-            <Link key='discovery' to={'/discovery'}>
-              <Button>Go To Discovery Page</Button>
+            <Link
+              key={specificFormInfo.successRedirectLink}
+              to={specificFormInfo.successRedirectLink}
+            >
+              <Button>{specificFormInfo.successRedirectText}</Button>
             </Link>,
           ]}
         />

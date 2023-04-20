@@ -12,6 +12,8 @@ const StudyRegistrationAccessRequest = {
   showGrantNumber: false,
   showDisclaimer: true,
   subjectLine: 'Study registration access request for',
+  successRedirectLink: '/discovery',
+  successRedirectText: 'Go to Discovery Page',
 };
 const DataDictionarySubmissionRequest = {
   name: 'DataDictionarySubmissionRequest',
@@ -25,6 +27,8 @@ const DataDictionarySubmissionRequest = {
   showGrantNumber: false,
   showDisclaimer: true,
   subjectLine: 'Data dictionary submission access request for',
+  successRedirectLink: '/discovery',
+  successRedirectText: 'Go to Discovery Page',
 };
 const WorkspaceAccessRequest = {
   name: 'WorkspaceAccessRequest',
@@ -37,6 +41,8 @@ const WorkspaceAccessRequest = {
   showGrantNumber: true,
   showDisclaimer: false,
   subjectLine: 'Workspace Access Request for Workspace in',
+  successRedirectLink: workspaceRegistrationConfig?.successRedirect.link || '/discovery',
+  successRedirectText: workspaceRegistrationConfig?.successRedirect.text || 'Go to Discovery Page',
 };
 const determineSpecificFormInfo = (path: String) => {
   if (path === '/study-reg/request-access') {
