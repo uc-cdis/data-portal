@@ -24,7 +24,7 @@ const handleRegisterFormSubmission = async (
     title: string;
     subjectLine: string;
   }) => {
-    if (specifcFormInfo.name === 'WorkSpaceRegister') {
+    if (specificFormInfo.name === 'WorkSpaceRegister') {
       return `${specificFormInfo.subjectLine} ${hostname}`;
     }
     return `${specificFormInfo.subjectLine} ${studyNumber} ${studyName}`;
