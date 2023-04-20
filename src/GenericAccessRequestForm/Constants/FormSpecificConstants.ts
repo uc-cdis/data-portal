@@ -26,7 +26,7 @@ const DataDictionarySubmissionRequest = {
 };
 const WorkSpaceRegister = {
   name: 'WorkSpaceRegister',
-  title: 'Workspace Registration Access Request',
+  title: 'Workspace Access Request',
   description: `The HEAL workspace provides a standardized computational environment for accessing and analyzing data from HEAL studies.
     Please fill out this form to request access to the workspace and start computing!`,
   resultTitle: 'Your access request has been submitted!',
