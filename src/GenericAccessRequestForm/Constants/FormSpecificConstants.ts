@@ -48,7 +48,7 @@ const determineSpecificFormInfo = (path: String) => {
   if (path === '/study-reg/request-access') {
     return StudyRegistrationAccessRequest;
   }
-  if (path === '/workspace/register') {
+  if (path === '/workspace/request-access') {
     return WorkspaceAccessRequest;
   }
   return DataDictionarySubmissionRequest;
