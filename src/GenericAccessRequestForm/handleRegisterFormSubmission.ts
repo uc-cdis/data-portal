@@ -41,7 +41,7 @@ const handleRegisterFormSubmission = async (
       return;
     }
   } catch (err) {
-    throw new Error(err);
+    throw new Error(`Unable to check existing requests: ${err}`);
   }
 
   // create a request in requestor
