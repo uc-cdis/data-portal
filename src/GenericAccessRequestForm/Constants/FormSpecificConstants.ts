@@ -1,3 +1,5 @@
+import { workspaceRegistrationConfig } from '../../localconf';
+
 const StudyRegistrationAccessRequest = {
   name: 'StudyRegistration',
   title: 'Study Registration Access Request',
@@ -27,8 +29,7 @@ const DataDictionarySubmissionRequest = {
 const WorkspaceAccessRequest = {
   name: 'WorkspaceAccessRequest',
   title: 'Workspace Access Request',
-  description: `The HEAL workspace provides a standardized computational environment for accessing and analyzing data from HEAL studies.
-    Please fill out this form to request access to the workspace and start computing!`,
+  description: workspaceRegistrationConfig?.workspaceInfoMessage || 'Please fill out this form to request and be approved for access to workspace.',
   resultTitle: 'Your access request has been submitted!',
   resultSubtitle:
     'Thank you for your submission. Requests take up to 1 business day to complete. Please check back then.',

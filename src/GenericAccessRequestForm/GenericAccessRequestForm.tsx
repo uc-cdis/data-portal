@@ -271,7 +271,8 @@ const GenericAccessRequestForm: React.FunctionComponent<StudyRegistrationProps> 
             <Space>
               {!userHasAccess() ? (
                 <Tooltip
-                  title={'You don\'t have permission to request for access'}
+                  title={`You don't have permission to
+                  request for access`}
                 >
                   <Button type='primary' htmlType='submit' disabled>
                     Submit
