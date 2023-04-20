@@ -19,12 +19,7 @@ const handleRegisterFormSubmission = async (
   studyName,
   setReqAccessRequestPending,
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  const determineSubjectLine = (specificFormInfo: {
-    name: string;
-    title: string;
-    subjectLine: string;
-  }) => {
+  const determineSubjectLine = () => {
     if (specificFormInfo.name === 'WorkspaceAccessRequest') {
       return `${specificFormInfo.subjectLine} ${hostname}`;
     }
@@ -80,7 +75,7 @@ const handleRegisterFormSubmission = async (
           // request created, now create a kayako ticket
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
-          let subject = determineSubjectLine(specificFormInfo);
+          let subject = determineSubjectLine();
           if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
             subject = `${subject.substring(
               0,
