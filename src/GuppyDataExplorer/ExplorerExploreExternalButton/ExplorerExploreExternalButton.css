@@ -26,3 +26,7 @@
   > svg:first-child {
   margin-right: 0.25rem;
 }
+
+.no-data-info {
+  margin-bottom: 2rem;
+}
