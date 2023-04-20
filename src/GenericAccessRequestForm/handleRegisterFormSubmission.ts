@@ -29,7 +29,6 @@ const handleRegisterFormSubmission = async (
   // first, check if there is already a pending request in requestor
   try {
     const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
-    console.log('userHaveRequestPending', userHaveRequestPending);
     if (userHaveRequestPending) {
       // there is already a request for this user on this study, display a message
       // and disable the button
@@ -42,7 +41,7 @@ const handleRegisterFormSubmission = async (
       return;
     }
   } catch (err) {
-    console.error(`Unable to check existing requests: ${err}`);
+    throw new Error(err);
   }
 
   // create a request in requestor
