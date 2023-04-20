@@ -19,7 +19,7 @@ const handleRegisterFormSubmission = async (
   studyName,
   setReqAccessRequestPending,
 ) => {
-  const determineSubjectLine = (specifcFormInfo: {
+  const determineSubjectLine = (specificFormInfo: {
     name: string;
     title: string;
     subjectLine: string;
