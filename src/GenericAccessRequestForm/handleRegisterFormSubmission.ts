@@ -19,6 +19,7 @@ const handleRegisterFormSubmission = async (
   studyName,
   setReqAccessRequestPending,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const determineSubjectLine = (specificFormInfo: {
     name: string;
     title: string;
