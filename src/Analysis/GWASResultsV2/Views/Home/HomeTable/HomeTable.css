@@ -66,10 +66,11 @@
 .home-table .anticon-ellipsis {
   transform: scale(1.25);
 }
-
+/*
 .home-table tr.ant-table-row:nth-child(1) {
   background: #e9eef2;
 }
+*/
 .home-table tr.ant-table-row:nth-child(1):hover,
 .home-table .ant-table-tbody > tr.ant-table-row:nth-child(1):hover > td,
 .home-table

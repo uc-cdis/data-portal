@@ -14,14 +14,15 @@ const { RangePicker } = DatePicker;
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
-  const [uidSearchTerm, setUidSearchTerm] = useState('');
+  const [nameSearchTerm, setNameSearchTerm] = useState('');
   const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
   const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
+  const [startedAtSelections, setStartedAtSelections] = useState([]);
   const [jobStatusSelections, setJobStatusSelections] = useState([]);
 
   const handleSearchTermChange = (event, searchTermKey) => {
-    if (searchTermKey === 'uid') {
-      setUidSearchTerm(event.target.value);
+    if (searchTermKey === 'name') {
+      setNameSearchTerm(event.target.value);
     }
     if (searchTermKey === 'wf_name') {
       setWfNameSearchTerm(event.target.value);
@@ -34,34 +35,14 @@ const HomeTable = ({ data }) => {
     if (dateType === 'submittedAt') {
       setSubmittedAtSelections([startDate, endDate]);
     }
+    if (dateType === 'startedAt') {
+      setStartedAtSelections([startDate, endDate]);
+    }
   };
 
   const handleJobStatusChange = (event) => {
     console.log(event);
     setJobStatusSelections(event);
-  };
-  const initial = {
-    key: 'initial',
-    name: 'initial',
-    uid: 'initial',
-    wf_name: 'initial',
-    submittedAt: 'initial',
-    startedAt: 'initial',
-    phase: 'initial',
-    viewDetails: 'initial',
-    actions: 'initial',
-  };
-
-  const emptyTableData = {
-    key: 'No Results',
-    name: 'No Results',
-    uid: 'No Results',
-    wf_name: 'No Results',
-    submittedAt: 'No Results',
-    startedAt: 'No Results',
-    phase: 'No Results',
-    viewDetails: 'initial',
-    actions: 'initial',
   };
 
   const phaseOptions = [];
@@ -72,93 +53,104 @@ const HomeTable = ({ data }) => {
   const columns = [
     {
       title: 'Run ID',
-      dataIndex: 'uid',
-      key: 'uid',
+      dataIndex: 'name',
+      key: 'name',
       sorter: (a, b) => {
-        if (a.uid === 'initial' || b.uid === 'initial') return 0;
-        return a.uid.localeCompare(b.uid);
+        return a.name.localeCompare(b.name);
       },
-      render: (value) =>
-        value === 'initial' ? (
-          <Input
-            placeholder='Search by Run ID'
-            value={uidSearchTerm}
-            onChange={(event) => handleSearchTermChange(event, 'uid')}
-            suffix={<SearchOutlined />}
-          />
-        ) : (
-          value
-        ),
+      children: [
+        {
+          title: (
+            <Input
+              placeholder='Search by Run ID'
+              value={nameSearchTerm}
+              onChange={(event) => handleSearchTermChange(event, 'name')}
+              suffix={<SearchOutlined />}
+            />
+          ),
+          dataIndex: 'name',
+        },
+      ],
     },
     {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'name',
       sorter: (a, b) => {
-        if (a.name === 'initial' || b.name === 'initial') return 0;
         return a.wf_name.localeCompare(b.wf_name);
       },
-      render: (value) =>
-        value === 'initial' ? (
-          <Input
-            placeholder='Search by Workflow Name'
-            suffix={<SearchOutlined />}
-            vale={wfNameSearchTerm}
-            onChange={(event) => handleSearchTermChange(event, 'wf_name')}
-          />
-        ) : (
-          value
-        ),
+      children: [
+        {
+          title: (
+            <Input
+              placeholder='Search by Workflow Name'
+              suffix={<SearchOutlined />}
+              vale={wfNameSearchTerm}
+              onChange={(event) => handleSearchTermChange(event, 'wf_name')}
+            />
+          ),
+          dataIndex: 'wf_name',
+        },
+      ],
     },
+
     {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
-      // sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
-      sorter: (a, b) => {
-        if (a.submittedAt === 'initial' || b.submittedAt === 'initial')
-          return 0;
-        return a.submittedAt.localeCompare(b.submittedAt);
-      },
-      render: (value) =>
-        value === 'initial' ? (
-          <RangePicker
-            showToday
-            onChange={(event) =>
-              event !== null && handleDateSelectionChange(event, 'submittedAt')
-            }
-          />
-        ) : (
-          <DateForTable utcFormattedDate={value} />
-        ),
+      sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
+      children: [
+        {
+          title: (
+            <RangePicker
+              showToday
+              onChange={(event) =>
+                event !== null &&
+                handleDateSelectionChange(event, 'submittedAt')
+              }
+            />
+          ),
+          dataIndex: 'submittedAt',
+          render: (value) => <DateForTable utcFormattedDate={value} />,
+        },
+      ],
     },
     {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
-      render: (value) =>
-        value === 'initial' ? (
-          <Select
-            showArrow
-            suffixIcon={<CaretDownOutlined />}
-            mode='multiple'
-            style={{
-              width: '100%',
-            }}
-            options={phaseOptions}
-            value={jobStatusSelections}
-            onChange={(event) => handleJobStatusChange(event)}
-          />
-        ) : (
-          <div className='job-status'>
-            {value === PHASES.Succeeded && <Icons.Succeeded />}
-            {value === PHASES.Pending && <Icons.Pending />}
-            {value === PHASES.Running && <Icons.Running />}
-            {value === PHASES.Error && <Icons.Error />}
-            {value === PHASES.Failed && <Icons.Failed />}
-            {value}
-          </div>
-        ),
+      children: [
+        {
+          title: (
+            <Select
+              showArrow
+              placeholder='Select Job Status'
+              mode='multiple'
+              style={{
+                width: '100%',
+              }}
+              options={phaseOptions}
+              value={jobStatusSelections}
+              onChange={(event) => handleJobStatusChange(event)}
+            />
+          ),
+          dataIndex: 'phase',
+          render: (value) => {
+            console.log(value);
+            return (
+              <div className='job-status'>
+                {value === PHASES.Succeeded && <Icons.Succeeded />}
+                {value === PHASES.Pending && <Icons.Pending />}
+                {value === PHASES.Running && <Icons.Running />}
+                {value === PHASES.Error && <Icons.Error />}
+                {value === PHASES.Failed && <Icons.Failed />}
+                {value}
+              </div>
+            );
+          },
+        },
+      ],
+
       sorter: (a, b) => {
         if (a.phase === 'initial' || b.phase === 'initial') return 0;
         return a.phase.localeCompare(b.phase);
@@ -167,52 +159,63 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Started',
       key: 'startedAt',
-      // sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      sorter: (a, b) => {
-        if (a.startedAt === 'initial' || b.startedAt === 'initial') return 0;
-        return a.startedAt.localeCompare(b.startedAt);
-      },
+      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
 
       dataIndex: 'startedAt',
-      render: (value) =>
-        value === 'initial' ? (
-          <RangePicker />
-        ) : (
-          <DateForTable utcFormattedDate={value} />
-        ),
+
+      children: [
+        {
+          title: (
+            <RangePicker
+              showToday
+              onChange={(event) =>
+                event !== null && handleDateSelectionChange(event, 'startedAt')
+              }
+            />
+          ),
+          dataIndex: 'startedAt',
+          render: (value) => <DateForTable utcFormattedDate={value} />,
+        },
+      ],
     },
     {
       title: 'View Details',
       key: 'viewDetails',
-      render: (record) =>
-        record.viewDetails === 'initial' ? (
-          ''
-        ) : (
-          <Space>
-            <Button
-              onClick={() => {
-                setSelectedRowData(record);
-                setCurrentView('execution');
-              }}
-            >
-              Execution
-            </Button>
-            <Button
-              onClick={() => {
-                setSelectedRowData(record);
-                setCurrentView('results');
-              }}
-            >
-              Results
-            </Button>
-          </Space>
-        ),
+      children: [
+        {
+          title: '',
+          render: (record) => (
+            <Space>
+              <Button
+                onClick={() => {
+                  setSelectedRowData(record);
+                  setCurrentView('execution');
+                }}
+              >
+                Execution
+              </Button>
+              <Button
+                onClick={() => {
+                  setSelectedRowData(record);
+                  setCurrentView('results');
+                }}
+              >
+                Results
+              </Button>
+            </Space>
+          ),
+        },
+      ],
     },
     {
       title: 'Actions',
       key: 'actions',
-      render: (record) =>
-        record.actions === 'initial' ? '' : <ActionsDropdown record={record} />,
+      children: [
+        {
+          title: '',
+          render: (record) => <ActionsDropdown record={record} />,
+        },
+      ],
     },
   ];
 
@@ -225,7 +228,6 @@ const HomeTable = ({ data }) => {
     );
 
   const filterByJobStatuses = (initData) => {
-    console.log('here', Date.now(), jobStatusSelections);
     return initData.filter((item) => jobStatusSelections.includes(item.phase));
   };
 
@@ -240,16 +242,20 @@ const HomeTable = ({ data }) => {
 
   const filteredData = () => {
     let filteredDataResult = data;
-    filteredDataResult = filterBySearchTerm(
-      filteredDataResult,
-      'uid',
-      uidSearchTerm
-    );
-    filteredDataResult = filterBySearchTerm(
-      filteredDataResult,
-      'wf_name',
-      wfNameSearchTerm
-    );
+    if (nameSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'name',
+        nameSearchTerm
+      );
+    }
+    if (wfNameSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'wf_name',
+        wfNameSearchTerm
+      );
+    }
     if (submittedAtSelections.length > 0) {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
@@ -260,19 +266,22 @@ const HomeTable = ({ data }) => {
     if (jobStatusSelections.length > 0) {
       filteredDataResult = filterByJobStatuses(filteredDataResult);
     }
+    if (startedAtSelections.length > 0) {
+      filteredDataResult = filterByDateRange(
+        filteredDataResult,
+        'startedAt',
+        startedAtSelections
+      );
+    }
 
     return filteredDataResult;
   };
   return (
     <div className='home-table'>
       <Table
-        dataSource={
-          filteredData().length > 0
-            ? [initial, ...filteredData()]
-            : [initial, ...[emptyTableData]]
-        }
+        dataSource={filteredData()}
         columns={columns}
-        rowKey={(record) => record.uid}
+        rowKey={(record) => record.name}
         pagination={{
           defaultPageSize: 10,
           showSizeChanger: true,
