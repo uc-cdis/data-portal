@@ -66,22 +66,26 @@ const Simple3SetsEulerDiagram = ({
 
   const saveImage = () => {
     console.log('saving image');
-    const html = d3.select("svg")
+    let svgAsInnerHTML = d3.select("svg")
       .attr("version", 1.1)
       .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink") //https://stackoverflow.com/questions/59138117/svg-namespace-prefix-xlink-for-href-on-image-is-not-defined - this deprecated xlink is still used by PheWeb
       .node().parentNode.innerHTML;
-    const svgData = 'data:image/svg+xml;base64,'+ btoa(html); //TODO use buf.toString('base64') instead
+    // workaround specific for PheWeb Manhattan plot where we have log₁₀ as the axis label, breaking window.btoa() below because this is non-ascii...
+    svgAsInnerHTML = svgAsInnerHTML.replace("₁", "1");
+    svgAsInnerHTML = svgAsInnerHTML.replace("₀", "0");
 
+    const svgData = 'data:image/svg+xml;base64,'+ window.btoa(svgAsInnerHTML); //TODO use buf.toString('base64') instead
     const tmpImage = new Image;
     tmpImage.src = svgData;
     tmpImage.onload = function() {
-      const hiddenCanvas = document.getElementById("hiddenCanvas");
+      const hiddenCanvas = document.createElement("canvas");
       const canvasContext = hiddenCanvas.getContext("2d");
       canvasContext.drawImage(tmpImage, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
       const canvasData = hiddenCanvas.toDataURL("image/png");
 
       const a = document.createElement("a");
-      a.download = "euler_diagram.png";
+      a.download = "plot.png";
       a.href = canvasData;
       a.click();
     };
@@ -110,7 +114,6 @@ const Simple3SetsEulerDiagram = ({
 
   return (
     <div>
-      <canvas id="hiddenCanvas" style={{display: 'none'}} width={1600} height={800}></canvas>
       <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
       <Button onClick={saveImage}>Download Image</Button>
     </div>
