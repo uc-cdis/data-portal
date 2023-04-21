@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
+import {
+  Button, Table, Space, Input, DatePicker, Select,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -46,8 +48,7 @@ const HomeTable = ({ data }) => {
   };
 
   const phaseOptions = [];
-  Object.values(PHASES).forEach((phase) =>
-    phaseOptions.push({ value: phase, label: phase })
+  Object.values(PHASES).forEach((phase) => phaseOptions.push({ value: phase, label: phase }),
   );
 
   const columns = [
@@ -100,10 +101,8 @@ const HomeTable = ({ data }) => {
           title: (
             <RangePicker
               showToday
-              onChange={(event) =>
-                event !== null &&
-                handleDateSelectionChange(event, 'submittedAt')
-              }
+              onChange={(event) => event !== null
+                && handleDateSelectionChange(event, 'submittedAt')}
             />
           ),
           dataIndex: 'submittedAt',
@@ -164,9 +163,7 @@ const HomeTable = ({ data }) => {
           title: (
             <RangePicker
               showToday
-              onChange={(event) =>
-                event !== null && handleDateSelectionChange(event, 'startedAt')
-              }
+              onChange={(event) => event !== null && handleDateSelectionChange(event, 'startedAt')}
             />
           ),
           dataIndex: 'startedAt',
@@ -215,25 +212,21 @@ const HomeTable = ({ data }) => {
     },
   ];
 
-  const filterBySearchTerm = (initData, key, searchTerm) =>
-    initData.filter((obj) =>
-      obj[key]
-        .toString()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+  const filterBySearchTerm = (initData, key, searchTerm) => initData.filter((obj) => obj[key]
+    .toString()
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase()),
+  );
+
+  const filterByJobStatuses = (initData) => initData.filter((item) => jobStatusSelections.includes(item.phase));
+
+  const filterByDateRange = (initData, key, dateSelection) => initData.filter((obj) => {
+    const utcDate = moment.utc(obj[key]);
+    return (
+      utcDate.isSameOrAfter(dateSelection[0])
+        && utcDate.isSameOrBefore(dateSelection[1])
     );
-
-  const filterByJobStatuses = (initData) =>
-    initData.filter((item) => jobStatusSelections.includes(item.phase));
-
-  const filterByDateRange = (initData, key, dateSelection) =>
-    initData.filter((obj) => {
-      const utcDate = moment.utc(obj[key]);
-      return (
-        utcDate.isSameOrAfter(dateSelection[0]) &&
-        utcDate.isSameOrBefore(dateSelection[1])
-      );
-    });
+  });
 
   const filteredData = () => {
     let filteredDataResult = data;
@@ -241,21 +234,21 @@ const HomeTable = ({ data }) => {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'name',
-        nameSearchTerm
+        nameSearchTerm,
       );
     }
     if (wfNameSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'wf_name',
-        wfNameSearchTerm
+        wfNameSearchTerm,
       );
     }
     if (submittedAtSelections.length > 0) {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
         'submittedAt',
-        submittedAtSelections
+        submittedAtSelections,
       );
     }
     if (jobStatusSelections.length > 0) {
@@ -265,7 +258,7 @@ const HomeTable = ({ data }) => {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
         'startedAt',
-        startedAtSelections
+        startedAtSelections,
       );
     }
 
