@@ -1,6 +1,6 @@
 const TableData = [
   {
-    name: '123',
+    uid: '123',
     wf_name: 'User Added WF Name 1',
     name: 'Workflow 1',
     startedAt: '2022-02-15T13:00:00Z',
@@ -8,7 +8,7 @@ const TableData = [
     submittedAt: '2022-02-15T13:30:00Z',
   },
   {
-    name: '456',
+    uid: '456',
     wf_name: 'User Added WF Name 2',
     name: 'Workflow 2',
     startedAt: '2022-02-16T10:00:00Z',

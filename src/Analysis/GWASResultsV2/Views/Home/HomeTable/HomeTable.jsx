@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
-import { SearchOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
@@ -55,9 +55,7 @@ const HomeTable = ({ data }) => {
       title: 'Run ID',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => {
-        return a.name.localeCompare(b.name);
-      },
+      sorter: (a, b) => a.name.localeCompare(b.name),
       children: [
         {
           title: (
@@ -76,9 +74,7 @@ const HomeTable = ({ data }) => {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'name',
-      sorter: (a, b) => {
-        return a.wf_name.localeCompare(b.wf_name);
-      },
+      sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       children: [
         {
           title: (
@@ -227,9 +223,8 @@ const HomeTable = ({ data }) => {
         .includes(searchTerm.toLowerCase())
     );
 
-  const filterByJobStatuses = (initData) => {
-    return initData.filter((item) => jobStatusSelections.includes(item.phase));
-  };
+  const filterByJobStatuses = (initData) =>
+    initData.filter((item) => jobStatusSelections.includes(item.phase));
 
   const filterByDateRange = (initData, key, dateSelection) =>
     initData.filter((obj) => {
