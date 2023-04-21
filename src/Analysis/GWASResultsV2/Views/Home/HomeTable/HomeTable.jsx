@@ -17,6 +17,8 @@ const HomeTable = ({ data }) => {
   const [uidSearchTerm, setUidSearchTerm] = useState('');
   const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
   const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
+  const [jobStatusSelections, setJobStatusSelections] = useState([]);
+
   const handleSearchTermChange = (event, searchTermKey) => {
     if (searchTermKey === 'uid') {
       setUidSearchTerm(event.target.value);
@@ -34,6 +36,10 @@ const HomeTable = ({ data }) => {
     }
   };
 
+  const handleJobStatusChange = (event) => {
+    console.log(event);
+    setJobStatusSelections(event);
+  };
   const initial = {
     key: 'initial',
     name: 'initial',
@@ -157,6 +163,8 @@ const HomeTable = ({ data }) => {
               width: '100%',
             }}
             options={phaseOptions}
+            value={jobStatusSelections}
+            onChange={(event) => handleJobStatusChange(event)}
           />
         ) : (
           <div className='job-status'>
@@ -233,6 +241,11 @@ const HomeTable = ({ data }) => {
         .includes(searchTerm.toLowerCase())
     );
 
+  const filterByJobStatuses = (initData) => {
+    console.log('here', Date.now(), jobStatusSelections);
+    return initData.filter((item) => jobStatusSelections.includes(item.phase));
+  };
+
   const filterByDateRange = (initData, key, dateSelection) => {
     return initData.filter((obj) => {
       const utcDate = moment.utc(obj[key]);
@@ -255,12 +268,17 @@ const HomeTable = ({ data }) => {
       'wf_name',
       wfNameSearchTerm
     );
-    if (submittedAtSelections.length > 0)
+    if (submittedAtSelections.length > 0) {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
         'submittedAt',
         submittedAtSelections
       );
+    }
+    if (jobStatusSelections.length > 0) {
+      filteredDataResult = filterByJobStatuses(filteredDataResult);
+    }
+
     return filteredDataResult;
   };
   return (
