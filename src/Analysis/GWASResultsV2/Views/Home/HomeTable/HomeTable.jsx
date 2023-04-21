@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined, CaretDownOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import moment from 'moment';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
@@ -64,28 +64,11 @@ const HomeTable = ({ data }) => {
     actions: 'initial',
   };
 
-  const phaseOptions = [
-    {
-      value: 'Succeeded',
-      label: 'Succeeded',
-    },
-    {
-      value: 'Pending',
-      label: 'Pending',
-    },
-    {
-      value: 'Running',
-      label: 'Running',
-    },
-    {
-      value: 'Error',
-      label: 'Error',
-    },
-    {
-      value: 'Failed',
-      label: 'Failed',
-    },
-  ];
+  const phaseOptions = [];
+  Object.values(PHASES).forEach((phase) =>
+    phaseOptions.push({ value: phase, label: phase })
+  );
+
   const columns = [
     {
       title: 'Run ID',
@@ -140,7 +123,7 @@ const HomeTable = ({ data }) => {
       render: (value) =>
         value === 'initial' ? (
           <RangePicker
-            showToday={true}
+            showToday
             onChange={(event) =>
               event !== null && handleDateSelectionChange(event, 'submittedAt')
             }
@@ -246,15 +229,14 @@ const HomeTable = ({ data }) => {
     return initData.filter((item) => jobStatusSelections.includes(item.phase));
   };
 
-  const filterByDateRange = (initData, key, dateSelection) => {
-    return initData.filter((obj) => {
+  const filterByDateRange = (initData, key, dateSelection) =>
+    initData.filter((obj) => {
       const utcDate = moment.utc(obj[key]);
       return (
         utcDate.isSameOrAfter(dateSelection[0]) &&
         utcDate.isSameOrBefore(dateSelection[1])
       );
     });
-  };
 
   const filteredData = () => {
     let filteredDataResult = data;
