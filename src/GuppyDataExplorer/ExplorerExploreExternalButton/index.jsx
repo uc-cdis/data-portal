@@ -84,10 +84,10 @@ function ExplorerExploreExternalButton({ filter }) {
   /** @param {typeof selected} newSelected */
   async function handleSelectExternalCommons(newSelected) {
     if (selected.value === newSelected.value) return;
+    setCommonsInfo(null);
     setSelected(newSelected);
 
     if (newSelected.value === '') {
-      setCommonsInfo(null);
       return;
     }
 
@@ -119,7 +119,7 @@ function ExplorerExploreExternalButton({ filter }) {
   }
 
   function isOpenInNewTabButtonEnabled() {
-    if (!commonsInfo) {
+    if (!commonsInfo || !commonsInfo.data) {
       return false;
     } else if (commonsInfo.type === 'file') {
       return isFileDownloaded;
@@ -154,13 +154,19 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
+              {commonsInfo && !commonsInfo.data && (
+                <p className="no-data-info">
+                  There is no data for this cohort of subjects in the{' '}
+                  {selected.value.toUpperCase()} platform
+                </p>
+              )}
               {isLoading && (
                 <div className='explorer-explore-external__loading'>
                   <Spinner />
                 </div>
               )}
             </form>
-            {commonsInfo?.type === 'file' ? (
+            {commonsInfo?.type === 'file' && commonsInfo?.data ? (
               <div className='explorer-explore-external__download-manifest'>
                 <p>
                   <FontAwesomeIcon
