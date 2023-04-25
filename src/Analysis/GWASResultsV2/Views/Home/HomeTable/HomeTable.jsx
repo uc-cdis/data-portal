@@ -18,12 +18,15 @@ const HomeTable = ({ data }) => {
     setSelectedRowData,
     nameSearchTerm,
     setNameSearchTerm,
+    wfNameSearchTerm,
+    setWfNameSearchTerm,
+    submittedAtSelections,
+    setSubmittedAtSelections,
+    startedAtSelections,
+    setStartedAtSelections,
+    jobStatusSelections,
+    setJobStatusSelections,
   } = useContext(SharedContext);
-
-  const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
-  const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
-  const [startedAtSelections, setStartedAtSelections] = useState([]);
-  const [jobStatusSelections, setJobStatusSelections] = useState([]);
 
   const handleSearchTermChange = (event, searchTermKey) => {
     if (searchTermKey === 'name') {
@@ -105,6 +108,7 @@ const HomeTable = ({ data }) => {
           title: (
             <RangePicker
               showToday
+              value={submittedAtSelections}
               onChange={(event) =>
                 event !== null &&
                 handleDateSelectionChange(event, 'submittedAt')
@@ -169,6 +173,7 @@ const HomeTable = ({ data }) => {
           title: (
             <RangePicker
               showToday
+              value={startedAtSelections}
               onChange={(event) =>
                 event !== null && handleDateSelectionChange(event, 'startedAt')
               }
