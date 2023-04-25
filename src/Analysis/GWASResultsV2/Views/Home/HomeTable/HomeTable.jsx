@@ -39,19 +39,22 @@ const HomeTable = ({ data }) => {
 
   const handleDateSelectionChange = (event, dateType) => {
     if (dateType === 'submittedAtSelection') {
-      alert(event);
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
         const endDate = moment.utc(event[1]._d);
-        alert('first');
-        setSubmittedAtSelections([startDate, endDate]);
+        return setSubmittedAtSelections([startDate, endDate]);
       } else {
-        alert('second');
-        setSubmittedAtSelections([]);
+        return setSubmittedAtSelections([]);
       }
     }
-    if (dateType === 'startedAt') {
-      setStartedAtSelections([startDate, endDate]);
+    if (dateType === 'startedAtSelection') {
+      if (event && event.length === 2) {
+        const startDate = moment.utc(event[0]._d);
+        const endDate = moment.utc(event[1]._d);
+        setStartedAtSelections([startDate, endDate]);
+      } else {
+        setStartedAtSelections([]);
+      }
     }
   };
 
@@ -119,7 +122,6 @@ const HomeTable = ({ data }) => {
               allowClear
               size='large'
               onChange={(event) => {
-                alert('on change called' + event);
                 handleDateSelectionChange(event, 'submittedAtSelection');
               }}
             />
@@ -174,18 +176,18 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Started',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-
       dataIndex: 'startedAt',
-
       children: [
         {
           title: (
             <RangePicker
               showToday
               value={startedAtSelections}
-              onChange={(event) =>
-                event !== null && handleDateSelectionChange(event, 'startedAt')
-              }
+              allowClear
+              size='large'
+              onChange={(event) => {
+                handleDateSelectionChange(event, 'startedAtSelection');
+              }}
             />
           ),
           dataIndex: 'startedAt',
