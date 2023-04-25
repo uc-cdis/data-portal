@@ -38,10 +38,17 @@ const HomeTable = ({ data }) => {
   };
 
   const handleDateSelectionChange = (event, dateType) => {
-    const startDate = moment.utc(event[0]._d);
-    const endDate = moment.utc(event[1]._d);
-    if (dateType === 'submittedAt') {
-      setSubmittedAtSelections([startDate, endDate]);
+    if (dateType === 'submittedAtSelection') {
+      alert(event);
+      if (event && event.length === 2) {
+        const startDate = moment.utc(event[0]._d);
+        const endDate = moment.utc(event[1]._d);
+        alert('first');
+        setSubmittedAtSelections([startDate, endDate]);
+      } else {
+        alert('second');
+        setSubmittedAtSelections([]);
+      }
     }
     if (dateType === 'startedAt') {
       setStartedAtSelections([startDate, endDate]);
@@ -109,10 +116,12 @@ const HomeTable = ({ data }) => {
             <RangePicker
               showToday
               value={submittedAtSelections}
-              onChange={(event) =>
-                event !== null &&
-                handleDateSelectionChange(event, 'submittedAt')
-              }
+              allowClear
+              size='large'
+              onChange={(event) => {
+                alert('on change called' + event);
+                handleDateSelectionChange(event, 'submittedAtSelection');
+              }}
             />
           ),
           dataIndex: 'submittedAt',
