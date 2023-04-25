@@ -117,7 +117,7 @@ const HomeTable = ({ data }) => {
         {
           title: (
             <RangePicker
-              showToday
+              dropdownClassName='home-table-range-picker'
               value={submittedAtSelections}
               allowClear
               size='large'
@@ -152,7 +152,6 @@ const HomeTable = ({ data }) => {
           ),
           dataIndex: 'phase',
           render: (value) => {
-            console.log(value);
             return (
               <div className='job-status'>
                 {value === PHASES.Succeeded && <Icons.Succeeded />}
@@ -180,15 +179,17 @@ const HomeTable = ({ data }) => {
       children: [
         {
           title: (
-            <RangePicker
-              showToday
-              value={startedAtSelections}
-              allowClear
-              size='large'
-              onChange={(event) => {
-                handleDateSelectionChange(event, 'startedAtSelection');
-              }}
-            />
+            <Space direction='vertical' size={12}>
+              <RangePicker
+                value={startedAtSelections}
+                dropdownClassName='home-table-range-picker'
+                allowClear
+                size='large'
+                onChange={(event) => {
+                  handleDateSelectionChange(event, 'startedAtSelection');
+                }}
+              />
+            </Space>
           ),
           dataIndex: 'startedAt',
           render: (value) => <DateForTable utcFormattedDate={value} />,
