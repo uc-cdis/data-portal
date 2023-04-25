@@ -10,18 +10,19 @@ import './GWASResultsContainer.css';
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
+  const [nameSearchTerm, setNameSearchTerm] = useState('');
 
   useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
-    case VIEWS.home:
-      return <Home />;
-    case VIEWS.results:
-      return <Results />;
-    case VIEWS.execution:
-      return <Execution />;
-    default:
-      return null;
+      case VIEWS.home:
+        return <Home />;
+      case VIEWS.results:
+        return <Results />;
+      case VIEWS.execution:
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
@@ -32,6 +33,8 @@ const GWASResultsContainer = () => {
           setCurrentView,
           selectedRowData,
           setSelectedRowData,
+          nameSearchTerm,
+          setNameSearchTerm,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>
