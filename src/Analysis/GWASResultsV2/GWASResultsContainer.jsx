@@ -10,14 +10,6 @@ import './GWASResultsContainer.css';
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
-
-  // const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
-  // const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
-  // const [startedAtSelections, setStartedAtSelections] = useState([]);
-  // const [jobStatusSelections, setJobStatusSelections] = useState([]);
-  // const [sortInfo, setSortInfo] = useState({});
-  // const [currentPage, setCurrentPage] = useState(1);
-
   const [homeTableState, setHomeTableState] = useState({
     nameSearchTerm: '',
     wfNameSearchTerm: '',

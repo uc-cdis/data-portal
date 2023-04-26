@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -20,64 +20,65 @@ const HomeTable = ({ data }) => {
     setHomeTableState,
   } = useContext(SharedContext);
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: sorter,
-    });
+  useEffect(() => {
+    console.log(homeTableState);
+  }, [homeTableState]);
 
-    if (pagination.current !== homeTableState.currentPage) {
-      setHomeTableState({
-        ...homeTableState,
-        currentPage: pagination.current,
-      });
-    } else {
-      // Ask Pieter what he thinks about having sort move pagination back to page one
-      setHomeTableState({
-        ...homeTableState,
-        currentPage: 1,
-      });
-    }
-
-    console.log('Sort Info', homeTableState.sortInfo);
-    console.log('currentPage', currentPage);
-  };
-
-  const handleSearchTermChange = (event, searchTermKey) => {
+  const setHomeTableToFirstPage = () => {
     setHomeTableState({
       ...homeTableState,
       currentPage: 1,
     });
+  };
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    if (pagination.current !== homeTableState.currentPage) {
+      // User updates page, set page to current pagination
+      return setHomeTableState({
+        ...homeTableState,
+        currentPage: pagination.current,
+      });
+    }
+    // User updates sorting, set page to first page
+    // Ask Pieter what he thinks about having sort move pagination back to page one
+    setHomeTableState({
+      ...homeTableState,
+      currentPage: 1,
+      sortInfo: sorter,
+    });
+  };
+
+  const handleSearchTermChange = (event, searchTermKey) => {
     if (searchTermKey === 'name') {
       setHomeTableState({
         ...homeTableState,
+        currentPage: 1,
         nameSearchTerm: event.target.value,
       });
     }
     if (searchTermKey === 'wf_name') {
       setHomeTableState({
         ...homeTableState,
+        currentPage: 1,
         wfNameSearchTerm: event.target.value,
       });
     }
   };
 
   const handleDateSelectionChange = (event, dateType) => {
-    setHomeTableState({
-      ...homeTableState,
-      currentPage: 1,
-    });
     if (dateType === 'submittedAtSelection') {
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
         const endDate = moment.utc(event[1]._d);
         return setHomeTableState({
           ...homeTableState,
+          currentPage: 1,
           submittedAtSelections: [startDate, endDate],
         });
       } else {
         return setHomeTableState({
           ...homeTableState,
+          currentPage: 1,
           submittedAtSelections: [],
         });
       }
@@ -88,11 +89,13 @@ const HomeTable = ({ data }) => {
         const endDate = moment.utc(event[1]._d);
         return setHomeTableState({
           ...homeTableState,
+          currentPage: 1,
           startedAtSelections: [startDate, endDate],
         });
       } else {
         return setHomeTableState({
           ...homeTableState,
+          currentPage: 1,
           startedAtSelections: [],
         });
       }
@@ -100,13 +103,11 @@ const HomeTable = ({ data }) => {
   };
 
   const handleJobStatusChange = (event) => {
-    setHomeTableState({
-      ...homeTableState,
-      currentPage: 1,
-    });
+    setHomeTableToFirstPage();
     console.log(event, homeTableState);
     setHomeTableState({
       ...homeTableState,
+      currentPage: 1,
       jobStatusSelections: event,
     });
   };
@@ -161,7 +162,6 @@ const HomeTable = ({ data }) => {
         },
       ],
     },
-
     {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
@@ -224,7 +224,6 @@ const HomeTable = ({ data }) => {
       ],
 
       sorter: (a, b) => {
-        if (a.phase === 'initial' || b.phase === 'initial') return 0;
         return a.phase.localeCompare(b.phase);
       },
     },
@@ -239,16 +238,14 @@ const HomeTable = ({ data }) => {
       children: [
         {
           title: (
-            <Space direction='vertical' size={12}>
-              <RangePicker
-                value={homeTableState.startedAtSelections}
-                popupClassName='home-table-range-picker'
-                allowClear
-                onChange={(event) => {
-                  handleDateSelectionChange(event, 'startedAtSelection');
-                }}
-              />
-            </Space>
+            <RangePicker
+              value={homeTableState.startedAtSelections}
+              popupClassName='home-table-range-picker'
+              allowClear
+              onChange={(event) => {
+                handleDateSelectionChange(event, 'startedAtSelection');
+              }}
+            />
           ),
           dataIndex: 'startedAt',
           render: (value) => <DateForTable utcFormattedDate={value} />,

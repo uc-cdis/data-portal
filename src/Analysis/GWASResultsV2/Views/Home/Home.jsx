@@ -15,9 +15,6 @@ const Home = () => {
   }
 
   const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     refetchInterval,
   });
   if (status === 'loading') {
