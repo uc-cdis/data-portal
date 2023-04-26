@@ -67,6 +67,10 @@
   transform: scale(1.25);
 }
 
+.home-table .select-job-status {
+  width: 100%;
+}
+
 /* Fix for date picker layout */
 .home-table-range-picker .ant-picker-header > * {
   flex: unset;

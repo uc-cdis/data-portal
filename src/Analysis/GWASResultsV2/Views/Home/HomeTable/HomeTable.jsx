@@ -177,7 +177,6 @@ const HomeTable = ({ data }) => {
               popupClassName='home-table-range-picker'
               value={homeTableState.submittedAtSelections}
               allowClear
-              size='large'
               onChange={(event) => {
                 handleDateSelectionChange(event, 'submittedAtSelection');
               }}
@@ -200,11 +199,9 @@ const HomeTable = ({ data }) => {
           title: (
             <Select
               showArrow
+              className='select-job-status'
               placeholder='Select Job Status'
               mode='multiple'
-              style={{
-                width: '100%',
-              }}
               options={phaseOptions}
               value={homeTableState.jobStatusSelections}
               onChange={(event) => handleJobStatusChange(event)}
@@ -247,7 +244,6 @@ const HomeTable = ({ data }) => {
                 value={homeTableState.startedAtSelections}
                 popupClassName='home-table-range-picker'
                 allowClear
-                size='large'
                 onChange={(event) => {
                   handleDateSelectionChange(event, 'startedAtSelection');
                 }}
