@@ -103,8 +103,6 @@ const HomeTable = ({ data }) => {
   };
 
   const handleJobStatusChange = (event) => {
-    setHomeTableToFirstPage();
-    console.log(event, homeTableState);
     setHomeTableState({
       ...homeTableState,
       currentPage: 1,
@@ -222,7 +220,6 @@ const HomeTable = ({ data }) => {
           },
         },
       ],
-
       sorter: (a, b) => {
         return a.phase.localeCompare(b.phase);
       },
