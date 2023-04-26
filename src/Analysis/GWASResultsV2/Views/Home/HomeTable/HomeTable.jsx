@@ -26,9 +26,21 @@ const HomeTable = ({ data }) => {
     setStartedAtSelections,
     jobStatusSelections,
     setJobStatusSelections,
+    sortInfo,
+    setSortInfo,
+    currentPage,
+    setCurrentPage,
   } = useContext(SharedContext);
 
+  const handleTableChange = (pagination, filters, sorter) => {
+    setSortInfo(sorter);
+    setCurrentPage(pagination.current);
+    console.log('Sort Info', sortInfo);
+    console.log('currentPage', currentPage);
+  };
+
   const handleSearchTermChange = (event, searchTermKey) => {
+    setCurrentPage(1);
     if (searchTermKey === 'name') {
       setNameSearchTerm(event.target.value);
     }
@@ -38,6 +50,7 @@ const HomeTable = ({ data }) => {
   };
 
   const handleDateSelectionChange = (event, dateType) => {
+    setCurrentPage(1);
     if (dateType === 'submittedAtSelection') {
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
@@ -59,7 +72,7 @@ const HomeTable = ({ data }) => {
   };
 
   const handleJobStatusChange = (event) => {
-    console.log(event);
+    setCurrentPage(1);
     setJobStatusSelections(event);
   };
 
@@ -74,6 +87,7 @@ const HomeTable = ({ data }) => {
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
+      sortOrder: sortInfo.columnKey === 'name' && sortInfo.order,
       children: [
         {
           title: (
@@ -91,8 +105,9 @@ const HomeTable = ({ data }) => {
     {
       title: 'Workflow name',
       dataIndex: 'wf_name',
-      key: 'name',
+      key: 'wf_name',
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
+      sortOrder: sortInfo.columnKey === 'wf_name' && sortInfo.order,
       children: [
         {
           title: (
@@ -113,11 +128,12 @@ const HomeTable = ({ data }) => {
       dataIndex: 'submittedAt',
       key: 'submittedAt',
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
+      sortOrder: sortInfo.columnKey === 'submittedAt' && sortInfo.order,
       children: [
         {
           title: (
             <RangePicker
-              dropdownClassName='home-table-range-picker'
+              popupClassName='home-table-range-picker'
               value={submittedAtSelections}
               allowClear
               size='large'
@@ -135,6 +151,7 @@ const HomeTable = ({ data }) => {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
+      sortOrder: sortInfo.columnKey === 'phase' && sortInfo.order,
       children: [
         {
           title: (
@@ -175,6 +192,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Started',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      sortOrder: sortInfo.columnKey === 'startedAt' && sortInfo.order,
       dataIndex: 'startedAt',
       children: [
         {
@@ -182,7 +200,7 @@ const HomeTable = ({ data }) => {
             <Space direction='vertical' size={12}>
               <RangePicker
                 value={startedAtSelections}
-                dropdownClassName='home-table-range-picker'
+                popupClassName='home-table-range-picker'
                 allowClear
                 size='large'
                 onChange={(event) => {
@@ -299,7 +317,10 @@ const HomeTable = ({ data }) => {
         dataSource={filteredData()}
         columns={columns}
         rowKey={(record) => record.name}
+        onChange={handleTableChange}
+        defaultCurrent={6}
         pagination={{
+          current: currentPage,
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '30'],

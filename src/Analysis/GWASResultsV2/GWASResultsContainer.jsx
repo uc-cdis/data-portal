@@ -15,6 +15,8 @@ const GWASResultsContainer = () => {
   const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
   const [startedAtSelections, setStartedAtSelections] = useState([]);
   const [jobStatusSelections, setJobStatusSelections] = useState([]);
+  const [sortInfo, setSortInfo] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
 
   useHideUnneededElements();
   const generateStep = () => {
@@ -47,6 +49,10 @@ const GWASResultsContainer = () => {
           setStartedAtSelections,
           jobStatusSelections,
           setJobStatusSelections,
+          sortInfo,
+          setSortInfo,
+          currentPage,
+          setCurrentPage,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>
