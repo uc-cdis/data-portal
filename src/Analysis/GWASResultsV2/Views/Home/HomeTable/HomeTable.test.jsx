@@ -26,7 +26,7 @@ describe('HomeTable component', () => {
       const submittedTestDate = new Date(item.submittedAt);
       const formattedSubmittedTestDate = submittedTestDate.toLocaleDateString();
 
-      expect(screen.getAllByText(item.uid)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.name)[0]).toBeInTheDocument();
       expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
       expect(
         screen.getAllByText(formattedStartTestDate)[0],
