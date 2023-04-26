@@ -47,6 +47,7 @@ import {
   discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
+import Viewer from './DICOMViewer/page';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { components } from './params';
@@ -223,6 +224,20 @@ async function init() {
                     path='/query'
                     component={
                       (props) => <ProtectedContent component={GraphQLQuery} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/dicom-viewer/viewer/:series'
+                    component={
+                      (props) => <ProtectedContent component={Viewer} {...props} />
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/dicom-viewer'
+                    component={
+                      (props) => <ProtectedContent component={Viewer} {...props} />
                     }
                   />
                   {
