@@ -8,10 +8,8 @@ const filterBySearchTerm = (initData, key, searchTerm) =>
       .includes(searchTerm.toLowerCase())
   );
 
-const filterByJobStatuses = (initData, homeTableState) =>
-  initData.filter((item) =>
-    homeTableState.jobStatusSelections.includes(item.phase)
-  );
+const filterByJobStatuses = (initData, jobStatusSelections) =>
+  initData.filter((item) => jobStatusSelections.includes(item.phase));
 
 const filterByDateRange = (initData, key, dateSelection) =>
   initData.filter((obj) => {
@@ -48,7 +46,7 @@ const filterTableData = (data, homeTableState) => {
   if (homeTableState.jobStatusSelections.length > 0) {
     filteredDataResult = filterByJobStatuses(
       filteredDataResult,
-      homeTableState
+      homeTableState.jobStatusSelections
     );
   }
   if (homeTableState.startedAtSelections.length > 0) {

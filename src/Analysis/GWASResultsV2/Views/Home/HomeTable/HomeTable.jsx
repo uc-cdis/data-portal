@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import filterData from './filterTableData';
+import filterTableData from './filterTableData';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
@@ -287,10 +287,15 @@ const HomeTable = ({ data }) => {
     },
   ];
 
+  const [filteredData, setFilteredData] = useState(data);
+  useEffect(() => {
+    setFilteredData(filterTableData(data, homeTableState));
+  }, [homeTableState]);
+
   return (
     <div className='home-table'>
       <Table
-        dataSource={filterData(data, homeTableState)}
+        dataSource={filteredData}
         columns={columns}
         rowKey={(record) => record.name}
         onChange={handleTableChange}
