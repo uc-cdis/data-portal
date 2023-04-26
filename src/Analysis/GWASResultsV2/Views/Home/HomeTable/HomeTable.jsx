@@ -355,9 +355,9 @@ const HomeTable = ({ data }) => {
         homeTableState.startedAtSelections
       );
     }
-
     return filteredDataResult;
   };
+
   return (
     <div className='home-table'>
       <Table
@@ -365,7 +365,6 @@ const HomeTable = ({ data }) => {
         columns={columns}
         rowKey={(record) => record.name}
         onChange={handleTableChange}
-        defaultCurrent={6}
         pagination={{
           current: homeTableState.currentPage,
           defaultPageSize: 10,
