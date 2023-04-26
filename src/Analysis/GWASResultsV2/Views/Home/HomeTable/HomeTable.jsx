@@ -16,64 +16,99 @@ const HomeTable = ({ data }) => {
   const {
     setCurrentView,
     setSelectedRowData,
-    nameSearchTerm,
-    setNameSearchTerm,
-    wfNameSearchTerm,
-    setWfNameSearchTerm,
-    submittedAtSelections,
-    setSubmittedAtSelections,
-    startedAtSelections,
-    setStartedAtSelections,
-    jobStatusSelections,
-    setJobStatusSelections,
-    sortInfo,
-    setSortInfo,
-    currentPage,
-    setCurrentPage,
+    homeTableState,
+    setHomeTableState,
   } = useContext(SharedContext);
 
   const handleTableChange = (pagination, filters, sorter) => {
-    setSortInfo(sorter);
-    setCurrentPage(pagination.current);
-    console.log('Sort Info', sortInfo);
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: sorter,
+    });
+
+    if (pagination.current !== homeTableState.currentPage) {
+      setHomeTableState({
+        ...homeTableState,
+        currentPage: pagination.current,
+      });
+    } else {
+      // Ask Pieter what he thinks about having sort move pagination back to page one
+      setHomeTableState({
+        ...homeTableState,
+        currentPage: 1,
+      });
+    }
+
+    console.log('Sort Info', homeTableState.sortInfo);
     console.log('currentPage', currentPage);
   };
 
   const handleSearchTermChange = (event, searchTermKey) => {
-    setCurrentPage(1);
+    setHomeTableState({
+      ...homeTableState,
+      currentPage: 1,
+    });
     if (searchTermKey === 'name') {
-      setNameSearchTerm(event.target.value);
+      setHomeTableState({
+        ...homeTableState,
+        nameSearchTerm: event.target.value,
+      });
     }
     if (searchTermKey === 'wf_name') {
-      setWfNameSearchTerm(event.target.value);
+      setHomeTableState({
+        ...homeTableState,
+        wfNameSearchTerm: event.target.value,
+      });
     }
   };
 
   const handleDateSelectionChange = (event, dateType) => {
-    setCurrentPage(1);
+    setHomeTableState({
+      ...homeTableState,
+      currentPage: 1,
+    });
     if (dateType === 'submittedAtSelection') {
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
         const endDate = moment.utc(event[1]._d);
-        return setSubmittedAtSelections([startDate, endDate]);
+        return setHomeTableState({
+          ...homeTableState,
+          submittedAtSelections: [startDate, endDate],
+        });
       } else {
-        return setSubmittedAtSelections([]);
+        return setHomeTableState({
+          ...homeTableState,
+          submittedAtSelections: [],
+        });
       }
     }
     if (dateType === 'startedAtSelection') {
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
         const endDate = moment.utc(event[1]._d);
-        setStartedAtSelections([startDate, endDate]);
+        return setHomeTableState({
+          ...homeTableState,
+          startedAtSelections: [startDate, endDate],
+        });
       } else {
-        setStartedAtSelections([]);
+        return setHomeTableState({
+          ...homeTableState,
+          startedAtSelections: [],
+        });
       }
     }
   };
 
   const handleJobStatusChange = (event) => {
-    setCurrentPage(1);
-    setJobStatusSelections(event);
+    setHomeTableState({
+      ...homeTableState,
+      currentPage: 1,
+    });
+    console.log(event, homeTableState);
+    setHomeTableState({
+      ...homeTableState,
+      jobStatusSelections: event,
+    });
   };
 
   const phaseOptions = [];
@@ -87,13 +122,15 @@ const HomeTable = ({ data }) => {
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-      sortOrder: sortInfo.columnKey === 'name' && sortInfo.order,
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'name' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
             <Input
               placeholder='Search by Run ID'
-              value={nameSearchTerm}
+              value={homeTableState.nameSearchTerm}
               onChange={(event) => handleSearchTermChange(event, 'name')}
               suffix={<SearchOutlined />}
             />
@@ -107,14 +144,16 @@ const HomeTable = ({ data }) => {
       dataIndex: 'wf_name',
       key: 'wf_name',
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
-      sortOrder: sortInfo.columnKey === 'wf_name' && sortInfo.order,
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'wf_name' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
             <Input
               placeholder='Search by Workflow Name'
               suffix={<SearchOutlined />}
-              vale={wfNameSearchTerm}
+              value={homeTableState.wfNameSearchTerm}
               onChange={(event) => handleSearchTermChange(event, 'wf_name')}
             />
           ),
@@ -128,13 +167,15 @@ const HomeTable = ({ data }) => {
       dataIndex: 'submittedAt',
       key: 'submittedAt',
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
-      sortOrder: sortInfo.columnKey === 'submittedAt' && sortInfo.order,
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'submittedAt' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
             <RangePicker
               popupClassName='home-table-range-picker'
-              value={submittedAtSelections}
+              value={homeTableState.submittedAtSelections}
               allowClear
               size='large'
               onChange={(event) => {
@@ -151,7 +192,9 @@ const HomeTable = ({ data }) => {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
-      sortOrder: sortInfo.columnKey === 'phase' && sortInfo.order,
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'phase' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -163,7 +206,7 @@ const HomeTable = ({ data }) => {
                 width: '100%',
               }}
               options={phaseOptions}
-              value={jobStatusSelections}
+              value={homeTableState.jobStatusSelections}
               onChange={(event) => handleJobStatusChange(event)}
             />
           ),
@@ -192,14 +235,16 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Started',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      sortOrder: sortInfo.columnKey === 'startedAt' && sortInfo.order,
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'startedAt' &&
+        homeTableState.sortInfo.order,
       dataIndex: 'startedAt',
       children: [
         {
           title: (
             <Space direction='vertical' size={12}>
               <RangePicker
-                value={startedAtSelections}
+                value={homeTableState.startedAtSelections}
                 popupClassName='home-table-range-picker'
                 allowClear
                 size='large'
@@ -264,7 +309,9 @@ const HomeTable = ({ data }) => {
     );
 
   const filterByJobStatuses = (initData) =>
-    initData.filter((item) => jobStatusSelections.includes(item.phase));
+    initData.filter((item) =>
+      homeTableState.jobStatusSelections.includes(item.phase)
+    );
 
   const filterByDateRange = (initData, key, dateSelection) =>
     initData.filter((obj) => {
@@ -277,35 +324,35 @@ const HomeTable = ({ data }) => {
 
   const filteredData = () => {
     let filteredDataResult = data;
-    if (nameSearchTerm.length > 0) {
+    if (homeTableState.nameSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'name',
-        nameSearchTerm
+        homeTableState.nameSearchTerm
       );
     }
-    if (wfNameSearchTerm.length > 0) {
+    if (homeTableState.wfNameSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'wf_name',
-        wfNameSearchTerm
+        homeTableState.wfNameSearchTerm
       );
     }
-    if (submittedAtSelections.length > 0) {
+    if (homeTableState.submittedAtSelections.length > 0) {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
         'submittedAt',
-        submittedAtSelections
+        homeTableState.submittedAtSelections
       );
     }
-    if (jobStatusSelections.length > 0) {
+    if (homeTableState.jobStatusSelections.length > 0) {
       filteredDataResult = filterByJobStatuses(filteredDataResult);
     }
-    if (startedAtSelections.length > 0) {
+    if (homeTableState.startedAtSelections.length > 0) {
       filteredDataResult = filterByDateRange(
         filteredDataResult,
         'startedAt',
-        startedAtSelections
+        homeTableState.startedAtSelections
       );
     }
 
@@ -320,7 +367,7 @@ const HomeTable = ({ data }) => {
         onChange={handleTableChange}
         defaultCurrent={6}
         pagination={{
-          current: currentPage,
+          current: homeTableState.currentPage,
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '30'],

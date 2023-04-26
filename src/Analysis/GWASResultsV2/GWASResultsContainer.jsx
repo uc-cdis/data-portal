@@ -10,13 +10,23 @@ import './GWASResultsContainer.css';
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
-  const [nameSearchTerm, setNameSearchTerm] = useState('');
-  const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
-  const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
-  const [startedAtSelections, setStartedAtSelections] = useState([]);
-  const [jobStatusSelections, setJobStatusSelections] = useState([]);
-  const [sortInfo, setSortInfo] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
+
+  // const [wfNameSearchTerm, setWfNameSearchTerm] = useState('');
+  // const [submittedAtSelections, setSubmittedAtSelections] = useState([]);
+  // const [startedAtSelections, setStartedAtSelections] = useState([]);
+  // const [jobStatusSelections, setJobStatusSelections] = useState([]);
+  // const [sortInfo, setSortInfo] = useState({});
+  // const [currentPage, setCurrentPage] = useState(1);
+
+  const [homeTableState, setHomeTableState] = useState({
+    nameSearchTerm: '',
+    wfNameSearchTerm: '',
+    submittedAtSelections: [],
+    startedAtSelections: [],
+    jobStatusSelections: [],
+    sortInfo: {},
+    currentPage: 1,
+  });
 
   useHideUnneededElements();
   const generateStep = () => {
@@ -39,20 +49,8 @@ const GWASResultsContainer = () => {
           setCurrentView,
           selectedRowData,
           setSelectedRowData,
-          nameSearchTerm,
-          setNameSearchTerm,
-          wfNameSearchTerm,
-          setWfNameSearchTerm,
-          submittedAtSelections,
-          setSubmittedAtSelections,
-          startedAtSelections,
-          setStartedAtSelections,
-          jobStatusSelections,
-          setJobStatusSelections,
-          sortInfo,
-          setSortInfo,
-          currentPage,
-          setCurrentPage,
+          homeTableState,
+          setHomeTableState,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>
