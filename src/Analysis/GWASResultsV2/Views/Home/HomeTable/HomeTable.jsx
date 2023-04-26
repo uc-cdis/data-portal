@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
+import filterData from './filterTableData';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
@@ -19,10 +20,6 @@ const HomeTable = ({ data }) => {
     homeTableState,
     setHomeTableState,
   } = useContext(SharedContext);
-
-  useEffect(() => {
-    console.log(homeTableState);
-  }, [homeTableState]);
 
   const setHomeTableToFirstPage = () => {
     setHomeTableState({
@@ -290,68 +287,10 @@ const HomeTable = ({ data }) => {
     },
   ];
 
-  const filterBySearchTerm = (initData, key, searchTerm) =>
-    initData.filter((obj) =>
-      obj[key]
-        .toString()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-
-  const filterByJobStatuses = (initData) =>
-    initData.filter((item) =>
-      homeTableState.jobStatusSelections.includes(item.phase)
-    );
-
-  const filterByDateRange = (initData, key, dateSelection) =>
-    initData.filter((obj) => {
-      const utcDate = moment.utc(obj[key]);
-      return (
-        utcDate.isSameOrAfter(dateSelection[0]) &&
-        utcDate.isSameOrBefore(dateSelection[1])
-      );
-    });
-
-  const filteredData = () => {
-    let filteredDataResult = data;
-    if (homeTableState.nameSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'name',
-        homeTableState.nameSearchTerm
-      );
-    }
-    if (homeTableState.wfNameSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'wf_name',
-        homeTableState.wfNameSearchTerm
-      );
-    }
-    if (homeTableState.submittedAtSelections.length > 0) {
-      filteredDataResult = filterByDateRange(
-        filteredDataResult,
-        'submittedAt',
-        homeTableState.submittedAtSelections
-      );
-    }
-    if (homeTableState.jobStatusSelections.length > 0) {
-      filteredDataResult = filterByJobStatuses(filteredDataResult);
-    }
-    if (homeTableState.startedAtSelections.length > 0) {
-      filteredDataResult = filterByDateRange(
-        filteredDataResult,
-        'startedAt',
-        homeTableState.startedAtSelections
-      );
-    }
-    return filteredDataResult;
-  };
-
   return (
     <div className='home-table'>
       <Table
-        dataSource={filteredData()}
+        dataSource={filterData(data, homeTableState)}
         columns={columns}
         rowKey={(record) => record.name}
         onChange={handleTableChange}
