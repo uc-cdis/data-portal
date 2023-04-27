@@ -61,7 +61,7 @@
     "mock-local-storage": "^1.0.5",
     "moment": "^2.29.4",
     "node-fetch": "^2.6.1",
-    "nunjucks": "^3.0.1",
+    "nunjucks": "^3.2.4",
     "p-limit": "2.3.0",
     "papaparse": "^5.2.0",
     "pluralize": "^8.0.0",
