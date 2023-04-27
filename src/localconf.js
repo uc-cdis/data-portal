@@ -134,6 +134,8 @@ function buildConfig(opts) {
   const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
 
+  const dicomServerUrl = `${hostname}dicom-server/`;
+
   // datadog related setup
   let ddEnv = 'PROD';
   if (hostnameOnly.includes('qa-')) {
@@ -571,6 +573,7 @@ function buildConfig(opts) {
     workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
+    dicomServerUrl,
     workspaceRegistrationConfig,
     workspaceStorageUrl,
     workspaceStorageListUrl,

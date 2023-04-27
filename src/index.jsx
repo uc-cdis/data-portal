@@ -228,14 +228,14 @@ async function init() {
                   />
                   <Route
                     exact
-                    path='/dicom-viewer/viewer/:series'
+                    path='/ohif-viewer/viewer/:series'
                     component={
                       (props) => <ProtectedContent component={Viewer} {...props} />
                     }
                   />
                   <Route
                     exact
-                    path='/dicom-viewer'
+                    path='/ohif-viewer'
                     component={
                       (props) => <ProtectedContent component={Viewer} {...props} />
                     }

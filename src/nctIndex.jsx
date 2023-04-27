@@ -240,13 +240,6 @@ async function init() {
                       (props) => <ProtectedContent component={GraphQLQuery} {...props} />
                     }
                   />
-                  <Route
-                    exact
-                    path='/dicom-viewer'
-                    component={
-                      (props) => <ProtectedContent component={Viewer} {...props} />
-                    }
-                  />
                   {
                     isEnabled('analysis')
                       ? (

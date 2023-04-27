@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { createRef } from 'react';
+import { dicomServerUrl } from '../localconf';
 import { installViewer } from '@ohif/viewer';
 
 import './page.less';
 
 const ohifViewerConfig = {
-  routerBasename: '/dev.html/dicom-viewer',
+  routerBasename: '/ohif-viewer',
   servers: {
     dicomWeb: [
       {
         name: 'DCM4CHEE',
-        wadoUriRoot: 'http://localhost/orthanc/wado',
-        qidoRoot: 'http://localhost/orthanc/dicom-web',
-        wadoRoot: 'http://localhost/orthanc/dicom-web',
+        wadoUriRoot: `${dicomServerUrl}dicom-web/wado`,
+        qidoRoot: `${dicomServerUrl}dicom-web`,
+        wadoRoot: `${dicomServerUrl}dicom-web`,
         qidoSupportsIncludeField: true,
         imageRendering: 'wadors',
         thumbnailRendering: 'wadors',
@@ -29,17 +30,42 @@ const componentRenderedOrUpdatedCallback = function () {
 };
 
 class Viewer extends React.Component {
+  parentRef = createRef();
+  observer = null;
+
   componentDidMount() {
     installViewer(
       ohifViewerConfig,
       containerId,
       componentRenderedOrUpdatedCallback
     );
+    this.checkAndUpdateParentHeight();
+  }
+
+  componentDidUpdate() {
+    this.checkAndUpdateParentHeight();
+  }
+
+  checkAndUpdateParentHeight() {
+    const parent = this.parentRef.current;
+    const child1 = parent && parent.querySelector('.study-list-container');
+    let height = 201;
+
+    if (child1) {
+      const childHeight = parseInt(window.getComputedStyle(child1).height);
+      height += childHeight;
+    } else {
+      setTimeout(() => {
+        this.checkAndUpdateParentHeight();
+      }, 500);
+    }
+
+    parent.style.minHeight = height + "px";
   }
 
   render() {
     return (
-      <div id={containerId} className='dicom-viewer' />
+      <div id={containerId} ref={this.parentRef} className='dicom-viewer' />
     );
   }
 }
