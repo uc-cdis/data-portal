@@ -1,11 +1,11 @@
 import React, { createRef } from 'react';
-import { dicomServerUrl } from '../localconf';
+import { basename, dicomServerUrl } from '../localconf';
 import { installViewer } from '@ohif/viewer';
 
 import './page.less';
 
 const ohifViewerConfig = {
-  routerBasename: '/ohif-viewer/',
+  routerBasename: `${basename}/ohif-viewer/`,
   servers: {
     dicomWeb: [
       {
