@@ -5,7 +5,7 @@ import { installViewer } from '@ohif/viewer';
 import './page.less';
 
 const ohifViewerConfig = {
-  routerBasename: `${basename}/ohif-viewer/`,
+  routerBasename: `${basename}${basename.endsWith('/') ? '' : '/'}ohif-viewer/`,
   servers: {
     dicomWeb: [
       {
