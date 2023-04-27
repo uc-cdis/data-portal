@@ -227,14 +227,7 @@ async function init() {
                     }
                   />
                   <Route
-                    exact
-                    path='/ohif-viewer/viewer/:series'
-                    component={
-                      (props) => <ProtectedContent component={Viewer} {...props} />
-                    }
-                  />
-                  <Route
-                    exact
+                    exact={false}
                     path='/ohif-viewer'
                     component={
                       (props) => <ProtectedContent component={Viewer} {...props} />
