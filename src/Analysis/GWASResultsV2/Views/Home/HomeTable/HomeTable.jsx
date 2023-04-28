@@ -9,6 +9,7 @@ import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
+  console.log(data);
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
   const columns = [
     {
@@ -26,7 +27,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Submitted',
       key: 'submittedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.submittedAt),
+      sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       render: (record) => (
         <DateForTable utcFormattedDate={record.submittedAt} />
       ),
