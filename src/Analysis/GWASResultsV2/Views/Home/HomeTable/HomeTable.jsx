@@ -283,7 +283,7 @@ const HomeTable = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
   useEffect(() => {
     setFilteredData(filterTableData(data, homeTableState));
-  }, [homeTableState]);
+  }, [homeTableState, data]);
 
   return (
     <div className='home-table'>

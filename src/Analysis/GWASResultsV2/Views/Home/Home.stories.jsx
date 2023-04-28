@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import { rest } from 'msw';
@@ -22,18 +22,31 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const MockTemplate = () => (
-  <QueryClientProvider client={mockedQueryClient}>
-    <SharedContext.Provider
-      value={{
-        setSelectedRowData,
-        setCurrentView,
-      }}
-    >
-      <Home />
-    </SharedContext.Provider>
-  </QueryClientProvider>
-);
+const MockTemplate = () => {
+  const [homeTableState, setHomeTableState] = useState({
+    nameSearchTerm: '',
+    wfNameSearchTerm: '',
+    submittedAtSelections: [],
+    finishedAtSelections: [],
+    jobStatusSelections: [],
+    sortInfo: {},
+    currentPage: 1,
+  });
+  return (
+    <QueryClientProvider client={mockedQueryClient}>
+      <SharedContext.Provider
+        value={{
+          setSelectedRowData,
+          setCurrentView,
+          homeTableState,
+          setHomeTableState,
+        }}
+      >
+        <Home />
+      </SharedContext.Provider>
+    </QueryClientProvider>
+  );
+};
 
 let requestCount = 0;
 let rowCount = 1;
@@ -53,16 +66,25 @@ const getMockPhase = (requestCount) => {
 };
 
 let workflowList = TableData;
+const minWorkflowNum = 100000000;
+const maxWorkflowNum = 999999999;
 
 const getMockWorkflowList = () => {
   requestCount++;
   // simulate a new workflow only at each 3rd request:
   if (requestCount % 3 == 0) {
     workflowList.splice(0, 0, {
-      name: 'argo-wrapper-workflow-' + requestCount,
+      name:
+        'argo-wrapper-workflow-' +
+        requestCount +
+        Math.round(
+          Math.random() * (maxWorkflowNum - minWorkflowNum) + minWorkflowNum
+        ),
+      wf_name: 'User Added WF Name ' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
-      startedAt: new Date(new Date() - Math.random() * 1e12),
+      finishedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
+      submittedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
     });
     rowCount++;
   }
