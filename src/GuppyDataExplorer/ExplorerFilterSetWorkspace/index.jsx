@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
+import ButtonToggle from '../../gen3-ui-component/components/ButtonToggle';
 import { contactEmail } from '../../localconf';
 import {
   createFilterSet,
@@ -230,25 +231,12 @@ function ExplorerFilterSetWorkspace() {
               style={{ display: 'inline-flex', margin: '0 1rem 0 0' }}
             >
               Compose with
-              {['AND', 'OR'].map((/** @type {'AND' | 'OR'} */ combineMode) => (
-                <label
-                  key={combineMode}
-                  className={
-                    composeState.combineMode === combineMode
-                      ? 'active'
-                      : undefined
-                  }
-                >
-                  <input
-                    name='combineMode'
-                    value={combineMode}
-                    type='radio'
-                    onChange={() => updateComposeCombineMode(combineMode)}
-                    checked={composeState.combineMode === combineMode}
-                  />
-                  {combineMode}
-                </label>
-              ))}
+              <ButtonToggle 
+                isOn={composeState.combineMode === 'AND'}
+                onText='AND'
+                offText='OR'
+                onToggle={({ value }) => updateComposeCombineMode(value)}
+              />
             </span>
             <button
               className='explorer-filter-set-workspace__action-button'

@@ -1,0 +1,31 @@
+.button-toggle {
+    display: inline-flex;
+}
+  
+.button-toggle > label {
+    padding: 0 4px;
+    margin-left: 8px;
+    background-color: var(--g3-color__silver);
+    border: 1px solid var(--g3-color__silver);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* .button-toggle > label:first-of-type {
+    margin-left: 0;
+} */
+  
+.button-toggle > label.active {
+    border-color: var(--pcdc-color__secondary);
+}
+  
+.button-toggle > label.active,
+.button-toggle > label:hover {
+    background-color: var(--g3-color__white);
+}
+  
+.button-toggle input[type='radio'] {
+    display: none;
+}
