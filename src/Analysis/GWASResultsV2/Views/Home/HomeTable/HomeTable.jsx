@@ -21,13 +21,6 @@ const HomeTable = ({ data }) => {
     setHomeTableState,
   } = useContext(SharedContext);
 
-  const setHomeTableToFirstPage = () => {
-    setHomeTableState({
-      ...homeTableState,
-      currentPage: 1,
-    });
-  };
-
   const handleTableChange = (pagination, filters, sorter) => {
     if (pagination.current !== homeTableState.currentPage) {
       // User updates page, set page to current pagination
