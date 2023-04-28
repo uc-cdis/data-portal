@@ -14,7 +14,7 @@ const GWASResultsContainer = () => {
     nameSearchTerm: '',
     wfNameSearchTerm: '',
     submittedAtSelections: [],
-    startedAtSelections: [],
+    finishedAtSelections: [],
     jobStatusSelections: [],
     sortInfo: {},
     currentPage: 1,

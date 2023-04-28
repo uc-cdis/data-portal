@@ -49,11 +49,11 @@ const filterTableData = (data, homeTableState) => {
       homeTableState.jobStatusSelections
     );
   }
-  if (homeTableState.startedAtSelections.length > 0) {
+  if (homeTableState.finishedAtSelections.length > 0) {
     filteredDataResult = filterByDateRange(
       filteredDataResult,
-      'startedAt',
-      homeTableState.startedAtSelections
+      'finishedAt',
+      homeTableState.finsihedAtSelections
     );
   }
   return filteredDataResult;
