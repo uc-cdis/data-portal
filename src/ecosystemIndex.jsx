@@ -10,7 +10,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
-
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchAndSetCsrfToken } from './configs';
@@ -28,7 +27,6 @@ import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
-// import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -64,8 +62,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
-import WorkspaceRegistration from './WorkspaceRegistration';
-import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
+import ReduxGenericAccessRequestForm from './GenericAccessRequestForm/ReduxGenericAccessRequestForm';
 import ReduxDataDictionarySubmission from './StudyRegistration/ReduxDataDictionarySubmission';
 import NotFound from './components/NotFound';
 import ErrorPage403 from './components/ErrorPage403';
@@ -359,7 +356,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={WorkspaceRegistration}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
@@ -368,6 +365,7 @@ async function init() {
                       )
                       : null
                   }
+
                   <Route
                     exact
                     path={workspaceUrl}
@@ -535,7 +533,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={ReduxStudyRegistrationRequestForm}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
@@ -554,6 +552,24 @@ async function init() {
                             (props) => (
                               <ProtectedContent
                                 component={ReduxDataDictionarySubmission}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/data-dictionary-submission/request-access'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
