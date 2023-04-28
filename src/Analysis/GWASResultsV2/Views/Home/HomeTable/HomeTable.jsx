@@ -9,7 +9,6 @@ import PHASES from '../../../Utils/PhasesEnumeration';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
-  console.log(data);
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
   const columns = [
     {
@@ -48,10 +47,10 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
-      title: 'Date/Time Started',
-      key: 'startedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
-      render: (record) => <DateForTable utcFormattedDate={record.startedAt} />,
+      title: 'Date/Time Finished',
+      key: 'finishedAt',
+      sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
+      render: (record) => <DateForTable utcFormattedDate={record.finishedAt} />,
     },
     {
       title: 'View Details',
