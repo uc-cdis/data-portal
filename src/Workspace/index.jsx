@@ -690,7 +690,7 @@ class Workspace extends React.Component {
                       <Alert
                         description={
                           showExternalLoginsOnProfile
-                            ? 'To analyze controlled data to which you have access, please authorize external data resources in the Profile page.'
+                            ? 'To analyze all data to which you have access, please authorize external data resources in the Profile page.'
                             : 'Please link account to additional data resources at the bottom of the page'
                         }
                         type='info'
