@@ -13,9 +13,9 @@ const HomeTable = ({ data }) => {
   const columns = [
     {
       title: 'Run ID',
-      dataIndex: 'uid',
-      key: 'uid',
-      sorter: (a, b) => a.uid.localeCompare(b.uid),
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: 'Workflow name',

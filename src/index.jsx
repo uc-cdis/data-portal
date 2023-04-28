@@ -57,7 +57,6 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import workspaceSessionMonitor from './Workspace/WorkspaceSessionMonitor';
 import Workspace from './Workspace';
-import WorkspaceRegistration from './WorkspaceRegistration';
 import ResourceBrowser from './ResourceBrowser';
 import Discovery from './Discovery';
 import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
@@ -66,6 +65,7 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
 import ErrorPage403 from './components/ErrorPage403';
+import GenericAccessRequestForm from './GenericAccessRequestForm/GenericAccessRequestForm';
 
 // monitor user's session
 sessionMonitor.start();
@@ -356,7 +356,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={WorkspaceRegistration}
+                                component={GenericAccessRequestForm}
                                 {...props}
                               />
                             )

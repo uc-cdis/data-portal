@@ -294,7 +294,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                   key={study[studyRegistrationConfig.studyRegistrationUIDField]}
                   value={study[studyRegistrationConfig.studyRegistrationUIDField]}
                 >
-                  {`${study.project_number} : ${study.project_title} : ${study[studyRegistrationConfig.studyRegistrationUIDField]}`}
+                  {`${study.project_number} : ${study.project_title} : ${study.appl_id}`}
                 </Option>
               ))}
             </Select>
