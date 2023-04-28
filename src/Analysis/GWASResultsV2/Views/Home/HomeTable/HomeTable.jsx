@@ -215,7 +215,7 @@ const HomeTable = ({ data }) => {
       },
     },
     {
-      title: 'Date/Time finished',
+      title: 'Date/Time Finished',
       key: 'finishedAt',
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
@@ -288,7 +288,7 @@ const HomeTable = ({ data }) => {
   return (
     <div className='home-table'>
       <Table
-        dataSource={filteredData}
+        dataSource={[...filteredData]}
         columns={columns}
         rowKey={(record) => record.name}
         onChange={handleTableChange}
