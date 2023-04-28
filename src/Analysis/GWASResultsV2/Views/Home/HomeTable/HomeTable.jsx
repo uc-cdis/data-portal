@@ -73,20 +73,20 @@ const HomeTable = ({ data }) => {
         });
       }
     }
-    if (dateType === 'startedAtSelection') {
+    if (dateType === 'finishedAtSelection') {
       if (event && event.length === 2) {
         const startDate = moment.utc(event[0]._d);
         const endDate = moment.utc(event[1]._d);
         return setHomeTableState({
           ...homeTableState,
           currentPage: 1,
-          startedAtSelections: [startDate, endDate],
+          finishedAtSelections: [startDate, endDate],
         });
       } else {
         return setHomeTableState({
           ...homeTableState,
           currentPage: 1,
-          startedAtSelections: [],
+          finishedAtSelections: [],
         });
       }
     }
@@ -215,26 +215,26 @@ const HomeTable = ({ data }) => {
       },
     },
     {
-      title: 'Date/Time Started',
-      key: 'startedAt',
-      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
+      title: 'Date/Time finished',
+      key: 'finishedAt',
+      sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'startedAt' &&
+        homeTableState.sortInfo?.columnKey === 'finishedAt' &&
         homeTableState.sortInfo.order,
-      dataIndex: 'startedAt',
+      dataIndex: 'finishedAt',
       children: [
         {
           title: (
             <RangePicker
-              value={homeTableState.startedAtSelections}
+              value={homeTableState.finishedAtSelections}
               popupClassName='home-table-range-picker'
               allowClear
               onChange={(event) => {
-                handleDateSelectionChange(event, 'startedAtSelection');
+                handleDateSelectionChange(event, 'finishedAtSelection');
               }}
             />
           ),
-          dataIndex: 'startedAt',
+          dataIndex: 'finishedAt',
           render: (value) => <DateForTable utcFormattedDate={value} />,
         },
       ],
