@@ -6,19 +6,12 @@ import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
 import './GWASResultsContainer.css';
+import InitialHomeTableState from './Utils/InitialHomeTableState';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
-  const [homeTableState, setHomeTableState] = useState({
-    nameSearchTerm: '',
-    wfNameSearchTerm: '',
-    submittedAtSelections: [],
-    finishedAtSelections: [],
-    jobStatusSelections: [],
-    sortInfo: {},
-    currentPage: 1,
-  });
+  const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
   useHideUnneededElements();
   const generateStep = () => {

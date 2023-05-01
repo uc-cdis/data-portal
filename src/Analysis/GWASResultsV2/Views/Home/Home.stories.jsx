@@ -5,6 +5,7 @@ import { rest } from 'msw';
 import Home from './Home';
 import PHASES from '../../Utils/PhasesEnumeration';
 import TableData from '../../TestData/TableData';
+import InitialHomeTableState from '../../Utils/InitialHomeTableState';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
@@ -23,15 +24,7 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  const [homeTableState, setHomeTableState] = useState({
-    nameSearchTerm: '',
-    wfNameSearchTerm: '',
-    submittedAtSelections: [],
-    finishedAtSelections: [],
-    jobStatusSelections: [],
-    sortInfo: {},
-    currentPage: 1,
-  });
+  const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider

@@ -53,7 +53,7 @@ const filterTableData = (data, homeTableState) => {
     filteredDataResult = filterByDateRange(
       filteredDataResult,
       'finishedAt',
-      homeTableState.finsihedAtSelections
+      homeTableState.finishedAtSelections
     );
   }
   return filteredDataResult;
