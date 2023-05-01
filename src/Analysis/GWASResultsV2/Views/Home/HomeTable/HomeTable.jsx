@@ -23,7 +23,7 @@ const HomeTable = ({ data }) => {
 
   const handleTableChange = (pagination, filters, sorter) => {
     if (pagination.current !== homeTableState.currentPage) {
-      // User updates page, set page to current pagination
+      // User updates page, set page to current pagination selection
       return setHomeTableState({
         ...homeTableState,
         currentPage: pagination.current,
@@ -98,9 +98,9 @@ const HomeTable = ({ data }) => {
     });
   };
 
-  const phaseOptions = [];
+  const jobStatusDropdownOptions = [];
   Object.values(PHASES).forEach((phase) =>
-    phaseOptions.push({ value: phase, label: phase })
+    jobStatusDropdownOptions.push({ value: phase, label: phase })
   );
 
   const columns = [
@@ -188,7 +188,7 @@ const HomeTable = ({ data }) => {
               className='select-job-status'
               placeholder='Select Job Status'
               mode='multiple'
-              options={phaseOptions}
+              options={jobStatusDropdownOptions}
               value={homeTableState.jobStatusSelections}
               onChange={(event) => handleJobStatusChange(event)}
             />
