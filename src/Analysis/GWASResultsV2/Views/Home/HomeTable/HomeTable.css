@@ -21,12 +21,15 @@
 
 /* Hide separators in table between thead columns */
 .ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+> tr
+> th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
   content: none;
 }
 
 /* Style actions dropdown */
+.home-table .anticon-search svg path {
+  opacity: 0.35;
+}
 .home-table svg[data-icon='ellipsis'] {
   border-radius: 50%;
   height: 25px;
@@ -75,10 +78,6 @@
   font-weight: 400;
   color: rgba(0, 0, 0, 0.2);
   font-size: 14px;
-}
-
-.home-table .anticon-search svg path {
-  opacity: 0.35;
 }
 
 .home-table th.ant-table-column-has-sorters,
