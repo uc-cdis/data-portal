@@ -69,7 +69,7 @@ const createWorkflowNum = () =>
 const getMockWorkflowList = () => {
   requestCount++;
   // simulate a new workflow only at each 3rd request:
-  if (requestCount % 1 == 0) {
+  if (requestCount % 3 == 0) {
     workflowList.splice(0, 0, {
       name: 'argo-wrapper-workflow-' + createWorkflowNum(),
       wf_name: 'User Added WF Name ' + requestCount,
