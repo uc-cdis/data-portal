@@ -61,17 +61,17 @@ const getMockPhase = (requestCount) => {
 let workflowList = TableData;
 const minWorkflowNum = 1e8;
 const maxWorkflowNum = 1e9 - 1;
+const createWorkflowNum = () =>
+  Math.round(
+    Math.random() * (maxWorkflowNum - minWorkflowNum) + minWorkflowNum
+  );
 
 const getMockWorkflowList = () => {
   requestCount++;
   // simulate a new workflow only at each 3rd request:
-  if (requestCount % 3 == 0) {
+  if (requestCount % 1 == 0) {
     workflowList.splice(0, 0, {
-      name:
-        'argo-wrapper-workflow-' +
-        Math.round(
-          Math.random() * (maxWorkflowNum - minWorkflowNum) + minWorkflowNum
-        ),
+      name: 'argo-wrapper-workflow-' + createWorkflowNum(),
       wf_name: 'User Added WF Name ' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
