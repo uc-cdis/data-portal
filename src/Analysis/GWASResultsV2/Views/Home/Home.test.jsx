@@ -5,22 +5,23 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import TableData from '../../TestData/TableData';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
+import InitialHomeTableState from '../../Utils/InitialHomeTableState';
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false },
   },
 });
-const setCurrentView = () => 'arbitrary function';
-const setSelectedRowData = () => 'another arbitrary function';
-const selectedRowData = 'arbitrary variable';
+
 const testJSX = () => (
   <QueryClientProvider client={mockedQueryClient}>
     <SharedContext.Provider
       value={{
-        setCurrentView,
-        selectedRowData,
-        setSelectedRowData,
+        setCurrentView: jest.fn(),
+        selectedRowData: jest.fn(),
+        setSelectedRowData: jest.fn(),
+        homeTableState: InitialHomeTableState,
+        setHomeTableState: jest.fn(),
       }}
     >
       <Home />
@@ -39,7 +40,9 @@ describe('Home component', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    );
   });
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
