@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
+import {
+  Button, Table, Space, Input, DatePicker, Select,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -100,8 +102,7 @@ const HomeTable = ({ data }) => {
   };
 
   const jobStatusDropdownOptions = [];
-  Object.values(PHASES).forEach((phase) =>
-    jobStatusDropdownOptions.push({ value: phase, label: phase })
+  Object.values(PHASES).forEach((phase) => jobStatusDropdownOptions.push({ value: phase, label: phase }),
   );
 
   const columns = [
@@ -111,8 +112,8 @@ const HomeTable = ({ data }) => {
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'name' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'name'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -133,8 +134,8 @@ const HomeTable = ({ data }) => {
       key: 'wf_name',
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'wf_name' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'wf_name'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -155,8 +156,8 @@ const HomeTable = ({ data }) => {
       key: 'submittedAt',
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'submittedAt' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'submittedAt'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -179,8 +180,8 @@ const HomeTable = ({ data }) => {
       dataIndex: 'phase',
       key: 'phase',
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'phase' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'phase'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -214,8 +215,8 @@ const HomeTable = ({ data }) => {
       key: 'finishedAt',
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'finishedAt' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'finishedAt'
+        && homeTableState.sortInfo.order,
       dataIndex: 'finishedAt',
       children: [
         {
