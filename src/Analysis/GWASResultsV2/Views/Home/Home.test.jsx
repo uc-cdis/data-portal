@@ -40,8 +40,7 @@ describe('Home component', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await waitFor(() =>
-      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
     );
   });
 

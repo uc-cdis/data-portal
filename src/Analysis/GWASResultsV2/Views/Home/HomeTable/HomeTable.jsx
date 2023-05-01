@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
+import {
+  Button, Table, Space, Input, DatePicker, Select,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -29,9 +31,9 @@ const HomeTable = ({ data }) => {
         currentPage: pagination.current,
       });
     }
-    // User updates sorting, set page to first page
+    // User updates sorting or filtering, set page to first page
     // Ask Pieter what he thinks about having sort move pagination back to page one
-    setHomeTableState({
+    return setHomeTableState({
       ...homeTableState,
       currentPage: 1,
       sortInfo: sorter,
@@ -65,13 +67,12 @@ const HomeTable = ({ data }) => {
           currentPage: 1,
           submittedAtSelections: [startDate, endDate],
         });
-      } else {
-        return setHomeTableState({
-          ...homeTableState,
-          currentPage: 1,
-          submittedAtSelections: [],
-        });
       }
+      return setHomeTableState({
+        ...homeTableState,
+        currentPage: 1,
+        submittedAtSelections: [],
+      });
     }
     if (dateType === 'finishedAtSelection') {
       if (event && event.length === 2) {
@@ -82,14 +83,14 @@ const HomeTable = ({ data }) => {
           currentPage: 1,
           finishedAtSelections: [startDate, endDate],
         });
-      } else {
-        return setHomeTableState({
-          ...homeTableState,
-          currentPage: 1,
-          finishedAtSelections: [],
-        });
       }
+      return setHomeTableState({
+        ...homeTableState,
+        currentPage: 1,
+        finishedAtSelections: [],
+      });
     }
+    return new Error('Invalid dateType');
   };
 
   const handleJobStatusChange = (event) => {
@@ -101,8 +102,7 @@ const HomeTable = ({ data }) => {
   };
 
   const phaseOptions = [];
-  Object.values(PHASES).forEach((phase) =>
-    phaseOptions.push({ value: phase, label: phase })
+  Object.values(PHASES).forEach((phase) => phaseOptions.push({ value: phase, label: phase }),
   );
 
   const columns = [
@@ -112,8 +112,8 @@ const HomeTable = ({ data }) => {
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'name' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'name'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -134,8 +134,8 @@ const HomeTable = ({ data }) => {
       key: 'wf_name',
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'wf_name' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'wf_name'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -156,8 +156,8 @@ const HomeTable = ({ data }) => {
       key: 'submittedAt',
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'submittedAt' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'submittedAt'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -180,8 +180,8 @@ const HomeTable = ({ data }) => {
       dataIndex: 'phase',
       key: 'phase',
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'phase' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'phase'
+        && homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -196,31 +196,27 @@ const HomeTable = ({ data }) => {
             />
           ),
           dataIndex: 'phase',
-          render: (value) => {
-            return (
-              <div className='job-status'>
-                {value === PHASES.Succeeded && <Icons.Succeeded />}
-                {value === PHASES.Pending && <Icons.Pending />}
-                {value === PHASES.Running && <Icons.Running />}
-                {value === PHASES.Error && <Icons.Error />}
-                {value === PHASES.Failed && <Icons.Failed />}
-                {value}
-              </div>
-            );
-          },
+          render: (value) => (
+            <div className='job-status'>
+              {value === PHASES.Succeeded && <Icons.Succeeded />}
+              {value === PHASES.Pending && <Icons.Pending />}
+              {value === PHASES.Running && <Icons.Running />}
+              {value === PHASES.Error && <Icons.Error />}
+              {value === PHASES.Failed && <Icons.Failed />}
+              {value}
+            </div>
+          ),
         },
       ],
-      sorter: (a, b) => {
-        return a.phase.localeCompare(b.phase);
-      },
+      sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
       title: 'Date/Time Finished',
       key: 'finishedAt',
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'finishedAt' &&
-        homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'finishedAt'
+        && homeTableState.sortInfo.order,
       dataIndex: 'finishedAt',
       children: [
         {
