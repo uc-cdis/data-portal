@@ -59,8 +59,8 @@ const getMockPhase = (requestCount) => {
 };
 
 let workflowList = TableData;
-const minWorkflowNum = 100000000;
-const maxWorkflowNum = 999999999;
+const minWorkflowNum = 1e8;
+const maxWorkflowNum = 1e9 - 1;
 
 const getMockWorkflowList = () => {
   requestCount++;
@@ -69,7 +69,6 @@ const getMockWorkflowList = () => {
     workflowList.splice(0, 0, {
       name:
         'argo-wrapper-workflow-' +
-        requestCount +
         Math.round(
           Math.random() * (maxWorkflowNum - minWorkflowNum) + minWorkflowNum
         ),
