@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
-import Switch from 'react-switch';
+import ButtonToggle from '../../ButtonToggle';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import SingleSelectFilter from '../SingleSelectFilter';
@@ -208,12 +208,12 @@ function FilterSection({
     setState((prevState) => ({ ...prevState, isExpanded: newIsExpanded }));
   }
 
-  /** @param {boolean} isExclusion */
-  function handleToggleExclusion(isExclusion) {
+  function handleToggleExclusion({ isOn }) {
+    let isExclusion = !isOn;
     onToggleExclusion(isExclusion);
     setState((prevState) => ({
       ...prevState,
-      isExclusion,
+      isExclusion
     }));
   }
 
@@ -426,16 +426,13 @@ function FilterSection({
     // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
     return (
       <>
-        <div className='g3-single-select-filter'>
-          <label htmlFor={sectionTitle} style={{ marginRight: '0.5rem' }}>
-            Exclude Selections
-          </label>
-          <Switch
-            id={sectionTitle}
-            height={22}
-            width={44}
-            onChange={handleToggleExclusion}
-            checked={state.isExclusion}
+        <div>
+          Filter Mode
+          <ButtonToggle 
+            isOn={!state.isExclusion}
+            onText='Include'
+            offText='Exclude' 
+            onToggle={handleToggleExclusion}
           />
         </div>
         {options.map(
