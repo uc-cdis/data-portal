@@ -100,7 +100,7 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(100), ctx.json(getMockWorkflowList()));
+          return res(ctx.delay(400), ctx.json(getMockWorkflowList()));
         }
       ),
     ],
