@@ -21,7 +21,9 @@ const Home = () => {
     return (
       <React.Fragment>
         <div className='spinner-container'>
-          <Spin />
+          <Spin /> Retrieving the list of workflows.
+          <br />
+          Please wait...
         </div>
       </React.Fragment>
     );
