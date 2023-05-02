@@ -41,7 +41,7 @@
 
 .explorer-survival-analysis__control-form {
   margin: 12px;
-  min-height: 300px;
+  min-height: calc(100% + 200px);
   text-align: center;
   width: 100%;
 }
