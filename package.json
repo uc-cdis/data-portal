@@ -1,6 +1,6 @@
 {
   "name": "@pcdc/windmill",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "PCDC Data Portal",
   "dependencies": {
     "@babel/core": "^7.21.3",
