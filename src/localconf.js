@@ -448,13 +448,6 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwasResults.svg',
           };
           break;
-        case 'GWASResultsV2':
-          analysisApps.GWASResultsV2 = {
-            title: 'GWAS ResultsV2',
-            description: 'Temporary card for opening the V2 of GWAS Results App',
-            image: '/src/img/analysis-icons/gwasResults.svg',
-          };
-          break;
         default:
           break;
         }
