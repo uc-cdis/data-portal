@@ -109,7 +109,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Run ID',
       dataIndex: 'name',
-      key: 'name',
+      key: 'uid',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'name'
@@ -286,7 +286,7 @@ const HomeTable = ({ data }) => {
       <Table
         dataSource={[...filteredData]}
         columns={columns}
-        rowKey={(record) => record.name}
+        rowKey={(record) => record.uid}
         onChange={handleTableChange}
         pagination={{
           current: homeTableState.currentPage,
