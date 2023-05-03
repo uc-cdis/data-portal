@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Dropdown, Menu, Switch } from 'antd';
-import { HolderOutlined } from '@ant-design/icons';
-
-import './ManageColumns.css';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
+import './ManageColumns.css';
 
 const ManageColumns = () => {
   const [restoreDefaults, setRestoreDefaults] = useState(false);
@@ -89,7 +87,7 @@ const ManageColumns = () => {
       overlayClassName='manage-columns-dropdown'
       trigger={['click']}
     >
-      <Button>
+      <Button className='manage-columns-button'>
         <ManageColumnsIcon />
         Manage columns
       </Button>

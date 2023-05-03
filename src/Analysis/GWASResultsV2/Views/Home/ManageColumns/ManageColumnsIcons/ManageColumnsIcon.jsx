@@ -1,7 +1,12 @@
 import React from 'react';
 
 const ManageColumnsIcon = () => (
-  <svg xmlns='http://www.w3.org/2000/svg' height='12' viewBox='0 0 48 48'>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    height='12'
+    viewBox='0 0 48 48'
+    className='manage-columns-icon'
+  >
     <g id='manageC_Icon' transform='translate(-2 -2)'>
       <path
         id='middle'

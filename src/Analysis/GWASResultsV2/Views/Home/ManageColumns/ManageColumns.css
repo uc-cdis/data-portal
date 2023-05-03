@@ -14,3 +14,7 @@
 .ant-dropdown button.ant-switch {
   max-width: 28px;
 }
+
+.manage-columns-icon {
+  margin-right: 10px;
+}
