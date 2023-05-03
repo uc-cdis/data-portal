@@ -1,14 +1,14 @@
 import moment from 'moment';
 
-const filterBySearchTerm = (initData, key, searchTerm) => initData.filter((obj) => obj[key]
+const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
   .toString()
   .toLowerCase()
   .includes(searchTerm.toLowerCase()),
 );
 
-const filterByJobStatuses = (initData, jobStatusSelections) => initData.filter((item) => jobStatusSelections.includes(item.phase));
+const filterByJobStatuses = (data, jobStatusSelections) => data.filter((item) => jobStatusSelections.includes(item.phase));
 
-const filterByDateRange = (initData, key, dateSelection) => initData.filter((obj) => {
+const filterByDateRange = (data, key, dateSelection) => data.filter((obj) => {
   const utcDate = moment.utc(obj[key]);
   return (
     utcDate.isSameOrAfter(dateSelection[0])
