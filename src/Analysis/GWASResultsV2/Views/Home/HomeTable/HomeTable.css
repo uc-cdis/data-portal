@@ -27,6 +27,10 @@
 }
 
 /* Style actions dropdown */
+.home-table .anticon-search svg path {
+  opacity: 0.35;
+}
+
 .home-table svg[data-icon='ellipsis'] {
   border-radius: 50%;
   height: 25px;
@@ -65,4 +69,31 @@
 
 .home-table .anticon-ellipsis {
   transform: scale(1.25);
+}
+
+.home-table .select-job-status {
+  width: 160px;
+}
+
+.home-table .select-job-status .ant-select-selection-placeholder {
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
+
+.home-table th.ant-table-column-has-sorters,
+.home-table .ant-table-thead > tr > th {
+  padding: 16px 16px 8px 16px;
+}
+
+.home-table th.ant-table-column-has-sorters .ant-table-column-sorters::after {
+  display: none;
+}
+.home-table .ant-table-thead > tr:nth-child(2) th.ant-table-cell {
+  padding: 0 16px 16px 16px;
+}
+
+/* Fix for date picker layout */
+.home-table-range-picker .ant-picker-header > * {
+  flex: unset;
 }
