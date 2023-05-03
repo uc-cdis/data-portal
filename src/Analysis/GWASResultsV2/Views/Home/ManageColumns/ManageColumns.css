@@ -1,0 +1,16 @@
+.manage-columns {
+  float: right;
+  margin-bottom: 20px;
+}
+
+.restore-defaults {
+  color: #2e77b8;
+  font-size: 12px;
+}
+
+.manage-columns-dropdown .dropdown-row svg {
+  margin-right: 5px;
+}
+.ant-dropdown button.ant-switch {
+  max-width: 28px;
+}

@@ -3,7 +3,9 @@ import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
+
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import ManageColumns from './ManageColumns/ManageColumns';
 
 const Home = () => {
   const refetchInterval = 5000;
@@ -33,6 +35,7 @@ const Home = () => {
   }
   return (
     <React.Fragment>
+      <ManageColumns />
       <HomeTable data={data} />
     </React.Fragment>
   );
