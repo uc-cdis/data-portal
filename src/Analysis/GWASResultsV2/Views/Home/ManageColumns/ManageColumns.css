@@ -8,13 +8,14 @@
   font-size: 12px;
 }
 
-.manage-columns-dropdown .dropdown-row svg {
+.manage-columns-dropdown .dropdown-row svg,
+.manage-columns-icon {
   margin-right: 5px;
 }
 .ant-dropdown button.ant-switch {
   max-width: 28px;
 }
 
-.manage-columns-icon {
-  margin-right: 10px;
+.manage-columns-dropdown .ant-switch-checked {
+  background: #ef8523;
 }

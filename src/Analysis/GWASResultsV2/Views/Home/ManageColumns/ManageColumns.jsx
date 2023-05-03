@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, Menu, Switch } from 'antd';
+import {
+  Button, Dropdown, Menu, Switch,
+} from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
