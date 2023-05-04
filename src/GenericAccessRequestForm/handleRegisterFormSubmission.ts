@@ -27,16 +27,24 @@ const handleRegisterFormSubmission = async (
   };
 
   // first, check if there is already a pending request in requestor
+  let userHaveRequestPending;
+  let policyID;
   try {
-    const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
+
+    if (specificFormInfo.name === 'WorkspaceAccessRequest') {
+      policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
+      userHaveRequestPending = await doesUserHaveRequestPending(null, policyID);
+    }
+    else {
+      userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
+    }
     if (userHaveRequestPending) {
       // there is already a request for this user on this study, display a message
       // and disable the button
       setFormSubmissionButtonDisabled(true);
       setFormSubmissionStatus({
         status: 'info',
-        text: `There is already a pending request for this study/user combination,
-           please wait while we are processing your request.`,
+        text: specificFormInfo.pendingRequestText,
       });
       return;
     }
@@ -48,7 +56,6 @@ const handleRegisterFormSubmission = async (
   // eslint-disable-next-line camelcase
   let body: { policy_id?: string; username?: any; resource_id?: any; resource_paths?: any[]; role_ids?: string[]; };
   if (specificFormInfo.name === 'WorkspaceAccessRequest') {
-    const policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
     body = {
       policy_id: policyID,
     };
