@@ -27,8 +27,8 @@ const handleRegisterFormSubmission = async (
   };
 
   // first, check if there is already a pending request in requestor
-  let userHaveRequestPending;
-  let policyID;
+  let userHaveRequestPending : boolean;
+  let policyID : string;
   try {
     if (specificFormInfo.name === 'WorkspaceAccessRequest') {
       policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
