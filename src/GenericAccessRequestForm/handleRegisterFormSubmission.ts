@@ -30,12 +30,10 @@ const handleRegisterFormSubmission = async (
   let userHaveRequestPending;
   let policyID;
   try {
-
     if (specificFormInfo.name === 'WorkspaceAccessRequest') {
       policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
       userHaveRequestPending = await doesUserHaveRequestPending(null, policyID);
-    }
-    else {
+    } else {
       userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
     }
     if (userHaveRequestPending) {
