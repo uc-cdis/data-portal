@@ -65,6 +65,7 @@
 .g3-filter-section__options {
   font-size: 14px;
   color: var(--g3-color__gray);
+  margin-top: 10px;
 }
 
 .g3-filter-section__toggle-icon-container {
@@ -223,3 +224,4 @@
   margin-left: 14px;
   margin-top: 14px;
 }
+

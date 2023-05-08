@@ -204,7 +204,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
                 icon='circle-info'
                 color='var(--pcdc-color__primary-light)'
               />{' '}
-              Allowed Consortium
+              Allowed Consortia
             </span>
           </Tooltip>
         }
@@ -326,6 +326,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
           maxMenuHeight={160}
           value={selectFilterSet}
           theme={overrideSelectTheme}
+          menuPlacement='auto'
         />
         <Button
           label='Add'
