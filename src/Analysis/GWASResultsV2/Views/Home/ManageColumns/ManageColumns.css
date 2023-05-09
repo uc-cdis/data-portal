@@ -2,9 +2,11 @@
   float: right;
   margin-bottom: 20px;
 }
+
 .manage-columns-dropdown {
   width: 238px;
 }
+
 .manage-columns-switch {
   width: 30px;
   float: right;
@@ -23,6 +25,7 @@
 .manage-columns-icon {
   margin-right: 5px;
 }
+
 .ant-dropdown button.ant-switch {
   max-width: 28px;
 }
