@@ -3,17 +3,20 @@ import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
-import ColumnManagementDefault from './ColumnManagementDefault';
+import InitialColumnManagement from '../../../Utils/InitialColumnManagement';
 import SharedContext from '../../../Utils/SharedContext';
 import './ManageColumns.css';
 
 const ManageColumns = () => {
-  const { columnManagement, setColumnManagement } = useContext(SharedContext);
+  const { homeTableState, setHomeTableState } = useContext(SharedContext);
 
   const handleRestoreDefaultsClick = (e) => {
     e.stopPropagation();
     message.success('Restored column defaults');
-    setColumnManagement(ColumnManagementDefault);
+    setHomeTableState({
+      ...homeTableState,
+      columnManagement: InitialColumnManagement,
+    });
   };
 
   const handleSwitchClick = (e) => {
@@ -43,15 +46,24 @@ const ManageColumns = () => {
           className='dropdown-row run-id'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              runId: !columnManagement.runId,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              nameSearchTerm: '',
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                runId: !homeTableState.columnManagement.runId,
+              },
             });
           }}
         >
           <HolderIcon /> Run ID
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.runId} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.runId}
+            />
           </div>
         </div>
       ),
@@ -63,15 +75,24 @@ const ManageColumns = () => {
           className='dropdown-row workflow-name'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              workflowName: !columnManagement.workflowName,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              wfNameSearchTerm: '',
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                workflowName: !homeTableState.columnManagement.workflowName,
+              },
             });
           }}
         >
           <HolderIcon /> Workflow Name
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.workflowName} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.workflowName}
+            />
           </div>
         </div>
       ),
@@ -84,15 +105,24 @@ const ManageColumns = () => {
           className='dropdown-row date-submitted'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              dateSubmitted: !columnManagement.dateSubmitted,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              submittedAtSelections: [],
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
+              },
             });
           }}
         >
           <HolderIcon /> Date/Time Submitted
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.dateSubmitted} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.dateSubmitted}
+            />
           </div>
         </div>
       ),
@@ -104,15 +134,24 @@ const ManageColumns = () => {
           className='dropdown-row job-status'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              jobStatus: !columnManagement.jobStatus,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              jobStatusSelections: [],
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                jobStatus: !homeTableState.columnManagement.jobStatus,
+              },
             });
           }}
         >
           <HolderIcon /> Job Status
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.jobStatus} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.jobStatus}
+            />
           </div>
         </div>
       ),
@@ -124,15 +163,24 @@ const ManageColumns = () => {
           className='dropdown-row date-finished'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              dateFinished: !columnManagement.dateFinished,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              finishedAtSelections: [],
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                dateFinished: !homeTableState.columnManagement.dateFinished,
+              },
             });
           }}
         >
           <HolderIcon /> Date/Time Finished
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.dateFinished} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.dateFinished}
+            />
           </div>
         </div>
       ),
@@ -144,15 +192,23 @@ const ManageColumns = () => {
           className='dropdown-row view-details'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              viewDetails: !columnManagement.viewDetails,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                viewDetails: !homeTableState.columnManagement.viewDetails,
+              },
             });
           }}
         >
           <HolderIcon /> View Details
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.viewDetails} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.viewDetails}
+            />
           </div>
         </div>
       ),
@@ -164,15 +220,23 @@ const ManageColumns = () => {
           className='dropdown-row actions'
           onClick={(event) => {
             handleSwitchClick(event);
-            setColumnManagement({
-              ...columnManagement,
-              actions: !columnManagement.actions,
+            setHomeTableState({
+              ...homeTableState,
+              sortInfo: {},
+              currentPage: 1,
+              columnManagement: {
+                ...homeTableState.columnManagement,
+                actions: !homeTableState.columnManagement.actions,
+              },
             });
           }}
         >
           <HolderIcon /> Actions
           <div className='manage-columns-switch'>
-            <Switch size='small' checked={columnManagement.actions} />
+            <Switch
+              size='small'
+              checked={homeTableState.columnManagement.actions}
+            />
           </div>
         </div>
       ),

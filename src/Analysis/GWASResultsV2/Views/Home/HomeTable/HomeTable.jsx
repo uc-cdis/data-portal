@@ -12,6 +12,7 @@ import filterTableData from './filterTableData';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
 import './HomeTable.css';
+import LoadingErrorMessage from '../../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
 const { RangePicker } = DatePicker;
 
@@ -21,7 +22,6 @@ const HomeTable = ({ data }) => {
     setSelectedRowData,
     homeTableState,
     setHomeTableState,
-    columnManagement,
   } = useContext(SharedContext);
 
   const handleTableChange = (pagination, filters, sorter) => {
@@ -111,7 +111,7 @@ const HomeTable = ({ data }) => {
       title: 'Run ID',
       dataIndex: 'name',
       key: 'name',
-      show: columnManagement.runId,
+      show: homeTableState.columnManagement.runId,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'name' &&
@@ -134,7 +134,7 @@ const HomeTable = ({ data }) => {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'wf_name',
-      show: columnManagement.workflowName,
+      show: homeTableState.columnManagement.workflowName,
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'wf_name' &&
@@ -157,7 +157,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
-      show: columnManagement.dateSubmitted,
+      show: homeTableState.columnManagement.dateSubmitted,
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'submittedAt' &&
@@ -183,7 +183,7 @@ const HomeTable = ({ data }) => {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
-      show: columnManagement.jobStatus,
+      show: homeTableState.columnManagement.jobStatus,
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'phase' &&
         homeTableState.sortInfo.order,
@@ -218,7 +218,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Finished',
       key: 'finishedAt',
-      show: columnManagement.dateFinished,
+      show: homeTableState.columnManagement.dateFinished,
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'finishedAt' &&
@@ -244,7 +244,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'View Details',
       key: 'viewDetails',
-      show: columnManagement.viewDetails,
+      show: homeTableState.columnManagement.viewDetails,
       children: [
         {
           title: '',
@@ -274,7 +274,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      show: columnManagement.actions,
+      show: homeTableState.columnManagement.actions,
       children: [
         {
           title: '',
@@ -289,9 +289,13 @@ const HomeTable = ({ data }) => {
     setFilteredData(filterTableData(data, homeTableState));
   }, [homeTableState, data]);
 
+  const checkForColumn = () => {
+    return Object.values(homeTableState.columnManagement).includes(true);
+  };
+
   return (
     <div className='home-table'>
-      {Object.keys(columnManagement).some((key) => columnManagement[key]) ? (
+      {checkForColumn() ? (
         <Table
           dataSource={isIterable(filteredData) && [...filteredData]}
           columns={columns}
@@ -305,7 +309,9 @@ const HomeTable = ({ data }) => {
           }}
         />
       ) : (
-        <h2>Please select at least one column from Manage Columns </h2>
+        <LoadingErrorMessage
+          message={'Please select at least one column from Manage columns'}
+        />
       )}
     </div>
   );

@@ -1,3 +1,5 @@
+import ColumnManagementDefault from './InitialColumnManagement';
+
 const InitialHomeTableState = {
   nameSearchTerm: '',
   wfNameSearchTerm: '',
@@ -6,6 +8,7 @@ const InitialHomeTableState = {
   jobStatusSelections: [],
   sortInfo: {},
   currentPage: 1,
+  columnManagement: ColumnManagementDefault,
 };
 
 export default InitialHomeTableState;
