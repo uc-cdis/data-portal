@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import { Button, Dropdown, Switch, message } from 'antd';
+import {
+  Button, Dropdown, Switch, message,
+} from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
