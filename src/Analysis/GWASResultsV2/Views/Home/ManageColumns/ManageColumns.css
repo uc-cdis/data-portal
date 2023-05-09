@@ -17,8 +17,15 @@
   font-size: 12px;
 }
 
-.manage-columns-dropdown .dropdown-row {
+.manage-columns-dropdown button.dropdown-row {
   user-select: none;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: unset;
 }
 
 .manage-columns-dropdown .dropdown-row svg,

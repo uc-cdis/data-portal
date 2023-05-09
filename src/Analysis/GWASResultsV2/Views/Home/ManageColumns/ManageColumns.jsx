@@ -9,23 +9,113 @@ import './ManageColumns.css';
 
 const ManageColumns = () => {
   const { homeTableState, setHomeTableState } = useContext(SharedContext);
+  const isEnterOrSpace = (event) =>
+    event.key === 'Enter' ||
+    event.key === ' ' ||
+    event.key === 'Spacebar' ||
+    event.keycode === '32' ||
+    event.keycode === '13';
+
+  const restoreDefaults = (event) => {
+    message.success('Restored column defaults');
+    setHomeTableState({
+      ...homeTableState,
+      columnManagement: InitialColumnManagement,
+    });
+  };
+  const toggleRunId = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      nameSearchTerm: '',
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        runId: !homeTableState.columnManagement.runId,
+      },
+    });
+  const toggleWorkflowName = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      wfNameSearchTerm: '',
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        workflowName: !homeTableState.columnManagement.workflowName,
+      },
+    });
+
+  const toggleDateSubmitted = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      submittedAtSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
+      },
+    });
+
+  const toggleJobStatus = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      jobStatusSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        jobStatus: !homeTableState.columnManagement.jobStatus,
+      },
+    });
+
+  const toggleDateFinished = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      finishedAtSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        dateFinished: !homeTableState.columnManagement.dateFinished,
+      },
+    });
+
+  const toggleViewDetails = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        viewDetails: !homeTableState.columnManagement.viewDetails,
+      },
+    });
+
+  const toggleActions = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        actions: !homeTableState.columnManagement.actions,
+      },
+    });
+
   const items = [
     {
       label: (
-        <div
+        <button
           className='dropdown-row restore-defaults'
-          role='button'
           onClick={(event) => {
             event.stopPropagation();
-            message.success('Restored column defaults');
-            setHomeTableState({
-              ...homeTableState,
-              columnManagement: InitialColumnManagement,
-            });
+            restoreDefaults(event);
           }}
         >
           <RestoreIcon /> Restore Defaults
-        </div>
+        </button>
       ),
       key: '0',
     },
@@ -34,20 +124,11 @@ const ManageColumns = () => {
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              nameSearchTerm: '',
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                runId: !homeTableState.columnManagement.runId,
-              },
-            });
+            toggleRunId();
           }}
         >
           <HolderIcon /> Run ID
@@ -57,26 +138,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.runId}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '1',
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row workflow-name'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              wfNameSearchTerm: '',
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                workflowName: !homeTableState.columnManagement.workflowName,
-              },
-            });
+            toggleWorkflowName();
           }}
         >
           <HolderIcon /> Workflow Name
@@ -86,27 +158,18 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.workflowName}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '2',
     },
 
     {
       label: (
-        <div
+        <button
           className='dropdown-row date-submitted'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              submittedAtSelections: [],
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
-              },
-            });
+            toggleDateSubmitted();
           }}
         >
           <HolderIcon /> Date/Time Submitted
@@ -116,26 +179,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.dateSubmitted}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '3',
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row job-status'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              jobStatusSelections: [],
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                jobStatus: !homeTableState.columnManagement.jobStatus,
-              },
-            });
+            toggleJobStatus();
           }}
         >
           <HolderIcon /> Job Status
@@ -145,26 +199,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.jobStatus}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '4',
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row date-finished'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              finishedAtSelections: [],
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                dateFinished: !homeTableState.columnManagement.dateFinished,
-              },
-            });
+            toggleDateFinished();
           }}
         >
           <HolderIcon /> Date/Time Finished
@@ -174,25 +219,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.dateFinished}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '5',
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row view-details'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                viewDetails: !homeTableState.columnManagement.viewDetails,
-              },
-            });
+            toggleViewDetails();
           }}
         >
           <HolderIcon /> View Details
@@ -202,25 +239,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.viewDetails}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '6',
     },
     {
       label: (
-        <div
+        <button
           className='dropdown-row actions'
           onClick={(event) => {
             event.stopPropagation();
-            setHomeTableState({
-              ...homeTableState,
-              sortInfo: {},
-              currentPage: 1,
-              columnManagement: {
-                ...homeTableState.columnManagement,
-                actions: !homeTableState.columnManagement.actions,
-              },
-            });
+            toggleActions();
           }}
         >
           <HolderIcon /> Actions
@@ -230,7 +259,7 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.actions}
             />
           </div>
-        </div>
+        </button>
       ),
       key: '7',
     },
