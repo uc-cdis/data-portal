@@ -7,23 +7,27 @@ import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
 import './GWASResultsContainer.css';
 import InitialHomeTableState from './Utils/InitialHomeTableState';
+import ColumnManagementDefault from './Views/Home/ManageColumns/ColumnManagementDefault';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
+  const [columnManagement, setColumnManagement] = useState(
+    ColumnManagementDefault
+  );
 
   useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
-    case VIEWS.home:
-      return <Home />;
-    case VIEWS.results:
-      return <Results />;
-    case VIEWS.execution:
-      return <Execution />;
-    default:
-      return null;
+      case VIEWS.home:
+        return <Home />;
+      case VIEWS.results:
+        return <Results />;
+      case VIEWS.execution:
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
@@ -36,6 +40,8 @@ const GWASResultsContainer = () => {
           setSelectedRowData,
           homeTableState,
           setHomeTableState,
+          columnManagement,
+          setColumnManagement,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>

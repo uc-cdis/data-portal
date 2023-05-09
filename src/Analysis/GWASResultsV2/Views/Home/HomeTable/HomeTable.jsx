@@ -21,6 +21,7 @@ const HomeTable = ({ data }) => {
     setSelectedRowData,
     homeTableState,
     setHomeTableState,
+    columnManagement,
   } = useContext(SharedContext);
 
   const handleTableChange = (pagination, filters, sorter) => {
@@ -110,7 +111,7 @@ const HomeTable = ({ data }) => {
       title: 'Run ID',
       dataIndex: 'name',
       key: 'name',
-      hidden: false,
+      show: columnManagement.runId,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'name' &&
@@ -133,7 +134,7 @@ const HomeTable = ({ data }) => {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'wf_name',
-      hidden: false,
+      show: columnManagement.workflowName,
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'wf_name' &&
@@ -156,7 +157,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
-      hidden: false,
+      show: columnManagement.dateSubmitted,
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'submittedAt' &&
@@ -182,7 +183,7 @@ const HomeTable = ({ data }) => {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
-      hidden: false,
+      show: columnManagement.jobStatus,
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'phase' &&
         homeTableState.sortInfo.order,
@@ -217,7 +218,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Finished',
       key: 'finishedAt',
-      hidden: false,
+      show: columnManagement.dateFinished,
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'finishedAt' &&
@@ -243,6 +244,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'View Details',
       key: 'viewDetails',
+      show: columnManagement.viewDetails,
       children: [
         {
           title: '',
@@ -272,7 +274,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      hidden: false,
+      show: columnManagement.actions,
       children: [
         {
           title: '',
@@ -280,7 +282,7 @@ const HomeTable = ({ data }) => {
         },
       ],
     },
-  ].filter((item) => !item.hidden);
+  ].filter((item) => item.show);
 
   const [filteredData, setFilteredData] = useState(data);
   useEffect(() => {
@@ -289,18 +291,22 @@ const HomeTable = ({ data }) => {
 
   return (
     <div className='home-table'>
-      <Table
-        dataSource={isIterable(filteredData) && [...filteredData]}
-        columns={columns}
-        rowKey={(record) => record.uid}
-        onChange={handleTableChange}
-        pagination={{
-          current: homeTableState.currentPage,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '30'],
-        }}
-      />
+      {Object.keys(columnManagement).some((key) => columnManagement[key]) ? (
+        <Table
+          dataSource={isIterable(filteredData) && [...filteredData]}
+          columns={columns}
+          rowKey={(record) => record.uid}
+          onChange={handleTableChange}
+          pagination={{
+            current: homeTableState.currentPage,
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '30'],
+          }}
+        />
+      ) : (
+        <h2>Please select at least one column from Manage Columns </h2>
+      )}
     </div>
   );
 };
