@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Button, Dropdown, Switch, message,
-} from 'antd';
+import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
@@ -11,27 +9,19 @@ import './ManageColumns.css';
 
 const ManageColumns = () => {
   const { homeTableState, setHomeTableState } = useContext(SharedContext);
-
-  const handleRestoreDefaultsClick = (e) => {
-    e.stopPropagation();
-    message.success('Restored column defaults');
-    setHomeTableState({
-      ...homeTableState,
-      columnManagement: InitialColumnManagement,
-    });
-  };
-
-  const handleSwitchClick = (e) => {
-    e.stopPropagation();
-  };
-
   const items = [
     {
       label: (
         <div
           className='dropdown-row restore-defaults'
+          role='button'
           onClick={(event) => {
-            handleRestoreDefaultsClick(event);
+            event.stopPropagation();
+            message.success('Restored column defaults');
+            setHomeTableState({
+              ...homeTableState,
+              columnManagement: InitialColumnManagement,
+            });
           }}
         >
           <RestoreIcon /> Restore Defaults
@@ -47,7 +37,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row run-id'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -76,7 +66,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row workflow-name'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -106,7 +96,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row date-submitted'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -135,7 +125,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row job-status'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -164,7 +154,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row date-finished'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -193,7 +183,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row view-details'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
@@ -221,7 +211,7 @@ const ManageColumns = () => {
         <div
           className='dropdown-row actions'
           onClick={(event) => {
-            handleSwitchClick(event);
+            event.stopPropagation();
             setHomeTableState({
               ...homeTableState,
               sortInfo: {},
