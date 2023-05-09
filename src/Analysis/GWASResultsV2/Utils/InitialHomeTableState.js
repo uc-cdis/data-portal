@@ -1,4 +1,4 @@
-import ColumnManagementDefault from './InitialColumnManagement';
+import InitialColumnManagement from './InitialColumnManagement';
 
 const InitialHomeTableState = {
   nameSearchTerm: '',
@@ -8,7 +8,7 @@ const InitialHomeTableState = {
   jobStatusSelections: [],
   sortInfo: {},
   currentPage: 1,
-  columnManagement: ColumnManagementDefault,
+  columnManagement: InitialColumnManagement,
 };
 
 export default InitialHomeTableState;
