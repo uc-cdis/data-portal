@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
-import {
-  Button, Dropdown, Menu, Switch,
-} from 'antd';
+import { Button, Dropdown, Menu, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
 import './ManageColumns.css';
 
 const ManageColumns = () => {
-  const [restoreDefaults, setRestoreDefaults] = useState(false);
-  const [runId, setRunId] = useState(false);
-  const [workflowName, setWorkflowName] = useState(false);
+  const [restoreDefaults, setRestoreDefaults] = useState(true);
+  const [runIdCheck, setRunIdCheck] = useState(true);
+  const [workflowNameCheck, setWorkflowNameCheck] = useState(true);
+  const [dateSubmittedCheck, setDateSubmittedCheck] = useState(true);
+  const [jobStatusCheck, setJobStatusCheck] = useState(true);
+  const [dateFinishedCheck, setDateFinishedCheck] = useState(true);
+  const [viewDetailsCheck, setViewDetailsCheck] = useState(true);
+  const [actionsCheck, setActionsCheck] = useState(true);
 
-  const handleRestoreDefaultsClick = () => {
-    window.location.href = 'https://www.google.com';
+  const handleRestoreDefaultsClick = (e) => {
+    e.stopPropagation();
+    message.success('Restored column defaults');
   };
 
   const handleRunIdToggle = (e) => {
     e.stopPropagation();
-    setRunId();
+    // setRunId();
   };
 
-  const handleWorkflowNameToggle = () => {
-    setWorkflowName();
+  const handleWorkflowNameToggle = (e) => {
+    e.stopPropagation();
+    // setWorkflowName();
   };
 
   const items = [
@@ -30,8 +35,8 @@ const ManageColumns = () => {
       label: (
         <div
           className='dropdown-row restore-defaults'
-          onClick={(e) => {
-            handleRestoreDefaultsClick();
+          onClick={(event) => {
+            handleRestoreDefaultsClick(event);
           }}
         >
           <RestoreIcon /> Restore Defaults
@@ -48,35 +53,119 @@ const ManageColumns = () => {
           className='dropdown-row run-id'
           onClick={(event) => {
             handleRunIdToggle(event);
-            setRunId(runId ? 0 : 1);
+            setRunIdCheck(runIdCheck ? false : true);
           }}
         >
-          <HolderIcon /> Run ID{' '}
-          <div style={{ width: 30, float: 'right' }}>
-            <Switch size='small' checked={runId} onChange={() => setRunId(1)} />
+          <HolderIcon /> Run ID
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={runIdCheck} />
           </div>
         </div>
       ),
       key: '1',
     },
-
     {
       label: (
         <div
           className='dropdown-row workflow-name'
-          onClick={(e) => {
-            e.stopPropagation();
-            return setWorkflowName();
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setWorkflowNameCheck(workflowNameCheck ? false : true);
           }}
         >
           <HolderIcon /> Workflow Name
-          <Switch
-            checked={workflowName}
-            onChange={(e) => handleWorkflowNameToggle(e)}
-          />
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={workflowNameCheck} />
+          </div>
+        </div>
+      ),
+      key: '2',
+    },
+
+    {
+      label: (
+        <div
+          className='dropdown-row date-submitted'
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setDateSubmittedCheck(dateSubmittedCheck ? false : true);
+          }}
+        >
+          <HolderIcon /> Date/Time Submitted
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={dateSubmittedCheck} />
+          </div>
         </div>
       ),
       key: '3',
+    },
+    {
+      label: (
+        <div
+          className='dropdown-row job-status'
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setJobStatusCheck(jobStatusCheck ? false : true);
+          }}
+        >
+          <HolderIcon /> Job Status
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={jobStatusCheck} />
+          </div>
+        </div>
+      ),
+      key: '4',
+    },
+    {
+      label: (
+        <div
+          className='dropdown-row date-finished'
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setDateFinishedCheck(dateFinishedCheck ? false : true);
+          }}
+        >
+          <HolderIcon /> Date/Time Finished
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={dateFinishedCheck} />
+          </div>
+        </div>
+      ),
+      key: '5',
+    },
+    {
+      label: (
+        <div
+          className='dropdown-row date-finished'
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setViewDetailsCheck(viewDetailsCheck ? false : true);
+          }}
+        >
+          <HolderIcon /> View Details
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={viewDetailsCheck} />
+          </div>
+        </div>
+      ),
+      key: '6',
+    },
+    {
+      label: (
+        <div
+          className='dropdown-row actions'
+          onClick={(event) => {
+            handleWorkflowNameToggle(event);
+            setActionsCheck(actionsCheck ? false : true);
+          }}
+        >
+          <HolderIcon /> Actions
+          <div className='manage-columns-switch'>
+            <Switch size='small' checked={actionsCheck} />
+          </div>
+        </div>
+      ),
+      key: '7',
     },
   ];
 

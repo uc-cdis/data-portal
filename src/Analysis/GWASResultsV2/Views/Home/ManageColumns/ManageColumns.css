@@ -2,10 +2,21 @@
   float: right;
   margin-bottom: 20px;
 }
+.manage-columns-dropdown {
+  width: 238px;
+}
+.manage-columns-switch {
+  width: 30px;
+  float: right;
+}
 
 .restore-defaults {
   color: #2e77b8;
   font-size: 12px;
+}
+
+.manage-columns-dropdown .dropdown-row {
+  user-select: none;
 }
 
 .manage-columns-dropdown .dropdown-row svg,
@@ -18,4 +29,17 @@
 
 .manage-columns-dropdown .ant-switch-checked {
   background: #ef8523;
+}
+
+button.manage-columns.ant-dropdown-open {
+  background: #2e77b8;
+  color: white;
+}
+
+button.manage-columns.ant-dropdown-open svg path {
+  fill: #fff;
+}
+
+button.manage-columns.ant-dropdown-open svg path#middle {
+  fill: #2e77b8;
 }
