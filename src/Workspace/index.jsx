@@ -518,7 +518,7 @@ class Workspace extends React.Component {
         >
           {
             (Object.keys(this.state.payModel).length > 0) ? (
-              <Collapse defaultActiveKey={['1']} className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
+              <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='Account Information' key='1'>
                   <Row gutter={{
                     xs: 8, sm: 16, md: 24, lg: 32,
@@ -531,7 +531,7 @@ class Workspace extends React.Component {
                           ? (
                             <a href={stridesPortalURL} target='_blank' rel='noreferrer'>
                               <Space>
-                                Workspace Account Manager
+                                Apply for an account
                                 <Tooltip title='This link is external'>
                                   <FontAwesomeIcon
                                     icon={'external-link-alt'}
@@ -690,7 +690,7 @@ class Workspace extends React.Component {
                       <Alert
                         description={
                           showExternalLoginsOnProfile
-                            ? 'To analyze all data to which you have access, please authorize external data resources in the Profile page.'
+                            ? 'Please link account to additional data resources on the Profile Page'
                             : 'Please link account to additional data resources at the bottom of the page'
                         }
                         type='info'
