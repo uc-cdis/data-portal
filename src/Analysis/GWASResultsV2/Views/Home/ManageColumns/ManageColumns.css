@@ -50,6 +50,6 @@ button.manage-columns.ant-dropdown-open svg path {
   fill: #fff;
 }
 
-button.manage-columns.ant-dropdown-open svg path#middle {
+button.manage-columns.ant-dropdown-open svg path.middle {
   fill: #2e77b8;
 }
