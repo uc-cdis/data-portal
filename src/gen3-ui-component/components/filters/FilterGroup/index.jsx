@@ -18,6 +18,7 @@ import {
   updateExclusion,
   updateRangeValue,
   updateSelectedValue,
+  removeEmptyFilter,
 } from './utils';
 import './FilterGroup.css';
 
@@ -103,7 +104,7 @@ function FilterGroup({
 
   const [filterResults, setFilterResults] = useState(filter);
 
-  const [excludedStatus] = useState(
+  const [excludedStatus, setExcludedStatus] = useState(
     getExcludedStatus(filterTabs, filterResults)
   );
 
@@ -231,8 +232,9 @@ function FilterGroup({
       isExclusion,
     });
 
-    setFilterResults(updated.filterResults);
-    onFilterChange(updated.filterResults);
+    setExcludedStatus(getExcludedStatus(filterTabs, updated.filterResults, excludedStatus));
+    setFilterResults(removeEmptyFilter(updated.filterResults));
+    onFilterChange(removeEmptyFilter(updated.filterResults));
   }
 
   /**
