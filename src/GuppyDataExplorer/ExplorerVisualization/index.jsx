@@ -26,7 +26,7 @@ class ExplorerVisualization extends React.Component {
     this.connectedFilter = React.createRef();
   }
 
-  getData = (aggsData, chartConfig, filter) => {
+  getData = (aggsData, chartConfig) => {
     const summaries = [];
     let countItems = [];
     const stackedBarCharts = [];
@@ -36,14 +36,14 @@ class ExplorerVisualization extends React.Component {
     });
     Object.keys(chartConfig).forEach((field) => {
       // use `${field}` to handle nested fields, which contain '.'
-      if (!aggsData || !aggsData[`${field}`] || !aggsData[`${field}`].histogram) return;
+      if (!aggsData || !aggsData[`${field}`] || !(aggsData[`${field}`].histogram || aggsData[`${field}`].cardinalityCount)) return;
       const { histogram } = aggsData[`${field}`];
       switch (chartConfig[`${field}`].chartType) {
       case 'count':
+        // handle data returned from api
         countItems.push({
           label: chartConfig[`${field}`].title,
-          value: filter[`${field}`] ? filter[`${field}`].selectedValues.length
-            : aggsData[`${field}`].histogram.length,
+          value: aggsData[`${field}`].cardinalityCount,
         });
         break;
       case 'pie':
@@ -98,7 +98,7 @@ class ExplorerVisualization extends React.Component {
   };
 
   render() {
-    const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
+    const chartData = this.getData(this.props.aggsData, this.props.chartConfig);
     const tableColumnsOrdered = (this.props.tableConfig.fields
       && this.props.tableConfig.fields.length > 0);
     const tableColumns = tableColumnsOrdered ? this.props.tableConfig.fields : this.props.allFields;

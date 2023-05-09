@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unused-state */
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -106,6 +107,9 @@ class GuppyDataExplorer extends React.Component {
     if (isEnabled('explorerStoreFilterInURL')) {
       this.refreshQueryStateInUrl();
     }
+    // sort chartConfig to handle chart type "count" separately
+    const [extraAggsFieldsCardinalityCount, extraAggsFields] = _.partition(Object.keys(this.props.chartConfig), (key) => this.props.chartConfig[key].chartType === 'count');
+
     return (
       <div className='guppy-data-explorer'>
         <GuppyWrapper
@@ -129,7 +133,8 @@ class GuppyDataExplorer extends React.Component {
           <ExplorerFilter
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
-            extraAggsFields={Object.keys(this.props.chartConfig)}
+            extraAggsFields={extraAggsFields}
+            extraAggsFieldsCardinalityCount={extraAggsFieldsCardinalityCount}
             getAccessButtonLink={this.props.getAccessButtonLink}
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}
