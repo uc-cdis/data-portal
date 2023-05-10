@@ -29,9 +29,11 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
  * @param {FilterTabsOption[]} filterTabs
  * @param {EmptyFilter | StandardFilterState} filterResults
  */
-export function getExcludedStatus(filterTabs, filterResults) {
-  return filterTabs.map(({ fields }) =>
-    fields.map((field) => filterResults.value?.[field]?.isExclusion || false)
+export function getExcludedStatus(filterTabs, filterResults, previousExcludedStatus = []) {
+  return filterTabs.map(({ fields }, i) =>
+    fields.map((field, j) => {
+      return filterResults.value?.[field]?.isExclusion ?? previousExcludedStatus[i]?.[j] ?? false
+    })
   );
 }
 
@@ -255,7 +257,7 @@ export function updateExclusion({
   }
 
   return {
-    filterResults: removeEmptyFilter(newFilterResults),
+    filterResults: newFilterResults,
   };
 }
 
