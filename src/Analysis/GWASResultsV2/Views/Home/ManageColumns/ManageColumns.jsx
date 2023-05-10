@@ -114,13 +114,15 @@ const ManageColumns = () => {
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
             toggleRunId();
           }}
+          onKeyPress={() => null}
         >
           <HolderIcon /> Run ID
           <div className='manage-columns-switch'>
@@ -129,7 +131,7 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.runId}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '1',
     },

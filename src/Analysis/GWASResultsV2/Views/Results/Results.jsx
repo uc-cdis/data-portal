@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Button, Tooltip } from 'antd';
+import { Spin, Button, Tooltip, message } from 'antd';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -27,7 +27,7 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        alert(`Could not download. \n\n${error}`);
+        message.error(`Could not download. \n\n${error}`);
       });
   };
 
@@ -37,7 +37,7 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        alert(`Could not download. \n\n${error}`);
+        message.error(`Could not download. \n\n${error}`);
       });
   };
 
