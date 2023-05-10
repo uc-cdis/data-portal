@@ -11,7 +11,8 @@ describe('ManageColumns', () => {
     setHomeTableState: jest.fn(),
   };
 
-  const columnNames = [
+  const rowNames = [
+    'Restore Defaults'
     'Run ID',
     'Workflow Name',
     'Date/Time Submitted',
@@ -20,7 +21,7 @@ describe('ManageColumns', () => {
     'View Details',
     'Actions',
   ];
-  it('renders all columns with correct default values', async () => {
+  it('renders all row with correct default values', async () => {
     render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
@@ -29,8 +30,8 @@ describe('ManageColumns', () => {
     const button = screen.getByRole('button');
     fireEvent.click(button);
     await waitFor(() => {
-      columnNames.forEach((columnName) => {
-        expect(screen.getByText(columnName)).toBeInTheDocument();
+      rowNames.forEach((rowName) => {
+        expect(screen.getByText(rowName)).toBeInTheDocument();
       });
     });
 
