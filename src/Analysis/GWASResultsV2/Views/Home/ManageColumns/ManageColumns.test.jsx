@@ -1,40 +1,49 @@
 import React from 'react';
-import SharedContext from '../../../Utils/SharedContext';
 import '@testing-library/jest-dom';
-import {
-  render, fireEvent, getByRole, screen,
-} from '@testing-library/react';
+import SharedContext from '../../../Utils/SharedContext';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import ManageColumns from './ManageColumns';
 import InitialHomeTableState from '../../../Utils/InitialHomeTableState';
 
 describe('ManageColumns', () => {
   const state = {
-    homeTableState: {
-      columnManagement: {
-        runId: true,
-        workflowName: true,
-        dateSubmitted: true,
-        jobStatus: true,
-        dateFinished: true,
-        viewDetails: true,
-        actions: true,
-      },
-      setHomeTableState: jest.fn(),
-    },
+    homeTableState: InitialHomeTableState,
+    setHomeTableState: jest.fn(),
   };
 
-  it('renders all columns with correct default values', () => {
-    const { container } = render(
+  const columnNames = [
+    'Run ID',
+    'Workflow Name',
+    'Date/Time Submitted',
+    'Job Status',
+    'Date/Time Finished',
+    'View Details',
+    'Actions',
+  ];
+  it('renders all columns with correct default values', async () => {
+    render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
     const button = screen.getByRole('button');
-
     fireEvent.click(button);
-    expect(screen.getByText('Run ID')).toBeInTheDocument();
-    // expect(container.getElementsByClassName('ant-switch-checked').length).toBe(6);
-    /*     expect(getByLabelText('Run ID')).toBeChecked();
+    await waitFor(() => {
+      columnNames.forEach((columnName) => {
+        expect(screen.getByText(columnName)).toBeInTheDocument();
+      });
+    });
+
+    /*
+    expect(
+      container.querySelectorAll('.manage-columns-switch .ant-switch-checked')
+        .length
+    ).toBe(6);
+    */
+  });
+
+  // expect(container.getElementsByClassName('ant-switch-checked').length).toBe(6);
+  /*  expect(getByLabelText('Run ID')).toBeChecked();
     expect(getByText('Workflow Name')).toBeInTheDocument();
     expect(getByLabelText('Workflow Name')).toBeChecked();
     expect(getByText('Date/Time Submitted')).toBeInTheDocument();
@@ -47,8 +56,7 @@ describe('ManageColumns', () => {
     expect(getByLabelText('View Details')).toBeChecked();
     expect(getByText('Actions')).toBeInTheDocument();
     expect(getByLabelText('Actions')).toBeChecked();
- */ });
-/*
+
   it('toggles Run ID column when switch is clicked', () => {
     const { getByLabelText } = render(
       <SharedContext.Provider value={state}>
@@ -90,6 +98,8 @@ describe('ManageColumns', () => {
       },
     });
   });
-*/
+
   // add more tests for other columns
+});
+ */
 });
