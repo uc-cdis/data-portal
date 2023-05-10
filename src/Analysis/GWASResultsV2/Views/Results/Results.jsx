@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Button, Tooltip, message } from 'antd';
+import {
+  Spin, Button, Tooltip, message,
+} from 'antd';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -20,6 +22,7 @@ const Results = () => {
     () => fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
     queryConfig,
   );
+  const errorDisplayTime = 15;
 
   const downloadAll = () => {
     fetchPresignedUrlForWorkflowArtifact(name, uid, 'gwas_archive_index')
@@ -27,7 +30,7 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        message.error(`Could not download. \n\n${error}`);
+        message.error(`Could not download. \n\n${error}`, errorDisplayTime);
       });
   };
 
@@ -37,7 +40,7 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        message.error(`Could not download. \n\n${error}`);
+        message.error(`Could not download. \n\n${error}`, errorDisplayTime);
       });
   };
 

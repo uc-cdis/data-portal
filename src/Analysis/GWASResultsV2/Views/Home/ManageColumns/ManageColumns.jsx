@@ -117,12 +117,13 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
+          onKeyPress={() => toggleRunId()}
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
             toggleRunId();
           }}
-          onKeyPress={() => null}
+
         >
           <HolderIcon /> Run ID
           <div className='manage-columns-switch'>
@@ -137,8 +138,10 @@ const ManageColumns = () => {
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleWorkflowName()}
           className='dropdown-row workflow-name'
           onClick={(event) => {
             event.stopPropagation();
@@ -152,15 +155,17 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.workflowName}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '2',
     },
 
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleDateSubmitted()}
           className='dropdown-row date-submitted'
           onClick={(event) => {
             event.stopPropagation();
@@ -174,14 +179,16 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.dateSubmitted}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '3',
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleJobStatus()}
           className='dropdown-row job-status'
           onClick={(event) => {
             event.stopPropagation();
@@ -195,14 +202,16 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.jobStatus}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '4',
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleDateFinished()}
           className='dropdown-row date-finished'
           onClick={(event) => {
             event.stopPropagation();
@@ -216,14 +225,16 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.dateFinished}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '5',
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleViewDetails()}
           className='dropdown-row view-details'
           onClick={(event) => {
             event.stopPropagation();
@@ -237,14 +248,16 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.viewDetails}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '6',
     },
     {
       label: (
-        <button
-          type='button'
+        <div
+          role='button'
+          tabIndex={0}
+          onKeyPress={() => toggleActions()}
           className='dropdown-row actions'
           onClick={(event) => {
             event.stopPropagation();
@@ -258,7 +271,7 @@ const ManageColumns = () => {
               checked={homeTableState.columnManagement.actions}
             />
           </div>
-        </button>
+        </div>
       ),
       key: '7',
     },
