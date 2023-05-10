@@ -119,10 +119,12 @@ function ExplorerExploreExternalButton({ filter }) {
   }
 
   function isOpenInNewTabButtonEnabled() {
-    if (!commonsInfo || !commonsInfo.data) {
+    if (!commonsInfo) {
       return false;
     } else if (commonsInfo.type === 'file') {
-      return isFileDownloaded;
+      return commonsInfo.data ? isFileDownloaded : false;
+    } else {
+      return true;
     }
   }
 
@@ -154,12 +156,14 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
-              {commonsInfo && !commonsInfo.data && (
-                <p className="no-data-info">
-                  There is no data for this cohort of subjects in the{' '}
-                  {selected.value.toUpperCase()} platform
-                </p>
-              )}
+              {commonsInfo &&
+                commonsInfo.type === 'file' &&
+                !commonsInfo.data && (
+                  <p className='no-data-info'>
+                    There is no data for this cohort of subjects in the{' '}
+                    {selected.value.toUpperCase()} platform
+                  </p>
+                )}
               {isLoading && (
                 <div className='explorer-explore-external__loading'>
                   <Spinner />
