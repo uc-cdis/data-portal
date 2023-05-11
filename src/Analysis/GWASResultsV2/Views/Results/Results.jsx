@@ -21,7 +21,6 @@ const Results = () => {
       fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
     queryConfig
   );
-  const errorDisplayTime = 15;
 
   const downloadAll = () => {
     fetchPresignedUrlForWorkflowArtifact(name, uid, 'gwas_archive_index')
