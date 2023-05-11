@@ -1,7 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom';
+import {
+  render, fireEvent, screen, waitFor,
+} from '@testing-library/react';
 import SharedContext from '../../../Utils/SharedContext';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import ManageColumns from './ManageColumns';
 import InitialHomeTableState from '../../../Utils/InitialHomeTableState';
 import InitialColumnManagement from '../../../Utils/InitialColumnManagement';
@@ -28,7 +30,7 @@ describe('ManageColumns', () => {
     render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     const button = screen.getByText('Manage columns');
     fireEvent.click(button);
@@ -43,7 +45,7 @@ describe('ManageColumns', () => {
     render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     const button = screen.getByRole('button');
     fireEvent.click(button);
@@ -56,7 +58,7 @@ describe('ManageColumns', () => {
     render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     const button = screen.getByRole('button');
     fireEvent.click(button);
@@ -79,7 +81,7 @@ describe('ManageColumns', () => {
     render(
       <SharedContext.Provider value={state}>
         <ManageColumns />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     const button = screen.getByRole('button');
     fireEvent.click(button);

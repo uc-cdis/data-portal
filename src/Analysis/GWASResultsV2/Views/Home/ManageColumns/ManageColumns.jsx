@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
-import { Button, Dropdown, Switch, message } from 'antd';
+import {
+  Button, Dropdown, Switch, message,
+} from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
@@ -17,86 +19,79 @@ const ManageColumns = () => {
       columnManagement: InitialColumnManagement,
     });
   };
-  const toggleRunId = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      nameSearchTerm: '',
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        runId: !homeTableState.columnManagement.runId,
-      },
-    });
-  const toggleWorkflowName = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      wfNameSearchTerm: '',
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        workflowName: !homeTableState.columnManagement.workflowName,
-      },
-    });
+  const toggleRunId = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    nameSearchTerm: '',
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      runId: !homeTableState.columnManagement.runId,
+    },
+  });
+  const toggleWorkflowName = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    wfNameSearchTerm: '',
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      workflowName: !homeTableState.columnManagement.workflowName,
+    },
+  });
 
-  const toggleDateSubmitted = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      submittedAtSelections: [],
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
-      },
-    });
+  const toggleDateSubmitted = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    submittedAtSelections: [],
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
+    },
+  });
 
-  const toggleJobStatus = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      jobStatusSelections: [],
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        jobStatus: !homeTableState.columnManagement.jobStatus,
-      },
-    });
+  const toggleJobStatus = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    jobStatusSelections: [],
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      jobStatus: !homeTableState.columnManagement.jobStatus,
+    },
+  });
 
-  const toggleDateFinished = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      finishedAtSelections: [],
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        dateFinished: !homeTableState.columnManagement.dateFinished,
-      },
-    });
+  const toggleDateFinished = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    finishedAtSelections: [],
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      dateFinished: !homeTableState.columnManagement.dateFinished,
+    },
+  });
 
-  const toggleViewDetails = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        viewDetails: !homeTableState.columnManagement.viewDetails,
-      },
-    });
+  const toggleViewDetails = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      viewDetails: !homeTableState.columnManagement.viewDetails,
+    },
+  });
 
-  const toggleActions = () =>
-    setHomeTableState({
-      ...homeTableState,
-      sortInfo: {},
-      currentPage: 1,
-      columnManagement: {
-        ...homeTableState.columnManagement,
-        actions: !homeTableState.columnManagement.actions,
-      },
-    });
+  const toggleActions = () => setHomeTableState({
+    ...homeTableState,
+    sortInfo: {},
+    currentPage: 1,
+    columnManagement: {
+      ...homeTableState.columnManagement,
+      actions: !homeTableState.columnManagement.actions,
+    },
+  });
 
   const items = [
     {
