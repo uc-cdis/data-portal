@@ -108,7 +108,7 @@ class GuppyDataExplorer extends React.Component {
       this.refreshQueryStateInUrl();
     }
     // sort chartConfig to handle chart type "count" separately
-    const [extraAggsFieldsCardinalityCount, extraAggsFields] = _.partition(Object.keys(this.props.chartConfig), (key) => this.props.chartConfig[key].chartType === 'count');
+    const [extraAggsFieldsCount, extraAggsFields] = _.partition(Object.keys(this.props.chartConfig), (key) => this.props.chartConfig[key].chartType === 'count');
 
     return (
       <div className='guppy-data-explorer'>
@@ -134,7 +134,7 @@ class GuppyDataExplorer extends React.Component {
             className='guppy-data-explorer__filter'
             guppyConfig={this.props.guppyConfig}
             extraAggsFields={extraAggsFields}
-            extraAggsFieldsCardinalityCount={extraAggsFieldsCardinalityCount}
+            extraAggsFieldsCount={extraAggsFieldsCount}
             getAccessButtonLink={this.props.getAccessButtonLink}
             hideGetAccessButton={this.props.hideGetAccessButton}
             tierAccessLevel={this.props.tierAccessLevel}

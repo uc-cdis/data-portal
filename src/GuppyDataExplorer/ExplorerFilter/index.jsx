@@ -121,7 +121,7 @@ class ExplorerFilter extends React.Component {
     const filterProps = {
       filterConfig: this.props.filterConfig,
       extraAggsFields: this.props.extraAggsFields,
-      extraAggsFieldsCardinalityCount: this.props.extraAggsFieldsCardinalityCount,
+      extraAggsFieldsCount: this.props.extraAggsFieldsCount,
       guppyConfig: { type: this.props.guppyConfig.dataType, ...this.props.guppyConfig },
       fieldMapping: this.props.guppyConfig.fieldMapping,
       onFilterChange: this.props.onFilterChange,
@@ -192,7 +192,7 @@ ExplorerFilter.propTypes = {
   className: PropTypes.string,
   tierAccessLevel: PropTypes.string.isRequired,
   extraAggsFields: PropTypes.arrayOf(PropTypes.string),
-  extraAggsFieldsCardinalityCount: PropTypes.arrayOf(PropTypes.string),
+  extraAggsFieldsCount: PropTypes.arrayOf(PropTypes.string),
   filterConfig: FilterConfigType, // inherit from GuppyWrapper
   guppyConfig: GuppyConfigType, // inherit from GuppyWrapper
   fieldMapping: PropTypes.array, // inherit from GuppyWrapper
@@ -212,7 +212,7 @@ ExplorerFilter.propTypes = {
 ExplorerFilter.defaultProps = {
   className: '',
   extraAggsFields: [],
-  extraAggsFieldsCardinalityCount: [],
+  extraAggsFieldsCount: [],
   filterConfig: {},
   guppyConfig: {},
   fieldMapping: [],

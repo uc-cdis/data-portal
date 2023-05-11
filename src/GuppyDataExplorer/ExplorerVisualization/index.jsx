@@ -36,14 +36,14 @@ class ExplorerVisualization extends React.Component {
     });
     Object.keys(chartConfig).forEach((field) => {
       // use `${field}` to handle nested fields, which contain '.'
-      if (!aggsData || !aggsData[`${field}`] || !(aggsData[`${field}`].histogram || aggsData[`${field}`].cardinalityCount)) return;
+      if (!aggsData || !aggsData[`${field}`] || !(aggsData[`${field}`].histogram || aggsData[`${field}`].totalCount)) return;
       const { histogram } = aggsData[`${field}`];
       switch (chartConfig[`${field}`].chartType) {
       case 'count':
         // handle data returned from api
         countItems.push({
           label: chartConfig[`${field}`].title,
-          value: aggsData[`${field}`].cardinalityCount,
+          value: aggsData[`${field}`].totalCount,
         });
         break;
       case 'pie':
