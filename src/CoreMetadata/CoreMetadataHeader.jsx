@@ -95,7 +95,10 @@ class CoreMetadataHeader extends Component {
         } else {
           // set to empty so it wont check again
           this.setState({
-            downloadButton: (<React.Fragment />),
+            downloadButton: (
+              <React.Fragment>
+                <p className='h3-typo' id='no-permission'>Dont have permission on the file</p>
+              </React.Fragment>),
           });
         }
       });
