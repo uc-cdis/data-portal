@@ -66,7 +66,7 @@
   width: 65px;
 }
 
-.discovery-header__stats-wrapper[data-aggregation-type='TotalSubjects'] {
+.discovery-header__stats-wrapper[data-aggregation-type="TotalSubjects"] {
   width: 135px;
 }
 
@@ -267,19 +267,19 @@
  * and then we add an arbitrary `--hover` suffix to both row and expandable row on that index.
  * Finally we override the default :hover effect of both classes.
  * ------------------------------------------------------------------------ */
-.discovery-table__expanded-row--hover > td.ant-table-cell {
+.discovery-table__expanded-row--hover>td.ant-table-cell {
   font-size: 12px;
   padding: 0;
   border-bottom: 0 solid #ccc;
 }
 
 .discovery-table-container th.ant-table-cell,
-.discovery-table-container .discovery-table__row > td.ant-table-cell {
+.discovery-table-container .discovery-table__row>td.ant-table-cell {
   border-color: #dfe3e2;
   background: #dfe3e2;
 }
 
-.discovery-table-container .discovery-table__expanded-row > td.ant-table-cell {
+.discovery-table-container .discovery-table__expanded-row>td.ant-table-cell {
   border-color: #dfe3e2;
   background: #dfe3e2;
   font-size: 12px;
@@ -287,9 +287,7 @@
   border-bottom: 1px solid #ccc;
 }
 
-.discovery-table-container
-.discovery-table__expanded-row--hover
-> td.ant-table-cell {
+.discovery-table-container .discovery-table__expanded-row--hover>td.ant-table-cell {
   border-top: none;
   background: #fff;
   font-size: 12px;
@@ -297,30 +295,28 @@
   border-bottom: 1px solid #ccc;
 }
 
-.discovery-table-container .ant-table-tbody > tr.discovery-table__row > td {
+
+.discovery-table-container .ant-table-tbody>tr.discovery-table__row>td {
   border-bottom: 0;
   background: #dfe3e2;
 }
 
-.discovery-table-container
-.ant-table-tbody
-> tr.discovery-table__row--hover
-> td {
+.discovery-table-container .ant-table-tbody>tr.discovery-table__row--hover>td {
   cursor: pointer;
   border-bottom: 0;
   background: #fff;
   /* transition: background-color 0.3s, border-color 0.3s; */
 }
 
-.discovery-table-container tr.ant-table-expanded-row:hover > td {
+.discovery-table-container tr.ant-table-expanded-row:hover>td {
   background: none;
 }
 
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td {
+.discovery-table-container .ant-table-tbody>tr.ant-table-row:hover>td {
   background: none;
 }
 
-.discovery-table-container .ant-table-tbody > tr.discovery-table__row {
+.discovery-table-container .ant-table-tbody>tr.discovery-table__row {
   background: #dfe3e2;
   border-color: #dfe3e2;
 }
@@ -426,9 +422,7 @@
   width: 60%;
 }
 
-.discovery-header__dropdown-tags
-.ant-select-show-search.ant-select:not(.ant-select-customize-input)
-.ant-select-selector {
+.discovery-header__dropdown-tags .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector {
   border-width: 1px;
   border-radius: 7px;
 }
@@ -477,8 +471,7 @@
   max-width: 50%;
 }
 
-.discovery-modal__attribute-group--halfwidth
-+ .discovery-modal__attribute-group--halfwidth {
+.discovery-modal__attribute-group--halfwidth+.discovery-modal__attribute-group--halfwidth {
   margin-left: 8px;
 }
 
@@ -539,7 +532,7 @@
   text-align: left;
 }
 
-.discovery-modal__attribute-value > p {
+.discovery-modal__attribute-value>p {
   margin-bottom: 0;
 }
 
@@ -556,7 +549,7 @@
   background: #dfe3e2;
 }
 
-.discovery-modal__download-panel-header > .ant-collapse-content {
+.discovery-modal__download-panel-header>.ant-collapse-content {
   background: #dfe3e2;
   border: none;
 }
@@ -602,9 +595,10 @@
   display: flex;
   justify-content: end;
   flex-wrap: wrap;
+
 }
 
-.ant-tabs-tab-active > .ant-tabs-tab-btn > .discovery-modal__tablabel {
+.ant-tabs-tab-active>.ant-tabs-tab-btn>.discovery-modal__tablabel {
   color: var(--g3-color__base-blue);
 }
 
