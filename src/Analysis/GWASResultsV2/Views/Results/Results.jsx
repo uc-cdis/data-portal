@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
-import {
-  Spin, Button, Tooltip, message,
-} from 'antd';
+import { Spin, Button, Tooltip, notification } from 'antd';
 import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -19,8 +17,9 @@ const Results = () => {
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
     ['fetchPresignedUrlForWorkflowArtifact', name, uid, 'manhattan_plot_index'],
-    () => fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
-    queryConfig,
+    () =>
+      fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
+    queryConfig
   );
   const errorDisplayTime = 15;
 
@@ -30,7 +29,12 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        message.error(`Could not download. \n\n${error}`, errorDisplayTime);
+        notification.open({
+          message: 'Could not download',
+          type: 'error',
+          duration: 0,
+          description: error,
+        });
       });
   };
 
@@ -40,7 +44,12 @@ const Results = () => {
         window.open(res, '_blank');
       })
       .catch((error) => {
-        message.error(`Could not download. \n\n${error}`, errorDisplayTime);
+        notification.open({
+          message: 'Could not download',
+          type: 'error',
+          duration: 0,
+          description: error,
+        });
       });
   };
 
