@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Space, Dropdown, Button, notification,
-} from 'antd';
+import { Space, Dropdown, Button } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { fetchPresignedUrlForWorkflowArtifact } from '../../../../Utils/gwasWorkflowApi';
+import {
+  fetchPresignedUrlForWorkflowArtifact,
+} from '../../../../Utils/gwasWorkflowApi';
 
 const ActionsDropdown = ({ record }) => {
   const items = [
@@ -19,18 +19,11 @@ const ActionsDropdown = ({ record }) => {
               record.name,
               record.uid,
               'gwas_archive_index',
-            )
-              .then((res) => {
-                window.open(res, '_blank');
-              })
-              .catch((error) => {
-                notification.open({
-                  message: 'Could not download',
-                  type: 'error',
-                  duration: 0,
-                  description: error,
-                });
-              });
+            ).then((res) => {
+              window.open(res, '_blank');
+            }).catch((error) => {
+              alert(`Could not download. \n\n${error}`);
+            });
           }}
         >
           Download
