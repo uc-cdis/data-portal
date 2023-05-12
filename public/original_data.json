@@ -1,0 +1,2382 @@
+{
+  "HEAL": [
+    {
+      "5025787": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [
+              "Genomic",
+              "Biophysical",
+              "Imaging",
+              "Biochemical",
+              "Questionnaire/Survey/Assessment - validated instrument"
+            ],
+            "data_source": [
+              "Clinical/EHR",
+              "Laboratory",
+              "Researcher Collected/Measured",
+              "Patient-Reported"
+            ],
+            "data_orientation": [
+              "Quantitative"
+            ],
+            "subject_data_level_available": [
+              "Individual - Unaggregated"
+            ],
+            "subject_data_unit_of_analysis": [
+              "Individual"
+            ],
+            "subject_data_unit_of_collection": [
+              "Individual"
+            ],
+            "subject_geographic_data_level_available": [
+              "No geographic data will be made available"
+            ],
+            "subject_geographic_data_level_collected": [
+              "No geographic data will be collected"
+            ],
+            "subject_data_unit_of_analysis_expected_number": "150",
+            "subject_data_unit_of_collection_expected_number": "150"
+          },
+          "terms": "",
+          "is_new": "",
+          "appl_id": "5025787",
+          "full_foa": "",
+          "phr_text": "",
+          "cfda_code": "",
+          "cong_dist": "",
+          "is_active": "",
+          "Study Type": {
+            "study_stage": "Clinical Research",
+            "study_type_design": [
+              "Clinical Research – Phase II"
+            ],
+            "study_subject_type": [
+              "Human"
+            ],
+            "study_primary_or_secondary": "Primary Research",
+            "study_observational_or_experimental": "Experimental Research"
+          },
+          "award_type": "",
+          "budget_end": "",
+          "date_added": "",
+          "pref_terms": "",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "",
+          "budget_start": "",
+          "institutions": "Massachusetts General Hosptial",
+          "year_awarded": "2021",
+          "abstract_text": "",
+          "activity_code": "",
+          "is_registered": true,
+          "project_title": "A Study to Evaluate the Safety and Efficacy of CNTX-6970 in Subjects With Knee Osteoarthritis Pain",
+          "subproject_id": "",
+          "covid_response": "",
+          "project_number": "OT2NS122680-01_b",
+          "contact_pi_name": "Fava Maurizio",
+          "direct_cost_amt": "",
+          "administering_ic": "National Institute of Neurological Disorders and Stroke",
+          "core_project_num": "OT2NS122680-01_b",
+          "project_end_date": "2023-05-10",
+          "Data Availability": {
+            "produce_data": "Yes",
+            "produce_other": "Yes",
+            "data_available": "some",
+            "data_restricted": "some",
+            "data_release_status": "not started",
+            "data_collection_status": "started",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/b2d7536f-91f7-4cd5-b43e-2af7f5c431fe",
+          "funding_mechanism": "",
+          "indirect_cost_amt": "",
+          "mechanism_code_dc": "",
+          "clinical_trials_id": "NCT05025787",
+          "clinicaltrials.gov": {
+            "NCTId": "NCT05025787",
+            "Phase": "Phase 2",
+            "Gender": "All",
+            "Condition": "Knee Osteoarthritis",
+            "StartDate": "October 25, 2021",
+            "StudyType": "Interventional",
+            "BriefTitle": "A Study to Evaluate the Safety and Efficacy of CNTX-6970 in Subjects With Knee Osteoarthritis Pain.",
+            "IPDSharing": "Yes",
+            "MaximumAge": "80 Years",
+            "MinimumAge": "4 Years",
+            "BriefSummary": "The primary objective of this study is to evaluate the safety and efficacy of two doses of CNTX-6970 for the treatment of pain related to OA of the knee compared to placebo. CNTX-6970 is being developed as a new treatment for chronic pain, including painful osteoarthritis of the knee.",
+            "OfficialTitle": "EN20-01: A 24 Week Study to Evaluate the Safety and Efficacy of CNTX-6970 in Subjects With Moderate to Severe Knee Osteoarthritis Pain.",
+            "OverallStatus": "Recruiting",
+            "StartDateType": "Actual",
+            "CompletionDate": "May 10, 2023",
+            "EnrollmentType": "Anticipated",
+            "EnrollmentCount": "150",
+            "DesignAllocation": "Randomized",
+            "InterventionType": "Drug",
+            "CompletionDateType": "Anticipated",
+            "IsFDARegulatedDrug": "Yes",
+            "DetailedDescription": "The study will employ a randomized, allocation-concealed, multicenter, placebo-controlled, multi-period crossover design (Schmid et al, 2018). This multi-period crossover randomized, controlled trial allows comparability and assessment of efficacy through repeated exposures within each subject to the active treatment and a control (placebo) in randomized sequence. Such multi-period crossover designs are ideal for treatments with rapid onset of action and short half-life such as the asset under study here. We have strived to minimize the complexity of this powerful design by using only 2 blocks with 2 periods each. The modest additional complexity of the proposed multi-period crossover design, compared to a parallel-groups design, is justified by the marked improvement in efficiency. The gains in efficiency afforded by the multi-period crossover design allow a substantial reduction in sample size without sacrificing statistical power. For example, our simulation experiments (with sample sizes ranging from 30 to 50, carryover effects ranging from 0 to 0.2, and an effect size of 0.4) indicated that the parallel design yields statistical power ranging from 0.20-0.25, whereas our proposed 2-block multi-period crossover design yields power ranging from 0.9-1.0.\n\nThe trial will compare an active treatment vs. placebo. Each arm of the study will employ a multi-period crossover design with two blocks. Each block will consist of two treatment periods with each period lasting 6 weeks. Treatment assignments (active drug versus placebo) will be randomized for each patient to the two periods within each block. The period length of 6 weeks was chosen based on several considerations: (i) Most efficacious analgesic drugs demonstrate separation from placebo by 6 weeks; (ii) The decision to move CNTX-6970 forward to Phase 3 will require a clinically meaningful separation from placebo by 6 weeks; (iii) In this Phase 2 study, implementing a treatment block longer than 6 weeks would make the overall design more challenging and burdensome by extending the duration of overall testing beyond 6 months; (iv) Recent meta-analyses suggest that anti-inflammatory treatments such as NSAIDs reach peak effects on pain within a 4-week timeframe in patients with knee osteoarthritis, and multiple RCTs have specifically demonstrated efficacy for celecoxib at 2-6 weeks (Osani et al, 2020).\n\nThe comparison with celecoxib is used to evaluate \"assay sensitivity,\" i.e., to assess the study protocol's ability to demonstrate superiority of an established efficacious treatment (celecoxib 100mg BID). In this study, the placebo will consist of inactive tablets identical to the active treatment tablets. Treatment assignments (active drug versus placebo) will be randomized for each patient to the two treatment periods within each block",
+            "DesignPrimaryPurpose": "Treatment",
+            "IsFDARegulatedDevice": "No",
+            "PrimaryOutcomeMeasure": "Western Ontario and McMaster Universities Osteoarthritis Index (WOMAC-A)",
+            "DesignInterventionModel": "Crossover Assignment",
+            "SecondaryOutcomeMeasure": "Numeric Rating Scale (NRS)"
+          },
+          "investigators_name": "Maurizio Fava, MD",
+          "project_detail_url": "",
+          "project_serial_num": "",
+          "project_start_date": "2021-10-25",
+          "registration_authz": "/study/5025787",
+          "_second_search_flag": "",
+          "registrant_username": "merops01@nyumc.org",
+          "research_focus_area": "Clinical Research in Pain Management",
+          "spending_categories": "",
+          "agency_ic_admin.code": "NS",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": 2021,
+          "organization.org_city": "",
+          "organization.org_duns": "",
+          "organization.org_fips": "",
+          "organization.org_ueis": "",
+          "organization.dept_type": "",
+          "organization.org_state": "",
+          "organization_type.code": "",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "NS",
+          "agency_ic_fundings.name": "National Institute of Neurological Disorders and Stroke",
+          "full_study_section.name": "",
+          "organization.org_country": "",
+          "organization.org_zipcode": "",
+          "organization.primary_uei": "",
+          "spending_categories_desc": "",
+          "Study Translational Focus": {
+            "study_translational_focus": "Treatment of a Condition",
+            "study_translational_topic_grouping": [
+              "Biology and Health"
+            ]
+          },
+          "organization.org_ipf_code": "",
+          "organization.primary_duns": "",
+          "project_num_split.ic_code": "",
+          "study_description_summary": "The study will employ a randomized, allocation-concealed, multicenter, placebo-controlled, multi-period crossover design (Schmid et al, 2018). This multi-period crossover randomized, controlled trial allows comparability and assessment of efficacy through repeated exposures within each subject to the active treatment and a control (placebo) in randomized sequence. Such multi-period crossover designs are ideal for treatments with rapid onset of action and short half-life such as the asset under study here. We have strived to minimize the complexity of this powerful design by using only 2 blocks with 2 periods each. The modest additional complexity of the proposed multi-period crossover design, compared to a parallel-groups design, is justified by the marked improvement in efficiency. The gains in efficiency afforded by the multi-period crossover design allow a substantial reduction in sample size without sacrificing statistical power. For example, our simulation experiments (with sample sizes ranging from 30 to 50, carryover effects ranging from 0 to 0.2, and an effect size of 0.4) indicated that the parallel design yields statistical power ranging from 0.20-0.25, whereas our proposed 2-block multi-period crossover design yields power ranging from 0.9-1.0. The trial will compare an active treatment vs. placebo. Each arm of the study will employ a multi-period crossover design with two blocks. Each block will consist of two treatment periods with each period lasting 6 weeks. Treatment assignments (active drug versus placebo) will be randomized for each patient to the two periods within each block. The period length of 6 weeks was chosen based on several considerations: (i) Most efficacious analgesic drugs demonstrate separation from placebo by 6 weeks; (ii) The decision to move CNTX-6970 forward to Phase 3 will require a clinically meaningful separation from placebo by 6 weeks; (iii) In this Phase 2 study, implementing a treatment block longer than 6 weeks would make the overall design more challenging and burdensome by extending the duration of overall testing beyond 6 months; (iv) Recent meta-analyses suggest that anti-inflammatory treatments such as NSAIDs reach peak effects on pain within a 4-week timeframe in patients with knee osteoarthritis, and multiple RCTs have specifically demonstrated efficacy for celecoxib at 2-6 weeks (Osani et al, 2020). The comparison with celecoxib is used to evaluate assay sensitivity, i.e., to assess the study protocol's ability to demonstrate superiority of an established efficacious treatment (celecoxib 100mg BID). In this study, the placebo will consist of inactive tablets identical to the active treatment tablets. Treatment assignments (active drug versus placebo) will be randomized for each patient to the two treatment periods within each block",
+          "organization_type.is_other": "",
+          "program_officers.full_name": "",
+          "program_officers.last_name": "",
+          "Human Subject Applicability": {
+            "age_applicability": [
+              "Middle aged adult (45 to 64 years)",
+              "Aged adult (65 to 79 years)",
+              "Aged, 80 and over (80 years and over)"
+            ],
+            "gender_applicability": [
+              "Female",
+              "Female-to-male transsexual",
+              "Intersexed",
+              "Male-to-female transsexual",
+              "Male",
+              "Other"
+            ],
+            "geographic_applicability": [],
+            "biological_sex_applicability": [
+              "Ambiguous",
+              "Female",
+              "Male"
+            ],
+            "sexual_identity_applicability": [],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "",
+          "agency_ic_admin.abbreviation": "NINDS",
+          "organization.external_org_id": "",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "",
+          "Human Condition Applicability": {
+            "condition_category": [
+              "Pain",
+              "Pain, chronic"
+            ],
+            "all_other_condition": [
+              "Safety"
+            ],
+            "all_outcome_condition": [
+              "Osteoarthritis, Knee"
+            ],
+            "pain_causal_condition": [
+              "Osteoarthritis, Knee"
+            ],
+            "condition_investigation_stage_or_type": [
+              "Treatment of condition"
+            ],
+            "all_treatment_or_study_target_condition": [
+              "Osteoarthritis"
+            ],
+            "pain_treatment_or_study_target_condition": [
+              "Pain",
+              "Pain, chronic"
+            ]
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [
+              "Therapeutic (treating an occurrence)"
+            ],
+            "treatment_type": [
+              "non-opioid drug"
+            ],
+            "treatment_novelty": [
+              "Novel"
+            ],
+            "treatment_application_level": [
+              "Individual"
+            ],
+            "treatment_investigation_stage_or_type": [
+              "treatment efficacy"
+            ]
+          },
+          "agency_ic_fundings.total_cost": "",
+          "full_study_section.group_code": "",
+          "principal_investigators.title": "MD",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "",
+          "agency_ic_fundings.abbreviation": "NINDS",
+          "project_num_split.activity_code": "",
+          "full_study_section.sra_flex_code": "",
+          "project_num_split.appl_type_code": "",
+          "principal_investigators.last_name": "Fava, MD",
+          "principal_investigators.first_name": "\"Maurizio:",
+          "principal_investigators.profile_id": "",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "",
+          "principal_investigators.is_contact_pi": "",
+          "full_study_section.sra_designator_code": "",
+          "tags": [],
+          "__manifest": [],
+          "advSearchFilters": [],
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "5480228": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [
+              "Biochemical",
+              "Biophysical",
+              "Questionnaire/Survey/Assessment - validated instrument"
+            ],
+            "data_source": [
+              "Clinical/EHR",
+              "Laboratory",
+              "Researcher Collected/Measured",
+              "Patient-Reported"
+            ],
+            "data_orientation": [
+              "Quantitative"
+            ],
+            "subject_data_level_available": [
+              "Individual - Unaggregated"
+            ],
+            "subject_data_unit_of_analysis": [
+              "Individual"
+            ],
+            "subject_data_unit_of_collection": [
+              "Individual"
+            ],
+            "subject_geographic_data_level_available": [
+              "No geographic data will be made available"
+            ],
+            "subject_geographic_data_level_collected": [
+              "No geographic data will be collected"
+            ],
+            "subject_data_unit_of_analysis_expected_number": "260",
+            "subject_data_unit_of_collection_expected_number": "260"
+          },
+          "terms": "",
+          "is_new": "",
+          "appl_id": "5480228",
+          "full_foa": "",
+          "phr_text": "",
+          "cfda_code": "",
+          "cong_dist": "",
+          "is_active": "",
+          "Study Type": {
+            "study_stage": "Clinical Research",
+            "study_type_design": [],
+            "study_subject_type": [
+              "Human"
+            ],
+            "study_primary_or_secondary": "Primary Research",
+            "study_observational_or_experimental": "Experimental Research"
+          },
+          "award_type": "",
+          "budget_end": "",
+          "date_added": "",
+          "pref_terms": "",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "",
+          "budget_start": "",
+          "institutions": "Icahn School of Medicine at Mount Sinai",
+          "year_awarded": "2021",
+          "abstract_text": "",
+          "activity_code": "",
+          "is_registered": true,
+          "project_title": "EPPIC-Net: Novaremed Painful Diabetic Peripheral Neuropathy ISA",
+          "subproject_id": "",
+          "covid_response": "",
+          "project_number": "OT2NS122680-01_a",
+          "contact_pi_name": "Robinson-Papp, Jessica",
+          "direct_cost_amt": "",
+          "administering_ic": "National Institute of Neurological Disorders and Stroke",
+          "core_project_num": "OT2NS122680-01_a",
+          "project_end_date": "2023-12-01",
+          "Data Availability": {
+            "produce_data": "Yes",
+            "produce_other": "Yes",
+            "data_available": "some",
+            "data_restricted": "some",
+            "data_release_status": "not started",
+            "data_collection_status": "started",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/c6eb70b6-d552-4574-94a6-6aee98f53a33",
+          "funding_mechanism": "",
+          "indirect_cost_amt": "",
+          "mechanism_code_dc": "",
+          "clinical_trials_id": "NCT05480228",
+          "clinicaltrials.gov": {
+            "NCTId": "NCT05480228",
+            "Phase": "Phase 2",
+            "Gender": "All",
+            "Acronym": "EN21-01",
+            "Condition": "Painful Diabetic Neuropathy",
+            "StartDate": "September 21, 2022",
+            "StudyType": "Interventional",
+            "BriefTitle": "EPPIC-Net: Novaremed Painful Diabetic Peripheral Neuropathy ISA",
+            "IPDSharing": "No",
+            "MinimumAge": "18 Years",
+            "BriefSummary": "The purpose of this study is to investigate the safety and efficacy of the current hard gelatin capsule formulation of NRD135S.E1 80 mg once daily in the treatment of PDPN when administered for 13 weeks.",
+            "OfficialTitle": "EPPIC-Net EN21-01 A Multicenter, Randomized, Double-Blind, Placebo-Controlled Study to Assess the Safety and Efficacy of 80 mg Daily of NRD135S.E1 Versus Placebo in Adult and Elderly Participants With Painful Diabetic Peripheral Neuropathy.",
+            "OverallStatus": "Recruiting",
+            "StartDateType": "Anticipated",
+            "CompletionDate": "December 1, 2023",
+            "EnrollmentType": "Anticipated",
+            "EnrollmentCount": "122",
+            "DesignAllocation": "Randomized",
+            "InterventionType": "Drug",
+            "CompletionDateType": "Anticipated",
+            "IsFDARegulatedDrug": "Yes",
+            "DetailedDescription": "This ISA describes a double-blind Phase II study of the PK/PD, safety, tolerability, and effect of 13 weeks of NRD135S.E1 (80mg/day) as an ISA within the context of the Platform Protocol to Assess Treatments for Painful Diabetic Peripheral Neuropathy, EN21-PP. The ISA is intended to be read and interpreted within the context of the Platform Protocol and focuses on the description of design features that are specific to NRD135S.E1.",
+            "DesignPrimaryPurpose": "Treatment",
+            "IsFDARegulatedDevice": "No",
+            "PrimaryOutcomeMeasure": "To demonstrate that NRD135S.E1 80 mg daily is superior to placebo in relieving neuropathic pain associated with PDPN, after 13 weeks' treatment.",
+            "DesignInterventionModel": "Parallel Assignment",
+            "SecondaryOutcomeMeasure": "Occurrence of 30% reduction of WAP from Baseline to Week 13."
+          },
+          "investigators_name": "Jessica Robinson-Papp, MD",
+          "project_detail_url": "",
+          "project_serial_num": "",
+          "project_start_date": "2022-08-10",
+          "registration_authz": "/study/5480228",
+          "_second_search_flag": "",
+          "registrant_username": "merops01@nyumc.org",
+          "research_focus_area": "Clinical Research in Pain Management",
+          "spending_categories": "",
+          "agency_ic_admin.code": "NS",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": 2021,
+          "organization.org_city": "",
+          "organization.org_duns": "",
+          "organization.org_fips": "",
+          "organization.org_ueis": "",
+          "organization.dept_type": "",
+          "organization.org_state": "",
+          "organization_type.code": "",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "NS",
+          "agency_ic_fundings.name": "National Institute of Neurological Disorders and Stroke",
+          "full_study_section.name": "",
+          "organization.org_country": "",
+          "organization.org_zipcode": "",
+          "organization.primary_uei": "",
+          "spending_categories_desc": "",
+          "Study Translational Focus": {
+            "study_translational_focus": "Treatment of a Condition",
+            "study_translational_topic_grouping": [
+              "Biology and Health"
+            ]
+          },
+          "organization.org_ipf_code": "",
+          "organization.primary_duns": "",
+          "project_num_split.ic_code": "",
+          "study_description_summary": "This ISA describes a double-blind Phase II study of the PK/PD, safety, tolerability, and effect of 13 weeks of NRD135S.E1 (80mg/day) as an ISA within the context of the Platform Protocol to Assess Treatments for Painful Diabetic Peripheral Neuropathy, EN21-PP. The ISA is intended to be read and interpreted within the context of the Platform Protocol and focuses on the description of design features that are specific to NRD135S.E1",
+          "organization_type.is_other": "",
+          "program_officers.full_name": "",
+          "program_officers.last_name": "",
+          "Human Subject Applicability": {
+            "age_applicability": [
+              "Adult (19 to 44 years)",
+              "Middle aged adult (45 to 64 years)",
+              "Aged adult (65 to 79 years)",
+              "Aged, 80 and over (80 years and over)"
+            ],
+            "gender_applicability": [
+              "Female",
+              "Female-to-male transsexual",
+              "Intersexed",
+              "Male",
+              "Male-to-female transsexual",
+              "Other"
+            ],
+            "geographic_applicability": [],
+            "biological_sex_applicability": [
+              "Ambiguous",
+              "Female",
+              "Male"
+            ],
+            "sexual_identity_applicability": [
+              "Heterosexual",
+              "Homosexual (gay/lesbian)",
+              "Bisexual",
+              "Asexual",
+              "Other"
+            ],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "",
+          "agency_ic_admin.abbreviation": "NINDS",
+          "organization.external_org_id": "",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "",
+          "Human Condition Applicability": {
+            "condition_category": [
+              "Pain",
+              "Pain, chronic"
+            ],
+            "all_other_condition": [],
+            "all_outcome_condition": [
+              "Pain"
+            ],
+            "pain_causal_condition": [
+              "Diabetic Neuropathies"
+            ],
+            "condition_investigation_stage_or_type": [
+              "Treatment of condition"
+            ],
+            "all_treatment_or_study_target_condition": [
+              "Diabetic Neuropathies"
+            ],
+            "pain_treatment_or_study_target_condition": [
+              "Pain",
+              "Pain, chronic"
+            ]
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [
+              "Therapeutic (treating an occurrence)"
+            ],
+            "treatment_type": [
+              "non-opioid drug"
+            ],
+            "treatment_novelty": [
+              "Novel"
+            ],
+            "treatment_application_level": [
+              "Individual"
+            ],
+            "treatment_investigation_stage_or_type": [
+              "treatment efficacy"
+            ]
+          },
+          "agency_ic_fundings.total_cost": "",
+          "full_study_section.group_code": "",
+          "principal_investigators.title": "MD",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "",
+          "agency_ic_fundings.abbreviation": "NINDS",
+          "project_num_split.activity_code": "",
+          "full_study_section.sra_flex_code": "",
+          "project_num_split.appl_type_code": "",
+          "principal_investigators.last_name": "Robinson-Papp, MD",
+          "principal_investigators.first_name": "Jessica",
+          "principal_investigators.profile_id": "",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "",
+          "principal_investigators.is_contact_pi": "",
+          "full_study_section.sra_designator_code": "",
+          "tags": [],
+          "__manifest": [],
+          "advSearchFilters": [],
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00001": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [],
+            "data_source": [],
+            "data_orientation": [],
+            "subject_data_level_available": [],
+            "subject_data_unit_of_analysis": [],
+            "subject_data_unit_of_collection": [],
+            "subject_geographic_data_level_available": [],
+            "subject_geographic_data_level_collected": [],
+            "subject_data_unit_of_analysis_expected_number": "",
+            "subject_data_unit_of_collection_expected_number": ""
+          },
+          "tags": [
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Small Business",
+              "category": "Other"
+            }
+          ],
+          "authz": "",
+          "terms": "<Adult><adulthood><Adult Human><21+ years old><Age><ages><Pain management><pain treatment><Pain Therapy><Pain Control><Opioid Analgesics><opioid painkiller><opioid pain reliever><opioid pain medication><opioid anesthetic><opioid analgesia><opiate pain reliever><opiate pain medication><opiate analgesic><opiate analgesia><Antibodies><Autoantibodies><self reactive antibody><autoimmune antibody><Automobile Driving><driving><Bacteriophages><bacterial virus><Phages><Biological Assay><Biologic Assays><Bioassay><Assay><Blood><Blood Reticuloendothelial System><Diagnosis><Female><Health><Hematology Testing><Hematological Tests><Hematologic Tests><Blood Tests><orthopedic freezing><Immobilization><allergic/immunologic organ system><allergic/immunologic body system><Immune system><In Vitro><Inflammation><Medicine><Methods><Painful><Pain><pain assay><Pain Assessment><Nociception Tests><Analgesia Tests><Pain Measurement><Pathology><Patients><Peptides><Play><Primary Care Physician><Production><Public Health><Racial Stocks><Racial Group><Race><social role><Role><Sensitivity and Specificity><Technology><Testing><United States><chronic pain><base><Acute Pain><Chronic><Clinical><Phase><Ensure><Serum><Blood Serum><Individual><Opioid><Opiates><non-opioid analgesic><nonopioid><nonopiate analgesic><non-opioid><non-opiate analgesic><non-narcotic analgesic><Nonopioid Analgesics><Nonnarcotic Analgesics><Ethnic Origin><Ethnicity><Functional disorder><pathophysiology><Physiopathology><Dysfunction><Inflammatory><tool><Diagnostic><Notification><Source><Opiate Addiction><opioid dependent><opioid dependence><opioid addiction><Opiate Dependence><American><Performance><success><novel><economic impact><Patient Self-Report><Self-Report><Devices><Pain-Free><protein aminoacid sequence><peptide sequence><peptide aminoacid sequence><Molecular Interaction><Binding><disease causation><causation><Causality><Etiology><Address><Pain Nature><Phage Display><Validation><Pathologic><Development><developmental><next generation><scale up><cost effective><Prevalence><chronic widespread pain><prototype><commercialization><treatment response><therapeutic response><response to treatment><serological marker><Biological Markers><biomarker><biologic marker><bio-markers><non-cancer pain><noncancer pain><prescription opioid><prescription opiate><prescribed opioid><prescribed opiate><opioid medication><opiate medication><licit opioid><opiate tolerance><tolerance to opiates><opioid tolerance><opioid habituation><Pain intensity><next generation sequencing><nextgen sequencing><next gen sequencing><NGS system><NGS Method><diagnostic assay><treatment group><patient stratification><stratified patient><opioid use><opioid intake><opioid drug use><opioid consumption><opiate use><opiate intake><opiate drug use><opiate consumption><chronic painful condition><chronic pain disorder><chronic pain condition><pain patient><chronic pain patient><patient with chronic pain><opioid overuse>",
+          "is_new": "False",
+          "appl_id": 9608089,
+          "_hdp_uid": "HDP00001",
+          "full_foa": "RFA-DA-18-012",
+          "phr_text": "PROJECT NARRATIVE. Over 100 million Americans are living with chronic pain, and the personal and economic impacts are immense.. Optimal pain management requires the selection of the best treatment for a given individuals pain based on the. source and intensity of pain, and response to treatment, however, lack of objective diagnostic tools leads to. ineffective management and overuse of opioids. Affinergy is developing a novel blood-based assay to objectively. identify patients with chronic pain who should be considered for non-opioid treatment.",
+          "cfda_code": "279",
+          "cong_dist": "NC-04",
+          "is_active": "False",
+          "Study Type": {
+            "study_stage": "",
+            "study_type_design": [],
+            "study_subject_type": [],
+            "study_primary_or_secondary": "",
+            "study_observational_or_experimental": ""
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-02-29T12:02:00Z",
+          "date_added": "2019-03-02T07:03:39Z",
+          "pref_terms": "Acute Pain;Address;Adult;Age;American;Antibodies;Autoantibodies;Automobile Driving;Bacteriophages;Binding;Biological Assay;Biological Markers;Blood;Blood Tests;Chronic;Clinical;Development;Devices;Diagnosis;Diagnostic;Ensure;Ethnic Origin;Etiology;Female;Functional disorder;Health;Immobilization;Immune system;In Vitro;Individual;Inflammation;Inflammatory;Medicine;Methods;Notification;Opiate Addiction;Opioid;Opioid Analgesics;Pain;Pain Measurement;Pain Nature;Pain intensity;Pain management;Pain-Free;Pathologic;Pathology;Patient Self-Report;Patients;Peptides;Performance;Phage Display;Phase;Play;Prevalence;Primary Care Physician;Production;Public Health;Race;Role;Sensitivity and Specificity;Serum;Source;Technology;Testing;United States;Validation;base;chronic pain;chronic pain patient;chronic painful condition;chronic widespread pain;commercialization;cost effective;diagnostic assay;economic impact;next generation;next generation sequencing;non-cancer pain;non-opioid analgesic;novel;opiate tolerance;opioid overuse;opioid use;pain patient;patient stratification;prescription opioid;protein aminoacid sequence;prototype;scale up;serological marker;success;tool;treatment group;treatment response",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "320058",
+          "budget_start": "2019-03-01T12:03:00Z",
+          "institutions": "AFFINERGY, LLC",
+          "year_awarded": "2019",
+          "abstract_text": "SUMMARY/ABSTRACT. Chronic, non-cancer pain is a significant unmet health need worldwide. The prevalence of chronic pain among. adults in the United States has been estimated at between 11 and 43%. The personal toll of living with chronic. pain is immense, and the economic impact can be devastating. One of the most widely used treatments for. chronic pain is opioid analgesics. While the appropriate use of opioids can be an important and effective part of. pain management, the United States is currently facing a national crisis resulting from widespread opioid. addiction, believed to be the direct product of overprescription. Importantly, there is evidence of a pathological. interaction between opioids and the immune system that can contribute to both opioid tolerance and elevated. levels of pain. Chronic pain conditions for which opioids are most often prescribed have been shown to involve. dysregulation of the immune system, which may contribute to pathological effects of opioid use in these patients.. To ensure proper treatment and restrict opioids to those conditions for which they will be most effective without. further exacerbation of pain, it will be essential to identify the underlying pathophysiology driving pain in a given. patient. Importantly, there are currently no unbiased, mechanism-based methods for pain diagnosis. Given the. variability in self-reported pain measurements and unclear etiology of a majority of chronic pain conditions, an. objective tool that could identify the nature of pain and stratify patients into treatment groups would be an. important advancement in medicine. In particular, identifying patients who would be ill-suited for opioid treatment. would have a major impact on public health. To address this unmet need, we propose to develop a reliable,. cost effective and non-invasive in vitro diagnostic assay for chronic pain with an underlying. inflammatory pathology. This blood test will be available to primary care physicians and results will be clear. and actionable..  In this Phase I application, we will use phage display biopanning and next generation sequencing to identify. peptides that bind autoantibodies uniquely associated with patients who have widespread chronic pain. We will. identify a unique peptide signature that can be used to objectively identify patients with these biomarkers and. develop a prototype peptide array that is capable of reproducibly detecting a specific set of antibodies from. serum. In Phase 2, we plan to use the chronic pain peptide signature to further develop a clinically useful array. specific for determining the presence of a pain-related autoantibody signature. Affinergys device for objectively. identifying an inflammation-induced chronic pain signature will play an important role in assessing pain and. distinguishing those patients who should not receive opioids as a first line treatment.",
+          "activity_code": "R43",
+          "project_title": "Development of a multiplex peptide array to identify patients with an autoantibody signature for chronic pain",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1R43DA046998-01",
+          "contact_pi_name": "DARBY, MARTYN",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "160817",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [],
+          "core_project_num": "R43DA046998",
+          "dataset_category": "",
+          "project_end_date": "2020-02-29T12:02:00Z",
+          "Data Availability": {
+            "produce_data": "",
+            "produce_other": "",
+            "data_available": "",
+            "data_restricted": "",
+            "data_release_status": "",
+            "data_collection_status": "",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "2019-02-28T12:02:00Z",
+          "data_availability": "not_available",
+          "funding_mechanism": "SBIR/STTR",
+          "indirect_cost_amt": "138303",
+          "mechanism_code_dc": "SB",
+          "investigators_name": "Martyn  Darby",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9608089",
+          "project_serial_num": "DA046998",
+          "project_start_date": "2019-03-01T12:03:00Z",
+          "registration_authz": "/study/9608089",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "research_focus_area": "New Strategies to Prevent and Treat Opioid Addiction",
+          "spending_categories": "108; 616; 240; 525; 4076; 3951; 618; 817; 3724",
+          "agency_ic_admin.code": "DA",
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "DURHAM",
+          "organization.org_duns": "078296854",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "YJQ6K1QMS488",
+          "organization.dept_type": "",
+          "organization.org_state": "NC",
+          "organization_type.code": "FP",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "DA",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse",
+          "full_study_section.name": "Special Emphasis Panel[ZDA1 JXB-N (11)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "277094650",
+          "organization.primary_uei": "YJQ6K1QMS488",
+          "spending_categories_desc": "Biotechnology; Chronic Pain; Drug Abuse (NIDA only); Neurosciences; Opioid Misuse and Addiction; Opioids; Pain Research; Substance Abuse; Women's Health",
+          "Study Translational Focus": {
+            "study_translational_focus": "",
+            "study_translational_topic_grouping": []
+          },
+          "organization.org_ipf_code": "10031812",
+          "organization.primary_duns": "078296854",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "One of the most widely used treatments for chronic pain is opioid analgesics. Importantly, there is evidence of a pathological interaction between opioids and the immune system that can contribute to both opioid tolerance and elevated levels of pain. Chronic pain conditions for which opioids are most often prescribed have been shown to involve dysregulation of the immune system, which may contribute to pathological effects of opioid use in these patients. To address this unmet need, this study aims to develop a reliable, cost-effective, and non-invasive in vitro diagnostic assay for chronic pain with an underlying inflammatory pathology, as a blood test available in primary care settings, with the hope that doctors can use the test to identify which patients might benefit less from opioids and be more likely to become addicted.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "RAMACHANDRAN NMN Arudchandran",
+          "program_officers.last_name": "Arudchandran",
+          "Human Subject Applicability": {
+            "age_applicability": [],
+            "gender_applicability": [],
+            "geographic_applicability": [],
+            "geographic_applicability1": [],
+            "sexual_identity_applicability": [],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "ZDA1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "RAMACHANDRAN",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "10031812",
+          "program_officers.middle_name": "NMN",
+          "project_num_split.serial_num": "046998",
+          "Human Condition Applicability": {
+            "condition_category": [],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": []
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [],
+            "treatment_type": [],
+            "treatment_novelty": [],
+            "treatment_application_level": [],
+            "treatment_investigation_stage_or_type": []
+          },
+          "agency_ic_fundings.total_cost": "320058.0",
+          "full_study_section.group_code": "11",
+          "principal_investigators.title": "DIRECTOR OF RESEARCH AND DEVELOPMENT",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA",
+          "project_num_split.activity_code": "R43",
+          "full_study_section.sra_flex_code": "N",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "Darby",
+          "principal_investigators.first_name": "Martyn",
+          "principal_investigators.profile_id": "9971977",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "JXB",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00011": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [
+              "Interview/Focus Group",
+              "Interview/Focus Group - semi-structured",
+              "Questionnaire/Survey/Assessment",
+              "Questionnaire/Survey/Assessment - validated instrument"
+            ],
+            "data_source": [
+              "Administrative",
+              "Researcher Collected/Measured"
+            ],
+            "data_orientation": [
+              "Quantitative",
+              "Qualitative"
+            ],
+            "subject_data_level_available": [
+              "Individual - Aggregated",
+              "Community, Group, Cluster, Population - Aggregated",
+              "Individual - Unaggregated",
+              "Community, Group, Cluster, Population - Unaggregated",
+              "Aggregated, by treatment/exposure group"
+            ],
+            "subject_data_unit_of_analysis": [
+              "Individual",
+              "Community, Group, Cluster, Population"
+            ],
+            "subject_data_unit_of_collection": [
+              "Individual",
+              "Community, Group, Cluster, Population"
+            ],
+            "subject_geographic_data_level_available": [
+              "State"
+            ],
+            "subject_geographic_data_level_collected": [
+              "State"
+            ],
+            "subject_data_unit_of_analysis_expected_number": "360",
+            "subject_data_unit_of_collection_expected_number": "360"
+          },
+          "tags": [
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "At-risk",
+              "category": "Other"
+            },
+            {
+              "name": "New Formulations Of Existing Interventions",
+              "category": "Other"
+            },
+            {
+              "name": "Adolescents",
+              "category": "Subject Characteristics"
+            },
+            {
+              "name": "Health Care Settings",
+              "category": "Other"
+            },
+            {
+              "name": "Young Adults",
+              "category": "Subject Characteristics"
+            },
+            {
+              "name": "High Risk",
+              "category": "Other"
+            }
+          ],
+          "authz": "",
+          "terms": "<Adolescence><adolescence (12-20)><12-20 years old><Adult><adulthood><Adult Human><21+ years old><Aging><Behavior><Mental disorders><psychological disorder><psychiatric illness><mental illness><Psychiatric Disorder><Psychiatric Disease><Mental health disorders><youngster><childrens'><children><Children (0-21)><Child Youth><0-11 years old><Child><Communities><Control Groups><cost effectiveness><Death><Cessation of life><Diamorphine><Diacetylmorphine><Heroin><Elements><Extended Family><Family><Feedback><Phentanyl><Fentyl><Fentanest><Duragesic><Actiq><Fentanyl><Focus Groups><Hospital Admission><Hospitalization><Hybrids><Investments><Justice><Manuals><Overdose><Parents><Public Health><Rehabilitation Centers><Risk><Risk Factors><social role><Role><Safety><Self Regulation><Informal Social Control><Substance Use Disorder><Survey Instrument><Surveys><Testing><Work><Administrator><Criminal Justice><Family member><health care><Healthcare><Mediating><Youth 10-21><Youth><base><improved><Penetration><Phase><Adolescent><juvenile human><juvenile><Adolescent Youth><Ensure><Training><Alcohol or Other Drugs use><using substances><substance using><substance use><AOD use><Trust><Opioid><Opiates><Populations at Risk><Educational Intervention><instructional intervention><Training Intervention><Instruction Intervention><Education for Intervention><tool><Complex><Protocols documentation><Protocol><Techniques><System><contextual factors><Application Context><empowered><experience><Nomenclature><Structure><recidivism><social><response><Intervention><interventional strategy><Intervention Strategies><Vulnerable Populations><vulnerable group><Effectiveness><preventing><prevent><Preparedness><Readiness><Address><Effectiveness of Interventions><National Institute of Drug Abuse><National Institute on Drug Abuse><NIDA><Preventive Intervention><preventional intervention strategy><Prevention intervention><Preventative intervention><Randomized><randomly assigned><randomization><randomisation><Subgroup><Enrollment><enroll><Process><cost><design><designing><Outcome><juvenile justice system><Trauma><Vehicle crash><Vehicular crash><Vehicular collision><Motor vehicle crash><Motor vehicle collision><Car crash><Car collision><Automobile crash><Automobile collision><innovation><innovative><innovate><Evidence based intervention><trial comparing><comparative><emotion regulation><emotional regulation><control trial><Secure><cognitive reappraisal><cognitive regulation><family support><opioid use disorder><opiate use disorder><opioid use><opioid intake><opioid drug use><opioid consumption><opiate use><opiate intake><opiate drug use><opiate consumption><opioid overdose><opioid toxicity><opioid related overdose><opioid poisoning><opioid medication overdose><opioid intoxication><opioid induced overdose><opioid drug overdose><opiate related overdose><opiate overdose><recruit><prescription opioid misuse><prescription opiate misuse><opioid prescription medication misuse><opioid medication misuse><opioid analgesic misuse><nonmedical use of prescription opioids><nonmedical use of prescription opiates><non-medical use of prescription opioids><non-medical use of prescription opiates><opioid misuse><opiate misuse><nonmedical opioid use><non-medical opioid use>",
+          "is_new": "False",
+          "appl_id": 9893173,
+          "_hdp_uid": "HDP00011",
+          "full_foa": "RFA-DA-19-035",
+          "phr_text": "Project Narrative. Across the US, substance use is a significant public health concern, with juvenile justice (JJ)-involved youth. representing a particularly vulnerable population. The current study proposes to adapt and test an intervention. Trust-based Relational Intervention (TBRI) for preventing initiation and/or escalation of opioid misuse among. older adolescents involved in the JJ system. Successful completion of study aims will provide information on. TBRIs utility for older JJ adolescents, barriers and facilitators of sustainment, and provide training and. implementation support for sustainment in participating facilities.",
+          "cfda_code": "279",
+          "cong_dist": "TX-12",
+          "is_active": "False",
+          "Study Type": {
+            "study_stage": "Clinical Research",
+            "study_type_design": [
+              "Randomized Control Trial"
+            ],
+            "study_subject_type": [
+              "Human"
+            ],
+            "study_primary_or_secondary": "Primary Research",
+            "study_observational_or_experimental": "Experimental Research"
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-08-31T12:08:00Z",
+          "date_added": "2019-09-30T04:09:41Z",
+          "pref_terms": "Address;Administrator;Adolescence;Adolescent;Adult;Aging;Alcohol or Other Drugs use;Behavior;Cessation of life;Child;Communities;Complex;Control Groups;Criminal Justice;Educational Intervention;Effectiveness;Effectiveness of Interventions;Elements;Enrollment;Ensure;Evidence based intervention;Extended Family;Family;Family member;Feedback;Fentanyl;Focus Groups;Healthcare;Heroin;Hospitalization;Hybrids;Informal Social Control;Intervention;Investments;Justice;Manuals;Mediating;Mental disorders;National Institute of Drug Abuse;Nomenclature;Opioid;Outcome;Overdose;Parents;Penetration;Phase;Populations at Risk;Preventive Intervention;Process;Protocols documentation;Public Health;Randomized;Readiness;Rehabilitation Centers;Risk;Risk Factors;Role;Safety;Secure;Structure;Subgroup;Substance Use Disorder;Surveys;System;Techniques;Testing;Training;Trauma;Trust;Vehicle crash;Vulnerable Populations;Work;Youth;base;cognitive reappraisal;comparative;contextual factors;control trial;cost;cost effectiveness;design;emotion regulation;empowered;experience;family support;improved;innovation;juvenile justice system;opioid misuse;opioid overdose;opioid use;opioid use disorder;prescription opioid misuse;prevent;recidivism;recruit;response;social;tool;trial comparing",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "579199",
+          "budget_start": "2019-09-30T12:09:00Z",
+          "institutions": "TEXAS CHRISTIAN UNIVERSITY",
+          "year_awarded": "2019",
+          "abstract_text": "Project Summary/Abstract. Across the US, substance use (SU) is a significant public health concern. Rates of opioid use disorders have. increased exponentially, with 60% of overdoses attributed to heroin and illicit synthetics. Although opioid use. among youth is low compared to adults, experimentation and regular use increases later in adolescence as. youth transition to adulthood. Juvenile justice (JJ)-involved youth represent a particularly vulnerable population,. as they often experience mental health disorders, dysfunctional family/social relationships, and complex. trauma, placing them at greater risk for SU and substance use disorders (SUDs). To ensure that these youth. do not become another opioid statistic, innovative and effective prevention interventions are needed. We. propose to adapt and test an intervention for preventing initiation and/or escalation of opioid misuse among. older JJ-involved adolescents. The target enrollment group will be youth aging out of JJ (16-18 years) who are. transitioning to their communities after a period of detainment in a secure treatment or correctional facility.. Trust-based Relational Intervention (TBRI; a relational, attachment-based intervention that promotes. emotional regulation through interaction with responsive adults) will be adapted as a prevention intervention. targeting youth at risk for SU (especially non-medical use of opioids). Safe adults (e.g., parent/guardian) will be. trained in behavior management techniques for empowering youth to appropriately express their needs,. connecting them with others in pro-social ways, and correcting or reshaping undesirable behavior. The. proposed Effectiveness/Implementation study will be conducted in 3 phases. Phase 1 will adapt elements of. TBRI for JJ youth, develop intervention manuals and study protocols, examine the acceptability of the adapted. intervention, and test the feasibility of the proposed study protocol (e.g., agency and youth recruitment).. Feedback from 15 youth/safe adult dyads will be solicited as part of this phase. Phase 2 will examine both the. effectiveness of TBRI for preventing opioid misuse and the comparative utility of three support formats: (1). TBRI Training only, (2) TBRI Training + Structured Coaching, or (3) TBRI Training + Responsive Coaching. (triggered by the youths need/risk). A total of 360 youth/safe adult dyads will be recruited from 6 participating. JJ facilities over a 3-year period, and followed for 18 months post-release (20 youth-adult dyads/year per. facility). This design enables a comparison of TBRI versus SRP (using a stepped-wedge design where each. facility serves as its own control) plus a randomized control trial comparing 3 TBRI support formats. Phase 3. will examine barriers and facilitators of TBRI sustainment. Sixty JJ staff (10 from each agency) will provide. input annually via focus groups and surveys. TCU will work with administrators and staff at each JJ facility to. implement a sustainment plan, which will include developing in-house TBRI expertise (i.e., staff training and. implementation assistance). Successful completion of study aims will provide a test of the adapted intervention. and will facilitate sustainment by providing training and implementation support to participating facilities.",
+          "activity_code": "UG3",
+          "is_registered": true,
+          "project_title": "Preventing Opioid Use Among Justice-Involved Youth as They Transition to Adulthood: Leveraging Safe Adults (LeSA)",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1UG3DA050250-01",
+          "contact_pi_name": "KNIGHT, DANICA K",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "484184",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [
+            {
+              "key": "Research Focus Area",
+              "value": "New Strategies to Prevent and Treat Opioid Addiction"
+            },
+            {
+              "key": "Administering IC(s)",
+              "value": "NIDA"
+            },
+            {
+              "key": "Year Grant Awarded",
+              "value": "2019"
+            }
+          ],
+          "core_project_num": "UG3DA050250",
+          "dataset_category": "",
+          "project_end_date": "2020-08-31T12:08:00Z",
+          "Data Availability": {
+            "produce_data": "Yes",
+            "produce_other": "No",
+            "data_available": "all",
+            "data_restricted": "some",
+            "data_release_status": "not started",
+            "data_collection_status": "started",
+            "data_release_start_date": "2023-12-31",
+            "data_release_finish_date": "2024-08-31",
+            "data_collection_start_date": "2021-03-11",
+            "data_collection_finish_date": "2021-03-11"
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "2019-09-23T12:09:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/d6459c20-a658-4cbe-b8a6-ee382e64231f",
+          "data_availability": "not_available",
+          "funding_mechanism": "Non-SBIR/STTR",
+          "indirect_cost_amt": "95015",
+          "mechanism_code_dc": "RP",
+          "clinical_trials_id": "NCT04678960",
+          "clinicaltrials.gov": {
+            "NCTId": "NCT04678960",
+            "Phase": "Not Applicable",
+            "Gender": "All",
+            "Acronym": "LeSA",
+            "Condition": "Opioid Use",
+            "StartDate": "February 15, 2021",
+            "StudyType": "Interventional",
+            "BriefTitle": "Preventing Opioid Use Among Justice-involved Youth as They Transition to Adulthood Leveraging Safe Adults (LeSA)",
+            "IPDSharing": "Yes",
+            "MaximumAge": "20 Years",
+            "MinimumAge": "15 Years",
+            "BriefSummary": "Across the US, substance use is a significant public health concern, with juvenile justice (JJ)-involved youth representing a particularly vulnerable population. The current study proposes to adapt and test an intervention Trust-based Relational Intervention® (TBRI®) for preventing initiation and/or escalation of opioid misuse among older adolescents involved in the JJ system. Successful completion of study aims will provide information on TBRI's utility for older JJ adolescents, barriers and facilitators of sustainment, and provide training and implementation support for sustainment in participating facilities.",
+            "IPDSharingURL": "https://heal.nih.gov/about/public-access-data",
+            "OfficialTitle": "Preventing Opioid Use Among Justice-involved Youth as They Transition to Adulthood: Leveraging Safe Adults (LeSA)",
+            "OverallStatus": "Recruiting",
+            "StartDateType": "Actual",
+            "CompletionDate": "August 31, 2024",
+            "EnrollmentType": "Anticipated",
+            "EnrollmentCount": "360",
+            "DesignAllocation": "Randomized",
+            "InterventionType": "Behavioral",
+            "CompletionDateType": "Anticipated",
+            "IsFDARegulatedDrug": "No",
+            "DetailedDescription": "Across the US, substance use (SU) is a significant public health concern, with an estimated 11.1 million misusing prescription opioids. Rates of opioid use disorders (OUDs) have increased exponentially, with 60% of overdoses attributed to heroin and illicit synthetics (such as Fentanyl). Although opioid use among youth is low compared to adults, experimentation and regular use increases later in adolescence as youth transition to adulthood. Juvenile justice (JJ)-involved youth represent a particularly vulnerable population, as they often experience mental health disorders, dysfunctional family/social relationships, and complex trauma, placing them at greater risk for SU and substance use disorders (SUDs). To ensure that these youth do not become another opioid statistic, innovative and effective prevention interventions are needed. The investigators propose to adapt and test an intervention for preventing initiation and/or escalation of opioid misuse among older JJ-involved adolescents. The target enrollment group will be youth aging out of JJ (15-18 years at study enrollment) who are transitioning to their communities after a period of detainment in a secure treatment or correctional facility. Trust-based Relational Intervention® (TBRI®; a relational, attachment-based intervention that promotes emotional regulation through interaction with responsive adults) will be adapted as a prevention intervention targeting youth at risk for SU (especially non-medical use of opioids). Safe adults (e.g., parent/guardian, extended family member) will be trained in behavior management techniques for empowering youth to appropriately express their needs, connecting them with others in pro-social ways, and correcting or reshaping undesirable behavior. The proposed Effectiveness/Implementation study will examine both the effectiveness of TBRI for preventing opioid misuse and the comparative utility of three support formats: (1) TBRI Training only, (2) TBRI Training + Structured Coaching, or (3) TBRI Training + Responsive Coaching (triggered by the youth's need/risk). A total of 360 youth/safe adult dyads will be recruited from 9 participating JJ facilities over a 3-year period, and followed for 18 months post-release (15 youth-adult dyads/year per facility). This design enables a comparison of TBRI versus Standard Reentry Practice (SRP; using a stepped-wedge design where each facility serves as its own control) plus a randomized control trial comparing 3 TBRI support formats. This study will also examine barriers and facilitators of TBRI sustainment. Ninety JJ staff (10 from each agency) will provide input annually via focus groups and surveys. TCU will work with administrators and staff at each JJ facility to implement a sustainment plan, which will include developing in-house TBRI expertise (i.e., staff training and implementation assistance). Successful completion of study aims will provide a test of the adapted intervention and will facilitate sustainment by providing training and implementation support to participating facilities.",
+            "IPDSharingTimeFrame": "The data will be shared with the HEAL Prevention Cooperative between 2021 and 2024.\n\nSharing of underlying primary data for the publications will be made broadly available through an appropriate data repository, such as the NIH HEAL Initiative central data repository, or a non-NIH repository that conforms to the principles articulated in the HEAL Public Access and Data Sharing Policy (referred to in the URL included below).",
+            "DesignPrimaryPurpose": "Prevention",
+            "IsFDARegulatedDevice": "No",
+            "PrimaryOutcomeMeasure": "Youth days to opioid (and other substance use) initiation",
+            "DesignInterventionModel": "Parallel Assignment",
+            "SecondaryOutcomeMeasure": "Self-regulation (youth) - positive and negative urgency",
+            "IPDSharingAccessCriteria": "All research teams that participate in the NIH Helping to End Addiction Long-term (HEAL) Initiative.\n\nhttps://heal.nih.gov/files/2020-01/2020-01-16_data-sharing-4.pdf"
+          },
+          "investigators_name": "DANICA K KNIGHT",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9893173",
+          "project_serial_num": "DA050250",
+          "project_start_date": "2019-09-30T12:09:00Z",
+          "registration_authz": "/study/9893173",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "0000-0002-9190-5918",
+          "research_focus_area": "New Strategies to Prevent and Treat Opioid Addiction",
+          "spending_categories": "89; 118; 176; 180; 240; 4076; 3951; 679; 683; 701; 817",
+          "agency_ic_admin.code": "DA",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "FORT WORTH",
+          "organization.org_duns": "043807882",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "MJCLFGKGULP5",
+          "organization.dept_type": "MISCELLANEOUS",
+          "organization.org_state": "TX",
+          "organization_type.code": "10",
+          "organization_type.name": "ORGANIZED RESEARCH UNITS",
+          "agency_ic_fundings.code": "DA",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse",
+          "full_study_section.name": "Special Emphasis Panel[ZDA1 HXO-H (08)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "761290001",
+          "organization.primary_uei": "MJCLFGKGULP5",
+          "spending_categories_desc": "Behavioral and Social Science; Brain Disorders; Clinical Research; Clinical Trials and Supportive Activities; Drug Abuse (NIDA only); Opioid Misuse and Addiction; Opioids; Pediatric; Pediatric Research Initiative; Prevention; Substance Abuse",
+          "Study Translational Focus": {
+            "study_translational_focus": "Treatment",
+            "study_translational_topic_grouping": [
+              "Social Determinants",
+              "Mental Health"
+            ]
+          },
+          "organization.org_ipf_code": "8272601",
+          "organization.primary_duns": "043807882",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "Juvenile justice (JJ)-involved youth represent a particularly vulnerable population for substance use and substance use disorders (SUDs), because they often experience mental health disorders, dysfunctional family/social relationships, and complex trauma. This study will adapt and test an intervention for preventing initiation and/or escalation of opioid misuse among older JJ-involved youth aging out of JJ (16-18 years), who are transitioning to their communities after a period of detainment in a secure treatment or correctional facility. Trust-Based Relational Intervention (TBRI, a relational, attachment-based intervention that promotes emotional regulation through interaction with responsive adults) will be adapted as a prevention intervention targeting youth at risk for substance use, especially non-medical use of opioids. Safe adults (e.g., parent/guardian) will be trained in behavior management techniques for empowering youth to appropriately express their needs, connecting them with others in pro-social ways, and correcting or reshaping undesirable behavior.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Amy B Goldstein",
+          "program_officers.last_name": "Goldstein",
+          "Human Subject Applicability": {
+            "age_applicability": [
+              "Adolescent (13 to 18 years)"
+            ],
+            "gender_applicability": [
+              "Cis Male",
+              "Cis Female",
+              "Trans Male",
+              "Trans Female",
+              "Agender, Non-binary, gender non-conforming",
+              "Gender Queer",
+              "Intersex"
+            ],
+            "geographic_applicability": [
+              "US - National",
+              "Non US"
+            ],
+            "geographic_applicability1": [
+              "Non-US",
+              "US - National"
+            ],
+            "sexual_identity_applicability": [
+              "Heterosexual",
+              "Homosexual",
+              "Bisexual",
+              "Pansexual",
+              "Queer",
+              "Asexual"
+            ],
+            "irb_vulnerability_conditions_applicability": [
+              "Institutionalized persons (for example, persons in correctional facilities, nursing homes or mental health facilities)",
+              "Children"
+            ]
+          },
+          "full_study_section.srg_code": "ZDA1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Amy",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "8272601",
+          "program_officers.middle_name": "B",
+          "project_num_split.serial_num": "050250",
+          "Human Condition Applicability": {
+            "condition_category": [
+              "Opioid use and opioid use disorder, primary occurrence"
+            ],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [
+              "Incidence of condition",
+              "Treatment of condition"
+            ],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": []
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [
+              "Preventive (prevention of an occurrence)"
+            ],
+            "treatment_type": [
+              "behavioral",
+              "psychotherapy",
+              "housing supports"
+            ],
+            "treatment_novelty": [
+              "Novel",
+              "Novel, added to established"
+            ],
+            "treatment_application_level": [
+              "Individual"
+            ],
+            "treatment_investigation_stage_or_type": [
+              "treatment efficacy",
+              "treatment mechanism",
+              "treatment implementation"
+            ]
+          },
+          "agency_ic_fundings.total_cost": "579199.0",
+          "full_study_section.group_code": "08",
+          "principal_investigators.title": "SENIOR RESEARCH SCIENTIST",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA",
+          "project_num_split.activity_code": "UG3",
+          "full_study_section.sra_flex_code": "H",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "KNIGHT",
+          "principal_investigators.first_name": "DANICA",
+          "principal_investigators.profile_id": "6797190",
+          "principal_investigators.middle_name": "K",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "HXO",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00018": {
+        "gen3_discovery": {
+          "tags": [
+            {
+              "name": "Novel Medications",
+              "category": "Intervention/Treatment"
+            },
+            {
+              "name": "Medication",
+              "category": "Other"
+            },
+            {
+              "name": "Respiratory Depression",
+              "category": "Other"
+            },
+            {
+              "name": "Opioid Use Disorder",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Craving",
+              "category": "Other"
+            },
+            {
+              "name": "Medication Intervention",
+              "category": "Other"
+            },
+            {
+              "name": "New Formulations Of Existing Interventions",
+              "category": "Other"
+            },
+            {
+              "name": "Relapse",
+              "category": "Other"
+            },
+            {
+              "name": "Overdose",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Chronic Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Withdrawal",
+              "category": "Substance Use"
+            }
+          ],
+          "authz": "",
+          "terms": "<Oral Administration><intraoral drug delivery><Oral Drug Administration><Adult><adulthood><Adult Human><21+ years old><Affect><Pain management><pain treatment><Pain Therapy><Pain Control><Animals><inhibitor/antagonist><inhibitor><Biological Assay><Biologic Assays><Bioassay><Assay><Blood><Blood Reticuloendothelial System><Body Weight><Budgets><Carboxylic Acids><Cardiovascular system><circulatory system><Heart Vascular><Cardiovascular Organ System><Cardiovascular Body System><Cardiovascular><United States Centers for Disease Control and Prevention><United States Centers for Disease Control><Centers for Disease Control and Prevention><Centers for Disease Control><CDC><Centers for Disease Control and Prevention (U.S.)><Clinical Chemistry><Chronology><Clinical Study><Clinical Research><virtual simulation><in silico><computerized simulation><computerized modeling><computer based models><computational simulation><computational models><computational modeling><Mathematical Models and Simulations><Mathematical Model Simulation><Computerized Models><Computer based Simulation><Computer Models><Computer Simulation><Double-Masked Study><Double-Masked Method><Double-Blinded><Double-Blind Study><Double-Blind Method><Drug Design><Drug Modelings><drug/agent><Pharmaceutic Preparations><Medication><Drugs><Pharmaceutical Preparations><balance function><balance><Equilibrium><Female><Fecundity><Fecundability><Fertility><Aminoacetic Acid><Glycine><Goals><cGMP><Guanosine Cyclic Monophosphate><Cyclic GMP><Hematology><Modern Man><Human><hyperalgia><Hyperalgesic Sensations><Hyperalgesia><In Vitro><Membrane Channels><Ionic Channels><Ion Channel><male><Metabolic Processes><Intermediary Metabolism><Metabolism><Statex SR><Roxanol><Oramorph SR><Oramorph><Morphia><MSir><MS Contin><Kadian><Infumorph><Morphine><Names><opioid drug abuse><opiate drug abuse><opiate abuse><opioid abuse><Coxarthrosis><Hip Osteoarthritis><Overdose><Painful><Pain><Pathology><Pharmacokinetics><Drug Kinetics><Phenotype><sham therapy><Sham Treatment><Placebos><Reticuloendothelial System, Serum, Plasma><Plasma Serum><Blood Plasma><Plasma><Postoperative><Post-Operative><Postoperative Period><Drug Prescribing><Drug Prescriptions><Production><quinoline><Rabbits Mammals><Rabbits><Domestic Rabbit><Oryctolagus cuniculus><Rats Mammals><Rat><Common Rat Strains><Rattus><Research><Safety><Sodium Ion Channels><Sodium Channel><miniswine><mini-swine><mini pig><Minipigs><Miniature Swine><Syndrome><Testing><Body Tissues><Tissues><Toxicology><NMDA Receptors><NMDA Receptor-Ionophore Complex><N-Methylaspartate Receptors><N-Methyl-D-Aspartate Receptors><chronic pain><Injury><method development><Procedures><Peripheral><Site><Acute><Solid><Clinical><Phase><Chemicals><Evaluation><Excretory function><excretion><Recovery><Licensing><Opioid><Opiates><non-opioid analgesic><nonopioid><nonopiate analgesic><non-opioid><non-opiate analgesic><non-narcotic analgesic><Nonopioid Analgesics><Nonnarcotic Analgesics><Funding><Toxicokinetics><Knee Osteoarthritis><knee joint osteoarthritis><knee joint OA><knee OA><Kilogram><Complex><Oral><System><Country><respiratory><Drug Formulations><Opiate Addiction><opioid dependent><opioid dependence><opioid addiction><Opiate Dependence><meetings><receptor><Receptor Protein><genotoxicity><placebo controlled study><placebo controlled trial><pharmacophore><cohort><Animal Model><model organism><model of animal><Animal Models and Related Studies><Toxic effect><Toxicities><Histopathology><sensory system><reproductive><response><Pharmacological Substance><Pharmaceuticals><Pharmaceutical Agent><Pharmacologic Substance><preventing><prevent><Coagulation><Clotting><Coagulation Process><Address><Dose><Data><Applications Grants><Grant Proposals><Randomized><randomly assigned><randomization><randomisation><Request for Applications><NIH RFA><in vivo><Monitor><Molecular><Process><Development><developmental><Phototoxicity><safety study><pre-clinical><preclinical><preclinical study><pre-clinical study><food consumption><design><designing><scale up><drug distribution><Population><novel therapeutics><novel therapy><novel drugs><novel drug treatments><next generation therapeutics><new therapy><new therapeutics><new drugs><new drug treatments><addiction><addictive disorder><overdose death><prescription opioid><prescription opiate><prescribed opioid><prescribed opiate><opioid medication><opiate medication><licit opioid><Institutional Review Boards><IRBs><IRB><Drug Targeting><Formulation><opioid use><opioid intake><opioid drug use><opioid consumption><opiate use><opiate intake><opiate drug use><opiate consumption><experimental study><experimental research><experiment><efficacy study><opioid epidemic><opioid crisis><opiate crisis><opioid overdose><opioid toxicity><opioid related overdose><opioid poisoning><opioid medication overdose><opioid intoxication><opioid induced overdose><opioid drug overdose><opiate related overdose><opiate overdose><pain signal><osteoarthritis pain><first-in-human><first in man><synthetic opioid><synthetic opiate><opioid sparing>",
+          "is_new": "False",
+          "appl_id": 9667901,
+          "_hdp_uid": "HDP00018",
+          "full_foa": "RFA-DA-19-002",
+          "phr_text": "The U.S. and other countries around the world are facing dual crises of pain and opioid addiction. Lohocla. Research Corporation has responded to the opioid crisis and medication development challenge by designing,. synthesizing and demonstrating, in pre-clinical studies, the efficacy and safety of a non-opiate, non-addictive. new chemical entity for treatment of chronic pain. This new chemical entity, called Kindolor, has significant. additional benefits of being able to prevent the development of chronic pain if administered soon after tissue. injury, including post-operative conditions. Kindolor also has a highly significant opiate sparing effect in. conditions that may require the use of opiates, since Kindolor demonstrates a strong synergistic effect with. morphine. In this grant application we are requesting funds to complete cGMP synthesis and GLP studies. necessary for an IND application to the FDA, and given the FDA approval of the IND status, the completion of. the first in human, Phase I clinical studies for safety and Phase 2a studies of efficacy to bring our medication to. chronic pain sufferers.",
+          "cfda_code": "279",
+          "cong_dist": "CO-06",
+          "is_active": "False",
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-02-29T12:02:00Z",
+          "date_added": "2019-03-16T07:03:22Z",
+          "pref_terms": "Acute;Address;Adult;Affect;Animal Model;Animals;Applications Grants;Biological Assay;Blood;Body Weight;Budgets;Carboxylic Acids;Cardiovascular system;Centers for Disease Control and Prevention (U.S.);Chemicals;Chronology;Clinical;Clinical Chemistry;Clinical Research;Coagulation Process;Complex;Computer Simulation;Country;Cyclic GMP;Data;Development;Dose;Double-Blind Method;Drug Design;Drug Formulations;Drug Kinetics;Drug Modelings;Drug Prescriptions;Drug Targeting;Equilibrium;Evaluation;Excretory function;Female;Fertility;Formulation;Funding;Glycine;Goals;Hematology;Hip Osteoarthritis;Histopathology;Human;Hyperalgesia;In Vitro;Injury;Institutional Review Boards;Ion Channel;Kilogram;Knee Osteoarthritis;Licensing;Metabolism;Miniature Swine;Molecular;Monitor;Morphine;N-Methyl-D-Aspartate Receptors;Names;Opiate Addiction;Opioid;Oral;Oral Administration;Oryctolagus cuniculus;Overdose;Pain;Pain management;Pathology;Peripheral;Pharmaceutical Preparations;Pharmacologic Substance;Phase;Phenotype;Phototoxicity;Placebos;Plasma;Population;Postoperative Period;Procedures;Process;Production;Randomized;Rattus;Recovery;Request for Applications;Research;Safety;Site;Sodium Channel;Solid;Syndrome;System;Testing;Tissues;Toxic effect;Toxicokinetics;Toxicology;addiction;chronic pain;cohort;design;drug distribution;efficacy study;experimental study;first-in-human;food consumption;genotoxicity;in vivo;inhibitor/antagonist;male;meetings;method development;non-opioid analgesic;novel therapeutics;opioid abuse;opioid epidemic;opioid overdose;opioid sparing;opioid use;osteoarthritis pain;overdose death;pain signal;pharmacophore;placebo controlled study;pre-clinical;preclinical study;prescription opioid;prevent;quinoline;receptor;reproductive;respiratory;response;safety study;scale up;sensory system;synthetic opioid",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "award_amount": "2382426",
+          "budget_start": "2019-03-15T12:03:00Z",
+          "institutions": "LOHOCLA RESEARCH CORPORATION",
+          "year_awarded": "2019",
+          "abstract_text": "Over 100 million adults in the U.S. suffer from intermittent or constant chronic pain, and chronic pain affects at. least 10% of the worlds population. The primary pharmaceuticals for treatment of chronic pain have been natural. or synthetic opioids and the use of opioids for pain treatment has resulted in what has been called an epidemic. of opioid abuse, addiction and lethal overdoses. We have, through a process of rational drug design, generated. a new chemical entity (NCE) and have given it the name Kindolor. Kindolor is a non-opiate, non-addicting. molecule that was developed specifically to simultaneously control the aberrant activity of three targets on the. peripheral sensory system that are integral in the development and propagation of chronic pain. Kindolor acts. as an inhibitor of the pain propagating Nav1.7 and Nav1.8 sodium channels and as an inhibitor of NMDA receptors. that act to magnify pain signals (Fig A). We have generated a process to synthesize Kindolor at 99% purity. In. our pre-clinical studies we have demonstrated the efficacy of Kindolor to reduce or eliminate chronic pain. generated in five animal models at doses compatible with use of Kindolor in humans. We have generated. evidence that this broad range of efficacy is a result of the multi-target engagement by Kindolor. We have. generated the initial evidence for the safety (high TI) of Kindolor and its uneventful metabolism. Additional. attractive features of Kindolor are that it can prevent the development of chronic pain if given soon after tissue. injury. And if combined with low doses of opiates, Kindolor produces a substantial opiate sparing effect through. synergistic actions with the opiates. To bring Kindolor to the public, we are proposing to complete the pre-clinical. studies necessary for an IND application to the FDA and, if the IND is approved, the completion of a Phase 1a. and 1b, first in human, study of the safety of our compound, and then a Phase 2a study of efficacy on pain of. osteoarthritis. To start, we will have Kindolor synthesized using cGMP procedures. This will include development. of methods for scaling up production quantities. We will produce a formulation for oral drug administration to. humans and will use this formulation for GLP studies of pharmacokinetics and toxicokinetics in two species of. animals (rat and minipig). We will complete GLP studies of safety of the formulation in the two species, including. escalating dose experiments and sub-chronic dosing for 28 days with low, moderate, and high doses of the drug. product. These studies will include a 14 day recovery period to assess delayed toxicity. Genotoxicity studies will. also be completed, as will specific assessments of cardiovascular and respiratory toxicity prior to a pre-IND. meeting with the FDA. The satisfactory completion of the pre-IND meeting will allow for expedient completion of. the IND application. Given approval of the IND application, we propose to complete the Phase Ia and 1b study. and the Phase 2a study. In all, our goal is to bring our compound to a full Phase 2 ready stage for licensing or. partnering with a Pharma company willing and able to bring the medication to the chronic pain sufferer.",
+          "activity_code": "UG3",
+          "is_registered": true,
+          "project_title": "A novel therapeutic to ameliorate chronic pain and reduce opiate use",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1UG3DA047680-01",
+          "contact_pi_name": "TABAKOFF, BORIS",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "1701733",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [],
+          "core_project_num": "UG3DA047680",
+          "dataset_category": "",
+          "project_end_date": "2021-02-28T12:02:00Z",
+          "award_notice_date": "2019-03-08T12:03:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/cec33f0f-9c9f-4585-a874-1006dbeb7f32",
+          "data_availability": "not_available",
+          "funding_mechanism": "Non-SBIR/STTR",
+          "indirect_cost_amt": "680693",
+          "mechanism_code_dc": "RP",
+          "clinical_trials_id": "",
+          "investigators_name": "Boris  Tabakoff",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9667901",
+          "project_serial_num": "DA047680",
+          "project_start_date": "2019-03-15T12:03:00Z",
+          "registration_authz": "/study/9667901",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "george42@uchicago.edu",
+          "research_focus_area": "Novel Therapeutic Options for Opioid Use Disorder and Overdose",
+          "spending_categories": "55; 118; 616; 176; 180; 240; 372; 4076; 3951; 2599; 618; 700; 817",
+          "agency_ic_admin.code": "DA",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "Aurora",
+          "organization.org_duns": "966627499",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "E9QLNCNUDLE3",
+          "organization.dept_type": "",
+          "organization.org_state": "CO",
+          "organization_type.code": "FP",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "DA",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse",
+          "full_study_section.name": "Special Emphasis Panel[ZDA1 IXN-O (01)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "80045",
+          "organization.primary_uei": "E9QLNCNUDLE3",
+          "spending_categories_desc": "Arthritis; Brain Disorders; Chronic Pain; Clinical Research; Clinical Trials and Supportive Activities; Drug Abuse (NIDA only); Injury (total) Accidents/Adverse Effects; Opioid Misuse and Addiction; Opioids; Osteoarthritis; Pain Research; Prescription Drug Abuse; Substance Abuse",
+          "organization.org_ipf_code": "1758701",
+          "organization.primary_duns": "966627499",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "More than 100 million adults in the U.S. suffer from intermittent or constant chronic pain, and chronic pain affects at least 10 percent of the worlds population. The primary pharmaceuticals for treatment of chronic pain have been natural or synthetic opioids, and the use of opioids for pain treatment has resulted in what has been called an epidemic of opioid abuse, addiction, and lethal overdoses. Through a process of rational drug design, the research team has generated a new chemical entity (NCE) and have given it the name Kindolor, a non-opiate, non-addicting molecule that was shown to reduce or eliminate chronic pain in five animal models at doses compatible with use of Kindolor in humans. This project intends to complete the pre-clinical studies required for an IND application, which, if approved, would allow for proceeding onto the Phase 1 and 2 studies to assess safety and efficacy of the compound against osteoarthritic pain.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "JANE  ACRI",
+          "program_officers.last_name": "ACRI",
+          "full_study_section.srg_code": "ZDA1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "JANE",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "1758701",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "047680",
+          "agency_ic_fundings.total_cost": "2382426.0",
+          "full_study_section.group_code": "01",
+          "principal_investigators.title": "",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA",
+          "project_num_split.activity_code": "UG3",
+          "full_study_section.sra_flex_code": "O",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "Tabakoff",
+          "principal_investigators.first_name": "Boris",
+          "principal_investigators.profile_id": "9441388",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "IXN",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00039": {
+        "gen3_discovery": {
+          "tags": [
+            {
+              "name": "Dryad",
+              "category": "Data Repository"
+            }
+          ],
+          "authz": "",
+          "terms": "<American Indians><American Indian><Brain><Brain Nervous System><Encephalon><Buprenorphine><Client><Communities><comorbidity><co-morbid><co-morbidity><Complement><Complement Proteins><Consultations><Control Groups><Cost Measures><Cost metrics><cost measurement><cost effectiveness><Data Collection><Education><Educational aspects><Goals><Health><Human><Modern Man><Institutes><Mentors><Methods><Persons><United States National Institutes of Health><NIH><National Institutes of Health><New Mexico><Outpatients><Out-patients><Pain><Painful><Patients><Personal Satisfaction><well-being><wellbeing><Pilot Projects><pilot study><Pregnant Women><expectant mother><expecting mother><pregnant mothers><Primary Health Care><Primary Care><Primary Healthcare><Public Health><Quality Control><Quality of life><QOL><Research><Research Personnel><Investigators><Researchers><Resources><Research Resources><Science><Technology><Testing><Time><Universities><Measures><Treatment outcome><Outcome Measure><Research Methodology><Research Methods><chronic pain><economic evaluation><economic analysis><base><improved><Site><Training><Individual><Recovery><Funding><Research Project Grants><R-Series Research Projects><R01 Mechanism><R01 Program><Research Grants><Research Projects><Collaborations><Native Americans><Knowledge><Life><Clinic><psychosocial><innovative technologies><experience><Alaska Indian><Alaskan American><Alaskan Indian><Alaskan Native><Alaskan Native American><Alaska Native><holistic approach><motivational interview><motivational enhancement therapy><outreach><disease recurrence prevention><disorder recurrence prevention><recurrence prevention><relapse prevention><disorder later incidence prevention><stigma><social stigma><Intervention Strategies><interventional strategy><Intervention><Provider><Effectiveness><Address><randomisation><randomization><randomly assigned><Randomized><Common Data Element><Evidence based treatment><design><designing><improved functioning><Outcome><Population><patient oriented><patient centered><person centered><economic outcome><community based participatory research><community led research><community participatory research><community research><participatory action research><implementation science><addiction><addictive disorder><patient population><primary care setting><mindfulness><screening and brief intervention><social health determinants><screening><opioid use disorder><opiate use disorder><open data><open science><open-source data><improved outcome><opioid use><opiate consumption><opiate drug use><opiate intake><opiate use><opioid consumption><opioid drug use><opioid intake><recruit><health care settings><healthcare settings><chronic pain patient><patient with chronic pain><clinical pain><Integrative Therapy><Integrative Treatment><implementation strategy><strategies for implementation><opioid misuse><non-medical opioid use><nonmedical opioid use><opiate misuse><Sex Differences><Differences between sexes><Differs between sexes><Sexual differences><sex-dependent differences><sex-related differences><sex-specific differences><data harmonization><harmonized data><effectiveness implementation study><effectiveness implementation hybrid><effectiveness testing><chronic pain management><Reach, Effectiveness, Adoption, Implementation, and Maintenance><RE-AIM><reach, efficacy, adoption, implementation, and maintenance><implementation intervention><hybrid type 1 design><hybrid type 1 factorial design><hybrid type I design><implementation outcomes><organizational readiness><effectiveness study><biopsychosocial factor><biopsychosocial variable>",
+          "is_new": "False",
+          "appl_id": 10378422,
+          "_hdp_uid": "HDP00039",
+          "full_foa": "RFA-DA-21-030",
+          "phr_text": "PROJECT NARRATIVE. Chronic pain and opioid use disorder are major public health problems. The University of New Mexico (UNM). Integrative Management of chronic Pain and Opioid use disorder for Whole Recovery (IMPOWR) Center will. take an integrated and holistic approach to improving the lives of patients with chronic pain and opioid use. disorder via tailored intervention approaches to meet the needs of diverse individuals in diverse communities.. This project supports the strategic goals of several NIH institutes by examining a difficult and understudied. problem with the ultimate goal of impacting scientific knowledge and improving human health and well-being.",
+          "cfda_code": "279",
+          "cong_dist": "NM-01",
+          "is_active": "True",
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2023-07-31T12:07:00Z",
+          "date_added": "2021-10-01T09:10:17Z",
+          "pref_terms": "Address;Alaska Native;American Indians;Brain;Buprenorphine;Client;Clinic;Collaborations;Common Data Element;Communities;Complement;Consultations;Control Groups;Cost Measures;Data Collection;Education;Effectiveness;Evidence based treatment;Funding;Goals;Health;Human;Individual;Institutes;Integrative Therapy;Intervention;Knowledge;Life;Measures;Mentors;Methods;Native Americans;New Mexico;Outcome;Outcome Measure;Outpatients;Pain;Patients;Personal Satisfaction;Persons;Pilot Projects;Population;Pregnant Women;Primary Health Care;Provider;Public Health;Quality Control;Quality of life;Randomized;Reach, Effectiveness, Adoption, Implementation, and Maintenance;Recovery;Research;Research Methodology;Research Personnel;Research Project Grants;Resources;Science;Sex Differences;Site;Technology;Testing;Time;Training;Treatment outcome;United States National Institutes of Health;Universities;addiction;base;biopsychosocial factor;chronic pain;chronic pain management;chronic pain patient;clinical pain;community based participatory research;comorbidity;cost effectiveness;data harmonization;design;disorder later incidence prevention;economic evaluation;economic outcome;effectiveness implementation study;effectiveness study;effectiveness testing;experience;health care settings;holistic approach;hybrid type 1 design;implementation intervention;implementation outcomes;implementation science;implementation strategy;improved;improved functioning;improved outcome;innovative technologies;mindfulness;motivational enhancement therapy;open data;opioid misuse;opioid use;opioid use disorder;organizational readiness;outreach;patient oriented;patient population;person centered;primary care setting;psychosocial;recruit;screening;screening and brief intervention;social health determinants;social stigma",
+          "repository": "Dryad",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "award_amount": "4186344",
+          "budget_start": "2021-09-30T12:09:00Z",
+          "institutions": "UNIVERSITY OF NEW MEXICO",
+          "year_awarded": "2021",
+          "abstract_text": "PROJECT SUMMARY. Chronic pain and opioid use disorder (OUD) are major public health problems. Despite the alarming increases. in opioid misuse and OUD, few integrated treatments target both chronic pain and OUD. Integrated holistic. treatments are desperately needed that simultaneously address pain and opioid use, the fundamental causes. of pain and OUD, and that focus on whole person functioning and well-being among individuals with chronic. pain and opioid misuse/OUD. The University of New Mexico (UNM) Integrative Management of chronic Pain. and Opioid use disorder for Whole Recovery (IMPOWR) Center will take an integrated and holistic approach to. improving the lives of patients with chronic pain and opioid misuse/OUD via tailored intervention approaches to. meet the needs of diverse individuals in diverse communities. We will explicitly target increasing quality of life. and engagement in valued activities, the cultural centering of interventions to meet the needs of diverse patient. populations, and reducing stigma of chronic pain and opioid misuse and OUD. The approaches proposed in. our IMPOWR Center will directly target whole person functioning and well-being among individuals with chronic. pain and misuse/OUD. Our goals are to develop, test, and implement scalable, generalizable, and sustainable. provider- and patient-level interventions that are focused on improving functioning and can be delivered in. diverse health care settings. To maximize impact, we have established a diverse Stakeholder Consultation. Board (including people with lived experience and other stakeholders) and a Scientific Advisory Board. (including experts in chronic pain, opioid misuse/OUD, and implementation science), and aim to build a. sustainable workforce of researchers and providers devoted to ameliorating chronic pain and OUD via training. and mentoring. All Center projects will embrace principles of community-based participatory research, team. science, implementation science, economic evaluation, and open science. Consistent with our patient-centered. approach, assessment of opioid use and chronic pain will be complemented with measures of psychosocial. functioning and other important life domains, including stigma, engagement in valued activities, and quality of. life. Projects will include economic evaluation to measure cost-effectiveness of our interventions from a societal. perspective. Specific research projects will test the effectiveness, mechanisms, and implementation of an. integrated psychosocial treatment for chronic pain and OUD among individuals receiving buprenorphine from. outpatient OUD treatment clinics, and will use community-based participatory research methods to develop a. culturally-centered implementation intervention for screening and brief intervention of chronic pain and OUD. among American Indian/Alaska Native patients in primary care settings. Pilot projects focused on chronic pain. and OUD will be selected by our Stakeholder Consultation Board. The UNM IMPOWR Center is committed to. data harmonization, sharing of study resources, and provider training to enhance the reach, effectiveness,. adoption, implementation, and maintenance of evidence-based treatments for chronic pain and OUD.",
+          "activity_code": "RM1",
+          "is_registered": true,
+          "project_title": "Integrative Treatment for Achieving Holistic Recovery from Comorbid Chronic Pain and Opioid Use Disorder",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1RM1DA055301-01",
+          "contact_pi_name": "WITKIEWITZ, KATIE A",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "3077600",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [],
+          "core_project_num": "RM1DA055301",
+          "dataset_category": "",
+          "project_end_date": "2023-07-31T12:07:00Z",
+          "award_notice_date": "2021-09-24T12:09:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/0e6112be-1e1d-4354-885c-d402c068c7d9",
+          "data_availability": "",
+          "funding_mechanism": "Non-SBIR/STTR",
+          "indirect_cost_amt": "1108744",
+          "mechanism_code_dc": "RP",
+          "clinical_trials_id": "",
+          "investigators_name": "Matthew Ryan Pearson; Katie A Witkiewitz",
+          "project_detail_url": "https://reporter.nih.gov/project-details/10378422",
+          "project_serial_num": "DA055301",
+          "project_start_date": "2021-09-30T12:09:00Z",
+          "registration_authz": "/study/10378422",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "0000-0002-5828-0952",
+          "research_focus_area": "Clinical Research in Pain Management",
+          "spending_categories": "44; 89; 118; 616; 176; 180; 191; 201; 4998; 298; 3584; 525; 4076; 3951; 618; 817",
+          "agency_ic_admin.code": "DA",
+          "repository_study_ids": [
+            "Dryad1111"
+          ],
+          "agency_ic_fundings.fy": "2021",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "ALBUQUERQUE",
+          "organization.org_duns": "868853094",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "F6XLTRUQJEN4",
+          "organization.dept_type": "PSYCHOLOGY",
+          "organization.org_state": "NM",
+          "organization_type.code": "10",
+          "organization_type.name": "SCHOOLS OF ARTS AND SCIENCES",
+          "agency_ic_fundings.code": "NS",
+          "agency_ic_fundings.name": "National Institute of Neurological Disorders and Stroke",
+          "full_study_section.name": "Special Emphasis Panel[ZRG1 BBBP-B (50)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "871063807",
+          "organization.primary_uei": "F6XLTRUQJEN4",
+          "spending_categories_desc": "American Indian or Alaska Native; Behavioral and Social Science; Brain Disorders; Chronic Pain; Clinical Research; Clinical Trials and Supportive Activities; Complementary and Integrative Health; Cost Effectiveness Research; Dissemination and Implementation Research; Health Services; Minority Health; Neurosciences; Opioid Misuse and Addiction; Opioids; Pain Research; Substance Misuse",
+          "organization.org_ipf_code": "1415702",
+          "organization.primary_duns": "868853094",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "There are a dearth of integrated treatments that simultaneously address the fundamental causes of chronic pain and opioid misuse/opioid use disorder and that focus on well-being among individuals with chronic pain and opioid misuse/disorder. This research will study how to improve the lives of patients with chronic pain and opioid misuse/disorder via tailored interventions that explicitly target increasing quality of life and engagement in valued activities, the cultural centering of interventions to meet the needs of diverse patient populations and reducing stigma of chronic pain and opioid misuse/disorder. Specific research projects will i)test the effectiveness, mechanisms, and implementation of an integrated psychosocial treatment for chronic pain and opioid use disorder among individuals receiving buprenorphine from outpatient treatment clinics,andii)will use community-based participatory research methods to develop aculturally centeredstrategy for screening and brief intervention of chronic pain and opioid use disorder among American Indian/Alaska Native patients in primary care settings. This research will shed light on a difficult problem and improve health and wellbeing with a focus on diverse and underserved populations.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Shelley  Su",
+          "program_officers.last_name": "Su",
+          "full_study_section.srg_code": "ZRG1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Shelley",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "1415702",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "055301",
+          "agency_ic_fundings.total_cost": "4186344.0",
+          "full_study_section.group_code": "50",
+          "principal_investigators.title": "; REGENTS PROFESSOR",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NINDS",
+          "project_num_split.activity_code": "RM1",
+          "full_study_section.sra_flex_code": "B",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "Pearson; Witkiewitz",
+          "principal_investigators.first_name": "Matthew; Katie",
+          "principal_investigators.profile_id": "10125895; 8321568",
+          "principal_investigators.middle_name": "Ryan; A",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "False; True",
+          "full_study_section.sra_designator_code": "BBBP",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00059": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [
+              "Questionnaire/Survey/Assessment",
+              "Questionnaire/Survey/Assessment - validated instrument"
+            ],
+            "data_source": [
+              "Patient-Reported"
+            ],
+            "data_orientation": [
+              "Quantitative"
+            ],
+            "subject_data_level_available": [
+              "Individual - Unaggregated"
+            ],
+            "subject_data_unit_of_analysis": [
+              "Individual"
+            ],
+            "subject_data_unit_of_collection": [
+              "Individual"
+            ],
+            "subject_geographic_data_level_available": [
+              "No geographic data will be made available"
+            ],
+            "subject_geographic_data_level_collected": [
+              "No geographic data will be collected"
+            ],
+            "subject_data_unit_of_analysis_expected_number": "500",
+            "subject_data_unit_of_collection_expected_number": "500"
+          },
+          "tags": [],
+          "authz": "",
+          "terms": "<poor sleep><impaired sleep><disturbed sleep><disrupted sleep><aberrant sleep><Spinal Fusion><Spondylosyndeses><Vertebral column><backbone><Spine><Spinal Column><Educational process of instructing><Teaching><Technology><Testing><Work><Mediating><Schedule><Youth><Youth 10-21><chronic pain><Perioperative Care><base><improved><Acute Pain><Site><Acute><Chronic><Clinical><Phase><Medical><psychological><psychologic><juvenile human><juvenile><Adolescent Youth><Adolescent><Randomized Clinical Trials><Training><disability><Distress><pediatric><Childhood><Recovery><Opiates><Opioid><Pediatric Surgery><Pediatric Surgical Procedures><Randomized Controlled Trials><randomized controlled study><programs><Severities><Home environment><Home><Country><Musculoskeletal><psychosocial><Operative Surgical Procedures><surgery><Surgical Procedure><Surgical Interventions><Surgical><Operative Procedures><Outcome Study><experience><synergism><skills><Participant><Secondary Prevention><Prevention><Reporting><intervention therapy><Therapeutic Intervention><Deterioration><Modeling><interventional strategy><Intervention Strategies><Intervention><vulnerable group><Vulnerable Populations><Effectiveness><preventing><prevent><Address><Data><randomly assigned><randomization><randomisation><Randomized><Perioperative><Preparation><Behavioral><cost><health related quality of life><designing><design><Outcome><coping><Population><innovative><innovate><innovation><treatment effect><addictive disorder><addiction><primary outcome><secondary outcome><standard of care><clinical practice><surgery pain><surgical pain><intense pain><arm><Pain interference><Pain intensity><mobile health><m-Health><mHealth><attentional control><opioid intake><opioid drug use><opioid consumption><opiate use><opiate intake><opiate drug use><opiate consumption><opioid use><opioid exposed><opiate exposure><opiate exposed><opioid exposure><intervention cost><pain outcome><chronic MSK pain><chronic musculoskeletal pain><daily pain><pain self-management><reduce pain><pain reduction><Non-pharmacologic Therapy><Nonpharmacologic Therapy><intervention arm><treatment arm><opiate misuse><nonmedical opioid use><non-medical opioid use><opioid misuse><surgery risk><surgical risk><Adolescence><adolescence (12-20)><12-20 years old><Adult><adulthood><Adult Human><21+ years old><Age><ages><Pain management><pain treatment><Pain Therapy><Pain Control><Anxiety><Cognitive Therapy><cognitive behavioral treatment><cognitive behavioral therapy><cognitive behavioral modification><cognitive behavioral intervention><cognitive behavior therapy><cognitive behavior modification><cognitive behavior intervention><Cognitive Psychotherapy><Cognition Therapy><Education><Educational aspects><Family><Goals><Health><Healthcare Systems><Health Care Systems><Hospitals><Incidence><Longevity><lifespan><life span><Length of Life><Neurobiology><neurobiological><Pain><Painful><Postoperative Pain><postsurgical pain><post-surgical pain><Post-operative Pain><Parents><Postoperative Period><Postoperative><Post-Operative><Primary Prevention><Productivity><Psychological Factors><Publishing><Research><Risk><Risk Factors><Sleep disturbances><sleep disruption>",
+          "is_new": "False",
+          "appl_id": 9868143,
+          "_hdp_uid": "HDP00059",
+          "full_foa": "RFA-NS-19-021",
+          "phr_text": "This study will address the gap in understanding the effectiveness of non-pharmacological treatments in perioperative care of adolescents undergoing major musculoskeletal surgery. We will test a mHealth psychosocial intervention targeting psychosocial risk factors and teaching pain self-management strategies to reduce acute postoperative pain and opioid use, and prevent transition from acute to chronic pain. If effective, this scalable, low cost intervention will allow broad implementation in pediatric spine centers across the country, to reduce opioid exposure and potential for addiction, and prevent CPSP in youth undergoing major musculoskeletal surgery.",
+          "cfda_code": "865",
+          "cong_dist": "WA-07",
+          "is_active": "False",
+          "Study Type": {
+            "study_stage": "Clinical Research",
+            "study_type_design": [
+              "Randomized Control Trial"
+            ],
+            "study_subject_type": [
+              "Human"
+            ],
+            "study_primary_or_secondary": "Primary Research",
+            "study_observational_or_experimental": "Experimental Research"
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-08-31T12:08:00Z",
+          "date_added": "2019-09-30T04:09:41Z",
+          "pref_terms": "Acute;Acute Pain;Address;Adolescence;Adolescent;Adult;Age;Anxiety;Behavioral;Childhood;Chronic;Clinical;Cognitive Therapy;Country;Data;Deterioration;Distress;Education;Educational process of instructing;Effectiveness;Family;Goals;Health;Healthcare Systems;Home environment;Hospitals;Incidence;Intervention;Longevity;Mediating;Medical;Modeling;Musculoskeletal;Neurobiology;Nonpharmacologic Therapy;Operative Surgical Procedures;Opioid;Outcome;Outcome Study;Pain;Pain intensity;Pain interference;Pain management;Parents;Participant;Pediatric Surgical Procedures;Perioperative;Perioperative Care;Phase;Population;Postoperative Pain;Postoperative Period;Preparation;Prevention;Primary Prevention;Productivity;Psychological Factors;Publishing;Randomized;Randomized Clinical Trials;Randomized Controlled Trials;Recovery;Reporting;Research;Risk;Risk Factors;Schedule;Secondary Prevention;Severities;Site;Sleep disturbances;Spinal Fusion;Technology;Testing;Therapeutic Intervention;Training;Vertebral column;Vulnerable Populations;Work;Youth;addiction;arm;attentional control;base;chronic musculoskeletal pain;chronic pain;clinical practice;coping;cost;daily pain;design;disability;experience;health related quality of life;improved;innovation;intense pain;intervention cost;mHealth;opioid exposure;opioid misuse;opioid use;pain outcome;pain reduction;pain self-management;prevent;primary outcome;programs;psychologic;psychosocial;secondary outcome;skills;standard of care;surgical pain;surgical risk;synergism;treatment arm;treatment effect",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "717363",
+          "budget_start": "2019-09-30T12:09:00Z",
+          "institutions": "SEATTLE CHILDREN'S HOSPITAL",
+          "year_awarded": "2019",
+          "abstract_text": "Acute and chronic postsurgical pain (CPSP) are a major health concern across the lifespan. Adolescents undergoing invasive musculoskeletal surgeries are particularly at risk, with 20% developing CPSP and associated deterioration in health-related quality of life (HRQL). Further, neurobiological and psychosocial changes during adolescence increase vulnerability to addiction, placing these youth at elevated risk for developing persistent opioid use following surgery. Despite research demonstrating the importance of psychological factors in persistence of pain and opioid use following surgery, standard perioperative care in youth relies on opioids to treat pain. Non-pharmacological interventions are not accessible or widely used in this population. Our own studies demonstrate efficacy of mHealth psychosocial interventions to improve chronic pain-related outcomes in youth. Other published data support efficacy of psychosocial interventions to reduce acute postsurgical pain in adolescents. Using stakeholder input, our team adapted our highly successful technology-delivered pain self-management intervention for the perioperative period in a program called SurgeryPal. We developed two distinct interventions to be delivered during 1) the pre-operative phase to target psychosocial risk factors, and 2) the post-operative phase to teach pain self-management skills. The goal of this proposal is to establish the effectiveness of our mHealth perioperative psychosocial intervention to improve clinically meaningful outcomes in adolescents undergoing major musculoskeletal surgery, and to identify the optimal timing of intervention delivery. During the UG3, our team will work cooperatively with the HEAL ERN Program to plan for the efficient implementation of our proposed multi-site randomized clinical trial at 25 collaborating centers and will ready our interventions for deployment. During the UH3 phase, we will conduct a randomized controlled trial in 500 youth age 12-18 years undergoing spinal fusion surgery and their parents. In addition to standard perioperative care, participants will be randomized using a factorial design to receive psychosocial intervention (SurgeryPal) or education (attention control condition) at two treatment phases, each of 4-weeks duration (pre-operative and post-operative) to test timing of intervention delivery. Primary study outcomes are acute pain severity and interference assessed over the first 2 weeks after surgery, and chronic pain intensity and interference at 3-month follow-up. Secondary outcomes include HRQL, psychosocial distress, sleep disturbance, and opioid use and misuse. We will examine synergy of psychosocial intervention during both treatment phases, and explore underlying treatment mechanisms of prevention of transition from acute to CPSP over 6 months.  This project represents a significant advance in innovative approaches to deliver non-pharmacological therapies to youth undergoing major musculoskeletal surgeries, which may effect a paradigm shift in clinical practice. This intervention has potential to be integrated into pediatric surgery programs across the country to reduce incidence of CPSP and potential for addiction.",
+          "activity_code": "UG3",
+          "is_registered": true,
+          "project_title": "Effectiveness of an mHealth psychosocial intervention to prevent transition from acute to chronic postsurgical pain in adolescents",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1UG3HD102038-01",
+          "contact_pi_name": "RABBITTS, JENNIFER",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "464322",
+          "administering_ic": "Eunice Kennedy Shriver National Institute of Child Health and Human Development",
+          "advSearchFilters": [],
+          "core_project_num": "UG3HD102038",
+          "dataset_category": "",
+          "project_end_date": "2020-08-31T12:08:00Z",
+          "Data Availability": {
+            "produce_data": "Yes",
+            "produce_other": "No",
+            "data_available": "all",
+            "data_restricted": "some",
+            "data_release_status": "not started",
+            "data_collection_status": "started",
+            "data_release_start_date": "2026-08-31",
+            "data_release_finish_date": "2026-08-31",
+            "data_collection_start_date": "2021-12-29",
+            "data_collection_finish_date": "2025-08-31"
+          },
+          "Metadata Location": {
+            "other_study_websites": [
+              "https://surgerypal.org"
+            ]
+          },
+          "award_notice_date": "2019-09-24T12:09:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/144d5fcc-3971-458b-a8ec-121ecebeda76",
+          "data_availability": "",
+          "funding_mechanism": "Non-SBIR/STTR",
+          "indirect_cost_amt": "253041",
+          "mechanism_code_dc": "RP",
+          "clinical_trials_id": "NCT04637802",
+          "clinicaltrials.gov": {
+            "NCTId": "NCT04637802",
+            "Phase": "Not Applicable",
+            "Gender": "All",
+            "Acronym": "SurgeryPal",
+            "Condition": "Juvenile; Scoliosis",
+            "StartDate": "December 29, 2020",
+            "StudyType": "Interventional",
+            "BriefTitle": "Digital Health Psychosocial Intervention for Adolescent Spine Surgery Preparation and Recovery",
+            "IPDSharing": "Yes",
+            "MaximumAge": "18 Years",
+            "MinimumAge": "12 Years",
+            "BriefSummary": "This is a randomized controlled trial to test effectiveness of the SurgeryPal intervention vs. education control to improve acute and chronic pain and health outcomes in youth undergoing major musculoskeletal surgery. Youth will be randomized on an individual level using a factorial design to SurgeryPal or Education during 2 phases of intervention: 1) pre-operative phase (4 week duration delivered over the 4 weeks leading up to surgery), and 2) post-operative phase (4 week duration following surgery). Thus there will be 4 treatment arms. Participants will undergo 4 assessments, independent of their treatment assignment: T1: Baseline (pre-randomization); T2: acute post-surgery outcomes (daily assessment of acute outcomes beginning day 1 through day 14 after hospital discharge from surgery); T3: Post-surgery follow-up (assessment of outcomes at 3-months post-surgery); T4: Final post-surgery follow-up (assessment of outcomes at 6-months post-surgery).",
+            "OfficialTitle": "Effectiveness of an mHealth Psychosocial Intervention to Prevent Transition From Acute to Chronic Postsurgical Pain in Adolescents",
+            "OverallStatus": "Recruiting",
+            "StartDateType": "Actual",
+            "CompletionDate": "August 2025",
+            "EnrollmentType": "Anticipated",
+            "EnrollmentCount": "500",
+            "DesignAllocation": "Randomized",
+            "InterventionType": "Behavioral",
+            "CompletionDateType": "Anticipated",
+            "IsFDARegulatedDrug": "No",
+            "DetailedDescription": "Major musculoskeletal surgeries are associated with particularly high prevalence of both acute and chronic post-surgical pain (CPSP), with 80% of youth reporting intense acute pain after hospital discharge, and up to half reporting CPSP up to one year after spine surgery. Interventions to improve recovery and reduce pain after surgery have potential to interrupt a negative trajectory of suffering and disability associated with chronic pain. Our specific aims are: Primary: (1) Determine effectiveness of a pre-operative mHealth psychosocial intervention to improve acute pain outcomes in adolescents undergoing major musculoskeletal surgery, (2) Determine effectiveness of a post-operative mHealth psychosocial intervention to improve chronic pain outcomes at 3 months in adolescents undergoing major musculoskeletal surgery, (3) Determine the combined effects of pre- and post-operative psychosocial intervention on chronic pain outcomes. Secondary: (1) Determine effectiveness of pre-operative psychosocial intervention to reduce opioid use during the 14 days following hospital discharge, (2) Determine effectiveness of psychosocial intervention to improve health-related quality of life following surgery.",
+            "IPDSharingTimeFrame": "After last subject enrollment and all follow up procedures have been completed, the HEAL Pain Management Effectiveness Research Network Data Coordinating Center (DCC) at the University of Utah will prepare a final study database for the trial, which will then be used for statistical analyses and publication of findings from the trial. The policies for release of this database are in accordance with the HEAL Data Sharing policy as determined by the NIH. Our preliminary plan is to release the underlying primary database at the time of publication of the primary manuscript. The primary publication from the dataset will be made publicly available immediately without any embargo period through the Creative Commons Generic License in accordance with the HEAL Public Access guidance. Additional secondary publications will be deposited electronically within 4 weeks of acceptance into PubMed Central.",
+            "DesignPrimaryPurpose": "Treatment",
+            "IsFDARegulatedDevice": "No",
+            "PrimaryOutcomeMeasure": "Post-surgical pain intensity and interference",
+            "DesignInterventionModel": "Factorial Assignment",
+            "SecondaryOutcomeMeasure": "Change in health-related quality of life",
+            "IPDSharingAccessCriteria": "Access to the releasable database housed in the NIH-assigned repository will be in accordance with procedures and regulations of the NIH or specific institute. The DCC will not provide any support for investigators using the releasable database."
+          },
+          "investigators_name": "Tonya M Palermo; Jennifer  Rabbitts",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9868143",
+          "project_serial_num": "HD102038",
+          "project_start_date": "2019-09-30T12:09:00Z",
+          "registration_authz": "/study/9868143",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "homer.aalfs@seattlechildrens.org",
+          "research_focus_area": "Clinical Research in Pain Management",
+          "spending_categories": "89; 118; 616; 176; 180; 191; 443; 467; 329; 525; 3951; 618; 1254; 679; 683; 701; 732",
+          "agency_ic_admin.code": "HD",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "SEATTLE",
+          "organization.org_duns": "048682157",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "SZ32VTCXM799",
+          "organization.dept_type": "",
+          "organization.org_state": "WA",
+          "organization_type.code": "30",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "NS",
+          "agency_ic_fundings.name": "National Institute of Neurological Disorders and Stroke",
+          "full_study_section.name": "Special Emphasis Panel[ZRG1 ETTN-A (90)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "981053901",
+          "organization.primary_uei": "SZ32VTCXM799",
+          "spending_categories_desc": "Behavioral and Social Science; Brain Disorders; Chronic Pain; Clinical Research; Clinical Trials and Supportive Activities; Complementary and Integrative Health; Mental Health; Mind and Body; Networking and Information Technology R&D (NITRD); Neurosciences; Opioids; Pain Research; Patient Safety; Pediatric; Pediatric Research Initiative; Prevention; Rehabilitation",
+          "Study Translational Focus": {
+            "study_translational_focus": "Treatment",
+            "study_translational_topic_grouping": [
+              "Mental Health",
+              "Biology and Health"
+            ]
+          },
+          "organization.org_ipf_code": "1531401",
+          "organization.primary_duns": "048682157",
+          "project_num_split.ic_code": "HD",
+          "study_description_summary": "The study team developed an mHealth pain self-management intervention for the perioperative period (SurgeryPal) to target psychosocial risk factors and teach pain self-management skills. The goal of this proposal is to establish the effectiveness of the SurgeryPal psychosocial intervention to improve clinically meaningful outcomes in adolescents undergoing major musculoskeletal surgery, and to identify the optimal timing of intervention delivery. The study team will plan for the efficient implementation of a multisite randomized clinical trial at 25 centers in 500 youth ages 1218 years undergoing spinal fusion surgery and their parents. Participants will be randomized to receive SurgeryPal or attention control condition during the preoperative and postoperative phases. Self-reported pain severity and interference and secondary outcomes will be assessed at baseline, 3-, and 6-months. If effective, this scalable, low cost intervention will allow broad implementation to prevent chronic postsurgical pain in youth.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Karen  Lee",
+          "program_officers.last_name": "Lee",
+          "Human Subject Applicability": {
+            "age_applicability": [
+              "Adolescent (13 to 18 years)"
+            ],
+            "gender_applicability": [
+              "Cis Male",
+              "Cis Female",
+              "Trans Male",
+              "Trans Female",
+              "Agender, Non-binary, gender non-conforming",
+              "Gender Queer",
+              "Intersex"
+            ],
+            "geographic_applicability": [
+              "US - National"
+            ],
+            "geographic_applicability1": [
+              "US - National"
+            ],
+            "sexual_identity_applicability": [
+              "Heterosexual",
+              "Homosexual",
+              "Bisexual",
+              "Pansexual",
+              "Queer",
+              "Asexual"
+            ],
+            "irb_vulnerability_conditions_applicability": [
+              "Children"
+            ]
+          },
+          "full_study_section.srg_code": "ZRG1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Karen",
+          "agency_ic_admin.abbreviation": "NICHD",
+          "organization.external_org_id": "1531401",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "102038",
+          "Human Condition Applicability": {
+            "condition_category": [
+              "Pain",
+              "Pain, acute",
+              "Pain, chronic",
+              "Pain, acute to chronic transition",
+              "Pain, resulting from surgery",
+              "Opioid exposure"
+            ],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [
+              "Treatment of condition",
+              "Impact of condition"
+            ],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": [
+              "Pain, acute",
+              "Pain, chronic"
+            ]
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [
+              "Therapeutic (treating an occurrence)"
+            ],
+            "treatment_type": [
+              "behavioral"
+            ],
+            "treatment_novelty": [
+              "Novel, added to established"
+            ],
+            "treatment_application_level": [
+              "Individual"
+            ],
+            "treatment_investigation_stage_or_type": [
+              "treatment efficacy"
+            ]
+          },
+          "agency_ic_fundings.total_cost": "717363.0",
+          "full_study_section.group_code": "90",
+          "principal_investigators.title": "; ",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NINDS",
+          "project_num_split.activity_code": "UG3",
+          "full_study_section.sra_flex_code": "A",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "Palermo; Rabbitts",
+          "principal_investigators.first_name": "Tonya; Jennifer",
+          "principal_investigators.profile_id": "1900717; 11242775",
+          "principal_investigators.middle_name": "M; ",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "False; True",
+          "full_study_section.sra_designator_code": "ETTN",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00060": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [],
+            "data_source": [],
+            "data_orientation": [],
+            "subject_data_level_available": [],
+            "subject_data_unit_of_analysis": [],
+            "subject_data_unit_of_collection": [],
+            "subject_geographic_data_level_available": [],
+            "subject_geographic_data_level_collected": [],
+            "subject_data_unit_of_analysis_expected_number": "",
+            "subject_data_unit_of_collection_expected_number": ""
+          },
+          "tags": [
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Small Business",
+              "category": "Other"
+            }
+          ],
+          "authz": "",
+          "terms": "<Pain management><pain treatment><Pain Therapy><Pain Control><Analgesics><painkiller><pain reliever><pain medication><pain killer><Antinociceptive Drugs><Antinociceptive Agents><Anodynes><Analgesic Preparation><Analgesic Drugs><Analgesic Agents><Angiotensins><Antibodies><Biological Assay><Biologic Assays><Bioassay><Assay><Brain><Encephalon><Brain Nervous System><Buffers><Chemistry><Chromatography><High Speed Liquid Chromatography><High Performance Liquid Chromatography><HPLC><High Pressure Liquid Chromatography><Constipation><sleepiness><Somnolence><Drowsiness><Filtration Fractionation><Filtration><Future><Aminoacetic Acid><Glycine><Goals><Half-Life><Modern Man><Human><Libraries><Photoradiation><Light><Macromolecular Structure><Molecular Structure><Molecular Weight><Nausea and Vomiting><Painful><Pain><Peptides><Pharmacokinetics><Drug Kinetics><Reticuloendothelial System, Serum, Plasma><Plasma Serum><Blood Plasma><Plasma><Play><itch sensation><Pruritis><Pruritic Disorder><Itching><Pruritus><Public Health><QOL><Quality of life><Risk><Safety><L-Serine><Serine><Societies><Temperature><Testing><Time><Toxicology><OR><-OR>< opioid receptors>< opioid>< opiate><kappa opioid><kappa opiate><kappa opioid receptors><OR><-OR>< opioid receptors><mu opioid receptors><Somatotropin Release Inhibiting Hormone Receptors><SRIH Receptors><Somatostatin Receptor><Mediating><chronic pain><Public Domains><peptide G><synthetic laminin-binding peptide><laminin-binding peptide><base><improved><Peripheral><Site><Solid><Clinical><Penetration><Phase><Biological><Series><Reporter Genes><Ensure><Chemicals><Chemical Structure><Evaluation><Psyche structure><mental><Ventilatory Depression><depression of breathing><depressed breathing><Respiratory Depression><Opioid><Opiates><Selection Criteria><Agonist><Malignant Bone Neoplasm><Osseous Cancer><Malignant Tumor of the Bone><Malignant Osseous Tumor><Malignant Osseous Neoplasm><Bone Cancer><Inflammatory><Nature><programs><Hour><Dependence><Neuropathy><neuropathic><Reaction><subcutaneous><Source><Receptor, Angiotensin, Type 1><Angiotensin II Type 1 Receptor><Angiotensin AT1 Receptor><cancer pain><receptor><Receptor Protein><success><antibody conjugate><azetidinone><Animal Model><model organism><model of animal><Animal Models and Related Studies><Structure><Hydrophobic Interactions><novel><Exclusion><G-Protein-Coupled Receptors><GPCR><G Protein-Coupled Receptor Genes><G Protein-Complex Receptor><Drug Exposure><MAS1 gene><MAS1><Sampling><Property><response><liquid chromatography mass spectrometry><LC/MS><Adverse effects><Neuraxis><Central Nervous System><CNS Nervous System><patient safety><preventing><prevent><small molecule><SSTR4 gene><SSTR4><Incubated><Length><Dose><Electrospray Ionization><Peptide Synthesis><Small Business Innovation Research Grant><Small Business Innovation Research><SBIR><Preparation><Molecular><follow-up><followup><followed up><follow up><active followup><Active Follow-up><Development><developmental><pre-clinical><preclinical><efficacy evaluation><Outcome><Coupled><Peptide antibodies><clinically relevant><clinical relevance><addiction><addictive disorder><lead series><overdose death><animal pain><screening><clinical candidate><clinical development><opioid epidemic><opioid crisis><opiate crisis><pain model><Opioid agonist><Opioid receptor agonist><Opiate receptor agonist><Opiate agonist><lead optimization><opioid sparing>",
+          "is_new": "False",
+          "appl_id": 9674683,
+          "_hdp_uid": "HDP00060",
+          "full_foa": "PA-18-574",
+          "phr_text": "PROJECT NARRATIVE.  This program seeks to develop novel, efficacious, non-addictive, safe and convenient analgesics able to. reduce or replace opioids for the treatment of moderate-to-severe pain. The program goal is to ultimately improve. pain control while maintaining patient safety and quality of life and helping society to curb the opioid crisis.",
+          "cfda_code": "279",
+          "cong_dist": "CA-52",
+          "is_active": "False",
+          "Study Type": {
+            "study_stage": "",
+            "study_type_design": [],
+            "study_subject_type": [],
+            "study_primary_or_secondary": "",
+            "study_observational_or_experimental": ""
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-02-29T12:02:00Z",
+          "date_added": "2019-03-16T07:03:22Z",
+          "pref_terms": "Adverse effects;Agonist;Analgesics;Angiotensins;Animal Model;Antibodies;Biological;Biological Assay;Brain;Buffers;Chemical Structure;Chemicals;Chemistry;Chromatography;Clinical;Constipation;Coupled;Dependence;Development;Dose;Drowsiness;Drug Exposure;Drug Kinetics;Electrospray Ionization;Ensure;Evaluation;Exclusion;Filtration;Future;G-Protein-Coupled Receptors;Glycine;Goals;Half-Life;High Pressure Liquid Chromatography;Hour;Human;Hydrophobic Interactions;Incubated;Inflammatory;Length;Libraries;Light;MAS1 gene;Malignant Bone Neoplasm;Mediating;Molecular;Molecular Structure;Molecular Weight;Nature;Nausea and Vomiting;Neuraxis;Neuropathy;Opioid;Opioid agonist;Outcome;Pain;Pain management;Penetration;Peptide Synthesis;Peptide antibodies;Peptides;Peripheral;Phase;Plasma;Play;Preparation;Property;Pruritus;Psyche structure;Public Domains;Public Health;Quality of life;Reaction;Receptor, Angiotensin, Type 1;Reporter Genes;Risk;SSTR4 gene;Safety;Sampling;Selection Criteria;Series;Serine;Site;Small Business Innovation Research Grant;Societies;Solid;Somatostatin Receptor;Source;Structure;Temperature;Testing;Time;Toxicology;Ventilatory Depression;addiction;animal pain;antibody conjugate;azetidinone;base;cancer pain;chronic pain;clinical candidate;clinical development;clinically relevant;efficacy evaluation;follow-up;improved;kappa opioid receptors;lead optimization;lead series;liquid chromatography mass spectrometry;mu opioid receptors;novel;opioid epidemic;opioid sparing;overdose death;pain model;patient safety;peptide G;pre-clinical;prevent;programs;receptor;response;screening;small molecule;subcutaneous;success",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "!@#$%^&*! testing 7654321 :) :( :|",
+            "alternative_study_description": "sandwiches are tasty."
+          },
+          "award_amount": "347799",
+          "budget_start": "2019-03-15T12:03:00Z",
+          "institutions": "PEPTIDE LOGIC, LLC",
+          "year_awarded": "2019",
+          "abstract_text": "PROJECT SUMMARY.  The current US opioid crisis fueled by over 225 million annual prescriptions of mu-opioid receptor (MOR). agonist analgesics and characterized by unprecedented levels of addiction, abuse and death by overdose, has. emphasized the need for novel, efficacious, non-addictive and safe analgesics. The proposed program seeks to. develop a first-in-class (FIC), peripherally-restricted and long-acting MAS1 (LA-MAS1) agonist with potential to. reduce or replace MOR agonists for moderate-to-severe pain, and that will be non-addictive, safe and convenient. to use. The program is based on strong scientific evidence showing that activation of MAS1, a peptidic G protein-. coupled receptor (GPCR), produces opioid-independent and peripheral antinociceptive activity in a wide range. of animal models of chronic pain, including inflammatory, neuropathic and bone cancer pain. We propose to. conjugate existing short-acting peptidic MAS1 agonists to CVX-2000, a plug and play and re-usable antibody. carrier, previously clinically-validated for extending the half-life of peptides, and successfully used by us to create. other long-acting peripheral analgesics (LPAs), including long-acting kappa-opioid receptor (LA-KOR) agonists. and long-acting somatostatin receptor type 4 (LA-SSTR4) agonists. The resulting LA-MAS1 peptide-antibody. conjugates (PACs) will retain potent agonistic activity and selectivity at MAS1 while acquiring the pharmaco-. kinetic (PK) properties of the antibody carrier, thereby achieving both (i) long elimination half-life and (ii) high. peripheral selectivity. These two key features will provide LA-MAS1 agonists with a highly differentiated and. superior target product profile (TPP) in terms of efficacy, safety and convenience compared to short-acting and. brain-penetrating small molecule analgesics currently in development. The extended half-life will enable less. frequent, simpler and more convenient administration, i.e., once-weekly or twice-monthly subcutaneous dosing. that in turn will improve compliance while ensuring continuous drug exposure at effective plasma concentration,. which combined, will maximize efficacy. The lack of penetration in the central nervous system (CNS) will prevent. unnecessary and undesired interaction with the widely distributed MAS1 in the CNS, thereby eliminating any risk. of CNS-mediated MAS1 adverse effects. Finally, unlike MOR agonists, LA-MAS1 agonists will not induce. respiratory depression, nausea, vomiting, itching, constipation, drowsiness, mental cloudiness, dependence,. addiction or abuse. The current SBIR Phase I program aims to assess the chemical feasibility of creating potent,. selective and stable LA-MAS1 agonists. The subsequent Phase II program will include further lead optimization,. evaluation of efficacy, potency and duration of action in animal pain models, preclinical PK studies and selection. of a clinical candidate new biological entity (NBE) for nonclinical development. IMPACT & Relevance to Public Health: . This program has potential to bring forward novel, efficacious, non-addictive, safe and convenient. analgesics able to reduce or replace opioids for the treatment of moderate-to-severe pain, thus improving pain. control while maintaining patient safety and quality of life and helping society to curb the opioid crisis.",
+          "activity_code": "R43",
+          "is_registered": true,
+          "project_title": "Peripherally-restricted and long-acting MAS1(LA-MAS1) agonists for pain",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1R43DA047722-01",
+          "contact_pi_name": "RIVIERE, PIERRE",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "232176",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [],
+          "core_project_num": "R43DA047722",
+          "dataset_category": "",
+          "project_end_date": "2020-02-29T12:02:00Z",
+          "Data Availability": {
+            "produce_data": "",
+            "produce_other": "",
+            "data_available": "",
+            "data_restricted": "",
+            "data_release_status": "",
+            "data_collection_status": "",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": [
+              "http://google.com"
+            ]
+          },
+          "award_notice_date": "2019-03-04T12:03:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/ff9dc2c1-751f-4720-ab4c-7c30893cb7a3",
+          "data_availability": "not_available",
+          "funding_mechanism": "SBIR/STTR",
+          "indirect_cost_amt": "92870",
+          "mechanism_code_dc": "SB",
+          "clinical_trials_id": "",
+          "investigators_name": "Pierre  Riviere",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9674683",
+          "project_serial_num": "DA047722",
+          "project_start_date": "2019-03-15T12:03:00Z",
+          "registration_authz": "/study/9674683",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "george42@uchicago.edu",
+          "research_focus_area": "New Strategies to Prevent and Treat Opioid Addiction",
+          "spending_categories": "616; 240; 525; 3951; 618; 817",
+          "agency_ic_admin.code": "DA",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "SAN DIEGO",
+          "organization.org_duns": "079275185",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "WS12KZBLMDA1",
+          "organization.dept_type": "",
+          "organization.org_state": "CA",
+          "organization_type.code": "FP",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "DA",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse",
+          "full_study_section.name": "Special Emphasis Panel[ZRG1 ETTN-H (11)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "921302642",
+          "organization.primary_uei": "WS12KZBLMDA1",
+          "spending_categories_desc": "Chronic Pain; Drug Abuse (NIDA only); Neurosciences; Opioids; Pain Research; Substance Abuse",
+          "Study Translational Focus": {
+            "study_translational_focus": "",
+            "study_translational_topic_grouping": []
+          },
+          "organization.org_ipf_code": "10040394",
+          "organization.primary_duns": "079275185",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "This project seeks to develop a first-in-class (FIC), peripherally restricted and long-acting drug with potential to reduce or replace opioid for moderate to severe pain, and that will be non-addictive, safe, and convenient to use. The program is based on strong scientific evidence showing that activation of a receptor called MAS1 produces opioid-independent and peripheral pain relieving activity in a wide range of animal models of chronic pain, including inflammatory, neuropathic, and bone cancer pain. This project focuses on the development of potent, stable, and specific molecules that stimulate MAS1. Researchers will then attach peptides that stimulate MAS to antibody carriers that make them last longer and selectively affect only the peripheral nervous system, which could allow for once a week or twice a month dosing while maintaining the drugs efficacy and reducing potential side effects, and test the resulting molecule in animal models.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Julia  Berzhanskaya",
+          "program_officers.last_name": "Berzhanskaya",
+          "Human Subject Applicability": {
+            "age_applicability": [],
+            "gender_applicability": [],
+            "geographic_applicability": [],
+            "geographic_applicability1": [],
+            "sexual_identity_applicability": [],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "ZRG1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Julia",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "10040394",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "047722",
+          "Human Condition Applicability": {
+            "condition_category": [],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": []
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [],
+            "treatment_type": [],
+            "treatment_novelty": [],
+            "treatment_application_level": [],
+            "treatment_investigation_stage_or_type": []
+          },
+          "agency_ic_fundings.total_cost": "347799.0",
+          "full_study_section.group_code": "11",
+          "principal_investigators.title": "FOUNDER & CEO",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA",
+          "project_num_split.activity_code": "R43",
+          "full_study_section.sra_flex_code": "H",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "Riviere",
+          "principal_investigators.first_name": "Pierre",
+          "principal_investigators.profile_id": "9763915",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "ETTN",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00066": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [],
+            "data_source": [],
+            "data_orientation": [],
+            "subject_data_level_available": [],
+            "subject_data_unit_of_analysis": [],
+            "subject_data_unit_of_collection": [],
+            "subject_geographic_data_level_available": [],
+            "subject_geographic_data_level_collected": [],
+            "subject_data_unit_of_analysis_expected_number": "",
+            "subject_data_unit_of_collection_expected_number": ""
+          },
+          "tags": [
+            {
+              "name": "Infants",
+              "category": "Subject Characteristics"
+            },
+            {
+              "name": "Drug-free Intervention",
+              "category": "Other"
+            },
+            {
+              "name": "Medication Intervention",
+              "category": "Other"
+            },
+            {
+              "name": "Children",
+              "category": "Subject Characteristics"
+            },
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Withdrawal",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Neonatal",
+              "category": "Subject Characteristics"
+            },
+            {
+              "name": "Imaging",
+              "category": "Data Type"
+            }
+          ],
+          "authz": "",
+          "terms": "<Achievement><Achievement Attainment><Adult><adulthood><Adult Human><21+ years old><Affect><Alabama><Amygdaloid structure><amygdaloid nuclear complex><Amygdaloid Nucleus><Amygdaloid Body><Amygdala><Behavior><Biological Assay><Biologic Assays><Bioassay><Assay><Brain><Encephalon><Brain Nervous System><youngster><childrens'><children><Children (0-21)><Child Youth><0-11 years old><Child><childrearing><Parenting behavior><Parenting><Child Rearing><Clinical Trials><Communities><depression><Mental Depression><Environment><Epidemic><epidemiological><epidemiologic><Epidemiology><Family><Fetus><Followup Studies><Follow-Up Studies><Future><Goals><substantia grisea><gray matter><Health><History><Recording of previous events><Children's Hospital><Pediatric Hospitals><indexing><Infant><newborn children><newborn child><Newborns><0-4 weeks old><Newborn Infant><Informed Consent><Inventory><Equipment and supply inventories><Language><Literature><longterm study><long-term study><Longitudinal Studies><Zeugmatography><Nuclear Magnetic Resonance Imaging><NMR Tomography><NMR Imaging><Medical Imaging, Magnetic Resonance / Nuclear Magnetic Resonance><MRI><MR Tomography><MR Imaging><Magnetic Resonance Imaging><Psychological Health><Mental Hygiene><Mental Health><Neonatal Withdrawal Syndrome><Neonatal Substance Withdrawal><Neonatal Opioid Withdrawal Syndrome><Neonatal Abstinence Syndrome><opioid detoxification><opioid detox><opiate withdrawal><opioid withdrawal><Pennsylvania><Gestation><Pregnancy><Psychopharmaceuticals><Psychoactive Drugs><Psychoactive Compound><Psychoactive Agents><Psychotropic Drugs><Research Support><Rest><Risk Factors><Schools><Stress><Tablets><Testing><Time><Umbilical Cord><Umbilical cord structure><United States><Universities><Measures><Care Givers><Caregivers><Mediating><Social Impacts><base><Biological><Medical><Ensure><Evaluation><Cerebrum><cerebral><Opioid><Opiates><Funding><Problem behavior><behavioral problem><Head circumference><Collaborations><Exposure to><Life><Severities><Home environment><Home><postnatal><fetal><Opiate Addiction><opioid dependent><opioid dependence><opioid addiction><Opiate Dependence><Medical center><experience><Performance><relating to nervous system><neural><neurodevelopment><Neural Development><Structure><neuroimaging><neuro-imaging><Participant><member><economic impact><Toddler><white matter><substantia alba><Environmental Risk Factor><environmental risk><Environmental Factor><social><maternal stress><stressed mothers><Intervention Trial><Interventional trial><Emotional><prenatal exposure><prenatally exposed><intrauterine environmental exposure><intra-uterine environmental exposure><in utero exposure><fetal exposure><exposed in utero><response><Vulnerable Populations><vulnerable group><brain volume><Diffusion Magnetic Resonance Imaging><diffusion tensor imaging><dMRI><Diffusion-weighted Magnetic Resonance Imaging><Diffusion weighted imaging><Diffusion Weighted MRI><Diffusion MRI><DWI-MRI><DWI (diffusion weighted imaging)><disparity in health><health disparity><imaging method><image-based method><imaging modality><Dose><Symptoms><Data><International><Motor><National Institute of Child Health and Human Development><National Institute of Children's Health and Human Development><NICHD><Cognitive><Enrollment><enroll><Pediatric Research><Process><follow-up><followup><followed up><follow up><active followup><Active Follow-up><Development><developmental><Behavioral><Image><imaging><in utero><birth control><neurobehavioral><Data Coordinating Center><Data Coordination Center><design><designing><clinical research site><clinical site><fetal opioid exposure><prenatally opiate exposed><prenatal opioid exposure><prenatal opiate exposure><gestational opioid exposure><gestational opiate exposure><fetal opiate exposures><maternal opioid use><maternal opiates use><Outcome><Neonatal><prospective><innovation><innovative><innovate><2 year old><two years of age><two year old><aged two years><aged 2 years><age 2 years><2 years of age><modifiable risk><infant outcome><high risk><multimodality><multi-modality><Multicenter Neonatal Research Network><Neonatal Research Network><Multi-center Neonatal Research Network><behavioral outcome><behavior outcome><improved outcome><opioid use><opioid intake><opioid drug use><opioid consumption><opiate use><opiate intake><opiate drug use><opiate consumption><connectome><high risk population><high risk group><Longitudinal cohort study><Longterm cohort study><Long-term cohort study><antenatal><antepartum><opioid exposure><opioid exposed><opiate exposure><opiate exposed><opioid misuse><opiate misuse><nonmedical opioid use><non-medical opioid use>",
+          "is_new": "False",
+          "appl_id": 9901874,
+          "_hdp_uid": "HDP00066",
+          "full_foa": "RFA-HD-19-025",
+          "phr_text": "PROJECT NARRATIVE. The Outcomes of Babies with Opioid Exposure (OBOE) Study will examine longitudinal advanced MRI imaging. and developmental and behavioral outcomes of infants exposed to opioids in utero and matched controls from. birth to 2 years of age. The study Consortium comprises an independent Data Coordinating Center at RTI. International, a neuroimaging core at Children's National Medical Center, and four Clinical Sites (Case. Western University, Children's Hospital of Pennsylvania, Cincinnati Children's Hospital Medical Center, and the. University of Alabama at Birmingham). Our team's long history of collaboration and proposed innovations will. ensure successful completion of the OBOE Study, providing critically needed new data to improve. outcomes of this vulnerable population.",
+          "cfda_code": "865",
+          "cong_dist": "NC-04",
+          "is_active": "True",
+          "Study Type": {
+            "study_stage": "",
+            "study_type_design": [],
+            "study_subject_type": [],
+            "study_primary_or_secondary": "",
+            "study_observational_or_experimental": ""
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2023-08-31T12:08:00Z",
+          "date_added": "2019-09-21T07:09:24Z",
+          "pref_terms": "2 year old;Achievement;Adult;Affect;Alabama;Amygdaloid structure;Behavior;Behavioral;Biological;Biological Assay;Brain;Caregivers;Cerebrum;Child;Child Rearing;Clinical Trials;Cognitive;Collaborations;Communities;Data;Data Coordinating Center;Development;Diffusion Magnetic Resonance Imaging;Dose;Emotional;Enrollment;Ensure;Environment;Environmental Risk Factor;Epidemic;Epidemiology;Equipment and supply inventories;Evaluation;Exposure to;Family;Fetus;Follow-Up Studies;Funding;Future;Goals;Head circumference;Health;Home environment;Image;Infant;Informed Consent;International;Intervention Trial;Language;Life;Literature;Longitudinal Studies;Longitudinal cohort study;Magnetic Resonance Imaging;Measures;Mediating;Medical;Medical center;Mental Depression;Mental Health;Motor;Multicenter Neonatal Research Network;National Institute of Child Health and Human Development;Neonatal;Neonatal Abstinence Syndrome;Newborn Infant;Opiate Addiction;Opioid;Outcome;Participant;Pediatric Hospitals;Pediatric Research;Pennsylvania;Performance;Pregnancy;Problem behavior;Process;Psychotropic Drugs;Recording of previous events;Research Support;Rest;Risk Factors;Schools;Severities;Social Impacts;Stress;Structure;Symptoms;Tablets;Testing;Time;Toddler;Umbilical cord structure;United States;Universities;Vulnerable Populations;antenatal;base;behavioral outcome;birth control;brain volume;clinical research site;connectome;design;economic impact;experience;fetal;fetal opioid exposure;follow-up;gray matter;health disparity;high risk;high risk population;imaging modality;improved outcome;in utero;indexing;infant outcome;innovation;maternal opioid use;maternal stress;member;modifiable risk;multimodality;neurobehavioral;neurodevelopment;neuroimaging;opioid exposure;opioid misuse;opioid use;opioid withdrawal;postnatal;prenatal exposure;prospective;relating to nervous system;response;social;white matter",
+          "repository": "",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "11018358",
+          "budget_start": "2019-09-20T12:09:00Z",
+          "institutions": "RESEARCH TRIANGLE INSTITUTE",
+          "year_awarded": "2019",
+          "abstract_text": "PROJECT SUMMARY/ABSTRACT. While the health, social, and economic impacts of opioid addiction on adults and their communities are well. known, the impact of maternal opioid use and misuse on the fetus exposed in utero is less well understood.. The Outcomes of Babies with Opioid Exposure (OBOE) Study is a longitudinal cohort study to prospectively. examine the medical, neuroanatomical, neurodevelopmental, behavioral, and social/family/home outcomes. of children who were exposed to opioids in utero as compared with matched controls. The objectives of the. OBOE Study are to (1) determine the impact of antenatal opioid exposure on brain structure and. connectivity over the first 2 years of life; (2) define medical, developmental, and behavioral outcomes. over the first 2 years of life in infants exposed to opioids; and (3) explore whether and how the home. environment, maternal mental health, and parenting modify trajectories of brain connectivity and. neurodevelopment over the first 2 years of life. We hypothesize that neural connectivity and. neuroanatomical volumes are altered by prenatal opioid exposure and that the magnitude of these. alterations correlates with developmental and behavioral outcomes. Further, maternal and environmental. factors interact with prenatal opioid exposure to influence the trajectories of connectivity, development, and. behavior over the first 2 years of life. The OBOE Study Consortium includes four Clinical Sites (Case. Western University, Children's Hospital of Pennsylvania, Cincinnati Children's Hospital Medical Center, and. the University of Alabama at Birmingham) and an independent Data Coordinating Center (DCC) at RTI. International, comprising an Administrative Core and a Research Support Core. The Consortium also. includes a neuroimaging core at the Children's National Medical Center, which has an extensive track record. of studying brain development in healthy and high-risk fetuses, newborns, and infants using advanced,. serial, multimodal MR imaging methods. The DCC and Clinical Sites have a long history of successful. collaborations on past and ongoing multisite neonatal follow-up studies, including the NICHD-funded. Neonatal Research Network. The proposed study has many innovations including (1) optimizing efficiencies. by leveraging ongoing collaborations; (2) integrating both MRI and neurodevelopmental data to obtain a. multidimensional evaluation of outcomes; (3) conducting serial MRI assessments to examine trajectories of. brain development within the first 2 years of life; (4) using umbilical cord assays to accurately measure. amounts of opioid and other substance exposure, which will allow us to examine dose-response effects; and. (5) using an innovative tablet application developed by the DCC that will assist with the informed consent. process to facilitate participant understanding among this high-risk population.",
+          "activity_code": "PL1",
+          "is_registered": true,
+          "project_title": "HEAL Initiative: Antenatal Opioid Exposure Longitudinal Study Consortium",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1PL1HD101059-01",
+          "contact_pi_name": "BANN, CARLA M",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "8003141",
+          "administering_ic": "Eunice Kennedy Shriver National Institute of Child Health and Human Development",
+          "advSearchFilters": [
+            {
+              "key": "Research Focus Area",
+              "value": "Enhanced Outcomes for Infants and Children Exposed to Opioids"
+            },
+            {
+              "key": "Administering IC(s)",
+              "value": "NICHD"
+            },
+            {
+              "key": "Year Grant Awarded",
+              "value": "2019"
+            }
+          ],
+          "core_project_num": "PL1HD101059",
+          "dataset_category": "",
+          "project_end_date": "2023-08-31T12:08:00Z",
+          "Data Availability": {
+            "produce_data": "",
+            "produce_other": "",
+            "data_available": "",
+            "data_restricted": "",
+            "data_release_status": "",
+            "data_collection_status": "",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "2019-09-20T12:09:00Z",
+          "cedar_instance_id": "https://repo.metadatacenter.org/template-instances/e0eb0627-d674-4875-a14a-f00feef99fce",
+          "data_availability": "not_available",
+          "funding_mechanism": "Research Centers",
+          "indirect_cost_amt": "3015217",
+          "mechanism_code_dc": "RC",
+          "clinical_trials_id": "NCT04149509",
+          "clinicaltrials.gov": {
+            "NCTId": "NCT04149509",
+            "Gender": "All",
+            "Acronym": "OBOE",
+            "Condition": "Neonatal Opioid Withdrawal Syndrome",
+            "StartDate": "August 19, 2020",
+            "StudyType": "Observational",
+            "BriefTitle": "ACT NOW Longitudinal Study: Outcomes of Babies With Opioid Exposure Study",
+            "IPDSharing": "Yes",
+            "MaximumAge": "1 Month",
+            "BriefSummary": "The objective of this longitudinal cohort study is to quantify the effects of antenatal opioid exposure on the trajectory of brain development over the first 2 years of life, examine associations with developmental and neurobehavioral outcomes, and explore how specific factors (differing antenatal and postnatal exposures, severity of neonatal opioid withdrawal, maternal stress/depression/parenting) modify these effects",
+            "OfficialTitle": "ACT NOW Longitudinal Study: Outcomes of Babies With Opioid Exposure Study",
+            "OverallStatus": "Recruiting",
+            "StartDateType": "Actual",
+            "CompletionDate": "July 2023",
+            "EnrollmentType": "Anticipated",
+            "EnrollmentCount": "300",
+            "CompletionDateType": "Anticipated",
+            "IsFDARegulatedDrug": "No",
+            "DetailedDescription": "This objective of this longitudinal cohort study is to prospectively examine the medical, neuroanatomical, neurodevelopmental, behavioral, and social/family/home outcomes of infants who were exposed to opioids in utero. Match control infants will be recruited into the study and based on birth hospital and birth month of the exposed infants. The study will quantify the effects of antenatal opioid exposure on the trajectory of brain development over the first 2 years of life, examine associations with developmental and neurobehavioral outcomes, and explore how specific factors (differing antenatal and postnatal exposures, severity of neonatal opioid withdrawal, maternal stress/depression/parenting) modify these effects. The investigators hypothesize that neural connectivity and neuroanatomical volumes are altered by antenatal opioid exposure and that the magnitude of these alterations correlates with developmental and behavioral outcomes. Further, maternal and environmental factors interact with antenatal opioid exposure to influence the trajectories of connectivity, development, and behavior over the first 2 years of life.",
+            "IsFDARegulatedDevice": "No",
+            "PrimaryOutcomeMeasure": "Primary outcome related to brain development: White Matter Volume"
+          },
+          "investigators_name": "CARLA M BANN",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9901874",
+          "project_serial_num": "HD101059",
+          "project_start_date": "2019-09-20T12:09:00Z",
+          "registration_authz": "/study/9901874",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "registrant_username": "0000-0001-8880-8132",
+          "research_focus_area": "Enhanced Outcomes for Infants and Children Exposed to Opioids",
+          "spending_categories": "",
+          "agency_ic_admin.code": "HD",
+          "repository_study_ids": [],
+          "agency_ic_fundings.fy": "2019; 2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "RESEARCH TRIANGLE PARK",
+          "organization.org_duns": "004868105",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "JJHCMK4NT5N3",
+          "organization.dept_type": "",
+          "organization.org_state": "NC",
+          "organization_type.code": "20",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "DA; HD",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse; Eunice Kennedy Shriver National Institute of Child Health and Human Development",
+          "full_study_section.name": "Special Emphasis Panel[ZHD1 DSR-Z (50)]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "277092194",
+          "organization.primary_uei": "JJHCMK4NT5N3",
+          "spending_categories_desc": "",
+          "Study Translational Focus": {
+            "study_translational_focus": "",
+            "study_translational_topic_grouping": []
+          },
+          "organization.org_ipf_code": "6939101",
+          "organization.primary_duns": "004868105",
+          "project_num_split.ic_code": "HD",
+          "study_description_summary": "The incidence of Neonatal Opioid Withdrawal Syndrome (NOWS) in the United States has increased more than fivefold since 2004 to almost 7 per 1,000 hospital births. It is unknown how these effects are modulated by associated maternal, neonatal, and environmental factors and how the environment, maternal health, and parenting styles modify trajectories of brain connectivity and neurodevelopment. This study leverages the established infrastructure and longstanding collaborations of four clinical sites and the data coordinating center of the Eunice Kennedy Shriver National Institute of Child Health and Human Development Neonatal Research Network to address current critical knowledge gaps in childhood brain structure and connectivity and on medical, developmental, and behavioral trajectories in early childhood. The study will analyze a well-characterized observational cohort using clinical and neuroimaging measures to improve understanding of the structural and functional sequelae resulting from prenatal opioid exposure and NOWS and their interactions with the maternal-infant dyad.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Andrew  Bremer",
+          "program_officers.last_name": "Bremer",
+          "Human Subject Applicability": {
+            "age_applicability": [],
+            "gender_applicability": [],
+            "geographic_applicability": [],
+            "geographic_applicability1": [],
+            "sexual_identity_applicability": [],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "ZHD1",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Andrew",
+          "agency_ic_admin.abbreviation": "NICHD",
+          "organization.external_org_id": "6939101",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "101059",
+          "Human Condition Applicability": {
+            "condition_category": [],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": []
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [],
+            "treatment_type": [],
+            "treatment_novelty": [],
+            "treatment_application_level": [],
+            "treatment_investigation_stage_or_type": []
+          },
+          "agency_ic_fundings.total_cost": "10898973.0; 119385.0",
+          "full_study_section.group_code": "50",
+          "principal_investigators.title": "FELLOW AND SR STATISTICIAN",
+          "project_num_split.suffix_code": "",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA; NICHD",
+          "project_num_split.activity_code": "PL1",
+          "full_study_section.sra_flex_code": "Z",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "BANN",
+          "principal_investigators.first_name": "CARLA",
+          "principal_investigators.profile_id": "6477007",
+          "principal_investigators.middle_name": "M",
+          "project_num_split.full_support_year": "01",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "DSR",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    },
+    {
+      "HDP00090": {
+        "gen3_discovery": {
+          "Data": {
+            "data_type": [],
+            "data_source": [],
+            "data_orientation": [],
+            "subject_data_level_available": [],
+            "subject_data_unit_of_analysis": [],
+            "subject_data_unit_of_collection": [],
+            "subject_geographic_data_level_available": [],
+            "subject_geographic_data_level_collected": [],
+            "subject_data_unit_of_analysis_expected_number": "",
+            "subject_data_unit_of_collection_expected_number": ""
+          },
+          "tags": [
+            {
+              "name": "Novel Medications",
+              "category": "Intervention/Treatment"
+            },
+            {
+              "name": "Medication",
+              "category": "Other"
+            },
+            {
+              "name": "Respiratory Depression",
+              "category": "Other"
+            },
+            {
+              "name": "Opioid Use Disorder",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Craving",
+              "category": "Other"
+            },
+            {
+              "name": "Medication Intervention",
+              "category": "Other"
+            },
+            {
+              "name": "New Formulations Of Existing Interventions",
+              "category": "Other"
+            },
+            {
+              "name": "Relapse",
+              "category": "Other"
+            },
+            {
+              "name": "Overdose",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Chronic Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Opioid Use",
+              "category": "Substance Use"
+            },
+            {
+              "name": "Withdrawal",
+              "category": "Substance Use"
+            }
+          ],
+          "authz": "",
+          "terms": "<Affect><Aftercare><post treatment><After-Treatment><After Care><Amygdaloid structure><amygdaloid nuclear complex><Amygdaloid Nucleus><Amygdaloid Body><Amygdala><Pain management><pain treatment><Pain Therapy><Pain Control><Analgesics><painkiller><pain reliever><pain medication><pain killer><Antinociceptive Drugs><Antinociceptive Agents><Anodynes><Analgesic Preparation><Analgesic Drugs><Analgesic Agents><Opioid Analgesics><opioid painkiller><opioid pain reliever><opioid pain medication><opioid anesthetic><opioid analgesia><opiate pain reliever><opiate pain medication><opiate analgesic><opiate analgesia><Anxiety><Back Pain><Backache><Back Ache><Behavior><Blood><Blood Reticuloendothelial System><Brain><Encephalon><Brain Nervous System><cerebrovascular blood flow><cerebrocirculation><cerebral circulation><cerebral blood flow><brain blood flow><Cerebrovascular Circulation><Clinical Study><Clinical Research><co-morbidity><Comorbidity><Financial cost><depression><Mental Depression><drug/agent><Pharmaceutic Preparations><Medication><Drugs><Pharmaceutical Preparations><Ear><Economics><Emotions><hypothalamic><Hypothalamus><Hypothalamic structure><Medial Hypothalamus><Intermediate Hypothalamic Region><Middle Hypothalamus><allergic/immunologic organ system><allergic/immunologic body system><Immune system><Island of Reil><Insula><Central Lobe><Insula of Reil><Lumbago><Low Backache><Low Back Ache><Low Back Pain><Methods><Moods><Neurosciences><Neuroendocrine System><Neuroendocrine><Neurosecretory Systems><Painful><Pain><Patients><Physicians><pilot study><Pilot Projects><Play><pressure><Public Health><putamen><Rest><social role><Role><biological signal transduction><Signaling><Signal Transduction Systems><Intracellular Communication and Signaling><Cell Signaling><Cell Communication and Signaling><Signal Transduction><somesthetic sensory cortex><Somatosensory Cortex><Testing><Vagus Nerve><Tenth Cranial Nerve><Pneumogastric Nerve><Cranial Nerve X><Vagus nerve structure><chronic pain><Caring><Prefrontal Cortex><base><Brain imaging><brain visualization><Lateral><Medial><Peripheral><Clinical><Biological><midbrain central gray substance><periaqueductal gray matter><annulus of the aqueduct><Periaqueductal Gray><Midbrain Central Gray><Mesencephalic Central Gray><disability><Nociception><nociceptive><Opioid><Opiates><Measurement><non-opioid analgesic><nonopioid><nonopiate analgesic><non-opioid><non-opiate analgesic><non-narcotic analgesic><Nonopioid Analgesics><Nonnarcotic Analgesics><Functional disorder><pathophysiology><Physiopathology><Dysfunction><Therapeutic><Functional Magnetic Resonance Imaging><fMRI><Functional MRI><Immune><Immunes><Complex><Sensory><Visit><cingulate cortex><neuroimaging><neuro-imaging><novel><Reporting><social><Ventral Striatum><Inflammatory Response><Brain region><imaging method><image-based method><imaging modality><Symptoms><Data><Randomized><randomly assigned><randomization><randomisation><Pain Management Method><follow-up><followup><followed up><follow up><active followup><Active Follow-up><Therapeutic Effect><Development><developmental><Clinical assessments><vagus nerve stimulation><Outcome><Chronic low back pain><treatment effect><novel therapeutics><novel therapy><novel drugs><novel drug treatments><next generation therapeutics><new therapy><new therapeutics><new drugs><new drug treatments><inflammatory marker><inflammation marker><prescription opioid><prescription opiate><prescribed opioid><prescribed opiate><opioid medication><opiate medication><licit opioid><Pain intensity><reduce symptoms><symptom relief><symptom reduction><symptom alleviation><relieves symptoms><fewer symptoms><decrease symptom><ameliorating symptom><alleviate symptom><welfare><conditioned pain modulation><insurance claims><pain patient><pain relief><relieve pain><Opioid user><Opioid drug user><Opiate user>",
+          "is_new": "False",
+          "appl_id": 9745990,
+          "_hdp_uid": "HDP00090",
+          "full_foa": "PA-18-073",
+          "phr_text": "Project Narrative. The aim of this study is to investigate the modulation effect of transcutaneous vagus nerve stimulation on. chronic low back pain. This study, if successful, will provide new, non-opioid based chronic pain management. methods, as well as reduce the prescription of opioids to treat chronic pain.",
+          "cfda_code": "279",
+          "cong_dist": "MA-08",
+          "is_active": "False",
+          "Study Type": {
+            "study_stage": "",
+            "study_type_design": [],
+            "study_subject_type": [],
+            "study_primary_or_secondary": "",
+            "study_observational_or_experimental": ""
+          },
+          "__manifest": [],
+          "award_type": "1",
+          "budget_end": "2020-04-30T12:04:00Z",
+          "date_added": "2019-05-04T07:05:16Z",
+          "pref_terms": "Affect;Aftercare;Amygdaloid structure;Analgesics;Anxiety;Back Pain;Behavior;Biological;Blood;Brain;Brain imaging;Brain region;Caring;Cerebrovascular Circulation;Chronic low back pain;Clinical;Clinical Research;Clinical assessments;Comorbidity;Complex;Data;Development;Ear;Economics;Emotions;Financial cost;Functional Magnetic Resonance Imaging;Functional disorder;Hypothalamic structure;Immune;Immune system;Inflammatory Response;Insula of Reil;Lateral;Low Back Pain;Measurement;Medial;Mental Depression;Methods;Middle Hypothalamus;Moods;Neurosciences;Neurosecretory Systems;Nociception;Opioid;Opioid Analgesics;Opioid user;Outcome;Pain;Pain Management Method;Pain intensity;Pain management;Patients;Peripheral;Pharmaceutical Preparations;Physicians;Pilot Projects;Play;Prefrontal Cortex;Public Health;Randomized;Reporting;Rest;Role;Sensory;Signal Transduction;Somatosensory Cortex;Symptoms;Testing;Therapeutic;Therapeutic Effect;Vagus nerve structure;Ventral Striatum;Visit;base;chronic pain;cingulate cortex;conditioned pain modulation;disability;follow-up;imaging modality;inflammatory marker;insurance claims;midbrain central gray substance;neuroimaging;non-opioid analgesic;novel;novel therapeutics;pain patient;pain relief;prescription opioid;pressure;putamen;reduce symptoms;social;treatment effect;vagus nerve stimulation;welfare",
+          "agency_code": "NIH",
+          "arra_funded": "N",
+          "Minimal Info": {
+            "alternative_study_name": "",
+            "alternative_study_description": ""
+          },
+          "award_amount": "252000",
+          "budget_start": "2019-05-01T12:05:00Z",
+          "institutions": "MASSACHUSETTS GENERAL HOSPITAL",
+          "year_awarded": "2019",
+          "abstract_text": "Summary. Low back pain (LBP) is one of the most common reasons for all physician visits in the USA. The financial costs. associated with the care of LBP are staggering. The treatments for chronic low back pain (cLBP) are far from. satisfactory. Insurance claims data reveal that opioids are the most commonly prescribed class of drug for. back pain, and more than half of regular opioid users reported using them for the treatment of back pain.. Meanwhile, few new non-opioid and non-addictive pain medications have been developed in nearly five. decades; thus, there is an urgent need for the development of new therapies for chronic low back pain.. The vagus nerve (VN) consists of a complex network that regulates pain, mood, and the neuro-endocrine-. immune axis. Studies suggest that auricular transcutaneous vagus nerve stimulation (tVNS), a non-invasive. therapeutic method, can induce antinociception, which may affect peripheral and central nociception,. inflammatory responses, autonomic activity, and pain-related behavior. Clinical studies and our pilot study. have also shown that tVNS can significantly reduce symptoms of chronic pain and common comorbidities of. chronic pain, such as depression and anxiety, thereby endorsing its potential for the treatment of cLBP.. This proposal aims to investigate the treatment effect and underlying mechanism of tVNS on chronic low back. pain. Patients with chronic low back pain will be randomized to either real or sham tVNS treatment for one. month, with a three-month follow up. In addition to clinical outcome measurements, multiple brain imaging. modalities, Quantitative Sensory Testing, and blood inflammation markers will be assessed. We believe that. this study, if successful, will provide new treatment options for chronic low back pain, reduce the use of opioid. analgesics in chronic pain management, and enhance our understanding of the underlying mechanism of tVNS. treatment, as well as the pathophysiology and development of chronic pain.",
+          "activity_code": "R34",
+          "project_title": "Treatment of chronic low back pain with transcutaneous auricular vagus nerve stimulation",
+          "subproject_id": "",
+          "covid_response": "",
+          "dataset_1_type": "",
+          "dataset_2_type": "",
+          "dataset_3_type": "",
+          "dataset_4_type": "",
+          "dataset_5_type": "",
+          "project_number": "1R34DA046635-01A1",
+          "contact_pi_name": "KONG, JIAN",
+          "dataset_1_title": "",
+          "dataset_2_title": "",
+          "dataset_3_title": "",
+          "dataset_4_title": "",
+          "dataset_5_title": "",
+          "direct_cost_amt": "150000",
+          "administering_ic": "National Institute on Drug Abuse",
+          "advSearchFilters": [],
+          "core_project_num": "R34DA046635",
+          "dataset_category": "",
+          "project_end_date": "2022-04-30T12:04:00Z",
+          "Data Availability": {
+            "produce_data": "",
+            "produce_other": "",
+            "data_available": "",
+            "data_restricted": "",
+            "data_release_status": "",
+            "data_collection_status": "",
+            "data_release_start_date": "",
+            "data_release_finish_date": "",
+            "data_collection_start_date": "",
+            "data_collection_finish_date": ""
+          },
+          "Metadata Location": {
+            "other_study_websites": []
+          },
+          "award_notice_date": "2019-04-16T12:04:00Z",
+          "data_availability": "not_available",
+          "funding_mechanism": "Non-SBIR/STTR",
+          "indirect_cost_amt": "102000",
+          "mechanism_code_dc": "RP",
+          "investigators_name": "JIAN  KONG",
+          "project_detail_url": "https://reporter.nih.gov/project-details/9745990",
+          "project_serial_num": "DA046635",
+          "project_start_date": "2019-05-01T12:05:00Z",
+          "registration_authz": "/study/9745990",
+          "_second_search_flag": "",
+          "dataset_description": "",
+          "research_focus_area": "Novel Therapeutic Options for Opioid Use Disorder and Overdose",
+          "spending_categories": "3454; 89; 229; 616; 176; 180; 240; 525; 618; 817",
+          "agency_ic_admin.code": "DA",
+          "agency_ic_fundings.fy": "2019",
+          "dataset_1_description": "",
+          "dataset_2_description": "",
+          "dataset_3_description": "",
+          "dataset_4_description": "",
+          "dataset_5_description": "",
+          "organization.org_city": "BOSTON",
+          "organization.org_duns": "073130411",
+          "organization.org_fips": "US",
+          "organization.org_ueis": "FLJ7DQKLL226",
+          "organization.dept_type": "",
+          "organization.org_state": "MA",
+          "organization_type.code": "30",
+          "organization_type.name": "",
+          "agency_ic_fundings.code": "DA",
+          "agency_ic_fundings.name": "National Institute on Drug Abuse",
+          "full_study_section.name": "Behavioral Medicine, Interventions and Outcomes Study Section[BMIO]",
+          "organization.org_country": "UNITED STATES",
+          "organization.org_zipcode": "021142621",
+          "organization.primary_uei": "FLJ7DQKLL226",
+          "spending_categories_desc": "Back Pain; Behavioral and Social Science; Biomedical Imaging; Chronic Pain; Clinical Research; Clinical Trials and Supportive Activities; Drug Abuse (NIDA only); Neurosciences; Pain Research; Substance Abuse",
+          "Study Translational Focus": {
+            "study_translational_focus": "",
+            "study_translational_topic_grouping": []
+          },
+          "organization.org_ipf_code": "4907701",
+          "organization.primary_duns": "073130411",
+          "project_num_split.ic_code": "DA",
+          "study_description_summary": "Low back pain (LBP) is one of the most common reasons for all physician visits in the U.S. The financial costs associated with the care of LBP are staggering. The treatments for chronic low back pain (cLBP) are far from satisfactory, and opioids are often prescribed with varying degrees of success. This study builds on prior work suggesting that auricular transcutaneous vagus nerve stimulation (tVNS), a non-invasive therapeutic, can significantly reduce symptoms of chronic pain and common comorbidities of chronic pain, such as depression and anxiety. This proposal aims to investigate the treatment effect and underlying mechanism of tVNS on chronic low back pain. Patients with chronic low back pain will be randomized to either real or sham tVNS treatment for 1 month, with a 3-month follow-up. This study, if successful, could provide new treatment options for chronic low back pain and reduce the use of opioid analgesics in chronic pain management.",
+          "organization_type.is_other": "False",
+          "program_officers.full_name": "Aidan  Hampson",
+          "program_officers.last_name": "Hampson",
+          "Human Subject Applicability": {
+            "age_applicability": [],
+            "gender_applicability": [],
+            "geographic_applicability": [],
+            "geographic_applicability1": [],
+            "sexual_identity_applicability": [],
+            "irb_vulnerability_conditions_applicability": []
+          },
+          "full_study_section.srg_code": "BMIO",
+          "full_study_section.srg_flex": "",
+          "program_officers.first_name": "Aidan",
+          "agency_ic_admin.abbreviation": "NIDA",
+          "organization.external_org_id": "4907701",
+          "program_officers.middle_name": "",
+          "project_num_split.serial_num": "046635",
+          "Human Condition Applicability": {
+            "condition_category": [],
+            "all_other_condition": [],
+            "all_outcome_condition": [],
+            "pain_causal_condition": [],
+            "condition_investigation_stage_or_type": [],
+            "all_treatment_or_study_target_condition": [],
+            "pain_treatment_or_study_target_condition": []
+          },
+          "Human Treatment Applicability": {
+            "treatment_mode": [],
+            "treatment_type": [],
+            "treatment_novelty": [],
+            "treatment_application_level": [],
+            "treatment_investigation_stage_or_type": []
+          },
+          "agency_ic_fundings.total_cost": "252000.0",
+          "full_study_section.group_code": "",
+          "principal_investigators.title": "ASSOCIATE PROFESSOR",
+          "project_num_split.suffix_code": "A1",
+          "project_num_split.support_year": "01",
+          "agency_ic_fundings.abbreviation": "NIDA",
+          "project_num_split.activity_code": "R34",
+          "full_study_section.sra_flex_code": "",
+          "project_num_split.appl_type_code": "1",
+          "principal_investigators.last_name": "KONG",
+          "principal_investigators.first_name": "JIAN",
+          "principal_investigators.profile_id": "7852891",
+          "principal_investigators.middle_name": "",
+          "project_num_split.full_support_year": "01A1",
+          "principal_investigators.is_contact_pi": "True",
+          "full_study_section.sra_designator_code": "",
+          "commons_url": "https://preprod.healdata.org",
+          "commons_name": "HEAL"
+        }
+      }
+    }
+  ]
+}

@@ -9,8 +9,10 @@ import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../loca
 const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
   t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
+// eslint-disable-next-line no-unused-vars
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
-  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
+  const url = 'https://localhost:9443/original_data.json';
+  /// const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
   const res = await fetch(url);
   if (res.status !== 200) {
@@ -23,6 +25,8 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const commons = Object.keys(metadataResponse);
 
   let allStudies = [];
+
+  console.log("metadataResponse: ", metadataResponse);
 
   commons.forEach((commonsName) => {
     const studies = metadataResponse[commonsName];

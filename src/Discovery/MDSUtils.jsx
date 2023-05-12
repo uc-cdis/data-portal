@@ -1,8 +1,9 @@
-import { mdsURL, studyRegistrationConfig } from '../localconf';
+import { /* mdsURL, */ studyRegistrationConfig } from '../localconf';
 
 const LIMIT = 1000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
+// eslint-disable-next-line no-unused-vars
 const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   try {
     let allStudies = [];
@@ -10,7 +11,11 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
     // request up to LIMIT studies from MDS at a time.
     let shouldContinue = true;
     while (shouldContinue) {
-      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
+      /*
+        Side load JSON data from local file
+       */
+      const url = 'https://localhost:9443/original_data.json';
+      /// const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
       // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
       // using Promise.all() so that we can fire multiple requests at one.
       // But we WANT to delay sending the next request to MDS until we know we need it.
