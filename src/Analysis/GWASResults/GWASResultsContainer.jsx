@@ -6,10 +6,12 @@ import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
 import './GWASResultsContainer.css';
+import InitialHomeTableState from './Utils/InitialHomeTableState';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
+  const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
   useHideUnneededElements();
   const generateStep = () => {
@@ -32,6 +34,8 @@ const GWASResultsContainer = () => {
           setCurrentView,
           selectedRowData,
           setSelectedRowData,
+          homeTableState,
+          setHomeTableState,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>
