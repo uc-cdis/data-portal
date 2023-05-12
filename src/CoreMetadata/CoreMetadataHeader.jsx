@@ -95,10 +95,7 @@ class CoreMetadataHeader extends Component {
         } else {
           // set to empty so it wont check again
           this.setState({
-            downloadButton: (
-              <React.Fragment>
-                <p className='h3-typo' id='no-permission'>You do not have access to download this data.</p>
-              </React.Fragment>),
+            downloadButton: (<p className='h3-typo' id='no-permission'>You do not have access to download this data.</p>),
           });
         }
       });
