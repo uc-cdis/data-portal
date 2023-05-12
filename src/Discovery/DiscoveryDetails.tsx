@@ -229,6 +229,7 @@ const DiscoveryDetails = (props: Props) => {
             ? (
               <Button
                 type='text'
+                className='discovery-modal__request-button'
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
@@ -274,6 +275,7 @@ const DiscoveryDetails = (props: Props) => {
             ? (
               <Button
                 type='text'
+                className='discovery-modal__request-button'
                 onClick={() => handleRedirectClick('/data-dictionary-submission',
                   props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                   props.modalData.project_title,
@@ -296,6 +298,7 @@ const DiscoveryDetails = (props: Props) => {
           ) ? (
               <Button
                 type='text'
+                className='discovery-modal__request-button'
                 onClick={() => handleRedirectClick('/data-dictionary-submission/request-access',
                   props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                   props.modalData.project_title,
