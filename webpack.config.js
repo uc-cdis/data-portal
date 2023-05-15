@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const fs = require('fs');
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
@@ -54,6 +55,17 @@ if (configFile && configFile.analysisTools) {
   });
 }
 
+// returns the last modified time of the CSS file
+function getCSSVersion() {
+  const overridesCss = './src/css/themeoverrides.css';
+  if (!fs.existsSync(overridesCss)) {
+    console.warn(`${overridesCss} does not exist`);
+    return ('');
+  }
+  const stats = fs.statSync(overridesCss);
+  return (stats.mtime.getTime());
+}
+
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
@@ -88,6 +100,7 @@ const plugins = [
     title: configFile.components.appName || 'Generic Data Commons',
     metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
+    cssVersion: getCSSVersion(),
     template: 'src/index.ejs',
     connectSrc: ((() => {
       const rv = {};

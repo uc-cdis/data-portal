@@ -82,11 +82,15 @@ function buildConfig(opts) {
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const peregrineVersionPath = `${hostname}api/search/_version`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobAPIPath = `${hostname}job/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
-  const coreMetadataPath = `${hostname}coremetadata/`;
+
+  const coreMetadataPath = `${hostname}api/search/coremetadata/`;
+  const coreMetadataLegacyPath = `${hostname}coremetadata/`;
+
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
 
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
@@ -211,6 +215,10 @@ function buildConfig(opts) {
   if (components.systemUse && components.systemUse.systemUseText) {
     showSystemUse = true;
   }
+  let showSystemUseOnlyOnLogin = false;
+  if (components.systemUse && components.systemUse.showOnlyOnLogin) {
+    showSystemUseOnlyOnLogin = true;
+  }
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -301,7 +309,10 @@ function buildConfig(opts) {
     studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
+    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
+  }
+  if (!studyRegistrationConfig.dataDictionaryField) {
+    studyRegistrationConfig.dataDictionaryField = '';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -437,13 +448,6 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwasResults.svg',
           };
           break;
-        case 'GWAS++':
-          analysisApps['GWAS++'] = {
-            title: 'GWAS++',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
         default:
           break;
         }
@@ -491,10 +495,12 @@ function buildConfig(opts) {
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    coreMetadataLegacyPath,
     indexdPath,
     cohortMiddlewarePath,
     gwasWorkflowPath,
     graphqlPath,
+    peregrineVersionPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
@@ -580,6 +586,7 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    showSystemUseOnlyOnLogin,
     Error403Url,
   };
 }

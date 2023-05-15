@@ -31,7 +31,7 @@ jobs:
     name: NPM Unit Test
     uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@master
     with:
-      node-version: '14'
+      node-version: '16'
       npm-version: '8.5'
       pre-test: 'npm run relay && npm run params'
       post-test: 'bash ./testSchema.sh'
