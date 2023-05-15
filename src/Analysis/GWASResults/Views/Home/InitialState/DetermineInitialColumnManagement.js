@@ -1,7 +1,7 @@
 import localStorageAvailable from './localStorageAvailable';
 import DefaultColumnManagement from './DefaultColumnManagement';
 
-const hasValidKeys = (a, b) => {
+const hasSameKeys = (a, b) => {
   // Checks that the keys of two objects match
   const aKeys = Object.keys(a).sort();
   const bKeys = Object.keys(b).sort();
@@ -14,7 +14,7 @@ const columnManagementLocalStorageIsValid = () => {
   const retrievedObject = localStorage.getItem('columnManagement');
   const parsedRetrievedObject = JSON.parse(retrievedObject);
   return (
-    hasValidKeys(parsedRetrievedObject, DefaultColumnManagement)
+    hasSameKeys(parsedRetrievedObject, DefaultColumnManagement)
     && hasOnlyBoolValues(retrievedObject)
   );
 };
