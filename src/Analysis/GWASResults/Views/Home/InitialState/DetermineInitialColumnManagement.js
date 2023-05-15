@@ -8,24 +8,22 @@ const hasValidKeys = (a, b) => {
   return JSON.stringify(aKeys) === JSON.stringify(bKeys);
 };
 
-const hasOnlyBoolValues = (obj) => {
-  return Object.values(obj).every(Boolean);
-};
+const hasOnlyBoolValues = (obj) => Object.values(obj).every(Boolean);
 
 const columnManagementLocalStorageIsValid = () => {
   const retrievedObject = localStorage.getItem('columnManagement');
   const parsedRetrievedObject = JSON.parse(retrievedObject);
   return (
-    hasValidKeys(parsedRetrievedObject, DefaultColumnManagement) &&
-    hasOnlyBoolValues(retrievedObject)
+    hasValidKeys(parsedRetrievedObject, DefaultColumnManagement)
+    && hasOnlyBoolValues(retrievedObject)
   );
 };
 
 const DetermineInitialColumnManagement = () => {
   if (localStorageAvailable()) {
     if (
-      localStorage.getItem('columnManagement') &&
-      columnManagementLocalStorageIsValid()
+      localStorage.getItem('columnManagement')
+      && columnManagementLocalStorageIsValid()
     ) {
       // columnManagement is already set & valid,
       // we can return the user's saved settings
@@ -36,7 +34,7 @@ const DetermineInitialColumnManagement = () => {
     // but haven't set a valid columnManagement yet so we set it to default
     localStorage.setItem(
       'columnManagement',
-      JSON.stringify(DefaultColumnManagement)
+      JSON.stringify(DefaultColumnManagement),
     );
     return DefaultColumnManagement;
   }
