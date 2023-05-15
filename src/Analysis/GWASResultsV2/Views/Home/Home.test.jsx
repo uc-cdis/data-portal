@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import TableData from '../../TestData/TableData';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
-import InitialHomeTableState from '../../Utils/InitialHomeTableState';
+import InitialHomeTableState from './InitialState/InitialHomeTableState';
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +40,8 @@ describe('Home component', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
+    await waitFor(() =>
+      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
     );
   });
 
