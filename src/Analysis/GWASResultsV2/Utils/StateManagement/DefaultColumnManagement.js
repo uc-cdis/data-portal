@@ -1,4 +1,4 @@
-const InitialColumnManagement = {
+const DefaultColumnManagement = {
   runId: true,
   workflowName: true,
   dateSubmitted: true,
@@ -8,4 +8,4 @@ const InitialColumnManagement = {
   actions: true,
 };
 
-export default InitialColumnManagement;
+export default DefaultColumnManagement;

@@ -1,0 +1,46 @@
+import localStorageAvailable from './localStorageAvailable';
+import DefaultColumnManagement from './DefaultColumnManagement';
+
+const hasValidKeys = (a, b) => {
+  // Checks that the keys of two objects match
+  const aKeys = Object.keys(a).sort();
+  const bKeys = Object.keys(b).sort();
+  return JSON.stringify(aKeys) === JSON.stringify(bKeys);
+};
+const hasOnlyBoolValues = (a) => {
+  // checks that the values of obj are all booleans
+  return Object.values(a).every(Boolean);
+};
+
+const columnManagementLocalStorageIsValid = () => {
+  const retrievedObject = localStorage.getItem('columnManagement');
+  const parsedRetrievedObject = JSON.parse(retrievedObject);
+  return (
+    hasValidKeys(parsedRetrievedObject, DefaultColumnManagement) &&
+    hasOnlyBoolValues(retrievedObject)
+  );
+};
+
+const DetermineInitialColumnManagement = () => {
+  if (localStorageAvailable()) {
+    if (
+      localStorage.getItem('columnManagement') &&
+      columnManagementLocalStorageIsValid()
+    ) {
+      // columnManagement is already set, we can return the users saved settings
+      const retrievedObject = localStorage.getItem('columnManagement');
+      return JSON.parse(retrievedObject);
+    }
+    // we have local storage available,
+    // but haven't set a valid columnManagement yet so we set it to default
+    localStorage.setItem(
+      'columnManagement',
+      JSON.stringify(DefaultColumnManagement)
+    );
+    return DefaultColumnManagement;
+  }
+  // localstorage isn't available, just use the default value
+  return DefaultColumnManagement;
+};
+
+export default DetermineInitialColumnManagement;

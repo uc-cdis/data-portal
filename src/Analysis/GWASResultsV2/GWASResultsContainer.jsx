@@ -5,8 +5,8 @@ import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
+import InitialHomeTableState from './Utils/StateManagement/InitialHomeTableState';
 import './GWASResultsContainer.css';
-import InitialHomeTableState from './Utils/InitialHomeTableState';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
@@ -16,14 +16,14 @@ const GWASResultsContainer = () => {
   useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
-    case VIEWS.home:
-      return <Home />;
-    case VIEWS.results:
-      return <Results />;
-    case VIEWS.execution:
-      return <Execution />;
-    default:
-      return null;
+      case VIEWS.home:
+        return <Home />;
+      case VIEWS.results:
+        return <Results />;
+      case VIEWS.execution:
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
