@@ -19,6 +19,7 @@
 .manage-columns-dropdown .dropdown-row {
   user-select: none;
 }
+
 .manage-columns-dropdown button.dropdown-row {
   user-select: none;
   width: 100%;
