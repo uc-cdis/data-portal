@@ -5,7 +5,7 @@ import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
-import InitialHomeTableState from './Utils/StateManagement/InitialHomeTableState';
+import InitialHomeTableState from './Views/Home/InitialState/InitialHomeTableState';
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {

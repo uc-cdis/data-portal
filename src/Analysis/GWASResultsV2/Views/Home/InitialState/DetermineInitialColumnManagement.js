@@ -7,9 +7,10 @@ const hasValidKeys = (a, b) => {
   const bKeys = Object.keys(b).sort();
   return JSON.stringify(aKeys) === JSON.stringify(bKeys);
 };
-const hasOnlyBoolValues = (a) => {
+
+const hasOnlyBoolValues = (obj) => {
   // checks that the values of obj are all booleans
-  return Object.values(a).every(Boolean);
+  return Object.values(obj).every(Boolean);
 };
 
 const columnManagementLocalStorageIsValid = () => {
@@ -27,7 +28,8 @@ const DetermineInitialColumnManagement = () => {
       localStorage.getItem('columnManagement') &&
       columnManagementLocalStorageIsValid()
     ) {
-      // columnManagement is already set, we can return the users saved settings
+      // columnManagement is already set & valid,
+      // we can return the user's saved settings
       const retrievedObject = localStorage.getItem('columnManagement');
       return JSON.parse(retrievedObject);
     }

@@ -3,7 +3,7 @@ import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
-import InitialColumnManagement from '../../../Utils/StateManagement/DefaultColumnManagement';
+import InitialColumnManagement from '../InitialState/DefaultColumnManagement';
 import SharedContext from '../../../Utils/SharedContext';
 import './ManageColumns.css';
 
