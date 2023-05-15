@@ -5,8 +5,8 @@ import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
 import useHideUnneededElements from './Utils/useHideUnneededElements';
+import InitialHomeTableState from './Views/Home/InitialState/InitialHomeTableState';
 import './GWASResultsContainer.css';
-import InitialHomeTableState from './Utils/InitialHomeTableState';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');

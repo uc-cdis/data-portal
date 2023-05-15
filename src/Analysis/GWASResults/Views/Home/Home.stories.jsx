@@ -5,7 +5,7 @@ import { rest } from 'msw';
 import Home from './Home';
 import PHASES from '../../Utils/PhasesEnumeration';
 import TableData from '../../TestData/TableData';
-import InitialHomeTableState from '../../Utils/InitialHomeTableState';
+import InitialHomeTableState from './InitialState/InitialHomeTableState';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
