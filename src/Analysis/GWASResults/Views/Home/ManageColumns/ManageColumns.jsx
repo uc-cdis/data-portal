@@ -30,6 +30,7 @@ const ManageColumns = () => {
       columnManagement: InitialColumnManagement,
     });
   };
+
   const toggleRunId = () => setHomeTableState({
     ...homeTableState,
     sortInfo: {},
@@ -40,6 +41,7 @@ const ManageColumns = () => {
       runId: !homeTableState.columnManagement.runId,
     },
   });
+
   const toggleWorkflowName = () => setHomeTableState({
     ...homeTableState,
     sortInfo: {},
