@@ -16,14 +16,14 @@ const GWASResultsContainer = () => {
   useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
-      case VIEWS.home:
-        return <Home />;
-      case VIEWS.results:
-        return <Results />;
-      case VIEWS.execution:
-        return <Execution />;
-      default:
-        return null;
+    case VIEWS.home:
+      return <Home />;
+    case VIEWS.results:
+      return <Results />;
+    case VIEWS.execution:
+      return <Execution />;
+    default:
+      return null;
     }
   };
 

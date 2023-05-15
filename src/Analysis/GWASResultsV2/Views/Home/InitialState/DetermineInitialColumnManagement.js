@@ -9,8 +9,7 @@ const hasValidKeys = (a, b) => {
 };
 
 const hasOnlyBoolValues = (obj) => {
-  // checks that the values of obj are all booleans
-  return Object.values(obj).every(Boolean);
+  Object.values(obj).every(Boolean);
 };
 
 const columnManagementLocalStorageIsValid = () => {
