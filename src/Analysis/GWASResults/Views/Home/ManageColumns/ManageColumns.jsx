@@ -1,7 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  Button, Dropdown, Switch, message,
-} from 'antd';
+import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
@@ -18,7 +16,7 @@ const ManageColumns = () => {
     if (homeTableState.useLocalStorage) {
       localStorage.setItem(
         'columnManagement',
-        JSON.stringify(homeTableState.columnManagement),
+        JSON.stringify(homeTableState.columnManagement)
       );
     }
   }, [homeTableState.columnManagement]);
@@ -31,80 +29,17 @@ const ManageColumns = () => {
     });
   };
 
-  const toggleRunId = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    nameSearchTerm: '',
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      runId: !homeTableState.columnManagement.runId,
-    },
-  });
-
-  const toggleWorkflowName = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    wfNameSearchTerm: '',
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      workflowName: !homeTableState.columnManagement.workflowName,
-    },
-  });
-
-  const toggleDateSubmitted = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    submittedAtSelections: [],
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
-    },
-  });
-
-  const toggleJobStatus = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    jobStatusSelections: [],
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      jobStatus: !homeTableState.columnManagement.jobStatus,
-    },
-  });
-
-  const toggleDateFinished = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    finishedAtSelections: [],
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      dateFinished: !homeTableState.columnManagement.dateFinished,
-    },
-  });
-
-  const toggleViewDetails = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      viewDetails: !homeTableState.columnManagement.viewDetails,
-    },
-  });
-
-  const toggleActions = () => setHomeTableState({
-    ...homeTableState,
-    sortInfo: {},
-    currentPage: 1,
-    columnManagement: {
-      ...homeTableState.columnManagement,
-      actions: !homeTableState.columnManagement.actions,
-    },
-  });
+  const toggleSwitch = (key) =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      nameSearchTerm: '',
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        [key]: !homeTableState.columnManagement[key],
+      },
+    });
 
   const items = [
     {
@@ -130,11 +65,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleRunId()}
+          onKeyPress={() => toggleSwitch('runId')}
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
-            toggleRunId();
+            toggleSwitch('runId');
           }}
         >
           <HolderIcon /> Run ID
@@ -153,11 +88,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleWorkflowName()}
+          onKeyPress={() => toggleSwitch('workflowName')}
           className='dropdown-row workflow-name'
           onClick={(event) => {
             event.stopPropagation();
-            toggleWorkflowName();
+            toggleSwitch('workflowName');
           }}
         >
           <HolderIcon /> Workflow Name
@@ -177,11 +112,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleDateSubmitted()}
+          onKeyPress={() => toggleSwitch('dateSubmitted')}
           className='dropdown-row date-submitted'
           onClick={(event) => {
             event.stopPropagation();
-            toggleDateSubmitted();
+            toggleSwitch('dateSubmitted');
           }}
         >
           <HolderIcon /> Date/Time Submitted
@@ -200,11 +135,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleJobStatus()}
+          onKeyPress={() => toggleSwitch('jobStatus')}
           className='dropdown-row job-status'
           onClick={(event) => {
             event.stopPropagation();
-            toggleJobStatus();
+            toggleSwitch('jobStatus');
           }}
         >
           <HolderIcon /> Job Status
@@ -223,11 +158,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleDateFinished()}
+          onKeyPress={() => toggleSwitch('dateFinished')}
           className='dropdown-row date-finished'
           onClick={(event) => {
             event.stopPropagation();
-            toggleDateFinished();
+            toggleSwitch('dateFinished');
           }}
         >
           <HolderIcon /> Date/Time Finished
@@ -246,11 +181,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleViewDetails()}
+          onKeyPress={() => toggleSwitch('viewDetails')}
           className='dropdown-row view-details'
           onClick={(event) => {
             event.stopPropagation();
-            toggleViewDetails();
+            toggleSwitch('viewDetails');
           }}
         >
           <HolderIcon /> View Details
@@ -269,11 +204,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleActions()}
+          onKeyPress={() => toggleSwitch('actions')}
           className='dropdown-row actions'
           onClick={(event) => {
             event.stopPropagation();
-            toggleActions();
+            toggleSwitch('actions');
           }}
         >
           <HolderIcon /> Actions
