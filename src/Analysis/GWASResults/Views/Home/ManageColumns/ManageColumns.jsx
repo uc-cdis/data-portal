@@ -29,7 +29,7 @@ const ManageColumns = () => {
     });
   };
 
-  const columnUpdates = {
+  const filteringResets = {
     runId: { nameSearchTerm: '' },
     workflowName: { wfNameSearchTerm: '' },
     dateSubmitted: { submittedAtSelections: [] },
@@ -39,12 +39,12 @@ const ManageColumns = () => {
     actions: {},
   };
   const toggleColumn = (key) => {
-    const updates = columnUpdates[key] || {};
+    const filteringUpdate = filteringResets[key] || {};
     setHomeTableState({
       ...homeTableState,
       sortInfo: {},
       currentPage: 1,
-      ...updates,
+      ...filteringUpdate,
       columnManagement: {
         ...homeTableState.columnManagement,
         [key]: !homeTableState.columnManagement[key],
