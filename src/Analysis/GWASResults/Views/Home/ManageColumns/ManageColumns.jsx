@@ -12,7 +12,7 @@ const ManageColumns = () => {
 
   useEffect(() => {
     // if using LocalStorage, update the columnManagement
-    // storage with each state update
+    // storage with each columnManagement update
     if (homeTableState.useLocalStorage) {
       localStorage.setItem(
         'columnManagement',
