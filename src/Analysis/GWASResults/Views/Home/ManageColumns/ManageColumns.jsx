@@ -29,7 +29,7 @@ const ManageColumns = () => {
     });
   };
 
-  const toggleSwitch = (key) =>
+  const toggleRunId = () =>
     setHomeTableState({
       ...homeTableState,
       sortInfo: {},
@@ -37,7 +37,77 @@ const ManageColumns = () => {
       nameSearchTerm: '',
       columnManagement: {
         ...homeTableState.columnManagement,
-        [key]: !homeTableState.columnManagement[key],
+        runId: !homeTableState.columnManagement.runId,
+      },
+    });
+
+  const toggleWorkflowName = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      wfNameSearchTerm: '',
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        workflowName: !homeTableState.columnManagement.workflowName,
+      },
+    });
+
+  const toggleDateSubmitted = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      submittedAtSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        dateSubmitted: !homeTableState.columnManagement.dateSubmitted,
+      },
+    });
+
+  const toggleJobStatus = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      jobStatusSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        jobStatus: !homeTableState.columnManagement.jobStatus,
+      },
+    });
+
+  const toggleDateFinished = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      finishedAtSelections: [],
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        dateFinished: !homeTableState.columnManagement.dateFinished,
+      },
+    });
+
+  const toggleViewDetails = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        viewDetails: !homeTableState.columnManagement.viewDetails,
+      },
+    });
+
+  const toggleActions = () =>
+    setHomeTableState({
+      ...homeTableState,
+      sortInfo: {},
+      currentPage: 1,
+      columnManagement: {
+        ...homeTableState.columnManagement,
+        actions: !homeTableState.columnManagement.actions,
       },
     });
 
@@ -65,11 +135,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('runId')}
+          onKeyPress={() => toggleRunId()}
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('runId');
+            toggleRunId();
           }}
         >
           <HolderIcon /> Run ID
@@ -88,11 +158,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('workflowName')}
+          onKeyPress={() => toggleWorkflowName()}
           className='dropdown-row workflow-name'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('workflowName');
+            toggleWorkflowName();
           }}
         >
           <HolderIcon /> Workflow Name
@@ -112,11 +182,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('dateSubmitted')}
+          onKeyPress={() => toggleDateSubmitted()}
           className='dropdown-row date-submitted'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('dateSubmitted');
+            toggleDateSubmitted();
           }}
         >
           <HolderIcon /> Date/Time Submitted
@@ -135,11 +205,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('jobStatus')}
+          onKeyPress={() => toggleJobStatus()}
           className='dropdown-row job-status'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('jobStatus');
+            toggleJobStatus();
           }}
         >
           <HolderIcon /> Job Status
@@ -158,11 +228,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('dateFinished')}
+          onKeyPress={() => toggleDateFinished()}
           className='dropdown-row date-finished'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('dateFinished');
+            toggleDateFinished();
           }}
         >
           <HolderIcon /> Date/Time Finished
@@ -181,11 +251,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('viewDetails')}
+          onKeyPress={() => toggleViewDetails()}
           className='dropdown-row view-details'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('viewDetails');
+            toggleViewDetails();
           }}
         >
           <HolderIcon /> View Details
@@ -204,11 +274,11 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleSwitch('actions')}
+          onKeyPress={() => toggleActions()}
           className='dropdown-row actions'
           onClick={(event) => {
             event.stopPropagation();
-            toggleSwitch('actions');
+            toggleActions();
           }}
         >
           <HolderIcon /> Actions
