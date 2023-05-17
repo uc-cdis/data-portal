@@ -1,11 +1,11 @@
 const DefaultColumnManagement = {
-  runId: true,
-  workflowName: true,
-  dateSubmitted: true,
-  jobStatus: true,
-  dateFinished: true,
-  viewDetails: true,
-  actions: true,
+  showRunId: true,
+  showWorkflowName: true,
+  showDateSubmitted: true,
+  showJobStatus: true,
+  showDateFinished: true,
+  showViewDetails: true,
+  showActions: true,
 };
 
 export default DefaultColumnManagement;

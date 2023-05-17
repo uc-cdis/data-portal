@@ -3,7 +3,7 @@ import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
-import InitialColumnManagement from '../HomeTableState/DefaultColumnManagement';
+import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
 import SharedContext from '../../../Utils/SharedContext';
 import './ManageColumns.css';
 import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
@@ -21,7 +21,7 @@ const ManageColumns = () => {
     message.success('Restored column defaults');
     setHomeTableState({
       ...homeTableState,
-      columnManagement: InitialColumnManagement,
+      columnManagement: DefaultColumnManagement,
     });
   };
 
@@ -72,18 +72,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('runId')}
+          onKeyPress={() => toggleColumn('showRunId')}
           className='dropdown-row run-id'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('runId');
+            toggleColumn('showRunId');
           }}
         >
           <HolderIcon /> Run ID
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.runId}
+              checked={homeTableState.columnManagement.showRunId}
             />
           </div>
         </div>
@@ -95,18 +95,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('workflowName')}
+          onKeyPress={() => toggleColumn('showWorkflowName')}
           className='dropdown-row workflow-name'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('workflowName');
+            toggleColumn('showWorkflowName');
           }}
         >
           <HolderIcon /> Workflow Name
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.workflowName}
+              checked={homeTableState.columnManagement.showWorkflowName}
             />
           </div>
         </div>
@@ -119,18 +119,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('dateSubmitted')}
+          onKeyPress={() => toggleColumn('showDateSubmitted')}
           className='dropdown-row date-submitted'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('dateSubmitted');
+            toggleColumn('showDateSubmitted');
           }}
         >
           <HolderIcon /> Date/Time Submitted
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.dateSubmitted}
+              checked={homeTableState.columnManagement.showDateSubmitted}
             />
           </div>
         </div>
@@ -142,18 +142,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('jobStatus')}
+          onKeyPress={() => toggleColumn('showJobStatus')}
           className='dropdown-row job-status'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('jobStatus');
+            toggleColumn('showJobStatus');
           }}
         >
           <HolderIcon /> Job Status
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.jobStatus}
+              checked={homeTableState.columnManagement.showJobStatus}
             />
           </div>
         </div>
@@ -165,18 +165,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('dateFinished')}
+          onKeyPress={() => toggleColumn('showDateFinished')}
           className='dropdown-row date-finished'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('dateFinished');
+            toggleColumn('showDateFinished');
           }}
         >
           <HolderIcon /> Date/Time Finished
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.dateFinished}
+              checked={homeTableState.columnManagement.showDateFinished}
             />
           </div>
         </div>
@@ -188,18 +188,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('viewDetails')}
+          onKeyPress={() => toggleColumn('showViewDetails')}
           className='dropdown-row view-details'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('viewDetails');
+            toggleColumn('showViewDetails');
           }}
         >
           <HolderIcon /> View Details
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.viewDetails}
+              checked={homeTableState.columnManagement.showViewDetails}
             />
           </div>
         </div>
@@ -211,18 +211,18 @@ const ManageColumns = () => {
         <div
           role='button'
           tabIndex={0}
-          onKeyPress={() => toggleColumn('actions')}
+          onKeyPress={() => toggleColumn('showActions')}
           className='dropdown-row actions'
           onClick={(event) => {
             event.stopPropagation();
-            toggleColumn('actions');
+            toggleColumn('showActions');
           }}
         >
           <HolderIcon /> Actions
           <div className='manage-columns-switch'>
             <Switch
               size='small'
-              checked={homeTableState.columnManagement.actions}
+              checked={homeTableState.columnManagement.showActions}
             />
           </div>
         </div>
