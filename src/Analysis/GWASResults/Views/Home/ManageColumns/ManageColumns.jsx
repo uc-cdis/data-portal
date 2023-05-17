@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from 'react';
 import {
   Button, Dropdown, Switch, message,
 } from 'antd';
+import SharedContext from '../../../Utils/SharedContext';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
 import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
-import SharedContext from '../../../Utils/SharedContext';
 import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
 import './ManageColumns.css';
 
