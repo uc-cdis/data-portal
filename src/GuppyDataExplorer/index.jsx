@@ -13,14 +13,18 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter, { DisabledExplorerFilter } from './ExplorerFilter';
 import './Explorer.css';
 import { FILTER_TYPE } from './ExplorerFilterSetWorkspace/utils';
+import { useStore } from 'react-redux';
 
 /** @typedef {import('../redux/types').RootState} RootState */
 /** @typedef {import('./types').OptionFilter} OptionFilter */
+/** @typedef {import('../redux/types').RootStore} RootStore */
 
 /** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
 function ExplorerDashboard() {
+    /** @type {RootStore} */
+  const reduxStore = useStore();
   const dispatch = useAppDispatch();
   /** @param {RootState['explorer']['explorerFilter']} filter */
   function handleFilterChange(filter) {
@@ -71,6 +75,19 @@ function ExplorerDashboard() {
       window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
   }, []);
 
+  const dict = reduxStore.getState().submission.dictionary;
+  const dictSections = dict ? Object.entries(dict) : [];
+
+  const dictionaryEntries = [];
+  for (let [sectionKey, sectionValue] of dictSections) {
+    if (sectionKey && !sectionKey.startsWith('_') && sectionValue?.hasOwnProperty('properties')) {
+      const dictEntries = Object.entries(sectionValue.properties);
+      for (let [entryKey, entryValue] of dictEntries) {
+        dictionaryEntries.push({ sectionKey, entryKey, entryValue });
+      }
+    }
+  }
+
   return (
     <GuppyWrapper
       key={explorerId}
@@ -83,8 +100,8 @@ function ExplorerDashboard() {
       rawDataFields={tableConfig.fields}
       patientIds={patientIds}
     >
-      {(data) => (
-        <Dashboard>
+      {(data) => {
+        return <Dashboard>
           <Dashboard.Sidebar className='explorer__sidebar'>
             <div>
               <ExplorerSelect />
@@ -99,6 +116,7 @@ function ExplorerDashboard() {
                   onAnchorValueChange={data.onAnchorValueChange}
                   onFilterChange={data.onFilterChange}
                   tabsOptions={data.tabsOptions}
+                  dictionaryEntries={dictionaryEntries}
                 />
               )}
             </div>
@@ -139,7 +157,7 @@ function ExplorerDashboard() {
             />
           </Dashboard.Main>
         </Dashboard>
-      )}
+      }}
     </GuppyWrapper>
   );
 }

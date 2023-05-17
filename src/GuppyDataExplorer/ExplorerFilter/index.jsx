@@ -44,6 +44,7 @@ DisabledExplorerFilter.propTypes = {
  * @property {GuppyData['onFilterChange']} onFilterChange
  * @property {GuppyData['onAnchorValueChange']} onAnchorValueChange
  * @property {GuppyData['tabsOptions']} tabsOptions
+ * @property {Object} dictionaryEntries
  */
 
 /** @param {ExplorerFilterProps} props */
@@ -96,6 +97,7 @@ ExplorerFilter.propTypes = {
   onAnchorValueChange: PropTypes.func.isRequired, // from GuppyWrapper
   onFilterChange: PropTypes.func.isRequired, // from GuppyWrapper
   tabsOptions: PropTypes.object.isRequired, // from GuppWrapper
+  dictionaryEntries: PropTypes.array
 };
 
 export default ExplorerFilter;
