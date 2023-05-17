@@ -11,6 +11,7 @@ import PHASES from '../../../Utils/PhasesEnumeration';
 import filterTableData from './filterTableData';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
+import LoadingErrorMessage from '../../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
@@ -110,6 +111,7 @@ const HomeTable = ({ data }) => {
       title: 'Run ID',
       dataIndex: 'name',
       key: 'name',
+      show: homeTableState.columnManagement.showRunId,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'name' &&
@@ -132,6 +134,7 @@ const HomeTable = ({ data }) => {
       title: 'Workflow name',
       dataIndex: 'wf_name',
       key: 'wf_name',
+      show: homeTableState.columnManagement.showWorkflowName,
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'wf_name' &&
@@ -154,6 +157,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Submitted',
       dataIndex: 'submittedAt',
       key: 'submittedAt',
+      show: homeTableState.columnManagement.showDateSubmitted,
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'submittedAt' &&
@@ -179,6 +183,7 @@ const HomeTable = ({ data }) => {
       title: 'Job status',
       dataIndex: 'phase',
       key: 'phase',
+      show: homeTableState.columnManagement.showJobStatus,
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'phase' &&
         homeTableState.sortInfo.order,
@@ -213,6 +218,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/Time Finished',
       key: 'finishedAt',
+      show: homeTableState.columnManagement.showDateFinished,
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'finishedAt' &&
@@ -238,6 +244,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'View Details',
       key: 'viewDetails',
+      show: homeTableState.columnManagement.showViewDetails,
       children: [
         {
           title: '',
@@ -275,6 +282,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
+      show: homeTableState.columnManagement.showActions,
       children: [
         {
           title: '',
@@ -282,27 +290,33 @@ const HomeTable = ({ data }) => {
         },
       ],
     },
-  ];
+  ].filter((item) => item.show);
 
   const [filteredData, setFilteredData] = useState(data);
   useEffect(() => {
     setFilteredData(filterTableData(data, homeTableState));
   }, [homeTableState, data]);
 
+  const checkForShownColumn = () => Object.values(homeTableState.columnManagement).includes(true);
+
   return (
     <div className='home-table'>
-      <Table
-        dataSource={isIterable(filteredData) && [...filteredData]}
-        columns={columns}
-        rowKey={(record) => record.uid}
-        onChange={handleTableChange}
-        pagination={{
-          current: homeTableState.currentPage,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '30'],
-        }}
-      />
+      {checkForShownColumn() ? (
+        <Table
+          dataSource={isIterable(filteredData) && [...filteredData]}
+          columns={columns}
+          rowKey={(record) => record.uid}
+          onChange={handleTableChange}
+          pagination={{
+            current: homeTableState.currentPage,
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '30'],
+          }}
+        />
+      ) : (
+        <LoadingErrorMessage message='Please select at least one column from Manage columns' />
+      )}
     </div>
   );
 };
