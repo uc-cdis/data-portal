@@ -1,0 +1,29 @@
+.job-details {
+  width: 500px;
+  border: 1px solid #e9e9ea;
+  background: #fff;
+  border-radius: 8px;
+  margin: 20px auto;
+}
+.job-details h2 {
+  color: #2e77b8;
+  font-size: 14px;
+  padding: 10px 16px;
+  border: 1px solid #e9e9ea;
+}
+.job-details-table {
+  padding: 16px;
+}
+
+.job-details hr {
+  margin: 20px 0;
+  height: 1px;
+  background-color: #cfdbe6;
+  border: none;
+}
+.job-details .GWASResults-flex-row {
+  justify-content: space-between;
+}
+.job-details .GWASResults-flex-row div:first-child {
+  font-weight: bold;
+}
