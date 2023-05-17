@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button, Tooltip } from 'antd';
+import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
 import {
   fetchPresignedUrlForWorkflowArtifact,
@@ -10,12 +11,17 @@ import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/Load
 
 const JobDetails = () => {
   const { selectedRowData } = useContext(SharedContext);
+  const { name, uid } = selectedRowData;
+  const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
 
   const url =
     'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
 
+  console.log('expected', url);
+  console.log('endpoint:', endpoint);
+
   const fetchData = async () => {
-    const res = await fetch(url);
+    const res = await fetch(endpoint);
     console.log(JSON.stringify(res));
     return res.json();
   };
@@ -23,7 +29,10 @@ const JobDetails = () => {
   const { data, status } = useQuery('user', fetchData);
 
   const getParameterData = (key) => {
-    return data?.arguments?.parameters.find((obj) => obj.name === key).value;
+    const datum = data?.arguments?.parameters.find((obj) => obj.name === key)
+      .value;
+    if (datum) return datum;
+    else return 'Data not found';
   };
 
   if (status === 'error') {
@@ -40,60 +49,64 @@ const JobDetails = () => {
       </div>
     );
   }
+  if (!data) {
+    return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
+  }
 
   return (
-    <section className='job-details'>
-      {JSON.stringify(data?.arguments)}
-      <h2 className='job-details-title'>Job Name</h2>
-      <div className='GWASResults-flex-col job-details-table'>
-        <div className='GWASResults-flex-row'>
-          <div>Number of PCs</div>
-          <div>{getParameterData('n_pcs')}</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>MAF Cutoff</div>
-          <div id='modal-maf-threshold'>mafThreshold</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>HARE Ancestry</div>
-          <div id='modal-hare-ancestry'>selectedHare?.concept_value_name</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>Imputation Score Cutoff</div>
-          <div id='modal-imputation-score'>imputationScore</div>
-        </div>
-        <hr />
-        <div className='GWASResults-flex-row'>
-          <div>Cohort</div>
-          <div id='modal-cohort'>selectedCohort?.cohort_name</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>Outcome Phenotype</div>
-          <div id='modal-outcome'>
-            outcome?.concept_name ?? outcome?.provided_name
+    <>
+      {JSON.stringify(data)}
+      <section className='job-details'>
+        <h2 className='job-details-title'>{data.wf_name}</h2>
+        <div className='GWASResults-flex-col job-details-table'>
+          <div className='GWASResults-flex-row'>
+            <div>Number of PCs</div>
+            <div>{getParameterData('n_pcs')}</div>
           </div>
-        </div>
-        <div id='modal-population-size' className='GWASResults-flex-row'>
-          <div>item.population Size</div>
-          <div>item.size</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>Covariates</div>
-          <div id='modal-covariates'>
-            covariate?.concept_name <br /> covariate.provided_name
+          <div className='GWASResults-flex-row'>
+            <div>MAF Cutoff</div>
+            <div>{getParameterData('maf_threshold')}</div>
           </div>
-        </div>
+          <div className='GWASResults-flex-row'>
+            <div>HARE Ancestry</div>
+            <div>{getParameterData('hare_population')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Imputation Score Cutoff</div>
+            <div>{getParameterData('imputation_score_cutoff')}</div>
+          </div>
+          <hr />
+          <div className='GWASResults-flex-row'>
+            <div>Cohort</div>
+            <div>{getParameterData('source_population_cohort')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Phenotype</div>
+            <div>
+              {JSON.parse(getParameterData('outcome'))['concept_name'] ||
+                JSON.parse(getParameterData('outcome'))['provided_name']}
+            </div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Final Size</div>
+            <div>Dunno?</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Covariates</div>
+            <div>Dunno?</div>
+          </div>
 
-        <div className='GWASResults-flex-row'>
-          <div>Minimum Outlier Cutoff</div>
-          <div id='modal-covariates'>0.5</div>
+          <div className='GWASResults-flex-row'>
+            <div>Minimum Outlier Cutoff</div>
+            <div>Dunno?</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Maxmimum Outlier Cutoff</div>
+            <div>Dunno?</div>
+          </div>
         </div>
-        <div className='GWASResults-flex-row'>
-          <div>Maxmimum Outlier Cutoff</div>
-          <div id='modal-covariates'>12.5</div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 export default JobDetails;

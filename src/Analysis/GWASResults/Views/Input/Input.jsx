@@ -33,11 +33,6 @@ const Input = () => {
   );
     */
 
-  const getParameterData = (key) => {
-    return jobDetailsData?.arguments?.parameters.find((obj) => obj.name === key)
-      .value;
-  };
-
   const displayTopSection = () => (
     <section className='results-top'>
       <div className='GWASResults-flex-row'>
