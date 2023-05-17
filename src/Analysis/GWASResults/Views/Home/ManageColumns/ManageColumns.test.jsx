@@ -24,7 +24,7 @@ describe('ManageColumns', () => {
     'View Details',
     'Actions',
   ];
-  const expectedNumberOfSwitches = 7;
+  const expectedNumberOfSwitches = Object.keys(DefaultColumnManagement).length;
 
   it('renders manage columns button and all row names with correct default values', async () => {
     render(
