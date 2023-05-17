@@ -11,7 +11,8 @@ import './SingleSelectFilter.css';
  * @property {string} [disabledTooltipMessage]
  * @property {number} [hideValue]
  * @property {boolean} [hideZero]
- * @property {string} label
+ * @property {string} [label]
+ * @property {string} [optionTooltip]
  * @property {string} [lockedTooltipMessage]
  * @property {(label: string) => void} onSelect
  * @property {boolean} [selected]
@@ -26,6 +27,7 @@ function SingleSelectFilter({
   hideValue = -1,
   hideZero = true,
   label,
+  optionTooltip,
   lockedTooltipMessage = '',
   onSelect,
   selected,
@@ -103,8 +105,21 @@ function SingleSelectFilter({
         onChange={handleCheck}
         checked={isChecked}
         disabled={inputDisabled}
-      />
-      <span className='g3-single-select-filter__label'>{label}</span>
+      /> 
+      <span className='g3-single-select-filter__label'>
+        {
+          optionTooltip ? 
+          <Tooltip
+              placement='right'
+              overlay={<span>{optionTooltip}</span>}
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              trigger={['hover', 'focus']}
+          >
+            <span>{label}</span>
+          </Tooltip> :
+          label
+        }
+      </span>
       {count !== null && countIconComponent}
       {lockIconComponent}
     </div>
@@ -119,6 +134,7 @@ SingleSelectFilter.propTypes = {
   hideValue: PropTypes.number,
   hideZero: PropTypes.bool,
   label: PropTypes.string.isRequired,
+  optionTooltip: PropTypes.string,
   lockedTooltipMessage: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   selected: PropTypes.bool,

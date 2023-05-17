@@ -31,6 +31,7 @@ import {
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
  * @property {SimpleAggsData} tabsOptions
+ * @property {Array} dictionaryEntries
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -49,6 +50,7 @@ function ConnectedFilter({
   onPatientIdsChange,
   patientIds,
   tabsOptions,
+  dictionaryEntries
 }) {
   if (
     hidden ||
@@ -74,6 +76,7 @@ function ConnectedFilter({
 
   const filterTabs = filterConfig.tabs.map(({ fields, searchFields }) =>
     getFilterSections({
+      dictionaryEntries,
       adminAppliedPreFilters,
       arrayFields: arrayFields.current,
       fields,
@@ -149,6 +152,7 @@ ConnectedFilter.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tabsOptions: PropTypes.object.isRequired,
+  dictionaryEntries: PropTypes.array.isRequired
 };
 
 export default ConnectedFilter;
