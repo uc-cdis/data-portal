@@ -1,12 +1,14 @@
 import React, { useContext, useEffect } from 'react';
-import { Button, Dropdown, Switch, message } from 'antd';
+import {
+  Button, Dropdown, Switch, message,
+} from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
 import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
 import SharedContext from '../../../Utils/SharedContext';
-import './ManageColumns.css';
 import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
+import './ManageColumns.css';
 
 const ManageColumns = () => {
   const { homeTableState, setHomeTableState } = useContext(SharedContext);
@@ -48,6 +50,27 @@ const ManageColumns = () => {
     });
   };
 
+  const columnSwitch = (switchTitle, columnBoolean) => (
+    <div
+      role='button'
+      tabIndex={0}
+      onKeyPress={() => toggleColumn(columnBoolean)}
+      className='dropdown-row'
+      onClick={(event) => {
+        event.stopPropagation();
+        toggleColumn(columnBoolean);
+      }}
+    >
+      <HolderIcon /> {switchTitle}
+      <div className='manage-columns-switch'>
+        <Switch
+          size='small'
+          checked={homeTableState.columnManagement[columnBoolean]}
+        />
+      </div>
+    </div>
+  );
+
   const items = [
     {
       label: (
@@ -68,165 +91,32 @@ const ManageColumns = () => {
       type: 'divider',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showRunId')}
-          className='dropdown-row run-id'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showRunId');
-          }}
-        >
-          <HolderIcon /> Run ID
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showRunId}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Run ID', 'showRunId'),
       key: '1',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showWorkflowName')}
-          className='dropdown-row workflow-name'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showWorkflowName');
-          }}
-        >
-          <HolderIcon /> Workflow Name
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showWorkflowName}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Workflow Name', 'showWorkflowName'),
       key: '2',
     },
 
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showDateSubmitted')}
-          className='dropdown-row date-submitted'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showDateSubmitted');
-          }}
-        >
-          <HolderIcon /> Date/Time Submitted
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showDateSubmitted}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Date/Time Submitted', 'showDateSubmitted'),
       key: '3',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showJobStatus')}
-          className='dropdown-row job-status'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showJobStatus');
-          }}
-        >
-          <HolderIcon /> Job Status
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showJobStatus}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Job Status', 'showJobStatus'),
       key: '4',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showDateFinished')}
-          className='dropdown-row date-finished'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showDateFinished');
-          }}
-        >
-          <HolderIcon /> Date/Time Finished
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showDateFinished}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Date/Time Finished', 'showDateFinished'),
       key: '5',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showViewDetails')}
-          className='dropdown-row view-details'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showViewDetails');
-          }}
-        >
-          <HolderIcon /> View Details
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showViewDetails}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('View Details', 'showViewDetails'),
       key: '6',
     },
     {
-      label: (
-        <div
-          role='button'
-          tabIndex={0}
-          onKeyPress={() => toggleColumn('showActions')}
-          className='dropdown-row actions'
-          onClick={(event) => {
-            event.stopPropagation();
-            toggleColumn('showActions');
-          }}
-        >
-          <HolderIcon /> Actions
-          <div className='manage-columns-switch'>
-            <Switch
-              size='small'
-              checked={homeTableState.columnManagement.showActions}
-            />
-          </div>
-        </div>
-      ),
+      label: columnSwitch('Actions', 'showActions'),
       key: '7',
     },
   ];

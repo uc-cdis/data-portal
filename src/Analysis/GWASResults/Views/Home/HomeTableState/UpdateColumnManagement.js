@@ -2,7 +2,7 @@ const UpdateColumnManagement = (homeTableState) => {
   if (homeTableState.useLocalStorage) {
     localStorage.setItem(
       'columnManagement',
-      JSON.stringify(homeTableState.columnManagement)
+      JSON.stringify(homeTableState.columnManagement),
     );
   }
 };

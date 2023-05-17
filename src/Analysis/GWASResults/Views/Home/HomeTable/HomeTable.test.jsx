@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import HomeTable from './HomeTable';
 import SharedContext from '../../../Utils/SharedContext';
 import TableData from '../../../TestData/TableData';
-import InitialHomeTableState from '../InitialState/InitialHomeTableState';
+import InitialHomeTableState from '../HomeTableState/InitialHomeTableState';
 
 describe('HomeTable component', () => {
   const data = TableData;

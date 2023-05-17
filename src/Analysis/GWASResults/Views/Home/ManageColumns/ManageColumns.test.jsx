@@ -5,8 +5,8 @@ import {
 } from '@testing-library/react';
 import SharedContext from '../../../Utils/SharedContext';
 import ManageColumns from './ManageColumns';
-import InitialHomeTableState from '../InitialState/InitialHomeTableState';
-import DefaultColumnManagement from '../InitialState/DefaultColumnManagement';
+import InitialHomeTableState from '../HomeTableState/InitialHomeTableState';
+import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
 
 describe('ManageColumns', () => {
   const state = {
@@ -73,7 +73,7 @@ describe('ManageColumns', () => {
       nameSearchTerm: '',
       columnManagement: {
         ...state.homeTableState.columnManagement,
-        runId: false,
+        showRunId: false,
       },
     });
   });
