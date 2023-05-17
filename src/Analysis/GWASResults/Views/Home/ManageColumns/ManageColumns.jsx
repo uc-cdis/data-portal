@@ -1,13 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  Button, Dropdown, Switch, message,
-} from 'antd';
+import { Button, Dropdown, Switch, message } from 'antd';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import HolderIcon from './ManageColumnsIcons/HolderIcon';
 import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
-import InitialColumnManagement from '../InitialState/DefaultColumnManagement';
+import InitialColumnManagement from '../HomeTableState/DefaultColumnManagement';
 import SharedContext from '../../../Utils/SharedContext';
 import './ManageColumns.css';
+import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
 
 const ManageColumns = () => {
   const { homeTableState, setHomeTableState } = useContext(SharedContext);
@@ -15,12 +14,7 @@ const ManageColumns = () => {
   useEffect(() => {
     // if using LocalStorage, update the columnManagement
     // storage with each columnManagement update
-    if (homeTableState.useLocalStorage) {
-      localStorage.setItem(
-        'columnManagement',
-        JSON.stringify(homeTableState.columnManagement),
-      );
-    }
+    UpdateColumnManagement(homeTableState);
   }, [homeTableState.columnManagement]);
 
   const restoreDefaults = () => {
