@@ -14,8 +14,7 @@ const JobDetails = () => {
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
 
-  const url =
-    'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
+  const url = 'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
 
   console.log('expected', url);
   console.log('endpoint:', endpoint);
@@ -83,8 +82,8 @@ const JobDetails = () => {
           <div className='GWASResults-flex-row'>
             <div>Phenotype</div>
             <div>
-              {JSON.parse(getParameterData('outcome')).concept_name ||
-                JSON.parse(getParameterData('outcome')).provided_name}
+              {JSON.parse(getParameterData('outcome')).concept_name
+                || JSON.parse(getParameterData('outcome')).provided_name}
             </div>
           </div>
           <div className='GWASResults-flex-row'>
