@@ -14,6 +14,7 @@ const StudyRegistrationAccessRequest = {
   subjectLine: 'Study registration access request for',
   successRedirectLink: '/discovery',
   successRedirectText: 'Go to Discovery Page',
+  pendingRequestText: 'There is already a pending request for this study/user combination, please wait while we are processing your request.',
 };
 const DataDictionarySubmissionRequest = {
   name: 'DataDictionarySubmissionRequest',
@@ -29,6 +30,7 @@ const DataDictionarySubmissionRequest = {
   subjectLine: 'Data dictionary submission access request for',
   successRedirectLink: '/discovery',
   successRedirectText: 'Go to Discovery Page',
+  pendingRequestText: 'There is already a pending request for this study/user combination, please wait while we are processing your request.',
 };
 const WorkspaceAccessRequest = {
   name: 'WorkspaceAccessRequest',
@@ -43,6 +45,7 @@ const WorkspaceAccessRequest = {
   subjectLine: 'Workspace Access Request for Workspace in',
   successRedirectLink: workspaceRegistrationConfig?.successRedirect.link || '/discovery',
   successRedirectText: workspaceRegistrationConfig?.successRedirect.text || 'Go to Discovery Page',
+  pendingRequestText: 'There is already a pending request for workspace access for this user. Please wait while we are processing your request',
 };
 const determineSpecificFormInfo = (path: String) => {
   if (path === '/study-reg/request-access') {
