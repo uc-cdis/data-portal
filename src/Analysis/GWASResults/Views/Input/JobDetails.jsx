@@ -32,7 +32,7 @@ const JobDetails = () => {
     const datum = data?.arguments?.parameters.find((obj) => obj.name === key)
       .value;
     if (datum) return datum;
-    else return 'Data not found';
+    return 'Data not found';
   };
 
   if (status === 'error') {
@@ -54,7 +54,7 @@ const JobDetails = () => {
   }
 
   return (
-    <>
+    <React.Fragment>
       {JSON.stringify(data)}
       <section className='job-details'>
         <h2 className='job-details-title'>{data.wf_name}</h2>
@@ -83,8 +83,8 @@ const JobDetails = () => {
           <div className='GWASResults-flex-row'>
             <div>Phenotype</div>
             <div>
-              {JSON.parse(getParameterData('outcome'))['concept_name'] ||
-                JSON.parse(getParameterData('outcome'))['provided_name']}
+              {JSON.parse(getParameterData('outcome')).concept_name ||
+                JSON.parse(getParameterData('outcome')).provided_name}
             </div>
           </div>
           <div className='GWASResults-flex-row'>
@@ -93,7 +93,11 @@ const JobDetails = () => {
           </div>
           <div className='GWASResults-flex-row'>
             <div>Covariates</div>
-            <div>Dunno?</div>
+            <div>
+              Take the object with name "variables", take the value for the key
+              "value", for each object output as a string either the
+              concept_name OR the provided_name with nice line breaks between{' '}
+            </div>
           </div>
 
           <div className='GWASResults-flex-row'>
@@ -106,7 +110,7 @@ const JobDetails = () => {
           </div>
         </div>
       </section>
-    </>
+    </React.Fragment>
   );
 };
 export default JobDetails;
