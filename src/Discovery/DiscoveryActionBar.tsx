@@ -264,7 +264,7 @@ const handleDownloadZipClick = async (
     }
   }
 
-  const studyIDs = selectedResources.map((study) => study.project_number);
+  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',

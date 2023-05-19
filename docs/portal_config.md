@@ -144,11 +144,12 @@ Below is an example, with inline comments describing what each JSON block config
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
-      "systemUseText" : [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
       "expireUseMsgDays" : 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "showOnlyOnLogin" : false, // optional; if set to true, the USe Message will only be shown after a success login
     },
     "footer": {
-      "externalURL": "/external/footer" // iframe link to raw html from another source (ie frontend framework) to pull a footer from
+      "externalURL": "/external/footer", // iframe link to raw html from another source (ie frontend framework) to pull a footer from
       "links": [
         {
           "text": "Link title",
@@ -688,16 +689,19 @@ Below is an example, with inline comments describing what each JSON block config
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
-  "stridesPortalURL": "https://strides-admin-portal.org" // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
+  "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
   "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
       "features":{ // Optional; Required when using study/Workspace registration
         "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
           "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
           "studyRegistrationValidationField": "is_registered", // optional, the other of the extra field that is being added to metadata when a study is registered, to check if a study has been registered, because after loading data from MDS/AggMDS into Discovery page, the metadata category information is lost. Defaults to "is_registered"
           "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
-          "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
+          "studyRegistrationUIDField": "_hdp_uid", // optional, if omitted, value defaults the same as the "minimalFieldMapping.uid" value. In metadata, values from this field MUST be the same as their GUIDs for each metadata record
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
-          "clinicalTrialFields": [] // optional, list of fields to fetch from ClinicalTrials.gov
+          "clinicalTrialFields": [], // optional, list of fields to fetch from ClinicalTrials.gov
+          "dataDictionaryField": "data_dictionaries", // optional, specify the field name in metadata for variable-level metadata, default to ""
+          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for VLMD submission. Default to the data upload bucket from fence config if omitted
+          "dataDictionarySubmissionDisclaimerField": "some disclaimer text" // optional, the disclaimer text that appears under the submit button on the VLMD submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
@@ -712,6 +716,5 @@ Below is an example, with inline comments describing what each JSON block config
         "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
       }
     }
-
 }
 ```

@@ -12,14 +12,18 @@ class Popup extends React.Component {
     // maintaining an accessible tab order (508 compliance)
     // Code inspired by: https://robinvdvleuten.nl/blog/trap-focus-in-a-react-component/
     const modal = document.getElementById('popup');
+    const html = document.getElementsByTagName('html')[0];
 
     this.focusTrap = createFocusTrap('#popup', {
       onActivate() {
         modal.classList.add('trap-is-active');
+        html.classList.add('lock-scroll');
       },
       onDeactivate() {
         modal.classList.remove('trap-is-active');
+        html.classList.remove('lock-scroll');
       },
+      initialFocus: false,
     });
 
     this.focusTrap.activate();

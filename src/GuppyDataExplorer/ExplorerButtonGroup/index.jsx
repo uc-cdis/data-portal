@@ -687,8 +687,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       } else {
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
+        // Setting downloadingInProgress of manifest to true as a trick such that the button's isPending
+        // state is set to true while the manifest is being counted. This is because we want the button to show
+        // the spinner instead of the download icon while the counting is in progress.
         this.setState({
-          manifestEntryCount: 0,
+          manifestEntryCount: 0, downloadingInProgress: { manifest: true }, toasterOpen: false,
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
@@ -701,7 +704,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               this.props.filter,
             );
             this.setState({
-              manifestEntryCount: countResult,
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
             });
           } else {
             let caseIDList = caseIDResult.map((i) => i[caseField]);
@@ -712,7 +715,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               },
             });
             this.setState({
-              manifestEntryCount: countResult,
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
             });
           }
         } else {
