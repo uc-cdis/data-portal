@@ -264,7 +264,7 @@ const handleDownloadZipClick = async (
     }
   }
 
-  const studyIDs = selectedResources.map((study) => study.project_number);
+  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -525,7 +525,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          visible={downloadStatus.message.active}
+          open={downloadStatus.message.active}
           title={downloadStatus.message.title}
           footer={(
             <Button

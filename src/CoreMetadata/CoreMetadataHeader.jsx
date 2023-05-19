@@ -68,7 +68,7 @@ class CoreMetadataHeader extends Component {
           || userHasAccess
           || projectIsOpenData(projectAvail, projectId)
         ) {
-          const downloadLink = `${userAPIPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+          const downloadLink = `${userAPIPath}data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
           this.setState({
             downloadButton: (
@@ -95,7 +95,7 @@ class CoreMetadataHeader extends Component {
         } else {
           // set to empty so it wont check again
           this.setState({
-            downloadButton: (<React.Fragment />),
+            downloadButton: (<p className='h3-typo' id='no-permission'>You do not have permission to access the contents of this file.</p>),
           });
         }
       });

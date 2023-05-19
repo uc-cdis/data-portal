@@ -1,0 +1,99 @@
+.home-table {
+  width: 100%;
+}
+
+.home-table tr {
+  color: #333;
+}
+
+.home-table .job-status {
+  min-width: 160px;
+}
+
+.home-table th.ant-table-cell {
+  background: #e9eef2;
+  font-weight: bold;
+}
+
+.home-table thead tr {
+  border: 1px solid #e2e2e3;
+}
+
+/* Hide separators in table between thead columns */
+.ant-table-thead
+> tr
+> th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  content: none;
+}
+
+/* Style actions dropdown */
+.home-table .anticon-search svg path {
+  opacity: 0.35;
+}
+
+.home-table svg[data-icon='ellipsis'] {
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+  padding: 1px;
+}
+
+.home-table svg[data-icon='ellipsis'] path {
+  fill: #ab5915;
+}
+
+.home-table .ant-dropdown-trigger:hover svg[data-icon='ellipsis'],
+.home-table .ant-dropdown-trigger:focus svg[data-icon='ellipsis'],
+.home-table .ant-btn-text:hover svg[data-icon='ellipsis'],
+.home-table .ant-btn-text:focus svg[data-icon='ellipsis'] {
+  background: #2e77b8;
+  transition: all 0.25s ease-in-out;
+}
+
+.home-table .ant-dropdown-trigger:hover svg[data-icon='ellipsis'] path,
+.home-table .ant-dropdown-trigger:focus svg[data-icon='ellipsis'] path,
+.home-table .ant-btn-text:hover svg[data-icon='ellipsis'] path,
+.home-table .ant-btn-text:focus svg[data-icon='ellipsis'] path {
+  fill: #fff;
+  transition: all 0.25s ease-in-out;
+}
+
+.home-table .ant-btn-text:hover,
+.home-table .ant-btn-text:focus {
+  background: none;
+}
+
+.home-table .ant-dropdown-menu-item:hover {
+  background: #e9eef2;
+}
+
+.home-table .anticon-ellipsis {
+  transform: scale(1.25);
+}
+
+.home-table .select-job-status {
+  width: 160px;
+}
+
+.home-table .select-job-status .ant-select-selection-placeholder {
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
+
+.home-table th.ant-table-column-has-sorters,
+.home-table .ant-table-thead > tr > th {
+  padding: 16px 16px 8px 16px;
+}
+
+.home-table th.ant-table-column-has-sorters .ant-table-column-sorters::after {
+  display: none;
+}
+.home-table .ant-table-thead > tr:nth-child(2) th.ant-table-cell {
+  padding: 0 16px 16px 16px;
+}
+
+/* Fix for date picker layout */
+.home-table-range-picker .ant-picker-header > * {
+  flex: unset;
+}
