@@ -227,21 +227,6 @@
         },
         {
             "files": [
-                "src/Analysis/GWASWizard/shared/CustomDichotomousSelect.jsx"
-            ],
-            "rules": {
-                "react/no-unknown-property": [
-                    "error",
-                    {
-                        "ignore": [
-                            "align"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "files": [
                 "*.ts",
                 "*.tsx"
             ],

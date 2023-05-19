@@ -30,7 +30,7 @@ const { Text } = Typography;
 
 export interface FormSubmissionState {
   status?: ResultStatusType;
-  text?: string
+  text?: string;
 }
 export interface User {
   username: string
@@ -294,7 +294,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                   key={study[studyRegistrationConfig.studyRegistrationUIDField]}
                   value={study[studyRegistrationConfig.studyRegistrationUIDField]}
                 >
-                  {`${study.project_number} : ${study.project_title} : ${study[studyRegistrationConfig.studyRegistrationUIDField]}`}
+                  {`${study.project_number} : ${study.project_title} : ${study.appl_id}`}
                 </Option>
               ))}
             </Select>
@@ -350,6 +350,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             help='Leave this section blank if your data is not yet available'
           >
             <Select placeholder='Select a data repository' showSearch allowClear>
+              <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
               <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
@@ -359,7 +360,6 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='JCOIN'>JCOIN</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
               <Option value='Metabolomics Workbench'>Metabolomics Workbench</Option>
-              <Option value='Microphysiology Systems Database'>Microphysiology Systems Database</Option>
               <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
               <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
               <Option value='NICHD DASH'>NICHD DASH</Option>

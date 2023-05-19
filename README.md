@@ -127,6 +127,12 @@ You will then need to visit `https://localhost` and accept the self-signed certi
 
 docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 
+
+### Quickstart with Helm
+
+You can now deploy individual services via Helm!
+Please refer to the Helm quickstart guide HERE (https://github.com/uc-cdis/data-portal/blob/master/docs/quickstart_helm.md)
+
 ### GraphQL configuration
 
 The configurations of Homepage charts are specified data/config/<common-name>.json, or gitops.json in gitops repo. For each common, we need to specify the following json entities:
@@ -332,3 +338,12 @@ We use ESLint and Stylelint to lint and automatically format code.
 - `npm run eslint` Will run ESLint on the entire code base and automatically try to fix all JS and JS like files.
 - `npm run eslint-new` Will run ESLint only on newly added files in the current git branch and automatically try to fix the JS and JS like files.
 - `npm run stylelint` Will run Stylelint on all CSS and CSS-like files in the code base and automatically try to fix them.
+
+
+### Testing
+
+We use JEST and enzyme for unit testing frontend components in this project.
+
+- `npm run test` Will run JEST tests for all the tests found in the complete project.
+- `npm run test SUBFOLDER_RELATIVE_PATH` will only consider the part of the project starting at the given subfolder when looking for tests to run.
+  - e.g. `npm run test src/Analysis/GWASV2`

@@ -1,0 +1,9 @@
+.return-home-button {
+  border-radius: 50%;
+  width: 30px;
+  background-color: white;
+}
+
+.return-home-button:hover {
+  background-color: #e9eef2;
+}
