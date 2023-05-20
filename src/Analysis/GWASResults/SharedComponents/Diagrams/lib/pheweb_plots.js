@@ -4,9 +4,17 @@
  * MIT LICENSE: https://github.com/statgen/locuszoom-hosted/blob/d726fb23477e36d244c43be87d84b5ed3e1725e7/LICENSE, https://github.com/statgen/pheweb/blob/76f0d0e32ae72e51bc4b259ce4b16edfd653601a/LICENSE
  */
 
-import * as d3 from 'd3';
+import * as d3 from 'd3-selection';
+import * as d3Array from 'd3-array';
+import * as d3Scale from 'd3-scale';
+import * as d3Axis from 'd3-axis';
+import * as d3Format from 'd3-format';
 import d3Tip from 'd3-tip';
 import {memoize, property, range, some, sortBy, template} from 'lodash';
+
+// Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
+const tooltip_underscoretemplate = '<b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %>';
+const urlprefix = 'mylocuszoom-url-prefix';
 
 // NOTE: `qval` means `-log10(pvalue)`.
 function fmt(format) {
@@ -21,7 +29,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
     // FIXME: Replace global variables with options object
     // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
     // In the DOM, later siblings are displayed over top of (and occluding) earlier siblings.
-    unbinned_variants = sortBy(unbinned_variants, function(d) { return d.neg_log_pvalue; });
+    unbinned_variants = sortBy(unbinned_variants, function(d) { return -Math.log10(d.pval); });
 
     const get_chrom_offsets = memoize(function() {
         const  chrom_padding = 2e7;
@@ -97,7 +105,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         let max_plot_qval = ticks[ticks.length - 1];
         // If we have any qval=inf (pval=0) variants, leave space for them.
         if (includes_pval0) { max_plot_qval *= 1.1; }
-        let scale = d3.scaleLinear().clamp(true);
+        let scale = d3Scale.scaleLinear().clamp(true);
         if (max_plot_qval <= 40) {
             scale = scale
                 .domain([max_plot_qval, 0])
@@ -117,8 +125,8 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         };
     }
 
-    $(function() {
-        const svg_width = $('#manhattan_plot_container').width();
+    window.addEventListener('load', function() {
+        const svg_width = document.getElementById('manhattan_plot_container').offsetWidth;
         const svg_height = 550;
         const plot_margin = {
             'left': 70,
@@ -148,22 +156,22 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         gwas_svg.call(significance_threshold_tooltip);
 
         const genomic_position_extent = (function() {
-            const extent1 = d3.extent(variant_bins, get_genomic_position);
-            const extent2 = d3.extent(unbinned_variants, get_genomic_position);
-            return d3.extent(extent1.concat(extent2));
+            const extent1 = d3Array.extent(variant_bins, get_genomic_position);
+            const extent2 = d3Array.extent(unbinned_variants, get_genomic_position);
+            return d3Array.extent(extent1.concat(extent2));
         })();
 
-        const x_scale = d3.scaleLinear()
+        const x_scale = d3Scale.scaleLinear()
             .domain(genomic_position_extent)
             .range([0, plot_width]);
 
-        const includes_pval0 = some(unbinned_variants, function(variant) { return variant.pvalue === 0; });
+        const includes_pval0 = some(unbinned_variants, function(variant) { return variant.pval === 0; }); // in locus-zoom version this was .pvalue
 
         const highest_plot_qval = Math.max(
             -Math.log10(significance_threshold) + 0.5,
             (function() {
-                const best_unbinned_qval = -Math.log10(d3.min(unbinned_variants, function(d) {
-                    return (d.pvalue === 0) ? 1 : d.pvalue;
+                const best_unbinned_qval = -Math.log10(d3Array.min(unbinned_variants, function(d) {
+                    return (d.pval === 0) ? 1 : d.pval;
                 }));
                 if (best_unbinned_qval !== undefined) {return best_unbinned_qval;}
                 return d3.max(variant_bins, function(bin) {
@@ -175,8 +183,8 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         const y_scale = y_axis_config.scale;
 
         // TODO: draw a small y-axis-break at 20 if `y_axis_config.draw_break_at_20`
-        const y_axis = d3.axisLeft(y_scale)
-            .tickFormat(d3.format('d'))
+        const y_axis = d3Axis.axisLeft(y_scale)
+            .tickFormat(d3Format.format('d'))
             .tickValues(y_axis_config.ticks);
         gwas_plot.append('g')
             .attr('class', 'y axis')
@@ -215,9 +223,9 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
             });
         })();
 
-        const color_by_chrom = d3.scaleOrdinal()
+        const color_by_chrom = d3Scale.scaleOrdinal()
             .domain(get_chrom_offsets().chroms)
-            .range(['#AFAFAF', '#007bff']);
+            .range(['rgb(120,120,186)', 'rgb(0,0,66)']);
 
         gwas_svg.selectAll('text.chrom_label')
             .data(chroms_and_midpoints)
@@ -248,7 +256,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
             .on('mouseout', significance_threshold_tooltip.hide);
 
         // Points & labels
-        const tooltip_template = template(window.model.tooltip_underscoretemplate);
+        const tooltip_template = template(tooltip_underscoretemplate);
         const point_tooltip = d3Tip()
             .attr('class', 'd3-tip')
             .html(function(d) {
@@ -258,7 +266,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         gwas_svg.call(point_tooltip);
 
         function get_link_to_LZ(variant) {
-            let base = new URL(window.model.urlprefix, window.location.origin);
+            let base = new URL(urlprefix, window.location.origin);
             base.searchParams.set('chrom', variant.chrom);
             base.searchParams.set('start', Math.max(0, variant.pos - 200 * 1000));
             base.searchParams.set('end', variant.pos + 200 * 1000);
@@ -268,8 +276,8 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         // Add gene name labels to the plot: the 7 most significant peaks, up to 2 gene labels per data point
         // Note: this is slightly different from PheWeb's code (b/c nearest_genes is represented differently)
         const variants_to_label = unbinned_variants.slice()
-            .filter(v => (!!v.peak && v.neg_log_pvalue > 7.301))  // Only label peaks above line of gwas significance
-            .sort((a, b) => b.neg_log_pvalue - a.neg_log_pvalue)  // most significant first
+            .filter(v => (!!v.peak && -Math.log10(v.pval) > 7.301))  // Only label peaks above line of gwas significance
+            .sort((a, b) => -Math.log10(b.pval) - (-Math.log10(a.pval)))  // most significant first
             .slice(0, 7);
         gwas_plot.append('g')
             .attr('class', 'genenames')
@@ -283,16 +291,11 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
             .attr('transform', function(d) {
                 return fmt('translate({0},{1})',
                            x_scale(get_genomic_position(d)),
-                           y_scale(d.neg_log_pvalue) - 5);
+                           y_scale(-Math.log10(d.pval)) - 5);
             })
             .text(function(d) {
-                // Old datasets: no symbol. New dataset: hash with symbol & ensg keys
-                const genes = (d.nearest_genes || []).map(gene => gene.symbol);
-                if (genes.length <= 2) {
-                    return genes.join(',');
-                } else {
-                    return genes.slice(0, 2).join(',') + ',...';
-                }
+                // d.nearest_genes is a string, just print as is:
+                return d.nearest_genes;
             });
 
         function pp1() {
@@ -308,7 +311,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
                     return x_scale(get_genomic_position(d));
                 })
                 .attr('cy', function(d) {
-                    return y_scale(d.neg_log_pvalue);
+                    return y_scale(-Math.log10(d.pval));
                 })
                 .attr('r', 7)
                 .style('opacity', 0)
@@ -339,7 +342,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
                     return x_scale(get_genomic_position(d));
                 })
                 .attr('cy', function(d) {
-                    return y_scale(d.neg_log_pvalue);
+                    return y_scale(-Math.log10(d.pval));
                 })
                 .attr('r', 2.3)
                 .style('fill', function(d) {
@@ -417,7 +420,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
     // Physically, this means a QQ plot would be meaningless: ALL the values are *way* more extreme than explained by
     // chance!
     if (!maf_ranges[0].qq.bins.length) {
-        $('#qq_plot_container').text(
+        document.getElementById('qq_plot_container').text(
             'No QQ Plot could be generated. It is possible that your data has been filtered to only contain very extreme pvalues, such that a QQ plot would not be meaningful.');
         return;
     }
@@ -426,7 +429,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
         maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i];
     });
 
-    $(function() {
+    window.addEventListener('load', function() {
         const exp_max = d3.max(maf_ranges, function(maf_range) {
             return maf_range.qq.max_exp_qval;
         });
@@ -440,7 +443,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
         obs_max = Math.ceil(obs_max) + 0.01; // The 0.01 makes sure the integer tick will be shown.
 
 
-        const svg_width = $('#qq_plot_container').width();
+        const svg_width = document.getElementById('qq_plot_container').offsetWidth;
         const plot_margin = {
             'left': 70,
             'right': 30,
@@ -463,10 +466,10 @@ function create_qq_plot(maf_ranges, qq_ci) {
             .attr('id', 'qq_plot')
             .attr('transform', fmt('translate({0},{1})', plot_margin.left, plot_margin.top));
 
-        const x_scale = d3.scaleLinear()
+        const x_scale = d3Scale.scaleLinear()
             .domain([0, exp_max])
             .range([0, plot_width]);
-        const y_scale = d3.scaleLinear()
+        const y_scale = d3Scale.scaleLinear()
             .domain([0, obs_max])
             .range([plot_height, 0]);
 
@@ -536,22 +539,22 @@ function create_qq_plot(maf_ranges, qq_ci) {
             });
 
         // Axes
-        const xAxis = d3.axisBottom(x_scale)
+        const xAxis = d3Axis.axisBottom(x_scale)
             .tickSizeInner(-plot_height) // this approach to a grid is taken from <http://bl.ocks.org/hunzy/11110940>
             .tickSizeOuter(0)
             .tickPadding(7)
-            .tickFormat(d3.format('d')) //integers
+            .tickFormat(d3Format.format('d')) //integers
             .tickValues(range(exp_max)); //prevent unlabeled, non-integer ticks.
         qq_plot.append('g')
             .attr('class', 'x axis')
             .attr('transform', fmt('translate(0,{0})', plot_height))
             .call(xAxis);
 
-        const y_axis = d3.axisLeft(y_scale)
+        const y_axis = d3Axis.axisLeft(y_scale)
             .tickSizeInner(-plot_width)
             .tickSizeOuter(0)
             .tickPadding(7)
-            .tickFormat(d3.format('d')) //integers
+            .tickFormat(d3Format.format('d')) //integers
             .tickValues(range(obs_max)); //prevent unlabeled, non-integer ticks.
         qq_plot.append('g')
             .attr('class', 'y axis')
