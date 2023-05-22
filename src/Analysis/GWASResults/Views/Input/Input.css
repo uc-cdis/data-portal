@@ -1,5 +1,5 @@
 .job-details {
-  width: 500px;
+  width: 349px;
   border: 1px solid #e9e9ea;
   background: #fff;
   border-radius: 8px;
@@ -23,7 +23,12 @@
 }
 .job-details .GWASResults-flex-row {
   justify-content: space-between;
+  margin: 2px 0;
 }
 .job-details .GWASResults-flex-row div:first-child {
   font-weight: bold;
+}
+
+.job-details .covariate-item {
+  float: right;
 }

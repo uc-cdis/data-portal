@@ -25,16 +25,6 @@ const JobDetails = () => {
 
   const { data, status } = useQuery('user', fetchData);
 
-  const getParameterData = (key) => {
-    console.log(
-      '    const datum = data?.arguments?.parameters?',
-      data?.arguments?.parameters
-    );
-    const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
-    if (datum) return datum.value;
-    return 'Data not found';
-  };
-
   if (status === 'error') {
     return (
       <React.Fragment>
@@ -53,24 +43,38 @@ const JobDetails = () => {
     return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
   }
 
+  const getParameterData = (key) => {
+    const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
+    return datum.value || 'Data not found';
+  };
+
+  const getPhenotype = () => {
+    return (
+      JSON.parse(getParameterData('outcome'))?.concept_name ||
+      JSON.parse(getParameterData('outcome'))?.provided_name ||
+      'Data not found'
+    );
+  };
+
   const processCovariates = () => {
     const input = JSON.stringify(getParameterData('variables'));
-    let output = input.replaceAll('\\n', '');
-    output = output.substring(1, output.length - 1);
+    let covariatesString = input.replaceAll('\\n', '');
+    covariatesString = covariatesString.substring(
+      1,
+      covariatesString.length - 1
+    );
     const strToRemove = '\\"';
-    output = output.replaceAll(strToRemove, '"');
-    output = JSON.parse(output);
-    console.log(output[0]);
-    console.log(output[0].concept_name);
-    return output;
+    covariatesString = covariatesString.replaceAll(strToRemove, '"');
+    const covariatesObj = JSON.parse(covariatesString);
+    return covariatesObj;
   };
 
   const displayCovariates = () => {
     const covariates = processCovariates();
-    if (covariates.length > 0)
+    if (covariates && covariates.length > 0) {
       return covariates.map((obj, index) => (
         <React.Fragment key={index}>
-          <span style={{ float: 'right' }}>
+          <span className='covariate-item'>
             {obj?.concept_name}
             {obj?.provided_name}
             {!obj?.concept_name && !obj?.provided_name && 'Data not found'}
@@ -78,6 +82,7 @@ const JobDetails = () => {
           <br />
         </React.Fragment>
       ));
+    }
     return 'Data not found';
   };
 
@@ -110,11 +115,7 @@ const JobDetails = () => {
           </div>
           <div className='GWASResults-flex-row'>
             <div>Phenotype</div>
-            <div>
-              {JSON.parse(getParameterData('outcome')).concept_name ||
-                JSON.parse(getParameterData('outcome')).provided_name ||
-                'Data not found'}
-            </div>
+            <div>{getPhenotype()}</div>
           </div>
           <div className='GWASResults-flex-row'>
             <div>Final Size</div>
@@ -122,7 +123,7 @@ const JobDetails = () => {
           </div>
           <div className='GWASResults-flex-row'>
             <div>Covariates</div>
-            <div>{displayCovariates() || 'Data not found'}</div>
+            <div>{displayCovariates()}</div>
           </div>
         </div>
       </section>
