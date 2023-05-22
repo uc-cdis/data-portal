@@ -26,9 +26,12 @@ const JobDetails = () => {
   const { data, status } = useQuery('user', fetchData);
 
   const getParameterData = (key) => {
-    const datum = data?.arguments?.parameters.find((obj) => obj.name === key)
-      .value;
-    if (datum) return datum;
+    console.log(
+      '    const datum = data?.arguments?.parameters?',
+      data?.arguments?.parameters
+    );
+    const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
+    if (datum) return datum.value;
     return 'Data not found';
   };
 
@@ -51,7 +54,7 @@ const JobDetails = () => {
   }
 
   const processCovariates = () => {
-    let input = JSON.stringify(getParameterData('variables'));
+    const input = JSON.stringify(getParameterData('variables'));
     let output = input.replaceAll('\\n', '');
     output = output.substring(1, output.length - 1);
     const strToRemove = '\\"';
@@ -64,15 +67,18 @@ const JobDetails = () => {
 
   const displayCovariates = () => {
     const covariates = processCovariates();
-    return covariates.map((obj, index) => (
-      <React.Fragment key={index}>
-        <span style={{ float: 'right' }}>
-          {obj?.concept_name}
-          {obj?.provided_name}
-        </span>
-        <br />
-      </React.Fragment>
-    ));
+    if (covariates.length > 0)
+      return covariates.map((obj, index) => (
+        <React.Fragment key={index}>
+          <span style={{ float: 'right' }}>
+            {obj?.concept_name}
+            {obj?.provided_name}
+            {!obj?.concept_name && !obj?.provided_name && 'Data not found'}
+          </span>
+          <br />
+        </React.Fragment>
+      ));
+    return 'Data not found';
   };
 
   return (
@@ -106,7 +112,8 @@ const JobDetails = () => {
             <div>Phenotype</div>
             <div>
               {JSON.parse(getParameterData('outcome')).concept_name ||
-                JSON.parse(getParameterData('outcome')).provided_name}
+                JSON.parse(getParameterData('outcome')).provided_name ||
+                'Data not found'}
             </div>
           </div>
           <div className='GWASResults-flex-row'>
@@ -115,7 +122,7 @@ const JobDetails = () => {
           </div>
           <div className='GWASResults-flex-row'>
             <div>Covariates</div>
-            <div>{displayCovariates()}</div>
+            <div>{displayCovariates() || 'Data not found'}</div>
           </div>
         </div>
       </section>
