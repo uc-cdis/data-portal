@@ -14,7 +14,8 @@ import './Input.css';
 const Input = () => {
   const { selectedRowData } = useContext(SharedContext);
 
-  const url = 'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
+  const url =
+    'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
 
   const fetchData = async () => {
     const res = await fetch(url);

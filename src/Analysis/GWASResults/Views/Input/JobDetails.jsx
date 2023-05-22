@@ -14,10 +14,8 @@ const JobDetails = () => {
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
 
-  const url = 'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
-
-  console.log('expected', url);
-  console.log('endpoint:', endpoint);
+  const url =
+    'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
 
   const fetchData = async () => {
     const res = await fetch(endpoint);
@@ -52,6 +50,31 @@ const JobDetails = () => {
     return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
   }
 
+  const processCovariates = () => {
+    let input = JSON.stringify(getParameterData('variables'));
+    let output = input.replaceAll('\\n', '');
+    output = output.substring(1, output.length - 1);
+    const strToRemove = '\\"';
+    output = output.replaceAll(strToRemove, '"');
+    output = JSON.parse(output);
+    console.log(output[0]);
+    console.log(output[0].concept_name);
+    return output;
+  };
+
+  const displayCovariates = () => {
+    const covariates = processCovariates();
+    return covariates.map((obj, index) => (
+      <React.Fragment key={index}>
+        <span style={{ float: 'right' }}>
+          {obj?.concept_name}
+          {obj?.provided_name}
+        </span>
+        <br />
+      </React.Fragment>
+    ));
+  };
+
   return (
     <React.Fragment>
       {JSON.stringify(data)}
@@ -82,30 +105,17 @@ const JobDetails = () => {
           <div className='GWASResults-flex-row'>
             <div>Phenotype</div>
             <div>
-              {JSON.parse(getParameterData('outcome')).concept_name
-                || JSON.parse(getParameterData('outcome')).provided_name}
+              {JSON.parse(getParameterData('outcome')).concept_name ||
+                JSON.parse(getParameterData('outcome')).provided_name}
             </div>
           </div>
           <div className='GWASResults-flex-row'>
             <div>Final Size</div>
-            <div>Dunno?</div>
+            <div>TBD</div>
           </div>
           <div className='GWASResults-flex-row'>
             <div>Covariates</div>
-            <div>
-              Take the object with name "variables", take the value for the key
-              "value", for each object output as a string either the
-              concept_name OR the provided_name with nice line breaks between{' '}
-            </div>
-          </div>
-
-          <div className='GWASResults-flex-row'>
-            <div>Minimum Outlier Cutoff</div>
-            <div>Dunno?</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>Maxmimum Outlier Cutoff</div>
-            <div>Dunno?</div>
+            <div>{displayCovariates()}</div>
           </div>
         </div>
       </section>
