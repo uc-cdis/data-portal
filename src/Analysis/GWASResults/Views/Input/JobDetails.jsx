@@ -45,16 +45,13 @@ const JobDetails = () => {
 
   const getParameterData = (key) => {
     const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
-    return datum.value || 'Data not found';
+    return datum?.value || 'Data not found';
   };
 
-  const getPhenotype = () => {
-    return (
-      JSON.parse(getParameterData('outcome'))?.concept_name ||
-      JSON.parse(getParameterData('outcome'))?.provided_name ||
-      'Data not found'
-    );
-  };
+  const getPhenotype = () =>
+    JSON.parse(getParameterData('outcome'))?.concept_name ||
+    JSON.parse(getParameterData('outcome'))?.provided_name ||
+    'Data not found';
 
   const processCovariates = () => {
     const input = JSON.stringify(getParameterData('variables'));
