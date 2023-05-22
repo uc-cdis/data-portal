@@ -18,11 +18,7 @@ const JobDetails = () => {
   const { data, status } = useQuery('user', fetchData);
 
   if (status === 'error') {
-    return (
-      <React.Fragment>
-        <LoadingErrorMessage message='Error getting job details' />
-      </React.Fragment>
-    );
+    return <LoadingErrorMessage message='Error getting job details' />;
   }
   if (status === 'loading') {
     return (
@@ -76,47 +72,44 @@ const JobDetails = () => {
   };
 
   return (
-    <React.Fragment>
-      {JSON.stringify(data)}
-      <section className='job-details'>
-        <h2 className='job-details-title'>{data.wf_name}</h2>
-        <div className='GWASResults-flex-col job-details-table'>
-          <div className='GWASResults-flex-row'>
-            <div>Number of PCs</div>
-            <div>{getParameterData('n_pcs')}</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>MAF Cutoff</div>
-            <div>{getParameterData('maf_threshold')}</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>HARE Ancestry</div>
-            <div>{getParameterData('hare_population')}</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>Imputation Score Cutoff</div>
-            <div>{getParameterData('imputation_score_cutoff')}</div>
-          </div>
-          <hr />
-          <div className='GWASResults-flex-row'>
-            <div>Cohort</div>
-            <div>{getParameterData('source_population_cohort')}</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>Phenotype</div>
-            <div>{getPhenotype()}</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>Final Size</div>
-            <div>TBD</div>
-          </div>
-          <div className='GWASResults-flex-row'>
-            <div>Covariates</div>
-            <div>{displayCovariates()}</div>
-          </div>
+    <section className='job-details'>
+      <h2 className='job-details-title'>{data.wf_name}</h2>
+      <div className='GWASResults-flex-col job-details-table'>
+        <div className='GWASResults-flex-row'>
+          <div>Number of PCs</div>
+          <div>{getParameterData('n_pcs')}</div>
         </div>
-      </section>
-    </React.Fragment>
+        <div className='GWASResults-flex-row'>
+          <div>MAF Cutoff</div>
+          <div>{getParameterData('maf_threshold')}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>HARE Ancestry</div>
+          <div>{getParameterData('hare_population')}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Imputation Score Cutoff</div>
+          <div>{getParameterData('imputation_score_cutoff')}</div>
+        </div>
+        <hr />
+        <div className='GWASResults-flex-row'>
+          <div>Cohort</div>
+          <div>{getParameterData('source_population_cohort')}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Phenotype</div>
+          <div>{getPhenotype()}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Final Size</div>
+          <div>TBD</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Covariates</div>
+          <div>{displayCovariates()}</div>
+        </div>
+      </div>
+    </section>
   );
 };
 export default JobDetails;
