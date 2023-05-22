@@ -15,7 +15,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "^0.15.5",
+    "@gen3/guppy": "^0.16.0",
     "@gen3/ui-component": "^0.11.1",
     "@reactour/tour": "^2.12.0",
     "@storybook/addon-actions": "^6.0.0",
