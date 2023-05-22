@@ -12,7 +12,6 @@ const JobDetails = () => {
 
   const fetchData = async () => {
     const res = await fetch(endpoint);
-    console.log(JSON.stringify(res));
     return res.json();
   };
 
@@ -41,16 +40,17 @@ const JobDetails = () => {
     return datum?.value || 'Data not found';
   };
 
-  const getPhenotype = () => JSON.parse(getParameterData('outcome'))?.concept_name
-    || JSON.parse(getParameterData('outcome'))?.provided_name
-    || 'Data not found';
+  const getPhenotype = () =>
+    JSON.parse(getParameterData('outcome'))?.concept_name ||
+    JSON.parse(getParameterData('outcome'))?.provided_name ||
+    'Data not found';
 
   const processCovariates = () => {
     const input = JSON.stringify(getParameterData('variables'));
     let covariatesString = input.replaceAll('\\n', '');
     covariatesString = covariatesString.substring(
       1,
-      covariatesString.length - 1,
+      covariatesString.length - 1
     );
     const strToRemove = '\\"';
     covariatesString = covariatesString.replaceAll(strToRemove, '"');
