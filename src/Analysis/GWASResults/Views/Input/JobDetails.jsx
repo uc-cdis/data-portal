@@ -1,21 +1,14 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Button, Tooltip } from 'antd';
+import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
-import {
-  fetchPresignedUrlForWorkflowArtifact,
-  queryConfig,
-} from '../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
 const JobDetails = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
-
-  const url =
-    'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/status/gwas-workflow-9398100811?uid=e88fcf45-03b3-47ce-8bf1-909bd9623937';
 
   const fetchData = async () => {
     const res = await fetch(endpoint);
@@ -48,22 +41,21 @@ const JobDetails = () => {
     return datum?.value || 'Data not found';
   };
 
-  const getPhenotype = () =>
-    JSON.parse(getParameterData('outcome'))?.concept_name ||
-    JSON.parse(getParameterData('outcome'))?.provided_name ||
-    'Data not found';
+  const getPhenotype = () => JSON.parse(getParameterData('outcome'))?.concept_name
+    || JSON.parse(getParameterData('outcome'))?.provided_name
+    || 'Data not found';
 
   const processCovariates = () => {
     const input = JSON.stringify(getParameterData('variables'));
     let covariatesString = input.replaceAll('\\n', '');
     covariatesString = covariatesString.substring(
       1,
-      covariatesString.length - 1
+      covariatesString.length - 1,
     );
     const strToRemove = '\\"';
     covariatesString = covariatesString.replaceAll(strToRemove, '"');
-    const covariatesObj = JSON.parse(covariatesString);
-    return covariatesObj;
+    const covariatesJSON = JSON.parse(covariatesString);
+    return covariatesJSON;
   };
 
   const displayCovariates = () => {
