@@ -15,7 +15,7 @@ const JobDetails = () => {
     return res.json();
   };
 
-  const { data, status } = useQuery('user', fetchData);
+  const { data, status } = useQuery('jobDetails', fetchData);
 
   if (status === 'error') {
     return <LoadingErrorMessage message='Error getting job details' />;
@@ -27,7 +27,8 @@ const JobDetails = () => {
       </div>
     );
   }
-  if (!data) {
+
+  if (!data || data.length === 0 || data.error) {
     return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
   }
 
@@ -73,6 +74,7 @@ const JobDetails = () => {
 
   return (
     <section className='job-details'>
+      {JSON.stringify(data)}
       <h2 className='job-details-title'>{data.wf_name}</h2>
       <div className='GWASResults-flex-col job-details-table'>
         <div className='GWASResults-flex-row'>
