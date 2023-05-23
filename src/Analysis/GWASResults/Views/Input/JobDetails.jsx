@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
+import isJsonString from '../../Utils/IsJsonString';
 import SharedContext from '../../Utils/SharedContext';
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
@@ -37,10 +38,19 @@ const JobDetails = () => {
     return datum?.value || 'Data not found';
   };
 
-  const getPhenotype = () =>
-    JSON.parse(getParameterData('outcome'))?.concept_name ||
-    JSON.parse(getParameterData('outcome'))?.provided_name ||
-    'Data not found';
+  const getPhenotype = () => {
+    if (
+      getParameterData('outcome') &&
+      isJsonString(getParameterData('outcome'))
+    ) {
+      console.log('here');
+      return (
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
+      );
+    }
+    return 'Data not found';
+  };
 
   const processCovariates = () => {
     const input = JSON.stringify(getParameterData('variables'));
@@ -51,8 +61,11 @@ const JobDetails = () => {
     );
     const strToRemove = '\\"';
     covariatesString = covariatesString.replaceAll(strToRemove, '"');
-    const covariatesJSON = JSON.parse(covariatesString);
-    return covariatesJSON;
+    if (isJsonString(covariatesString)) {
+      const covariatesJSON = JSON.parse(covariatesString);
+      return covariatesJSON;
+    }
+    return false;
   };
 
   const displayCovariates = () => {
@@ -74,7 +87,6 @@ const JobDetails = () => {
 
   return (
     <section className='job-details'>
-      {JSON.stringify(data)}
       <h2 className='job-details-title'>{data.wf_name}</h2>
       <div className='GWASResults-flex-col job-details-table'>
         <div className='GWASResults-flex-row'>

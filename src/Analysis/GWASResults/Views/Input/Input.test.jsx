@@ -1,8 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { render, screen } from '@testing-library/react';
 import SharedContext from '../../Utils/SharedContext';
-import { render } from '@testing-library/react';
 import Input from './Input';
 
 const setCurrentView = () => 'arbitrary function';
@@ -30,10 +30,10 @@ const inputWrapper = () => (
 describe('Input', () => {
   test('renders Input component', () => {
     // Render the Input component
-    const { getByText, getByTestId } = render(inputWrapper());
+    render(inputWrapper());
 
     // Assert that the DetailPageHeader component is rendered with the correct page title
-    const pageTitle = getByText('Input Details');
+    const pageTitle = screen.getByText('Input Details');
     expect(pageTitle).toBeInTheDocument();
   });
 });
