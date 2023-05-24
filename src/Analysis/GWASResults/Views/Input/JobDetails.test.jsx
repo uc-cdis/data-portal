@@ -25,7 +25,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -39,9 +39,9 @@ describe('Job Details', () => {
     const { container } = render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
-    expect(container.getElementsByClassName('ant-spin').length).toBe(1);
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('renders an error message when there is an error fetching data', async () => {
@@ -53,10 +53,11 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
+    await waitFor(() =>
+      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
     );
   });
 
@@ -68,7 +69,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
     await waitFor(() => {
