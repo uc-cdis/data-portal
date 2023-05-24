@@ -231,27 +231,24 @@ class Covid19Dashboard extends React.Component {
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
-            <TabPanel className='gen3-dashboard_panel'>
+            <TabPanel className='covid19-dashboard_panel'>
               <div className='gen3-dashboard_quicksight'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
                 { mapboxAPIToken
                   && (
-                    <div className="gen3-dashboard_container">
-                      <div className="gen3-dashboard_row">
-                        <div className="gen3-dashboard_col">
-                          <iframe className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/6652754a-1e60-4aaf-b160-1346cbc5fc66?directory_alias=gen3-dashboards">
-                          </iframe>
+                    <div className='gen3-dashboard_container'>
+                      <div className='gen3-dashboard_row'>
+                        <div className='gen3-dashboard_col'>
+                          <iframe className='gen3-dashboard_frame' src='https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/6652754a-1e60-4aaf-b160-1346cbc5fc66?directory_alias=gen3-dashboards' />
                         </div>
                       </div>
-                      <div className="gen3-dashboard_row">
-                        <div className="gen3-dashboard_col">
-                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/00227203-5da5-428f-b687-7bb27acd2a99?directory_alias=gen3-dashboards">
-                          </iframe>
+                      <div className='gen3-dashboard_row'>
+                        <div className='gen3-dashboard_col'>
+                          <iframe className='gen3-dashboard_frame' src='https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/00227203-5da5-428f-b687-7bb27acd2a99?directory_alias=gen3-dashboards' />
                         </div>
-                        <div className="gen3-dashboard_col">
-                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/3e6cb492-9541-4fec-b440-913135971b4d?directory_alias=gen3-dashboards">
-                          </iframe>
+                        <div className='gen3-dashboard_col'>
+                          <iframe className='gen3-dashboard_frame' src='https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/3e6cb492-9541-4fec-b440-913135971b4d?directory_alias=gen3-dashboards' />
                         </div>
                       </div>
                     </div>

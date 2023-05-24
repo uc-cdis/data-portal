@@ -82,11 +82,15 @@ function buildConfig(opts) {
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const peregrineVersionPath = `${hostname}api/search/_version`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobAPIPath = `${hostname}job/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
-  const coreMetadataPath = `${hostname}coremetadata/`;
+
+  const coreMetadataPath = `${hostname}api/search/coremetadata/`;
+  const coreMetadataLegacyPath = `${hostname}coremetadata/`;
+
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
 
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
@@ -305,7 +309,7 @@ function buildConfig(opts) {
     studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
+    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
   }
   if (!studyRegistrationConfig.dataDictionaryField) {
     studyRegistrationConfig.dataDictionaryField = '';
@@ -491,10 +495,12 @@ function buildConfig(opts) {
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    coreMetadataLegacyPath,
     indexdPath,
     cohortMiddlewarePath,
     gwasWorkflowPath,
     graphqlPath,
+    peregrineVersionPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
