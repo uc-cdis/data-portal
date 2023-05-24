@@ -4,7 +4,10 @@ import { rest } from 'msw';
 import SharedContext from '../../Utils/SharedContext';
 import Results from './Results';
 import imageFile from '../../TestData/dummy_result1.png'; // not a Manhattan plot...but will do for now
-import WorkflowStatusResponse from '../../TestData/WorkflowDetails';
+import manhattanPheWebJsonFile from '../../TestData/ManhattanPlotTestData.json';
+import WorkflowStatusResponse from '../../TestData/WorkflowDetailsOnlyPng';
+import WorkflowStatusResponse2 from '../../TestData/WorkflowDetailsPngAndPheWebJson';
+
 
 export default {
   title: 'Tests2/GWASResults/Views/Results',
@@ -15,6 +18,7 @@ const selectedRowData1 = { name: 'Test Name', uid: '123456' };
 const selectedRowData2 = { name: 'Test_Name2', uid: '7891011' };
 const selectedRowData3 = { name: 'Test_Name3', uid: '999111' };
 const selectedRowData4 = { name: 'Test_Name4', uid: '999222' };
+const selectedRowData5 = { name: 'Test Name5', uid: '123456789' };
 
 
 const setCurrentView = (input) => {
@@ -73,6 +77,48 @@ MockedSuccess.parameters = {
   },
 };
 
+export const MockedSuccess2 = MockTemplate.bind({});
+MockedSuccess2.args = selectedRowData5;
+MockedSuccess2.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
+        (req, res, ctx) => {
+          const { argowrapperpath, workflowname } = req.params;
+          console.log(argowrapperpath);
+          console.log(workflowname);
+          return res(
+            ctx.delay(500),
+            ctx.json(WorkflowStatusResponse2)
+          );
+        }
+      ),
+      rest.get(
+        'http://:server/user/data/download/:index_did',
+        (req, res, ctx) => {
+          const { index_did } = req.params;
+          console.log(index_did);
+          return res(
+            ctx.delay(500),
+            ctx.json({"url": index_did === '222-8888-7777-bbbb123456-777777' ? "https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json?X-Amz-Algorithm=AWS4-ETC" : "manhattanPheWebJsonFile.zip"}) // note: the .json and .zip here are fake urls
+          );
+        }
+      ),
+      rest.get(
+        'https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json',
+        (req, res, ctx) => {
+          const { index_did } = req.params;
+          console.log(index_did);
+          return res(
+            ctx.delay(500),
+            ctx.json(manhattanPheWebJsonFile)
+          );
+        }
+      ),
+    ],
+  },
+};
 
 export const MockedError = MockTemplate.bind({});
 MockedError.args = selectedRowData2;
