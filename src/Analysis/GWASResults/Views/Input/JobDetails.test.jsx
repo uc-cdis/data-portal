@@ -36,7 +36,7 @@ describe('Job Details', () => {
       data: null,
     });
 
-    const { container } = render(
+    render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
       </SharedContext.Provider>
