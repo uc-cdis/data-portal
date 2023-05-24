@@ -40,12 +40,12 @@ const JobDetails = () => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome') &&
-      IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome')
+      && IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name ||
-        JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name
+        || JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     return 'Data not found';
@@ -56,7 +56,7 @@ const JobDetails = () => {
     let covariatesString = input.replaceAll('\\n', '');
     covariatesString = covariatesString.substring(
       1,
-      covariatesString.length - 1
+      covariatesString.length - 1,
     );
     const strToRemove = '\\"';
     covariatesString = covariatesString.replaceAll(strToRemove, '"');

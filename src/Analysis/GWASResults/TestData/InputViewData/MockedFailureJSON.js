@@ -13,7 +13,7 @@ const MockedFailureJSON = {
         name: 'outcome',
         value: null,
       },
-      { name: 'hare_population', value: 'non-Hispanic Black' },
+      { name: 'hare_population', value: null },
       { name: 'hare_concept_id', default: '2000007027', value: '2000007027' },
       { name: 'maf_threshold', value: null },
       { name: 'imputation_score_cutoff', value: null },
