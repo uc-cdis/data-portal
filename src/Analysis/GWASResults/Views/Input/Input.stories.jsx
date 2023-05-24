@@ -54,7 +54,7 @@ const MockTemplateSuccess = () => {
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
         value={{
-          selectedRowData: { ...selectedRowData, phase: 'Succeeded' },
+          selectedRowData: selectedRowData,
           setCurrentView,
         }}
       >

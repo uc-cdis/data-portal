@@ -29,10 +29,7 @@ const inputWrapper = () => (
 
 describe('Input', () => {
   test('renders Input component', () => {
-    // Render the Input component
     render(inputWrapper());
-
-    // Assert that the DetailPageHeader component is rendered with the correct page title
     const pageTitle = screen.getByText('Input Details');
     expect(pageTitle).toBeInTheDocument();
   });

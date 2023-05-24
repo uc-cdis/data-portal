@@ -5,12 +5,14 @@
   border-radius: 8px;
   margin: 20px auto;
 }
+
 .job-details h2 {
   color: #2e77b8;
   font-size: 14px;
   padding: 10px 16px;
   border-bottom: 1px solid #e9e9ea;
 }
+
 .job-details-table {
   padding: 16px;
 }
@@ -21,10 +23,12 @@
   background-color: #cfdbe6;
   border: none;
 }
+
 .job-details .GWASResults-flex-row {
   justify-content: space-between;
   margin: 2px 0;
 }
+
 .job-details .GWASResults-flex-row div:first-child {
   font-weight: bold;
 }
