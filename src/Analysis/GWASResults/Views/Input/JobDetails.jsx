@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
-import isJsonString from '../../Utils/IsJsonString';
+import IsJsonString from '../../Utils/IsJsonString';
 import SharedContext from '../../Utils/SharedContext';
 import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
 
@@ -41,7 +41,7 @@ const JobDetails = () => {
   const getPhenotype = () => {
     if (
       getParameterData('outcome') &&
-      isJsonString(getParameterData('outcome'))
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
         JSON.parse(getParameterData('outcome'))?.concept_name ||
@@ -60,7 +60,7 @@ const JobDetails = () => {
     );
     const strToRemove = '\\"';
     covariatesString = covariatesString.replaceAll(strToRemove, '"');
-    if (isJsonString(covariatesString)) {
+    if (IsJsonString(covariatesString)) {
       const covariatesJSON = JSON.parse(covariatesString);
       return covariatesJSON;
     }
