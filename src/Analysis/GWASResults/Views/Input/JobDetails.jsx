@@ -43,7 +43,6 @@ const JobDetails = () => {
       getParameterData('outcome') &&
       isJsonString(getParameterData('outcome'))
     ) {
-      console.log('here');
       return (
         JSON.parse(getParameterData('outcome'))?.concept_name ||
         JSON.parse(getParameterData('outcome'))?.provided_name
@@ -86,7 +85,7 @@ const JobDetails = () => {
   };
 
   return (
-    <section className='job-details'>
+    <section data-testid='job-details' className='job-details'>
       <h2 className='job-details-title'>{data.wf_name}</h2>
       <div className='GWASResults-flex-col job-details-table'>
         <div className='GWASResults-flex-row'>
