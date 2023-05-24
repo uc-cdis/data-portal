@@ -23,7 +23,7 @@ const JobDetails = () => {
   }
   if (status === 'loading') {
     return (
-      <div className='spinner-container'>
+      <div className='spinner-container' data-testid='spinner'>
         <Spin />
       </div>
     );
