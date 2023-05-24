@@ -26,8 +26,6 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  console.log("metadataResponse: ", metadataResponse);
-
   commons.forEach((commonsName) => {
     const studies = metadataResponse[commonsName];
 
