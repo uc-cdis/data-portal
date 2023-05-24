@@ -97,7 +97,7 @@
     "showdown": "^1.9.0",
     "string-similarity": "^3.0.0",
     "style-loader": "^0.21.0",
-    "styled-components": "^5.0.0",
+    "styled-components": "^5.3.7",
     "viz.js": "2.0.0"
   },
   "devDependencies": {
