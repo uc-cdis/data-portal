@@ -2,16 +2,50 @@ import { headers } from '../../../configs';
 import { gwasWorkflowPath } from '../../../localconf';
 import { getPresignedUrl } from '../../AnalysisJob';
 
+export const getWorkflowDetails = async (
+  workflowName,
+  workflowUid,
+) => {
+  // query argo-wrapper endpoint to get the list of artifacts produced by the workflow:
+  const endPoint = `${gwasWorkflowPath}status/${workflowName}?uid=${workflowUid}`;
+  const response = await fetch(endPoint, { headers })
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+const getDataFromUrl = async (
+  url,
+) => {
+  const response = await fetch(url, { headers })
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+export const getDataForWorkflowArtifact = async (
+  workflowName,
+  workflowUid,
+  artifactName,
+) => {
+  const url = await fetchPresignedUrlForWorkflowArtifact( workflowName,
+    workflowUid,
+    artifactName)
+  const result = await getDataFromUrl(url);
+  return result;
+}
+
 export const fetchPresignedUrlForWorkflowArtifact = async (
   workflowName,
   workflowUid,
   artifactName,
 ) => {
   // query argo-wrapper endpoint to get the list of artifacts produced by the workflow:
-  const endPoint = `${gwasWorkflowPath}status/${workflowName}?uid=${workflowUid}`;
-  const response = await fetch(endPoint, { headers })
-    .then((res) => res.json())
-    .then((data) => data);
+  const response = await getWorkflowDetails(workflowName, workflowUid);
   if (!response) {
     throw new Error('Error while querying workflow artifacts');
   }

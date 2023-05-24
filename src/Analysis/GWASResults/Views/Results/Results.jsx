@@ -5,34 +5,25 @@ import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader
 import SharedContext from '../../Utils/SharedContext';
 import {
   fetchPresignedUrlForWorkflowArtifact,
+  getWorkflowDetails,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
+import ResultsPheWeb from './ResultsPheWeb';
+import ResultsPng from './ResultsPng';
 
 const Results = () => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageLoadFailed, setImageLoadFailed] = useState(false);
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
-    ['fetchPresignedUrlForWorkflowArtifact', name, uid, 'manhattan_plot_index'],
-    () => fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
+    ['getWorkflowDetails', name, uid],
+    () => getWorkflowDetails(name, uid),
     queryConfig,
   );
 
   const downloadAll = () => {
     fetchPresignedUrlForWorkflowArtifact(name, uid, 'gwas_archive_index')
-      .then((res) => {
-        window.open(res, '_blank');
-      })
-      .catch((error) => {
-        alert(`Could not download. \n\n${error}`);
-      });
-  };
-
-  const downloadManhattanPlot = () => {
-    fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index')
       .then((res) => {
         window.open(res, '_blank');
       })
@@ -51,20 +42,14 @@ const Results = () => {
           <Button onClick={downloadAll}>Download All Results</Button>
         </div>
       </div>
-      <div className='GWASResults-flex-row section-header'>
-        <div className='GWASResults-flex-col qq-plot-button'>
-          <Button>View QQ Plot</Button>
-        </div>
-        <Button onClick={downloadManhattanPlot}>View Image in New Tab</Button>
-      </div>
-    </section>
+     </section>
   );
 
   if (status === 'error') {
     return (
       <React.Fragment>
         {displayTopSection()}
-        <LoadingErrorMessage message='Error getting Manhattan plot' />
+        <LoadingErrorMessage message='Error getting workflow details' />
       </React.Fragment>
     );
   }
@@ -73,7 +58,7 @@ const Results = () => {
       <React.Fragment>
         {displayTopSection()}
         <div className='spinner-container'>
-          Fetching Manhattan plot... <Spin />
+          Fetching workflow details... <Spin />
         </div>
       </React.Fragment>
     );
@@ -83,24 +68,29 @@ const Results = () => {
     return (
       <React.Fragment>
         {displayTopSection()}
-        <LoadingErrorMessage message='Failed to load image, no image path' />
+        <LoadingErrorMessage message='Workflow details empty/not found' />
       </React.Fragment>
     );
   }
 
-  const displaySpinnerWhileImageLoadsOrErrorIfItFails = () => {
-    if (imageLoadFailed) {
+  const displayManhattanPlot = () => {
+    // Try the pheweb option first:
+    let results = data.outputs.parameters.filter((entry) => entry.name === 'pheweb_json_index');
+    if (results.length !=0 ) {
       return (
-        <LoadingErrorMessage message='Failed to load image, invalid image path' />
+        <ResultsPheWeb/>
       );
     }
-    if (imageLoaded) {
-      return '';
+    // If no pheweb json file, try to see if there is a PNG Manhattan plot:
+    results = data.outputs.parameters.filter((entry) => entry.name === 'manhattan_plot_index');
+    if (results.length !=0 ) {
+      return (
+        <ResultsPng />
+      );
     }
+    // If none of the above, show error:
     return (
-      <div className='spinner-container'>
-        Loading... <Spin />
-      </div>
+      <LoadingErrorMessage message='Failed to load Manhattan Plot: no plot data available for this workflow' />
     );
   };
 
@@ -108,21 +98,7 @@ const Results = () => {
     <div className='results-view'>
       {displayTopSection()}
       <section className='data-viz'>
-        {!imageLoadFailed && (
-          <Tooltip title='Right click and select “Save Image As” to download'>
-            <img
-              src={data}
-              alt='Manhattan plot'
-              onLoad={() => {
-                setImageLoaded(true);
-              }}
-              onError={() => {
-                setImageLoadFailed(true);
-              }}
-            />
-          </Tooltip>
-        )}
-        {displaySpinnerWhileImageLoadsOrErrorIfItFails()}
+        {displayManhattanPlot()}
       </section>
     </div>
   );
