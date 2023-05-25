@@ -11,9 +11,8 @@ import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
-import GWASWorkflowList from './GWASResults/GWASWorkflowList';
 import GWASContainer from './GWASApp/GWASContainer';
-import GWASResultsContainer from './GWASResultsV2/GWASResultsContainer';
+import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 
 const queryClient = new QueryClient();
 
@@ -115,12 +114,6 @@ class AnalysisApp extends React.Component {
         </React.Fragment>
       );
     case 'GWASResults':
-      return (
-        <div className='analysis-app_flex_row'>
-          <GWASWorkflowList refetchInterval={5000} />
-        </div>
-      );
-    case 'GWASResultsV2':
       return (
         <div className='analysis-app_flex_row'>
           <GWASResultsContainer />

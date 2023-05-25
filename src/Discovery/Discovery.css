@@ -441,6 +441,10 @@
   font-weight: 700;
 }
 
+.discovery-modal__request-button {
+  width: unset;
+}
+
 .discovery-modal__header-text {
   margin: 6px;
 }
