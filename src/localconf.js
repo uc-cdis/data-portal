@@ -21,15 +21,16 @@ function buildConfig(opts) {
     protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
     hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    hostnameWithSubdomain: hostnameValue,
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
+    gwasWorkflowURL: process.env.GWAS_WORKFLOW_URL,
     arboristURL: process.env.ARBORIST_URL,
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     requestorURL: process.env.REQUESTOR_URL,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
@@ -54,15 +55,16 @@ function buildConfig(opts) {
     protocol,
     hostnameOnly,
     hostname,
+    hostnameWithSubdomain,
     fenceURL,
     indexdURL,
     cohortMiddlewareURL,
+    gwasWorkflowURL,
     arboristURL,
     wtsURL,
     workspaceURL,
     manifestServiceURL,
     requestorURL,
-    gaDebug,
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
@@ -77,18 +79,25 @@ function buildConfig(opts) {
     u.search = '';
     return u.href;
   }
-
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const peregrineVersionPath = `${hostname}api/search/_version`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobAPIPath = `${hostname}job/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
-  const coreMetadataPath = `${hostname}coremetadata/`;
+
+  const coreMetadataPath = `${hostname}api/search/coremetadata/`;
+  const coreMetadataLegacyPath = `${hostname}coremetadata/`;
+
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
+  const gwasWorkflowPath = typeof gwasWorkflowURL === 'undefined' ? `${hostname}ga4gh/wes/v2/` : ensureTrailingSlash(gwasWorkflowURL);
+
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
+  const wtsAggregateAuthzPath = `${hostname}wts/aggregate/authz/mapping`;
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userAPIPath}login/google?redirect=`,
@@ -103,6 +112,7 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
+  const Error403Url = '/403error';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
@@ -157,7 +167,7 @@ function buildConfig(opts) {
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     studyViewerConfig.forEach((cfg, i) => {
       if (cfg.openMode
-      && !validOpenOptions.includes(cfg.openMode)) {
+        && !validOpenOptions.includes(cfg.openMode)) {
         studyViewerConfig[i].openMode = 'open-all';
       }
     });
@@ -199,16 +209,25 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL, gaTrackingId } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
     showSystemUse = true;
   }
+  let showSystemUseOnlyOnLogin = false;
+  if (components.systemUse && components.systemUse.showOnlyOnLogin) {
+    showSystemUseOnlyOnLogin = true;
+  }
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
+  }
+
+  let gwasTemplate = 'gwas-template-latest';
+  if (config.argoTemplate) {
+    gwasTemplate = config.argoTemplate;
   }
 
   let showFenceAuthzOnProfile = true;
@@ -234,6 +253,11 @@ function buildConfig(opts) {
   let terraExportWarning;
   if (config.terraExportWarning) {
     terraExportWarning = config.terraExportWarning;
+  }
+
+  let homepageChartNodesExcludeFiles = false;
+  if (components.index.homepageChartNodesExcludeFiles) {
+    homepageChartNodesExcludeFiles = components.index.homepageChartNodesExcludeFiles;
   }
 
   let homepageChartNodesChunkSize = 15;
@@ -272,21 +296,29 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  const { registrationConfigs } = config;
+  const studyRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? (registrationConfigs.features.studyRegistrationConfig || {}) : {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
-    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
   }
   if (!studyRegistrationConfig.studyRegistrationValidationField) {
-    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered';
   }
   if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
-    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
+  }
+  if (!studyRegistrationConfig.dataDictionaryField) {
+    studyRegistrationConfig.dataDictionaryField = '';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
+  const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? registrationConfigs.features.workspaceRegistrationConfig : null;
+  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -402,18 +434,18 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASApp':
-          analysisApps.GWASApp = {
-            title: 'GWAS',
-            description: 'GWAS App',
+        case 'GWASUIApp':
+          analysisApps.GWASUIApp = {
+            title: 'Gen3 GWAS',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
-        case 'GWASUIApp':
-          analysisApps.GWASUIApp = {
-            title: 'GWAS UI',
-            description: 'Advanced GWAS UI',
-            image: '/src/img/analysis-icons/gwas.svg',
+        case 'GWASResults':
+          analysisApps.GWASResults = {
+            title: 'GWAS Results',
+            description: 'Use this App to view status & results of submitted workflows',
+            image: '/src/img/analysis-icons/gwasResults.svg',
           };
           break;
         default:
@@ -452,18 +484,23 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
+    gwasTemplate,
     dev,
     hostname,
-    gaDebug,
+    hostnameWithSubdomain,
+    gaTrackingId,
     userAPIPath,
     jobAPIPath,
     apiPath,
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    coreMetadataLegacyPath,
     indexdPath,
     cohortMiddlewarePath,
+    gwasWorkflowPath,
     graphqlPath,
+    peregrineVersionPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
@@ -488,6 +525,7 @@ function buildConfig(opts) {
     stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
+    homepageChartNodesExcludeFiles,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
@@ -498,6 +536,7 @@ function buildConfig(opts) {
     guppyDownloadUrl,
     manifestServiceApiPath,
     wtsPath,
+    wtsAggregateAuthzPath,
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
@@ -524,6 +563,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    kayakoConfig,
     studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
@@ -531,6 +571,7 @@ function buildConfig(opts) {
     workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
+    workspaceRegistrationConfig,
     workspaceStorageUrl,
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
@@ -545,6 +586,8 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    showSystemUseOnlyOnLogin,
+    Error403Url,
   };
 }
 

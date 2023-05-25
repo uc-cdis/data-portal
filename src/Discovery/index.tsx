@@ -5,13 +5,50 @@ import _ from 'lodash';
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { discoveryConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
+import {
+  hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI,
+} from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 import loadStudiesFromMDS from './MDSUtils';
 
+const populateStudiesWithConfigInfo = (studies, config) => {
+  if (!config.studies) {
+    return;
+  }
+
+  const studyMatchesStudyConfig = (study, studyConfig) => {
+    const fieldToMatch = Object.keys(studyConfig.match)[0];
+    if (study[fieldToMatch] !== undefined) {
+      const valueToMatch = Object.values(studyConfig.match)[0];
+      if (study[fieldToMatch] === valueToMatch) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const populateStudy = (study, studyConfig) => {
+    studyConfig.fieldsToValues.forEach((fieldToValue) => {
+      const [field, value] = Object.entries(fieldToValue)[0];
+      study[field] = value; // eslint-disable-line no-param-reassign
+    });
+  };
+
+  let studyConfig;
+  studies.forEach((study) => {
+    for (let i = 0; i < config.studies.length; i += 1) {
+      studyConfig = config.studies[i];
+      if (studyMatchesStudyConfig(study, studyConfig) === true) {
+        populateStudy(study, studyConfig);
+        break;
+      }
+    }
+  });
+};
+
 const DiscoveryWithMDSBackend: React.FC<{
-    userAuthMapping: any,
+    userAggregateAuthMappings: any,
     config: DiscoveryConfig,
     awaitingDownload: boolean,
     selectedResources,
@@ -58,20 +95,32 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
+        const { supportedValues } = props.config.features.authorization;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+          if (supportedValues?.pending?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (study[authzField] === undefined || study[authzField] === '') {
+          } else if (supportedValues?.notAvailable?.enabled && !study[authzField]) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
-            accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping)
-              ? AccessLevel.ACCESSIBLE
-              : AccessLevel.UNACCESSIBLE;
+            let authMapping;
+            if (isEnabled('discoveryUseAggWTS')) {
+              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)] || {};
+            } else {
+              authMapping = props.userAuthMapping;
+            }
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
+            if (supportedValues?.accessible?.enabled && isAuthorized === true) {
+              accessible = AccessLevel.ACCESSIBLE;
+            } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {
+              accessible = AccessLevel.UNACCESSIBLE;
+            } else {
+              accessible = AccessLevel.OTHER;
+            }
           }
           return {
             ...study,
@@ -82,6 +131,8 @@ const DiscoveryWithMDSBackend: React.FC<{
       } else {
         studiesToSet = rawStudies;
       }
+
+      populateStudiesWithConfigInfo(studiesToSet, props.config);
       setStudies(studiesToSet);
 
       // resume action in progress if redirected from login
@@ -102,7 +153,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props]);
+  }, []);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
@@ -119,6 +170,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
 const mapStateToProps = (state) => ({
   userAuthMapping: state.userAuthMapping,
+  userAggregateAuthMappings: state.userAggregateAuthMappings,
   config: discoveryConfig,
   ...state.discovery,
 });

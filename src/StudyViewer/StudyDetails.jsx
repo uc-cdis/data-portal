@@ -330,7 +330,7 @@ class StudyDetails extends React.Component {
            {(requestAccessConfig) ? (
              <Modal
                title='Request Access'
-               visible={this.state.redirectModalVisible}
+               open={this.state.redirectModalVisible}
                closable={false}
                onCancel={this.handleRedirectModalCancel}
                footer={[
@@ -353,7 +353,7 @@ class StudyDetails extends React.Component {
            ) : null}
            <Modal
              title='Download Files'
-             visible={this.state.downloadModalVisible}
+             open={this.state.downloadModalVisible}
              closable={false}
              onCancel={this.handleDownloadModalCancel}
              footer={[
@@ -382,7 +382,12 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested
+           {this.requestAccessButtonVisible
+            && (!userHasLoggedIn
+              || (this.props.data.requiredIdpField
+              && this.props.data.requiredIdpField !== this.props.user?.idp)
+            )
+            && !this.state.accessRequested
              ? (
                <Alert
                  message={loginAlertMessage}

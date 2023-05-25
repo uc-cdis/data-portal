@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Empty, Tag, Tooltip } from 'antd';
+import React, { useState } from 'react';
+import {
+  Table, Empty, Tag, Tooltip,
+} from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
@@ -16,8 +18,6 @@ interface Props {
   setModalData: (boolean) => void;
   selectedResources: any[];
   selectedTags: any [];
-  advSearchFilterHeight: string | number;
-  setAdvSearchFilterHeight: (any) => void;
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
   onTagsSelected: (selectedTags: any) => any;
 }
@@ -27,12 +27,6 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
   const [onHeightChange, setOnHeightChange] = useState(true);
 
-  useEffect(() => {
-    if (document.getElementById('discovery-table-of-records')
-    && props.advSearchFilterHeight !== document.getElementById('discovery-table-of-records').offsetHeight) {
-      props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
-    }
-  });
   const scroll = (
     props.config.tableScrollHeight
       ? { scroll: { y: props.config.tableScrollHeight } } : {}

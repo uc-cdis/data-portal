@@ -79,6 +79,15 @@ const userAuthMapping = (state = {}, action) => {
   }
 };
 
+const userAggregateAuthMappings = (state = {}, action) => {
+  switch (action.type) {
+  case 'RECEIVE_AGGREGATE_USER_AUTH_MAPPINGS':
+    return { ...state, ...action.data };
+  default:
+    return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -110,6 +119,7 @@ const reducers = combineReducers({
   ddgraph,
   userAccess,
   userAuthMapping,
+  userAggregateAuthMappings,
   discovery,
 });
 

@@ -1,0 +1,26 @@
+.results-view {
+  width: 100%;
+}
+
+.results-view .loading {
+  text-align: center;
+}
+
+section.results-top button:not(.return-home-button) {
+  float: right;
+  margin-right: 8px;
+}
+
+section.results-top .qq-plot-button button {
+  margin-left: 8px;
+  display: none;
+}
+
+section.data-viz {
+  width: 100%;
+  text-align: center;
+}
+
+.data-viz img {
+  width: 100%;
+}

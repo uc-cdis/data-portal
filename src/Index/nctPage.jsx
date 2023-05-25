@@ -73,11 +73,10 @@ class IndexPageComponent extends React.Component {
       });
     }
 
-    // indexChartNames and chartNames has to > 1 in here since by default we push in 'Files' as chart if there is less than 4 chart fields
-    // FIXME: remove this fix once we get rid of the pushing 'Files' into charts by default logic
-    if ((homepageChartNodes && homepageChartNodes.length > 0)
-    || (components.charts && components.charts.indexChartNames && components.charts.indexChartNames.length > 1)
-    || (components.charts && components.charts.chartNames && components.charts.chartNames.length > 1)
+    // if any of these charts exist
+    if ((homepageChartNodes?.length)
+    || (components?.charts?.indexChartNames?.length)
+    || (components?.charts?.chartNames?.length)
     ) {
       homepageCharts.push(<div key={homepageCharts.length} className='index-page__slider-chart'><ReduxIndexBarChart /></div>);
     }
@@ -94,7 +93,7 @@ class IndexPageComponent extends React.Component {
                 {homepageCharts}
               </Carousel>
             </MediaQuery>
-            <div className='emailSignUpForm'>
+            <div className='nct-right-box emailSignUpForm'>
               <h2>Sign Up For Updates</h2>
               <form
                 action='https://public.govdelivery.com/accounts/USNIAID/subscribers/qualify'
@@ -113,6 +112,10 @@ class IndexPageComponent extends React.Component {
                   Submit
                 </Button>
               </form>
+            </div>
+            <div className='high-light nct-right-box'>
+              <p><strong>Data Sharing and Submission</strong></p>
+              <p>If you are interested in making your data available via this platform, please <a href={`mailto:${components.login.email}`}>contact us.</a></p>
             </div>
           </div>
         </div>

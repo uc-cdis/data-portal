@@ -1,29 +1,36 @@
 @import '~@gen3/ui-component/dist/css/base.less';
 
+.lock-scroll {
+  overflow: hidden;
+}
+
 #popup {
   width: 100%;
+  max-height: 100%;
   position: absolute;
   z-index: 100;
 }
 
 .popup__mask {
   z-index: 100;
-  position: fixed;
+  position: absolute;
   overflow-y: scroll;
   top: 0;
-  width: 100%;
-  height: 100%;
   left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
   background: rgba(223, 223, 223, 0.47);
-  padding-top: 10em;
+  padding-top: 4em;
+  padding-bottom: 4em;
 }
 
 .popup__box {
-  width: 50%;
+  width: 70%;
+  max-height: 100%;
   overflow-y: scroll;
   background: white;
   margin: auto;
-  overflow: hidden;
   border-radius: 8px;
   border: 1px solid @light_gray;
 }
@@ -35,6 +42,8 @@
 }
 
 .popup__title {
+  position: sticky;
+  top: 0;
   width: 100%;
   height: 70px;
   line-height: 70px;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
@@ -11,9 +12,9 @@ import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import isEnabled from '../helpers/featureFlags';
 import {
   workspaceUrl,
-  wtsPath,
   externalLoginOptionsUrl,
   workspaceOptionsUrl,
   workspaceLaunchUrl,
@@ -25,6 +26,7 @@ import {
   workspacePageDescription,
   stridesPortalURL,
   showExternalLoginsOnProfile,
+  workspaceErrorUrl,
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -39,6 +41,7 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
+import { initWorkspaceRefreshToken } from './WorkspaceRefreshToken';
 
 const { Step } = Steps;
 const { Panel } = Collapse;
@@ -54,7 +57,7 @@ class Workspace extends React.Component {
       interval: null,
       payModelInterval: null,
       workspaceID: null,
-      defaultWorkspace: false,
+      hasWorkspaceAccess: true,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
       payModel: {},
@@ -70,19 +73,15 @@ class Workspace extends React.Component {
   }
 
   componentDidMount() {
-    fetchWithCreds({
-      path: `${wtsPath}connected`,
-      method: 'GET',
-    })
-      .then(
-        ({ status }) => {
-          if (status !== 200) {
-            window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
-          } else {
-            this.connected();
-          }
-        },
-      );
+    // Check if workspaceTokenServiceRefreshTokenAtLogin is NOT set.
+    // Because if is already enabled, then an extra refresh is not
+    // really needed, since it has already happened at login, so just call the callback:
+    if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+      const redirectLocation = { from: `${window.location.pathname}` };
+      initWorkspaceRefreshToken(redirectLocation, this.connected);
+    } else {
+      this.connected();
+    }
   }
 
   componentWillUnmount() {
@@ -124,7 +123,7 @@ class Workspace extends React.Component {
         });
         this.setState({ options: sortedResults });
       },
-    ).catch(() => this.setState({ defaultWorkspace: true }));
+    ).catch(() => this.setState({ hasWorkspaceAccess: false }));
   }
 
   getExternalLoginOptions = () => {
@@ -348,7 +347,7 @@ class Workspace extends React.Component {
         payModel: data,
       });
     });
-    if (!this.state.defaultWorkspace) {
+    if (this.state.hasWorkspaceAccess) {
       this.getWorkspaceStatus().then((data) => {
         if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
           this.checkWorkspaceStatus();
@@ -432,6 +431,10 @@ class Workspace extends React.Component {
   }
 
   handleMenuClick = async (e) => {
+    if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
+      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@datacommons.io with questions.');
+      return;
+    }
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
       method: 'POST',
@@ -492,9 +495,9 @@ class Workspace extends React.Component {
               <Menu.Item
                 key={i}
                 id={option.bmh_workspace_id}
-                icon={<UserOutlined />}
+                icon={option.request_status === 'active' ? <UserOutlined /> : <ExclamationCircleOutlined />}
               >
-                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)}`}
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)} \t ${option.request_status ? `(${option.request_status})` : ''}`}
               </Menu.Item>
             ))
           ) : null
@@ -502,20 +505,20 @@ class Workspace extends React.Component {
       </Menu>
     );
 
-    if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
+    if (this.state.connectedStatus && this.state.workspaceStatus && this.state.hasWorkspaceAccess) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
-
+      const isPayModelAboveLimit = this.state.payModel.current_pay_model?.request_status === 'above limit';
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
           {
             (Object.keys(this.state.payModel).length > 0) ? (
-              <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
+              <Collapse defaultActiveKey={['1']} className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='Account Information' key='1'>
                   <Row gutter={{
                     xs: 8, sm: 16, md: 24, lg: 32,
@@ -528,7 +531,7 @@ class Workspace extends React.Component {
                           ? (
                             <a href={stridesPortalURL} target='_blank' rel='noreferrer'>
                               <Space>
-                                Apply for an account
+                                Workspace Account Manager
                                 <Tooltip title='This link is external'>
                                   <FontAwesomeIcon
                                     icon={'external-link-alt'}
@@ -569,12 +572,12 @@ class Workspace extends React.Component {
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Total Charges (USD)'>
-                        <Statistic value={this.state.payModel.current_pay_model?.['total-usage'] || 'N/A'} precision={2} />
+                        <Statistic value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['total-usage'])) ? 'N/A' : this.state.payModel.current_pay_model?.['total-usage']} precision={2} />
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Spending Limit (USD)'>
-                        <Statistic precision={2} value={this.state.payModel.current_pay_model?.['hard-limit'] || 'N/A'} />
+                        <Statistic precision={2} value={Number.isNaN(Number.parseFloat(this.state.payModel.current_pay_model?.['hard-limit'])) ? 'N/A' : this.state.payModel.current_pay_model?.['hard-limit']} />
                       </Card>
                     </Col>
                   </Row>
@@ -687,10 +690,20 @@ class Workspace extends React.Component {
                       <Alert
                         description={
                           showExternalLoginsOnProfile
-                            ? 'Please link account to additional data resources on the Profile Page'
+                            ? 'To analyze all data to which you have access, please authorize external data resources in the Profile page.'
                             : 'Please link account to additional data resources at the bottom of the page'
                         }
                         type='info'
+                        banner
+                        closable
+                      />
+                    )
+                    : null}
+                  {isPayModelAboveLimit
+                    ? (
+                      <Alert
+                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
+                        type='error'
                         banner
                         closable
                       />
@@ -711,8 +724,9 @@ class Workspace extends React.Component {
                             onClick={() => this.launchWorkspace(option)}
                             isPending={this.state.workspaceID === option.id}
                             isDisabled={
-                              !!this.state.workspaceID
-                              && this.state.workspaceID !== option.id
+                              (!!this.state.workspaceID
+                              && this.state.workspaceID !== option.id)
+                              || isPayModelAboveLimit
                             }
                           />
                         );
@@ -733,20 +747,12 @@ class Workspace extends React.Component {
           }
         </div>
       );
-    } if (this.state.defaultWorkspace && this.state.connectedStatus) {
-      // If this commons does not use Hatchery to spawn workspaces, then this
-      // default workspace is shown.
-      return (
-        <div className='workspace__default'>
-          <iframe
-            title='Workspace'
-            frameBorder='0'
-            className='workspace__iframe'
-            src={workspaceUrl}
-            onLoad={this.oniframeLoad}
-          />
-        </div>
-      );
+    } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
+      if (isEnabled('workspaceRegistration')) {
+        console.log('This is navigated to workspace register page');
+        return <Redirect to='/workspace/request-access' />;
+      }
+      return <Redirect to={workspaceErrorUrl} />;
     }
     return <Spinner />;
   }
