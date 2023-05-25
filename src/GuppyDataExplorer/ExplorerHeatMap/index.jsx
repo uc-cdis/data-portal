@@ -137,11 +137,6 @@ class ExplorerHeatMap extends React.Component {
   });
 
   render() {
-    // check for data, stop if no data or data loading
-    if (this.props.rawData.length === 0
-      || this.props.aggsDataIsLoading) {
-      return null;
-    }
     // y axis items name mapping
     const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields,
@@ -205,7 +200,6 @@ ExplorerHeatMap.propTypes = {
   mainYAxisVar: PropTypes.string.isRequired,
   isLocked: PropTypes.bool,
   lockMessage: PropTypes.string.isRequired,
-  aggsDataIsLoading: PropTypes.bool,
 };
 
 ExplorerHeatMap.defaultProps = {
@@ -213,7 +207,6 @@ ExplorerHeatMap.defaultProps = {
   filter: {},
   guppyConfig: {},
   isLocked: false,
-  aggsDataIsLoading: true,
 };
 
 export default ExplorerHeatMap;
