@@ -154,7 +154,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         };
     }
 
-    window.addEventListener('load', function() {
+    {
         const svg_width = document.getElementById('manhattan_plot_container').offsetWidth;
         const svg_height = 550;
         const plot_margin = {
@@ -442,7 +442,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         }
         pp3();
 
-    });
+    }
 }
 
 
@@ -461,7 +461,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
         maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i]; // eslint-disable-line no-param-reassign
     });
 
-    window.addEventListener('load', function() {
+    {
         const exp_max = d3.max(maf_ranges, function(maf_range) {
             return maf_range.qq.max_exp_qval;
         });
@@ -605,7 +605,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
                                    plot_margin.left + plot_width / 2,
                                    plot_margin.top + plot_height + 40))
             .text('expected -log\u2081\u2080(p)');
-    });
+    }
 }
 
 export { create_gwas_plot, create_qq_plot };
