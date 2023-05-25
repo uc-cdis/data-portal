@@ -50,21 +50,13 @@ const JobDetails = () => {
     }
     /* eslint-disable-next-line no-console */
     console.error('Data not found or not in expected JSON format');
-    return 'Data not found or not in expected JSON format';
+    return 'Data not found';
   };
 
   const processCovariates = () => {
-    const input = JSON.stringify(getParameterData('variables'));
-    let covariatesString = input.replaceAll('\\n', '');
-    covariatesString = covariatesString.substring(
-      1,
-      covariatesString.length - 1
-    );
-    const strToRemove = '\\"';
-    covariatesString = covariatesString.replaceAll(strToRemove, '"');
-    if (IsJsonString(covariatesString)) {
-      const covariatesJSON = JSON.parse(covariatesString);
-      return covariatesJSON;
+    const variablesData = getParameterData('variables');
+    if (IsJsonString(variablesData)) {
+      return JSON.parse(variablesData);
     }
     return false;
   };
