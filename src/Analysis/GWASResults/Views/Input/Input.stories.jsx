@@ -34,22 +34,7 @@ const selectedRowData = {
 
 const { name, uid } = selectedRowData;
 
-const MockTemplateFailure = () => {
-  return (
-    <QueryClientProvider client={mockedQueryClient}>
-      <SharedContext.Provider
-        value={{
-          selectedRowData,
-          setCurrentView,
-        }}
-      >
-        <Input />
-      </SharedContext.Provider>
-    </QueryClientProvider>
-  );
-};
-
-const MockTemplateSuccess = () => {
+const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
@@ -64,7 +49,7 @@ const MockTemplateSuccess = () => {
   );
 };
 
-export const MockedFailure = MockTemplateFailure.bind({});
+export const MockedFailure = MockTemplate.bind({});
 MockedFailure.parameters = {
   msw: {
     handlers: [
@@ -79,7 +64,7 @@ MockedFailure.parameters = {
   },
 };
 
-export const MockedSuccess = MockTemplateSuccess.bind({});
+export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
@@ -94,7 +79,7 @@ MockedSuccess.parameters = {
   },
 };
 
-export const MockedErrorObject = MockTemplateFailure.bind({});
+export const MockedErrorObject = MockTemplate.bind({});
 MockedErrorObject.parameters = {
   msw: {
     handlers: [
@@ -112,7 +97,7 @@ MockedErrorObject.parameters = {
     ],
   },
 };
-export const MockedError403Response = MockTemplateFailure.bind({});
+export const MockedError403Response = MockTemplate.bind({});
 MockedError403Response.parameters = {
   msw: {
     handlers: [
