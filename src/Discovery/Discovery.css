@@ -573,6 +573,7 @@
 
 .discovery-modal__field {
   display: flex;
+  white-space: pre-wrap;
   justify-content: space-between;
   padding: 2px 0;
 }
