@@ -13,35 +13,28 @@ const Home = () => {
     const getWorkflows = await fetch(workflowsEndpoint);
     return getWorkflows.json();
   }
-  const GWASWorkflows = () => {
-    const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
-      refetchInterval,
-    });
-    if (status === 'loading') {
-      return (
-        <React.Fragment>
-          <div className='spinner-container'>
-            <Spin />
-          </div>
-        </React.Fragment>
-      );
-    }
-    if (status === 'error') {
-      return (
-        <LoadingErrorMessage />
-      );
-    }
+
+  const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
+    refetchInterval,
+  });
+  if (status === 'loading') {
     return (
       <React.Fragment>
-        <HomeTable data={data} />
+        <div className='spinner-container'>
+          <Spin /> Retrieving the list of workflows.
+          <br />
+          Please wait...
+        </div>
       </React.Fragment>
     );
-  };
-
+  }
+  if (status === 'error') {
+    return <LoadingErrorMessage />;
+  }
   return (
-    <div>
-      <GWASWorkflows />
-    </div>
+    <React.Fragment>
+      <HomeTable data={data} />
+    </React.Fragment>
   );
 };
 export default Home;
