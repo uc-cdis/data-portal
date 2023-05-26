@@ -480,7 +480,6 @@ Below is an example, with inline comments describing what each JSON block config
           "pending": {...},
           "notAvailable": {...}
         }
-       }
       },
       "tagsColumn" : {
         "enabled": true // toggles if tags should be rendered in a column
