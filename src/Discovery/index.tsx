@@ -6,22 +6,21 @@ import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from '
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI
+  hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 import loadStudiesFromMDS from './MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
-
   if (!config.studies) {
     return;
   }
 
   const studyMatchesStudyConfig = (study, studyConfig) => {
-    let fieldToMatch = Object.keys(studyConfig.match)[0];
+    const fieldToMatch = Object.keys(studyConfig.match)[0];
     if (study[fieldToMatch] !== undefined) {
-      let valueToMatch = Object.values(studyConfig.match)[0];
+      const valueToMatch = Object.values(studyConfig.match)[0];
       if (study[fieldToMatch] === valueToMatch) {
         return true;
       }
@@ -96,31 +95,30 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
-        const supportedValues = props.config.features.authorization.supportedValues;
+        const { supportedValues } = props.config.features.authorization;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (supportedValues.pending.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+          if (supportedValues?.pending?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (supportedValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
+          } else if (supportedValues?.notAvailable?.enabled && !study[authzField]) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             let authMapping;
             if (isEnabled('discoveryUseAggWTS')) {
-              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)];
+              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)] || {};
             } else {
               authMapping = props.userAuthMapping;
             }
-            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping)
-            if (supportedValues.accessible.enabled && isAuthorized === true) {
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
+            if (supportedValues?.accessible?.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
-            } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
+            } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
-            }
-            else {
+            } else {
               accessible = AccessLevel.OTHER;
             }
           }
@@ -155,7 +153,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props]);
+  }, []);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {

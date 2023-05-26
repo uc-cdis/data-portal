@@ -38,6 +38,8 @@ export interface DiscoveryConfig {
             }
         },
         authorization: {
+            columnTooltip: string
+            supportedValues: any
             enabled: boolean,
             // requestAccess: { // not supported
             //     enabled: boolean,
@@ -60,9 +62,9 @@ export interface DiscoveryConfig {
         advSearchFilters?: {
             enabled: boolean,
             field: string,
+            displayName?: string,
             filters: {
                 key: string
-                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
                 keyDisplayName?: string
                 valueDisplayNames?: {
                     [value: string]: string

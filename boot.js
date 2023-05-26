@@ -1,5 +1,7 @@
 (function () {
   const basename = document.currentScript.getAttribute('basename');
+  const cssVersion = document.currentScript.getAttribute('cssVersion');
+  // eslint-disable-next-line no-restricted-globals
   const { pathname } = location;
   const isDevMode = !!pathname.match(/^.*(\/dev\.html)/);
   let buildSrc = '/bundle.js';
@@ -18,7 +20,7 @@
   scriptNode.type = 'text/javascript';
   document.body.appendChild(scriptNode);
   // create theme override node in body
-  const themeOverridesSrc = (basename && basename !== '/') ? `${basename}/src/css/themeoverrides.css` : '/src/css/themeoverrides.css';
+  const themeOverridesSrc = (basename && basename !== '/') ? `${basename}/src/css/themeoverrides.css?_=${cssVersion}` : `/src/css/themeoverrides.css?_=${cssVersion}`;
   let linkNode = document.createElement('link');
   linkNode.href = themeOverridesSrc;
   linkNode.type = 'text/css';
@@ -26,7 +28,7 @@
   linkNode.rel = 'stylesheet';
   document.body.appendChild(linkNode);
   // create local theme override node in body
-  const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css` : 'https://localhost:9443/src/css/themeoverrides.css';
+  const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css?_=${cssVersion}` : `https://localhost:9443/src/css/themeoverrides.css?_=${cssVersion}`;
   linkNode = document.createElement('link');
   linkNode.href = localThemeOverridesSrc;
   linkNode.type = 'text/css';

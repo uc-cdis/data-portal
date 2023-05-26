@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { fetchWithCreds } from '../actions';
-import { homepageChartNodes, homepageChartNodesChunkSize, datasetUrl } from '../localconf';
+import {
+  homepageChartNodes, homepageChartNodesChunkSize, homepageChartNodesExcludeFiles, datasetUrl,
+} from '../localconf';
 import getReduxStore from '../reduxStore';
 import getHomepageChartProjectsList from './relayer';
 
@@ -78,7 +80,7 @@ export const mergeChunkedChartData = (chartDataArray) => {
   return mergedChartData;
 };
 
-// loadHomepageChartdataFromDatasets queries Peregrine's /datasets endpoint for
+// loadHomepageChartDataFromDatasets queries Peregrine's /datasets endpoint for
 // summary data (counts of projects, counts of subjects, etc).
 // If `public_datasets` is enabled in Peregrine's config, the /datasets endpoint
 // is publicly available, and can be accessed by logged-out users. Otherwise, the
@@ -93,7 +95,10 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
   const store = await getReduxStore();
   const fileNodes = store.getState().submission.file_nodes;
   const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
-  const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
+  let nodesToRequest = nodesForIndexChart;
+  if (!homepageChartNodesExcludeFiles) {
+    nodesToRequest = _.union(fileNodes, nodesForIndexChart);
+  }
   const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest, homepageChartNodesChunkSize);
 
   const fullResultPromise = [];
