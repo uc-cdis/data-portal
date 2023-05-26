@@ -46,7 +46,7 @@ class ExplorerHeatMap extends React.Component {
       data.forEach((details) => {
         const xIndex = details.key;
         const fieldNameToCount = details.termsFields.reduce((res, x) => {
-          res[x.field] = x.terms.reduce((total, e) => total + e.count, 0);
+          res[x.field] = x.count;
           return res;
         }, {});
 
