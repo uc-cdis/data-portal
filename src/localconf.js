@@ -31,7 +31,6 @@ function buildConfig(opts) {
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     requestorURL: process.env.REQUESTOR_URL,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
@@ -66,7 +65,6 @@ function buildConfig(opts) {
     workspaceURL,
     manifestServiceURL,
     requestorURL,
-    gaDebug,
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
@@ -84,11 +82,15 @@ function buildConfig(opts) {
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
+  const peregrineVersionPath = `${hostname}api/search/_version`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobAPIPath = `${hostname}job/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
-  const coreMetadataPath = `${hostname}coremetadata/`;
+
+  const coreMetadataPath = `${hostname}api/search/coremetadata/`;
+  const coreMetadataLegacyPath = `${hostname}coremetadata/`;
+
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
 
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
@@ -165,7 +167,7 @@ function buildConfig(opts) {
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     studyViewerConfig.forEach((cfg, i) => {
       if (cfg.openMode
-      && !validOpenOptions.includes(cfg.openMode)) {
+        && !validOpenOptions.includes(cfg.openMode)) {
         studyViewerConfig[i].openMode = 'open-all';
       }
     });
@@ -207,11 +209,15 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL, gaTrackingId } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
     showSystemUse = true;
+  }
+  let showSystemUseOnlyOnLogin = false;
+  if (components.systemUse && components.systemUse.showOnlyOnLogin) {
+    showSystemUseOnlyOnLogin = true;
   }
 
   let showArboristAuthzOnProfile = false;
@@ -247,6 +253,11 @@ function buildConfig(opts) {
   let terraExportWarning;
   if (config.terraExportWarning) {
     terraExportWarning = config.terraExportWarning;
+  }
+
+  let homepageChartNodesExcludeFiles = false;
+  if (components.index.homepageChartNodesExcludeFiles) {
+    homepageChartNodesExcludeFiles = components.index.homepageChartNodesExcludeFiles;
   }
 
   let homepageChartNodesChunkSize = 15;
@@ -298,7 +309,10 @@ function buildConfig(opts) {
     studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
+    studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
+  }
+  if (!studyRegistrationConfig.dataDictionaryField) {
+    studyRegistrationConfig.dataDictionaryField = '';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -474,17 +488,19 @@ function buildConfig(opts) {
     dev,
     hostname,
     hostnameWithSubdomain,
-    gaDebug,
+    gaTrackingId,
     userAPIPath,
     jobAPIPath,
     apiPath,
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    coreMetadataLegacyPath,
     indexdPath,
     cohortMiddlewarePath,
     gwasWorkflowPath,
     graphqlPath,
+    peregrineVersionPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
@@ -509,6 +525,7 @@ function buildConfig(opts) {
     stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
+    homepageChartNodesExcludeFiles,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
@@ -569,6 +586,7 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    showSystemUseOnlyOnLogin,
     Error403Url,
   };
 }

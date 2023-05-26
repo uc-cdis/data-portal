@@ -687,25 +687,37 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       } else {
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
+        // Setting downloadingInProgress of manifest to true as a trick such that the button's isPending
+        // state is set to true while the manifest is being counted. This is because we want the button to show
+        // the spinner instead of the download icon while the counting is in progress.
         this.setState({
-          manifestEntryCount: 0,
+          manifestEntryCount: 0, downloadingInProgress: { manifest: true }, toasterOpen: false,
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
-          let caseIDList = caseIDResult.map((i) => i[caseField]);
-          caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
           if (!fileType) {
             throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
           }
-          const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-            [caseFieldInFileIndex]: {
-              selectedValues: caseIDList,
-            },
-          });
-          this.setState({
-            manifestEntryCount: countResult,
-          });
+          if (this.props.guppyConfig.manifestMapping.useFilterForCounts) {
+            const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType,
+              this.props.filter,
+            );
+            this.setState({
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
+            });
+          } else {
+            let caseIDList = caseIDResult.map((i) => i[caseField]);
+            caseIDList = _.uniq(caseIDList);
+            const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
+              [caseFieldInFileIndex]: {
+                selectedValues: caseIDList,
+              },
+            });
+            this.setState({
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
+            });
+          }
         } else {
           throw Error('Error when downloading data');
         }

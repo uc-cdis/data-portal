@@ -13,7 +13,6 @@ import {
 import { ThemeProvider } from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
 
@@ -28,12 +27,12 @@ import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import {
-  basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
+  basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
   ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
-import { gaTracking, components } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { components } from './params';
+import { GAInit, GARouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
@@ -50,9 +49,6 @@ workspaceSessionMonitor.start();
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
-
-  ReactGA.initialize(gaTracking);
-  ReactGA.pageview(window.location.pathname + window.location.search);
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
@@ -94,7 +90,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {(GAInit(gaTrackingId)) && <GARouteTracker />}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (

@@ -1,4 +1,4 @@
-import { mdsURL } from '../localconf';
+import { mdsURL, studyRegistrationConfig } from '../localconf';
 
 const LIMIT = 1000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
@@ -21,7 +21,14 @@ const loadStudiesFromMDS = async (_config, guidType = 'discovery_metadata') => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry) => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).map((entry) => {
+        const study = { ...entry[STUDY_DATA_FIELD] };
+        // copy VLMD info if exists
+        if (studyRegistrationConfig?.dataDictionaryField && entry[studyRegistrationConfig.dataDictionaryField]) {
+          study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
+        }
+        return study;
+      });
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {

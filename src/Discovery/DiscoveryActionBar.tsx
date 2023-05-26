@@ -48,6 +48,7 @@ interface Props {
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
+  disableFilterButton: boolean;
   user: User,
   discovery: {
     actionToResume: 'download'|'export'|'manifest';
@@ -94,8 +95,8 @@ const checkFederatedLoginStatus = async (
     const { providers } = data;
     const unauthenticatedProviders = providers.filter((provider) => !provider.refresh_token_expiration);
 
-    const guidsForHostnameResolution = [];
-    const guidPrefixes = [];
+    const guidsForHostnameResolution:any = [];
+    const guidPrefixes:any = [];
     selectedResources.forEach(
       (selectedResource) => {
         (selectedResource[manifestFieldName] || []).forEach(
@@ -201,8 +202,10 @@ const checkDownloadStatus = (
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               try {
-                /* eslint-disable no-new */
-                new URL(output);
+                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                if (!new RegExp(regexp).test(output)) {
+                  throw new Error('Invalid download URL');
+                }
                 setDownloadStatus({
                   inProgress: false,
                   message: {
@@ -248,7 +251,7 @@ const checkDownloadStatus = (
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
-  selectedStudies: any[],
+  selectedResources: any[],
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
@@ -258,13 +261,14 @@ const handleDownloadZipClick = async (
   const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
 
   if (config.features.exportToWorkspace.verifyExternalLogins) {
+    const { manifestFieldName } = config.features.exportToWorkspace;
     const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
     }
   }
 
-  const studyIDs = selectedResources.map((study) => study.project_number);
+  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -298,7 +302,7 @@ const handleDownloadZipClick = async (
   ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = async (config: DiscoveryConfig, selectedStudies: any[]) => {
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
@@ -431,7 +435,7 @@ const DiscoveryActionBar = (props: Props) => {
         },
       );
     },
-    [],
+    [props.discovery.selectedResources],
   );
 
   useEffect(
@@ -463,7 +467,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
@@ -529,7 +533,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          visible={downloadStatus.message.active}
+          open={downloadStatus.message.active}
           title={downloadStatus.message.title}
           footer={(
             <Button
@@ -641,9 +645,10 @@ const DiscoveryActionBar = (props: Props) => {
             <Button
               className='discovery-adv-filter-button'
               onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+              disabled={props.disableFilterButton}
               type='text'
             >
-          ADVANCED SEARCH
+              {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}
               { props.filtersVisible
                 ? <LeftOutlined />
                 : <RightOutlined />}
