@@ -467,7 +467,7 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "authorization": {
         "enabled": true, // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
-        "columnTooltip": "Filter by data access", // new in data portal 4.0.0, this is to clarify availability versus accessibility using tooltip
+        "columnTooltip": "Filter by data access", // no default; this is to clarify availability versus accessibility using tooltip
         "supportedValues": { // no default; should be configured if `authorization.enabled=true`
           "accessible": {
             "enabled": true,
@@ -503,7 +503,7 @@ Below is an example, with inline comments describing what each JSON block config
     "tagSelector": {
       "title": "Associated tags organized by category"
     },
-    "studies": [ // new in data-portal 4.0.0, this configures addition of tutorial nbs to specific studies. Shown here in BRH example. For HEAL, set to []
+    "studies": [ // optional, this configures addition of tutorial nbs to specific studies. Shown here in BRH example. For HEAL, set to []
       {
         "match": {
           "short_name": "Methodology and Advanced Analytics Resource Center"
@@ -520,6 +520,7 @@ Below is an example, with inline comments describing what each JSON block config
           }
         ]
       },
+    ],
     "studyColumns": [ // configures the columns of the table of studies.
       {
         "name": "Study Name",
