@@ -1,4 +1,19 @@
-# Guide to running portal locally with a custom portal config
+# Guide to running data-portal locally
+
+This guide describes how to test data-portal code changes or configuration changes locally.
+
+## Instructions for internal or external use
+
+1. Your Data Commons should be running and accessible, with a running `data-portal` pod.
+2. Clone the `data-portal` repo and `cd` to it.
+3. Run `npm ci`.
+4. Create a `config.json` file at `data/config`. Write your data-portal configuration in it (what would be in your `gitops.json` file for deployment).
+5. Run `HOSTNAME=<URL to your Data Commons portal, without the protocol> APP=config NODE_ENV=dev bash ./runWebpack.sh`.
+6. Go to `<URL to your Data Commons>/dev.html`.
+7. If the page does not load, go to https://localhost:9443/bundle.js and accept the warning about certificates.
+8. That's it! Local file changes are reflected automatically. Configuration file changes require reruning the command on step #5.
+
+## Detailed instructions for internal use
 
 This guide shows you how to test a portal config (aka `gitops.json` file) locally, so that you don't have to wait until the new `gitops.json` file is uploaded to GitHub and merged to see if your changes will break everything!
 
@@ -7,7 +22,7 @@ Assuming you want to edit the `gitops.json` file for `preprod.healdata.org`:
 (Before you start make sure that [preprod.healdata.org](http://preprod.healdata.org) is up and running!)
 
 1. Make sure that you have `git` [https://git-scm.com/book/en/v2/Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), `node.js` and `npm` [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) all installed.
-    1. To test if `npm` and `node` are working: open a terminal window and type `npm -v`. If you see something like `4.2.0` you're good, if you see something like `command not found: npm` and you're sure you installed Node and npm, you may need to restart your terminal for it to work, or you could have a problem with your path: [https://stackoverflow.com/questions/27864040/fixing-npm-path-in-windows-8-and-10](https://stackoverflow.com/questions/27864040/fixing-npm-path-in-windows-8-and-10). 
+    1. To test if `npm` and `node` are working: open a terminal window and type `npm -v`. If you see something like `4.2.0` you're good, if you see something like `command not found: npm` and you're sure you installed Node and npm, you may need to restart your terminal for it to work, or you could have a problem with your path: [https://stackoverflow.com/questions/27864040/fixing-npm-path-in-windows-8-and-10](https://stackoverflow.com/questions/27864040/fixing-npm-path-in-windows-8-and-10).
 2. Make a folder called `uc-cdis` and open a terminal window to it. [https://www.groovypost.com/howto/open-command-window-terminal-window-specific-folder-windows-mac-linux/](https://www.groovypost.com/howto/open-command-window-terminal-window-specific-folder-windows-mac-linux/)
 3. Download the `cdis-manifest` GitHub repo to the `uc-cdis` folder. In your terminal, which is open to the `uc-cdis` folder, type:
 
@@ -33,13 +48,16 @@ Assuming you want to edit the `gitops.json` file for `preprod.healdata.org`:
     git clone https://github.com/uc-cdis/data-portal
     ```
 
-5. Now navigate to the `data-portal` folder (`cd data-portal`) and run `npm install`. This command will probably take a few mins.
+5. Now navigate to the `data-portal` folder (`cd data-portal`) and run `npm ci`. This command will probably take a few mins.
     1. There may be some errors that show up — if they look like this: `rc-steps@4.1.3 requires a peer of react@>=16.9.0 but none is installed. You must install peer dependencies yourself.` then that's ok
-6. Once the `npm install` command finishes, follow these instructions to run portal locally: [https://github.com/uc-cdis/data-portal#local-development-and-devhtml](https://github.com/uc-cdis/data-portal#local-development-and-devhtml). Here's a tl;dr version:
+6. Once the `npm ci` command finishes, follow these instructions to run portal locally: [https://github.com/uc-cdis/data-portal#local-development-and-devhtml](https://github.com/uc-cdis/data-portal#local-development-and-devhtml). Here's a tl;dr version:
     1. In the terminal, in the data-portal folder, type `HOSTNAME=preprod.healdata.org NODE_ENV=auto bash ./runWebpack.sh`. This will start the local version of portal, it could take a minute or two to compile. Once you see a message that says: `ℹ ｢wdm｣: Compiled with warnings.`you're good!
-    2. Open a browser and go to [`https://localhost:9443/bundle.js`](https://localhost:9443/bundle.js)and accept the warning about certificates. (May be hidden under a small button saying `advanced`.) If it works, you should see a bunch of code appear. You should only need to do this once every few weeks.
+        1. :information_source: For Gen3 environments with customized basename, you need to set the `BASENAME` env var as well during this step, for example: `HOSTNAME=preprod.healdata.org NODE_ENV=auto BASENAME=/portal bash ./runWebpack.sh`
+    2. Open a browser and go to [https://localhost:9443/bundle.js](https://localhost:9443/bundle.js) and accept the warning about certificates. (May be hidden under a small button saying `advanced`.) If it works, you should see a bunch of code appear. You should only need to do this once every few weeks.
+        1. :information_source: If you ran the command in step 1 with customized basename, you need to go to [https://localhost:9443/portal/bundle.js](https://localhost:9443/portal/bundle.js)
     3. Go to [https://preprod.healdata.org/dev.html](https://preprod.healdata.org/dev.html). You should see the good old HEAL preprod page — but this one is coming from INSIDE the computer!
-    4. Now, go back to your terminal and hit Ctrl+C to cancel your local portal. This should stop the [runWebpack.sh](http://runwebpack.sh) job that's been running. We'll start it again soon.
+        1. :information_source: If you ran the command in step 1 with customized basename, now you should include that basename as part of the URL to dev server, for example: [https://preprod.healdata.org/portal/dev.html](https://preprod.healdata.org/portal/dev.html)
+    4. Now, go back to your terminal and hit Ctrl+C to cancel your local portal. This should stop the `runWebpack.sh` job that's been running. We'll start it again soon.
 
 7. Now, if you edit the `uc-cdis/cdis-manifest/preprod.healdata.org/portal/gitops.json` file and save it, and then go back and run step 6 again, **your local copy of portal will run with the edited version of the gitops.json file**. So if you e.g. tweak the Discovery page config in your local version of gitops.json and then **restart** your local portal using step 6, you'll see your changes when you go to https://preprod.healdata.org/dev.html.
     1. If you see an error like this when you try to start your local portal again, this means that another local portal is still running! Make sure you cancel (Ctrl+C) any other `HOSTNAME=preprod.healdata.org NODE_ENV=auto bash ./runWebpack.sh` jobs that are still running.

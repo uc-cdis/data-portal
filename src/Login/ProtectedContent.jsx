@@ -1,13 +1,20 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchProjects } from '../actions';
+import {
+  fetchUser,
+  fetchProjects,
+  displaySystemUseNotice,
+} from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import ReduxSystemUseWarningPopup from '../Popup/SystemUseWarningPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
+import isEnabled from '../helpers/featureFlags';
+import { initWorkspaceRefreshToken } from '../Workspace/WorkspaceRefreshToken';
 
 let lastAuthMs = 0;
 
@@ -22,8 +29,8 @@ let lastAuthMs = 0;
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       authenticated: false,
       dataLoaded: false,
@@ -38,52 +45,63 @@ class ProtectedContent extends React.Component {
    * in the various ways we want it to be.
    */
   componentDidMount() {
-    getReduxStore().then(
-      (store) => Promise.all(
-        [
-          store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-          store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-        ],
-      ).then(
-        () => this.checkLoginStatus(store, this.state)
-          .then((newState) => this.props.public || this.checkQuizStatus(newState))
-          .then((newState) => this.props.public || this.checkApiToken(store, newState)),
-      ).then(
-        (newState) => {
-          const filterPromise = (!this.props.public && newState.authenticated
-              && typeof this.props.filter === 'function')
-            ? this.props.filter()
-            : Promise.resolve('ok');
-            // finally update the component state
-          const finish = () => {
-            const latestState = { ...newState };
-            latestState.dataLoaded = true;
-            this.setState(latestState);
-          };
-          return filterPromise.then(
-            finish, finish,
-          );
-        },
-      ),
-    );
-    if (this.props.public) {
-      getReduxStore().then(
-        (store) => {
-          const filterPromise = (
-            typeof this.props.filter === 'function')
-            ? this.props.filter()
-            : Promise.resolve('ok');
-          // finally update the component state
-          const finish = () => {
-            const latestState = { ...store };
-            latestState.dataLoaded = true;
-            this.setState(latestState);
-          };
-          return filterPromise.then(
-            finish, finish,
-          );
-        },
+    getReduxStore()
+      .then(
+        (store) => Promise.all(
+          [
+            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+          ],
+        )
+          .then(
+            () => this.checkLoginStatus(store, this.state)
+              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
+              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
+          ).then(
+            (newState) => this.checkUseWarning(store, newState), // check for existence of cookie to popup Use Warning
+          )
+          .then(
+            (newState) => {
+              const filterPromise = (!this.props.public && newState.authenticated
+                && typeof this.props.filter === 'function')
+                ? this.props.filter()
+                : Promise.resolve('ok');
+              // finally update the component state
+              const finish = () => {
+                const latestState = { ...newState };
+                latestState.dataLoaded = true;
+                this.setState(latestState);
+                if (newState.authenticated && isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+                  // initialize WTS:
+                  const { location } = this.props; // this is the react-router "location"
+                  initWorkspaceRefreshToken(location);
+                }
+              };
+              return filterPromise.then(
+                finish, finish,
+              );
+            },
+          ),
       );
+    if (this.props.public) {
+      getReduxStore()
+        .then(
+          (store) => {
+            const filterPromise = (
+              typeof this.props.filter === 'function')
+              ? this.props.filter()
+              : Promise.resolve('ok');
+            // finally update the component state
+            const finish = () => {
+              const latestState = { ...store };
+              latestState.dataLoaded = true;
+              this.setState(latestState);
+            };
+            return filterPromise.then(
+              finish, finish,
+            );
+          },
+        );
     }
   }
 
@@ -125,6 +143,12 @@ class ProtectedContent extends React.Component {
       );
   };
 
+  checkUseWarning = (store, initialState) => {
+    const newState = { ...initialState };
+    store.dispatch(displaySystemUseNotice(initialState.authenticated));
+    return newState;
+  };
+
   /**
    * Filter refreshes the gdc-api token (acquired via oauth with user-api) if necessary.
    * @method checkApiToken
@@ -148,7 +172,8 @@ class ProtectedContent extends React.Component {
         if (projects) {
           // user already has a valid token
           return Promise.resolve(newState);
-        } if (info.status !== 403 || info.status !== 401) {
+        }
+        if (info.status !== 403 || info.status !== 401) {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
@@ -213,27 +238,40 @@ class ProtectedContent extends React.Component {
         }}
         />
       );
-    } if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
+    }
+
+    if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
+
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
-          <Component params={params} location={this.props.location} history={this.props.history} />
-        </div>
-      );
-    } if (!this.props.public && this.state.authenticated) {
-      return (
-        <div className={`protected-content ${pageFullWidthClassModifier}`}>
-          <ReduxAuthTimeoutPopup />
-          <Component params={params} location={this.props.location} history={this.props.history} />
-        </div>
-      );
-    } if (this.props.public && this.state.dataLoaded) {
-      return (
-        <div className={`protected-content ${pageFullWidthClassModifier}`}>
+          <ReduxSystemUseWarningPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
-    return (<div className={`protected-content ${pageFullWidthClassModifier}`}><Spinner /></div>);
+    if (!this.props.public && this.state.authenticated) {
+      return (
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
+          <ReduxSystemUseWarningPopup />
+          <ReduxAuthTimeoutPopup />
+          <Component params={params} location={this.props.location} history={this.props.history} />
+        </div>
+      );
+    }
+    if (this.props.public && this.state.dataLoaded) {
+      return (
+        <div className={`protected-content ${pageFullWidthClassModifier}`}>
+          <ReduxSystemUseWarningPopup />
+          <Component params={params} location={this.props.location} history={this.props.history} />
+        </div>
+      );
+    }
+    return (
+      <div className={`protected-content ${pageFullWidthClassModifier}`}>
+        <ReduxSystemUseWarningPopup />
+        <Spinner />
+      </div>
+    );
   }
 }
 

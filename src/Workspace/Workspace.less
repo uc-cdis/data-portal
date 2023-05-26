@@ -56,21 +56,36 @@ div.workspace--fullpage {
   width: 100%;
 }
 
+.workspace__pay-model {
+  margin: 20px 0 10px 0;
+}
+
+.workspace__pay-model-selector {
+  display: flex;
+  align-items: baseline;
+}
+
+.workspace__pay-model-selector-icon {
+  padding-left: 8px;
+}
+
+.workspace__pay-model-selector-icon__error {
+  color: var(--g3-color__rose);
+}
+
 .workspace__options {
-  padding: 20px 20px;
+  padding: 0 20px 20px 20px;
   display: flex;
   flex-flow: wrap;
 }
 
 .error-workspace-placeholder__error-msg {
-  position: absolute;
-  top: 0;
-  left: 0;
+  background: var(--g3-color__bg-cloud);
+  text-align: center;
   width: 100%;
   height: 100%;
-  background: var(--g3-color__bg-cloud);
-  z-index: 1;
-  text-align: center;
+  padding-top: 40px;
+  min-height: calc(100vh - 242px);
 }
 
 .workspace__spinner-container {
@@ -81,4 +96,8 @@ div.workspace--fullpage {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.workspace__spinner-container .ant-steps-item-title {
+  white-space: pre-wrap;
 }

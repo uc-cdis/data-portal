@@ -12,14 +12,18 @@ class Popup extends React.Component {
     // maintaining an accessible tab order (508 compliance)
     // Code inspired by: https://robinvdvleuten.nl/blog/trap-focus-in-a-react-component/
     const modal = document.getElementById('popup');
+    const html = document.getElementsByTagName('html')[0];
 
     this.focusTrap = createFocusTrap('#popup', {
       onActivate() {
         modal.classList.add('trap-is-active');
+        html.classList.add('lock-scroll');
       },
       onDeactivate() {
         modal.classList.remove('trap-is-active');
+        html.classList.remove('lock-scroll');
       },
+      initialFocus: false,
     });
 
     this.focusTrap.activate();
@@ -61,7 +65,7 @@ class Popup extends React.Component {
             }
           </div>
           <div className='popup__message'>
-            { this.props.message && <div className='high-light'>{this.props.message}</div> }
+            { this.props.message && <div className='high-light'>{this.props.message.map((text, i) => <p key={i}>{text}</p>)}</div> }
             {
               this.props.lines.length > 0
               && (
@@ -158,7 +162,7 @@ Popup.propTypes = {
     label: PropTypes.string,
     code: PropTypes.string,
   })),
-  message: PropTypes.string,
+  message: PropTypes.array,
   leftButtons: PropTypes.arrayOf(buttonType),
   rightButtons: PropTypes.arrayOf(buttonType),
   title: PropTypes.string,
@@ -170,7 +174,7 @@ Popup.defaultProps = {
   error: '',
   iconName: '',
   lines: [],
-  message: '',
+  message: [''],
   leftButtons: [],
   rightButtons: [],
   title: '',

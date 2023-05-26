@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userAPIPath, useArboristUI } from '../configs';
+import { userAPIPath, useArboristUI, indexdPath } from '../configs';
 import isEnabled from '../helpers/featureFlags';
 import { humanFileSize } from '../utils.js';
 
-import { userHasMethodForServiceOnProject } from '../authMappingUtils';
+import { userHasMethodForServiceOnResource, userHasMethodForServiceOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -25,6 +25,14 @@ function projectIsOpenData(projectAvail, projectID) {
 }
 
 class CoreMetadataHeader extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      downloadButton: null,
+      signedURLButton: null,
+    };
+  }
+
   onGenerateSignedURL = () => {
     this.props.onGenerateSignedURL(this.props.metadata.object_id);
   };
@@ -36,40 +44,69 @@ class CoreMetadataHeader extends Component {
 
   dateTransform = (date) => `Updated on ${date.substr(0, 10)}`;
 
+  // check if user has permision to download file
+  checkPermissions = () => {
+    // dont check more then once
+    if (this.state.downloadButton) {
+      return;
+    }
+    const { projectAvail } = this.props;
+    const projectId = this.props.metadata.project_id;
+    fetch(`${indexdPath}${this.props.metadata.object_id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        let userHasAccess = false;
+        if (data.authz && data.authz.length > 0) {
+          userHasAccess = data.authz.every((resource) => userHasMethodForServiceOnResource('read-storage', 'fence', resource, this.props.userAuthMapping));
+        } else {
+          // if no authz fall back to old verification method
+          userHasAccess = userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping);
+        }
+
+        if (
+          !useArboristUI
+          || userHasAccess
+          || projectIsOpenData(projectAvail, projectId)
+        ) {
+          const downloadLink = `${userAPIPath}data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+
+          this.setState({
+            downloadButton: (
+              <a href={downloadLink}>
+                <button className='button-primary-orange' type='button'>
+                  {DOWNLOAD_BTN_CAPTION}
+                </button>
+              </a>
+            ),
+          });
+
+          if (isEnabled('signedURLButton')) {
+            this.setState({
+              signedURLButton: (
+                <Button
+                  onClick={() => this.onGenerateSignedURL()}
+                  label={SIGNED_URL_BTN_CAPTION}
+                  className='core-metadata-page__column--right--signed-url-button'
+                  buttonType='primary'
+                />
+              ),
+            });
+          }
+        } else {
+          // set to empty so it wont check again
+          this.setState({
+            downloadButton: (<p className='h3-typo' id='no-permission'>You do not have permission to access the contents of this file.</p>),
+          });
+        }
+      });
+  }
+
   render() {
     if (this.props.metadata) {
-      const { projectAvail } = this.props;
-      const projectId = this.props.metadata.project_id;
-      let downloadButton = null;
-      let signedURLButton = null;
-
       // downloadButton should always render if useArboristUI false. Otherwise according to authz.
-      if (
-        !useArboristUI
-        || userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping)
-        || projectIsOpenData(projectAvail, projectId)
-      ) {
-        const downloadLink = `${userAPIPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
-        downloadButton = (
-          <a href={downloadLink}>
-            <button className='button-primary-orange' type='button'>
-              {DOWNLOAD_BTN_CAPTION}
-            </button>
-          </a>
-        );
-
-        if (isEnabled('signedURLButton')) {
-          signedURLButton = (
-            <Button
-              onClick={() => this.onGenerateSignedURL()}
-              label={SIGNED_URL_BTN_CAPTION}
-              className='core-metadata-page__column--right--signed-url-button'
-              buttonType='primary'
-            />
-          );
-        }
-      }
+      // check if user has permision to download file
+      this.checkPermissions();
 
       const propertiesList = [];
       if (this.props.metadata.data_format) {
@@ -94,13 +131,13 @@ class CoreMetadataHeader extends Component {
             {fileTypeTransform(this.props.metadata.type)}
           </p>
           <p className='body-typo'>{this.props.metadata.description}</p>
-          { downloadButton }
-          { signedURLButton }
+          { this.state.downloadButton }
+          { this.state.signedURLButton }
           {
             this.props.signedURLPopup === true
             && (
               <Popup
-                message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
+                message={(!this.props.error) ? [SIGNED_URL_MSG] : [SIGNED_URL_ERROR_MSG]}
                 error={this.props.error}
                 lines={(!this.props.error) ? [
                   { code: this.props.signedURL },

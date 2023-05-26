@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Empty } from 'antd';
+import React, { useState } from 'react';
+import {
+  Table, Empty, Tag, Tooltip,
+} from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
-import { AccessLevel } from './Discovery';
+import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
 
 interface Props {
   config: DiscoveryConfig;
-  studies: {__accessible: boolean, [any: string]: any}[];
+  studies: DiscoveryResource[];
   columns: [];
   visibleResources: any[];
   accessibleFieldName: string;
@@ -15,27 +17,25 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  setSelectedResources: (any) => void;
-  advSearchFilterHeight: string | number;
-  setAdvSearchFilterHeight: (any) => void;
+  selectedTags: any [];
+  onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
+  onTagsSelected: (selectedTags: any) => any;
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
-  const { searchTerm } = props;
+  const { searchTerm, config } = props;
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
   const [onHeightChange, setOnHeightChange] = useState(true);
 
-  useEffect(() => {
-    if (document.getElementById('discovery-table-of-records')
-    && props.advSearchFilterHeight !== document.getElementById('discovery-table-of-records').offsetHeight) {
-      props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
-    }
-  });
-
+  const scroll = (
+    props.config.tableScrollHeight
+      ? { scroll: { y: props.config.tableScrollHeight } } : {}
+  );
   return (
     <Table
+      {...scroll}
+      pagination={false} // handled in separate element
       loading={props.studies.length === 0}
-      width={'500px'}
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
       }}
@@ -52,9 +52,17 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
         ),
+        renderCell: (_checked, _record, _index, node) => (
+          <Tooltip
+            title={`Click to select item for ${(props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip) ? 'download or ' : ''}open in workspace`}
+            overlayStyle={{ maxWidth: '150px' }}
+          >
+            {node}
+          </Tooltip>
+        ),
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
-          props.setSelectedResources(selectedRows);
+          props.onResourcesSelected(selectedRows);
         },
         getCheckboxProps: (record) => {
           let disabled;
@@ -133,30 +141,78 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
             return value;
           };
           return (
-            <div
-              className='discovery-table__expanded-row-content'
-              role='button'
-              tabIndex={0}
-              onMouseEnter={(ev) => {
-                ev.stopPropagation();
-                setOnHoverRowIndex(index);
-              }}
-              onMouseLeave={(ev) => {
-                ev.stopPropagation();
-                setOnHoverRowIndex(null);
-              }}
-              onClick={() => {
-                props.setPermalinkCopied(false);
-                props.setModalData(record);
-                props.setModalVisible(true);
-              }}
-              onKeyPress={() => {
-                props.setPermalinkCopied(false);
-                props.setModalData(record);
-                props.setModalVisible(true);
-              }}
-            >
-              {renderValue(studyPreviewText)}
+            <div className='discovery-table__row-vertical-content'>
+              <div className='discovery-table__expanded-row-content'>
+                <div
+                  role='button'
+                  tabIndex={0}
+                  onMouseEnter={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(index);
+                  }}
+                  onMouseLeave={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(null);
+                  }}
+                  onClick={() => {
+                    props.setPermalinkCopied(false);
+                    props.setModalData(record);
+                    props.setModalVisible(true);
+                  }}
+                  onKeyPress={() => {
+                    props.setPermalinkCopied(false);
+                    props.setModalData(record);
+                    props.setModalVisible(true);
+                  }}
+                >
+                  {renderValue(studyPreviewText)}
+                </div>
+              </div>
+              { config.features.tagsInDescription?.enabled
+                ? (
+                  <div className='discovery-table__row-horizontal-content'>
+                    {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+                      const isSelected = !!props.selectedTags[name];
+                      const color = getTagColor(category, config);
+                      if (typeof name !== 'string') {
+                        return null;
+                      }
+                      return (
+                        <Tag
+                          key={record.name + name}
+                          role='button'
+                          tabIndex={0}
+                          aria-pressed={isSelected ? 'true' : 'false'}
+                          className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                          aria-label={name}
+                          style={{
+                            backgroundColor: isSelected ? color : 'initial',
+                            borderColor: color,
+                          }}
+                          onKeyPress={(ev) => {
+                            ev.stopPropagation();
+                            const selectedTags = {
+                              ...props.selectedTags,
+                              [name]: props.selectedTags[name] ? undefined : true,
+                            };
+                            props.onTagsSelected(selectedTags);
+                          }}
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            const selectedTags = {
+                              ...props.selectedTags,
+                              [name]: props.selectedTags[name] ? undefined : true,
+                            };
+                            props.onTagsSelected(selectedTags);
+                          }}
+                        >
+                          {name}
+                        </Tag>
+                      );
+                    })}
+                  </div>
+                )
+                : null}
             </div>
           );
         },

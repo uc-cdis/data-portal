@@ -27,10 +27,17 @@ import Spinner from '../../components/Spinner';
 // pull data from qa for everything that is not prod
 const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
 
-function filterCountyGeoJson(selectedFips) {
+function filterIllinoisCountiesGeoJson() {
   return {
     ...countyData,
-    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+  };
+}
+
+function filterModeledCountiesGeoJson(illinoisCountiesGeoJson, selectedFips) {
+  return {
+    ...illinoisCountiesGeoJson,
+    features: illinoisCountiesGeoJson.features.filter((f) => selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -60,14 +67,29 @@ class IllinoisMapChart extends React.Component {
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' }, */
-        V_time_data: { title: 'Vaccination Data' },
-        C_time_data: { title: 'Case Data' },
-        rnr_mobility_data: { title: 'Retail & Recreation' },
-        gnp_mobility_data: { title: 'Grocery & Pharmacy' },
-        prk_mobility_data: { title: 'Parks' },
-        trn_mobility_data: { title: 'Transit Stations' },
-        wrk_mobility_data: { title: 'Workplaces' },
-        res_mobility_data: { title: 'Residential' },
+        vaccination_layers: {
+          title: 'Vaccinations',
+          layers: {
+            V_time_data: { title: 'Vaccination Counts' },
+          },
+        },
+        case_layers: {
+          title: 'Cases & Deaths',
+          layers: {
+            C_time_data: { title: 'Case Counts' },
+          },
+        },
+        mobility_layers: {
+          title: 'Mobility',
+          layers: {
+            rnr_mobility_data: { title: 'Retail & Recreation' },
+            gnp_mobility_data: { title: 'Grocery & Pharmacy' },
+            prk_mobility_data: { title: 'Parks' },
+            trn_mobility_data: { title: 'Transit Stations' },
+            wrk_mobility_data: { title: 'Workplaces' },
+            res_mobility_data: { title: 'Residential' },
+          },
+        },
       },
       popup_data: {
         /*
@@ -92,16 +114,17 @@ class IllinoisMapChart extends React.Component {
       mapColors: null,
     };
     this.mapData = {
-      modeledCountyGeoJson: null,
+      illinoisCountiesGeoJson: null,
+      modeledCountiesGeoJson: null,
       colors: {},
       colorsAsList: null,
     };
   }
 
   componentDidUpdate() {
-    if (!this.state.time_data.fetchStatus && Object.entries(this.props.jsonByTime.il_county_list).length > 0) {
+    if (!this.state.time_data.fetchStatus && Object.entries(this.props.jsonByDate.il_county_list).length > 0) {
       const geoJson = this.addDataToGeoJsonBase(
-        this.props.jsonByTime.il_county_list,
+        this.props.jsonByDate.il_county_list,
         (data, location) => {
           const dateProps = {};
           Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
@@ -116,20 +139,24 @@ class IllinoisMapChart extends React.Component {
       this.setState({ // eslint-disable-line react/no-did-update-set-state, max-len
         time_data: {
           data: geoJson,
-          lastUpdated: this.props.jsonByTime.last_updated,
+          lastUpdated: this.props.jsonByDate.last_updated,
           fetchStatus: 'done',
         },
-        lastUpdated: this.props.jsonByTime.last_updated,
+        lastUpdated: this.props.jsonByDate.last_updated,
       });
 
-      this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+      this.mapData.illinoisCountiesGeoJson = filterIllinoisCountiesGeoJson();
+      this.mapData.modeledCountiesGeoJson = filterModeledCountiesGeoJson(
+        this.mapData.illinoisCountiesGeoJson,
+        this.props.modeledFipsList,
+      );
 
       // Finds second highest value in data set
       // Second highest value is used to better balance distribution
       // Due to cook county being an extreme outlier
       const maxVal = geoJson.features
         .map((obj) => {
-          const confirmedCases = obj.properties[`C_${this.props.jsonByTime.last_updated}`];
+          const confirmedCases = obj.properties[`C_${this.props.jsonByDate.last_updated}`];
           // this is to handle <5 strings in dataset, makes it 0
           if (typeof confirmedCases === 'string') {
             return 0;
@@ -311,7 +338,7 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id.indexOf('mobility_data') > -1) {
         const idString = feature.layer.id.split('_')[0];
         hoverInfo.mobility_values = {};
-        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
+        hoverInfo.mobility_values[this.state.overlay_layers.mobility_layers.layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
@@ -350,7 +377,7 @@ class IllinoisMapChart extends React.Component {
   setMapLegendColors(id) {
     if (id === 'C_time_data') {
       this.setState({
-        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
+        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByDate.last_updated,
       });
     }
     if (id === 'V_time_data') {
@@ -385,7 +412,7 @@ class IllinoisMapChart extends React.Component {
         ['No Data Available', '#5f5d59'],
       ];
       this.setState({
-        mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' }, lastUpdated: null,
+        mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google COVID-19 Community Mobility Reports', link: 'https://www.google.com/covid19/mobility/' }, lastUpdated: null,
       });
     }
   }
@@ -436,7 +463,6 @@ class IllinoisMapChart extends React.Component {
         const geoJson = this.addDataToGeoJsonBase(
           baseData,
           (data, location) => data[location.properties.FIPS]);
-
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
       })
       .then(() => {
@@ -583,6 +609,8 @@ class IllinoisMapChart extends React.Component {
   render() {
     return (
       <div className='map-chart map-chart-il'>
+        {this.state.sliderDate
+        && <MapSlider title={`View Data by Date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderDataLastUpdated} onChange={this.sliderOnChange} />}
         {this.state.mapColors
         && (
           <ControlPanel
@@ -631,27 +659,40 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
-          <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
+          {this.state.activeLayer === 'C_time_data'
+            && (
+              <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
+                <ReactMapGL.Layer
+                  id='county-highlight'
+                  type='line'
+                  beforeId='waterway-label'
+                  paint={{
+                    'line-color': '#421C52',
+                    'line-width': 3,
+                  }}
+                />
+              </ReactMapGL.Source>
+            )}
+          <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
               beforeId='waterway-label'
               paint={{
                 'line-color': '#421C52',
-                'line-width': 1.5,
+                'line-width': 1,
               }}
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        {this.state.sliderDate
-        && <MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderDataLastUpdated} onChange={this.sliderOnChange} />}
+
       </div>
     );
   }
 }
 
 IllinoisMapChart.propTypes = {
-  jsonByTime: PropTypes.object.isRequired,
+  jsonByDate: PropTypes.object.isRequired,
   modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
   jsonVaccinated: PropTypes.object.isRequired,

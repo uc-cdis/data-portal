@@ -16,18 +16,28 @@ module.exports = {
     es6: true,
     jest: true,
   },
+  globals: {
+    JSX: true,
+  },
   plugins: [
     'react',
+    'react-hooks',
     'jsx-a11y',
     'import',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,
     ecmaFeatures: {
       jsx: true,
       spread: true,
+    },
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        '@babel/plugin-proposal-class-properties',
+      ],
     },
   },
   rules: {
@@ -92,6 +102,8 @@ module.exports = {
     'react/destructuring-assignment': ['off'],
     'react/jsx-one-expression-per-line': ['off'],
     'react/jsx-props-no-spreading': ['off'],
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   overrides: [
     {

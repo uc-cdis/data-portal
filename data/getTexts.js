@@ -6,11 +6,11 @@ const componentTexts = paramByApp(params, 'components');
 function getChartText() {
   const graphQL = getGraphQL(paramByApp(params, 'graphql'));
   const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
-  if (boardPluralNames.length < 4) { boardPluralNames.push('Files'); }
+  if (boardPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { boardPluralNames.push('Files'); }
   const detailPluralNames = graphQL.projectDetails.map((item) => item.plural);
-  if (detailPluralNames.length < 4) { detailPluralNames.push('Files'); }
+  if (detailPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { detailPluralNames.push('Files'); }
   const indexChartNames = graphQL.boardCounts.map((item) => item.plural);
-  if (indexChartNames.length < 4) { indexChartNames.push('Files'); }
+  if (indexChartNames.length < 4 && !graphQL.chartNodesExcludeFiles) { indexChartNames.push('Files'); }
   return {
     boardPluralNames,
     chartNames: graphQL.chartCounts.map((item) => item.name),
@@ -24,7 +24,6 @@ function paramByDefault(prs, key) {
 }
 
 const defaultTexts = paramByDefault(params, 'components');
-const defaultGA = paramByApp(params, 'gaTrackingId');
 const defaultRequiredCerts = paramByApp(params, 'requiredCerts');
 
 function fillDefaultValues(values, defaultValues) {
@@ -120,9 +119,8 @@ function buildConfig(appIn, data) {
 }
 
 const config = buildConfig(process.env.app, params);
-console.log(`const gaTracking = '${defaultGA}';`);
 console.log('const hostname = typeof window !== \'undefined\' ? `${window.location.protocol}//${window.location.hostname}/` : \'http://localhost/\';');
 console.log(`const components = ${stringify(fillDefaultValues(componentTexts, defaultTexts), ['hostname'], 2)};`);
 console.log(`const config = ${JSON.stringify(config, null, '  ')};`);
 console.log(`const requiredCerts = [${defaultRequiredCerts.map((item) => `'${item}'`)}];`);
-console.log('module.exports = { components, config, gaTracking, requiredCerts };');
+console.log('module.exports = { components, config, requiredCerts };');

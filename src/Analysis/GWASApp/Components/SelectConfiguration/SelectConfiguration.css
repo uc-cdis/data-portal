@@ -1,0 +1,18 @@
+.configure-gwas .configure-gwas_container {
+  margin: auto;
+  background: #fff;
+  border: 1px solid #e2e2e3;
+  border-radius: 4px;
+  width: 682px;
+  min-height: 192px;
+  padding: 24px 12px;
+}
+.configure-gwas .configure-gwas_container .ant-select,
+.configure-gwas .configure-gwas_container .ant-input-number {
+  max-width: 317px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.configure-gwas .configure-gwas_container label {
+  margin-bottom: 10px;
+}

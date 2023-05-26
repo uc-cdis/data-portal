@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Content-Security-Policy connect-src:
       - https://*.mapbox.com for COVID-19 Dashboard maps
@@ -9,8 +10,9 @@
       - https://auspice.planx-pla.net and https://auspice.pandemicresponsecommons.org for COVID-19 Auspice app in iframe
     script-src:
       - https://dap.digitalgov.gov will be inserted by htmlWebpackPlugin if env is configured with DAPTrackingURL. This hostname is needed for fetching and executing the DAP tracking script
+      - https://*.quicksight.aws.amazon.com for loading AWS Quicksight dashboards into COVID-19 Home page
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; child-src blob:; img-src 'self' https://opendata.datacommons.io https://static.planx-pla.net data: https://*.s3.amazonaws.com https://www.google-analytics.com blob:; script-src 'self' 'unsafe-eval' https://www.google-analytics.com <%= htmlWebpackPlugin.options.script_src %>; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org https://opendata.datacommons.io https://static.planx-pla.net https://www.google-analytics.com <%= htmlWebpackPlugin.options.connect_src %>; frame-src <%= htmlWebpackPlugin.options.connect_src %> 'self' https://auspice.planx-pla.net https://auspice.pandemicresponsecommons.org;;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org; child-src blob:; img-src 'self' <%= htmlWebpackPlugin.options.imgSrc %> https://opendata.datacommons.io https://static.planx-pla.net data: https://*.s3.amazonaws.com blob:; script-src 'self' 'unsafe-eval' <%= htmlWebpackPlugin.options.scriptSrc %>; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; object-src 'none'; font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://login.bionimbus.org https://wayf.incommonfederation.org https://opendata.datacommons.io https://static.planx-pla.net <%= htmlWebpackPlugin.options.connectSrc %>; frame-src <%= htmlWebpackPlugin.options.connectSrc %> 'self' https://auspice.planx-pla.net https://auspice.pandemicresponsecommons.org https://*.quicksight.aws.amazon.com;">
     <meta name="viewport" content="width=device-width" />
     <link href="https://fonts.googleapis.com/icon?family=Source+Sans+Pro" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
@@ -18,17 +20,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet/less" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/node_modules/@gen3/ui-component/dist/css/base.less">
     <link rel="stylesheet" type="text/css" media="all" href="<%= htmlWebpackPlugin.options.basename %>/src/css/graphiql.css" />
-    <link rel="icon"
-    type="image/png" href="<%= htmlWebpackPlugin.options.basename %>/src/img/favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <% if(htmlWebpackPlugin.options.dap_url) { %>
-      <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
-      <script async type="text/javascript" src="<%= htmlWebpackPlugin.options.dap_url %>" id="_fed_an_ua_tag"></script>
-    <% } %>
-  </head>
-  <body>
-    <div id="root"></div>
-    <link id="gen3-theme-overrides" rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.options.basename %>/src/css/themeoverrides.css"/>
+    <link rel="icon" type="image/png" href="<%= htmlWebpackPlugin.options.basename %>/src/img/favicon.ico">
+    <title>
+        <%= htmlWebpackPlugin.options.title %>
+    </title>
+    <% if(htmlWebpackPlugin.options.metaDescription) { %>
+        <meta name="description" content="<%= htmlWebpackPlugin.options.metaDescription %>" />
+        <% } %>
+            <% if(htmlWebpackPlugin.options.dapURL) { %>
+                <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
+                <script async type="text/javascript" src="<%= htmlWebpackPlugin.options.dapURL %>" id="_fed_an_ua_tag"></script>
+                <% } %>
+                    </script>
+</head>
 
-  </body>
+<body>
+    <div id="root"></div>
+    <link id="gen3-theme-overrides" rel="stylesheet" type="text/css" href="<%= htmlWebpackPlugin.options.basename %>/src/css/themeoverrides.css?_=<%= htmlWebpackPlugin.options.cssVersion %>" />
+
+</body>
+
 </html>

@@ -1,14 +1,14 @@
 # Portal Configurations
 
-> Contents duplicated from https://github.com/uc-cdis/cdis-wiki/blob/master/dev/gen3/guides/ui_etl_configuration.md#portal-folder for public access
+> Contents duplicated from <https://github.com/uc-cdis/cdis-wiki/blob/master/dev/gen3/guides/ui_etl_configuration.md#portal-folder> for public access
 
 ## The "portal config" file
 
 Each Gen3 Commons has a JSON file which details what UI features should be deployed for a commons, and what the configuration for these features should be. This is commonly referred to as the "portal config" file. A "portal config" file usually locates at `/portal/gitops.json` in the manifest directory of a Commons. Portal also has some default config files under `/data/config` but most of them are legacy configurations.
 
-Below is an example, with inline comments describing what each JSON block configures, as well as which properties are optional and which are required (if you are looking to copy/paste configuration as a start, please use something in the Github repo as the inline comments below will become an issue):
+Below is an example, with inline comments describing what each JSON block configures, as well as which properties are optional and which are required (if you are looking to copy/paste configuration as a start, please use something in the GitHub repository as the inline comments below will become an issue):
 
-```
+```json
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
@@ -42,16 +42,19 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Study"
       }
     ],
-    "projectDetails": "boardCounts" // required; which JSON block above to use for displaying aggregate properties on the submission page (www.project.io/submission)
+    "projectDetails": "boardCounts", // required; which JSON block above to use for displaying aggregate properties on the submission page (/submission)
+    "chartNodesExcludeFiles": true // optional; specifies whether to exclude File nodes from charts. Defaults to false
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
+    "metaDescription": "", // optional; meta description used by search engines
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
         "text": "This is an example Gen3 Data Commons", // optional; text of homepage
-        "link": "/submission" // optional; link for button underneath the text
+        "buttonText": "Browse Studies", // optional; default is Submit/Browse Data
+        "link": "/submission" // optional; link for button underneath the text, default is /submission
       },
       "buttons": [ // optional; button “cards” displayed on the bottom of the homepage
         {
@@ -76,6 +79,8 @@ Below is an example, with inline comments describing what each JSON block config
           "label": "Run analysis"
         }
       ],
+      "homepageChartNodesExcludeFiles": true, // optional; specifies whether to exclude File nodes from the homepage chart. Defaults to false
+      "homepageChartNodesChunkSize": 5, // optional; specifies the number of node for each chunked request for homepage nodes that is being send to Peregrine. Defaults to 15
       "homepageChartNodes": [ // optional; used for tiered access on the homepage. This means that the charts on the homepage will be available to the public.
         {
           "node": "case", // required; GraphQL field name of node to show a chart for
@@ -96,25 +101,21 @@ Below is an example, with inline comments describing what each JSON block config
         {
           "icon": "dictionary", // required; icon from /img/icons for the button
           "link": "/DD", // required; the link for the button
-          "color": "#a2a2a2", // optional; hex color of the icon
           "name": "Dictionary" // required; text for the button
         },
         {
           "icon": "exploration",
           "link": "/explorer",
-          "color": "#a2a2a2",
           "name": "Exploration"
         },
         {
           "icon": "workspace",
           "link": "/workspace",
-          "color": "#a2a2a2",
           "name": "Workspace"
         },
         {
           "icon": "profile",
           "link": "/identity",
-          "color": "#a2a2a2",
           "name": "Profile"
         }
       ]
@@ -131,7 +132,7 @@ Below is an example, with inline comments describing what each JSON block config
           "name": "Documentation"
         }
       ],
-      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
+      "useProfileDropdown": false // optional; enables experimental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
@@ -140,6 +141,21 @@ Below is an example, with inline comments describing what each JSON block config
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
+    },
+   "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
+      "systemUseTitle" : "", // required; Title of the popup dialog
+      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays" : 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "showOnlyOnLogin" : false, // optional; if set to true, the USe Message will only be shown after a success login
+    },
+    "footer": {
+      "externalURL": "/external/footer", // iframe link to raw html from another source (ie frontend framework) to pull a footer from
+      "links": [
+        {
+          "text": "Link title",
+          "href": "https://example.com"
+        }
+      ]
     },
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
@@ -160,17 +176,21 @@ Below is an example, with inline comments describing what each JSON block config
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "explorerPublic": true, // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
-    "discoveryUseAggMDS": true // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
+    "discoveryUseAggMDS": true, // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
     "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
-    This feature currently supports single select filters and range filters; it
-    lacks support for search filter state, accessibility state, table state.
+    // This feature currently supports single select filters and range filters; it
+    // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "studyRegistration": true, // optional, whether to enable the study registration feature
+    "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
+    "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
         "chartType": "count", // required; indicates this chart will display a “count”
         "title": "Projects" // required; title to display on the chart
@@ -229,7 +249,8 @@ Below is an example, with inline comments describing what each JSON block config
       ],
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
-      ]
+      ],
+      "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
       "download": { // required; id of dropdown button
@@ -297,6 +318,13 @@ Below is an example, with inline comments describing what each JSON block config
       },
       {
         "enabled": true,
+        "type": "export-pfb-to-url", // export PFB to arbitrary URL; see docs/export_pfb_to_url.md
+        "targetURLTemplate": "https://terra.biodatacatalyst.nhlbi.nih.gov/#import-data?url={{PRESIGNED_URL}}", // required if type is `export-pfb-to-url`; `{{PRESIGNED_URL}}` is a required template variable which is replaced by the presigned URL of the exported PFB
+        "title": "Export All to Terra",
+        "rightIcon": "external-link"
+      },
+      {
+        "enabled": true,
         "type": "export-to-workspace", // required; export-to-workspace = export to workspace type
         "title": "Export to Workspace",
         "leftIcon": "datafile",
@@ -323,7 +351,8 @@ Below is an example, with inline comments describing what each JSON block config
         "resourceIndexType": "file", // required; what is the type of the index (must match the guppy config block in manifest.json) that contains the resources you want a manifest of?
         "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
         "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
-        "referenceIdFieldInDataIndex": "case_id" // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
+        "referenceIdFieldInDataIndex": "case_id", // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
+        "useFilterForCounts": false // optional: set to true to use the explore filter to query for file counts. This requires the fields that has been specified in the explorer tab of a certain index must have all those fields injected into its corresponding File index
       },
       "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
       "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
@@ -333,6 +362,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the File Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
         "chartType": "stackedBar", // required; chart type of stack bar
         "title": "File Type" // required; title of chart
@@ -403,13 +433,13 @@ Below is an example, with inline comments describing what each JSON block config
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
-          "enable": boolean
-          "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": string // text to be displayed on the download manifest button
-          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enable": boolean,
+          "enableDownloadManifest": boolean, // enables a button which allows user to download a manifest file for gen3 client
+          "downloadManifestButtonText": string, // text to be displayed on the download manifest button
+          "manifestFieldName": string, // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
-              "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
-              "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
+              "gen3Client": string, // link to documentation about the gen3 client. Used for button tooltips
+              "gen3Workspaces": string, // link to documentation about gen3 workspaces. Used for button tooltips.
           }
       },
       "pageTitle": {
@@ -418,14 +448,43 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "inputSubtitle": "Search Bar", // optional, subtitle of search bar
+          "placeholder": "Search studies by keyword", // optional, placeholder text of search input
+          "searchableTextFields": ["study", "age", "publication"] // optional, list of properties in data to make searchable
+                                                                  // if not present, only fields visible in the table will be searchable
+        },
+        "tagSearchDropdown": { // optional, config section for searchable tags
+          "enabled": true,
+          "collapseOnDefault": false, // optional, whether the searchable tag panel is collapsed when loading, default value is "true"
+          "collapsibleButtonText": "Study Characteristics" // optional, display text for the searchable tag panel collapse control button, default value is "Tag Panel"
         }
       },
       "advSearchFilters": {
-        "enabled": true
+        "enabled": true,
+        "field": "advSearchFilters", // required, filter component field name in metadata
+        "displayName": "Filters"  // optional, change the label of the filter open/close button, default value is "ADVANCED SEARCH"
       },
       "authorization": {
-        "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+        "enabled": true, // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+        "supportedValues": { // no default; should be configured if `authorization.enabled=true`
+          "accessible": {
+            "enabled": true,
+            "menuText": "Available"
+          },
+          "unaccessible": {
+            "enabled": false,
+            "menuText": "Not Accessible"
+          },
+          "pending": {...},
+          "notAvailable": {...}
+        }
+      },
+      "tagsColumn" : {
+        "enabled": true // toggles if tags should be rendered in a column
+      },
+      "tagsInDescription" : {
+        "enabled": false // toggles if tags should be rendered as last line of description
       }
     },
     "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
@@ -474,7 +533,7 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "Commons",
         "field": "commons_of_origin",
-        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the field name in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
@@ -485,6 +544,7 @@ Below is an example, with inline comments describing what each JSON block config
       "includeIfNotAvailable": true,
       "valueIfNotAvailable": "No description has been provided for this study."
     },
+    // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
         "field": "name"
@@ -543,6 +603,31 @@ Below is an example, with inline comments describing what each JSON block config
         }
       ]
     },
+    // takes precedence over "studyPageFields"
+    "detailView": {
+      "headerField": "project_title", // field from which to pull detail view title
+      "tabs": [
+        {
+          "tabName": "Study",
+          "groups": [
+            {
+              "header": "Study Description Summary", // subheading above a group of fields, optional
+              "fields": [
+                {
+                  "header": "Study Description Summary",
+                  "fields": [
+                    {
+                      "type": "block",
+                      "sourceField": "study_description_summary"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
@@ -552,7 +637,7 @@ Below is an example, with inline comments describing what each JSON block config
     "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
       {
         "name": "Program", // this configures the tag category name that will be shown on the tag selector
-        "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
+        "color": "rgba(129, 211, 248, 1)", // color can be any valid CSS color string, including hex, rgb, rgba, hsl
         "display": true,
         "displayName": "All Programs" // optional string to customize tag category display name
       },
@@ -566,15 +651,19 @@ Below is an example, with inline comments describing what each JSON block config
         "color": "rgba(112, 182, 3, 1)",
         "display": true
       }
-    ]
+    ],
+    "tagsDisplayName": "Tags", // optional, overrides the name of the mandatory tags column
+    "tableScrollHeight": 450 // optional, no scroll if omitted
   },
-  "resourceBrowser": {), // see Resource Browser documentation
+  "resourceBrowser": {}, // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
   "workspacePageDescription": "", // html to display above the workspace options
+  "studyViewerConfig": [],//See docs/study_viewer.md for more details.
   "useArboristUI": false, // optional; set true to enable Arborist UI; defaults to false if absent
   "hideSubmissionIfIneligible": true, // optional; only works if Arborist UI is enabled; if set to true, link/buttons to /submission page will be hidden to users who don't have permissions to submit data; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list Arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
+  "showExternalLoginsOnProfile": false, // enable WTS OIDC logins via the profile page
   "componentToResourceMapping": { // optional; configure some parts of Arborist UI
     "Workspace": { // name of component as defined in this file
       "resource": "/workspace", // ABAC fields defining permissions required to see this component
@@ -599,6 +688,33 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
-  ]
+  ],
+  "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
+  "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
+      "features":{ // Optional; Required when using study/Workspace registration
+        "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
+          "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
+          "studyRegistrationValidationField": "is_registered", // optional, the other of the extra field that is being added to metadata when a study is registered, to check if a study has been registered, because after loading data from MDS/AggMDS into Discovery page, the metadata category information is lost. Defaults to "is_registered"
+          "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
+          "studyRegistrationUIDField": "_hdp_uid", // optional, if omitted, value defaults the same as the "minimalFieldMapping.uid" value. In metadata, values from this field MUST be the same as their GUIDs for each metadata record
+          "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
+          "clinicalTrialFields": [], // optional, list of fields to fetch from ClinicalTrials.gov
+          "dataDictionaryField": "data_dictionaries", // optional, specify the field name in metadata for variable-level metadata, default to ""
+          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for VLMD submission. Default to the data upload bucket from fence config if omitted
+          "dataDictionarySubmissionDisclaimerField": "some disclaimer text" // optional, the disclaimer text that appears under the submit button on the VLMD submission page. Defaults to undefined
+        },
+        "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
+        "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
+        "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
+        "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+          "link": "/discovery",
+          "text": "Go to Discovery Page"
+        }
+      }
+      },
+      "kayakoConfig":{ //Required; if using either of the study/workspace registration feature
+        "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
+      }
+    }
 }
 ```
