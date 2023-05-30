@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
 import SharedContext from '../../Utils/SharedContext';
@@ -76,7 +76,8 @@ const ResultsPheWeb = () => {
       <section className='data-viz'>
         <ManhattanPlot
           variant_bins={data.variant_bins}
-          unbinned_variants={data.unbinned_variants} />
+          unbinned_variants={data.unbinned_variants}
+        />
       </section>
     </div>
   );
