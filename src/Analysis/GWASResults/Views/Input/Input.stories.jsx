@@ -79,8 +79,8 @@ MockedSuccess.parameters = {
   },
 };
 
-export const MockedErrorObject = MockTemplate.bind({});
-MockedErrorObject.parameters = {
+export const MockedError500Response = MockTemplate.bind({});
+MockedError500Response.parameters = {
   msw: {
     handlers: [
       rest.get(
@@ -89,6 +89,7 @@ MockedErrorObject.parameters = {
           const { argowrapperpath } = req.params;
           return res(
             ctx.delay(100),
+            ctx.status(500),
             // Some errroneous responses can return an error object
             ctx.json({ error: 'Mocked Server error response' })
           );
