@@ -35,7 +35,7 @@ const JobDetails = () => {
 
   const getParameterData = (key) => {
     const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
-    return datum?.value || 'Data not found';
+    return datum?.value || 'Unexpected Error';
   };
 
   const getPhenotype = () => {
@@ -50,7 +50,7 @@ const JobDetails = () => {
     }
     /* eslint-disable-next-line no-console */
     console.error('Data not found or not in expected JSON format');
-    return 'Data not found';
+    return 'Unexpected Error';
   };
 
   const processCovariates = () => {
@@ -69,13 +69,13 @@ const JobDetails = () => {
           <span className='covariate-item'>
             {obj?.concept_name}
             {obj?.provided_name}
-            {!obj?.concept_name && !obj?.provided_name && 'Data not found'}
+            {!obj?.concept_name && !obj?.provided_name && 'Unexpected Error'}
           </span>
           <br />
         </React.Fragment>
       ));
     }
-    return 'Data not found';
+    return 'No covariates';
   };
 
   return (
