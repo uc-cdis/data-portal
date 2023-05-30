@@ -12,6 +12,35 @@ import * as d3Format from 'd3-format';
 import d3Tip from 'd3-tip';
 import {memoize, property, range, some, sortBy, template} from 'lodash';
 
+/* eslint camelcase: 0 */ // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
+/* eslint max-len: 0 */ // --> OFF
+/* eslint no-plusplus: 0 */ // --> OFF
+/* eslint indent: 0 */ // --> OFF
+/* eslint spaced-comment: 0 */ // --> OFF
+/* eslint block-spacing: 0 */ // --> OFF
+/* eslint prefer-arrow-callback: 0 */ // --> OFF
+/* eslint space-before-function-paren: 0 */ // --> OFF
+/* eslint no-multiple-empty-lines: 0 */ // --> OFF
+/* eslint comma-spacing: 0 */ // --> OFF
+/* eslint brace-style: 0 */ // --> OFF
+/* eslint vars-on-top: 0 */ // --> OFF
+/* eslint quote-props: 0 */ // --> OFF
+/* eslint no-multi-spaces: 0 */ // --> OFF
+/* eslint padded-blocks: 0 */ // --> OFF
+/* eslint object-curly-spacing: 0 */ // --> OFF
+/* eslint object-curly-newline: 0 */ // --> OFF
+/* eslint eqeqeq: 0 */ // --> OFF
+/* eslint space-in-parens: 0 */ // --> OFF
+/* eslint no-floating-decimal: 0 */ // --> OFF
+/* eslint prefer-template: 0 */ // --> OFF
+/* eslint newline-per-chained-call: 0 */ // --> OFF
+/* eslint object-shorthand: 0 */ // --> OFF
+/* eslint prefer-rest-params: 0 */ // --> OFF
+/* eslint prefer-destructuring: 0 */ // --> OFF
+/* eslint wrap-iife: 0 */ // --> OFF
+/* eslint arrow-parens: 0 */ // --> OFF
+
 // Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
 const tooltip_underscoretemplate = '<b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %>';
 const urlprefix = 'mylocuszoom-url-prefix';
@@ -25,11 +54,11 @@ function fmt(format) {
     });
 }
 
-function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, tooltip_template = null} = {}) {
+function create_gwas_plot(variant_bins, unbinned_variants_in) {
     // FIXME: Replace global variables with options object
     // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
     // In the DOM, later siblings are displayed over top of (and occluding) earlier siblings.
-    unbinned_variants = sortBy(unbinned_variants, function(d) { return -Math.log10(d.pval); });
+    const unbinned_variants = sortBy(unbinned_variants_in, function(d) { return -Math.log10(d.pval); });
 
     const get_chrom_offsets = memoize(function() {
         const  chrom_padding = 2e7;
@@ -87,7 +116,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
             else if (max_data_qval <= 120) { possible_ticks = possible_ticks.concat([40,60,80,100,120]); }
             else if (max_data_qval <= 220) { possible_ticks = possible_ticks.concat([60,100,140,180,220]); }
             else {
-                const power_of_ten = Math.pow(10, Math.floor(Math.log10(max_data_qval)));
+                const power_of_ten = 10 ** Math.floor(Math.log10(max_data_qval));
                 const first_digit = max_data_qval / power_of_ten;
                 let multipliers;
                 if (first_digit <= 2) { multipliers = [0.5, 1, 1.5, 2]; }
@@ -98,7 +127,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         }
         // Include all ticks < qval.  Then also include the next tick.
         // That should mean we'll always have the largest tick >= the largest variant.
-        var ticks = possible_ticks.filter(function(qval) { return qval < max_data_qval; });
+        const ticks = possible_ticks.filter(function(qval) { return qval < max_data_qval; });
         if (ticks.length < possible_ticks.length) { ticks.push(possible_ticks[ticks.length]); }
 
         // Use the largest tick for the top of our y-axis so that we'll have a tick nicely rendered right at the top.
@@ -266,7 +295,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
         gwas_svg.call(point_tooltip);
 
         function get_link_to_LZ(variant) {
-            let base = new URL(urlprefix, window.location.origin);
+            const base = new URL(urlprefix, window.location.origin);
             base.searchParams.set('chrom', variant.chrom);
             base.searchParams.set('start', Math.max(0, variant.pos - 200 * 1000));
             base.searchParams.set('end', variant.pos + 200 * 1000);
@@ -366,8 +395,8 @@ function create_gwas_plot(variant_bins, unbinned_variants, {url_prefix = null, t
                 .attr('class', 'bin')
                 .attr('data-index', function(d, i) { return i; }) // make parent index available from DOM
                 .each(function(d) { //todo: do this in a forEach
-                    d.x = x_scale(get_genomic_position(d));
-                    d.color = color_by_chrom(d.chrom);
+                    d.x = x_scale(get_genomic_position(d)); // eslint-disable-line no-param-reassign
+                    d.color = color_by_chrom(d.chrom); // eslint-disable-line no-param-reassign
                 });
             bins.selectAll('circle.binned_variant_point')
                 .data(property('qvals'))
@@ -426,7 +455,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
     }
 
     maf_ranges.forEach(function(maf_range, i) {
-        maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i];
+        maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i]; // eslint-disable-line no-param-reassign
     });
 
     window.addEventListener('load', function() {
@@ -452,7 +481,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
         };
         const plot_width = svg_width - plot_margin.left - plot_margin.right;
         // Size the plot to make things square.  This way, x_scale and y_scale should be exactly equivalent.
-        const plot_height = plot_width / exp_max * obs_max;
+        const plot_height = (plot_width / exp_max) * obs_max;
         const svg_height = plot_height + plot_margin.top + plot_margin.bottom;
 
         // TODO: use a clip path to keep qq_ci below the upper edge
