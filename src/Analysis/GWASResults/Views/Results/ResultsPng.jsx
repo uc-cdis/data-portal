@@ -20,7 +20,6 @@ const ResultsPng = () => {
     queryConfig,
   );
 
-
   const downloadManhattanPlot = () => {
     fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index')
       .then((res) => {
