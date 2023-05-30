@@ -9,8 +9,8 @@ import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../loca
 const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
   t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
-const loadStudiesFromAggMDSRequests = async (offset, limit) => {
-  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
+const loadStudiesFromAggMDSRequests = async (offset, limit, manifestFieldName) => {
+  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}&counts=${manifestFieldName}`;
 
   const res = await fetch(url);
   if (res.status !== 200) {
@@ -24,22 +24,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  const commonsPromises = commons.map((commonsName) => (
-    Promise.all([
-      retrieveCommonsInfo(commonsName),
-    ])
-  ));
-
-  const responses = await Promise.all(commonsPromises);
-
-  const allCommonsInfo = responses
-    .reduce((commonsInfoByName, commonsInfo, index) => ({
-      ...commonsInfoByName,
-      [commons[index]]: commonsInfo,
-    }), {});
-
   commons.forEach((commonsName) => {
-    const [commonsInfo] = allCommonsInfo[commonsName];
 
     const studies = metadataResponse[commonsName];
 

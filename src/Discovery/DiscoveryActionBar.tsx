@@ -257,18 +257,19 @@ const handleDownloadZipClick = async (
   history,
   location,
 ) => {
-  const { manifestFieldName } = config.features.exportToWorkspace;
-  const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
 
+  let selectedResourcesWithManifest = selectedResources;
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
+    selectedResourcesWithManifest = await loadManifestFromResources(selectedResources, manifestFieldName);
+
     const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
     }
   }
 
-  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
+  const studyIDs = selectedResourcesWithManifest.map((study) => study[config.minimalFieldMapping.uid]);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -296,13 +297,13 @@ const handleDownloadZipClick = async (
             active: true,
           },
         });
-        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResourcesWithManifest);
       }
     },
   ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
+const handleDownloadManifestClick = async (config: DiscoveryConfig, selectedResources: any[]) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
@@ -310,8 +311,8 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   // combine manifests from all selected studies
   const manifest = [];
   // update the manifest to handle aggregated manifestFieldName
-  const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
-  selectedResources.forEach((study) => {
+  const selectedResourcesWithManifest = await loadManifestFromResources(selectedResources, manifestFieldName);
+  selectedResourcesWithManifest.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
@@ -325,9 +326,9 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
       }
     }
   });
-  const projectNumber = selectedResources.map((study) => study.project_number);
-  const studyName = selectedResources.map((study) => study.study_name);
-  const repositoryName = selectedResources.map((study) => study.commons);
+  const projectNumber = selectedResourcesWithManifest.map((study) => study.project_number);
+  const studyName = selectedResourcesWithManifest.map((study) => study.study_name);
+  const repositoryName = selectedResourcesWithManifest.map((study) => study.commons);
   datadogRum.addAction('manifestDownload', {
     manifestDownloadProjectNumber: projectNumber,
     manifestDownloadStudyName: studyName,
