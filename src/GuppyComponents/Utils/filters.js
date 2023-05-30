@@ -240,11 +240,28 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
 
 /**
  * @param {Object} args
+ * @param {string} [args.field]
+ * @param {Array} [args.dictionaryEntries]
+ */
+function findDictionaryEntryForField(field, dictionaryEntries) {
+  let foundEntry = dictionaryEntries.find((entry) => {
+    let { entryKey, sectionKey } = entry;
+    return field === entryKey || field === `${sectionKey}.${entryKey}`;
+  });
+  return foundEntry?.entryValue;
+}
+
+/**
+ * @param {Object} args
+ * @param {string} [args.field]
+ * @param {Array} [args.dictionaryEntries]
  * @param {OptionFilter['selectedValues']} [args.adminAppliedPreFilterValues]
  * @param {{ histogram: AggsCount[] }} args.histogramResult
  * @param {{ histogram: AggsCount[] }} args.initialHistogramResult
  */
 const getSingleFilterOption = ({
+  field,
+  dictionaryEntries,
   adminAppliedPreFilterValues,
   histogramResult,
   initialHistogramResult,
@@ -274,7 +291,11 @@ const getSingleFilterOption = ({
         count: item.count,
       });
     } else {
+      let entry = findDictionaryEntryForField(field, dictionaryEntries);
+      let enumDef = (entry?.enumDef || []).find((enumDefEntry) => enumDefEntry.enumeration === item.key);
+
       options.push({
+        description: enumDef?.description,
         text: item.key,
         filterType: 'singleSelect',
         count: item.count,
@@ -361,6 +382,7 @@ export const checkIsArrayField = (field, arrayFields) => {
  * @param {SimpleAggsData} args.initialTabsOptions
  * @param {string[]} args.searchFields
  * @param {SimpleAggsData} args.tabsOptions
+ * @param {Array} args.dictionaryEntries
  * @returns {import('../../gen3-ui-component/components/filters/types').FilterSectionConfig[]}
  */
 export const getFilterSections = ({
@@ -372,6 +394,7 @@ export const getFilterSections = ({
   initialTabsOptions,
   searchFields,
   tabsOptions,
+  dictionaryEntries
 }) => {
   let searchFieldSections = [];
 
@@ -396,6 +419,8 @@ export const getFilterSections = ({
       let selectedOptions = [];
       if (tabsOptionsFiltered && tabsOptionsFiltered.histogram) {
         selectedOptions = getSingleFilterOption({
+          field,
+          dictionaryEntries,
           adminAppliedPreFilterValues:
             adminAppliedPreFilters[field]?.selectedValues,
           histogramResult: tabsOptionsFiltered,
@@ -431,6 +456,8 @@ export const getFilterSections = ({
     }
 
     const defaultOptions = getSingleFilterOption({
+      field,
+      dictionaryEntries,
       adminAppliedPreFilterValues:
         adminAppliedPreFilters[field]?.selectedValues,
       histogramResult: tabsOptionsFiltered,

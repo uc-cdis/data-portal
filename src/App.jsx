@@ -189,7 +189,11 @@ function App() {
         <Route
           path='explorer'
           element={
-            <ProtectedContent preload={() => dispatch(fetchSurvivalConfig())}>
+            <ProtectedContent preload={() => 
+              Promise.all([
+                dispatch(fetchDictionary()),
+                dispatch(fetchSurvivalConfig())
+              ])}>
               <Explorer />
             </ProtectedContent>
           }

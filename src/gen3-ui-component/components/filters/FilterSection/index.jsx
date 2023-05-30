@@ -448,6 +448,7 @@ function FilterSection({
                 disabledTooltipMessage={disabledTooltipMessage}
                 hideZero={hideZero}
                 label={option.text}
+                optionTooltip={option.description}
                 lockedTooltipMessage={lockedTooltipMessage}
                 onSelect={handleSelectSingleSelectFilter}
                 selected={filterStatus[option.text]}
