@@ -40,6 +40,7 @@ import {memoize, property, range, some, sortBy, template} from 'lodash';
 /* eslint prefer-destructuring: 0 */ // --> OFF
 /* eslint wrap-iife: 0 */ // --> OFF
 /* eslint arrow-parens: 0 */ // --> OFF
+/* eslint no-inner-declarations: 0 */ // --> OFF
 
 // Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
 const tooltip_underscoretemplate = '<b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %>';

@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Button, Tooltip } from 'antd';
+import { Spin, Button } from 'antd';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
@@ -42,7 +42,7 @@ const Results = () => {
           <Button onClick={downloadAll}>Download All Results</Button>
         </div>
       </div>
-     </section>
+    </section>
   );
 
   if (status === 'error') {
@@ -76,14 +76,14 @@ const Results = () => {
   const displayManhattanPlot = () => {
     // Try the pheweb option first:
     let results = data.outputs.parameters.filter((entry) => entry.name === 'pheweb_json_index');
-    if (results.length !=0 ) {
+    if (results.length !== 0) {
       return (
-        <ResultsPheWeb/>
+        <ResultsPheWeb />
       );
     }
     // If no pheweb json file, try to see if there is a PNG Manhattan plot:
     results = data.outputs.parameters.filter((entry) => entry.name === 'manhattan_plot_index');
-    if (results.length !=0 ) {
+    if (results.length !== 0) {
       return (
         <ResultsPng />
       );

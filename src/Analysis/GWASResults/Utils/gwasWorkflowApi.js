@@ -8,36 +8,24 @@ export const getWorkflowDetails = async (
 ) => {
   // query argo-wrapper endpoint to get the list of artifacts produced by the workflow:
   const endPoint = `${gwasWorkflowPath}status/${workflowName}?uid=${workflowUid}`;
-  const response = await fetch(endPoint, { headers })
+  const response = await fetch(endPoint, { headers });
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`;
     throw new Error(message);
   }
   return response.json();
-}
+};
 
 const getDataFromUrl = async (
   url,
 ) => {
-  const response = await fetch(url, { headers })
+  const response = await fetch(url, { headers });
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`;
     throw new Error(message);
   }
   return response.json();
-}
-
-export const getDataForWorkflowArtifact = async (
-  workflowName,
-  workflowUid,
-  artifactName,
-) => {
-  const url = await fetchPresignedUrlForWorkflowArtifact( workflowName,
-    workflowUid,
-    artifactName)
-  const result = await getDataFromUrl(url);
-  return result;
-}
+};
 
 export const fetchPresignedUrlForWorkflowArtifact = async (
   workflowName,
@@ -59,6 +47,18 @@ export const fetchPresignedUrlForWorkflowArtifact = async (
   }
   // return a pre-signed "download ready" URL to the artifact:
   return getPresignedUrl(JSON.parse(results[0].value).did, 'download');
+};
+
+export const getDataForWorkflowArtifact = async (
+  workflowName,
+  workflowUid,
+  artifactName,
+) => {
+  const url = await fetchPresignedUrlForWorkflowArtifact(workflowName,
+    workflowUid,
+    artifactName);
+  const result = await getDataFromUrl(url);
+  return result;
 };
 
 export const queryConfig = {
