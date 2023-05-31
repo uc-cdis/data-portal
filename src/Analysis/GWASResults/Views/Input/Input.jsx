@@ -1,5 +1,5 @@
 import React from 'react';
-import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
+import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import JobDetails from './JobDetails';
 import './Input.css';
 
