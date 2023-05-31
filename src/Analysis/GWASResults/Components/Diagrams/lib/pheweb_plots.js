@@ -172,6 +172,9 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
             .attr('height', svg_height)
             .style('display', 'block')
             .style('margin', 'auto');
+        // Improve accessibility by adding a SVG <details> to hold assistive text:
+        gwas_svg.append('details')
+            .text('A chart showing a pheweb visualization. The data is also presented in the table below ');
         const gwas_plot = gwas_svg.append('g')
             .attr('id', 'gwas_plot')
             .attr('transform', fmt('translate({0},{1})', plot_margin.left, plot_margin.top));
