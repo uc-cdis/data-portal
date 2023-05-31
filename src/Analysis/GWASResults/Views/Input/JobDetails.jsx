@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
 import IsJsonString from '../../Utils/IsJsonString';
 import SharedContext from '../../Utils/SharedContext';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
 const JobDetails = () => {
   const { selectedRowData } = useContext(SharedContext);
