@@ -8,12 +8,12 @@ import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
-import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
+import DateForTable from '../../../Components/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import filterTableData from './filterTableData';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
-import LoadingErrorMessage from '../../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
