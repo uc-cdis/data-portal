@@ -37,6 +37,8 @@ const ResultsPheWeb = () => {
     tmpImage.src = svgData;
     tmpImage.onload = function () {
       const hiddenCanvas = document.createElement('canvas');
+      hiddenCanvas.width = document.body.clientWidth;
+      hiddenCanvas.height = document.body.clientHeight * 0.6;
       const canvasContext = hiddenCanvas.getContext('2d');
       canvasContext.drawImage(tmpImage, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
       const canvasData = hiddenCanvas.toDataURL('image/png');
