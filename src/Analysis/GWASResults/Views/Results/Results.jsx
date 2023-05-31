@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button, Tooltip } from 'antd';
-import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
+import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
 import {
   fetchPresignedUrlForWorkflowArtifact,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 
 const Results = () => {
