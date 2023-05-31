@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
+import * as d3 from 'd3-selection';
 import SharedContext from '../../Utils/SharedContext';
 import {
-  fetchPresignedUrlForWorkflowArtifact,
   getDataForWorkflowArtifact,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
@@ -19,16 +19,33 @@ const ResultsPheWeb = () => {
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_json_index'),
     queryConfig,
   );
+  const manhattanPlotContainerId = 'manhattan_plot_container';
 
   const downloadManhattanPlot = () => {
-    fetchPresignedUrlForWorkflowArtifact(name, uid, 'pheweb_json_index')
-      .then((res) => {
-        // TODO - the download should maybe move to the component itself...?
-        window.open(res, '_blank');
-      })
-      .catch((error) => {
-        alert(`Could not download. \n\n${error}`);
-      });
+    console.log('saving image');
+    const svgAsInnerHTML = d3.select(`#${manhattanPlotContainerId}`).select('svg')
+      .attr('version', 1.1)
+      .attr('xmlns', 'http://www.w3.org/2000/svg')
+      .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') // https://stackoverflow.com/questions/59138117/svg-namespace-prefix-xlink-for-href-on-image-is-not-defined - this deprecated xlink is still used by PheWeb
+      .node().parentNode.innerHTML;
+
+    const svgAsInnerHTMLAsUtf8Buffer = Buffer.from(svgAsInnerHTML);
+    const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString('base64');
+
+    const svgData = `data:image/svg+xml;base64,${svgAsInnerHTMLAsBase64}`;
+    const tmpImage = new Image();
+    tmpImage.src = svgData;
+    tmpImage.onload = function () {
+      const hiddenCanvas = document.createElement('canvas');
+      const canvasContext = hiddenCanvas.getContext('2d');
+      canvasContext.drawImage(tmpImage, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+      const canvasData = hiddenCanvas.toDataURL('image/png');
+
+      const a = document.createElement('a');
+      a.download = 'plot.png';
+      a.href = canvasData;
+      a.click();
+    };
   };
 
   const displayTopSection = () => (
@@ -77,6 +94,7 @@ const ResultsPheWeb = () => {
         <ManhattanPlot
           variant_bins={data.variant_bins}
           unbinned_variants={data.unbinned_variants}
+          manhattan_plot_container_id={manhattanPlotContainerId}
         />
       </section>
     </div>
