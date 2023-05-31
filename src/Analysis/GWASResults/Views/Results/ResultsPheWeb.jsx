@@ -7,9 +7,9 @@ import {
   getDataForWorkflowArtifact,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
-import ManhattanPlot from '../../SharedComponents/Diagrams/ManhattanPlot/ManhattanPlot';
+import ManhattanPlot from '../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 
 const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);

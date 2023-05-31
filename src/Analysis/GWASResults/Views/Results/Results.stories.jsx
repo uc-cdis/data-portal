@@ -4,7 +4,7 @@ import { rest } from 'msw';
 import SharedContext from '../../Utils/SharedContext';
 import Results from './Results';
 import imageFile from '../../TestData/dummy_result1.png'; // not a Manhattan plot...but will do for now
-import manhattanPheWebJsonFile from '../../TestData/ManhattanPlotTestData.json';
+import manhattanPheWebJsonFile from '../../TestData/Diagrams/ManhattanPlotTestDataLarge.json';
 import WorkflowStatusResponse from '../../TestData/WorkflowDetailsOnlyPng';
 import WorkflowStatusResponse2 from '../../TestData/WorkflowDetailsPngAndPheWebJson';
 
