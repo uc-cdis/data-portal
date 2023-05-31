@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Button, Table, Space, Input, DatePicker, Select,
-} from 'antd';
+import { Button, Table, Space, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -104,7 +102,8 @@ const HomeTable = ({ data }) => {
   };
 
   const jobStatusDropdownOptions = [];
-  Object.values(PHASES).forEach((phase) => jobStatusDropdownOptions.push({ value: phase, label: phase }),
+  Object.values(PHASES).forEach((phase) =>
+    jobStatusDropdownOptions.push({ value: phase, label: phase })
   );
 
   const columns = [
@@ -115,8 +114,8 @@ const HomeTable = ({ data }) => {
       show: homeTableState.columnManagement.showRunId,
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'name'
-        && homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'name' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -138,8 +137,8 @@ const HomeTable = ({ data }) => {
       show: homeTableState.columnManagement.showWorkflowName,
       sorter: (a, b) => a.wf_name.localeCompare(b.wf_name),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'wf_name'
-        && homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'wf_name' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -161,8 +160,8 @@ const HomeTable = ({ data }) => {
       show: homeTableState.columnManagement.showDateSubmitted,
       sorter: (a, b) => a.submittedAt.localeCompare(b.submittedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'submittedAt'
-        && homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'submittedAt' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -186,8 +185,8 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       show: homeTableState.columnManagement.showJobStatus,
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'phase'
-        && homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'phase' &&
+        homeTableState.sortInfo.order,
       children: [
         {
           title: (
@@ -222,8 +221,8 @@ const HomeTable = ({ data }) => {
       show: homeTableState.columnManagement.showDateFinished,
       sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'finishedAt'
-        && homeTableState.sortInfo.order,
+        homeTableState.sortInfo?.columnKey === 'finishedAt' &&
+        homeTableState.sortInfo.order,
       dataIndex: 'finishedAt',
       children: [
         {
@@ -238,7 +237,8 @@ const HomeTable = ({ data }) => {
             />
           ),
           dataIndex: 'finishedAt',
-          render: (value) => <DateForTable utcFormattedDate={value} />,
+          render: (value) =>
+            value ? <DateForTable utcFormattedDate={value} /> : 'In progress',
         },
       ],
     },
@@ -298,7 +298,8 @@ const HomeTable = ({ data }) => {
     setFilteredData(filterTableData(data, homeTableState));
   }, [homeTableState, data]);
 
-  const checkForShownColumn = () => Object.values(homeTableState.columnManagement).includes(true);
+  const checkForShownColumn = () =>
+    Object.values(homeTableState.columnManagement).includes(true);
 
   return (
     <div className='home-table'>
