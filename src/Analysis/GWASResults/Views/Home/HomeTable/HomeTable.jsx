@@ -254,6 +254,14 @@ const HomeTable = ({ data }) => {
               <Button
                 onClick={() => {
                   setSelectedRowData(record);
+                  setCurrentView(VIEWS.input);
+                }}
+              >
+                Input
+              </Button>
+              <Button
+                onClick={() => {
+                  setSelectedRowData(record);
                   setCurrentView(VIEWS.execution);
                 }}
               >
