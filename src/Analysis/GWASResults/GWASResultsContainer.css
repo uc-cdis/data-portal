@@ -11,6 +11,7 @@
 
 .GWASResults-flex-col {
   display: flex;
+  flex-direction: column;
   flex: 1;
 }
 
