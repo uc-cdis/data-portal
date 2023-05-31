@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
 import IsJsonString from '../../Utils/IsJsonString';
 import SharedContext from '../../Utils/SharedContext';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
 const JobDetails = () => {
   const { selectedRowData } = useContext(SharedContext);
@@ -40,12 +40,12 @@ const JobDetails = () => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
