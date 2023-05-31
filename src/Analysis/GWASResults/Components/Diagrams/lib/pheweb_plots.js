@@ -55,7 +55,7 @@ function fmt(format) {
     });
 }
 
-function create_gwas_plot(variant_bins, unbinned_variants_in) {
+function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_container_id) {
     // FIXME: Replace global variables with options object
     // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
     // In the DOM, later siblings are displayed over top of (and occluding) earlier siblings.
@@ -156,7 +156,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
     }
 
     {
-        const svg_width = document.getElementById('manhattan_plot_container').offsetWidth;
+        const svg_width = document.getElementById(manhattan_plot_container_id).offsetWidth;
         const svg_height = 550;
         const plot_margin = {
             'left': 70,
@@ -167,7 +167,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         const plot_width = svg_width - plot_margin.left - plot_margin.right;
         const plot_height = svg_height - plot_margin.top - plot_margin.bottom;
 
-        const gwas_svg = d3.select('#manhattan_plot_container').append('svg')
+        const gwas_svg = d3.select('#' + manhattan_plot_container_id).append('svg')
             .attr('id', 'gwas_svg')
             .attr('width', svg_width)
             .attr('height', svg_height)
