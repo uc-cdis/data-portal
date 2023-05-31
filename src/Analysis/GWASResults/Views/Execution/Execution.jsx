@@ -5,8 +5,8 @@ import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
 import PHASES from '../../Utils/PhasesEnumeration';
-import DetailPageHeader from '../../SharedComponents/DetailPageHeader/DetailPageHeader';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Execution.css';
 
 const Execution = () => {
