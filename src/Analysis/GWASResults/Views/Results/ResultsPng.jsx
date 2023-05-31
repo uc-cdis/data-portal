@@ -6,7 +6,7 @@ import {
   fetchPresignedUrlForWorkflowArtifact,
   queryConfig,
 } from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 
 const ResultsPng = () => {
