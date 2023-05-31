@@ -4,7 +4,7 @@ import largeJsonDataFile from '../../../TestData/Diagrams/ManhattanPlotTestDataL
 import smallJsonDataFile from '../../../TestData/Diagrams/ManhattanPlotTestDataSmall.json';
 
 export default {
-  title: 'Tests2/GWASResults/SharedComponents/Diagrams/ManhattanPlot',
+  title: 'Tests2/GWASResults/Components/Diagrams/ManhattanPlot',
   component: ManhattanPlot,
 };
 
