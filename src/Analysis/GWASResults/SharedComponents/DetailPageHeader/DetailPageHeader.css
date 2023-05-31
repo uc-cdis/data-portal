@@ -13,6 +13,7 @@
   position: absolute;
   line-height: 2em;
   top: -5px;
+  min-width: 300px;
 }
 
 .details-page-header svg path {
