@@ -77,6 +77,7 @@ MockedSuccess.parameters = {
   },
 };
 
+const dummyS3BucketLocation = "https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json";
 export const MockedSuccess2 = MockTemplate.bind({});
 MockedSuccess2.args = selectedRowData5;
 MockedSuccess2.parameters = {
@@ -101,12 +102,12 @@ MockedSuccess2.parameters = {
           console.log(index_did);
           return res(
             ctx.delay(500),
-            ctx.json({"url": index_did === '222-8888-7777-bbbb123456-777777' ? "https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json?X-Amz-Algorithm=AWS4-ETC" : "manhattanPheWebJsonFile.zip"}) // note: the .json and .zip here are fake urls
+            ctx.json({"url": index_did === '222-8888-7777-bbbb123456-777777' ? dummyS3BucketLocation + "?X-Amz-Algorithm=AWS4-ETC" : "manhattanPheWebJsonFile.zip"}) // note: the .json and .zip here are fake urls
           );
         }
       ),
       rest.get(
-        'https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json',
+        dummyS3BucketLocation,
         (req, res, ctx) => {
           const { index_did } = req.params;
           console.log(index_did);
