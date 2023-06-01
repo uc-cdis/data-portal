@@ -3,8 +3,8 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
-import Results from './Results';
-import WorkflowStatusResponse from '../../TestData/WorkflowDetails';
+import ResultsPng from './ResultsPng';
+import WorkflowStatusResponse from '../../TestData/WorkflowDetailsOnlyPng';
 import * as analysisJobModule from '../../../AnalysisJob';
 
 const mockedQueryClient = new QueryClient({
@@ -24,7 +24,7 @@ const resultsWrapper = () => (
         setSelectedRowData,
       }}
     >
-      <Results />
+      <ResultsPng />
     </SharedContext.Provider>
   </QueryClientProvider>
 );
