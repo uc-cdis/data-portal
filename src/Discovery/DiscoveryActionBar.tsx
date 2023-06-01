@@ -257,7 +257,6 @@ const handleDownloadZipClick = async (
   history,
   location,
 ) => {
-
   let selectedResourcesWithManifest = selectedResources;
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
