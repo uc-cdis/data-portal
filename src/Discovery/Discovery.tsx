@@ -118,7 +118,7 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
     if (Array.isArray(content)) {
       return content.join(', ');
     }
-    return content !== undefined ? content.toLocaleString() : 'N/A';
+    return content;
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
