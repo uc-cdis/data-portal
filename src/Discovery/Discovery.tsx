@@ -390,7 +390,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
-
       // let value = record[column.field];
       let value = get(record, column.field);
       let renderedCell: undefined | string | ReactNode;
@@ -438,11 +437,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         }
       }
 
-      console.log("props.studies",props.studies);
-      console.log("record",record);
-      console.log("column.field", column.field);
+      console.log('props.studies', props.studies);
+      console.log('record', record);
+      console.log('column.field', column.field);
 
-      console.log("value",value);
+      console.log('value', value);
 
       return <Tooltip title='Click to view details'>{renderedCell}</Tooltip>;
     },
