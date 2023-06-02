@@ -19,6 +19,7 @@ import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
 } from './Discovery';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+import { get } from 'lodash';
 
 const { Panel } = Collapse;
 
@@ -127,7 +128,11 @@ type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
-  const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
+  // const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
+  const resourceFieldValue = fieldConfig.sourceField && get(resource, fieldConfig.sourceField);
+  console.log("resourceFieldValue", resourceFieldValue);
+
+
   if (resourceFieldValue) {
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
