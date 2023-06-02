@@ -151,7 +151,7 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^4.0.0",
+    "webpack-dev-server": "^4.15.0",
     "webpack-node-externals": "^3.0.0"
   },
   "overrides": {
