@@ -8,12 +8,13 @@ export const getWorkflowDetails = async (
 ) => {
   // query argo-wrapper endpoint to get the list of artifacts produced by the workflow:
   const endPoint = `${gwasWorkflowPath}status/${workflowName}?uid=${workflowUid}`;
+  const errorMessage = 'An error has occured while fetching workflow details';
   const response = await fetch(endPoint, { headers })
     .then((res) => res.json())
-    .then((data) => data);
+    .then((data) => data)
+    .catch((error) => { throw new Error(`${errorMessage}: ${error}`); });
   if (!response) {
-    const message = 'An error has occured while fetching workflow details';
-    throw new Error(message);
+    throw new Error(`${errorMessage}: empty response`);
   }
   return response;
 };
@@ -34,11 +35,7 @@ export const fetchPresignedUrlForWorkflowArtifact = async (
   workflowUid,
   artifactName,
 ) => {
-  // query argo-wrapper endpoint to get the list of artifacts produced by the workflow:
   const response = await getWorkflowDetails(workflowName, workflowUid);
-  if (!response) {
-    throw new Error('Error while querying workflow artifacts');
-  }
   if (!response.outputs.parameters) {
     throw new Error('Found no artifacts for workflow');
   }
