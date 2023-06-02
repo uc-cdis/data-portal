@@ -11,6 +11,7 @@ import {
   AuditOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import { get } from 'lodash';
 import {
   hostname, basename, fenceDownloadPath, studyRegistrationConfig,
 } from '../localconf';
@@ -127,7 +128,10 @@ type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
-  const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
+  // const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
+  const resourceFieldValue = fieldConfig.sourceField && get(resource, fieldConfig.sourceField);
+  console.log('resourceFieldValue', resourceFieldValue);
+
   if (resourceFieldValue) {
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
