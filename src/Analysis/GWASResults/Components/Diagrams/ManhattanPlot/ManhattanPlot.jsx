@@ -9,7 +9,7 @@ const ManhattanPlot = ({
 }) => {
   useEffect(() => {
     create_gwas_plot(variant_bins, unbinned_variants, manhattan_plot_container_id);
-  }, [variant_bins, unbinned_variants]);
+  }, [variant_bins, unbinned_variants, manhattan_plot_container_id]);
 
   return (
     <div id={manhattan_plot_container_id} data-testid={manhattan_plot_container_id} style={{ marginTop: '100px' }} />
