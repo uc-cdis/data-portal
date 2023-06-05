@@ -22,7 +22,6 @@ const ResultsPheWeb = () => {
   const manhattanPlotContainerId = 'manhattan_plot_container';
 
   const downloadManhattanPlot = () => {
-    console.log('saving image');
     const svgAsInnerHTML = d3.select(`#${manhattanPlotContainerId}`).select('svg')
       .attr('version', 1.1)
       .attr('xmlns', 'http://www.w3.org/2000/svg')
