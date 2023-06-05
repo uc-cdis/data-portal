@@ -45,7 +45,6 @@ import {memoize, property, range, some, sortBy, template} from 'lodash';
 
 // Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
 const tooltip_underscoretemplate = '<div style="background:grey;padding:5px;color:#fff"><b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %></div>';
-const urlprefix = 'mylocuszoom-url-prefix';
 
 // NOTE: `qval` means `-log10(pvalue)`.
 function fmt(format) {
@@ -299,13 +298,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
             .offset([-6,0]);
         gwas_svg.call(point_tooltip);
 
-        function get_link_to_LZ(variant) {
-            const base = new URL(urlprefix, window.location.origin);
-            base.searchParams.set('chrom', variant.chrom);
-            base.searchParams.set('start', Math.max(0, variant.pos - 200 * 1000));
-            base.searchParams.set('end', variant.pos + 200 * 1000);
-            return base;
-        }
 
         // Add gene name labels to the plot: the 7 most significant peaks, up to 2 gene labels per data point
         // Note: this is slightly different from PheWeb's code (b/c nearest_genes is represented differently)
@@ -339,7 +331,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
                 .enter()
                 .append('a')
                 .attr('class', 'variant_hover_ring')
-                .attr('xlink:href', get_link_to_LZ)
                 .append('circle')
                 .attr('cx', function(d) {
                     return x_scale(get_genomic_position(d));
@@ -367,7 +358,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
                 .enter()
                 .append('a')
                 .attr('class', 'variant_point')
-                .attr('xlink:href', get_link_to_LZ)
                 .append('circle')
                 .attr('id', function(d) {
                     return fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt);
