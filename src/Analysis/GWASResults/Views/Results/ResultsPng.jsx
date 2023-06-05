@@ -9,6 +9,8 @@ import {
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 
+/* eslint no-alert: 0 */ // --> OFF
+
 const ResultsPng = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
