@@ -2,10 +2,10 @@ import React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import JobDetails from './JobDetails';
-import MockedSuccessJSON from '../../TestData/InputViewData/MockedSuccessJSON';
-import PHASES from '../../Utils/PhasesEnumeration';
+import MockedSuccessJSON from '../../../TestData/InputViewData/MockedSuccessJSON';
+import PHASES from '../../../Utils/PhasesEnumeration';
 
 jest.mock('react-query');
 
@@ -25,7 +25,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -39,7 +39,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
@@ -53,10 +53,11 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
+    await waitFor(() =>
+      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
     );
   });
 
@@ -68,7 +69,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
     await waitFor(() => {
