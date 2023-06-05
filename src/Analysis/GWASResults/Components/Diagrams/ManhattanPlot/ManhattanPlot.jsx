@@ -18,7 +18,6 @@ const ManhattanPlot = ({
       setPheWebFailed(true);
       setPheWebFailure(error);
     }
-
   }, [variant_bins, unbinned_variants, manhattan_plot_container_id]);
 
   if (pheWebFailed) {

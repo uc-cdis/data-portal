@@ -11,6 +11,8 @@ import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErr
 import './Results.css';
 import ManhattanPlot from '../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 
+/* eslint func-names: 0 */ // --> OFF
+
 const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
