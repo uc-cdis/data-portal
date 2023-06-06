@@ -87,7 +87,7 @@ MockedSuccess.parameters = {
             ctx.delay(500),
             ctx.json({
               url: dummyS3BucketLocation + '?X-Amz-Algorithm=AWS4-ETC',
-            }) // note: the .json and .zip here are fake urls
+            })
           );
         }
       ),
