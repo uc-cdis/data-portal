@@ -1,5 +1,7 @@
 import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../localconf';
 
+const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the aggMDS response that contains the study data
+
 /**
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
  *
@@ -32,7 +34,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit, manifestFieldName) =
       const keys = Object.keys(entry);
       const studyId = keys[0];
 
-      const entryUnpacked = entry[studyId].gen3_discovery;
+      const entryUnpacked = entry[studyId][STUDY_DATA_FIELD];
       entryUnpacked.study_id = studyId;
       entryUnpacked.commons = commonsName;
       entryUnpacked.frontend_uid = `${commonsName}_${index}`;
@@ -92,13 +94,14 @@ const loadStudiesFromAggMDS = async (config) => {
 const loadStudyFromMDS = async (study, manifestFieldName) => {
   if (study[manifestFieldName] === 0) return { study, [manifestFieldName]: [] };
 
-  const url = `${aggMDSDataURL}/guid/${study.guid}`;
+  const url = `${aggMDSDataURL}/guid/${study.study_id}`;
   const resp = await fetch(url);
   if (resp.status !== 200) {
     throw new Error(`Request for study info at ${url} failed. Response: ${JSON.stringify(resp, null, 2)}`);
   }
   const studyWithManifest = await resp.json();
-  return { ...study, [manifestFieldName]: studyWithManifest[manifestFieldName] };
+
+  return { ...study, [manifestFieldName]: studyWithManifest[STUDY_DATA_FIELD][manifestFieldName] };
 };
 
 // eslint-disable-next-line max-len
