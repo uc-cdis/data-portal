@@ -60,6 +60,20 @@ export const getDataForWorkflowArtifact = async (
   return result;
 };
 
+export const retryWorkflow = async (
+  workflowName,
+  workflowUid,
+) => {
+  // query argo-wrapper endpoint to retry a failed workflow:
+  const endPoint = `${gwasWorkflowPath}retry/${workflowName}?uid=${workflowUid}`;
+  const response = await fetch(endPoint, { method: 'POST', headers });
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+};
+
 export const queryConfig = {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
