@@ -156,9 +156,11 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
-              {commonsInfo &&
+              {((commonsInfo &&
                 commonsInfo.type === 'file' &&
-                !commonsInfo.data && (
+                !commonsInfo.data) || (commonsInfo &&
+                  commonsInfo.type === 'redirect' &&
+                  !commonsInfo.link)) && (
                   <p className='no-data-info'>
                     There is no data for this cohort of subjects in the{' '}
                     {selected.value.toUpperCase()} platform
