@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { Space, Dropdown, Button } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
-  fetchPresignedUrlForWorkflowArtifact,
+  fetchPresignedUrlForWorkflowArtifact, retryWorkflow,
 } from '../../../../Utils/gwasWorkflowApi';
+import PHASES from '../../../../Utils/PhasesEnumeration';
+
+/* eslint no-alert: 0 */ // --> OFF
 
 const ActionsDropdown = ({ record }) => {
   const items = [
@@ -30,6 +33,28 @@ const ActionsDropdown = ({ record }) => {
         </a>
       ),
       disabled: false,
+    },
+    {
+      key: '2',
+      label: (
+        <a
+          href=''
+          onClick={(e) => {
+            e.preventDefault();
+            retryWorkflow(
+              record.name,
+              record.uid,
+            ).then(() => {
+              alert('Workflow successfully restarted.');
+            }).catch((error) => {
+              alert(`Retry request failed. \n\n${error}`);
+            });
+          }}
+        >
+          Retry
+        </a>
+      ),
+      disabled: (!(record.phase === PHASES.Error || record.phase === PHASES.Failed)),
     },
   ];
 
