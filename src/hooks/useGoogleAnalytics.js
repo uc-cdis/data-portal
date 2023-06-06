@@ -1,26 +1,25 @@
 import { useEffect } from 'react';
-import ReactGA from 'react-ga';
-import { gaDebug, hostname } from '../localconf';
+import ReactGA from 'react-ga4';
+import { gaDebug, basename } from '../localconf';
 import { gaTracking as gaTrackingId } from '../params';
 
-const isUsingGoogleAnalytics = /UA-\d+-\d+/.test(gaTrackingId);
-
-if (isUsingGoogleAnalytics)
-  ReactGA.initialize(gaTrackingId, { debug: gaDebug });
-
-const origin = hostname.slice(0, -1);
+const isUsingGoogleAnalytics =
+  gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-');
 
 /** @param {import('react-router').Location} location */
-function useGoogleAnalytics(location) {
-  const page = location.pathname + location.search;
-  useEffect(() => {
-    ReactGA.set({ page, location: `${origin}${page}` });
-    ReactGA.pageview(page);
-  }, [location]);
+export default function useGoogleAnalytics(location) {
+  if (isUsingGoogleAnalytics) {
+    ReactGA.initialize(gaTrackingId, {
+      testMode: gaDebug,
+    });
+    useEffect(() => {
+      const pagePath =
+        basename === '/'
+          ? `${location.pathname}${location.search}`
+          : `${basename}${location.pathname}${location.search}`;
+      window.gtag('event', 'page_view', {
+        page_path: pagePath,
+      });
+    }, [location]);
+  }
 }
-
-export default isUsingGoogleAnalytics
-  ? useGoogleAnalytics
-  : () => {
-      /* noop */
-    };
