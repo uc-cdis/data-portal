@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../../Utils/SharedContext';
 import AttritionTable from './AttrtitionTable';
-import MockedSuccessJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 

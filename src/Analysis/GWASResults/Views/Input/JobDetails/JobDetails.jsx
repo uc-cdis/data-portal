@@ -40,12 +40,12 @@ const JobDetails = () => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome') &&
-      IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome')
+      && IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name ||
-        JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name
+        || JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
