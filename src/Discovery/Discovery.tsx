@@ -118,7 +118,7 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
     if (Array.isArray(content)) {
       return content.join(', ');
     }
-    return content;
+    return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
@@ -160,7 +160,7 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
   }
 };
 
-const highlightSearchTerm = (value: string, searchTerm: string, highlightClassName = 'matched'): { highlighted: React.ReactNode, matchIndex: number } => {
+const highlightSearchTerm = (value: string, searchTerm: string, highlighClassName = 'matched'): { highlighted: React.ReactNode, matchIndex: number } => {
   const matchIndex = value ? value.toLowerCase().indexOf(searchTerm.toLowerCase()) : -1;
   const noMatchFound = matchIndex === -1;
   if (noMatchFound) {
@@ -173,7 +173,7 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlightClassNa
     highlighted: (
       <React.Fragment>
         {prev}
-        <span className={highlightClassName}>{matched}</span>
+        <span className={highlighClassName}>{matched}</span>
         {after}
       </React.Fragment>
     ),
