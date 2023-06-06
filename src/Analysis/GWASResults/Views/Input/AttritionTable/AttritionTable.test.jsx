@@ -25,7 +25,7 @@ describe('Attrition Table', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -39,7 +39,7 @@ describe('Attrition Table', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
@@ -53,11 +53,10 @@ describe('Attrition Table', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
-    await waitFor(() =>
-      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
     );
   });
 
@@ -69,7 +68,7 @@ describe('Attrition Table', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTable />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     await waitFor(() => {
