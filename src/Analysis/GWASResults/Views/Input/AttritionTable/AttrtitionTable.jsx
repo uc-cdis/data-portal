@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Collapse } from 'antd';
-import { gwasWorkflowPath } from '../../../../../localconf';
-import IsJsonString from '../../../Utils/IsJsonString';
-import { getDataForWorkflowArtifact } from '../../../Utils/gwasWorkflowApi';
-import { queryConfig } from '../../../Utils/gwasWorkflowApi';
+import {
+  getDataForWorkflowArtifact,
+  queryConfig,
+} from '../../../Utils/gwasWorkflowApi';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './AttritionTable.css';
@@ -14,13 +14,18 @@ const AttritionTable = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
-    ['getDataForWorkflowArtifact' + name, name, uid, 'attrition_json_index'],
+    [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
     queryConfig
   );
 
   if (status === 'error') {
-    return <LoadingErrorMessage message='Error getting attrition table data' />;
+    return (
+      <LoadingErrorMessage
+        data-testid='loading-error-message'
+        message='Error getting attrition table data'
+      />
+    );
   }
 
   if (status === 'loading') {
@@ -39,6 +44,7 @@ const AttritionTable = () => {
 
   return (
     <section data-testid='attrition-table' className='attrition-table'>
+      {JSON.stringify(data)}
       <div className='attrition-table'>
         <Collapse
           defaultActiveKey={['1']}
