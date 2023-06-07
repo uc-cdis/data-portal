@@ -16,7 +16,7 @@ const AttritionTable = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig
+    queryConfig,
   );
 
   if (status === 'error') {
