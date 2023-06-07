@@ -123,6 +123,8 @@ function ExplorerExploreExternalButton({ filter }) {
       return false;
     } else if (commonsInfo.type === 'file') {
       return commonsInfo.data ? isFileDownloaded : false;
+    } else if (commonsInfo.type === 'redirect') {
+      return commonsInfo.link ? true : false;
     } else {
       return true;
     }
