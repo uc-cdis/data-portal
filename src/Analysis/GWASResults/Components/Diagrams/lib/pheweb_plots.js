@@ -40,10 +40,11 @@ import {memoize, property, range, some, sortBy, template} from 'lodash';
 /* eslint prefer-destructuring: 0 */ // --> OFF
 /* eslint wrap-iife: 0 */ // --> OFF
 /* eslint arrow-parens: 0 */ // --> OFF
+/* eslint no-inner-declarations: 0 */ // --> OFF
+/* eslint func-names: 0 */ // --> OFF
 
 // Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
-const tooltip_underscoretemplate = '<b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %>';
-const urlprefix = 'mylocuszoom-url-prefix';
+const tooltip_underscoretemplate = '<div style="background:grey;padding:5px;color:#fff"><b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %></div>';
 
 // NOTE: `qval` means `-log10(pvalue)`.
 function fmt(format) {
@@ -54,7 +55,7 @@ function fmt(format) {
     });
 }
 
-function create_gwas_plot(variant_bins, unbinned_variants_in) {
+function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_container_id) {
     // FIXME: Replace global variables with options object
     // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
     // In the DOM, later siblings are displayed over top of (and occluding) earlier siblings.
@@ -154,8 +155,8 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         };
     }
 
-    window.addEventListener('load', function() {
-        const svg_width = document.getElementById('manhattan_plot_container').offsetWidth;
+    {
+        const svg_width = document.getElementById(manhattan_plot_container_id).offsetWidth;
         const svg_height = 550;
         const plot_margin = {
             'left': 70,
@@ -166,7 +167,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         const plot_width = svg_width - plot_margin.left - plot_margin.right;
         const plot_height = svg_height - plot_margin.top - plot_margin.bottom;
 
-        const gwas_svg = d3.select('#manhattan_plot_container').append('svg')
+        const gwas_svg = d3.select('#' + manhattan_plot_container_id).append('svg')
             .attr('id', 'gwas_svg')
             .attr('width', svg_width)
             .attr('height', svg_height)
@@ -297,13 +298,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
             .offset([-6,0]);
         gwas_svg.call(point_tooltip);
 
-        function get_link_to_LZ(variant) {
-            const base = new URL(urlprefix, window.location.origin);
-            base.searchParams.set('chrom', variant.chrom);
-            base.searchParams.set('start', Math.max(0, variant.pos - 200 * 1000));
-            base.searchParams.set('end', variant.pos + 200 * 1000);
-            return base;
-        }
 
         // Add gene name labels to the plot: the 7 most significant peaks, up to 2 gene labels per data point
         // Note: this is slightly different from PheWeb's code (b/c nearest_genes is represented differently)
@@ -337,7 +331,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
                 .enter()
                 .append('a')
                 .attr('class', 'variant_hover_ring')
-                .attr('xlink:href', get_link_to_LZ)
                 .append('circle')
                 .attr('cx', function(d) {
                     return x_scale(get_genomic_position(d));
@@ -365,7 +358,6 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
                 .enter()
                 .append('a')
                 .attr('class', 'variant_point')
-                .attr('xlink:href', get_link_to_LZ)
                 .append('circle')
                 .attr('id', function(d) {
                     return fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt);
@@ -442,7 +434,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in) {
         }
         pp3();
 
-    });
+    }
 }
 
 
@@ -461,7 +453,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
         maf_range.color = ['#e66101', '#fdb863', '#b2abd2', '#5e3c99'][i]; // eslint-disable-line no-param-reassign
     });
 
-    window.addEventListener('load', function() {
+    {
         const exp_max = d3.max(maf_ranges, function(maf_range) {
             return maf_range.qq.max_exp_qval;
         });
@@ -605,7 +597,7 @@ function create_qq_plot(maf_ranges, qq_ci) {
                                    plot_margin.left + plot_width / 2,
                                    plot_margin.top + plot_height + 40))
             .text('expected -log\u2081\u2080(p)');
-    });
+    }
 }
 
 export { create_gwas_plot, create_qq_plot };
