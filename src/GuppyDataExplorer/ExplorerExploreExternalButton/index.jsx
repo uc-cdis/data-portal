@@ -123,6 +123,8 @@ function ExplorerExploreExternalButton({ filter }) {
       return false;
     } else if (commonsInfo.type === 'file') {
       return commonsInfo.data ? isFileDownloaded : false;
+    } else if (commonsInfo.type === 'redirect') {
+      return commonsInfo.link ? true : false;
     } else {
       return true;
     }
@@ -156,9 +158,11 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
-              {commonsInfo &&
+              {((commonsInfo &&
                 commonsInfo.type === 'file' &&
-                !commonsInfo.data && (
+                !commonsInfo.data) || (commonsInfo &&
+                  commonsInfo.type === 'redirect' &&
+                  !commonsInfo.link)) && (
                   <p className='no-data-info'>
                     There is no data for this cohort of subjects in the{' '}
                     {selected.value.toUpperCase()} platform
