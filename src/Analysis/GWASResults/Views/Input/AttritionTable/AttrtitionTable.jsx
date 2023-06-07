@@ -16,7 +16,7 @@ const AttritionTable = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig,
+    queryConfig
   );
 
   if (status === 'error') {
@@ -44,7 +44,6 @@ const AttritionTable = () => {
 
   return (
     <section data-testid='attrition-table' className='attrition-table'>
-      {JSON.stringify(data)}
       <div className='attrition-table'>
         <Collapse
           defaultActiveKey={['1']}
@@ -58,16 +57,10 @@ const AttritionTable = () => {
                     Type
                   </th>
                   <th className='attrition-table--w15'>Name</th>
-                  <th
-                    className='attrition-table--rightborder
-                attrition-table--w5'
-                  >
+                  <th className='attrition-table--rightborder attrition-table--w5'>
                     Size
                   </th>
-                  <th
-                    className='attrition-table--w15
-                attrition-table--leftpad'
-                  >
+                  <th className='attrition-table--w15 attrition-table--leftpad'>
                     Non-Hispanic Black
                   </th>
                   <th className='attrition-table--w15'>Non-Hispanic Asian</th>
