@@ -112,7 +112,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           const studyPreviewText = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
 
           const renderValue = (value: string | undefined): React.ReactNode => {
-            if (!value) {
+            if (!value || value.length === 0 ) {
               if (props.config.studyPreviewField.includeIfNotAvailable) {
                 return props.config.studyPreviewField.valueIfNotAvailable;
               }

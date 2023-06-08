@@ -133,7 +133,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
 
   console.log('resourceFieldValue', resourceFieldValue);
 
-  if (resourceFieldValue) {
+  if (resourceFieldValue && resourceFieldValue.length>0) {
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
