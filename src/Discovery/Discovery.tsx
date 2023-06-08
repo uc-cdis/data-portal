@@ -2,6 +2,7 @@ import React, {
   useState, useEffect, ReactNode, useMemo,
 } from 'react';
 import * as JsSearch from 'js-search';
+import jsonpath from 'jsonpath';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
 } from 'antd';
@@ -332,9 +333,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
+      // Original search method
       // let value = record[column.field];
-      // Deeper Search Method
-      let value = get(record, column.field);
+      // Deeper Search Method with lodash
+      // let value = get(record, column.field);
+      // Deeper Search Method with jsonpath
+      let value = jsonpath.query(record, `$.${column.field}`);
 
       console.log('column.field', column.field);
       console.log(value);

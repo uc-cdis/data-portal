@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Table, Empty, Tag, Tooltip,
 } from 'antd';
-import { get } from 'lodash';
+import jsonpath from 'jsonpath';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
@@ -108,11 +108,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           (r) => r[props.config.minimalFieldMapping.uid]),
         expandedRowRender: (record, index) => {
           // const studyPreviewText = record[props.config.studyPreviewField.field];
-            // Deeper search method:
-            const studyPreviewText = get(
-              record,
-              props.config.studyPreviewField.field
-            );
+          // Deeper Search Method with jsonpath
+          const studyPreviewText = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
 
           const renderValue = (value: string | undefined): React.ReactNode => {
             if (!value) {

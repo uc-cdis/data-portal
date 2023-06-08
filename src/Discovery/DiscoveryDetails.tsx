@@ -11,7 +11,7 @@ import {
   AuditOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { get } from 'lodash';
+import jsonpath from 'jsonpath';
 import {
   hostname, basename, fenceDownloadPath, studyRegistrationConfig,
 } from '../localconf';
@@ -129,7 +129,8 @@ type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
   // const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
-  const resourceFieldValue = fieldConfig.sourceField && get(resource, fieldConfig.sourceField);
+  const resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
+
   console.log('resourceFieldValue', resourceFieldValue);
 
   if (resourceFieldValue) {
