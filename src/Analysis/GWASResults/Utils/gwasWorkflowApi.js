@@ -71,7 +71,7 @@ export const retryWorkflow = async (
     const message = `An error has occured: ${response.status}`;
     throw new Error(message);
   }
-  return response.json();
+  return response.text();
 };
 
 export const queryConfig = {
