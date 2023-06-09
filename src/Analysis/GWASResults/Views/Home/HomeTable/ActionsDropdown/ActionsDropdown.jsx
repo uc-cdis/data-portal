@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button, notification } from 'antd';
+import {
+  Space, Dropdown, Button, notification,
+} from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
   fetchPresignedUrlForWorkflowArtifact, retryWorkflow,
@@ -15,7 +17,7 @@ const ActionsDropdown = ({ record }) => {
       description: '',
       duration: 0,
     });
-  }
+  };
   const items = [
     {
       key: '1',
@@ -52,21 +54,20 @@ const ActionsDropdown = ({ record }) => {
               record.uid,
             ).then(() => {
               openNotification('Workflow successfully restarted.');
-            }).catch((error) => {
+            }).catch(() => {
               openNotification('❌ Retry request failed.');
-              console.log(error.stack);
             });
           }}
         >
           Retry
         </a>
       ),
-      disabled: (!(record.phase === PHASES.Error || record.phase === PHASES.Failed)),
+      disabled: record.phase !== PHASES.Error && record.phase !== PHASES.Failed, // eslint-disable-line
     },
   ];
 
   return (
-    <>
+    <React.Fragment>
       {contextHolder}
       <Dropdown menu={{ items }} trigger={['click']}>
         <Space>
@@ -75,7 +76,7 @@ const ActionsDropdown = ({ record }) => {
           </Button>
         </Space>
       </Dropdown>
-    </>
+    </React.Fragment>
   );
 };
 
