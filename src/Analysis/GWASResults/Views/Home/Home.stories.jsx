@@ -107,7 +107,32 @@ MockedSuccess.parameters = {
           const { argowrapperpath, workflow } = req.params;
           console.log(argowrapperpath);
           console.log(workflow);
-          return res(ctx.delay(2000), ctx.text(`${workflow} retried sucessfully`));
+          return res(ctx.delay(800), ctx.text(`${workflow} retried sucessfully`));
+        }
+      ),
+    ],
+  },
+};
+
+export const MockedSuccessButFailedRetry = MockTemplate.bind({});
+MockedSuccessButFailedRetry.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          console.log(argowrapperpath);
+          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.post(
+        'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
+        (req, res, ctx) => {
+          const { argowrapperpath, workflow } = req.params;
+          console.log(argowrapperpath);
+          console.log(workflow);
+          return res(ctx.delay(800), ctx.status(500), ctx.text(`${workflow} retry failed`));
         }
       ),
     ],
