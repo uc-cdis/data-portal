@@ -340,9 +340,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Deeper Search Method with jsonpath
       let value = jsonpath.query(record, `$.${column.field}`);
 
-      console.log('column.field', column.field);
-      console.log(value);
-
       let renderedCell: undefined | string | ReactNode;
 
       if (!value) {

@@ -109,7 +109,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         expandedRowRender: (record, index) => {
           // const studyPreviewText = record[props.config.studyPreviewField.field];
           // Deeper Search Method with jsonpath
-          const studyPreviewText = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
+          const studyPreviewTextArray = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
 
           const renderValue = (value: string | undefined): React.ReactNode => {
             if (!value || value.length === 0 ) {
@@ -169,7 +169,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                     props.setModalVisible(true);
                   }}
                 >
-                  {renderValue(studyPreviewText)}
+                  {
+                  renderValue(studyPreviewTextArray[0])}
                 </div>
               </div>
               { config.features.tagsInDescription?.enabled
