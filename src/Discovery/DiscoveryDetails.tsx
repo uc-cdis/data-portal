@@ -128,9 +128,11 @@ type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
-  const resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
+  let resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
 
-  if (resourceFieldValue && resourceFieldValue.length > 0) {
+  if (resourceFieldValue && resourceFieldValue.length > 0 && resourceFieldValue[0].length !== 0) {
+    resourceFieldValue = resourceFieldValue.join(',_');
+    console.log(resourceFieldValue);
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
