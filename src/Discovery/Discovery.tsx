@@ -21,7 +21,7 @@ import {
   MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
-import { get, debounce } from 'lodash';
+import { debounce } from 'lodash';
 import doDebounceSearch from './Utils/Search/doDebounceSearch';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import DiscoverySummary from './DiscoverySummary';
@@ -333,13 +333,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
-      // Original search method
-      // let value = record[column.field];
-      // Deeper Search Method with lodash
-      // let value = get(record, column.field);
-      // Deeper Search Method with jsonpath
       let value = jsonpath.query(record, `$.${column.field}`);
-
       let renderedCell: undefined | string | ReactNode;
 
       if (!value) {

@@ -107,8 +107,6 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         expandedRowKeys: props.visibleResources.map(
           (r) => r[props.config.minimalFieldMapping.uid]),
         expandedRowRender: (record, index) => {
-          // const studyPreviewText = record[props.config.studyPreviewField.field];
-          // Deeper Search Method with jsonpath
           const studyPreviewTextArray = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
 
           const renderValue = (value: string | undefined): React.ReactNode => {
