@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button } from 'antd';
+import { Space, Dropdown, Button, notification } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
   fetchPresignedUrlForWorkflowArtifact, retryWorkflow,
 } from '../../../../Utils/gwasWorkflowApi';
 import PHASES from '../../../../Utils/PhasesEnumeration';
 
-/* eslint no-alert: 0 */ // --> OFF
-
 const ActionsDropdown = ({ record }) => {
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (notificationMessage) => {
+    api.open({
+      message: notificationMessage,
+      description: '',
+      duration: 0,
+    });
+  }
   const items = [
     {
       key: '1',
@@ -25,7 +31,7 @@ const ActionsDropdown = ({ record }) => {
             ).then((res) => {
               window.open(res, '_blank');
             }).catch((error) => {
-              alert(`Could not download. \n\n${error}`);
+              openNotification(`❌ Could not download. \n\n${error}`);
             });
           }}
         >
@@ -45,9 +51,10 @@ const ActionsDropdown = ({ record }) => {
               record.name,
               record.uid,
             ).then(() => {
-              alert('Workflow successfully restarted.');
+              openNotification('Workflow successfully restarted.');
             }).catch((error) => {
-              alert(`Retry request failed. \n\n${error}`);
+              openNotification('❌ Retry request failed.');
+              console.log(error.stack);
             });
           }}
         >
@@ -59,13 +66,16 @@ const ActionsDropdown = ({ record }) => {
   ];
 
   return (
-    <Dropdown menu={{ items }} trigger={['click']}>
-      <Space>
-        <Button type='text'>
-          <EllipsisOutlined />
-        </Button>
-      </Space>
-    </Dropdown>
+    <>
+      {contextHolder}
+      <Dropdown menu={{ items }} trigger={['click']}>
+        <Space>
+          <Button type='text'>
+            <EllipsisOutlined />
+          </Button>
+        </Space>
+      </Dropdown>
+    </>
   );
 };
 
