@@ -51,6 +51,11 @@
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^4.0.0"
   },
+  "overrides": {
+    "html-webpack-plugin": {
+      "strip-ansi": "6.0.1"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "set \"HOST=local-covid19.planx-pla.net\" && npx webpack serve --mode development",
