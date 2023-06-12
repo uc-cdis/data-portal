@@ -5,6 +5,7 @@ import Input from './Input';
 import { rest } from 'msw';
 import MockedSuccessJSON from '../../TestData/InputViewData/MockedSuccessJSON';
 import MockedFailureJSON from '../../TestData/InputViewData/MockedFailureJSON';
+import AttritionTableJSON from '../../TestData/InputViewData/AttritionTableJSON';
 import './../../GWASResultsContainer.css';
 
 export default {
@@ -64,6 +65,8 @@ MockedFailure.parameters = {
   },
 };
 
+const dummyS3BucketLocation =
+  'https://some-bucket.s3.amazonaws.com/gwas-workflow-123/test_pheweb.json';
 export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
@@ -75,6 +78,24 @@ MockedSuccess.parameters = {
           return res(ctx.delay(100), ctx.json(MockedSuccessJSON));
         }
       ),
+      rest.get(
+        'http://:server/user/data/download/:index_did',
+        (req, res, ctx) => {
+          const { index_did } = req.params;
+          console.log(index_did);
+          return res(
+            ctx.delay(500),
+            ctx.json({
+              url: dummyS3BucketLocation + '?X-Amz-Algorithm=AWS4-ETC',
+            })
+          );
+        }
+      ),
+      rest.get(dummyS3BucketLocation, (req, res, ctx) => {
+        const { index_did } = req.params;
+        console.log(index_did);
+        return res(ctx.delay(500), ctx.json(AttritionTableJSON));
+      }),
     ],
   },
 };
