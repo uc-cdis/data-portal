@@ -213,7 +213,7 @@ function FilterSection({
     onToggleExclusion(isExclusion);
     setState((prevState) => ({
       ...prevState,
-      isExclusion
+      isExclusion,
     }));
   }
 
@@ -428,10 +428,10 @@ function FilterSection({
       <>
         <div>
           Filter Mode
-          <ButtonToggle 
+          <ButtonToggle
             isOn={!state.isExclusion}
             onText='Include'
-            offText='Exclude' 
+            offText='Exclude'
             onToggle={handleToggleExclusion}
           />
         </div>
@@ -594,22 +594,15 @@ function FilterSection({
       {isTextFilter && renderSearchInput()}
       {isArrayField && renderCombineOptionButton()}
       {isSearchFilter && renderSearchFilter()}
-      {state.isExpanded &&
-        (options.length > 0 ? (
-          <div className='g3-filter-section__options'>
-            {(isTextFilter || isSearchFilter) &&
-              renderTextFilter(
-                /** @type {OptionFilterStatus} */ (filterStatus)
-              )}
-            {isRangeFilter &&
-              renderRangeFilter(
-                /** @type {RangeFilterStatus} */ (filterStatus)
-              )}
-            {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
-          </div>
-        ) : (
-          <div className='g3-filter-section__no-option'>No data</div>
-        ))}
+      {state.isExpanded && (
+        <div className='g3-filter-section__options'>
+          {(isTextFilter || isSearchFilter) &&
+            renderTextFilter(/** @type {OptionFilterStatus} */ (filterStatus))}
+          {isRangeFilter &&
+            renderRangeFilter(/** @type {RangeFilterStatus} */ (filterStatus))}
+          {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
+        </div>
+      )}
     </div>
   );
 }

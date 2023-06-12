@@ -232,7 +232,9 @@ function FilterGroup({
       isExclusion,
     });
 
-    setExcludedStatus(getExcludedStatus(filterTabs, updated.filterResults, excludedStatus));
+    setExcludedStatus(
+      getExcludedStatus(filterTabs, updated.filterResults, excludedStatus)
+    );
     setFilterResults(removeEmptyFilter(updated.filterResults));
     onFilterChange(removeEmptyFilter(updated.filterResults));
   }
@@ -376,36 +378,38 @@ function FilterGroup({
             patientIds={patientIds}
           />
         )}
-        {tabs[tabIndex].map((section, index) => (
-          <FilterSection
-            key={section.title}
-            sectionTitle={section.title}
-            disabledTooltipMessage={disabledTooltipMessage}
-            excluded={excludedStatus[tabIndex][index]}
-            expanded={expandedStatus[tabIndex][index]}
-            filterStatus={filterTabStatus[index]}
-            hideZero={hideZero}
-            isArrayField={section.isArrayField}
-            isSearchFilter={section.isSearchFilter}
-            lockedTooltipMessage={lockedTooltipMessage}
-            onAfterDrag={(...args) => handleDrag(index, ...args)}
-            onClear={() => handleClearSection(index)}
-            onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
-            onSelect={(label, isExclusion) =>
-              handleSelect(index, label, isExclusion)
-            }
-            onToggle={(isExpanded) => handleToggleSection(index, isExpanded)}
-            onToggleCombineMode={(...args) =>
-              handleToggleCombineMode(index, ...args)
-            }
-            onToggleExclusion={(isExclusion) =>
-              handleToggleExclusion(index, isExclusion)
-            }
-            options={section.options}
-            title={section.title}
-            tooltip={section.tooltip}
-          />
-        ))}
+        {tabs[tabIndex]
+          .filter((section) => !!section.options.length)
+          .map((section, index) => (
+            <FilterSection
+              key={section.title}
+              sectionTitle={section.title}
+              disabledTooltipMessage={disabledTooltipMessage}
+              excluded={excludedStatus[tabIndex][index]}
+              expanded={expandedStatus[tabIndex][index]}
+              filterStatus={filterTabStatus[index]}
+              hideZero={hideZero}
+              isArrayField={section.isArrayField}
+              isSearchFilter={section.isSearchFilter}
+              lockedTooltipMessage={lockedTooltipMessage}
+              onAfterDrag={(...args) => handleDrag(index, ...args)}
+              onClear={() => handleClearSection(index)}
+              onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
+              onSelect={(label, isExclusion) =>
+                handleSelect(index, label, isExclusion)
+              }
+              onToggle={(isExpanded) => handleToggleSection(index, isExpanded)}
+              onToggleCombineMode={(...args) =>
+                handleToggleCombineMode(index, ...args)
+              }
+              onToggleExclusion={(isExclusion) =>
+                handleToggleExclusion(index, isExclusion)
+              }
+              options={section.options}
+              title={section.title}
+              tooltip={section.tooltip}
+            />
+          ))}
       </div>
     </div>
   );
