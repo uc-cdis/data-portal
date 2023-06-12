@@ -16,7 +16,7 @@ const AttritionTable = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig,
+    queryConfig
   );
 
   if (status === 'error') {
@@ -41,6 +41,13 @@ const AttritionTable = () => {
       <LoadingErrorMessage message='Issue Loading Data for Attrition Table' />
     );
   }
+
+  const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
+    const matchingObject = conceptBreakdownArray.find(
+      (obj) => obj.concept_value_name === groupName
+    );
+    return matchingObject?.persons_in_cohort_with_value || <h3>❌</h3>;
+  };
 
   return (
     <section data-testid='attrition-table' className='attrition-table'>
@@ -77,20 +84,25 @@ const AttritionTable = () => {
                       {row?.size || <h3>❌</h3>}
                     </td>
                     <td>
-                      {row?.concept_breakdown[0]
-                        ?.persons_in_cohort_with_value || <h3>❌</h3>}
+                      {getBreakDownForGroup(
+                        'non-Hispanic Black',
+                        row?.concept_breakdown
+                      )}
                     </td>
                     <td>
-                      {row?.concept_breakdown[1]
-                        ?.persons_in_cohort_with_value || <h3>❌</h3>}
+                      {getBreakDownForGroup(
+                        'non-Hispanic Asian',
+                        row?.concept_breakdown
+                      )}
                     </td>
                     <td>
-                      {row?.concept_breakdown[2]
-                        ?.persons_in_cohort_with_value || <h3>❌</h3>}
+                      {getBreakDownForGroup(
+                        'non-Hispanic White',
+                        row?.concept_breakdown
+                      )}
                     </td>
                     <td>
-                      {row?.concept_breakdown[3]
-                        ?.persons_in_cohort_with_value || <h3>❌</h3>}
+                      {getBreakDownForGroup('Hispanic', row?.concept_breakdown)}
                     </td>
                   </tr>
                 ))}
