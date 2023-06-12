@@ -63,6 +63,11 @@ const MockedSuccessJSON = {
         value:
           '{\n    "baseid": "e6283201-0e02-483e-980a-9d321d05ebc3",\n    "did": "733993c2-3238-4779-8b4b-a3d744dadba0",\n    "rev": "102de8d6"\n}',
       },
+      {
+        name: 'attrition_json_index',
+        value:
+          '{\n    "baseid": "e6283201-0e02-483e-980a-9d321d05ebc4",\n    "did": "733993c2-3238-4779-8b4b-a3d744dadba1",\n    "rev": "102de8d6"\n}',
+      },
     ],
   },
 };
