@@ -1,12 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button } from 'antd';
+import {
+  Space, Dropdown, Button, notification,
+} from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
-  fetchPresignedUrlForWorkflowArtifact,
+  fetchPresignedUrlForWorkflowArtifact, retryWorkflow,
 } from '../../../../Utils/gwasWorkflowApi';
+import PHASES from '../../../../Utils/PhasesEnumeration';
 
 const ActionsDropdown = ({ record }) => {
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (notificationMessage) => {
+    api.open({
+      message: notificationMessage,
+      description: '',
+      duration: 0,
+    });
+  };
   const items = [
     {
       key: '1',
@@ -22,7 +33,7 @@ const ActionsDropdown = ({ record }) => {
             ).then((res) => {
               window.open(res, '_blank');
             }).catch((error) => {
-              alert(`Could not download. \n\n${error}`);
+              openNotification(`❌ Could not download. \n\n${error}`);
             });
           }}
         >
@@ -31,16 +42,41 @@ const ActionsDropdown = ({ record }) => {
       ),
       disabled: false,
     },
+    {
+      key: '2',
+      label: (
+        <a
+          href=''
+          onClick={(e) => {
+            e.preventDefault();
+            retryWorkflow(
+              record.name,
+              record.uid,
+            ).then(() => {
+              openNotification('Workflow successfully restarted.');
+            }).catch(() => {
+              openNotification('❌ Retry request failed.');
+            });
+          }}
+        >
+          Retry
+        </a>
+      ),
+      disabled: record.phase !== PHASES.Error && record.phase !== PHASES.Failed, // eslint-disable-line
+    },
   ];
 
   return (
-    <Dropdown menu={{ items }} trigger={['click']}>
-      <Space>
-        <Button type='text'>
-          <EllipsisOutlined />
-        </Button>
-      </Space>
-    </Dropdown>
+    <React.Fragment>
+      {contextHolder}
+      <Dropdown menu={{ items }} trigger={['click']}>
+        <Space>
+          <Button type='text'>
+            <EllipsisOutlined />
+          </Button>
+        </Space>
+      </Dropdown>
+    </React.Fragment>
   );
 };
 
