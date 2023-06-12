@@ -2,10 +2,10 @@ import React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import JobDetails from './JobDetails';
-import MockedSuccessJSON from '../../TestData/InputViewData/MockedSuccessJSON';
-import PHASES from '../../Utils/PhasesEnumeration';
+import MockedSuccessJSON from '../../../TestData/InputViewData/MockedSuccessJSON';
+import PHASES from '../../../Utils/PhasesEnumeration';
 
 jest.mock('react-query');
 
