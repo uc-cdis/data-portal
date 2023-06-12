@@ -16,7 +16,7 @@ const AttritionTable = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig
+    queryConfig,
   );
 
   if (status === 'error') {
@@ -44,7 +44,7 @@ const AttritionTable = () => {
 
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
-      (obj) => obj.concept_value_name === groupName
+      (obj) => obj.concept_value_name === groupName,
     );
     return matchingObject?.persons_in_cohort_with_value || <h3>❌</h3>;
   };
@@ -86,19 +86,19 @@ const AttritionTable = () => {
                     <td>
                       {getBreakDownForGroup(
                         'non-Hispanic Black',
-                        row?.concept_breakdown
+                        row?.concept_breakdown,
                       )}
                     </td>
                     <td>
                       {getBreakDownForGroup(
                         'non-Hispanic Asian',
-                        row?.concept_breakdown
+                        row?.concept_breakdown,
                       )}
                     </td>
                     <td>
                       {getBreakDownForGroup(
                         'non-Hispanic White',
-                        row?.concept_breakdown
+                        row?.concept_breakdown,
                       )}
                     </td>
                     <td>
