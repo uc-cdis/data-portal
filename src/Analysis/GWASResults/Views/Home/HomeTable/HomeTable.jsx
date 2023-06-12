@@ -238,7 +238,7 @@ const HomeTable = ({ data }) => {
             />
           ),
           dataIndex: 'finishedAt',
-          render: (value) => <DateForTable utcFormattedDate={value} />,
+          render: (value) => (value ? <DateForTable utcFormattedDate={value} /> : '—/—/----'),
         },
       ],
     },
