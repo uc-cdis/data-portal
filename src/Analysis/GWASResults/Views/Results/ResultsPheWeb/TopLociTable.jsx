@@ -65,7 +65,7 @@ const TopLociTable = ({ data }) => {
       ],
     },
     {
-      title: 'af',
+      title: 'AF',
       dataIndex: 'af',
       key: 'af',
       sorter: (a, b) => a.af.toString().localeCompare(b.af.toString()),
