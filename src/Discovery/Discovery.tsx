@@ -204,6 +204,7 @@ export interface Props {
     [accessLevel: number]: boolean
   },
   accessSortDirection: AccessSortDirection,
+  onAdvancedSearch: (advancedSearch: any[]) => any,
   onSearchChange: (arg0: string) => any,
   onTagsSelected: (arg0: any) => any,
   onAccessFilterSet: (arg0: object) => any,
@@ -745,7 +746,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   config={props.config}
                   studies={props.studies}
                   filterState={filterState}
-                  setFilterState={setFilterState}
+                  setFilterState={(event) => {
+                    props.onAdvancedSearch(event);
+                    setFilterState(event);
+                  }}
                   filterMultiSelectionLogic={filterMultiSelectionLogic}
                   setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
                 />
