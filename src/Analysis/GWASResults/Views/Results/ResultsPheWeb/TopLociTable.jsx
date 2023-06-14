@@ -6,13 +6,12 @@ import downloadTSVFromJson from './downloadTSVFromJSON';
 const TopLociTable = ({ data }) => {
   // Adds a variant key value pair with the desired formatting
   const tableData = useMemo(
-    () =>
-      data.map((obj) => ({
-        ...obj,
-        variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
+    () => data.map((obj) => ({
+      ...obj,
+      variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
     ${obj?.alt} (${obj?.rsids})`,
-      })),
-    [data]
+    })),
+    [data],
   );
 
   const [filteredData, setFilteredData] = useState(data);
@@ -60,14 +59,11 @@ const TopLociTable = ({ data }) => {
     return null;
   };
 
-  const filterBySearchTerm = (data, key, searchTerm) => {
-    return data.filter((obj) =>
-      obj[key]
-        .toString()
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-  };
+  const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
+    .toString()
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase()),
+  );
 
   const filterTableData = (tableData, lociTableState) => {
     let filteredDataResult = tableData;
@@ -75,28 +71,28 @@ const TopLociTable = ({ data }) => {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'variant',
-        lociTableState.variantSearchTerm
+        lociTableState.variantSearchTerm,
       );
     }
     if (lociTableState.nearestGenesSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'nearest_genes',
-        lociTableState.nearestGenesSearchTerm
+        lociTableState.nearestGenesSearchTerm,
       );
     }
     if (lociTableState.afSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'af',
-        lociTableState.afSearchTerm
+        lociTableState.afSearchTerm,
       );
     }
     if (lociTableState.pvalSearchTerm.length > 0) {
       filteredDataResult = filterBySearchTerm(
         filteredDataResult,
         'pval',
-        lociTableState.pvalSearchTerm
+        lociTableState.pvalSearchTerm,
       );
     }
     return filteredDataResult;
@@ -149,9 +145,7 @@ const TopLociTable = ({ data }) => {
               placeholder='Search by Nearest gene(s)'
               suffix={<SearchOutlined />}
               value={lociTableState.nearestGenesSearchTerm}
-              onChange={(event) =>
-                handleSearchTermChange(event, 'nearest_genes')
-              }
+              onChange={(event) => handleSearchTermChange(event, 'nearest_genes')}
             />
           ),
           dataIndex: 'nearest_genes',
