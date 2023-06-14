@@ -3,10 +3,9 @@ const downloadTSVFromJson = (filename, arrayOfJson) => {
   // convert JSON to CSV
   const replacer = (key, value) => (value === null ? '' : value); // specify how you want to handle null values here
   const header = Object.keys(arrayOfJson[0]);
-  let tsv = arrayOfJson.map((row) =>
-    header
-      .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-      .join('\t')
+  let tsv = arrayOfJson.map((row) => header
+    .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+    .join('\t'),
   );
   tsv.unshift(header.join('\t'));
   tsv = tsv.join('\r\n');
@@ -15,7 +14,7 @@ const downloadTSVFromJson = (filename, arrayOfJson) => {
   const link = document.createElement('a');
   link.setAttribute(
     'href',
-    'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(tsv)
+    `data:text/csv;charset=utf-8,%EF%BB%BF${encodeURIComponent(tsv)}`,
   );
   link.setAttribute('download', filename);
   link.style.visibility = 'hidden';

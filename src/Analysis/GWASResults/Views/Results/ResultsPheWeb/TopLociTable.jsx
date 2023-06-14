@@ -4,19 +4,26 @@ import { SearchOutlined } from '@ant-design/icons';
 import downloadTSVFromJson from './downloadTSVFromJSON';
 
 const TopLociTable = ({ data }) => {
-  const tableData = useMemo(() => {
-    return data.map((obj) => ({
-      ...obj,
-      variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
+  // Adds a variant key value pair with the desired formatting
+  const tableData = useMemo(
+    () =>
+      data.map((obj) => ({
+        ...obj,
+        variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
     ${obj?.alt} (${obj?.rsids})`,
-    }));
-  }, [data]);
+      })),
+    [data]
+  );
 
   const [filteredData, setFilteredData] = useState(data);
   const [lociTableState, setLociTableState] = useState({
     variantSearchTerm: '',
+    nearestGenesSearchTerm: '',
+    pvalSearchTerm: '',
+    afSearchTerm: '',
     currentPage: 1,
   });
+
   useEffect(() => {
     setFilteredData(filterTableData(tableData, lociTableState));
   }, [lociTableState, tableData]);
@@ -29,11 +36,31 @@ const TopLociTable = ({ data }) => {
         variantSearchTerm: event.target.value,
       });
     }
+    if (searchTermKey === 'nearest_genes') {
+      setLociTableState({
+        ...lociTableState,
+        currentPage: 1,
+        nearestGenesSearchTerm: event.target.value,
+      });
+    }
+    if (searchTermKey === 'pval') {
+      setLociTableState({
+        ...lociTableState,
+        currentPage: 1,
+        pvalSearchTerm: event.target.value,
+      });
+    }
+    if (searchTermKey === 'af') {
+      setLociTableState({
+        ...lociTableState,
+        currentPage: 1,
+        afSearchTerm: event.target.value,
+      });
+    }
     return null;
   };
 
   const filterBySearchTerm = (data, key, searchTerm) => {
-    console.log('data', data, ' key', key, ' searchTerm', searchTerm);
     return data.filter((obj) =>
       obj[key]
         .toString()
@@ -49,6 +76,27 @@ const TopLociTable = ({ data }) => {
         filteredDataResult,
         'variant',
         lociTableState.variantSearchTerm
+      );
+    }
+    if (lociTableState.nearestGenesSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'nearest_genes',
+        lociTableState.nearestGenesSearchTerm
+      );
+    }
+    if (lociTableState.afSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'af',
+        lociTableState.afSearchTerm
+      );
+    }
+    if (lociTableState.pvalSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'pval',
+        lociTableState.pvalSearchTerm
       );
     }
     return filteredDataResult;
@@ -93,16 +141,14 @@ const TopLociTable = ({ data }) => {
       title: 'Nearest Gene(s)',
       dataIndex: 'nearest_genes',
       key: 'nearest_genes',
-
       sorter: (a, b) => a.nearest_genes.localeCompare(b.nearest_genes),
-
       children: [
         {
           title: (
             <Input
               placeholder='Search by Nearest gene(s)'
               suffix={<SearchOutlined />}
-              value={lociTableState.nearest_genes}
+              value={lociTableState.nearestGenesSearchTerm}
               onChange={(event) =>
                 handleSearchTermChange(event, 'nearest_genes')
               }
@@ -124,7 +170,7 @@ const TopLociTable = ({ data }) => {
             <Input
               placeholder='Search by Af'
               suffix={<SearchOutlined />}
-              value={lociTableState.af}
+              value={lociTableState.afSearchTerm}
               onChange={(event) => handleSearchTermChange(event, 'af')}
             />
           ),
@@ -144,7 +190,7 @@ const TopLociTable = ({ data }) => {
             <Input
               placeholder='Search by P-value'
               suffix={<SearchOutlined />}
-              value={lociTableState.pval}
+              value={lociTableState.pvalSearchTerm}
               onChange={(event) => handleSearchTermChange(event, 'pval')}
             />
           ),
@@ -154,7 +200,6 @@ const TopLociTable = ({ data }) => {
       sorter: (a, b) => a.pval.toString().localeCompare(b.pval.toString()),
     },
   ];
-  console.log('DATA:', tableData);
 
   return (
     <section className='top-loci'>
