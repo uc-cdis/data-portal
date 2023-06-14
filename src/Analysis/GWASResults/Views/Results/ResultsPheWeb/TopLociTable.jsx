@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Table, Input, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import downloadCSVFromJson from './downloadCSVFromJSON';
+import downloadTSVFromJson from './downloadTSVFromJSON';
 
 const TopLociTable = ({ data }) => {
   const tableData = useMemo(() => {
@@ -12,21 +12,69 @@ const TopLociTable = ({ data }) => {
     }));
   }, [data]);
 
-  const handleSearchTermChange = () => null;
-  const downloadTopLoci = () => downloadCSVFromJson('topLociCSV.csv', data);
-
-  const lociTableState = {
+  const [filteredData, setFilteredData] = useState(data);
+  const [lociTableState, setLociTableState] = useState({
     variantSearchTerm: '',
     currentPage: 1,
+  });
+  useEffect(() => {
+    setFilteredData(filterTableData(tableData, lociTableState));
+  }, [lociTableState, tableData]);
+
+  const handleSearchTermChange = (event, searchTermKey) => {
+    if (searchTermKey === 'variant') {
+      setLociTableState({
+        ...lociTableState,
+        currentPage: 1,
+        variantSearchTerm: event.target.value,
+      });
+    }
+    return null;
   };
+
+  const filterBySearchTerm = (data, key, searchTerm) => {
+    console.log('data', data, ' key', key, ' searchTerm', searchTerm);
+    return data.filter((obj) =>
+      obj[key]
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const filterTableData = (tableData, lociTableState) => {
+    let filteredDataResult = tableData;
+    if (lociTableState.variantSearchTerm.length > 0) {
+      filteredDataResult = filterBySearchTerm(
+        filteredDataResult,
+        'variant',
+        lociTableState.variantSearchTerm
+      );
+    }
+    return filteredDataResult;
+  };
+
+  const handleTableChange = (pagination, filters, sorter) => {
+    if (pagination.current !== lociTableState.currentPage) {
+      // User changes page selection, set page to current pagination selection
+      return setLociTableState({
+        ...lociTableState,
+        currentPage: pagination.current,
+      });
+    }
+    // When the user updates sorting set page to first page
+    return setLociTableState({
+      ...lociTableState,
+      currentPage: 1,
+    });
+  };
+
   const columns = [
     {
       title: 'Variant',
       dataIndex: 'variant',
       key: 'variant',
-
       sorter: (a, b) => a.variant.localeCompare(b.variant),
-
       children: [
         {
           title: (
@@ -112,15 +160,17 @@ const TopLociTable = ({ data }) => {
     <section className='top-loci'>
       <h2>Top Loci</h2>
       <div className='table-header'>
-        <Button onClick={downloadTopLoci}>Download All Results</Button>
+        <Button onClick={() => downloadTSVFromJson('topLociTSV.tsv', data)}>
+          Download All Results
+        </Button>
       </div>
       <Table
-        dataSource={tableData}
+        dataSource={filteredData}
         columns={columns}
         rowKey={(record) => record.pos}
-        // onChange={handleTableChange}
+        onChange={handleTableChange}
         pagination={{
-          // current: lociTableState.currentPage,
+          current: lociTableState.currentPage,
           defaultPageSize: 10,
           showSizeChanger: true,
           pageSizeOptions: ['10', '20', '30'],
