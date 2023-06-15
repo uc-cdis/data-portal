@@ -164,13 +164,12 @@ const accessDescriptor = (resource: DiscoveryResource) => {
 type TabFieldConfig = TabFieldGroup['fields'][0];
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
-const formatResourceValuesWhenArray = (resourceFieldValue: string[]) => {
+const formatResourceValuesWhenNestedArray = (resourceFieldValue: string[]) => {
   if (
     Array.isArray(resourceFieldValue) &&
-    resourceFieldValue.length > 0 &&
     Array.isArray(resourceFieldValue[0])
   ) {
-    return (resourceFieldValue = resourceFieldValue[0].join(', '));
+    return resourceFieldValue[0].join(', ');
   }
   return resourceFieldValue;
 };
@@ -189,7 +188,12 @@ const tabField = (
     resourceFieldValue.length > 0 &&
     resourceFieldValue[0].length !== 0
   ) {
-    resourceFieldValue = formatResourceValuesWhenArray(resourceFieldValue);
+    console.log('Before', resourceFieldValue);
+    resourceFieldValue = formatResourceValuesWhenNestedArray(
+      resourceFieldValue
+    );
+    console.log('after', resourceFieldValue);
+
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
