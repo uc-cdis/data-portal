@@ -110,7 +110,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           const studyPreviewTextArray = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
 
           const renderValue = (value: string | undefined): React.ReactNode => {
-            if (!value || value.length === 0 ) {
+            if (!value || value.length === 0) {
               if (props.config.studyPreviewField.includeIfNotAvailable) {
                 return props.config.studyPreviewField.valueIfNotAvailable;
               }
@@ -167,7 +167,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                     props.setModalVisible(true);
                   }}
                 >
-                  {studyPreviewTextArray.forEach((item: string | undefined) =>renderValue(item))}
+                  {studyPreviewTextArray.forEach((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
               { config.features.tagsInDescription?.enabled
