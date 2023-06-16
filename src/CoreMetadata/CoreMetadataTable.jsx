@@ -25,7 +25,7 @@ class CoreMetadataTable extends Component {
       .filter((key) => metadata[key]) // do not display row if empty
       .map((key) => [
         <div className='core-metadata-table__title-cell'>{firstCharToUppercase(key)}</div>,
-        metadata[key],
+        Array.isArray(metadata[key]) ? metadata[key].join(', ') : metadata[key],
       ])
     : []);
 
