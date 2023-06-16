@@ -20,6 +20,14 @@ const discovery = (
   action,
 ) => {
   switch (action.type) {
+  case 'ADVANCED_SEARCH':
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination,
+        currentPage: 1,
+      },
+    };
   case 'RESOURCES_SELECTED':
     return {
       ...state,
