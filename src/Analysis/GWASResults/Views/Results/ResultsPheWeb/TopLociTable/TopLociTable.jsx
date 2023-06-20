@@ -8,12 +8,13 @@ import filterLociTableData from './filterLociTableData';
 const TopLociTable = ({ data }) => {
   // Adds a variant key value pair with the desired formatting
   const tableData = useMemo(
-    () => data.map((obj) => ({
-      ...obj,
-      variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
+    () =>
+      data.map((obj) => ({
+        ...obj,
+        variant: `${obj?.chrom}:${obj?.pos.toLocaleString('en-US')} ${obj?.ref}/
     ${obj?.alt} (${obj?.rsids})`,
-    })),
-    [data],
+      })),
+    [data]
   );
 
   const [filteredData, setFilteredData] = useState(data);
@@ -108,7 +109,9 @@ const TopLociTable = ({ data }) => {
               placeholder='Search by Nearest gene(s)'
               suffix={<SearchOutlined />}
               value={lociTableState.nearestGenesSearchTerm}
-              onChange={(event) => handleSearchTermChange(event, 'nearest_genes')}
+              onChange={(event) =>
+                handleSearchTermChange(event, 'nearest_genes')
+              }
             />
           ),
           dataIndex: 'nearest_genes',
