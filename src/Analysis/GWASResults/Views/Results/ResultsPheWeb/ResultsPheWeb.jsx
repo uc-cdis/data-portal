@@ -12,6 +12,7 @@ import '../Results.css';
 import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 import TopLociTable from './TopLociTable/TopLociTable';
 
+/* eslint func-names: 0 */ // --> OFF
 const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
