@@ -1,10 +1,8 @@
-const filterBySearchTerm = (data, key, searchTerm) =>
-  data.filter((obj) =>
-    obj[key]
-      .toString()
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
+  .toString()
+  .toLowerCase()
+  .includes(searchTerm.toLowerCase()),
+);
 
 const filterLociTableData = (tableData, lociTableState) => {
   let filteredDataResult = tableData;
@@ -12,28 +10,28 @@ const filterLociTableData = (tableData, lociTableState) => {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,
       'variant',
-      lociTableState.variantSearchTerm
+      lociTableState.variantSearchTerm,
     );
   }
   if (lociTableState.nearestGenesSearchTerm.length > 0) {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,
       'nearest_genes',
-      lociTableState.nearestGenesSearchTerm
+      lociTableState.nearestGenesSearchTerm,
     );
   }
   if (lociTableState.afSearchTerm.length > 0) {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,
       'af',
-      lociTableState.afSearchTerm
+      lociTableState.afSearchTerm,
     );
   }
   if (lociTableState.pvalSearchTerm.length > 0) {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,
       'pval',
-      lociTableState.pvalSearchTerm
+      lociTableState.pvalSearchTerm,
     );
   }
   return filteredDataResult;
