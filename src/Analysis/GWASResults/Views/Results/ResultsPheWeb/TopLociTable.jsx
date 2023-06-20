@@ -1,7 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Table, Input, Button } from 'antd';
+import PropTypes from 'prop-types';
 import { SearchOutlined } from '@ant-design/icons';
 import downloadTSVFromJson from './downloadTSVFromJSON';
+import filterLociTableData from './filterLociTableData';
 
 const TopLociTable = ({ data }) => {
   // Adds a variant key value pair with the desired formatting
@@ -24,7 +26,7 @@ const TopLociTable = ({ data }) => {
   });
 
   useEffect(() => {
-    setFilteredData(filterTableData(tableData, lociTableState));
+    setFilteredData(filterLociTableData(tableData, lociTableState));
   }, [lociTableState, tableData]);
 
   const handleSearchTermChange = (event, searchTermKey) => {
@@ -59,46 +61,7 @@ const TopLociTable = ({ data }) => {
     return null;
   };
 
-  const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
-    .toString()
-    .toLowerCase()
-    .includes(searchTerm.toLowerCase()),
-  );
-
-  const filterTableData = (tableData, lociTableState) => {
-    let filteredDataResult = tableData;
-    if (lociTableState.variantSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'variant',
-        lociTableState.variantSearchTerm,
-      );
-    }
-    if (lociTableState.nearestGenesSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'nearest_genes',
-        lociTableState.nearestGenesSearchTerm,
-      );
-    }
-    if (lociTableState.afSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'af',
-        lociTableState.afSearchTerm,
-      );
-    }
-    if (lociTableState.pvalSearchTerm.length > 0) {
-      filteredDataResult = filterBySearchTerm(
-        filteredDataResult,
-        'pval',
-        lociTableState.pvalSearchTerm,
-      );
-    }
-    return filteredDataResult;
-  };
-
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination) => {
     if (pagination.current !== lociTableState.currentPage) {
       // User changes page selection, set page to current pagination selection
       return setLociTableState({
@@ -176,8 +139,7 @@ const TopLociTable = ({ data }) => {
       title: 'P-value',
       dataIndex: 'pval',
       key: 'pval',
-      sorter: (a, b) => a.pval.localeCompare(b.pval),
-
+      sorter: (a, b) => a.pval.toString().localeCompare(b.pval.toString()),
       children: [
         {
           title: (
@@ -191,7 +153,6 @@ const TopLociTable = ({ data }) => {
           dataIndex: 'pval',
         },
       ],
-      sorter: (a, b) => a.pval.toString().localeCompare(b.pval.toString()),
     },
   ];
 
@@ -217,6 +178,10 @@ const TopLociTable = ({ data }) => {
       />
     </section>
   );
+};
+
+TopLociTable.propTypes = {
+  data: PropTypes.array.isRequired,
 };
 
 export default TopLociTable;
