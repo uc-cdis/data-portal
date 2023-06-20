@@ -2,30 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TopLociTable from './TopLociTable';
+import TopLociTableData from '../../../../TestData/ResultsViewData/TopLociTableData';
 
 describe('TopLociTable', () => {
-  const mockData = [
-    {
-      chrom: '1',
-      pos: 1000,
-      ref: 'A',
-      alt: 'T',
-      rsids: 'rs123',
-      nearest_genes: 'GeneA',
-      af: 0.1,
-      pval: 0.05,
-    },
-    {
-      chrom: '1',
-      pos: 1001,
-      ref: 'A',
-      alt: 'T',
-      rsids: 'rs456',
-      nearest_genes: 'GeneB',
-      af: 0.1,
-      pval: 0.05,
-    },
-  ];
+  const mockData = TopLociTableData;
 
   test('renders table columns and search inputs', () => {
     render(<TopLociTable data={mockData} />);

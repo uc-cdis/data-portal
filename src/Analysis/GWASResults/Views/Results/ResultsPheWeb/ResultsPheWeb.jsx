@@ -9,10 +9,10 @@ import {
 } from '../../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import '../Results.css';
-import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot'; // --> OFF
+import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 import TopLociTable from './TopLociTable/TopLociTable';
 
-/* eslint func-names: 0 */ const ResultsPheWeb = () => {
+const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(

@@ -1,21 +1,12 @@
 import filterLociTableData from './filterLociTableData';
+import TopLociTableData from '../../../../TestData/ResultsViewData/TopLociTableData';
 
 describe('filterLociTableData', () => {
-  const tableData = [
-    {
-      variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05,
-    },
-    {
-      variant: 'B', nearest_genes: 'GeneB', af: 0.2, pval: 0.01,
-    },
-    {
-      variant: 'C', nearest_genes: 'GeneC', af: 0.3, pval: 0.02,
-    },
-  ];
+  const tableData = TopLociTableData;
 
   const lociTableState = {
-    variantSearchTerm: 'A',
-    nearestGenesSearchTerm: '',
+    variantSearchTerm: '',
+    nearestGenesSearchTerm: 'GeneA',
     afSearchTerm: '',
     pvalSearchTerm: '',
   };
@@ -25,7 +16,14 @@ describe('filterLociTableData', () => {
 
     expect(filteredData).toEqual([
       {
-        variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05,
+        chrom: '1',
+        pos: 1000,
+        ref: 'A',
+        alt: 'T',
+        rsids: 'rs123',
+        nearest_genes: 'GeneA',
+        af: 0.1,
+        pval: 0.05,
       },
     ]);
   });
