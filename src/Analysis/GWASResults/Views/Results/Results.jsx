@@ -11,9 +11,9 @@ import {
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
-import ResultsPng from './ResultsPng/ResultsPng'; // --> OFF
+import ResultsPng from './ResultsPng/ResultsPng';
 
-/* eslint no-alert: 0 */ const Results = () => {
+const Results = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(

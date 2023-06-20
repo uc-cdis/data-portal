@@ -38,14 +38,14 @@ describe('TopLociTable', () => {
 
     // Check if the search inputs are rendered
     expect(
-      screen.getByPlaceholderText('Search by Variant')
+      screen.getByPlaceholderText('Search by Variant'),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('Search by Nearest gene(s)')
+      screen.getByPlaceholderText('Search by Nearest gene(s)'),
     ).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search by Af')).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('Search by P-value')
+      screen.getByPlaceholderText('Search by P-value'),
     ).toBeInTheDocument();
   });
 

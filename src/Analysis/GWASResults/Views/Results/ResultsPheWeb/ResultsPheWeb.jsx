@@ -18,7 +18,7 @@ import TopLociTable from './TopLociTable/TopLociTable';
   const { data, status } = useQuery(
     ['getDataForWorkflowArtifact', name, uid, 'pheweb_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_json_index'),
-    queryConfig
+    queryConfig,
   );
   const manhattanPlotContainerId = 'manhattan_plot_container';
 
@@ -33,13 +33,13 @@ import TopLociTable from './TopLociTable/TopLociTable';
 
     const svgAsInnerHTMLAsUtf8Buffer = Buffer.from(svgAsInnerHTML);
     const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString(
-      'base64'
+      'base64',
     );
 
     const svgData = `data:image/svg+xml;base64,${svgAsInnerHTMLAsBase64}`;
     const tmpImage = new Image();
     tmpImage.src = svgData;
-    tmpImage.onload = function() {
+    tmpImage.onload = function () {
       const hiddenCanvas = document.createElement('canvas');
       hiddenCanvas.width = document.body.clientWidth;
       hiddenCanvas.height = document.body.clientHeight * 0.6;
@@ -49,7 +49,7 @@ import TopLociTable from './TopLociTable/TopLociTable';
         0,
         0,
         hiddenCanvas.width,
-        hiddenCanvas.height
+        hiddenCanvas.height,
       );
       const canvasData = hiddenCanvas.toDataURL('image/png');
 

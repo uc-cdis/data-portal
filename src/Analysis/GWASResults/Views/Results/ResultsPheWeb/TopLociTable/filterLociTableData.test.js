@@ -2,9 +2,15 @@ import filterLociTableData from './filterLociTableData';
 
 describe('filterLociTableData', () => {
   const tableData = [
-    { variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05 },
-    { variant: 'B', nearest_genes: 'GeneB', af: 0.2, pval: 0.01 },
-    { variant: 'C', nearest_genes: 'GeneC', af: 0.3, pval: 0.02 },
+    {
+      variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05,
+    },
+    {
+      variant: 'B', nearest_genes: 'GeneB', af: 0.2, pval: 0.01,
+    },
+    {
+      variant: 'C', nearest_genes: 'GeneC', af: 0.3, pval: 0.02,
+    },
   ];
 
   const lociTableState = {
@@ -18,7 +24,9 @@ describe('filterLociTableData', () => {
     const filteredData = filterLociTableData(tableData, lociTableState);
 
     expect(filteredData).toEqual([
-      { variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05 },
+      {
+        variant: 'A', nearest_genes: 'GeneA', af: 0.1, pval: 0.05,
+      },
     ]);
   });
 
