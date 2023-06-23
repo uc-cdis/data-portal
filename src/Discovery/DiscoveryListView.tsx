@@ -167,7 +167,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                     props.setModalVisible(true);
                   }}
                 >
-                  {studyPreviewTextArray.forEach((item: string | undefined) => renderValue(item))}
+                  {studyPreviewTextArray.map((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
               { config.features.tagsInDescription?.enabled
