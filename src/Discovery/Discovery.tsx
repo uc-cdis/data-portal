@@ -267,6 +267,15 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterState],
   );
 
+
+  const formatSearchIndex = (index: String) => {
+    // if (!index.includes(".")) return index;
+    const wildCardStringRegex = new RegExp(/\[\*\]/,"g");
+    const indexWithoutWildcards = index.replace(wildCardStringRegex,'');
+    const indexArr = indexWithoutWildcards.split('.');
+    return indexArr;
+  }
+
   useEffect(() => {
     // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
@@ -278,19 +287,25 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     // in the table and the study description.
     // ---
     const searchableFields = config.features.search.searchBar.searchableTextFields;
-    if (searchableFields) {
+    if (searchableFields && 0==1) {
       searchableFields.forEach((field) => {
+        console.log("search.addIndex(field): ", (field))
         search.addIndex(field);
       });
     } else {
       config.studyColumns.forEach((column) => {
         if (!column.contentType || column.contentType === 'string') {
-          search.addIndex(column.field);
+          console.log("search.addIndex(column.field)", (formatSearchIndex(column.field)));
+          const studyColumnFieldsArr = formatSearchIndex(column.field);
+          search.addIndex(studyColumnFieldsArr);
+          // search.addIndex(formatSearchIndex(column.field));
         }
       });
       // Also enable search over preview field if present
       if (config.studyPreviewField) {
-        search.addIndex(config.studyPreviewField.field);
+        console.log("search.addIndex(config.studyPreviewField.field);", (config.studyPreviewField.field))
+        const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
+        search.addIndex(studyPreviewFieldArr);
       }
     }
     // ---
