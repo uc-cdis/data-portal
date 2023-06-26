@@ -1,7 +1,11 @@
+
+
+
 const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
   .toString()
   .toLowerCase()
-  .includes(searchTerm.toLowerCase()),
+  .replace(/,/g, '')
+  .includes(searchTerm.toLowerCase().replace(/,/g, '')),
 );
 
 const filterLociTableData = (tableData, lociTableState) => {

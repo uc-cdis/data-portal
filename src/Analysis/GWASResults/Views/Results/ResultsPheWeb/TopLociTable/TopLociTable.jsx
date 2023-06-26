@@ -173,7 +173,7 @@ const TopLociTable = ({ data }) => {
           current: lociTableState.currentPage,
           defaultPageSize: 10,
           showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '30'],
+          pageSizeOptions: ['10', '50', '100','500','1000'],
         }}
       />
     </section>
