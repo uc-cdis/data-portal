@@ -83,26 +83,20 @@ const TopLociTable = ({ data }) => {
       key: 'variant',
       // sorter: (a, b) => a.variant.localeCompare(b.variant),
       sorter: (a, b) => {
-          const numA = Number(a.variant.split(":")[0]);
-          const numB = Number(b.variant.split(":")[0]);
-          if (numA === numB) {
-            let numA1 = (a.variant.split(":")[1]);
-            numA1 = numA1.substring(0,numA1.indexOf(" "));
-            numA1 = Number(numA1.replace(/,/g, ''))
-            console.log("numA1",numA1);
+        const chromA = Number(a.variant.split(':')[0]);
+        const chromB = Number(b.variant.split(':')[0]);
+        if (chromA === chromB) {
+          let posA = (a.variant.split(':')[1]);
+          posA = posA.substring(0, posA.indexOf(' '));
+          posA = Number(posA.replace(/,/g, ''));
 
-            let numB2 = (b.variant.split(":")[1]);
-            numB2 = numB2.substring(0,numB2.indexOf(" "));
-            numB2 = Number(numB2.replace(/,/g, ''));
-            console.log("numB2",numB2);
-
-            return Number(numA1)- Number(numB2);
-          }
-          return numA-(numB);
-        },
-
-
-
+          let posB = (b.variant.split(':')[1]);
+          posB = posB.substring(0, posB.indexOf(' '));
+          posB = Number(posB.replace(/,/g, ''));
+          return posA - posB;
+        }
+        return chromA - chromB;
+      },
 
       children: [
         {
@@ -141,7 +135,7 @@ const TopLociTable = ({ data }) => {
       title: 'AF',
       dataIndex: 'af',
       key: 'af',
-      sorter: (a, b) => a.af.toString().localeCompare(b.af.toString()),
+      sorter: (a, b) => Number(a.af) - Number(b.af),
 
       children: [
         {
@@ -161,7 +155,7 @@ const TopLociTable = ({ data }) => {
       title: 'P-value',
       dataIndex: 'pval',
       key: 'pval',
-      sorter: (a, b) => a.pval.toString().localeCompare(b.pval.toString()),
+      sorter: (a, b) => Number(a.pval) - Number(b.pval),
       children: [
         {
           title: (
