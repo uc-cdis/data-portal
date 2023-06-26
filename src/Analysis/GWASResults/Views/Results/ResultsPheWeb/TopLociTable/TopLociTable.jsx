@@ -81,7 +81,29 @@ const TopLociTable = ({ data }) => {
       title: 'Variant',
       dataIndex: 'variant',
       key: 'variant',
-      sorter: (a, b) => a.variant.localeCompare(b.variant),
+      // sorter: (a, b) => a.variant.localeCompare(b.variant),
+      sorter: (a, b) => {
+          const numA = Number(a.variant.split(":")[0]);
+          const numB = Number(b.variant.split(":")[0]);
+          if (numA === numB) {
+            let numA1 = (a.variant.split(":")[1]);
+            numA1 = numA1.substring(0,numA1.indexOf(" "));
+            numA1 = Number(numA1.replace(/,/g, ''))
+            console.log("numA1",numA1);
+
+            let numB2 = (b.variant.split(":")[1]);
+            numB2 = numB2.substring(0,numB2.indexOf(" "));
+            numB2 = Number(numB2.replace(/,/g, ''));
+            console.log("numB2",numB2);
+
+            return Number(numA1)- Number(numB2);
+          }
+          return numA-(numB);
+        },
+
+
+
+
       children: [
         {
           title: (
@@ -173,7 +195,7 @@ const TopLociTable = ({ data }) => {
           current: lociTableState.currentPage,
           defaultPageSize: 10,
           showSizeChanger: true,
-          pageSizeOptions: ['10', '50', '100','500','1000'],
+          pageSizeOptions: ['10', '50', '100', '500', '1000'],
         }}
       />
     </section>

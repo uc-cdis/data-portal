@@ -1,6 +1,3 @@
-
-
-
 const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
   .toString()
   .toLowerCase()
