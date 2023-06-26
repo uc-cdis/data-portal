@@ -10,7 +10,7 @@ import * as d3Scale from 'd3-scale';
 import * as d3Axis from 'd3-axis';
 import * as d3Format from 'd3-format';
 import d3Tip from 'd3-tip';
-import {memoize, property, range, some, sortBy, template} from 'lodash';
+import {memoize, property, range, some, sortBy, template, escape} from 'lodash';
 
 /* eslint camelcase: 0 */ // --> OFF
 /* eslint no-unused-vars: 0 */ // --> OFF
@@ -103,6 +103,14 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
     function get_genomic_position(variant) {
         const chrom_offsets = get_chrom_offsets().chrom_offsets;
         return chrom_offsets[variant.chrom] + variant.pos;
+    }
+
+    function get_variant_point_id(variant) {
+        const chrom = variant.chrom;
+        const pos = variant.pos;
+        const ref = escape(variant.ref);
+        const alt = escape(variant.alt);
+        return fmt('variant-point-{0}-{1}-{2}-{3}', chrom, pos, ref, alt);
     }
 
     function get_y_axis_config(max_data_qval, plot_height, includes_pval0) {
@@ -343,7 +351,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
                 .style('stroke-width', 1)
                 .on('mouseover', function(d) {
                 //Note: once a tooltip has been explicitly placed once, it must be explicitly placed forever after.
-                    const target_node = document.getElementById(fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt));
+                    const target_node = document.getElementById(get_variant_point_id(d));
                     point_tooltip.show(d, target_node);
                 })
                 .on('mouseout', point_tooltip.hide);
@@ -360,7 +368,7 @@ function create_gwas_plot(variant_bins, unbinned_variants_in, manhattan_plot_con
                 .attr('class', 'variant_point')
                 .append('circle')
                 .attr('id', function(d) {
-                    return fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt);
+                    return get_variant_point_id(d);
                 })
                 .attr('cx', function(d) {
                     return x_scale(get_genomic_position(d));
