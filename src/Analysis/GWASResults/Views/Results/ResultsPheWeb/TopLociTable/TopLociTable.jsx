@@ -81,19 +81,11 @@ const TopLociTable = ({ data }) => {
       title: 'Variant',
       dataIndex: 'variant',
       key: 'variant',
-      // sorter: (a, b) => a.variant.localeCompare(b.variant),
       sorter: (a, b) => {
-        const chromA = Number(a.variant.split(':')[0]);
-        const chromB = Number(b.variant.split(':')[0]);
+        const chromA = Number(a.chrom);
+        const chromB = Number(b.chrom);
         if (chromA === chromB) {
-          let posA = (a.variant.split(':')[1]);
-          posA = posA.substring(0, posA.indexOf(' '));
-          posA = Number(posA.replace(/,/g, ''));
-
-          let posB = (b.variant.split(':')[1]);
-          posB = posB.substring(0, posB.indexOf(' '));
-          posB = Number(posB.replace(/,/g, ''));
-          return posA - posB;
+          return Number(a.pos) - Number(b.pos);
         }
         return chromA - chromB;
       },
