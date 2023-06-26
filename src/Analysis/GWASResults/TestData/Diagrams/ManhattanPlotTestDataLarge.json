@@ -25104,7 +25104,7 @@
             "chrom": "6",
             "pos": 31321100,
             "ref": "T",
-            "alt": "C",
+            "alt": "<CN0>",
             "rsids": "rs7748141",
             "nearest_genes": "HLA-B",
             "consequence": "intergenic_variant",
