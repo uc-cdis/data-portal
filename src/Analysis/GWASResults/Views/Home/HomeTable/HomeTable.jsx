@@ -21,6 +21,7 @@ const { RangePicker } = DatePicker;
 const HomeTable = ({ data }) => {
   const {
     setCurrentView,
+    selectedRowData,
     setSelectedRowData,
     homeTableState,
     setHomeTableState,
@@ -294,12 +295,15 @@ const HomeTable = ({ data }) => {
   ].filter((item) => item.show);
 
   const [filteredData, setFilteredData] = useState(data);
+
+
   useEffect(() => {
     setFilteredData(filterTableData(data, homeTableState));
   }, [homeTableState, data]);
 
   const checkForShownColumn = () => Object.values(homeTableState.columnManagement).includes(true);
 
+  console.log("filteredData", filteredData)
   return (
     <div className='home-table'>
       {checkForShownColumn() ? (
@@ -307,6 +311,7 @@ const HomeTable = ({ data }) => {
           dataSource={isIterable(filteredData) && [...filteredData]}
           columns={columns}
           rowKey={(record) => record.uid}
+          rowClassName={(record) => record.uid === selectedRowData?.uid && 'selected-row'}
           onChange={handleTableChange}
           pagination={{
             current: homeTableState.currentPage,

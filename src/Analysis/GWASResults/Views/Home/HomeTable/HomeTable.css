@@ -10,6 +10,17 @@
   min-width: 160px;
 }
 
+.home-table .selected-row {
+  background-color: #FCEFE4;
+}
+
+.home-table .selected-row:hover,
+.home-table .ant-table-tbody > tr.selected-row.ant-table-row:hover > td,
+.home-table .ant-table-tbody > tr.selected-row > td.ant-table-cell-row-hover
+{
+  background-color: RGBA(252, 239, 228,0.9);
+}
+
 .home-table th.ant-table-cell {
   background: #e9eef2;
   font-weight: bold;
