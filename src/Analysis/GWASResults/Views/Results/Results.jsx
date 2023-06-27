@@ -10,11 +10,10 @@ import {
 } from '../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
-import ResultsPheWeb from './ResultsPheWeb';
-import ResultsPng from './ResultsPng';
+import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
+import ResultsPng from './ResultsPng/ResultsPng';
 
 /* eslint no-alert: 0 */ // --> OFF
-
 const Results = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
@@ -77,18 +76,18 @@ const Results = () => {
 
   const displayManhattanPlot = () => {
     // Try the pheweb option first:
-    let results = data.outputs.parameters.filter((entry) => entry.name === 'pheweb_json_index');
-    if (results.length !== 0) {
-      return (
-        <ResultsPheWeb />
-      );
+    let results = data?.outputs?.parameters?.filter(
+      (entry) => entry.name === 'pheweb_json_index',
+    );
+    if (results && results.length !== 0) {
+      return <ResultsPheWeb />;
     }
     // If no pheweb json file, try to see if there is a PNG Manhattan plot:
-    results = data.outputs.parameters.filter((entry) => entry.name === 'manhattan_plot_index');
-    if (results.length !== 0) {
-      return (
-        <ResultsPng />
-      );
+    results = data?.outputs?.parameters?.filter(
+      (entry) => entry.name === 'manhattan_plot_index',
+    );
+    if (results && results.length !== 0) {
+      return <ResultsPng />;
     }
     // If none of the above, show error:
     return (
@@ -99,9 +98,7 @@ const Results = () => {
   return (
     <div className='results-view'>
       {displayTopSection()}
-      <section className='data-viz'>
-        {displayManhattanPlot()}
-      </section>
+      <section className='data-viz'>{displayManhattanPlot()}</section>
     </div>
   );
 };
