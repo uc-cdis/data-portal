@@ -2,10 +2,10 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import ResultsPng from './ResultsPng';
-import WorkflowStatusResponse from '../../TestData/WorkflowDetailsOnlyPng';
-import * as analysisJobModule from '../../../AnalysisJob';
+import WorkflowStatusResponse from '../../../TestData/WorkflowDetailsOnlyPng';
+import * as analysisJobModule from '../../../../AnalysisJob';
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
@@ -51,10 +51,12 @@ describe('Results component', () => {
     let methodUsed = '';
 
     // replace the getPresignedUrl() method with a simple one that just collects its arguments:
-    jest.spyOn(analysisJobModule, 'getPresignedUrl').mockImplementation((did, method) => {
-      didUsed = did;
-      methodUsed = method;
-    });
+    jest
+      .spyOn(analysisJobModule, 'getPresignedUrl')
+      .mockImplementation((did, method) => {
+        didUsed = did;
+        methodUsed = method;
+      });
 
     // render the component, which will internally trigger the call to getPresignedUrl():
     render(resultsWrapper());

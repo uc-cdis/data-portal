@@ -2,17 +2,17 @@ import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
 import * as d3 from 'd3-selection';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import {
   getDataForWorkflowArtifact,
   queryConfig,
-} from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import './Results.css';
-import ManhattanPlot from '../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
+} from '../../../Utils/gwasWorkflowApi';
+import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import '../Results.css';
+import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
+import TopLociTable from './TopLociTable/TopLociTable';
 
 /* eslint func-names: 0 */ // --> OFF
-
 const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
@@ -24,14 +24,18 @@ const ResultsPheWeb = () => {
   const manhattanPlotContainerId = 'manhattan_plot_container';
 
   const downloadManhattanPlot = () => {
-    const svgAsInnerHTML = d3.select(`#${manhattanPlotContainerId}`).select('svg')
+    const svgAsInnerHTML = d3
+      .select(`#${manhattanPlotContainerId}`)
+      .select('svg')
       .attr('version', 1.1)
       .attr('xmlns', 'http://www.w3.org/2000/svg')
       .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') // https://stackoverflow.com/questions/59138117/svg-namespace-prefix-xlink-for-href-on-image-is-not-defined - this deprecated xlink is still used by PheWeb
       .node().parentNode.innerHTML;
 
     const svgAsInnerHTMLAsUtf8Buffer = Buffer.from(svgAsInnerHTML);
-    const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString('base64');
+    const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString(
+      'base64',
+    );
 
     const svgData = `data:image/svg+xml;base64,${svgAsInnerHTMLAsBase64}`;
     const tmpImage = new Image();
@@ -41,7 +45,13 @@ const ResultsPheWeb = () => {
       hiddenCanvas.width = document.body.clientWidth;
       hiddenCanvas.height = document.body.clientHeight * 0.6;
       const canvasContext = hiddenCanvas.getContext('2d');
-      canvasContext.drawImage(tmpImage, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+      canvasContext.drawImage(
+        tmpImage,
+        0,
+        0,
+        hiddenCanvas.width,
+        hiddenCanvas.height,
+      );
       const canvasData = hiddenCanvas.toDataURL('image/png');
 
       const a = document.createElement('a');
@@ -100,6 +110,7 @@ const ResultsPheWeb = () => {
           manhattan_plot_container_id={manhattanPlotContainerId}
         />
       </section>
+      <TopLociTable data={data.unbinned_variants} />
     </div>
   );
 };
