@@ -24,3 +24,29 @@ section.data-viz {
 .data-viz img {
   width: 100%;
 }
+
+.top-loci h2 {
+  text-align: left;
+  color: #2e77b8;
+  font-size: 18px;
+}
+
+.top-loci th.ant-table-cell.ant-table-column-has-sorters {
+  background-color: #e9eef2;
+  font-weight: bold;
+}
+
+.top-loci .table-header {
+  background-color: #cfdbe6;
+  min-height: 64px;
+  position: relative;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.top-loci .table-header button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+  right: 0;
+}
