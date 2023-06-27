@@ -1,17 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button, Tooltip } from 'antd';
-import SharedContext from '../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import {
   fetchPresignedUrlForWorkflowArtifact,
   queryConfig,
-} from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import './Results.css';
+} from '../../../Utils/gwasWorkflowApi';
+import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import '../Results.css';
 
-/* eslint no-alert: 0 */ // --> OFF
-
-const ResultsPng = () => {
+/* eslint no-alert: 0 */ const ResultsPng = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageLoadFailed, setImageLoadFailed] = useState(false);
   const { selectedRowData } = useContext(SharedContext);
