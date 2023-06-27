@@ -74,7 +74,7 @@ Example configuration:
             {
                 // configuration specific to the "Request Access" button
                 "type": "request_access",
-                "requiredIdpField": "required_idp", // optional, requires user to have logged in through this identity provider to request access
+                "requiredIdpField": "required_idp", // optional, requires user to have logged in through this identity provider to request access, this matches to an etl mapped field on each record
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
                 "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"
