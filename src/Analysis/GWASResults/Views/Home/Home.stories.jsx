@@ -11,8 +11,6 @@ const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
 
-// const setSelectedRowData = () => {alert('setSelectedRowData called');};
-
 export default {
   title: 'Tests2/GWASResults/Views/Home',
   component: 'Home',
