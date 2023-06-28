@@ -37,7 +37,7 @@ const Results = () => {
     <section className='results-top'>
       <div className='GWASResults-flex-row'>
         <div className='GWASResults-flex-col'>
-          <DetailPageHeader pageTitle={'Results'} />
+          <DetailPageHeader pageTitle={`Results / ${name}`} />
         </div>
         <div>
           <Button onClick={downloadAll}>Download All Results</Button>
