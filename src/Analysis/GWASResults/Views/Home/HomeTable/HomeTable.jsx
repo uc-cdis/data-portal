@@ -295,14 +295,12 @@ const HomeTable = ({ data }) => {
   ].filter((item) => item.show);
 
   const [filteredData, setFilteredData] = useState(data);
-
   useEffect(() => {
     setFilteredData(filterTableData(data, homeTableState));
   }, [homeTableState, data]);
 
   const checkForShownColumn = () => Object.values(homeTableState.columnManagement).includes(true);
 
-  console.log('filteredData', filteredData);
   return (
     <div className='home-table'>
       {checkForShownColumn() ? (
