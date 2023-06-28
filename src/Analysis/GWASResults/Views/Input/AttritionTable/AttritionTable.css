@@ -36,14 +36,14 @@
 }
 
 .attrition-table
-  .ant-collapse-header[aria-expanded='true']
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded='true']
+.ant-collapse-expand-icon:before {
   margin-top: -1px;
 }
 
 .attrition-table
-  .ant-collapse-header[aria-expanded='false']
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded='false']
+.ant-collapse-expand-icon:before {
   transform: rotate(180deg);
   transform-origin: 7px 9px;
   margin: 1px 2px;
