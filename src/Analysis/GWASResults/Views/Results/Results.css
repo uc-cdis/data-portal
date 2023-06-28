@@ -6,6 +6,14 @@
   text-align: center;
 }
 
+.top-loci .table-header button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+  right: 0;
+}
+
 section.results-top button:not(.return-home-button) {
   float: right;
   margin-right: 8px;
@@ -40,13 +48,5 @@ section.data-viz {
   background-color: #cfdbe6;
   min-height: 64px;
   position: relative;
-  border-radius: 4px 4px 0px 0px;
-}
-
-.top-loci .table-header button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 10px;
-  right: 0;
+  border-radius: 4px 4px 0 0;
 }
