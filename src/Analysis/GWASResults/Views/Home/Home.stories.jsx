@@ -10,7 +10,8 @@ import InitialHomeTableState from './HomeTableState/InitialHomeTableState';
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
-const setSelectedRowData = () => alert('setSelectedRowData called');
+
+// const setSelectedRowData = () => {alert('setSelectedRowData called');};
 
 export default {
   title: 'Tests2/GWASResults/Views/Home',
@@ -24,11 +25,13 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
+  const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
         value={{
+          selectedRowData,
           setSelectedRowData,
           setCurrentView,
           homeTableState,
