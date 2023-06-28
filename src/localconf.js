@@ -137,10 +137,10 @@ function buildConfig(opts) {
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'x-csrf-token': document.cookie.replace(
-      /(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/,
-      '$1'
-    ),
+    'x-csrf-token': document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken=") && row.length > "csrftoken=".length)
+      ?.split("=")[1],
   };
 
   return {

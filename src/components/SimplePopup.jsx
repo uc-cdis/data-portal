@@ -9,12 +9,14 @@ import './SimplePopup.css';
 
 /** @param {SimplePopupPops} props */
 function SimplePopup({ children }) {
-  return ReactDOM.createPortal(
+  return <>
+    {ReactDOM.createPortal(
     <div className='simple-popup__overlay'>
       <div className='simple-popup__main'>{children}</div>
     </div>,
     document.getElementById('root')
-  );
+    )}
+  </>
 }
 
 SimplePopup.propTypes = {

@@ -1,16 +1,17 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import { useAppSelector } from '../redux/hooks';
 import { formatLocalTime } from '../utils';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
+import Spinner from '../gen3-ui-component/components/Spinner/Spinner';
 
 /** @typedef {import('../redux/types').RootState} RootState */
-/** @typedef {import('./index.jsx').ResearcherInfo} ResearcherInfo */
-/** @typedef {import('./index.jsx').DataRequestProject} DataRequestProject */
+/** @typedef {import('../redux/dataRequest/types').ResearcherInfo} ResearcherInfo */
+/** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
 
 const tableHeader = [
   'ID',
@@ -65,38 +66,64 @@ function parseTableData({ projects, showApprovedOnly, userId }) {
 /**
  * @param {Object} props
  * @param {string} [props.className]
- * @param {boolean} props.isLoading
  * @param {DataRequestProject[]} props.projects
+ * @param {boolean} props.isAdmin
+ * @param {function} props.onToggleAdmin
+ * @param {boolean} [props.isLoading]
  */
-function DataRequestsTable({ className = '', isLoading, projects }) {
+function DataRequestsTable({ className = '', projects, isAdmin, onToggleAdmin, isLoading }) {
+  const transitionTo = useNavigate();
   const userId = useAppSelector((state) => state.user.user_id);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
     () => parseTableData({ projects, showApprovedOnly, userId }),
     [projects, showApprovedOnly, userId]
   );
+  let [isAdminActive, setAdminActive] = useState(false);
+
   return (
     <div className={className}>
-      <h2>
-        List of My Requests
-        <Button
-          label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
-          onClick={() => setShowApprovedOnly((s) => !s)}
-        />
-      </h2>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Table header={tableHeader} data={tableData} />
-      )}
+        <div className='data-requests__table-header'>
+          <h2>
+            {isAdminActive ? "All Requests" : "List of My Requests"}
+          </h2>
+          <div className='data-requests__table-actions'>
+            {isAdmin && 
+              <span className="data-requests__admin-toggle">
+                <label htmlFor="data-request-admin-toggle">View Admin</label>
+                <input
+                  id="data-request-admin-toggle"
+                  type='checkbox'
+                  checked={isAdminActive}
+                  onChange={() => { setAdminActive(!isAdminActive);onToggleAdmin(); }} />
+              </span>
+            }
+            <Button
+              label={'Create Request'}
+              enabled={isAdmin}
+              onClick={() => transitionTo('/requests/create')}
+            />
+            <Button
+              label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
+              onClick={() => setShowApprovedOnly((s) => !s)}
+            />
+          </div>
+        </div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Table header={tableHeader} data={tableData} />
+        )}
     </div>
   );
 }
 
 DataRequestsTable.propTypes = {
   className: PropTypes.string,
-  isLoading: PropTypes.bool.isRequired,
   projects: PropTypes.array.isRequired,
+  isAdmin: PropTypes.bool,
+  onToggleAdmin: PropTypes.func,
+  isLoading: PropTypes.bool
 };
 
 export default DataRequestsTable;

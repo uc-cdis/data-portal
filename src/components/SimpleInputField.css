@@ -4,12 +4,13 @@
   align-items: center;
   justify-content: center;
   margin: 1rem;
+  margin-bottom: 30px;
 }
 
 .simple-input-field__label {
   text-align: right;
   margin-right: 10px;
-  width: 30%;
+  width: 20%;
 }
 
 .simple-input-field__input {
@@ -46,15 +47,18 @@
   overflow: scroll;
 }
 
-.simple-input-field__input--error > input {
+.simple-input-field__input--error > input,
+.simple-input-field__input--error > textarea {
   border-color: red;
 }
 
 .simple-input-field__error-message {
+  position: absolute;
+  right: 0px;
+  bottom: -20px;
   color: red;
   font-size: 0.8rem;
   font-family: inherit;
-  margin-left: 36%;
   text-align: left;
-  width: 100%;
+  height: 20px;
 }

@@ -22,10 +22,29 @@
   color: var(--g3-color__rose);
 }
 
-.data-requests__table > h2 {
+.data-requests__table-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+}
+
+.data-requests__table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.data-requests__table-actions > :not(:last-child) {
+  margin-right: 10px;
+}
+
+.data-requests__admin-toggle {
+  display: inline-flex;
+  align-items: center;
+}
+
+.data-requests__admin-toggle label {
+  margin-right: 5px;
 }
 
 .data-requests__error {

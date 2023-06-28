@@ -34,6 +34,7 @@
     "echarts-for-react": "^2.0.16",
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
+    "formik": "^2.4.2",
     "fuse.js": "^6.6.2",
     "graphiql": "^1.11.5",
     "graphql": "^15.8.0",
@@ -53,6 +54,7 @@
     "rc-tooltip": "^6.0.1",
     "react": "^17.0.2",
     "react-ace": "^10.1.0",
+    "react-aria-components": "^1.0.0-alpha.4",
     "react-dom": "^17.0.2",
     "react-ga4": "^2.1.0",
     "react-helmet": "^6.1.0",
@@ -70,7 +72,8 @@
     "string-similarity": "^4.0.4",
     "style-loader": "^3.3.3",
     "webpack": "^5.84.1",
-    "webpack-cli": "^5.1.1"
+    "webpack-cli": "^5.1.1",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.8",
@@ -87,6 +90,7 @@
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.1",
+    "@types/react": "^18.2.14",
     "babel-jest": "^29.5.0",
     "eslint": "^8.41.0",
     "eslint-config-airbnb": "^19.0.4",

@@ -1,51 +1,31 @@
-import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contactEmail } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
-import Button from '../gen3-ui-component/components/Button';
 import DataRequestsTable from './DataRequestsTable';
+import { toggleAdminActive } from '../redux/dataRequest/slice';
+import { fetchProjects } from '../redux/dataRequest/asyncThunks';
 import './DataRequests.css';
 
-/**
- * @typedef {Object} ResearcherInfo
- * @property {number} id
- * @property {string} first_name
- * @property {string} last_name
- * @property {string} institution
- */
+/** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
 
-/**
- * @typedef {Object} DataRequestProject
- * @property {number} id
- * @property {string} name
- * @property {'Approved' | 'Rejected' | 'In Review' | 'Data Available'} status
- * @property {string | null} submitted_at timestamp
- * @property {string | null} completed_at timestamp
- * @property {ResearcherInfo} researcher
- * @property {boolean} has_access
- */
-
-/** @returns {Promise<DataRequestProject[]>} */
-function fetchProjects() {
-  return fetch('/amanuensis/projects').then((res) => res.json());
+function mapPropsToState(state) {
+  return { projects: state.dataRequest.projects, isProjectsLoading: state.dataRequest.isProjectsLoading };
 }
 
-/** @type {DataRequestProject[]} */
-const emptyProjects = [];
-
-export default function DataRequests() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [projects, setProjects] = useState(emptyProjects);
-  function getProjects() {
-    setIsLoading(true);
-    fetchProjects()
-      .then(setProjects)
-      .catch(() => setProjects(null))
-      .finally(() => setIsLoading(false));
-  }
-  useEffect(() => {
-    getProjects();
-  }, []);
+/**
+ * @param {Object} props
+ * @param {DataRequestProject[]} [props.projects]
+ * @param {boolean} [props.isProjectsLoading]
+ */
+function DataRequests({ projects, isProjectsLoading }) {
+  console.log(projects);
+  let dispatch = useAppDispatch();
+  let { 
+      is_admin,
+      authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
+  } = useAppSelector((state) => state.user);
 
   return (
     <div className='data-requests'>
@@ -64,28 +44,29 @@ export default function DataRequests() {
                 Error in fetching your projects...
               </h2>
               <p>
-                Please retry or refreshing the page. If the problem persists,
+                Please refresh the page. If the problem persists,
                 please contact the administrator (
                 <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
                 information.
               </p>
               <br />
-              <Button
-                buttonType='primary'
-                label='Retry'
-                onClick={getProjects}
-                enabled={!isLoading}
-              />
             </div>
           }
         >
           <DataRequestsTable
             className='data-requests__table'
-            isLoading={isLoading}
             projects={projects}
+            onToggleAdmin={() => {
+              dispatch(toggleAdminActive());
+              dispatch(fetchProjects());
+            }}
+            isAdmin={is_admin || !!serviceAccessMethod}
+            isLoading={isProjectsLoading}
           />
         </ErrorBoundary>
       </main>
     </div>
   );
 }
+
+export default connect(mapPropsToState)(DataRequests);

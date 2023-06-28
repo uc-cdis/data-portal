@@ -25,12 +25,14 @@ import {
 import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
 import { fetchAccess } from './redux/userProfile/asyncThunks';
 import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
-import { fetchSurvivalConfig } from './redux/explorer/asyncThunks';
+import { fetchSurvivalConfig, fetchFilterSets } from './redux/explorer/asyncThunks';
+import { fetchProjects as fetchDataRequestProjects } from './redux/dataRequest/asyncThunks';
 import { useAppDispatch } from './redux/hooks';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
 const DataRequests = lazy(() => import('./DataRequests'));
+const DataRequestCreate = lazy(() => import('./DataRequests/create'));
 const Explorer = lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const IndexPage = lazy(() => import('./Index/page'));
@@ -210,12 +212,21 @@ function App() {
         )}
         <Route
           path='requests'
-          element={
-            <ProtectedContent>
+          element={<Outlet />}
+        >
+          <Route index element={
+            <ProtectedContent preload={() => dispatch(fetchDataRequestProjects())}>
               <DataRequests />
             </ProtectedContent>
-          }
-        />
+          }/>
+          <Route 
+            path="create"
+            element={
+            <ProtectedContent preload={() => dispatch(fetchFilterSets())}>
+              <DataRequestCreate />
+            </ProtectedContent>
+          }/>
+        </Route>
         <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'
