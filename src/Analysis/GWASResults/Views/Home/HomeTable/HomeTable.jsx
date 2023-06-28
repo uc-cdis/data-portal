@@ -21,6 +21,7 @@ const { RangePicker } = DatePicker;
 const HomeTable = ({ data }) => {
   const {
     setCurrentView,
+    selectedRowData,
     setSelectedRowData,
     homeTableState,
     setHomeTableState,
@@ -307,6 +308,10 @@ const HomeTable = ({ data }) => {
           dataSource={isIterable(filteredData) && [...filteredData]}
           columns={columns}
           rowKey={(record) => record.uid}
+          rowClassName={(record) => record.uid === selectedRowData?.uid && 'selected-row'}
+          onRow={(record) => ({
+            onClick: () => { setSelectedRowData(record); },
+          })}
           onChange={handleTableChange}
           pagination={{
             current: homeTableState.currentPage,
