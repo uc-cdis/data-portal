@@ -309,6 +309,9 @@ const HomeTable = ({ data }) => {
           columns={columns}
           rowKey={(record) => record.uid}
           rowClassName={(record) => record.uid === selectedRowData?.uid && 'selected-row'}
+          onRow={(record) => ({
+            onClick: () => { setSelectedRowData(record); },
+          })}
           onChange={handleTableChange}
           pagination={{
             current: homeTableState.currentPage,
