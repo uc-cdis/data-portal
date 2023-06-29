@@ -14,7 +14,7 @@
 }
 
 .data-requests__status-approved,
-.data-requests__status-data-delivered {
+.data-requests__status-data-available {
   color: var(--pcdc-color__primary);
 }
 

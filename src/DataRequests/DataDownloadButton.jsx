@@ -24,7 +24,7 @@ function DataDownloadButton({ project }) {
     <div className='download-button'>
       <Button
         buttonType='primary'
-        enabled={project.status === 'Data Delivered' && project.has_access}
+        enabled={project.status === 'Data Available' && project.has_access}
         onClick={handleClick}
         label='Download Data'
         rightIcon='download'
@@ -47,7 +47,7 @@ DataDownloadButton.propTypes = {
       'Approved',
       'Rejected',
       'In Review',
-      'Data Delivered',
+      'Data Available',
     ]),
   }),
 };
