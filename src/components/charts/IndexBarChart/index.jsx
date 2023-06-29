@@ -13,7 +13,9 @@ import TooltipCDIS from '../TooltipCDIS';
 import Tick from '../Tick';
 import './IndexBarChart.css';
 import { getCategoryColor } from '../helper';
+import { components } from '../../../params';
 
+const showPercentage = components.index?.barChart?.showPercentage;
 const sortCount = (a, b) => {
   const countA = a.counts.reduce((res, item) => res + item);
   const countB = b.counts.reduce((res, item) => res + item);
@@ -55,8 +57,7 @@ const createChartData = (projectList, countNames, sumList) => {
     project.counts.forEach((count, j) => {
       if (typeof indexChart[j] === 'undefined') return;
       indexChart[j].allCounts.push(count);
-      indexChart[j][`count${i}`] =
-        sumList[j] > 0 ? ((count * 100) / sumList[j]).toFixed(2) : 0;
+      indexChart[j][`count${i}`] = getChartCount(count, sumList[j]);
     });
   });
 
@@ -66,6 +67,13 @@ const createChartData = (projectList, countNames, sumList) => {
     return newIndex;
   });
   return indexChart;
+};
+
+const getChartCount = (count, sum) => {
+  if (showPercentage) {
+    return sum > 0 ? ((count * 100) / sum).toFixed(2) : 0;
+  }
+  return sum > 0 ? count : 0;
 };
 
 /**
@@ -110,7 +118,6 @@ function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
             {...xAxisStyle}
             stroke={xAxisStyle.color}
             fill={xAxisStyle.color}
-            unit='%'
             type='number'
           />
           <YAxis
@@ -152,9 +159,10 @@ IndexBarChart.defaultProps = {
   countNames: [],
   xAxisStyle: {
     color: '#666666',
-    domain: [0, 100],
-    ticks: [0, 25, 50, 75, 100],
+    domain: showPercentage ? [0, 100] : [],
+    ticks: showPercentage ? [0, 25, 50, 75, 100] : [],
     allowDecimals: false,
+    unit: showPercentage ? '%' : '',
   },
   barChartStyle: {
     margins: {

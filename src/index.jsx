@@ -12,20 +12,14 @@ import {
   faTriangleExclamation,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import store from './redux/store';
-import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
 import '@fontsource/raleway';
 import './base.css';
 import './icon.css';
-
-// Google Analytics
-ReactGA.initialize(gaTracking);
-ReactGA.pageview(window.location.pathname + window.location.search);
 
 // FontAwesome icons
 library.add(
