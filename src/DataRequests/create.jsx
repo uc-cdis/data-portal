@@ -29,8 +29,6 @@ let schema = Yup.object().shape({
 });
 
 function errorObjectForField(errors, touched, fieldName) {
-  console.log(errors);
-  console.log(touched);
   return touched[fieldName] && errors[fieldName] ?
     { isError: true, message: errors[fieldName] } : 
     { isError: false, message: '' }

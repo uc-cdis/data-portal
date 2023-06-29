@@ -11,7 +11,10 @@ import './DataRequests.css';
 /** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
 
 function mapPropsToState(state) {
-  return { projects: state.dataRequest.projects, isProjectsLoading: state.dataRequest.isProjectsLoading };
+  return {
+    projects: state.dataRequest.projects,
+    isProjectsLoading: state.dataRequest.isProjectsLoading
+  };
 }
 
 /**
@@ -20,7 +23,6 @@ function mapPropsToState(state) {
  * @param {boolean} [props.isProjectsLoading]
  */
 function DataRequests({ projects, isProjectsLoading }) {
-  console.log(projects);
   let dispatch = useAppDispatch();
   let { 
       is_admin,
