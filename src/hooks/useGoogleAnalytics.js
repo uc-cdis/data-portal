@@ -6,6 +6,17 @@ import { gaTracking as gaTrackingId } from '../params';
 const isUsingGoogleAnalytics =
   gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-');
 
+const clickApplySurvivalButtonEvent = () =>
+  ReactGA.event({
+    action: 'Click Apply Survival Button',
+    category: 'Exploration',
+    label: 'Survival Analysis',
+  });
+
+export const gaEvents = {
+  clickApplySurvivalButtonEvent,
+};
+
 /** @param {import('react-router').Location} location */
 export default function useGoogleAnalytics(location) {
   if (isUsingGoogleAnalytics) {
