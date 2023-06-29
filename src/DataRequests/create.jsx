@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { Formik, Field, Form, FieldArray } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
@@ -13,6 +14,12 @@ import { useState } from "react";
 import { fetchWithToken } from '../redux/explorer/filterSetsAPI';
 import * as Yup from 'yup';
 import './create.css';
+
+function mapPropsToState(state) {
+  return {
+    isCreatePending: state.dataRequest.isCreatePending
+  };
+}
 
 let schema = Yup.object().shape({
   name: Yup.string().required('Project Name is a required field'),
@@ -34,7 +41,7 @@ function errorObjectForField(errors, touched, fieldName) {
     { isError: false, message: '' }
 }
 
-export default function DataRequestCreate() {
+function DataRequestCreate({ isCreatePending }) {
   let dispatch = useAppDispatch();
   let { 
       email,
@@ -42,15 +49,18 @@ export default function DataRequestCreate() {
       user_id,
   } = useAppSelector((state) => state.user);
   let filterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
-  let [currentEmailInput, setCurrentEmailInput] = useState("");
-  let [openAddFilter, setOpenAddFilter] = useState(false);
-  let [viewFilter, setViewFilter] = useState(null);
 	let navigate = useNavigate();
 	let goBack = () => {
 		navigate(-1);
 	}
 
-  return <div className="data-requests">
+  let [currentEmailInput, setCurrentEmailInput] = useState("");
+  let [openAddFilter, setOpenAddFilter] = useState(false);
+  let [viewFilter, setViewFilter] = useState(null);
+  let [createRequestError, setRequestCreateError] = useState({ isError: false, message: '' });
+
+  return <div className={`data-requests ${isCreatePending ? 'data-requests--create-pending' : ''}`}>
+    {isCreatePending && <div className="create-pending-overlay"></div>}
     <button className="back-button" onClick={goBack}>&#10094;</button>	
     <Formik
       validationSchema={schema}
@@ -63,7 +73,17 @@ export default function DataRequestCreate() {
       }}
       onSubmit={async (values) => {
         let createParams = { user_id, ...values };
-        dispatch(createProject(createParams));
+        let createRequest = /** @type {import('../redux/dataRequest/types').CreateRequest} */ (dispatch(createProject(createParams)));
+
+        createRequest.then((action) => {
+          if (!action.payload.isError) {
+            navigate('/requests');
+            return;
+          }
+
+          let { isError, message } = action.payload;
+          setRequestCreateError({ isError, message })
+        })
       }}
     >
       {({ values, errors, touched, setFieldTouched }) => (
@@ -195,8 +215,11 @@ export default function DataRequestCreate() {
               </FieldArray>
             </div>
             <Button submit={true} className="create-submit" label="Create" />
+            {createRequestError.isError && <span className="create-request-error">{createRequestError.message}</span>}
           </Form>
       )}
     </Formik>
   </div>;
 }
+
+export default connect(mapPropsToState)(DataRequestCreate);

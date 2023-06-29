@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchProjects, createProject } from './asyncThunks';
-import { useAppSelector } from '../hooks';
 
 const slice = createSlice({
   name: 'dataRequest',
@@ -9,6 +8,7 @@ const slice = createSlice({
     isError: false,
     isAdminActive: false,
     isProjectsLoading: false,
+    isCreatePending: false,
   }),
   reducers: {
     toggleAdminActive(state) {
@@ -29,12 +29,29 @@ const slice = createSlice({
       state.isProjectsLoading = false;
       state.isError = true;
     });
-    builder.addCase(createProject.fulfilled, (state, action) => {
+    builder.addCase(createProject.pending, (state) => {  
+      state.isCreatePending = true;
+  });
+    builder.addCase(createProject.fulfilled, (state, action) => {        
+        state.isCreatePending = false;
+       
         if (action.payload === null) return;
 
-        let { user_id: currentUserId, additional_info: { firstName, lastName, institution} } = useAppSelector((state) => state.user);
-        let { id, name, create_date: submitted_at, associated_users  } = action.payload;
-        let researcher = associated_users.find(({ user_id }) => user_id === currentUserId );
+        let {
+          meta: {
+            user_id: currentUserId,
+            additional_info: {
+              firstName,
+              lastName,
+              institution
+            }
+          },
+          data: {
+            id,
+            name,
+            create_date: submitted_at,
+          }
+        } = action.payload;
 
         let newProject = {
             completed_at: "",
@@ -45,7 +62,7 @@ const slice = createSlice({
                 first_name: firstName,
                 last_name: lastName,
                 institution,
-                id: researcher.id
+                id: currentUserId
             },
             /** @type {'In Review'} */
             status: 'In Review',
@@ -55,6 +72,7 @@ const slice = createSlice({
         state.projects.push(newProject);
     });
     builder.addCase(createProject.rejected, (state) => {  
+        state.isCreatePending = false;
         state.isError = true;
     });
   },

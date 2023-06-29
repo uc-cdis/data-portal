@@ -24,6 +24,11 @@ export const fetchProjects = createAsyncThunk(
   }
 );
 
+function statusCategory(status) {
+  return `${Math.floor(status / 100)}XX`;
+}
+
+
 export const createProject = createAsyncThunk(
     'dataRequest/createProject',
     /** @param {import('./types').CreateParams} createParams */
@@ -35,12 +40,44 @@ export const createProject = createAsyncThunk(
               body: JSON.stringify(createParams)
           });
         
-          if (status !== 200) {
+          if (statusCategory(status) !== '2XX') {
+            switch (statusCategory(status)) {
+              case '5XX':
+                return {
+                  isError: true,
+                  message: 'Oops! An issue occured on our end, please try again',
+                  data: null,
+                  meta: null
+                };
+              case '4XX':
+                return {
+                  isError: true,
+                  message: 'Oop! We were unable to process your request, make sure you have the right permissions',
+                  data: null,
+                  meta: null
+                }
+            }
             console.error(`WARNING: failed to with status ${response.statusText}`);
-            return null;
+            return {
+              isError: true,
+              message: 'An unknown error occured',
+              data: null,
+              meta: null
+            };
           }
+
+          let { 
+            user: {
+              user_id,
+              additional_info
+            } 
+          } = /** @type {import('../types').RootState} */ (getState());;
+          let meta = {
+            user_id,
+            additional_info
+          };
         
-          return data;
+          return { data, meta, isError: false, message: '' };
         } catch (e) {
           return rejectWithValue(e);
         }

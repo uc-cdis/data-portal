@@ -1,3 +1,4 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 
 export type CreateParams = {
   user_id: number,
@@ -8,6 +9,21 @@ export type CreateParams = {
   filter_set_ids: number[],
 }
 
+export type CreatePayload = {
+  data: any;
+  meta: {
+      user_id: number;
+      additional_info: WritableDraft<{
+          firstName?: string;
+          lastName?: string;
+          institution?: string;
+      }>;
+  };
+  isError: boolean;
+  message: string;
+}
+
+export type CreateRequest = Promise<PayloadAction<CreatePayload>>;
 
 export type ResearcherInfo = {
   first_name: string,
@@ -30,5 +46,6 @@ export type DataRequestState = {
   projects: DataRequestProject[],
   isError: boolean,
   isAdminActive: boolean,
-  isProjectsLoading: boolean
+  isProjectsLoading: boolean,
+  isCreatePending: boolean
 }
