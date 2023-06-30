@@ -57,8 +57,7 @@ const createChartData = (projectList, countNames, sumList) => {
     project.counts.forEach((count, j) => {
       if (typeof indexChart[j] === 'undefined') return;
       indexChart[j].allCounts.push(getToolTipCount(count, sumList[j]));
-      indexChart[j][`count${i}`] =
-        sumList[j] > 0 ? ((count * 100) / sumList[j]).toFixed(2) : 0;
+      indexChart[j][`count${i}`] = getPercentageCount(count, sumList[j]);
     });
   });
 
@@ -72,10 +71,13 @@ const createChartData = (projectList, countNames, sumList) => {
 
 const getToolTipCount = (count, sum) => {
   if (showPercentage) {
-    return sum > 0 ? `${((count * 100) / sum).toFixed(2)}%` : '0%';
+    return `${getPercentageCount(count, sum)}%`;
   }
   return sum > 0 ? count.toString() : '0';
 };
+
+const getPercentageCount = (count, sum) =>
+  sum > 0 ? ((count * 100) / sum).toFixed(2) : 0;
 
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
