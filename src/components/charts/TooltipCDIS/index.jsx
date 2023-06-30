@@ -36,7 +36,7 @@ TooltipCDIS.propTypes = {
       fill: PropTypes.string,
       name: PropTypes.string,
       payload: PropTypes.shape({
-        allCounts: PropTypes.arrayOf(PropTypes.number),
+        allCounts: PropTypes.arrayOf(PropTypes.string),
       }),
     })
   ),

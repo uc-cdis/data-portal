@@ -56,8 +56,9 @@ const createChartData = (projectList, countNames, sumList) => {
   projectList.forEach((project, i) => {
     project.counts.forEach((count, j) => {
       if (typeof indexChart[j] === 'undefined') return;
-      indexChart[j].allCounts.push(count);
-      indexChart[j][`count${i}`] = getChartCount(count, sumList[j]);
+      indexChart[j].allCounts.push(getToolTipCount(count, sumList[j]));
+      indexChart[j][`count${i}`] =
+        sumList[j] > 0 ? ((count * 100) / sumList[j]).toFixed(2) : 0;
     });
   });
 
@@ -69,11 +70,11 @@ const createChartData = (projectList, countNames, sumList) => {
   return indexChart;
 };
 
-const getChartCount = (count, sum) => {
+const getToolTipCount = (count, sum) => {
   if (showPercentage) {
-    return sum > 0 ? ((count * 100) / sum).toFixed(2) : 0;
+    return sum > 0 ? `${((count * 100) / sum).toFixed(2)}%` : '0%';
   }
-  return sum > 0 ? count : 0;
+  return sum > 0 ? count.toString() : '0';
 };
 
 /**
@@ -159,10 +160,10 @@ IndexBarChart.defaultProps = {
   countNames: [],
   xAxisStyle: {
     color: '#666666',
-    domain: showPercentage ? [0, 100] : [],
-    ticks: showPercentage ? [0, 25, 50, 75, 100] : [],
+    domain: [0, 100],
+    ticks: [0, 25, 50, 75, 100],
     allowDecimals: false,
-    unit: showPercentage ? '%' : '',
+    unit: '%',
   },
   barChartStyle: {
     margins: {
