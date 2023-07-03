@@ -60,7 +60,7 @@ describe('Attrition Table Wrapper', () => {
     );
   });
 
-  it('renders the logs when data is fetched successfully', async () => {
+  it('renders the headers and data when data is fetched successfully', async () => {
     useQuery.mockReturnValueOnce({
       status: 'success',
       data: AttritionTableJSON,
@@ -86,6 +86,16 @@ describe('Attrition Table Wrapper', () => {
       checkForAtLeastOneInstanceOfText('Non-Hispanic Asian');
       checkForAtLeastOneInstanceOfText('Non-Hispanic White');
       checkForAtLeastOneInstanceOfText('Hispanic');
+
+      AttritionTableJSON.forEach((tableObj) => {
+        tableObj.rows.forEach((rowObj) => {
+          checkForAtLeastOneInstanceOfText(rowObj.name);
+          checkForAtLeastOneInstanceOfText(rowObj.size);
+          rowObj.concept_breakdown.forEach((conceptObj) => {
+            checkForAtLeastOneInstanceOfText(conceptObj.persons_in_cohort_with_value);
+          });
+        });
+      });
     });
   });
 });
