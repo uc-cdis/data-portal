@@ -96,6 +96,57 @@ const AttritionTableJSON = [
       },
     ],
   },
+  {
+    "table_type": "control",
+    "rows": [
+      {
+        "type": "cohort",
+        "name": "Catch All (do not run generate)",
+        "size": 510647,
+        "concept_breakdown": [
+          {
+            "concept_value_name": "non-Hispanic Black",
+            "persons_in_cohort_with_value": 102054
+          },
+          {
+            "concept_value_name": "non-Hispanic Asian",
+            "persons_in_cohort_with_value": 102441
+          },
+          {
+            "concept_value_name": "non-Hispanic White",
+            "persons_in_cohort_with_value": 204213
+          },
+          {
+            "concept_value_name": "Hispanic",
+            "persons_in_cohort_with_value": 101939
+          }
+        ]
+      },
+      {
+        "type": "outcome",
+        "name": "phenotypeName",
+        "size": 444,
+        "concept_breakdown": [
+          {
+            "concept_value_name": "non-Hispanic Black",
+            "persons_in_cohort_with_value": 95
+          },
+          {
+            "concept_value_name": "non-Hispanic Asian",
+            "persons_in_cohort_with_value": 91
+          },
+          {
+            "concept_value_name": "non-Hispanic White",
+            "persons_in_cohort_with_value": 169
+          },
+          {
+            "concept_value_name": "Hispanic",
+            "persons_in_cohort_with_value": 89
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 export default AttritionTableJSON;

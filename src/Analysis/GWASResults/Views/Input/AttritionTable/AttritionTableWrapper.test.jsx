@@ -3,13 +3,13 @@ import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../../Utils/SharedContext';
-import AttritionTable from './AttrtitionTable';
+import AttritionTableWrapper from './AttrtitionTableWrapper';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 
 jest.mock('react-query');
 
-describe('Attrition Table', () => {
+describe('Attrition Table Wrapper', () => {
   const selectedRowData = {
     name: 'workflow_name',
     uid: 'workflow_id',
@@ -24,7 +24,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
 
@@ -67,12 +67,13 @@ describe('Attrition Table', () => {
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Attrition Table')).toBeInTheDocument();
+      expect(screen.getByText('Case Cohort')).toBeInTheDocument();
+      expect(screen.getByText('Control Cohort')).toBeInTheDocument();
       expect(screen.getByText('Type')).toBeInTheDocument();
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Size')).toBeInTheDocument();
