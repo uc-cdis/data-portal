@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
-import { Spin, Collapse } from 'antd';
+import { Spin } from 'antd';
 import {
   getDataForWorkflowArtifact,
   queryConfig,
@@ -10,7 +10,6 @@ import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/Loading
 import './AttritionTable.css';
 import AttritionTable from './AttrtitionTable';
 
-const { Panel } = Collapse;
 const AttritionTableWrapper = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
@@ -51,9 +50,9 @@ const AttritionTableWrapper = () => {
 
   return (
     <section data-testid='attrition-table-wrapper' className='attrition-table-wrapper'>
-      <AttritionTable tableData={data[0]} title="Case Cohort Attrition Table"/>
-      {data[1]?.table_type === 'control' &&
-      <AttritionTable tableData={data[1]} title="Control Cohort Attrition Table" />}
+      <AttritionTable tableData={data[0]} title='Case Cohort Attrition Table' />
+      {data[1]?.table_type === 'control'
+      && <AttritionTable tableData={data[1]} title='Control Cohort Attrition Table' />}
     </section>
   );
 };

@@ -71,10 +71,10 @@ describe('Attrition Table Wrapper', () => {
       </SharedContext.Provider>,
     );
 
-      const checkForAtLeastOneInstanceOfText = (input) => {
-        const typeHeader = screen.getAllByText(input);
-        expect(typeHeader[0]).toBeInTheDocument();
-      }
+    const checkForAtLeastOneInstanceOfText = (input) => {
+      const typeHeader = screen.getAllByText(input);
+      expect(typeHeader[0]).toBeInTheDocument();
+    };
 
     await waitFor(() => {
       expect(screen.getByText('Case Cohort Attrition Table')).toBeInTheDocument();

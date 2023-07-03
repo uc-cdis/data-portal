@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Collapse } from 'antd';
 import PropTypes from 'prop-types';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
-const AttritionTable = ({tableData, title}) => {
-console.log("tableData",tableData)
+const AttritionTable = ({ tableData, title }) => {
+  console.log('tableData', tableData);
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
       (obj) => obj.concept_value_name === groupName,
@@ -80,8 +80,7 @@ console.log("tableData",tableData)
 };
 AttritionTable.propTypes = {
   tableData: PropTypes.object.isRequired,
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
 };
-
 
 export default AttritionTable;
