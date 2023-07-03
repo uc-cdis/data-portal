@@ -36,15 +36,9 @@ const AttritionTableWrapper = () => {
     );
   }
 
-  if (!data || data.length === 0 || data.error) {
+  if (!data || data.length === 0 || data[0].table_type !== 'case' || data.error ) {
     return (
-      <LoadingErrorMessage message='Issue Loading Data for Attrition Table' />
-    );
-  }
-
-  if (data[0].table_type !== 'case') {
-    return (
-      <LoadingErrorMessage message='Issue with Case Cohort Data for Attrition Table' />
+      <LoadingErrorMessage message='Error Getting Attrition Table Data' />
     );
   }
 
