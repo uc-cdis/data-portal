@@ -44,7 +44,7 @@ const AttritionTableWrapper = () => {
 
   if (data[0].table_type !== 'case') {
     return (
-      <LoadingErrorMessage message='Data for Attrition Table Missing Case Cohort Data' />
+      <LoadingErrorMessage message='Issue with Case Cohort Data for Attrition Table' />
     );
   }
 

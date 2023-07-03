@@ -72,8 +72,8 @@ describe('Attrition Table Wrapper', () => {
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
-      const typeHeader = screen.getAllByText(input);
-      expect(typeHeader[0]).toBeInTheDocument();
+      const textArr = screen.getAllByText(input);
+      expect(textArr[0]).toBeInTheDocument();
     };
 
     await waitFor(() => {

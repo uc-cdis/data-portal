@@ -5,7 +5,6 @@ import './AttritionTable.css';
 
 const { Panel } = Collapse;
 const AttritionTable = ({ tableData, title }) => {
-  console.log('tableData', tableData);
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
       (obj) => obj.concept_value_name === groupName,
