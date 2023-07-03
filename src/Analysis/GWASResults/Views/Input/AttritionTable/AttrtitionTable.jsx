@@ -1,13 +1,10 @@
 import React, { useContext } from 'react';
 import { Collapse } from 'antd';
-import SharedContext from '../../../Utils/SharedContext';
+import PropTypes from 'prop-types';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
-const AttritionTable = ({data, title}) => {
-  const { selectedRowData } = useContext(SharedContext);
-  const { name, uid } = selectedRowData;
-
+const AttritionTable = ({tableData, title}) => {
 
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
@@ -43,7 +40,7 @@ const AttritionTable = ({data, title}) => {
                 </tr>
               </thead>
               <tbody>
-                {data.rows.map((row, index) => (
+                {tableData.rows.map((row, index) => (
                   <tr key={index}>
                     <td>{row?.type || <h3>❌</h3>}</td>
                     <td>{row?.name || <h3>❌</h3>}</td>
@@ -81,4 +78,10 @@ const AttritionTable = ({data, title}) => {
     </section>
   );
 };
+AttritionTable.propTypes = {
+  tableData: PropTypes.object.isRequired,
+  title: PropTypes.string,
+};
+
+
 export default AttritionTable;

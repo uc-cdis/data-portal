@@ -48,13 +48,12 @@ const AttritionTableWrapper = () => {
       <LoadingErrorMessage message='Data for Attrition Table Missing Case Cohort Data' />
     );
   }
-  console.log("data",data)
 
   return (
     <section data-testid='attrition-table-wrapper' className='attrition-table-wrapper'>
-      <AttritionTable data={data[0]} title="Case Cohort Attribution Table"/>
+      <AttritionTable tableData={data[0]} title="Case Cohort Attribution Table"/>
       {data[1]?.table_type === 'control' &&
-      <AttritionTable data={data[1]} title="Control Cohort Attribution Table" />}
+      <AttritionTable tableData={data[1]} title="Control Cohort Attribution Table" />}
     </section>
   );
 };
