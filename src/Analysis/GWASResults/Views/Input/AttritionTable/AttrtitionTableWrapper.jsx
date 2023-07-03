@@ -36,7 +36,7 @@ const AttritionTableWrapper = () => {
     );
   }
 
-  if (!data || data.length === 0 || data[0].table_type !== 'case' || data.error ) {
+  if (!data || data.length === 0 || data[0].table_type !== 'case' || data.error) {
     return (
       <LoadingErrorMessage message='Error Getting Attrition Table Data' />
     );
