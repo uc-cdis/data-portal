@@ -71,16 +71,21 @@ describe('Attrition Table Wrapper', () => {
       </SharedContext.Provider>,
     );
 
+      const checkForAtLeastOneInstanceOfText = (input) => {
+        const typeHeader = screen.getAllByText(input);
+        expect(typeHeader[0]).toBeInTheDocument();
+      }
+
     await waitFor(() => {
-      expect(screen.getByText('Case Cohort')).toBeInTheDocument();
-      expect(screen.getByText('Control Cohort')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Name')).toBeInTheDocument();
-      expect(screen.getByText('Size')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic Black')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic Asian')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic White')).toBeInTheDocument();
-      expect(screen.getByText('Hispanic')).toBeInTheDocument();
+      expect(screen.getByText('Case Cohort Attrition Table')).toBeInTheDocument();
+      expect(screen.getByText('Control Cohort Attrition Table')).toBeInTheDocument();
+      checkForAtLeastOneInstanceOfText('Type');
+      checkForAtLeastOneInstanceOfText('Name');
+      checkForAtLeastOneInstanceOfText('Size');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic Black');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic Asian');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic White');
+      checkForAtLeastOneInstanceOfText('Hispanic');
     });
   });
 });

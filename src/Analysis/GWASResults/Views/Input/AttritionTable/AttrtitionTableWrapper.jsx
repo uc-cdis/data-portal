@@ -51,9 +51,9 @@ const AttritionTableWrapper = () => {
 
   return (
     <section data-testid='attrition-table-wrapper' className='attrition-table-wrapper'>
-      <AttritionTable tableData={data[0]} title="Case Cohort Attribution Table"/>
+      <AttritionTable tableData={data[0]} title="Case Cohort Attrition Table"/>
       {data[1]?.table_type === 'control' &&
-      <AttritionTable tableData={data[1]} title="Control Cohort Attribution Table" />}
+      <AttritionTable tableData={data[1]} title="Control Cohort Attrition Table" />}
     </section>
   );
 };
