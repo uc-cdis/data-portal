@@ -8,7 +8,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
-    "@babel/core": "^7.22.1",
+    "@babel/core": "^7.22.6",
     "@datadog/browser-rum": "^2.16.0",
     "@emotion/react": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
@@ -16,7 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
     "@gen3/guppy": "^0.16.0",
-    "@gen3/ui-component": "^0.11.1",
+    "@gen3/ui-component": "^0.11.4",
     "@reactour/tour": "^2.12.0",
     "@storybook/addon-actions": "^6.0.0",
     "@storybook/react": "^6.5.15",
