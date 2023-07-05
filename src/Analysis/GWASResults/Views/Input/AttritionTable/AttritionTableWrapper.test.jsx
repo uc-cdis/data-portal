@@ -3,13 +3,13 @@ import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import SharedContext from '../../../Utils/SharedContext';
-import AttritionTable from './AttrtitionTable';
+import AttritionTableWrapper from './AttrtitionTableWrapper';
 import PHASES from '../../../Utils/PhasesEnumeration';
 import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 
 jest.mock('react-query');
 
-describe('Attrition Table', () => {
+describe('Attrition Table Wrapper', () => {
   const selectedRowData = {
     name: 'workflow_name',
     uid: 'workflow_id',
@@ -24,7 +24,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('Attrition Table', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
 
@@ -60,26 +60,42 @@ describe('Attrition Table', () => {
     );
   });
 
-  it('renders the logs when data is fetched successfully', async () => {
+  it('renders the headers and data when data is fetched successfully', async () => {
     useQuery.mockReturnValueOnce({
       status: 'success',
       data: AttritionTableJSON,
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTable />
+        <AttritionTableWrapper />
       </SharedContext.Provider>,
     );
 
+    const checkForAtLeastOneInstanceOfText = (input) => {
+      const textArr = screen.getAllByText(input);
+      expect(textArr[0]).toBeInTheDocument();
+    };
+
     await waitFor(() => {
-      expect(screen.getByText('Attrition Table')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Name')).toBeInTheDocument();
-      expect(screen.getByText('Size')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic Black')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic Asian')).toBeInTheDocument();
-      expect(screen.getByText('Non-Hispanic White')).toBeInTheDocument();
-      expect(screen.getByText('Hispanic')).toBeInTheDocument();
+      expect(screen.getByText('Case Cohort Attrition Table')).toBeInTheDocument();
+      expect(screen.getByText('Control Cohort Attrition Table')).toBeInTheDocument();
+      checkForAtLeastOneInstanceOfText('Type');
+      checkForAtLeastOneInstanceOfText('Name');
+      checkForAtLeastOneInstanceOfText('Size');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic Black');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic Asian');
+      checkForAtLeastOneInstanceOfText('Non-Hispanic White');
+      checkForAtLeastOneInstanceOfText('Hispanic');
+
+      AttritionTableJSON.forEach((tableObj) => {
+        tableObj.rows.forEach((rowObj) => {
+          checkForAtLeastOneInstanceOfText(rowObj.name);
+          checkForAtLeastOneInstanceOfText(rowObj.size);
+          rowObj.concept_breakdown.forEach((conceptObj) => {
+            checkForAtLeastOneInstanceOfText(conceptObj.persons_in_cohort_with_value);
+          });
+        });
+      });
     });
   });
 });
