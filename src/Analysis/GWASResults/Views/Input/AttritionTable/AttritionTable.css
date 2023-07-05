@@ -74,6 +74,10 @@
   height: 40px;
 }
 
+.attrition-table .row-type {
+  text-transform: capitalize;
+}
+
 .attrition-table table .attrition-table--leftpad {
   padding-left: 26px;
 }

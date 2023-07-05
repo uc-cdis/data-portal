@@ -1,7 +1,7 @@
 import React from 'react';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import JobDetails from './JobDetails/JobDetails';
-import AttritionTable from './AttritionTable/AttrtitionTable';
+import AttritionTableWrapper from './AttritionTable/AttrtitionTableWrapper';
 import './Input.css';
 
 const Input = () => {
@@ -18,7 +18,7 @@ const Input = () => {
   return (
     <div className='results-view'>
       {displayTopSection()}
-      <AttritionTable />
+      <AttritionTableWrapper />
       <JobDetails />
     </div>
   );

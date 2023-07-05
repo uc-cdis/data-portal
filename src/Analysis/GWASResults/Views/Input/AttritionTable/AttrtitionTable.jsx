@@ -1,52 +1,22 @@
-import React, { useContext } from 'react';
-import { useQuery } from 'react-query';
-import { Spin, Collapse } from 'antd';
-import {
-  getDataForWorkflowArtifact,
-  queryConfig,
-} from '../../../Utils/gwasWorkflowApi';
-import SharedContext from '../../../Utils/SharedContext';
-import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import React from 'react';
+import { Collapse } from 'antd';
+import PropTypes from 'prop-types';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
-const AttritionTable = () => {
-  const { selectedRowData } = useContext(SharedContext);
-  const { name, uid } = selectedRowData;
-  const { data, status } = useQuery(
-    [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
-    () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig,
-  );
-
-  if (status === 'error') {
-    return (
-      <LoadingErrorMessage
-        data-testid='loading-error-message'
-        message='Error getting attrition table data'
-      />
-    );
-  }
-
-  if (status === 'loading') {
-    return (
-      <div className='spinner-container' data-testid='spinner'>
-        <Spin />
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0 || data.error) {
-    return (
-      <LoadingErrorMessage message='Issue Loading Data for Attrition Table' />
-    );
-  }
-
+const AttritionTable = ({ tableData, title }) => {
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
       (obj) => obj.concept_value_name === groupName,
     );
     return matchingObject?.persons_in_cohort_with_value || <h3>❌</h3>;
+  };
+
+  const displayRowType = (rowType) => {
+    if (rowType) {
+      return rowType === 'outcome' ? 'Outcome Phenotype' : rowType;
+    }
+    return <h3>❌</h3>;
   };
 
   return (
@@ -56,7 +26,7 @@ const AttritionTable = () => {
           defaultActiveKey={['1']}
           onClick={(event) => event.stopPropagation()}
         >
-          <Panel key='1' header='Attrition Table'>
+          <Panel key='1' header={title}>
             <table>
               <thead>
                 <tr>
@@ -76,9 +46,9 @@ const AttritionTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {data[0].rows.map((row, index) => (
+                {tableData.rows.map((row, index) => (
                   <tr key={index}>
-                    <td>{row?.type || <h3>❌</h3>}</td>
+                    <td className='row-type'>{displayRowType(row?.type)}</td>
                     <td>{row?.name || <h3>❌</h3>}</td>
                     <td className='attrition-table--rightborder'>
                       {row?.size || <h3>❌</h3>}
@@ -114,4 +84,9 @@ const AttritionTable = () => {
     </section>
   );
 };
+AttritionTable.propTypes = {
+  tableData: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+};
+
 export default AttritionTable;
