@@ -14,10 +14,10 @@ const AttritionTable = ({ tableData, title }) => {
 
   const displayRowType = (rowType) => {
     if (rowType) {
-      return rowType === 'outcome' ? 'Outcome Phenotype' : rowType
+      return rowType === 'outcome' ? 'Outcome Phenotype' : rowType;
     }
     return <h3>❌</h3>;
-  }
+  };
 
   return (
     <section data-testid='attrition-table' className='attrition-table'>
@@ -48,7 +48,7 @@ const AttritionTable = ({ tableData, title }) => {
               <tbody>
                 {tableData.rows.map((row, index) => (
                   <tr key={index}>
-                    <td className="row-type">{displayRowType(row?.type)}</td>
+                    <td className='row-type'>{displayRowType(row?.type)}</td>
                     <td>{row?.name || <h3>❌</h3>}</td>
                     <td className='attrition-table--rightborder'>
                       {row?.size || <h3>❌</h3>}
