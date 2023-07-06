@@ -268,7 +268,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
 
   const formatSearchIndex = (index: String) => {
-    // Removes [*] wild cards used by JSON Path
+    // Removes [*] wild cards used by JSON Path and converts to array
     const wildCardStringRegex = new RegExp(/\[\*\]/, 'g');
     const indexWithoutWildcards = index.replace(wildCardStringRegex, '');
     const indexArr = indexWithoutWildcards.split('.');
