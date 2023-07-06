@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { mockStore, requiredCerts } from '../localconf';
+import dataRequestReducer from './dataRequest/slice';
 import ddgraphReducer from './ddgraph/slice';
 import explorerReducer from './explorer/slice';
 import graphiqlReducer from './graphiql/slice';
@@ -31,6 +32,7 @@ const preloadedState = {
 
 const store = configureStore({
   reducer: {
+    dataRequest: dataRequestReducer,
     ddgraph: ddgraphReducer,
     explorer: explorerReducer,
     graphiql: graphiqlReducer,
