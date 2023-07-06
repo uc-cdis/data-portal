@@ -267,14 +267,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterState],
   );
 
-
   const formatSearchIndex = (index: String) => {
     // Removes [*] wild cards used by JSON Path
-    const wildCardStringRegex = new RegExp(/\[\*\]/,"g");
-    const indexWithoutWildcards = index.replace(wildCardStringRegex,'');
+    const wildCardStringRegex = new RegExp(/\[\*\]/, 'g');
+    const indexWithoutWildcards = index.replace(wildCardStringRegex, '');
     const indexArr = indexWithoutWildcards.split('.');
     return indexArr;
-  }
+  };
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -290,19 +289,19 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     if (searchableFields) {
       searchableFields.forEach((field) => {
         const formattedFields = formatSearchIndex(field);
-        formattedFields.forEach(formattedField=>search.addIndex(formattedField));
+        formattedFields.forEach((formattedField) => search.addIndex(formattedField));
       });
     } else {
       config.studyColumns.forEach((column) => {
         if (!column.contentType || column.contentType === 'string') {
           const studyColumnFieldsArr = formatSearchIndex(column.field);
-          studyColumnFieldsArr.forEach(studyColumnField=>search.addIndex(studyColumnField));
+          studyColumnFieldsArr.forEach((studyColumnField) => search.addIndex(studyColumnField));
         }
       });
       // Also enable search over preview field if present
       if (config.studyPreviewField) {
         const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
-        studyPreviewFieldArr.forEach(studyPreviewField=>search.addIndex(studyPreviewField))
+        studyPreviewFieldArr.forEach((studyPreviewField) => search.addIndex(studyPreviewField));
       }
     }
     // ---
