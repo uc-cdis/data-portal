@@ -38,12 +38,17 @@
   margin-right: 10px;
 }
 
-.data-requests__admin-toggle {
-  display: inline-flex;
+.data-requests__more-actions-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.data-requests__checkbox {
+  display: flex;
   align-items: center;
 }
 
-.data-requests__admin-toggle label {
+.data-requests__checkbox label {
   margin-right: 5px;
 }
 
@@ -63,4 +68,31 @@
   color: red;
   font-size: 0.8rem;
   font-style: italic;
+}
+
+.data-request__table-view-options-trigger {
+  font-size: 14px;
+  width: 50px;
+  height: 30px;
+  display: inline-flex;
+  vertical-align: middle;
+  background: none;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  position: relative;
+  border: none;
+}
+
+.data-request__table-view-options-trigger-icon {
+  width: 100%;
+  height: 30px;
+  background-color: black;
+  mask-size: 100% 100%;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-image: svg-load('../img/icons/more.svg');
+  mask-position: center;
+  transform: rotate(90deg);
 }
