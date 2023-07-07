@@ -446,6 +446,7 @@ Below is an example, with inline comments describing what each JSON block config
         "enabled": true,
         "text": "My Special Test Discovery Page"
       },
+      "guidType": "discovery_metadata" // optional, default value is "discovery_metadata" changes the _guid_type in the api call that fetches mds records
       "search": {
         "searchBar": {
           "enabled": true,
