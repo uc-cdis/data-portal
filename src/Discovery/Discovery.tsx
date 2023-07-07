@@ -301,7 +301,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Also enable search over preview field if present
       if (config.studyPreviewField) {
         const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
-        studyPreviewFieldArr.forEach((studyPreviewField) => search.addIndex(studyPreviewField));
+        search.addIndex(studyPreviewFieldArr);
       }
     }
     // ---
