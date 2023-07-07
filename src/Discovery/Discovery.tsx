@@ -295,7 +295,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       config.studyColumns.forEach((column) => {
         if (!column.contentType || column.contentType === 'string') {
           const studyColumnFieldsArr = formatSearchIndex(column.field);
-          studyColumnFieldsArr.forEach((studyColumnField) => search.addIndex(studyColumnField));
+          search.addIndex(studyColumnFieldsArr);
         }
       });
       // Also enable search over preview field if present
