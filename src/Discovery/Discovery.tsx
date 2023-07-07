@@ -289,7 +289,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     if (searchableFields) {
       searchableFields.forEach((field) => {
         const formattedFields = formatSearchIndex(field);
-        formattedFields.forEach((formattedField) => search.addIndex(formattedField));
+        search.addIndex(formattedFields);
       });
     } else {
       config.studyColumns.forEach((column) => {
