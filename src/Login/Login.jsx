@@ -8,12 +8,54 @@ import { components } from '../params';
 
 import './Login.less';
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
 const getInitialState = (height) => ({ height });
+
+const determineNext = () => {
+  if (location.from && !(location.from.includes(basename))) {
+    console.log("first conditional met")
+    return basename + location.from;
+  }
+  else if(location.from && location.from.includes(basename)) {
+    console.log("second conditional met")
+    return location.from;
+  }
+  return basename
+}
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
 export const getUrlForRedirectLocation = (location) => {
   // compose next according to location.from
-  let next = (location.from) ? `${basename}${location.from}` : basename;
+  // let next = (location.from) ? `${basename}${location.from}` : basename;
+  // let next = determineNext();
+  let next;
+  if (location.from && !(location.from.includes(basename))) {
+    console.log("first conditional met")
+    next = basename + location.from;
+  }
+  else if(location.from && location.from.includes(basename)) {
+    console.log("second conditional met")
+    next= location.from;
+  }
+  else {
+    next =basename
+  }
+
+
+
+  console.log("next",next)
+  console.log("basename",basename)
+  console.log("location.from",location.from)
+
+  sleep(20000)
   if (location.state && location.state.from) {
     next = `${basename}${location.state.from}`;
   }
@@ -21,7 +63,18 @@ export const getUrlForRedirectLocation = (location) => {
   next = next.replace(/\/+/g, '/');
   const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
   if (queryParams.next) {
-    next = basename === '/' ? queryParams.next : basename + queryParams.next;
+    console.log("queryParams.next",queryParams.next)
+    console.log("basename",basename)
+
+
+    if (basename === queryParams.next) {
+      console.log("first conditional")
+      next = basename === '/' ? queryParams.next : basename;
+    }
+    else {
+      console.log("second conditional")
+      next = basename === '/' ? queryParams.next : basename + queryParams.next;
+    }
   }
   const regexp = /^\/.*/gi;
   const isValidRedirect = new RegExp(regexp).test(next);
