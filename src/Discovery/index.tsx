@@ -82,10 +82,10 @@ const DiscoveryWithMDSBackend: React.FC<{
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
       }
-      const rawStudiesRegistered = await loadStudiesFunction();
+      const rawStudiesRegistered = await loadStudiesFunction(props.config);
       let rawStudiesUnregistered = [];
       if (isEnabled('studyRegistration')) {
-        rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
+        rawStudiesUnregistered = await loadStudiesFromMDS(props.config, 'unregistered_discovery_metadata');
         rawStudiesUnregistered = rawStudiesUnregistered
           .map((unregisteredStudy) => ({ ...unregisteredStudy, [studyRegistrationValidationField]: false }));
       }

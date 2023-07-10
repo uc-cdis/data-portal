@@ -3,7 +3,7 @@ import { mdsURL, studyRegistrationConfig } from '../localconf';
 const LIMIT = 1000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
-const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
+const loadStudiesFromMDS = async (_config, guidType = 'discovery_metadata') => {
   try {
     let allStudies = [];
     let offset = 0;

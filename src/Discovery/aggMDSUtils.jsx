@@ -1,5 +1,7 @@
 import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../localconf';
 
+const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the aggMDS response that contains the study data
+
 /**
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
  *
@@ -9,8 +11,8 @@ import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../loca
 const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
   t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
-const loadStudiesFromAggMDSRequests = async (offset, limit) => {
-  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
+const loadStudiesFromAggMDSRequests = async (offset, limit, manifestFieldName) => {
+  const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}&counts=${manifestFieldName}`;
 
   const res = await fetch(url);
   if (res.status !== 200) {
@@ -25,13 +27,14 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   let allStudies = [];
 
   commons.forEach((commonsName) => {
+
     const studies = metadataResponse[commonsName];
 
     const editedStudies = studies.map((entry, index) => {
       const keys = Object.keys(entry);
       const studyId = keys[0];
 
-      const entryUnpacked = entry[studyId].gen3_discovery;
+      const entryUnpacked = entry[studyId][STUDY_DATA_FIELD];
       entryUnpacked.study_id = studyId;
       entryUnpacked.commons = commonsName;
       entryUnpacked.frontend_uid = `${commonsName}_${index}`;
@@ -68,15 +71,40 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   return allStudies;
 };
 
-const loadStudiesFromAggMDS = async () => {
+const loadStudiesFromAggMDS = async (config) => {
   // Retrieve from aggregate MDS
 
   const offset = 0; // For pagination
   const limit = 1000; // Total number of rows requested
+  const manifestFieldName = config.features?.exportToWorkspace?.manifestFieldName ?
+    config.features.exportToWorkspace.manifestFieldName : '__manifest';
 
-  const studies = await loadStudiesFromAggMDSRequests(offset, limit);
+  const studies = await loadStudiesFromAggMDSRequests(offset, limit, manifestFieldName);
 
   return studies;
 };
+
+/**
+ * Will try to get the study manifest data from the aggregateMDS and returns
+ * the study with the newly populated manifest field
+ * @param study - study to get a manifest for
+ * @param manifestFieldName - name of the manifest member (default __manifest)
+ * @returns {Promise<*>} - the updated study data
+ */
+const loadStudyFromMDS = async (study, manifestFieldName) => {
+  if (study[manifestFieldName] === 0) return { study, [manifestFieldName]: [] };
+
+  const url = `${aggMDSDataURL}/guid/${study.study_id}`;
+  const resp = await fetch(url);
+  if (resp.status !== 200) {
+    throw new Error(`Request for study info at ${url} failed. Response: ${JSON.stringify(resp, null, 2)}`);
+  }
+  const studyWithManifest = await resp.json();
+
+  return { ...study, [manifestFieldName]: studyWithManifest[STUDY_DATA_FIELD][manifestFieldName] };
+};
+
+// eslint-disable-next-line max-len
+export const loadManifestFromResources = async (selectedResources, manifestFieldName) => Promise.all(selectedResources.map((x) => loadStudyFromMDS(x, manifestFieldName)));
 
 export default loadStudiesFromAggMDS;
