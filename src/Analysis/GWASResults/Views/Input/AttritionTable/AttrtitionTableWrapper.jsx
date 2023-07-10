@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import {
@@ -16,7 +16,7 @@ const AttritionTableWrapper = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig,
+    queryConfig
   );
 
   if (status === 'error') {
@@ -36,17 +36,42 @@ const AttritionTableWrapper = () => {
     );
   }
 
-  if (!data || data.length === 0 || data[0].table_type !== 'case' || data.error) {
-    return (
-      <LoadingErrorMessage message='Error Getting Attrition Table Data' />
-    );
+  if (
+    !data ||
+    data.length === 0 ||
+    data[0].table_type !== 'case' ||
+    data.error
+  ) {
+    return <LoadingErrorMessage message='Error Getting Attrition Table Data' />;
   }
 
+  const findSizeOfLastRow = (tableData) => {
+    return tableData?.rows[tableData?.rows.length - 1].size;
+  };
+
+  const totalSizes = { case: -1, control: -1, total: -1 };
+  if (data.length > 0 && data[0]?.rows) {
+    totalSizes.case = findSizeOfLastRow(data[0]);
+    totalSizes.control = data[1] ? findSizeOfLastRow(data[1]) : -1;
+
+    totalSizes.total =
+      totalSizes.control !== -1
+        ? totalSizes.case + totalSizes.control
+        : totalSizes.case;
+    console.log(JSON.stringify(totalSizes));
+  }
   return (
-    <section data-testid='attrition-table-wrapper' className='attrition-table-wrapper'>
+    <section
+      data-testid='attrition-table-wrapper'
+      className='attrition-table-wrapper'
+    >
       <AttritionTable tableData={data[0]} title='Case Cohort Attrition Table' />
-      {data[1]?.table_type === 'control'
-      && <AttritionTable tableData={data[1]} title='Control Cohort Attrition Table' />}
+      {data[1]?.table_type === 'control' && (
+        <AttritionTable
+          tableData={data[1]}
+          title='Control Cohort Attrition Table'
+        />
+      )}
     </section>
   );
 };
