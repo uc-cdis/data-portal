@@ -1,36 +1,32 @@
-import { useEffect } from 'react';
 import ReactGA from 'react-ga4';
-import { gaDebug, basename } from '../localconf';
+import { gaDebug } from '../localconf';
 import { gaTracking as gaTrackingId } from '../params';
 
 const isUsingGoogleAnalytics =
   gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-');
 
-const clickApplySurvivalButtonEvent = () =>
-  ReactGA.event({
-    action: 'Click Apply Survival Button',
-    category: 'Exploration',
-    label: 'Survival Analysis',
-  });
+const clickApplySurvivalButtonEvent = () => {
+  if (isUsingGoogleAnalytics) {
+    ReactGA.event({
+      action: 'Click Apply Survival Button',
+      category: 'Exploration',
+      label: 'Survival Analysis',
+    });
+  }
+};
 
 export const gaEvents = {
   clickApplySurvivalButtonEvent,
 };
 
-/** @param {import('react-router').Location} location */
-export default function useGoogleAnalytics(location) {
+/** @param {string} userId */
+export default function useGoogleAnalytics(userId) {
   if (isUsingGoogleAnalytics) {
     ReactGA.initialize(gaTrackingId, {
       testMode: gaDebug,
+      gaOptions: {
+        userId,
+      },
     });
-    useEffect(() => {
-      const pagePath =
-        basename === '/'
-          ? `${location.pathname}${location.search}`
-          : `${basename}${location.pathname}${location.search}`;
-      window.gtag('event', 'page_view', {
-        page_path: pagePath,
-      });
-    }, [location]);
   }
 }
