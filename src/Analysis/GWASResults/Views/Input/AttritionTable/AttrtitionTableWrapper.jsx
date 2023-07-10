@@ -16,7 +16,7 @@ const AttritionTableWrapper = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig
+    queryConfig,
   );
 
   if (status === 'error') {
@@ -37,27 +37,24 @@ const AttritionTableWrapper = () => {
   }
 
   if (
-    !data ||
-    data.length === 0 ||
-    data[0].table_type !== 'case' ||
-    data.error
+    !data
+    || data.length === 0
+    || data[0].table_type !== 'case'
+    || data.error
   ) {
     return <LoadingErrorMessage message='Error Getting Attrition Table Data' />;
   }
 
-  const findSizeOfLastRow = (tableData) => {
-    return tableData?.rows[tableData?.rows.length - 1].size;
-  };
+  const findSizeOfLastRow = (tableData) => tableData?.rows[tableData?.rows.length - 1].size;
 
   const totalSizes = { case: -1, control: -1, total: -1 };
   if (data.length > 0 && data[0]?.rows) {
     totalSizes.case = findSizeOfLastRow(data[0]);
     totalSizes.control = data[1] ? findSizeOfLastRow(data[1]) : -1;
 
-    totalSizes.total =
-      totalSizes.control !== -1
-        ? totalSizes.case + totalSizes.control
-        : totalSizes.case;
+    totalSizes.total = totalSizes.control !== -1
+      ? totalSizes.case + totalSizes.control
+      : totalSizes.case;
     console.log(JSON.stringify(totalSizes));
   }
   return (
