@@ -16,7 +16,7 @@ const AttritionTableWrapper = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig,
+    queryConfig
   );
 
   if (status === 'error') {
@@ -37,26 +37,58 @@ const AttritionTableWrapper = () => {
   }
 
   if (
-    !data
-    || data.length === 0
-    || data[0].table_type !== 'case'
-    || data.error
+    !data ||
+    data.length === 0 ||
+    data[0].table_type !== 'case' ||
+    data.error
   ) {
     return <LoadingErrorMessage message='Error Getting Attrition Table Data' />;
   }
 
-  const findSizeOfLastRow = (tableData) => tableData?.rows[tableData?.rows.length - 1].size;
+  const findSizeOfLastRow = (tableData) =>
+    tableData?.rows[tableData?.rows.length - 1].size;
 
   const totalSizes = { case: -1, control: -1, total: -1 };
+
+  /* DO IT THIS WAY IF POSIBLE */
+  /* const getFinalPopulationSizes = (selectedHareItem) => {
+    if (outcome.variable_type === 'concept') {
+      // Quantitative outcome scenario:
+      const finalCohortSize = hareResults[0].data.concept_breakdown.find(
+        (hare) => selectedHareItem.value === hare.concept_value
+      ).persons_in_cohort_with_value;
+      return [{ population: 'Total', size: finalCohortSize }];
+    }
+    // Dichotomous (aka Case/Control) outcome scenario:
+    const finalControlCohortSize = hareResults[0].data.concept_breakdown.find(
+      (hare) => selectedHareItem.value === hare.concept_value
+    ).persons_in_cohort_with_value;
+    const finalCaseCohortSize = hareResults[1].data.concept_breakdown.find(
+      (hare) => selectedHareItem.value === hare.concept_value
+    ).persons_in_cohort_with_value;
+    return [
+      { population: 'Control', size: finalControlCohortSize },
+      { population: 'Case', size: finalCaseCohortSize },
+      {
+        population: 'Total',
+        size: finalControlCohortSize + finalCaseCohortSize,
+      },
+    ];
+  };*/
+
+  // REFACTOR SO IF THERE IS ONLY ONE ROW, UPDATE OBJECT WITH TOTAL SIZE ONLY DEFINED
+  // OTHERWSIE IF THERE ARE TWO ROWS, UPDATE OBJECT WITH CASE, CONTROL AND TOTAL SIZE
   if (data.length > 0 && data[0]?.rows) {
     totalSizes.case = findSizeOfLastRow(data[0]);
     totalSizes.control = data[1] ? findSizeOfLastRow(data[1]) : -1;
 
-    totalSizes.total = totalSizes.control !== -1
-      ? totalSizes.case + totalSizes.control
-      : totalSizes.case;
+    totalSizes.total =
+      totalSizes.control !== -1
+        ? totalSizes.case + totalSizes.control
+        : totalSizes.case;
     console.log(JSON.stringify(totalSizes));
   }
+  console.log(data);
   return (
     <section
       data-testid='attrition-table-wrapper'
