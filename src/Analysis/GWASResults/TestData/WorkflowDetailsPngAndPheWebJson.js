@@ -33,7 +33,7 @@ const WorkflowStatusResponse = {
         value: '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-aaaa123456-777777",\n    "rev": "r78910"\n}',
       },
       {
-        name: 'pheweb_json_index',
+        name: 'pheweb_manhattan_json_index',
         value: '{\n    "baseid": "kkk-lll-mmm-1234-dddddd5678",\n    "did": "222-8888-7777-bbbb123456-777777",\n    "rev": "r78910"\n}',
       },
     ],

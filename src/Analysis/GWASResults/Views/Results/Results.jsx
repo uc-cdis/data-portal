@@ -77,7 +77,7 @@ const Results = () => {
   const displayManhattanPlot = () => {
     // Try the pheweb option first:
     let results = data?.outputs?.parameters?.filter(
-      (entry) => entry.name === 'pheweb_json_index',
+      (entry) => entry.name === 'pheweb_manhattan_json_index',
     );
     if (results && results.length !== 0) {
       return <ResultsPheWeb />;
