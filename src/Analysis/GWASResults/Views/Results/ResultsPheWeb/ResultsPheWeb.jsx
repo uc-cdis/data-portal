@@ -17,8 +17,8 @@ const ResultsPheWeb = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
-    ['getDataForWorkflowArtifact', name, uid, 'pheweb_json_index'],
-    () => getDataForWorkflowArtifact(name, uid, 'pheweb_json_index'),
+    ['getDataForWorkflowArtifact', name, uid, 'pheweb_manhattan_json_index'],
+    () => getDataForWorkflowArtifact(name, uid, 'pheweb_manhattan_json_index'),
     queryConfig,
   );
   const [api, contextHolder] = notification.useNotification();
