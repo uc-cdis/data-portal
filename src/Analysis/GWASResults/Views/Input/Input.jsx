@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import JobDetails from './JobDetails/JobDetails';
 import AttritionTableWrapper from './AttritionTable/AttrtitionTableWrapper';
 import './Input.css';
 
 const Input = () => {
+  const [totalSizes, setTotalSizes] = useState({
+    case: null,
+    control: null,
+    total: null,
+  });
   const displayTopSection = () => (
     <section className='results-top'>
       <div className='GWASResults-flex-row'>
@@ -18,8 +23,11 @@ const Input = () => {
   return (
     <div className='results-view'>
       {displayTopSection()}
-      <AttritionTableWrapper />
-      <JobDetails />
+      <AttritionTableWrapper
+        totalSizes={totalSizes}
+        setTotalSizes={setTotalSizes}
+      />
+      <JobDetails totalSizes={totalSizes} />
     </div>
   );
 };

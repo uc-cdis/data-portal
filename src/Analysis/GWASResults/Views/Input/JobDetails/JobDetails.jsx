@@ -6,7 +6,7 @@ import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
-const JobDetails = () => {
+const JobDetails = ({ totalSizes }) => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
@@ -40,12 +40,12 @@ const JobDetails = () => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -107,10 +107,28 @@ const JobDetails = () => {
           <div>Phenotype</div>
           <div>{getPhenotype()}</div>
         </div>
-        <div className='GWASResults-flex-row'>
-          <div>Final Size</div>
-          <div>TBD</div>
-        </div>
+
+        {totalSizes.control === null ? (
+          <div className='GWASResults-flex-row'>
+            <div>Final Size</div>
+            <div>{totalSizes.total}</div>
+          </div>
+        ) : (
+          <>
+            <div className='GWASResults-flex-row'>
+              <div>Control Size</div>
+              <div>{totalSizes.control}</div>
+            </div>
+            <div className='GWASResults-flex-row'>
+              <div>Case Size</div>
+              <div>{totalSizes.case}</div>
+            </div>
+            <div className='GWASResults-flex-row'>
+              <div>Total Size</div>
+              <div>{totalSizes.total}</div>
+            </div>
+          </>
+        )}
         <div className='GWASResults-flex-row'>
           <div>Covariates</div>
           <div>{displayCovariates()}</div>
