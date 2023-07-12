@@ -122,7 +122,7 @@ const JobDetails = ({ totalSizes }) => {
         </div>
         {totalSizes.control === null ? (
           <div className='GWASResults-flex-row'>
-            <div>Final Size</div>
+            <div>Total Size</div>
             <div>{totalSizes.total || '---'}</div>
           </div>
         ) : (
