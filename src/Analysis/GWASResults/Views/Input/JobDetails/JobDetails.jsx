@@ -107,11 +107,10 @@ const JobDetails = ({ totalSizes }) => {
           <div>Phenotype</div>
           <div>{getPhenotype()}</div>
         </div>
-
         {totalSizes.control === null ? (
           <div className='GWASResults-flex-row'>
             <div>Final Size</div>
-            <div>{totalSizes.total}</div>
+            <div>{totalSizes.total || '---'}</div>
           </div>
         ) : (
           <>

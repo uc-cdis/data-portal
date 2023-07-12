@@ -10,7 +10,7 @@ import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/Loading
 import './AttritionTable.css';
 import AttritionTable from './AttrtitionTable';
 
-const AttritionTableWrapper = ({ totalSizes, setTotalSizes }) => {
+const AttritionTableWrapper = ({ setTotalSizes }) => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
@@ -35,8 +35,6 @@ const AttritionTableWrapper = ({ totalSizes, setTotalSizes }) => {
       });
     }
   }, [data]);
-
-  console.log(JSON.stringify(totalSizes));
 
   if (status === 'error') {
     return (

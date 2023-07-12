@@ -23,10 +23,7 @@ const Input = () => {
   return (
     <div className='results-view'>
       {displayTopSection()}
-      <AttritionTableWrapper
-        totalSizes={totalSizes}
-        setTotalSizes={setTotalSizes}
-      />
+      <AttritionTableWrapper setTotalSizes={setTotalSizes} />
       <JobDetails totalSizes={totalSizes} />
     </div>
   );

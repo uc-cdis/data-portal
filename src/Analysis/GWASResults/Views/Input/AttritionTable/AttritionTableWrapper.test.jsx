@@ -9,6 +9,8 @@ import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJS
 
 jest.mock('react-query');
 
+const setTotalSizes = jest.fn(() => null);
+
 describe('Attrition Table Wrapper', () => {
   const selectedRowData = {
     name: 'workflow_name',
@@ -24,8 +26,8 @@ describe('Attrition Table Wrapper', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
+      </SharedContext.Provider>
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -38,8 +40,8 @@ describe('Attrition Table Wrapper', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
+      </SharedContext.Provider>
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
@@ -52,11 +54,12 @@ describe('Attrition Table Wrapper', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
+      </SharedContext.Provider>
     );
 
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
+    await waitFor(() =>
+      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
     );
   });
 
@@ -67,8 +70,8 @@ describe('Attrition Table Wrapper', () => {
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
+      </SharedContext.Provider>
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
@@ -77,8 +80,12 @@ describe('Attrition Table Wrapper', () => {
     };
 
     await waitFor(() => {
-      expect(screen.getByText('Case Cohort Attrition Table')).toBeInTheDocument();
-      expect(screen.getByText('Control Cohort Attrition Table')).toBeInTheDocument();
+      expect(
+        screen.getByText('Case Cohort Attrition Table')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Control Cohort Attrition Table')
+      ).toBeInTheDocument();
       checkForAtLeastOneInstanceOfText('Type');
       checkForAtLeastOneInstanceOfText('Name');
       checkForAtLeastOneInstanceOfText('Size');
@@ -92,7 +99,9 @@ describe('Attrition Table Wrapper', () => {
           checkForAtLeastOneInstanceOfText(rowObj.name);
           checkForAtLeastOneInstanceOfText(rowObj.size);
           rowObj.concept_breakdown.forEach((conceptObj) => {
-            checkForAtLeastOneInstanceOfText(conceptObj.persons_in_cohort_with_value);
+            checkForAtLeastOneInstanceOfText(
+              conceptObj.persons_in_cohort_with_value
+            );
           });
         });
       });
