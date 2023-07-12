@@ -42,12 +42,12 @@ const JobDetails = ({ totalSizes }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome') &&
-      IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome')
+      && IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name ||
-        JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name
+        || JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -58,7 +58,7 @@ const JobDetails = ({ totalSizes }) => {
   const removeOutcomeFromVariablesData = (variablesArray) => {
     const outcome = JSON.parse(getParameterData('outcome'));
     const filteredResult = variablesArray.filter(
-      (obj) => !isEqual(obj, outcome)
+      (obj) => !isEqual(obj, outcome),
     );
     return filteredResult;
   };
@@ -67,7 +67,7 @@ const JobDetails = ({ totalSizes }) => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
       const covariatesArray = removeOutcomeFromVariablesData(
-        JSON.parse(variablesData)
+        JSON.parse(variablesData),
       );
       return covariatesArray;
     }
