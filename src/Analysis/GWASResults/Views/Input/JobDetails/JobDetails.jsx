@@ -6,6 +6,7 @@ import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import { isEqual } from 'lodash';
 
 const JobDetails = ({ totalSizes }) => {
   const { selectedRowData } = useContext(SharedContext);
@@ -41,12 +42,12 @@ const JobDetails = ({ totalSizes }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -54,10 +55,29 @@ const JobDetails = ({ totalSizes }) => {
     return 'Unexpected Error';
   };
 
+  const removeOutcomeFromVariablesData = (variablesArray) => {
+    const outcome = getParameterData('outcome');
+    console.log('outcome', outcome);
+    console.log('variablesArray', variablesArray);
+    return variablesArray.filter((variable) => {
+      console.log('FILTER:outcome', outcome);
+      console.log('FILTER:variable', variable);
+      console.log(isEqual(outcome, variable));
+      return (
+        outcome?.concept_id === variable?.concept_id ||
+        outcome?.cohort_ids === variable?.cohort_ids
+      );
+    });
+  };
   const processCovariates = () => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
-      return JSON.parse(variablesData);
+      console.log('variablesData', variablesData);
+      const covariatesArray = removeOutcomeFromVariablesData(
+        JSON.parse(variablesData)
+      );
+      console.log('Processed covariatesArray', covariatesArray);
+      return covariatesArray;
     }
     return false;
   };
