@@ -10,6 +10,11 @@ import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJS
 jest.mock('react-query');
 
 const setTotalSizes = jest.fn(() => null);
+const expectedTotalSizesFromJsonTestData = {
+  case: 188237,
+  control: 444,
+  total: 188681,
+};
 
 describe('Attrition Table Wrapper', () => {
   const selectedRowData = {
@@ -105,6 +110,10 @@ describe('Attrition Table Wrapper', () => {
           });
         });
       });
+
+      expect(setTotalSizes).toHaveBeenCalledWith(
+        expectedTotalSizesFromJsonTestData
+      );
     });
   });
 });
