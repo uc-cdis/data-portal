@@ -32,7 +32,7 @@ describe('Attrition Table Wrapper', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -46,7 +46,7 @@ describe('Attrition Table Wrapper', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
@@ -60,11 +60,10 @@ describe('Attrition Table Wrapper', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
-    await waitFor(() =>
-      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
     );
   });
 
@@ -76,7 +75,7 @@ describe('Attrition Table Wrapper', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
@@ -86,10 +85,10 @@ describe('Attrition Table Wrapper', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Case Cohort Attrition Table')
+        screen.getByText('Case Cohort Attrition Table'),
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Control Cohort Attrition Table')
+        screen.getByText('Control Cohort Attrition Table'),
       ).toBeInTheDocument();
       checkForAtLeastOneInstanceOfText('Type');
       checkForAtLeastOneInstanceOfText('Name');
@@ -105,14 +104,14 @@ describe('Attrition Table Wrapper', () => {
           checkForAtLeastOneInstanceOfText(rowObj.size);
           rowObj.concept_breakdown.forEach((conceptObj) => {
             checkForAtLeastOneInstanceOfText(
-              conceptObj.persons_in_cohort_with_value
+              conceptObj.persons_in_cohort_with_value,
             );
           });
         });
       });
 
       expect(setTotalSizes).toHaveBeenCalledWith(
-        expectedTotalSizesFromJsonTestData
+        expectedTotalSizesFromJsonTestData,
       );
     });
   });

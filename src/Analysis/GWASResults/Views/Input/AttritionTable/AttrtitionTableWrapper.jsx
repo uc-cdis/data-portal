@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import {
@@ -16,18 +17,16 @@ const AttritionTableWrapper = ({ setTotalSizes }) => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig
+    queryConfig,
   );
 
-  const findSizeOfLastRow = (tableData) =>
-    tableData?.rows[tableData?.rows.length - 1]?.size;
+  const findSizeOfLastRow = (tableData) => tableData?.rows[tableData?.rows.length - 1]?.size;
 
   useEffect(() => {
     if (data?.length > 0) {
       const caseSize = data[0]?.rows && findSizeOfLastRow(data[0]);
       const controlSize = data[1]?.rows ? findSizeOfLastRow(data[1]) : null;
-      const totalSize =
-        controlSize !== null ? caseSize + controlSize : caseSize;
+      const totalSize = controlSize !== null ? caseSize + controlSize : caseSize;
       setTotalSizes({
         case: caseSize,
         control: controlSize,
@@ -54,10 +53,10 @@ const AttritionTableWrapper = ({ setTotalSizes }) => {
   }
 
   if (
-    !data ||
-    data.length === 0 ||
-    data[0].table_type !== 'case' ||
-    data.error
+    !data
+    || data.length === 0
+    || data[0].table_type !== 'case'
+    || data.error
   ) {
     return <LoadingErrorMessage message='Error Getting Attrition Table Data' />;
   }
@@ -77,4 +76,9 @@ const AttritionTableWrapper = ({ setTotalSizes }) => {
     </section>
   );
 };
+
+AttritionTableWrapper.propTypes = {
+  setTotalSizes: PropTypes.func.isRequired,
+};
+
 export default AttritionTableWrapper;

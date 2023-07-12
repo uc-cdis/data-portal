@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../../localconf';
@@ -40,12 +41,12 @@ const JobDetails = ({ totalSizes }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome') &&
-      IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome')
+      && IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name ||
-        JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name
+        || JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -113,7 +114,7 @@ const JobDetails = ({ totalSizes }) => {
             <div>{totalSizes.total || '---'}</div>
           </div>
         ) : (
-          <>
+          <React.Fragment>
             <div className='GWASResults-flex-row'>
               <div>Control Size</div>
               <div>{totalSizes.control}</div>
@@ -126,7 +127,7 @@ const JobDetails = ({ totalSizes }) => {
               <div>Total Size</div>
               <div>{totalSizes.total}</div>
             </div>
-          </>
+          </React.Fragment>
         )}
         <div className='GWASResults-flex-row'>
           <div>Covariates</div>
@@ -136,4 +137,9 @@ const JobDetails = ({ totalSizes }) => {
     </section>
   );
 };
+
+JobDetails.propTypes = {
+  totalSizes: PropTypes.object.isRequired,
+};
+
 export default JobDetails;
