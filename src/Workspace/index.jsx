@@ -265,6 +265,15 @@ class Workspace extends React.Component {
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
       } else {
         workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+        containerStates = workspaceStatusData.status.containerStates;
+        if(containerStates && containerStates.length > 1 )
+        {
+          //Display Detailed Pod Statuses
+          for (let i = 0; i < containerStates.length; i++)
+          {
+            workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + "status: " + containerStates[i].Ready)
+          }
+        }
       }
       return workspaceLaunchStepsConfig;
     }
@@ -272,6 +281,21 @@ class Workspace extends React.Component {
     // here we are at step 3, step 3 have no k8s pod/container conditions
     workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
     workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+
+    // Display ECS status
+    if(workspaceStatusData.workspaceType == 'ECS')
+    {
+      if(workspaceStatusData.status == 'Launching')
+      {
+        workspaceLaunchStepsConfig.steps[2].description = 'ECS task pending';
+      }
+      else if(workspaceStatusData.status != 'Active')
+      {
+        workspaceLaunchStepsConfig.steps[2].description = 'ECS task failed';
+      }
+      return workspaceLaunchStepsConfig;
+    }
+
     workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
 
     // condition type: ProxyConnected + status: false => at step 3
