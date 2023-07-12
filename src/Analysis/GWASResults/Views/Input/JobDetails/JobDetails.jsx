@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
+import { isEqual } from 'lodash';
 import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import { isEqual } from 'lodash';
 
 const JobDetails = ({ totalSizes }) => {
   const { selectedRowData } = useContext(SharedContext);
@@ -56,27 +56,19 @@ const JobDetails = ({ totalSizes }) => {
   };
 
   const removeOutcomeFromVariablesData = (variablesArray) => {
-    const outcome = getParameterData('outcome');
-    console.log('outcome', outcome);
-    console.log('variablesArray', variablesArray);
-    return variablesArray.filter((variable) => {
-      console.log('FILTER:outcome', outcome);
-      console.log('FILTER:variable', variable);
-      console.log(isEqual(outcome, variable));
-      return (
-        outcome?.concept_id === variable?.concept_id ||
-        outcome?.cohort_ids === variable?.cohort_ids
-      );
-    });
+    const outcome = JSON.parse(getParameterData('outcome'));
+    const filteredResult = variablesArray.filter(
+      (obj) => !isEqual(obj, outcome)
+    );
+    return filteredResult;
   };
+
   const processCovariates = () => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
-      console.log('variablesData', variablesData);
       const covariatesArray = removeOutcomeFromVariablesData(
         JSON.parse(variablesData)
       );
-      console.log('Processed covariatesArray', covariatesArray);
       return covariatesArray;
     }
     return false;
