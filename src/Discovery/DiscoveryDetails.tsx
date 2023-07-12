@@ -178,7 +178,15 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
   // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
   const groupHasContent = group.fields.some(
-    (field) => !field.sourceField || resource[field.sourceField],
+    (field) => {
+      if (!field.sourceField) {
+        return false;
+      }
+      const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
+      return (resourceFieldValue
+        && resourceFieldValue.length > 0
+        && resourceFieldValue[0].length !== 0);
+    },
   );
   if (groupHasContent) {
     return (
