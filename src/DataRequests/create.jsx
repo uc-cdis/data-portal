@@ -10,10 +10,12 @@ import MultiValueField from "../components/MultiValueField";
 import FilterSetOpenForm from "../GuppyDataExplorer/ExplorerFilterSetForms/FilterSetOpenForm";
 import ViewFilterDetail from "../GuppyDataExplorer/ExplorerFilterDisplay/ViewFilterDetail";
 import Button from "../gen3-ui-component/components/Button";
+import IconComponent from '../components/Icon';
+import dictIcons from '../img/icons/index';
 import { useState } from "react";
 import { fetchWithToken } from '../redux/explorer/filterSetsAPI';
 import * as Yup from 'yup';
-import './create.css';
+import './DataRequests.css';
 
 function mapPropsToState(state) {
   return {
@@ -61,7 +63,9 @@ function DataRequestCreate({ isCreatePending }) {
 
   return <div className={`data-requests ${isCreatePending ? 'data-requests--create-pending' : ''}`}>
     {isCreatePending && <div className="create-pending-overlay"></div>}
-    <button className="back-button" onClick={goBack}>&#10094;</button>	
+    <button className="back-button" onClick={goBack}>
+      <IconComponent dictIcons={dictIcons} iconName='back' height='12px' />
+    </button>	
     <Formik
       validationSchema={schema}
       initialValues={{
@@ -87,15 +91,15 @@ function DataRequestCreate({ isCreatePending }) {
       }}
     >
       {({ values, errors, touched, setFieldTouched }) => (
-          <Form className="create-form">
-            <header className="create-header">
+          <Form className="data-request__form">
+            <header className="data-request__header">
               <h2>Create Data Request</h2>
             </header>
-            <div className="create-fields">
+            <div className="data-request__fields">
               <Field name="name">
                 {({ field, meta }) => 
                   <SimpleInputField
-                    className="create-value-container"
+                    className="data-request__value-container"
                     label="Project Name"
                     input={<input type="text" {...field} />}
                     error={errorObjectForField(errors, touched, 'name')}
@@ -104,7 +108,7 @@ function DataRequestCreate({ isCreatePending }) {
               <Field name="institution">
                 {({ field, meta }) =>
                   <SimpleInputField
-                    className="create-value-container"
+                    className="data-request__value-container"
                     label="Institution"
                     input={<input type="text" {...field} />}
                     error={errorObjectForField(errors, touched, 'institution')}
@@ -113,7 +117,7 @@ function DataRequestCreate({ isCreatePending }) {
               <Field name="description">
                 {({ field, meta }) =>
                   <SimpleInputField
-                    className="create-value-container"
+                    className="data-request__value-container"
                     label="Description" 
                     input={<textarea {...field} />}
                     error={errorObjectForField(errors, touched, 'description')}
@@ -129,11 +133,11 @@ function DataRequestCreate({ isCreatePending }) {
                       return <MultiValueField
                           label="Assosciated Users"
                           fieldId="associated_users_emails"
-                          className="create-value-container"
+                          className="data-request__value-container"
                           error={errorObjectForField(errors, touched, 'associated_users_emails')}
                         >
                           {({ valueContainerProps, valueProps, inputProps }) => (<>
-                              <div className="create-multi-value-row create-multi-value-values-row" {...valueContainerProps}>
+                              <div className="data-request__multi-value-row data-request__multi-value-values-row" {...valueContainerProps}>
                                 {values.associated_users_emails.map((email, index) => {
                                   return <span key={index} {...valueProps}>
                                     <Pill onClose={() => {
@@ -145,7 +149,7 @@ function DataRequestCreate({ isCreatePending }) {
                                   </span>;
                                 })}
                               </div>
-                              <div className="create-multi-value-row">
+                              <div className="data-request__multi-value-row">
                                 <input
                                   {...inputProps}
                                   type="email"
@@ -153,7 +157,7 @@ function DataRequestCreate({ isCreatePending }) {
                                   onChange={(e) => setCurrentEmailInput(e.target.value)} value={currentEmailInput}
                                 />
                               </div>
-                              <div className="create-multi-value-row">
+                              <div className="data-request__multi-value-row">
                                 <Button buttonType="secondary" label="Add Email" onClick={addEmail} />
                               </div>
                           </>)}
@@ -170,11 +174,11 @@ function DataRequestCreate({ isCreatePending }) {
                     return <MultiValueField
                         label="Filter Sets"
                         fieldId="filter_set_ids"
-                        className="create-value-container"
+                        className="data-request__value-container"
                         error={errorObjectForField(errors, touched, 'filter_set_ids')}
                       >
                         {({ valueContainerProps, valueProps }) => (<>
-                          <div className="create-multi-value-row create-multi-value-values-row" {...valueContainerProps}>
+                          <div className="data-request__multi-value-row data-request__multi-value-values-row" {...valueContainerProps}>
                             {values.filter_set_ids.map((filter_id, index) => {
                               let filter = filterSets.find((filter) => filter.id === filter_id);
                               return <span key={index} {...valueProps}>
@@ -187,7 +191,7 @@ function DataRequestCreate({ isCreatePending }) {
                               </span>;
                             })}
                           </div>
-                          <div className="create-multi-value-row">
+                          <div className="data-request__multi-value-row">
                             <Button buttonType="secondary" hasPopup="dialog" label="Add Filter" onClick={() => setOpenAddFilter(true)} />
                           </div>
                           {openAddFilter &&
@@ -214,8 +218,8 @@ function DataRequestCreate({ isCreatePending }) {
                   }}
               </FieldArray>
             </div>
-            <Button submit={true} className="create-submit" label="Create" />
-            {createRequestError.isError && <span className="create-request-error">{createRequestError.message}</span>}
+            <Button submit={true} className="data-request__submit" label="Create" />
+            {createRequestError.isError && <span className="data-request__request-error">{createRequestError.message}</span>}
           </Form>
       )}
     </Formik>
