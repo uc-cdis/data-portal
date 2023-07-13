@@ -379,7 +379,6 @@ function FilterGroup({
           />
         )}
         {tabs[tabIndex]
-          .filter((section) => !!section.options.length)
           .map((section, index) => (
             <FilterSection
               key={section.title}
