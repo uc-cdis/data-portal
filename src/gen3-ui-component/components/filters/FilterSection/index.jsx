@@ -577,7 +577,7 @@ function FilterSection({
     </div>
   );
 
-  return (
+  return options.length ? (
     <div className='g3-filter-section'>
       {tooltip ? (
         <Tooltip
@@ -604,7 +604,7 @@ function FilterSection({
         </div>
       )}
     </div>
-  );
+  ) : null;
 }
 
 FilterSection.propTypes = {
