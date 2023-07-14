@@ -50,11 +50,15 @@ export default function AdminProjectActions({ project, projectStates, onAction }
     let dispatch = useAppDispatch();
     let [actionType, setActionType] = useState('')
     let [currentEmailInput, setCurrentEmailInput] = useState("");
+    let [isActionPending, setActionPending] = useState(false);
     let [actionRequestError, setRequestactionError] = useState({ isError: false, message: '' });
     let currentProjectState = projectStates[project.status] ?? { id: -1, code: '' };
     let projectStateOptions = Object.keys(projectStates).map((name) => ({ label: name, value: projectStates[name].id }));
 
-    return <div className="data-request-admin__actions-container">
+    return <div className={
+            `data-request-admin__actions-container
+            ${isActionPending ? 'data-request-admin__actions-container--action-pending' : ''}`
+        }>
         {actionType !== '' && 
             <button className="back-button" onClick={() => setActionType('')}>
                 <IconComponent dictIcons={dictIcons} iconName='back' height='12px' />
@@ -70,12 +74,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             approved_url: ''
                         }}
                         onSubmit={({ approved_url }) => {
+                            setActionPending(true);
                             let actionRequest =
                                 /** @type {import('../redux/dataRequest/types').Request} */
                                 (dispatch(updateProjectApprovedUrl({ approved_url, project_id: project.id })));
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
+                                    setActionPending(false);
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS')
                                     return;
@@ -114,12 +120,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                 state_id: currentProjectState.id
                             }}
                             onSubmit={({ state_id }) => {
+                                setActionPending(true);
                                 let updateRequest = 
                                     /** @type {import('../redux/dataRequest/types').Request} */ 
                                     (dispatch(updateProjectState({ state_id, project_id: project.id })));
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
+                                        setActionPending(false);
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
@@ -169,6 +177,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                 associated_users_emails: []
                             }}
                             onSubmit={(values) => {
+                                setActionPending(true);
                                 let users = values.associated_users_emails
                                     .map((email) => ({ project_id: project.id, email }));
                                 let updateRequest = 
@@ -177,6 +186,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
+                                        setActionPending(false);
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
@@ -248,12 +258,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             email: ''
                         }}
                         onSubmit={({ email }) => {
+                            setActionPending(true);
                             let actionRequest = 
                                 /** @type {import('../redux/dataRequest/types').Request} */ 
                                 (dispatch(updateUserDataAccess({ email, project_id: project.id })));
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
+                                    setActionPending(false);
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS');
                                     return;

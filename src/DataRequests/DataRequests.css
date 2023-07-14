@@ -18,7 +18,8 @@
   color: var(--pcdc-color__primary);
 }
 
-.data-requests--create-pending {
+.data-requests--create-pending,
+.data-request-admin__actions-container--action-pending {
   opacity: 0.5;
 }
 
