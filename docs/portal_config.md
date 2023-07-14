@@ -495,6 +495,11 @@ Below is an example, with inline comments describing what each JSON block config
         "type": "count" // count of rows in data where `field` is non-empty
       },
       {
+        "name": "Accession Numbers",
+        "field": "minimal_info.dbgap_accession", // JSONPath syntax field name for nested fields
+        "type": "count"
+      },
+      {
         "name": "Total Subjects",
         "field": "_subjects_count",
         "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
