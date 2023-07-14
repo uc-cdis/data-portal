@@ -227,7 +227,10 @@ function App() {
                   if (isAdmin && !state.dataRequest.isAdminActive) {
                     dispatch(toggleAdminActive());
                   }
-                  return Promise.all([dispatch(fetchDataRequestProjects({ triggerReloading: false })), dispatch(fetchProjectStates())]);
+                  return Promise.all([
+                    dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
+                    dispatch(fetchProjectStates())
+                  ]);
                 }
                 return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
             }}>
