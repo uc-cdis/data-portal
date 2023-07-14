@@ -63,6 +63,15 @@ const discovery = (
         currentPage: 1,
       },
     };
+  case 'CHATBOT_SEARCH_TERM_SET':
+    return {
+      ...state,
+      chatbotSearchTerm: action.chatbotSearchTerm,
+      pagination: {
+        ...state.pagination,
+        currentPage: 1,
+      },
+    };
   case 'PAGINATION_SET':
     return {
       ...state,

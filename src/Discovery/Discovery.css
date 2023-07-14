@@ -211,15 +211,34 @@
   margin-bottom: 10px;
 }
 
+.discovery-search-chatbot__standalone {
+  margin-bottom: 10px;
+}
+
 .discovery-search {
   border-color: var(--g3-color__base-blue);
   border-width: 1px;
   border-radius: 7px;
 }
 
+.discovery-chatbot {
+  border-color: var(--g3-color__base-blue-light);
+  border-width: 3px;
+  border-radius: 9px;
+}
+
+.discovery-chatbot-response {
+  white-space: pre-line
+}
+
 .discovery-input-subtitle {
   font-size: 0.75em;
   color: var(--g3-color__titanium);
+}
+
+.discovery-chatbot-input-subtitle {
+  font-size: 0.75em;
+  color: var(--g3-color__base-blue);
 }
 
 #discovery-table-of-records {

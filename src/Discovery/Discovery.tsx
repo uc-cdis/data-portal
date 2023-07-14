@@ -18,6 +18,7 @@ import {
   MinusOutlined,
   CheckCircleOutlined,
   MinusCircleOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import { debounce } from 'lodash';
@@ -29,11 +30,10 @@ import DiscoveryDropdownTagViewer from './DiscoveryDropdownTagViewer';
 import DiscoveryListView from './DiscoveryListView';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
-import DiscoveryMDSSearch from './DiscoveryMDSSearch';
+import {DiscoveryMDSSearch, DiscoveryChatbot} from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
-
 export const accessibleFieldName = '__accessible';
 
 export enum AccessLevel {
@@ -200,12 +200,16 @@ export interface Props {
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
   searchTerm: string,
+  chatbotSearchTerm: string,
+  chatbotResponse: string,
   accessFilters: {
     [accessLevel: number]: boolean
   },
   accessSortDirection: AccessSortDirection,
   onAdvancedSearch: (advancedSearch: any[]) => any,
   onSearchChange: (arg0: string) => any,
+  onChatbotSearchChange: (arg0: string) => any,
+  onChatbotResponse: (arg0: string) => any,
   onTagsSelected: (arg0: any) => any,
   onAccessFilterSet: (arg0: object) => any,
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
@@ -238,6 +242,15 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     props.onSearchChange(value);
   };
 
+  const handleChatbotSearchChange = (ev) => {
+    const { value } = ev.currentTarget;
+    props.onChatbotSearchChange(value);
+  };
+
+  const handleChatbotResponse = (searchTerms) => {
+    props.onSearchChange(searchTerms);
+  };
+
   const debouncingDelayInMilliseconds = 500;
   const memoizedDebouncedSearch = useMemo(
     () => debounce(doSearchFilterSort, debouncingDelayInMilliseconds),
@@ -257,6 +270,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   useEffect(
     () => doDebounceSearch(parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount), [
       props.searchTerm,
+      props.chatbotSearchTerm,
+      props.chatbotResponse,
       props.accessSortDirection,
       props.studies,
       props.pagination,
@@ -707,7 +722,15 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           />
         )}
       </div>
-
+        <div className='discovery-search-chatbot__standalone'>
+          <DiscoveryChatbot
+            response=''
+            chatbotSearchTerm={props.chatbotSearchTerm}
+            handleChatbotSearchChange={handleChatbotSearchChange}
+            handleChatbotResponse={handleChatbotResponse}
+            chatbotInputSubtitle={config.features.search.searchBar.chatbotInputSubtitle}
+          />
+        </div>
       <div className='discovery-studies-container'>
         {/* Free-form text search box */}
         {(enableSearchBar && !enableSearchableTags

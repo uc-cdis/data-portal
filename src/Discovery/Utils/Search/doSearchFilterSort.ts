@@ -26,7 +26,13 @@ const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSear
   } = parametersForDoSearchFilterSort;
   let filteredResources = props.studies;
   if (jsSearch && props.searchTerm) {
-    filteredResources = jsSearch.search(props.searchTerm);
+    let someFilteredResources = []
+    const searchTerms = props.searchTerm.split(",").map(item => item.trim());
+    for (const searchTerm of searchTerms){
+      someFilteredResources = someFilteredResources.concat(jsSearch.search(searchTerm));
+    }
+
+    filteredResources = someFilteredResources;
   }
   filteredResources = filterByTags(
     filteredResources,
