@@ -12,6 +12,9 @@ import './DataRequests.css';
 /** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
 /** @typedef {import('../redux/types').RootState} RootState */
 
+/**
+ * @param {RootState} state
+ */
 function mapPropsToState(state) {
   return {
     projects: state.dataRequest.projects,

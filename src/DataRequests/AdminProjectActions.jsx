@@ -36,12 +36,22 @@ function errorObjectForField(errors, touched, fieldName) {
       { isError: false, message: '' }
   }
 
+/** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
+/** @typedef {import('../redux/types').RootState} RootState */
+
+  
+  /**
+   * @param {Object} props
+   * @param {DataRequestProject} [props.project]
+   * @param {RootState['dataRequest']['projectStates']} [props.projectStates]
+   * @param {function} [props.onAction]
+   */
 export default function AdminProjectActions({ project, projectStates, onAction }) {
     let dispatch = useAppDispatch();
     let [actionType, setActionType] = useState('')
     let [currentEmailInput, setCurrentEmailInput] = useState("");
     let [actionRequestError, setRequestactionError] = useState({ isError: false, message: '' });
-    let currentProjectState = projectStates[project.status] ?? {};
+    let currentProjectState = projectStates[project.status] ?? { id: -1, code: '' };
     let projectStateOptions = Object.keys(projectStates).map((name) => ({ label: name, value: projectStates[name].id }));
 
     return <div className="data-request-admin__actions-container">
@@ -76,7 +86,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             })
                         }}
                     >
-                        {({ values, errors, touched, setFieldTouched }) => (
+                        {({ errors, touched }) => (
                             <Form className="data-request__form">
                                 <div className="data-request__header">
                                     <h2>Update Approved Data URL</h2>
