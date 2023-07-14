@@ -107,8 +107,18 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
  * @param {boolean} props.isAdminActive
  * @param {function} props.onToggleAdmin
  * @param {boolean} [props.isLoading]
+ * @param {function} [props.reloadProjects]
  */
-function DataRequestsTable({ className = '', projects, projectStates, isAdmin, isAdminActive, onToggleAdmin, isLoading }) {
+function DataRequestsTable({
+  className = '',
+  projects,
+  projectStates,
+  isAdmin,
+  isAdminActive,
+  onToggleAdmin,
+  isLoading,
+  reloadProjects
+}) {
   const transitionTo = useNavigate();
   const userId = useAppSelector((state) => state.user.user_id);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
@@ -128,6 +138,7 @@ function DataRequestsTable({ className = '', projects, projectStates, isAdmin, i
     }),
     [projects, showApprovedOnly, userId, isAdminActive]
   );
+  let shouldReloadProjectsOnActionClose = false;
 
   return (
     <div className={className}>
@@ -176,8 +187,25 @@ function DataRequestsTable({ className = '', projects, projectStates, isAdmin, i
             </Popup>
           }
           {projectDisplayOptions &&
-            <Popup title={`Edit "${projectDisplayOptions.name}"`} onClose={() => { setProjectDisplayOptions(null) }}>
-              <AdminProjectActions project={projectDisplayOptions} projectStates={projectStates} />
+            <Popup
+              hideFooter={true}
+              title={`Edit "${projectDisplayOptions.name}"`}
+              onClose={() => { 
+                if (shouldReloadProjectsOnActionClose) {
+                  reloadProjects?.();
+                }
+                setProjectDisplayOptions(null);
+              }}
+            >
+              <AdminProjectActions
+                project={projectDisplayOptions}
+                projectStates={projectStates}
+                onAction={(type) => {
+                  if (type === 'PROJECT_STATE' ) {  
+                    shouldReloadProjectsOnActionClose = true;
+                  }
+                }}
+              />
             </Popup>
           }
         </div>
@@ -197,7 +225,8 @@ DataRequestsTable.propTypes = {
   isAdmin: PropTypes.bool,
   isAdminActive: PropTypes.bool,
   onToggleAdmin: PropTypes.func,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  reloadProjects: PropTypes.func
 };
 
 export default DataRequestsTable;

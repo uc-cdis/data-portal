@@ -1,5 +1,6 @@
 .pill-container {
   display: inline-block;
+  white-space: nowrap;
   background-color: var(--g3-color__bg-cloud);
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 4px;

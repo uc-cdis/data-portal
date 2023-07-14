@@ -78,6 +78,7 @@ function DataRequests({ projects, projectStates, isAdminActive, isProjectsReload
               }
               dispatch(fetchProjects({ triggerReloading: true }));
             }}
+            reloadProjects={() => { dispatch(fetchProjects({ triggerReloading: true })); }}
             isAdminActive={isAdminActive}
             isAdmin={isAdmin}
             isLoading={isProjectsReloading}

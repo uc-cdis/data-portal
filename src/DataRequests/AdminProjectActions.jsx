@@ -36,8 +36,7 @@ function errorObjectForField(errors, touched, fieldName) {
       { isError: false, message: '' }
   }
 
-
-export default function AdminProjectActions({ project, projectStates }) {
+export default function AdminProjectActions({ project, projectStates, onAction }) {
     let dispatch = useAppDispatch();
     let [actionType, setActionType] = useState('')
     let [currentEmailInput, setCurrentEmailInput] = useState("");
@@ -67,6 +66,7 @@ export default function AdminProjectActions({ project, projectStates }) {
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
+                                    onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS')
                                     return;
                                 }
@@ -103,13 +103,14 @@ export default function AdminProjectActions({ project, projectStates }) {
                             initialValues={{
                                 state_id: currentProjectState.id
                             }}
-                            onSubmit={(values) => {
+                            onSubmit={({ state_id }) => {
                                 let updateRequest = 
                                     /** @type {import('../redux/dataRequest/types').Request} */ 
-                                    (dispatch(updateProjectState({ state_id: values.state_id, project_id: project.id })));
+                                    (dispatch(updateProjectState({ state_id, project_id: project.id })));
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
+                                        onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
                                     }
@@ -119,28 +120,29 @@ export default function AdminProjectActions({ project, projectStates }) {
                                 })
                             }}
                         >
-                            {({ errors, touched }) => (
+                            {({ values, errors, touched }) => (
                                 <Form className="data-request__form">
                                     <div className="data-request__header">
                                         <h2>Change Project State</h2>
                                     </div>
                                     <div className="data-request__fields">
-                                        <Field name="state_id">
+                                        <Field name="state">
                                             {({ field, meta }) => 
                                             <SimpleInputField
                                                 className="data-request__value-container"
                                                 label="Project State"
                                                 input={
                                                     <Select
-                                                        {...field}
+                                                        value={field.value}
                                                         options={projectStateOptions}
+                                                        onChange={({ value }) => { values.state_id = value; }}
                                                         autoFocus
                                                         isClearable={false}
                                                         isSearchable={false}
                                                         theme={overrideSelectTheme}
                                                     />
                                                 }
-                                                error={errorObjectForField(errors, touched, 'state_id')}
+                                                error={errorObjectForField(errors, touched, 'state')}
                                             />}
                                         </Field>
                                     </div>
@@ -165,6 +167,7 @@ export default function AdminProjectActions({ project, projectStates }) {
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
+                                        onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
                                     }
@@ -188,7 +191,7 @@ export default function AdminProjectActions({ project, projectStates }) {
                                                     setCurrentEmailInput('');
                                                 };
                                                 return <MultiValueField
-                                                    label="Assosciated Users"
+                                                    label="User Emails"
                                                     fieldId="associated_users_emails"
                                                     className="data-request__value-container"
                                                     error={errorObjectForField(errors, touched, 'associated_users_emails')}
@@ -241,7 +244,8 @@ export default function AdminProjectActions({ project, projectStates }) {
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
-                                    setActionType('ACTION_SUCESS');
+                                    onAction?.(actionType);
+                                    setActionType('ACTION_SUCCESS');
                                     return;
                                 }
                         
@@ -272,7 +276,9 @@ export default function AdminProjectActions({ project, projectStates }) {
                         )}
                     </Formik>);
                 case 'ACTION_SUCCESS':
-                    return <span>Success!</span>;
+                    return <div className="data-request-admin__action-success">
+                        <span>Success!</span>
+                    </div>;
                 default:
                     return <div>
                         <ul className="data-request-admin__action-list">

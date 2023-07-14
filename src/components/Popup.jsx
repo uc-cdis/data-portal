@@ -24,6 +24,7 @@ import './Popup.css';
  * @property {() => void} [onClose]
  * @property {PopupButton[]} [rightButtons]
  * @property {string} [title]
+ * @property {boolean} [hideFooter]
  */
 
 /** @param {PopupProps} props */
@@ -37,6 +38,7 @@ function Popup({
   onClose,
   rightButtons = [],
   title = '',
+  hideFooter = false
 }) {
   return (
     <div className='popup__mask'>
@@ -97,58 +99,60 @@ function Popup({
           {error && <h6 className='popup__error'>Error</h6>}
           {error && <code>{error}</code>}
         </div>
-        <div className='popup__foot'>
-          <div className='popup__left-foot'>
-            {leftButtons.map((btn, i) => [
-              i > 0 && ' ',
-              !btn.icon ? (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={btn.enabled !== undefined ? btn.enabled : true}
-                  buttonType='default'
-                  value={btn.value}
-                />
-              ) : (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={btn.enabled !== undefined ? btn.enabled : true}
-                  buttonType='default'
-                  rightIcon={btn.icon}
-                  value={btn.value}
-                />
-              ),
-            ])}
+        {!hideFooter && 
+          <div className='popup__foot'>
+            <div className='popup__left-foot'>
+              {leftButtons.map((btn, i) => [
+                i > 0 && ' ',
+                !btn.icon ? (
+                  <Button
+                    key={btn.caption}
+                    onClick={btn.fn}
+                    label={btn.caption}
+                    enabled={btn.enabled !== undefined ? btn.enabled : true}
+                    buttonType='default'
+                    value={btn.value}
+                  />
+                ) : (
+                  <Button
+                    key={btn.caption}
+                    onClick={btn.fn}
+                    label={btn.caption}
+                    enabled={btn.enabled !== undefined ? btn.enabled : true}
+                    buttonType='default'
+                    rightIcon={btn.icon}
+                    value={btn.value}
+                  />
+                ),
+              ])}
+            </div>
+            <div className='popup__right-foot'>
+              {rightButtons.map((btn, i) => [
+                i > 0 && ' ',
+                !btn.icon ? (
+                  <Button
+                    key={btn.caption}
+                    onClick={btn.fn}
+                    label={btn.caption}
+                    enabled={btn.enabled !== undefined ? btn.enabled : true}
+                    buttonType='primary'
+                    value={btn.value}
+                  />
+                ) : (
+                  <Button
+                    key={btn.caption}
+                    onClick={btn.fn}
+                    label={btn.caption}
+                    enabled={btn.enabled !== undefined ? btn.enabled : true}
+                    buttonType='primary'
+                    rightIcon={btn.icon}
+                    value={btn.value}
+                  />
+                ),
+              ])}
+            </div>
           </div>
-          <div className='popup__right-foot'>
-            {rightButtons.map((btn, i) => [
-              i > 0 && ' ',
-              !btn.icon ? (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={btn.enabled !== undefined ? btn.enabled : true}
-                  buttonType='primary'
-                  value={btn.value}
-                />
-              ) : (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={btn.enabled !== undefined ? btn.enabled : true}
-                  buttonType='primary'
-                  rightIcon={btn.icon}
-                  value={btn.value}
-                />
-              ),
-            ])}
-          </div>
-        </div>
+        }
       </div>
     </div>
   );
@@ -175,6 +179,7 @@ Popup.propTypes = {
   rightButtons: PropTypes.arrayOf(buttonType),
   title: PropTypes.string,
   onClose: PropTypes.func,
+  hideFooter: PropTypes.bool
 };
 
 export default Popup;
