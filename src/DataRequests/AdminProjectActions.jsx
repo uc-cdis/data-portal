@@ -81,14 +81,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
-                                    setActionPending(false);
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS')
                                     return;
                                 }
                         
                                 let { isError, message } = action.payload;
-                                setRequestactionError({ isError, message })
+                                setRequestactionError({ isError, message });
+                                setActionPending(false);
                             })
                         }}
                     >
@@ -127,14 +127,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
-                                        setActionPending(false);
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
                                     }
                             
                                     let { isError, message } = action.payload;
-                                    setRequestactionError({ isError, message })
+                                    setRequestactionError({ isError, message });
+                                    setActionPending(false);
                                 })
                             }}
                         >
@@ -186,14 +186,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         
                                 updateRequest.then((action) => {
                                     if (!action.payload.isError) {
-                                        setActionPending(false);
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
                                         return;
                                     }
                             
                                     let { isError, message } = action.payload;
-                                    setRequestactionError({ isError, message })
+                                    setRequestactionError({ isError, message });
+                                    setActionPending(false);
                                 })
                             }}
                             >
@@ -265,14 +265,14 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                     
                             actionRequest.then((action) => {
                                 if (!action.payload.isError) {
-                                    setActionPending(false);
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS');
                                     return;
                                 }
                         
                                 let { isError, message } = action.payload;
-                                setRequestactionError({ isError, message })
+                                setRequestactionError({ isError, message });
+                                setActionPending(false);
                             })
                         }}
                     >
