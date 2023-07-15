@@ -302,7 +302,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         <span>Success!</span>
                     </div>;
                 default:
-                    return <div>
+                    return <div className="data-request-admin__action-list-container">
                         <ul className="data-request-admin__action-list">
                             <li>
                                 <Button

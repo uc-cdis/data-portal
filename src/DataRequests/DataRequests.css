@@ -221,3 +221,10 @@
 .data-request-admin__action-list li button {
   width: 250px;
 }
+
+.data-request-admin__action-list-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
