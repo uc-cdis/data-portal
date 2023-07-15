@@ -215,3 +215,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.data-request-admin__action-list li button {
+  width: 250px;
+}
