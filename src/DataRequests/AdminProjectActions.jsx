@@ -80,6 +80,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                 (dispatch(updateProjectApprovedUrl({ approved_url, project_id: project.id })));
                     
                             actionRequest.then((action) => {
+                                setActionPending(false);
                                 if (!action.payload.isError) {
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS')
@@ -88,7 +89,6 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         
                                 let { isError, message } = action.payload;
                                 setRequestactionError({ isError, message });
-                                setActionPending(false);
                             })
                         }}
                     >
@@ -126,6 +126,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                     (dispatch(updateProjectState({ state_id, project_id: project.id })));
                         
                                 updateRequest.then((action) => {
+                                    setActionPending(false);
                                     if (!action.payload.isError) {
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
@@ -134,7 +135,6 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             
                                     let { isError, message } = action.payload;
                                     setRequestactionError({ isError, message });
-                                    setActionPending(false);
                                 })
                             }}
                         >
@@ -185,6 +185,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                     (dispatch(updateProjectUsers({ users })));
                         
                                 updateRequest.then((action) => {
+                                    setActionPending(false);
                                     if (!action.payload.isError) {
                                         onAction?.(actionType);
                                         setActionType('ACTION_SUCCESS');
@@ -193,7 +194,6 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             
                                     let { isError, message } = action.payload;
                                     setRequestactionError({ isError, message });
-                                    setActionPending(false);
                                 })
                             }}
                             >
@@ -264,6 +264,7 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                 (dispatch(updateUserDataAccess({ email, project_id: project.id })));
                     
                             actionRequest.then((action) => {
+                                setActionPending(false);
                                 if (!action.payload.isError) {
                                     onAction?.(actionType);
                                     setActionType('ACTION_SUCCESS');
@@ -272,7 +273,6 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                         
                                 let { isError, message } = action.payload;
                                 setRequestactionError({ isError, message });
-                                setActionPending(false);
                             })
                         }}
                     >
