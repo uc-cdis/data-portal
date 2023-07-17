@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
+import { useQuery } from 'react-query';
+import { Spin } from 'antd';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import JobDetails from './JobDetails/JobDetails';
 import AttritionTableWrapper from './AttritionTable/AttrtitionTableWrapper';
-import { useQuery } from 'react-query';
-import { Spin } from 'antd';
 import SharedContext from '../../Utils/SharedContext';
 import {
   getDataForWorkflowArtifact,
@@ -33,24 +33,24 @@ const Input = () => {
 
   if (status === 'error') {
     return (
-      <>
+      <React.Fragment>
         {displayTopSection()}
         <LoadingErrorMessage
           data-testid='loading-error-message'
           message='Error getting attrition table data due to status'
         />
-      </>
+      </React.Fragment>
     );
   }
 
   if (status === 'loading') {
     return (
-      <>
+      <React.Fragment>
         {displayTopSection()}
         <div className='spinner-container' data-testid='spinner'>
           <Spin />
         </div>
-      </>
+      </React.Fragment>
     );
   }
 
@@ -61,10 +61,10 @@ const Input = () => {
     data.error
   ) {
     return (
-      <>
+      <React.Fragment>
         {displayTopSection()}
         <LoadingErrorMessage message='Error Getting Attrition Table Data' />
-      </>
+      </React.Fragment>
     );
   }
 

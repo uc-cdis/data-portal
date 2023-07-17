@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
@@ -93,10 +93,6 @@ const JobDetails = ({ attritionTableData }) => {
   };
 
   const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
-    console.log(
-      'tableData?.rows[tableData?.rows.length - 1]',
-      tableData?.rows[tableData?.rows.length - 1]
-    );
     const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
     const datum = lastRowOfData?.concept_breakdown.find(
       (obj) => obj.concept_value_name === hareAncestry
@@ -104,9 +100,7 @@ const JobDetails = ({ attritionTableData }) => {
     return datum?.persons_in_cohort_with_value || 'Unexpected Error';
   };
 
-  const displayTotalSizes = () => {
-    console.log('data from Attrition Table Wrapper', attritionTableData);
-    console.log('hare ancestory');
+  const getTotalSizes = () => {
     const hareAncestry = getParameterData('hare_population');
     const caseSize =
       attritionTableData[0]?.rows &&
@@ -115,6 +109,15 @@ const JobDetails = ({ attritionTableData }) => {
       ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
       : null;
     const totalSize = controlSize !== null ? caseSize + controlSize : caseSize;
+    return {
+      caseSize,
+      controlSize,
+      totalSize,
+    };
+  };
+
+  const displayTotalSizes = () => {
+    const { caseSize, controlSize, totalSize } = getTotalSizes();
     return controlSize === null ? (
       <div className='GWASResults-flex-row'>
         <div>Total Size</div>
