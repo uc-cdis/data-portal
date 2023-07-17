@@ -1,4 +1,7 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+
+
+type FetchProjectsThunk = createAsyncThunk;
 
 export type CreateParams = {
   user_id: number,
@@ -7,6 +10,13 @@ export type CreateParams = {
   institution: string,
   associated_users_emails: string[],
   filter_set_ids: number[],
+}
+
+export type RequestPayload = {
+  data: any;
+  meta: any;
+  isError: boolean;
+  message: string;
 }
 
 export type CreatePayload = {
@@ -23,6 +33,7 @@ export type CreatePayload = {
   message: string;
 }
 
+export type Request = Promise<PayloadAction<RequestPayload>>;
 export type CreateRequest = Promise<PayloadAction<CreatePayload>>;
 
 export type ResearcherInfo = {
@@ -38,14 +49,34 @@ export type DataRequestProject = {
   id: number,
   name: string,
   researcher: ResearcherInfo,
-  status: 'Approved' | 'Rejected' | 'In Review' | 'Data Delivered',
+  status: string,
   submitted_at: string
+}
+
+export type ProjectStateUpdateParams = {
+  state_id: number,
+  project_id: number
+}
+
+export type ProjectUrlUpdateParams = {
+  approved_url: string,
+  project_id: number
+}
+
+export type UserRoleUpdateParams = {
+  project_id: number,
+  email: string
+}
+
+export type ProjectUsersUpdateParams = {
+  users: { project_id: number, email: string, id?: number }[]
 }
 
 export type DataRequestState = {
   projects: DataRequestProject[],
+  projectStates: Record<string, { id: number, code: string }>,
   isError: boolean,
   isAdminActive: boolean,
-  isProjectsLoading: boolean,
+  isProjectsReloading: boolean,
   isCreatePending: boolean
 }

@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
+import AdminProjectActions from './AdminProjectActions';
 import { useAppSelector } from '../redux/hooks';
 import { formatLocalTime } from '../utils';
 import DataDownloadButton from './DataDownloadButton';
@@ -21,7 +22,6 @@ const tableHeader = [
   'Submitted Date',
   'Completed Date',
   'Status',
-  '',
 ];
 
 /** @param {ResearcherInfo} researcher */
@@ -41,8 +41,10 @@ function parseResearcherInfo(researcher) {
  * @param {DataRequestProject[]} args.projects
  * @param {boolean} args.showApprovedOnly
  * @param {RootState['user']['user_id']} args.userId
+ * @param {function} args.rowAction
+ * @param {boolean} args.isAdminActive
  */
-function parseTableData({ projects, showApprovedOnly, userId }) {
+function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdminActive }) {
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .sort((a, b) => {
@@ -56,43 +58,87 @@ function parseTableData({ projects, showApprovedOnly, userId }) {
       }
       return 0;
     })
-    .map((project) => [
-      project.id,
-      project.name,
-      project.researcher?.id === userId
-        ? 'Me'
-        : parseResearcherInfo(project.researcher),
-      formatLocalTime(project.submitted_at),
-      formatLocalTime(project.completed_at),
-      <span
-        className={`data-requests__status-${project.status
-          .toLowerCase()
-          .replaceAll(' ', '-')}`}
-      >
-        {project.status}
-      </span>,
-      project.has_access ? <DataDownloadButton project={project} /> : null,
-    ]);
+    .map((project) => { 
+      let row = [
+        project.id,
+        project.name,
+        project.researcher?.id === userId
+          ? 'Me'
+          : parseResearcherInfo(project.researcher),
+        formatLocalTime(project.submitted_at),
+        formatLocalTime(project.completed_at),
+        <span
+          className={`data-requests__status-${project.status
+            .toLowerCase()
+            .replaceAll(' ', '-')}`}
+        >
+          {project.status}
+        </span>
+      ];
+
+      if (project.has_access) {
+        row.push(<DataDownloadButton project={project} />)
+      }
+
+      if (isAdminActive) {
+        row.push(
+          <button
+            type='button'
+            className='data-request__table-row-options-trigger'
+            aria-label='Table view options'
+            onClick={() => rowAction(project)}
+          >
+            <i className='data-request__table-row-options-trigger-icon' />
+          </button>
+        );
+      }
+
+      return row;
+    });
 }
+
 
 /**
  * @param {Object} props
  * @param {string} [props.className]
  * @param {DataRequestProject[]} props.projects
+ * @param {RootState['dataRequest']['projectStates']} props.projectStates
  * @param {boolean} props.isAdmin
+ * @param {boolean} props.isAdminActive
  * @param {function} props.onToggleAdmin
  * @param {boolean} [props.isLoading]
+ * @param {function} [props.reloadProjects]
  */
-function DataRequestsTable({ className = '', projects, isAdmin, onToggleAdmin, isLoading }) {
+function DataRequestsTable({
+  className = '',
+  projects,
+  projectStates,
+  isAdmin,
+  isAdminActive,
+  onToggleAdmin,
+  isLoading,
+  reloadProjects
+}) {
   const transitionTo = useNavigate();
   const userId = useAppSelector((state) => state.user.user_id);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
-  const tableData = useMemo(
-    () => parseTableData({ projects, showApprovedOnly, userId }),
-    [projects, showApprovedOnly, userId]
-  );
-  let [isAdminActive, setAdminActive] = useState(false);
+  const [projectDisplayOptions, setProjectDisplayOptions] = useState(null);
   let [isMoreActionsPopupOpen, setMoreActionsPopupOpen] = useState(false);
+  let [appliedViewOptions, setAppliedViewOptions] = useState({
+    isAdminActive: false,
+    showApprovedOnly: false
+  });
+  const tableData = useMemo(
+    () => parseTableData({
+      projects,
+      showApprovedOnly,
+      userId,
+      rowAction: (project) => { setProjectDisplayOptions(project) },
+      isAdminActive
+    }),
+    [projects, showApprovedOnly, userId, isAdminActive]
+  );
+  let shouldReloadProjectsOnActionClose = false;
 
   return (
     <div className={className}>
@@ -119,23 +165,47 @@ function DataRequestsTable({ className = '', projects, isAdmin, onToggleAdmin, i
             <Popup title='Requests View Options' onClose={() => { setMoreActionsPopupOpen(false) }}>
               <div className="data-requests__more-actions-container">
                 <div className="data-requests__checkbox">
-                    <label htmlFor="data-requests-approved-only-toggle">Approved Only</label>
                     <input
                       id="data-requests-approved-only-toggle"
                       type='checkbox'
                       checked={showApprovedOnly}
-                      onChange={() => setShowApprovedOnly((s) => !s)} />
+                      onChange={() => setShowApprovedOnly((s) => !s)}
+                    />
+                    <label htmlFor="data-requests-approved-only-toggle">Approved Only</label>
                   </div>
                   <div className="data-requests__checkbox">
-                    <label htmlFor="data-request-admin-toggle">View All (Admin)</label>
                     <input
                       disabled={!isAdmin}
                       id="data-request-admin-toggle"
                       type='checkbox'
                       checked={isAdminActive}
-                      onChange={() => { setAdminActive(!isAdminActive);onToggleAdmin(); }} />
+                      onChange={() => { onToggleAdmin(!isAdminActive); }}
+                    />
+                    <label htmlFor="data-request-admin-toggle">View All (Admin)</label>
                   </div>
               </div>
+            </Popup>
+          }
+          {projectDisplayOptions &&
+            <Popup
+              hideFooter={true}
+              title={`Edit "${projectDisplayOptions.name}"`}
+              onClose={() => { 
+                if (shouldReloadProjectsOnActionClose) {
+                  reloadProjects?.();
+                }
+                setProjectDisplayOptions(null);
+              }}
+            >
+              <AdminProjectActions
+                project={projectDisplayOptions}
+                projectStates={projectStates}
+                onAction={(type) => {
+                  if (type === 'PROJECT_STATE' ) {  
+                    shouldReloadProjectsOnActionClose = true;
+                  }
+                }}
+              />
             </Popup>
           }
         </div>
@@ -151,9 +221,12 @@ function DataRequestsTable({ className = '', projects, isAdmin, onToggleAdmin, i
 DataRequestsTable.propTypes = {
   className: PropTypes.string,
   projects: PropTypes.array.isRequired,
+  projectStates: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool,
+  isAdminActive: PropTypes.bool,
   onToggleAdmin: PropTypes.func,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  reloadProjects: PropTypes.func
 };
 
 export default DataRequestsTable;

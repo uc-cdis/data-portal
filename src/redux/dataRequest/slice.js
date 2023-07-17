@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchProjects, createProject } from './asyncThunks';
+import { fetchProjects, createProject, fetchProjectStates } from './asyncThunks';
 
 const slice = createSlice({
   name: 'dataRequest',
   initialState: /** @type {import('./types').DataRequestState} */ ({
     projects: [],
+    projectStates: {},
     isError: false,
     isAdminActive: false,
-    isProjectsLoading: false,
+    isProjectsReloading: false,
     isCreatePending: false,
   }),
   reducers: {
@@ -16,22 +17,35 @@ const slice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProjects.pending, (state) => {
-      state.isProjectsLoading = true;
+    builder.addCase(fetchProjects.pending, (state, action) => {
+      if (action.meta.arg.triggerReloading) {
+        state.isProjectsReloading = true;
+      }
     });
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
-      state.isProjectsLoading = false;
+      state.isProjectsReloading = false;
       if (action.payload === null) return;
 
       state.projects = action.payload;
     });
     builder.addCase(fetchProjects.rejected, (state) => {  
-      state.isProjectsLoading = false;
+      state.isProjectsReloading = false;
       state.isError = true;
+    });
+    builder.addCase(fetchProjectStates.fulfilled, (state, action) => {
+      if (action.payload === null || Object.keys(state.projectStates).length > 0) return;
+
+      let projectStates = state.projectStates;
+
+      for (let projectState of action.payload) {
+        state.projectStates[projectState.name] = { id: projectState.id, code: projectState.code };
+      }
+
+      state.projectStates = projectStates;
     });
     builder.addCase(createProject.pending, (state) => {  
       state.isCreatePending = true;
-  });
+    });
     builder.addCase(createProject.fulfilled, (state, action) => {        
         state.isCreatePending = false;
        

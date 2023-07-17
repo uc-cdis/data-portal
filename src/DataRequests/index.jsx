@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -5,29 +6,39 @@ import { contactEmail } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import DataRequestsTable from './DataRequestsTable';
 import { toggleAdminActive } from '../redux/dataRequest/slice';
-import { fetchProjects } from '../redux/dataRequest/asyncThunks';
+import { fetchProjects, fetchProjectStates } from '../redux/dataRequest/asyncThunks';
 import './DataRequests.css';
 
 /** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
+/** @typedef {import('../redux/types').RootState} RootState */
 
+/**
+ * @param {RootState} state
+ */
 function mapPropsToState(state) {
   return {
     projects: state.dataRequest.projects,
-    isProjectsLoading: state.dataRequest.isProjectsLoading
+    projectStates: state.dataRequest.projectStates,
+    isProjectsReloading: state.dataRequest.isProjectsReloading,
+    isAdminActive: state.dataRequest.isAdminActive
   };
 }
 
 /**
  * @param {Object} props
  * @param {DataRequestProject[]} [props.projects]
- * @param {boolean} [props.isProjectsLoading]
+ * @param {RootState['dataRequest']['projectStates']} [props.projectStates]
+ * @param {boolean} [props.isAdminActive]
+ * @param {boolean} [props.isProjectsReloading]
  */
-function DataRequests({ projects, isProjectsLoading }) {
+function DataRequests({ projects, projectStates, isAdminActive, isProjectsReloading }) {
+  let [searchParams, setSearchParams] = useSearchParams();
   let dispatch = useAppDispatch();
   let { 
       is_admin,
       authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
   } = useAppSelector((state) => state.user);
+  let isAdmin = is_admin || !!serviceAccessMethod;
 
   return (
     <div className='data-requests'>
@@ -58,12 +69,22 @@ function DataRequests({ projects, isProjectsLoading }) {
           <DataRequestsTable
             className='data-requests__table'
             projects={projects}
-            onToggleAdmin={() => {
+            projectStates={projectStates}
+            onToggleAdmin={(isAdminActive) => {
               dispatch(toggleAdminActive());
-              dispatch(fetchProjects());
+              searchParams.delete('admin');
+              if (isAdminActive) {
+                dispatch(fetchProjectStates());
+                setSearchParams(new URLSearchParams([...Array.from(searchParams.entries()), ['admin', 'true']]));
+              } else {
+                setSearchParams(searchParams);
+              }
+              dispatch(fetchProjects({ triggerReloading: true }));
             }}
-            isAdmin={is_admin || !!serviceAccessMethod}
-            isLoading={isProjectsLoading}
+            reloadProjects={() => { dispatch(fetchProjects({ triggerReloading: true })); }}
+            isAdminActive={isAdminActive}
+            isAdmin={isAdmin}
+            isLoading={isProjectsReloading}
           />
         </ErrorBoundary>
       </main>

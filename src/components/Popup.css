@@ -12,10 +12,9 @@
 
 .popup__box {
   width: 50%;
-  overflow-y: scroll;
   background: white;
   margin: auto;
-  overflow: hidden;
+  overflow-y: visible;
   border-radius: 8px;
   border: 1px solid var(--g3-color__lightgray);
 }
