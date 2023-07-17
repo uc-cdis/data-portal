@@ -35,6 +35,7 @@ const JobDetails = ({ totalSizes }) => {
     return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
   }
 
+  console.log(data);
   const getParameterData = (key) => {
     const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
     return datum?.value || 'Unexpected Error';
