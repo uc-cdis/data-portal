@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import SharedContext from '../../../Utils/SharedContext';
 import AttritionTableWrapper from './AttrtitionTableWrapper';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
+import attritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 
 jest.mock('react-query');
 
@@ -19,12 +19,12 @@ describe('Attrition Table Wrapper', () => {
   it('renders the headers and data when data is fetched successfully', async () => {
     useQuery.mockReturnValueOnce({
       status: 'success',
-      data: AttritionTableJSON,
+      data: attritionTableJSON,
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper data={AttritionTableJSON} />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper data={attritionTableJSON} />
+      </SharedContext.Provider>
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
@@ -34,10 +34,10 @@ describe('Attrition Table Wrapper', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Case Cohort Attrition Table'),
+        screen.getByText('Case Cohort Attrition Table')
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Control Cohort Attrition Table'),
+        screen.getByText('Control Cohort Attrition Table')
       ).toBeInTheDocument();
       checkForAtLeastOneInstanceOfText('Type');
       checkForAtLeastOneInstanceOfText('Name');
@@ -47,13 +47,13 @@ describe('Attrition Table Wrapper', () => {
       checkForAtLeastOneInstanceOfText('Non-Hispanic White');
       checkForAtLeastOneInstanceOfText('Hispanic');
 
-      AttritionTableJSON.forEach((tableObj) => {
+      attritionTableJSON.forEach((tableObj) => {
         tableObj.rows.forEach((rowObj) => {
           checkForAtLeastOneInstanceOfText(rowObj.name);
           checkForAtLeastOneInstanceOfText(rowObj.size);
           rowObj.concept_breakdown.forEach((conceptObj) => {
             checkForAtLeastOneInstanceOfText(
-              conceptObj.persons_in_cohort_with_value,
+              conceptObj.persons_in_cohort_with_value
             );
           });
         });
