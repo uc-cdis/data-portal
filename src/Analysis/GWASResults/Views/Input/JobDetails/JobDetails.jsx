@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
@@ -8,7 +8,7 @@ import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
-const JobDetails = ({ totalSizes }) => {
+const JobDetails = ({ attritionTableData }) => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
@@ -35,7 +35,7 @@ const JobDetails = ({ totalSizes }) => {
     return <LoadingErrorMessage message='Issue Loading Data for Job Details' />;
   }
 
-  console.log(data);
+  console.log('Job Details Data:', data);
   const getParameterData = (key) => {
     const datum = data?.arguments?.parameters?.find((obj) => obj.name === key);
     return datum?.value || 'Unexpected Error';
@@ -43,12 +43,12 @@ const JobDetails = ({ totalSizes }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -59,7 +59,7 @@ const JobDetails = ({ totalSizes }) => {
   const removeOutcomeFromVariablesData = (variablesArray) => {
     const outcome = JSON.parse(getParameterData('outcome'));
     const filteredResult = variablesArray.filter(
-      (obj) => !isEqual(obj, outcome),
+      (obj) => !isEqual(obj, outcome)
     );
     return filteredResult;
   };
@@ -68,7 +68,7 @@ const JobDetails = ({ totalSizes }) => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
       const covariatesArray = removeOutcomeFromVariablesData(
-        JSON.parse(variablesData),
+        JSON.parse(variablesData)
       );
       return covariatesArray;
     }
@@ -90,6 +90,52 @@ const JobDetails = ({ totalSizes }) => {
       ));
     }
     return 'No covariates';
+  };
+
+  const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
+    console.log(
+      'tableData?.rows[tableData?.rows.length - 1]',
+      tableData?.rows[tableData?.rows.length - 1]
+    );
+    const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
+    const datum = lastRowOfData?.concept_breakdown.find(
+      (obj) => obj.concept_value_name === hareAncestry
+    );
+    return datum?.persons_in_cohort_with_value || 'Unexpected Error';
+  };
+
+  const displayTotalSizes = () => {
+    console.log('data from Attrition Table Wrapper', attritionTableData);
+    console.log('hare ancestory');
+    const hareAncestry = getParameterData('hare_population');
+    const caseSize =
+      attritionTableData[0]?.rows &&
+      findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
+    const controlSize = attritionTableData[1]?.rows
+      ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
+      : null;
+    const totalSize = controlSize !== null ? caseSize + controlSize : caseSize;
+    return controlSize === null ? (
+      <div className='GWASResults-flex-row'>
+        <div>Total Size</div>
+        <div>{totalSize || '---'}</div>
+      </div>
+    ) : (
+      <React.Fragment>
+        <div className='GWASResults-flex-row'>
+          <div>Control Size</div>
+          <div>{controlSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Case Size</div>
+          <div>{caseSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Total Size</div>
+          <div>{totalSize}</div>
+        </div>
+      </React.Fragment>
+    );
   };
 
   return (
@@ -121,27 +167,7 @@ const JobDetails = ({ totalSizes }) => {
           <div>Phenotype</div>
           <div>{getPhenotype()}</div>
         </div>
-        {totalSizes.control === null ? (
-          <div className='GWASResults-flex-row'>
-            <div>Total Size</div>
-            <div>{totalSizes.total || '---'}</div>
-          </div>
-        ) : (
-          <React.Fragment>
-            <div className='GWASResults-flex-row'>
-              <div>Control Size</div>
-              <div>{totalSizes.control}</div>
-            </div>
-            <div className='GWASResults-flex-row'>
-              <div>Case Size</div>
-              <div>{totalSizes.case}</div>
-            </div>
-            <div className='GWASResults-flex-row'>
-              <div>Total Size</div>
-              <div>{totalSizes.total}</div>
-            </div>
-          </React.Fragment>
-        )}
+        {displayTotalSizes()}
         <div className='GWASResults-flex-row'>
           <div>Covariates</div>
           <div>{displayCovariates()}</div>
@@ -152,7 +178,7 @@ const JobDetails = ({ totalSizes }) => {
 };
 
 JobDetails.propTypes = {
-  totalSizes: PropTypes.object.isRequired,
+  attritionTableData: PropTypes.array.isRequired,
 };
 
 export default JobDetails;
