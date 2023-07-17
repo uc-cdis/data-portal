@@ -6,7 +6,7 @@ import SharedContext from '../../../Utils/SharedContext';
 import JobDetails from './JobDetails';
 import MockedSuccessJSON from '../../../TestData/InputViewData/MockedSuccessJSON';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
+import attritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 
 jest.mock('react-query');
 
@@ -25,7 +25,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails attritionTableData={AttritionTableJSON} />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails attritionTableData={AttritionTableJSON} />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails attritionTableData={AttritionTableJSON} />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>
     );
 
@@ -69,7 +69,7 @@ describe('Job Details', () => {
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails attritionTableData={AttritionTableJSON} />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>
     );
 
