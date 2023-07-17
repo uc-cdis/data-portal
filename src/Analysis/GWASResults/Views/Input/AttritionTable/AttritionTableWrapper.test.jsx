@@ -24,7 +24,7 @@ describe('Attrition Table Wrapper', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <AttritionTableWrapper data={AttritionTableJSON} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
@@ -34,10 +34,10 @@ describe('Attrition Table Wrapper', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Case Cohort Attrition Table')
+        screen.getByText('Case Cohort Attrition Table'),
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Control Cohort Attrition Table')
+        screen.getByText('Control Cohort Attrition Table'),
       ).toBeInTheDocument();
       checkForAtLeastOneInstanceOfText('Type');
       checkForAtLeastOneInstanceOfText('Name');
@@ -53,7 +53,7 @@ describe('Attrition Table Wrapper', () => {
           checkForAtLeastOneInstanceOfText(rowObj.size);
           rowObj.concept_breakdown.forEach((conceptObj) => {
             checkForAtLeastOneInstanceOfText(
-              conceptObj.persons_in_cohort_with_value
+              conceptObj.persons_in_cohort_with_value,
             );
           });
         });

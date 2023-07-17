@@ -18,7 +18,7 @@ const Input = () => {
   const { data, status } = useQuery(
     [`getDataForWorkflowArtifact${name}`, name, uid, 'attrition_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'attrition_json_index'),
-    queryConfig
+    queryConfig,
   );
 
   const displayTopSection = () => (
@@ -55,10 +55,10 @@ const Input = () => {
   }
 
   if (
-    !data ||
-    data.length === 0 ||
-    data[0].table_type !== 'case' ||
-    data.error
+    !data
+    || data.length === 0
+    || data[0].table_type !== 'case'
+    || data.error
   ) {
     return (
       <React.Fragment>
