@@ -9,63 +9,12 @@ import AttritionTableJSON from '../../../TestData/InputViewData/AttritionTableJS
 
 jest.mock('react-query');
 
-const setTotalSizes = jest.fn(() => null);
-const expectedTotalSizesFromJsonTestData = {
-  case: 188237,
-  control: 444,
-  total: 188681,
-};
-
 describe('Attrition Table Wrapper', () => {
   const selectedRowData = {
     name: 'workflow_name',
     uid: 'workflow_id',
     phase: PHASES.Succeeded,
   };
-
-  it('renders the component with loading error message', () => {
-    useQuery.mockReturnValueOnce({
-      status: 'succeeded',
-      data: [],
-    });
-
-    render(
-      <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>,
-    );
-    expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
-  });
-
-  it('renders a loading spinner when fetching data', () => {
-    useQuery.mockReturnValueOnce({
-      status: 'loading',
-      data: null,
-    });
-
-    render(
-      <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>,
-    );
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
-  });
-
-  it('renders an error message when there is an error fetching data', async () => {
-    useQuery.mockReturnValueOnce({
-      status: 'error',
-      error: new Error('Fetch failed'),
-    });
-
-    render(
-      <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>,
-    );
-
-    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
-    );
-  });
 
   it('renders the headers and data when data is fetched successfully', async () => {
     useQuery.mockReturnValueOnce({
@@ -74,8 +23,8 @@ describe('Attrition Table Wrapper', () => {
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <AttritionTableWrapper setTotalSizes={setTotalSizes} />
-      </SharedContext.Provider>,
+        <AttritionTableWrapper data={AttritionTableJSON} />
+      </SharedContext.Provider>
     );
 
     const checkForAtLeastOneInstanceOfText = (input) => {
@@ -85,10 +34,10 @@ describe('Attrition Table Wrapper', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Case Cohort Attrition Table'),
+        screen.getByText('Case Cohort Attrition Table')
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Control Cohort Attrition Table'),
+        screen.getByText('Control Cohort Attrition Table')
       ).toBeInTheDocument();
       checkForAtLeastOneInstanceOfText('Type');
       checkForAtLeastOneInstanceOfText('Name');
@@ -104,15 +53,11 @@ describe('Attrition Table Wrapper', () => {
           checkForAtLeastOneInstanceOfText(rowObj.size);
           rowObj.concept_breakdown.forEach((conceptObj) => {
             checkForAtLeastOneInstanceOfText(
-              conceptObj.persons_in_cohort_with_value,
+              conceptObj.persons_in_cohort_with_value
             );
           });
         });
       });
-
-      expect(setTotalSizes).toHaveBeenCalledWith(
-        expectedTotalSizesFromJsonTestData,
-      );
     });
   });
 });
