@@ -1,6 +1,5 @@
 import { PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-
 type FetchProjectsThunk = createAsyncThunk;
 
 export type CreateParams = {
