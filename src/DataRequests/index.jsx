@@ -36,8 +36,11 @@ function DataRequests({ projects, projectStates, isAdminActive, isProjectsReload
   let dispatch = useAppDispatch();
   let { 
       is_admin,
-      authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
+      authz: { '/services/amanuensis': serviceAccessMethods }
   } = useAppSelector((state) => state.user);
+  let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+    serviceAccessMethods[0]?.method :
+    undefined;
   let isAdmin = is_admin || !!serviceAccessMethod;
 
   return (

@@ -308,7 +308,7 @@ function ExplorerFilterSetWorkspace() {
                 onClick={() => setActionFormType('CLEAR-ALL')}
                 disabled={Object.keys(workspace.all).length < 2}
               >
-                Clear all
+                Remove all
               </button>
             </div>
             <div className='explorer-filter-set-workspace__action-button-group'>
