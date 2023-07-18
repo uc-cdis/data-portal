@@ -6,24 +6,24 @@ import smallJsonDataFile from '../../../../TestData/Diagrams/QQPlotData/SmallQQP
 
 const QQPlotModal = ({ modalOpen, setModalOpen }) => (
   <Modal
+    className='qq-modal'
     open={modalOpen}
     footer={null}
     onCancel={() => {
       setModalOpen(false);
     }}
-    title={
-      <div className='flex-row'>
-        <div style={{ width: '100%', padding: '0 25%' }}>
-          QQ Plot
-          <QQPlot
-            qq_plot_container_id='qq-plot-container-id'
-            maf_ranges={smallJsonDataFile.by_maf}
-            qq_ci={smallJsonDataFile.ci}
-          />
-        </div>
+    title={<h2>QQ Plot</h2>}
+  >
+    <div className='flex-row'>
+      <div style={{ width: '100%', padding: '0 25%' }}>
+        <QQPlot
+          qq_plot_container_id='qq-plot-container-id'
+          maf_ranges={smallJsonDataFile.by_maf}
+          qq_ci={smallJsonDataFile.ci}
+        />
       </div>
-    }
-  ></Modal>
+    </div>
+  </Modal>
 );
 /*
 JobInputModal.propTypes = {

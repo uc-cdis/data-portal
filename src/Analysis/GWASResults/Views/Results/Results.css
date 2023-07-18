@@ -51,3 +51,27 @@ section.data-viz {
   position: relative;
   border-radius: 4px 4px 0 0;
 }
+
+.qq-modal .ant-modal-header {
+  padding: 12px 24px;
+}
+
+.qq-modal .ant-modal-root button {
+  margin-top: -2px;
+}
+
+.qq-modal .ant-modal-close-icon svg path {
+  fill: #2e77b8;
+}
+
+.qq-modal .ant-modal-close-icon:hover {
+  border-radius: 2px;
+  padding: 2px;
+  background: #e9eef2;
+}
+
+.qq-modal .ant-modal-title h2 {
+  color: #2e77b8;
+  font-size: 14px;
+  margin-bottom: 0;
+}
