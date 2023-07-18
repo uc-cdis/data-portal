@@ -21,7 +21,8 @@ section.results-top button:not(.return-home-button) {
 
 section.results-top .qq-plot-button button {
   margin-left: 8px;
-  display: none;
+  padding: 0;
+  width: 100px;
 }
 
 section.data-viz {

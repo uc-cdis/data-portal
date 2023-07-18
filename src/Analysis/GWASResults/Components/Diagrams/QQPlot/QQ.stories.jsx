@@ -1,7 +1,7 @@
 import React from 'react';
 import QQPlot from './QQPlot';
-import largeJsonDataFile from '../../../../TestData/Diagrams/QQPlotData/LargeQQPlotTestData.json';
-import smallJsonDataFile from '../../../../TestData/Diagrams/QQPlotData/SmallQQPlotTestData.json';
+import largeJsonDataFile from '../../../TestData/Diagrams/QQPlotData/LargeQQPlotTestData.json';
+import smallJsonDataFile from '../../../TestData/Diagrams/QQPlotData/SmallQQPlotTestData.json';
 
 export default {
   title: 'Tests2/GWASResults/Components/Diagrams/QQPlot',
