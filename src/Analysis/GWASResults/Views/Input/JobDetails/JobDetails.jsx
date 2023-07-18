@@ -42,12 +42,12 @@ const JobDetails = ({ attritionTableData }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome') &&
-      IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome')
+      && IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name ||
-        JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name
+        || JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -58,7 +58,7 @@ const JobDetails = ({ attritionTableData }) => {
   const removeOutcomeFromVariablesData = (variablesArray) => {
     const outcome = JSON.parse(getParameterData('outcome'));
     const filteredResult = variablesArray.filter(
-      (obj) => !isEqual(obj, outcome)
+      (obj) => !isEqual(obj, outcome),
     );
     return filteredResult;
   };
@@ -67,7 +67,7 @@ const JobDetails = ({ attritionTableData }) => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
       const covariatesArray = removeOutcomeFromVariablesData(
-        JSON.parse(variablesData)
+        JSON.parse(variablesData),
       );
       return covariatesArray;
     }
@@ -94,16 +94,15 @@ const JobDetails = ({ attritionTableData }) => {
   const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
     const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
     const datum = lastRowOfData?.concept_breakdown.find(
-      (obj) => obj.concept_value_name === hareAncestry
+      (obj) => obj.concept_value_name === hareAncestry,
     );
     return datum?.persons_in_cohort_with_value || 'Unexpected Error';
   };
 
   const getTotalSizes = () => {
     const hareAncestry = getParameterData('hare_population');
-    const caseSize =
-      attritionTableData[0]?.rows &&
-      findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
+    const caseSize = attritionTableData[0]?.rows
+      && findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
     const controlSize = attritionTableData[1]?.rows
       ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
       : null;
