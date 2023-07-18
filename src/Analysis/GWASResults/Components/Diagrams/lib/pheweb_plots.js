@@ -3,9 +3,9 @@
  * Duplicated from https://github.com/statgen/locuszoom-hosted/blob/c153d3ba465be5b171d073c0aa785e86c1cde109/assets/js/util/pheweb_plots.js
  * MIT LICENSE: https://github.com/statgen/locuszoom-hosted/blob/d726fb23477e36d244c43be87d84b5ed3e1725e7/LICENSE, https://github.com/statgen/pheweb/blob/76f0d0e32ae72e51bc4b259ce4b16edfd653601a/LICENSE
  */
-
 import * as d3 from 'd3-selection';
 import * as d3Array from 'd3-array';
+// eslint-disable-next-line
 import * as d3Shape from 'd3-shape';
 import * as d3Scale from 'd3-scale';
 import * as d3Axis from 'd3-axis';

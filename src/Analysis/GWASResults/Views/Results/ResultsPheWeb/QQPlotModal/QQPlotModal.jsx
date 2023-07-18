@@ -25,9 +25,10 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => (
     </div>
   </Modal>
 );
-/*
-JobInputModal.propTypes = {
 
+QQPlotModal.propTypes = {
+  modalOpen: PropTypes.bool.isRequired,
+  setModalOpen: PropTypes.func.isRequired,
 };
-*/
+
 export default QQPlotModal;

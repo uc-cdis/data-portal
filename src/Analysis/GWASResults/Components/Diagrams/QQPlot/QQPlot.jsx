@@ -31,7 +31,7 @@ import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
   }
 
   return (
-    <div id={qq_plot_container_id} data-testid={qq_plot_container_id}></div>
+    <div id={qq_plot_container_id} data-testid={qq_plot_container_id} />
   );
 };
 
