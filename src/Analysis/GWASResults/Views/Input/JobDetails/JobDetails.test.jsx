@@ -6,6 +6,7 @@ import SharedContext from '../../../Utils/SharedContext';
 import JobDetails from './JobDetails';
 import MockedSuccessJSON from '../../../TestData/InputViewData/MockedSuccessJSON';
 import PHASES from '../../../Utils/PhasesEnumeration';
+import attritionTableJSON from '../../../TestData/InputViewData/AttritionTableJSON';
 
 jest.mock('react-query');
 
@@ -24,7 +25,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
@@ -38,7 +39,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
@@ -52,7 +53,7 @@ describe('Job Details', () => {
 
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>,
     );
 
@@ -67,7 +68,7 @@ describe('Job Details', () => {
     });
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
-        <JobDetails />
+        <JobDetails attritionTableData={attritionTableJSON} />
       </SharedContext.Provider>,
     );
 
@@ -77,8 +78,10 @@ describe('Job Details', () => {
       expect(screen.getByText('HARE Ancestry')).toBeInTheDocument();
       expect(screen.getByText('Imputation Score Cutoff')).toBeInTheDocument();
       expect(screen.getByText('Cohort')).toBeInTheDocument();
+      expect(screen.getByText('Control Size')).toBeInTheDocument();
+      expect(screen.getByText('Case Size')).toBeInTheDocument();
+      expect(screen.getByText('Total Size')).toBeInTheDocument();
       expect(screen.getByText('Phenotype')).toBeInTheDocument();
-      expect(screen.getByText('Final Size')).toBeInTheDocument();
       expect(screen.getByText('Covariates')).toBeInTheDocument();
     });
   });

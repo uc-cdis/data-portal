@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
+import { isEqual } from 'lodash';
 import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
-const JobDetails = () => {
+const JobDetails = ({ attritionTableData }) => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
@@ -53,10 +55,21 @@ const JobDetails = () => {
     return 'Unexpected Error';
   };
 
+  const removeOutcomeFromVariablesData = (variablesArray) => {
+    const outcome = JSON.parse(getParameterData('outcome'));
+    const filteredResult = variablesArray.filter(
+      (obj) => !isEqual(obj, outcome),
+    );
+    return filteredResult;
+  };
+
   const processCovariates = () => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
-      return JSON.parse(variablesData);
+      const covariatesArray = removeOutcomeFromVariablesData(
+        JSON.parse(variablesData),
+      );
+      return covariatesArray;
     }
     return false;
   };
@@ -76,6 +89,54 @@ const JobDetails = () => {
       ));
     }
     return 'No covariates';
+  };
+
+  const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
+    const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
+    const datum = lastRowOfData?.concept_breakdown.find(
+      (obj) => obj.concept_value_name === hareAncestry,
+    );
+    return datum?.persons_in_cohort_with_value || 'Unexpected Error';
+  };
+
+  const getTotalSizes = () => {
+    const hareAncestry = getParameterData('hare_population');
+    const caseSize = attritionTableData[0]?.rows
+      && findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
+    const controlSize = attritionTableData[1]?.rows
+      ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
+      : null;
+    const totalSize = controlSize !== null ? caseSize + controlSize : caseSize;
+    return {
+      caseSize,
+      controlSize,
+      totalSize,
+    };
+  };
+
+  const displayTotalSizes = () => {
+    const { caseSize, controlSize, totalSize } = getTotalSizes();
+    return controlSize === null ? (
+      <div className='GWASResults-flex-row'>
+        <div>Total Size</div>
+        <div>{totalSize || '---'}</div>
+      </div>
+    ) : (
+      <React.Fragment>
+        <div className='GWASResults-flex-row'>
+          <div>Control Size</div>
+          <div>{controlSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Case Size</div>
+          <div>{caseSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Total Size</div>
+          <div>{totalSize}</div>
+        </div>
+      </React.Fragment>
+    );
   };
 
   return (
@@ -107,10 +168,7 @@ const JobDetails = () => {
           <div>Phenotype</div>
           <div>{getPhenotype()}</div>
         </div>
-        <div className='GWASResults-flex-row'>
-          <div>Final Size</div>
-          <div>TBD</div>
-        </div>
+        {displayTotalSizes()}
         <div className='GWASResults-flex-row'>
           <div>Covariates</div>
           <div>{displayCovariates()}</div>
@@ -119,4 +177,9 @@ const JobDetails = () => {
     </section>
   );
 };
+
+JobDetails.propTypes = {
+  attritionTableData: PropTypes.array.isRequired,
+};
+
 export default JobDetails;
