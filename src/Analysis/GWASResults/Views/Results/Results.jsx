@@ -11,16 +11,15 @@ import {
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
-import ResultsPng from './ResultsPng/ResultsPng';
+import ResultsPng from './ResultsPng/ResultsPng'; // --> OFF
 
-/* eslint no-alert: 0 */ // --> OFF
-const Results = () => {
+/* eslint no-alert: 0 */ const Results = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
     ['getWorkflowDetails', name, uid],
     () => getWorkflowDetails(name, uid),
-    queryConfig,
+    queryConfig
   );
 
   const downloadAll = () => {
@@ -77,14 +76,14 @@ const Results = () => {
   const displayManhattanPlot = () => {
     // Try the pheweb option first:
     let results = data?.outputs?.parameters?.filter(
-      (entry) => entry.name === 'pheweb_manhattan_json_index',
+      (entry) => entry.name === 'pheweb_manhattan_json_index'
     );
     if (results && results.length !== 0) {
       return <ResultsPheWeb />;
     }
     // If no pheweb json file, try to see if there is a PNG Manhattan plot:
     results = data?.outputs?.parameters?.filter(
-      (entry) => entry.name === 'manhattan_plot_index',
+      (entry) => entry.name === 'manhattan_plot_index'
     );
     if (results && results.length !== 0) {
       return <ResultsPng />;

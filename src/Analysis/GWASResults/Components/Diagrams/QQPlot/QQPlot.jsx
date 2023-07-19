@@ -12,8 +12,6 @@ import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
   const [pheWebFailure, setPheWebFailure] = useState('');
 
   useEffect(() => {
-    console.log('maf_ranges', maf_ranges);
-    console.log('qq_ci', qq_ci);
     try {
       create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id);
     } catch (error) {
@@ -30,9 +28,7 @@ import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
     );
   }
 
-  return (
-    <div id={qq_plot_container_id} data-testid={qq_plot_container_id} />
-  );
+  return <div id={qq_plot_container_id} data-testid={qq_plot_container_id} />;
 };
 
 QQPlot.propTypes = {

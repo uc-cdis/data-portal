@@ -25,6 +25,12 @@ section.results-top .qq-plot-button button {
   width: 100px;
 }
 
+section.results-top .ant-tooltip-disabled-compatible-wrapper {
+  display: inline;
+  margin-left: 16px;
+  width: 100px;
+}
+
 section.data-viz {
   width: 100%;
   text-align: center;
