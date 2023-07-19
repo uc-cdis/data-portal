@@ -121,6 +121,9 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
     }
     return content.toLocaleString();
   case 'paragraphs':
+    if (Array.isArray(content)) {
+      return content.join('\n').split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+    }
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
     return (
@@ -348,7 +351,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       let value = jsonpath.query(record, `$.${column.field}`);
       let renderedCell: undefined | string | ReactNode;
 
-      if (!value) {
+      if (!value || value.length === 0 || value.every((val) => val === '')) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
@@ -362,9 +365,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
           : !column.contentType || column.contentType === 'string';
         if (columnIsSearchable && props.searchTerm) {
-          if (Array.isArray(value)) {
-            value = value.join(', ');
-          }
+          value = value.join(', '); // "value" will always be an array from jsonpath.query()
           renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
         } else if (column.hrefValueFromField) {
           renderedCell = <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{renderFieldContent(value, column.contentType, config)}</a>;

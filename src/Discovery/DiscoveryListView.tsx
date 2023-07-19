@@ -130,7 +130,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 start = 0;
               }
               return (
-                <React.Fragment>
+                <React.Fragment key={value}>
                   { start > 0 && '...' }
                   {value.slice(start, matchIndex)}
                   <span className='matched'>{value.slice(matchIndex,
