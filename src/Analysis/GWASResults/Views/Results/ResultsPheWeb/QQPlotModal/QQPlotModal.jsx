@@ -42,7 +42,6 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
     if (!data || !data?.by_maf || !data.ci) {
       return (
         <React.Fragment>
-          {displayTopSection()}
           <LoadingErrorMessage message='Failed to load data for Manhattan plot' />
         </React.Fragment>
       );
