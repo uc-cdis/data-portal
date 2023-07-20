@@ -12,7 +12,6 @@ const Template = (args) => (
   <div
     style={{
       width: '450px',
-      textAlign: 'center',
       margin: '30px auto',
     }}
   >
@@ -21,7 +20,6 @@ const Template = (args) => (
 );
 
 export const SmallPlot = Template.bind({});
-// Tiny data subset from https://pheweb.org/UKB-TOPMed/api/manhattan/pheno/557.1.json:
 SmallPlot.args = {
   qq_plot_container_id: 'dummydiv1',
   maf_ranges: smallJsonDataFile.by_maf,
@@ -29,7 +27,6 @@ SmallPlot.args = {
 };
 
 export const LargerPlot = Template.bind({});
-// COPY OF https://pheweb.org/UKB-TOPMed/api/manhattan/pheno/557.1.json:
 LargerPlot.args = {
   qq_plot_container_id: 'dummydiv2',
   maf_ranges: largeJsonDataFile.by_maf,

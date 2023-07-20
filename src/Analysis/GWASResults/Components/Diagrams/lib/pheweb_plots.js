@@ -3,9 +3,9 @@
  * Duplicated from https://github.com/statgen/locuszoom-hosted/blob/c153d3ba465be5b171d073c0aa785e86c1cde109/assets/js/util/pheweb_plots.js
  * MIT LICENSE: https://github.com/statgen/locuszoom-hosted/blob/d726fb23477e36d244c43be87d84b5ed3e1725e7/LICENSE, https://github.com/statgen/pheweb/blob/76f0d0e32ae72e51bc4b259ce4b16edfd653601a/LICENSE
  */
+/* eslint-disable */
 import * as d3 from 'd3-selection';
 import * as d3Array from 'd3-array';
-// eslint-disable-next-line
 import * as d3Shape from 'd3-shape';
 import * as d3Scale from 'd3-scale';
 import * as d3Axis from 'd3-axis';
@@ -19,9 +19,9 @@ import {
   sortBy,
   template,
   escape,
-} from 'lodash'; /* eslint no-unused-vars: 0 */ /* eslint max-len: 0 */ /* eslint no-plusplus: 0 */ /* eslint indent: 0 */ /* eslint spaced-comment: 0 */ /* eslint block-spacing: 0 */ /* eslint prefer-arrow-callback: 0 */ /* eslint space-before-function-paren: 0 */ /* eslint no-multiple-empty-lines: 0 */ /* eslint comma-spacing: 0 */ /* eslint brace-style: 0 */ /* eslint vars-on-top: 0 */ /* eslint quote-props: 0 */ /* eslint no-multi-spaces: 0 */ /* eslint padded-blocks: 0 */ /* eslint object-curly-spacing: 0 */ /* eslint object-curly-newline: 0 */ /* eslint eqeqeq: 0 */ /* eslint space-in-parens: 0 */ /* eslint no-floating-decimal: 0 */ /* eslint prefer-template: 0 */ /* eslint newline-per-chained-call: 0 */ /* eslint object-shorthand: 0 */ /* eslint prefer-rest-params: 0 */ /* eslint prefer-destructuring: 0 */ /* eslint wrap-iife: 0 */ /* eslint arrow-parens: 0 */ /* eslint no-inner-declarations: 0 */ /* eslint func-names: 0 */ // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // --> OFF // Based on https://github.com/statgen/locuszoom-hosted/commit/4c72340981c3e07733fedd14cb3ff479468db5d1#diff-663dda1af63699b00348953ced366f82022b3675c7df72276425a75f27312994R148, and adjusted a bit:
-
-/* eslint camelcase: 0 */ const tooltip_underscoretemplate =  '<div style="background:grey;padding:5px;color:#fff"><b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %></div>';
+} from 'lodash';
+const tooltip_underscoretemplate =
+  '<div style="background:grey;padding:5px;color:#fff"><b><%- d.chrom %>:<%- d.pos.toLocaleString() %> <%- (d.ref && d.alt) ? (d.ref + "/" + d.alt) : "" %></b><br>p-value: <%- d.pval %><br>Nearest gene(s): <%- d.nearest_genes %></div>';
 
 // NOTE: `qval` means `-log10(pvalue)`.
 function fmt(format) {
@@ -35,7 +35,7 @@ function fmt(format) {
 function create_gwas_plot(
   variant_bins,
   unbinned_variants_in,
-  manhattan_plot_container_id,
+  manhattan_plot_container_id
 ) {
   // FIXME: Replace global variables with options object
   // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
@@ -65,17 +65,19 @@ function create_gwas_plot(
     const chrom_genomic_start_positions = {};
     chrom_genomic_start_positions[chroms[0]] = 0;
     for (let i = 1; i < chroms.length; i++) {
-      chrom_genomic_start_positions[chroms[i]] =        chrom_genomic_start_positions[chroms[i - 1]]
-        + chrom_extents[chroms[i - 1]][1]
-        - chrom_extents[chroms[i - 1]][0]
-        + chrom_padding;
+      chrom_genomic_start_positions[chroms[i]] =
+        chrom_genomic_start_positions[chroms[i - 1]] +
+        chrom_extents[chroms[i - 1]][1] -
+        chrom_extents[chroms[i - 1]][0] +
+        chrom_padding;
     }
 
     // chrom_offsets are defined to be the numbers that make `get_genomic_position()` work.
     // ie, they leave a gap of `chrom_padding` between the last variant on one chromosome and the first on the next.
     const chrom_offsets = {};
     Object.keys(chrom_genomic_start_positions).forEach(function(chrom) {
-      chrom_offsets[chrom] =        chrom_genomic_start_positions[chrom] - chrom_extents[chrom][0];
+      chrom_offsets[chrom] =
+        chrom_genomic_start_positions[chrom] - chrom_extents[chrom][0];
     });
 
     return {
@@ -129,7 +131,7 @@ function create_gwas_plot(
         possible_ticks = possible_ticks.concat(
           multipliers.map(function(m) {
             return m * power_of_ten;
-          }),
+          })
         );
       }
     }
@@ -193,14 +195,14 @@ function create_gwas_plot(
     gwas_svg
       .append('details')
       .text(
-        'A chart showing a pheweb visualization. The data is also presented in the table below ',
+        'A chart showing a pheweb visualization. The data is also presented in the table below '
       );
     const gwas_plot = gwas_svg
       .append('g')
       .attr('id', 'gwas_plot')
       .attr(
         'transform',
-        fmt('translate({0},{1})', plot_margin.left, plot_margin.top),
+        fmt('translate({0},{1})', plot_margin.left, plot_margin.top)
       );
 
     // Significance Threshold line
@@ -232,7 +234,7 @@ function create_gwas_plot(
         const best_unbinned_qval = -Math.log10(
           d3Array.min(unbinned_variants, function(d) {
             return d.pval === 0 ? 1 : d.pval;
-          }),
+          })
         );
         if (best_unbinned_qval !== undefined) {
           return best_unbinned_qval;
@@ -240,13 +242,13 @@ function create_gwas_plot(
         return d3Array.max(variant_bins, function(bin) {
           return d3Array.max(bin, property('qval'));
         });
-      })(),
+      })()
     );
 
     const y_axis_config = get_y_axis_config(
       highest_plot_qval,
       plot_height,
-      includes_pval0,
+      includes_pval0
     );
     const y_scale = y_axis_config.scale;
 
@@ -262,7 +264,8 @@ function create_gwas_plot(
       .call(y_axis);
 
     if (includes_pval0) {
-      const y_axis_break_inf_offset =        y_scale(Infinity) + (y_scale(0) - y_scale(Infinity)) * 0.03;
+      const y_axis_break_inf_offset =
+        y_scale(Infinity) + (y_scale(0) - y_scale(Infinity)) * 0.03;
       gwas_plot
         .append('line')
         .attr('x1', -8 - 7)
@@ -292,8 +295,8 @@ function create_gwas_plot(
         fmt(
           'translate({0},{1})rotate(-90)',
           plot_margin.left * 0.4,
-          plot_height / 2 + plot_margin.top,
-        ),
+          plot_height / 2 + plot_margin.top
+        )
       )
       .text('-log\u2081\u2080(p-value)'); // Unicode subscript "10"
 
@@ -303,8 +306,8 @@ function create_gwas_plot(
         return {
           chrom: chrom,
           midpoint:
-            v.chrom_genomic_start_positions[chrom]
-            + (v.chrom_extents[chrom][1] - v.chrom_extents[chrom][0]) / 2,
+            v.chrom_genomic_start_positions[chrom] +
+            (v.chrom_extents[chrom][1] - v.chrom_extents[chrom][0]) / 2,
         };
       });
     })();
@@ -324,7 +327,7 @@ function create_gwas_plot(
         return fmt(
           'translate({0},{1})',
           plot_margin.left + x_scale(d.midpoint),
-          plot_height + plot_margin.top + 20,
+          plot_height + plot_margin.top + 20
         );
       })
       .text(function(d) {
@@ -377,7 +380,7 @@ function create_gwas_plot(
         return fmt(
           'translate({0},{1})',
           x_scale(get_genomic_position(d)),
-          y_scale(-Math.log10(d.pval)) - 5,
+          y_scale(-Math.log10(d.pval)) - 5
         );
       })
       .text(function(d) {
@@ -521,7 +524,7 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
     document
       .getElementById(qq_plot_container_id)
       .text(
-        'No QQ Plot could be generated. It is possible that your data has been filtered to only contain very extreme pvalues, such that a QQ plot would not be meaningful.',
+        'No QQ Plot could be generated. It is possible that your data has been filtered to only contain very extreme pvalues, such that a QQ plot would not be meaningful.'
       );
     return;
   }
@@ -569,7 +572,7 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
       .attr('id', 'qq_plot')
       .attr(
         'transform',
-        fmt('translate({0},{1})', plot_margin.left, plot_margin.top),
+        fmt('translate({0},{1})', plot_margin.left, plot_margin.top)
       );
 
     const x_scale = d3Scale
@@ -598,7 +601,7 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
           })
           .y1(function(d) {
             return y_scale(Math.max(0, d.y_min - 0.05));
-          }),
+          })
       )
       .style('fill', 'lightgray');
 
@@ -653,8 +656,8 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
         fmt(
           'translate({0},{1})',
           plot_margin.left + plot_width,
-          plot_margin.top + plot_height + 70,
-        ),
+          plot_margin.top + plot_height + 70
+        )
       )
       .selectAll('text.legend-items')
       .data(maf_ranges)
@@ -669,7 +672,7 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
           '{0} ≤ MAF < {1} ({2})',
           attempt_two_decimals(d.maf_range[0] || 0),
           attempt_two_decimals(d.maf_range[1] || 0.5), // If MAF values are missing, MAF 0-0.5
-          d.count,
+          d.count
         );
       })
       .attr('fill', function(d) {
@@ -710,8 +713,8 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
         fmt(
           'translate({0},{1})rotate(-90)',
           plot_margin.left * 0.4,
-          plot_margin.top + plot_height / 2,
-        ),
+          plot_margin.top + plot_height / 2
+        )
       )
       .text('observed -log\u2081\u2080(p)');
 
@@ -723,8 +726,8 @@ function create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id) {
         fmt(
           'translate({0},{1})',
           plot_margin.left + plot_width / 2,
-          plot_margin.top + plot_height + 40,
-        ),
+          plot_margin.top + plot_height + 40
+        )
       )
       .text('expected -log\u2081\u2080(p)');
   }

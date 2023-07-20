@@ -8,22 +8,22 @@ import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
   qq_ci,
   qq_plot_container_id,
 }) => {
-  const [pheWebFailed, setPheWebFailed] = useState(false);
-  const [pheWebFailure, setPheWebFailure] = useState('');
+  const [qqPlotFailed, setQQPlotFailed] = useState(false);
+  const [qqPlotFailure, setQQPlotFailure] = useState('');
 
   useEffect(() => {
     try {
       create_qq_plot(maf_ranges, qq_ci, qq_plot_container_id);
     } catch (error) {
-      setPheWebFailed(true);
-      setPheWebFailure(error);
+      setQQPlotFailed(true);
+      setQQPlotFailure(error);
     }
   }, [maf_ranges, qq_ci, qq_plot_container_id]);
 
-  if (pheWebFailed) {
+  if (qqPlotFailed) {
     return (
       <LoadingErrorMessage
-        message={`Error while trying to render qq plot: ${pheWebFailure}`}
+        message={`Error while trying to render qq plot: ${qqPlotFailure}`}
       />
     );
   }
