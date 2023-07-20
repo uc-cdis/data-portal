@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { Modal, Spin } from 'antd';
 import QQPlot from '../../../../Components/Diagrams/QQPlot/QQPlot';
-import smallJsonDataFile from '../../../../TestData/Diagrams/QQPlotData/SmallQQPlotTestData.json';
 import SharedContext from '../../../../Utils/SharedContext';
 import {
   getDataForWorkflowArtifact,
@@ -30,7 +29,8 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
           <LoadingErrorMessage message='Error getting QQ plot data' />
         </React.Fragment>
       );
-    } else if (status === 'loading') {
+    }
+    if (status === 'loading') {
       return (
         <React.Fragment>
           <div className='spinner-container'>
@@ -38,24 +38,24 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
           </div>
         </React.Fragment>
       );
-    } else if (!data || !data?.by_maf || !data.ci) {
+    }
+    if (!data || !data?.by_maf || !data.ci) {
       return (
         <React.Fragment>
           {displayTopSection()}
           <LoadingErrorMessage message='Failed to load data for Manhattan plot' />
         </React.Fragment>
       );
-    } else {
-      return (
-        <div style={{ width: '100%', padding: '0 25%' }}>
-          <QQPlot
-            qq_plot_container_id='qq-plot-container-id'
-            maf_ranges={data.by_maf}
-            qq_ci={data.ci}
-          />
-        </div>
-      );
     }
+    return (
+      <div style={{ width: '100%', padding: '0 25%' }}>
+        <QQPlot
+          qq_plot_container_id='qq-plot-container-id'
+          maf_ranges={data.by_maf}
+          qq_ci={data.ci}
+        />
+      </div>
+    );
   };
 
   return (

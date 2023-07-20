@@ -37,7 +37,7 @@ import '../Results.css';
         <div className='GWASResults-flex-col qq-plot-button'>
           <Tooltip
             className='qq-plot-button-tooltip'
-            title='If you want to see the QQ PLOT for older workflows please download all results'
+            title='If you want to see the QQ Plot for older workflows please download all results'
           >
             <Button disabled>View QQ Plot</Button>
           </Tooltip>
