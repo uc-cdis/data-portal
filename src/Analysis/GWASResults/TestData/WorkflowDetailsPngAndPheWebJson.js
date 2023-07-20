@@ -42,7 +42,7 @@ const WorkflowStatusResponse = {
       {
         name: 'pheweb_qq_json_index',
         value:
-          '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-aaaa123456-777777",\n    "rev": "r78910"\n}',
+          '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-cccc123456-777777",\n    "rev": "r78910"\n}',
       },
     ],
   },
