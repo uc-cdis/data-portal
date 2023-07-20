@@ -117,7 +117,7 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
     return content;
   case 'number':
     if (Array.isArray(content)) {
-      return content.map((v) => v.toLocaleString()).join(', ');
+      return content.map((v) => v.toLocaleString()).join('; ');
     }
     return content.toLocaleString();
   case 'paragraphs':
