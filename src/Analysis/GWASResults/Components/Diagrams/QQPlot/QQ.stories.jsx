@@ -8,7 +8,17 @@ export default {
   component: QQPlot,
 };
 
-const Template = (args) => <QQPlot {...args} />;
+const Template = (args) => (
+  <div
+    style={{
+      width: '450px',
+      textAlign: 'center',
+      margin: '30px auto',
+    }}
+  >
+    <QQPlot {...args} />
+  </div>
+);
 
 export const SmallPlot = Template.bind({});
 // Tiny data subset from https://pheweb.org/UKB-TOPMed/api/manhattan/pheno/557.1.json:
@@ -22,7 +32,6 @@ export const LargerPlot = Template.bind({});
 // COPY OF https://pheweb.org/UKB-TOPMed/api/manhattan/pheno/557.1.json:
 LargerPlot.args = {
   qq_plot_container_id: 'dummydiv2',
-
   maf_ranges: largeJsonDataFile.by_maf,
   qq_ci: largeJsonDataFile.ci,
 };

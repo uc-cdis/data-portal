@@ -17,7 +17,7 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
   const { data, status } = useQuery(
     ['getDataForWorkflowArtifact', name, uid, 'pheweb_qq_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_qq_json_index'),
-    queryConfig
+    queryConfig,
   );
 
   const displayModalContent = () => {
