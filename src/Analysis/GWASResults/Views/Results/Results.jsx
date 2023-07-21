@@ -19,7 +19,7 @@ const Results = () => {
   const { data, status } = useQuery(
     ['getWorkflowDetails', name, uid],
     () => getWorkflowDetails(name, uid),
-    queryConfig
+    queryConfig,
   );
 
   const downloadAll = () => {
@@ -76,14 +76,14 @@ const Results = () => {
   const displayManhattanPlot = () => {
     // Try the pheweb option first:
     let results = data?.outputs?.parameters?.filter(
-      (entry) => entry.name === 'pheweb_manhattan_json_index'
+      (entry) => entry.name === 'pheweb_manhattan_json_index',
     );
     if (results && results.length !== 0) {
       return <ResultsPheWeb />;
     }
     // If no pheweb json file, try to see if there is a PNG Manhattan plot:
     results = data?.outputs?.parameters?.filter(
-      (entry) => entry.name === 'manhattan_plot_index'
+      (entry) => entry.name === 'manhattan_plot_index',
     );
     if (results && results.length !== 0) {
       return <ResultsPng />;

@@ -86,6 +86,7 @@ export const MockedSuccess2 = MockTemplate.bind({});
 MockedSuccess2.args = selectedRowData5;
 
 const determineEndPointURL = (index_did) => {
+  // note: the .json and .zip here are fake urls
   if (index_did === '222-8888-7777-bbbb123456-777777') {
     return dummyS3BucketLocation + '?X-Amz-Algorithm=AWS4-ETC';
   } else if (index_did === '999-8888-7777-cccc123456-777777') {
@@ -116,7 +117,7 @@ MockedSuccess2.parameters = {
             ctx.delay(500),
             ctx.json({
               url: determineEndPointURL(index_did),
-            }) // note: the .json and .zip here are fake urls
+            })
           );
         }
       ),

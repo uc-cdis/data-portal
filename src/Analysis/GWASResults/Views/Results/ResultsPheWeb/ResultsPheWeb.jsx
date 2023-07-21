@@ -13,14 +13,16 @@ import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanP
 import TopLociTable from './TopLociTable/TopLociTable';
 import '../Results.css'; // --> OFF
 
-/* eslint func-names: 0 */ const ResultsPheWeb = () => {
+/* eslint func-names: 0 */
+
+const ResultsPheWeb = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
     ['getDataForWorkflowArtifact', name, uid, 'pheweb_manhattan_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_manhattan_json_index'),
-    queryConfig,
+    queryConfig
   );
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (notificationMessage) => {
@@ -42,12 +44,12 @@ import '../Results.css'; // --> OFF
 
     const svgAsInnerHTMLAsUtf8Buffer = Buffer.from(svgAsInnerHTML);
     const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString(
-      'base64',
+      'base64'
     );
 
     const svgData = `data:image/svg+xml;base64,${svgAsInnerHTMLAsBase64}`;
     const tmpImage = new Image();
-    tmpImage.onload = function () {
+    tmpImage.onload = function() {
       const hiddenCanvas = document.createElement('canvas');
       hiddenCanvas.width = document.body.clientWidth;
       hiddenCanvas.height = document.body.clientHeight * 0.6;
@@ -57,7 +59,7 @@ import '../Results.css'; // --> OFF
         0,
         0,
         hiddenCanvas.width,
-        hiddenCanvas.height,
+        hiddenCanvas.height
       );
       const canvasData = hiddenCanvas.toDataURL('image/png');
 
@@ -66,7 +68,7 @@ import '../Results.css'; // --> OFF
       a.href = canvasData;
       a.click();
     };
-    tmpImage.onerror = function (error) {
+    tmpImage.onerror = function(error) {
       // when SVG is invalid, the error.message will be undefined:
       if (!error.message) {
         openNotification('❌ Could not download. Invalid SVG');
