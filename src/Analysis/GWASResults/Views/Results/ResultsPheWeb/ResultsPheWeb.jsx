@@ -11,9 +11,7 @@ import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/Loading
 import QQPlotModal from './QQPlotModal/QQPlotModal';
 import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 import TopLociTable from './TopLociTable/TopLociTable';
-import '../Results.css'; // --> OFF
-
-/* eslint func-names: 0 */
+import '../Results.css';
 
 const ResultsPheWeb = () => {
   const [modalOpen, setModalOpen] = useState(false);

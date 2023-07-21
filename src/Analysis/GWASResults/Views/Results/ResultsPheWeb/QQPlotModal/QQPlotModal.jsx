@@ -21,8 +21,6 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
   );
 
   const displayModalContent = () => {
-    console.log('status', status);
-    console.log('data', data);
     if (status === 'error') {
       return (
         <React.Fragment>
