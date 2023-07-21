@@ -16,7 +16,7 @@ describe('QQPlot', () => {
         maf_ranges={largeJsonDataFile.by_maf}
         qq_ci={largeJsonDataFile.ci}
         qq_plot_container_id='qq_plot_container'
-      />
+      />,
     );
     const qqPlotContainer = screen.getByTestId('qq_plot_container');
     expect(qqPlotContainer).toBeInTheDocument();

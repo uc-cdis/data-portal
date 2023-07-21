@@ -14,6 +14,10 @@
   right: 0;
 }
 
+.qq-modal .ant-modal-root button {
+  margin-top: -2px;
+}
+
 section.results-top button:not(.return-home-button) {
   float: right;
   margin-right: 8px;
@@ -60,10 +64,6 @@ section.data-viz {
 
 .qq-modal .ant-modal-header {
   padding: 12px 24px;
-}
-
-.qq-modal .ant-modal-root button {
-  margin-top: -2px;
 }
 
 .qq-modal .ant-modal-close-icon svg path {
