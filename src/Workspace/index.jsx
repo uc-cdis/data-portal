@@ -265,7 +265,7 @@ class Workspace extends React.Component {
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
       } else {
         workspaceLaunchStepsConfig.steps[2].description = 'In progress';
-        containerStates = workspaceStatusData.status.containerStates;
+        containerStates = workspaceStatusData.containerStates;
         if(containerStates && containerStates.length > 1 )
         {
           //Display Detailed Pod Statuses
