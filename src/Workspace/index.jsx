@@ -265,13 +265,12 @@ class Workspace extends React.Component {
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
       } else {
         workspaceLaunchStepsConfig.steps[2].description = 'In progress';
-        containerStates = workspaceStatusData.containerStates;
-        if(containerStates && containerStates.length > 1 )
+        if(workspaceStatusData.containerStates && workspaceStatusData.containerStates.length > 1 )
         {
           //Display Detailed Pod Statuses
-          for (let i = 0; i < containerStates.length; i++)
+          for (let i = 0; i < workspaceStatusData.containerStates.length; i++)
           {
-            workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + "status: " + containerStates[i].Ready)
+            workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + "status: " + workspaceStatusData.containerStates[i].Ready)
           }
         }
       }
