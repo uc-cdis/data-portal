@@ -1,6 +1,7 @@
 import React from 'react';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
+import jsonpath from 'jsonpath';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
 interface AggregationConfig {
@@ -14,7 +15,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
     return '';
   }
   const { field, type } = aggregation;
-  let fields = studies.map((s) => s[field]);
+  let fields = jsonpath.query(studies, `$..${field}`);
   // Replace any undefined fields with value 0
   fields = fields.map((item) => (typeof item === 'undefined' ? 0 : item));
   switch (type) {

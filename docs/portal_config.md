@@ -433,26 +433,26 @@ Below is an example, with inline comments describing what each JSON block config
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
-          "enable": boolean,
-          "enableDownloadManifest": boolean, // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": string, // text to be displayed on the download manifest button
-          "manifestFieldName": string, // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enable": true,
+          "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
+          "downloadManifestButtonText": true, // text to be displayed on the download manifest button
+          "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
-              "gen3Client": string, // link to documentation about the gen3 client. Used for button tooltips
-              "gen3Workspaces": string, // link to documentation about gen3 workspaces. Used for button tooltips.
+              "gen3Client": "https://gen3-client", // link to documentation about the gen3 client. Used for button tooltips
+              "gen3Workspaces": "https://gen3-workspace-docs", // link to documentation about gen3 workspaces. Used for button tooltips.
           }
       },
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
       },
-      "guidType": "discovery_metadata" // optional, default value is "discovery_metadata", allows for displaying only select mds records on the discovery page; by changing the _guid_type on the mds records and this setting to match
+      "guidType": "discovery_metadata", // optional, default value is "discovery_metadata", allows for displaying only select mds records on the discovery page; by changing the _guid_type on the mds records and this setting to match
       "search": {
         "searchBar": {
           "enabled": true,
           "inputSubtitle": "Search Bar", // optional, subtitle of search bar
           "placeholder": "Search studies by keyword", // optional, placeholder text of search input
-          "searchableTextFields": ["study", "age", "publication"] // optional, list of properties in data to make searchable
+          "searchableTextFields": ["study", "age", "publication", "minimal_info.study_title"] // optional, list of properties in data to make searchable
                                                                   // if not present, only fields visible in the table will be searchable
         },
         "tagSearchDropdown": { // optional, config section for searchable tags
@@ -495,6 +495,11 @@ Below is an example, with inline comments describing what each JSON block config
         "type": "count" // count of rows in data where `field` is non-empty
       },
       {
+        "name": "Accession Numbers",
+        "field": "minimal_info.dbgap_accession", // JSONPath syntax field name for nested fields
+        "type": "count"
+      },
+      {
         "name": "Total Subjects",
         "field": "_subjects_count",
         "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
@@ -529,7 +534,7 @@ Below is an example, with inline comments describing what each JSON block config
       },
       {
         "name": "dbGaP Accession Number",
-        "field": "study_id"
+        "field": "minimal_info.dbgap_accession" // JSONPath syntax field name for nested fields
       },
       {
         "name": "Commons",
@@ -583,8 +588,8 @@ Below is an example, with inline comments describing what each JSON block config
               "includeIfNotAvailable": false
             },
             {
-              "name": "Project ID",
-              "field": "project_id",
+              "name": "Investigator Names",
+              "field": "citation.investigators[*].full_name", // JSONPath syntax field name for nested fields with array
               "contentType": "string",
               "includeIfNotAvailable": false
             }
