@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Table, Empty, Tag, Tooltip,
 } from 'antd';
+import jsonpath from 'jsonpath';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
@@ -106,9 +107,10 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         expandedRowKeys: props.visibleResources.map(
           (r) => r[props.config.minimalFieldMapping.uid]),
         expandedRowRender: (record, index) => {
-          const studyPreviewText = record[props.config.studyPreviewField.field];
+          const studyPreviewTextArray = jsonpath.query(record, `$.${props.config.studyPreviewField.field}`);
+
           const renderValue = (value: string | undefined): React.ReactNode => {
-            if (!value) {
+            if (!value || value.length === 0) {
               if (props.config.studyPreviewField.includeIfNotAvailable) {
                 return props.config.studyPreviewField.valueIfNotAvailable;
               }
@@ -128,7 +130,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 start = 0;
               }
               return (
-                <React.Fragment>
+                <React.Fragment key={value}>
                   { start > 0 && '...' }
                   {value.slice(start, matchIndex)}
                   <span className='matched'>{value.slice(matchIndex,
@@ -165,7 +167,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                     props.setModalVisible(true);
                   }}
                 >
-                  {renderValue(studyPreviewText)}
+                  {studyPreviewTextArray.map((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
               { config.features.tagsInDescription?.enabled
