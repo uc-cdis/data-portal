@@ -285,6 +285,7 @@ class Workspace extends React.Component {
     // Display ECS status
     if(workspaceStatusData.workspaceType == 'ECS')
     {
+      workspaceLaunchStepsConfig.currentIndex = 2;
       if(workspaceStatusData.status == 'Launching')
       {
         workspaceLaunchStepsConfig.steps[2].description = 'ECS task pending';
