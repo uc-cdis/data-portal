@@ -13,6 +13,7 @@ import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
 import ResultsPng from './ResultsPng/ResultsPng';
 
+/* eslint no-alert: 0 */ // --> OFF
 const Results = () => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
