@@ -683,6 +683,16 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
+                  {this.state.payModel?.current_pay_model == null
+                    ? (
+                      <Alert
+                        description='Please Select a Paymodel in order to launch a workspace'
+                        type='error'
+                        banner
+                        closable
+                      />
+                    )
+                    : null}
                   {showExternalLoginsHintBanner
                     ? (
                       <Alert
@@ -701,16 +711,6 @@ class Workspace extends React.Component {
                     ? (
                       <Alert
                         description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
-                        type='error'
-                        banner
-                        closable
-                      />
-                    )
-                    : null}
-                  {this.state.payModel?.current_pay_model == null
-                    ? (
-                      <Alert
-                        description='Please Select a Paymodel in order to launch a workspace'
                         type='error'
                         banner
                         closable
