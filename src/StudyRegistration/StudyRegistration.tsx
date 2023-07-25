@@ -207,10 +207,8 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       repository: formValues.repository || '',
       repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
+      clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
-    if (ctgovID) {
-      valuesToUpdate['clinicaltrials.gov'] = await getClinicalTrialMetadata(ctgovID);
-    }
     preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
