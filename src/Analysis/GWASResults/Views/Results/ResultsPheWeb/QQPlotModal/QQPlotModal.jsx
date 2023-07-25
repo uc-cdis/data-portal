@@ -17,7 +17,7 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
   const { data, status } = useQuery(
     ['getDataForWorkflowArtifact', name, uid, 'pheweb_qq_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_qq_json_index'),
-    queryConfig,
+    queryConfig
   );
 
   const displayModalContent = () => {
@@ -45,7 +45,7 @@ const QQPlotModal = ({ modalOpen, setModalOpen }) => {
       );
     }
     return (
-      <div style={{ width: '100%', padding: '0 25%' }}>
+      <div className='qqplot-modal-container'>
         <QQPlot
           qq_plot_container_id='qq-plot-container-id'
           maf_ranges={data.by_maf}
