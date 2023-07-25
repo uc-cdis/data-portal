@@ -275,8 +275,7 @@ class Workspace extends React.Component {
           //Display Detailed Pod Statuses
           for (let i = 0; i < cs.length; i++)
           {
-            workspaceLaunchStepsConfig.steps[2].description = 'In progress..';
-            workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + ' status: ' + workspaceStatusData.containerStates[i].Ready);
+            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + ' status: ' + workspaceStatusData.containerStates[i].Ready);
           }
         }
       }
