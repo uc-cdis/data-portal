@@ -73,7 +73,7 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
+  const resp = await fetch(`https://classic.clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
   if (!resp || resp.status !== 200) {
     return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
@@ -100,7 +100,7 @@ const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
     const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
     offset += limit;
     promiseList.push(
-      fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
+      fetch(`https://classic.clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
         .then(
           (resp) => {
             if (!resp || resp.status !== 200) {
