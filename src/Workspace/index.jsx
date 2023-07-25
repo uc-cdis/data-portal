@@ -259,7 +259,7 @@ class Workspace extends React.Component {
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
       workspaceLaunchStepsConfig.steps[2].description = 'In progress';
-      cs = workspaceStatusData.containerStates;
+      const cs = workspaceStatusData.containerStates;
 
       if (cs.some((element) => (
         (element.state && element.state.terminated)
