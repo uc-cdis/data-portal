@@ -545,7 +545,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu} disabled>
                                 <Btn block size='large'>
-                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model?.workspace_type || 'N/A') : 'Select a Pay model'} <LoadingOutlined />
+                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model.workspace_type || 'N/A') : 'Select a Pay model'} <LoadingOutlined />
                                 </Btn>
                               </Dropdown>
                               <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
@@ -556,7 +556,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu}>
                                 <Btn block size='large'>
-                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model?.workspace_type || 'N/A') : 'Select a Pay model'} <DownOutlined />
+                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model.workspace_type || 'N/A') : 'Select a Pay model'} <DownOutlined />
                                 </Btn>
                               </Dropdown>
                               {(this.state.workspaceStatus === 'Errored') ? (
