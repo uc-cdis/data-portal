@@ -309,6 +309,10 @@ function ExplorerFilterSetWorkspace() {
               <button
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
+                title={shouldNotRemove ?
+                  'To remove the currently active filter set from the workspace, first remove it from any unsaved composed filter set in the workspace' :
+                  'Remove the currently active filter set from the workspace'
+                }
                 onClick={handleRemove}
                 disabled={shouldNotRemove || workspace.size < 2}
               >
