@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button, notification } from 'antd';
 import * as d3 from 'd3-selection';
@@ -8,12 +8,13 @@ import {
   queryConfig,
 } from '../../../Utils/gwasWorkflowApi';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import '../Results.css';
+import QQPlotModal from './QQPlotModal/QQPlotModal';
 import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';
 import TopLociTable from './TopLociTable/TopLociTable';
+import '../Results.css';
 
-/* eslint func-names: 0 */ // --> OFF
 const ResultsPheWeb = () => {
+  const [modalOpen, setModalOpen] = useState(false);
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
@@ -80,7 +81,7 @@ const ResultsPheWeb = () => {
     <section className='results-top'>
       <div className='GWASResults-flex-row section-header'>
         <div className='GWASResults-flex-col qq-plot-button'>
-          <Button>View QQ Plot</Button>
+          <Button onClick={() => setModalOpen(true)}>View QQ Plot</Button>
         </div>
         <Button onClick={downloadManhattanPlot}>Download Manhattan Plot</Button>
       </div>
@@ -118,6 +119,9 @@ const ResultsPheWeb = () => {
   return (
     <React.Fragment>
       {contextHolder}
+      {modalOpen && (
+        <QQPlotModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
       <div className='results-view'>
         {displayTopSection()}
         <section className='data-viz'>

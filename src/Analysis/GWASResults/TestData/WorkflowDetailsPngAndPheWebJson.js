@@ -26,15 +26,23 @@ const WorkflowStatusResponse = {
     parameters: [
       {
         name: 'gwas_archive_index',
-        value: '{\n    "baseid": "aaa-bbb-ccc-ddd123-eee1234",\n    "did": "111-222-333-444-abcd123",\n    "rev": "r123456"\n}',
+        value:
+          '{\n    "baseid": "aaa-bbb-ccc-ddd123-eee1234",\n    "did": "111-222-333-444-abcd123",\n    "rev": "r123456"\n}',
       },
       {
         name: 'manhattan_plot_index',
-        value: '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-aaaa123456-777777",\n    "rev": "r78910"\n}',
+        value:
+          '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-aaaa123456-777777",\n    "rev": "r78910"\n}',
       },
       {
         name: 'pheweb_manhattan_json_index',
-        value: '{\n    "baseid": "kkk-lll-mmm-1234-dddddd5678",\n    "did": "222-8888-7777-bbbb123456-777777",\n    "rev": "r78910"\n}',
+        value:
+          '{\n    "baseid": "kkk-lll-mmm-1234-dddddd5678",\n    "did": "222-8888-7777-bbbb123456-777777",\n    "rev": "r78910"\n}',
+      },
+      {
+        name: 'pheweb_qq_json_index',
+        value:
+          '{\n    "baseid": "xxx-yyy-zzz-1234-dddddd5678",\n    "did": "999-8888-7777-cccc123456-777777",\n    "rev": "r78910"\n}',
       },
     ],
   },

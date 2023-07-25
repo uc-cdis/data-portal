@@ -14,6 +14,10 @@
   right: 0;
 }
 
+.qq-modal .ant-modal-root button {
+  margin-top: -2px;
+}
+
 section.results-top button:not(.return-home-button) {
   float: right;
   margin-right: 8px;
@@ -21,7 +25,14 @@ section.results-top button:not(.return-home-button) {
 
 section.results-top .qq-plot-button button {
   margin-left: 8px;
-  display: none;
+  padding: 0;
+  width: 100px;
+}
+
+section.results-top .ant-tooltip-disabled-compatible-wrapper {
+  display: inline;
+  margin-left: 16px;
+  width: 100px;
 }
 
 section.data-viz {
@@ -49,4 +60,30 @@ section.data-viz {
   min-height: 64px;
   position: relative;
   border-radius: 4px 4px 0 0;
+}
+
+.qqplot-modal-container {
+  width: 100%;
+  padding: 0 25%;
+}
+
+.qq-modal .ant-modal-header {
+  padding: 12px 24px;
+  border-bottom: 1px solid #cfdbe6;
+}
+
+.qq-modal .ant-modal-close-icon svg path {
+  fill: #2e77b8;
+}
+
+.qq-modal .ant-modal-close-icon:hover {
+  border-radius: 2px;
+  padding: 2px;
+  background: #e9eef2;
+}
+
+.qq-modal .ant-modal-title h2 {
+  color: #2e77b8;
+  font-size: 14px;
+  margin-bottom: 0;
 }
