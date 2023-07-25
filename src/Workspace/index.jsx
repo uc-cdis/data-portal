@@ -259,7 +259,8 @@ class Workspace extends React.Component {
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
       workspaceLaunchStepsConfig.steps[2].description = 'In progress';
-      cs = workspaceStatusData.containerStates
+      cs = workspaceStatusData.containerStates;
+
       if (cs.some((element) => (
         (element.state && element.state.terminated)
       ))) {
@@ -268,10 +269,10 @@ class Workspace extends React.Component {
       }
       else
       {
-        if(cs.containerStates.length > 1 )
+        if(cs.length > 1)
         {
           //Display Detailed Pod Statuses
-          for (let i = 0; i < workspaceStatusData.containerStates.length; i++)
+          for (let i = 0; i < cs.length; i++)
           {
             workspaceLaunchStepsConfig.steps[2].description.concat('\n Container ' + i + "status: " + workspaceStatusData.containerStates[i].Ready)
           }
