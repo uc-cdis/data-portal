@@ -34,7 +34,12 @@ import '../Results.css';
     <section className='results-top'>
       <div className='GWASResults-flex-row section-header'>
         <div className='GWASResults-flex-col qq-plot-button'>
-          <Button>View QQ Plot</Button>
+          <Tooltip
+            className='qq-plot-button-tooltip'
+            title='If you want to see the QQ Plot for older workflows please download all results'
+          >
+            <Button disabled>View QQ Plot</Button>
+          </Tooltip>
         </div>
         <Button onClick={downloadManhattanPlot}>View Image in New Tab</Button>
       </div>
