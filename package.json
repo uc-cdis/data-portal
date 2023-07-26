@@ -178,9 +178,6 @@
     "has-ansi": {
       "ansi-regex": "3.0.1"
     },
-    "strip-ansi": {
-      "ansi-regex": "6.0.1"
-    },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
     "@reactour/mask": "0.5.1",
