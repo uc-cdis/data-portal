@@ -277,7 +277,7 @@ class Workspace extends React.Component {
     // condition type: ProxyConnected + status: false => at step 3
     if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'False'))) {
       workspaceLaunchStepsConfig.currentIndex = 3;
-      workspaceLaunchStepsConfig.steps[3].description = 'In progress';
+      workspaceLaunchStepsConfig.steps[3].description = 'In progress. If you are stuck here for more than a few minutes, cancel launch and try again or contact user support.';
       return workspaceLaunchStepsConfig;
     }
     if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'True'))) {

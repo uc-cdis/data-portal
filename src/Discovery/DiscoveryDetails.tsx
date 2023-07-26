@@ -10,6 +10,7 @@ import {
   DownloadOutlined,
   AuditOutlined,
 } from '@ant-design/icons';
+import jsonpath from 'jsonpath';
 import { useHistory } from 'react-router-dom';
 import {
   hostname, basename, fenceDownloadPath, studyRegistrationConfig,
@@ -126,9 +127,25 @@ const accessDescriptor = (resource: DiscoveryResource) => {
 type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
+const formatResourceValuesWhenNestedArray = (resourceFieldValue: string[]) => {
+  if (
+    Array.isArray(resourceFieldValue)
+    && Array.isArray(resourceFieldValue[0])
+  ) {
+    return resourceFieldValue[0].join(', ');
+  }
+  return resourceFieldValue;
+};
+
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
-  const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
-  if (resourceFieldValue) {
+  let resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
+  if (
+    resourceFieldValue
+    && resourceFieldValue.length > 0
+    && resourceFieldValue[0].length !== 0
+  ) {
+    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
+
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
@@ -161,7 +178,15 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
   // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
   const groupHasContent = group.fields.some(
-    (field) => !field.sourceField || resource[field.sourceField],
+    (field) => {
+      if (!field.sourceField) {
+        return false;
+      }
+      const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
+      return (resourceFieldValue
+        && resourceFieldValue.length > 0
+        && resourceFieldValue[0].length !== 0);
+    },
   );
   if (groupHasContent) {
     return (
@@ -186,10 +211,10 @@ const DiscoveryDetails = (props: Props) => {
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string|null = null,
-    studyName: string|null = null,
-    studyNumber: string|null = null,
-    studyUID: string|number|null = null,
+  const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string | null = null,
+    studyName: string | null = null,
+    studyNumber: string | null = null,
+    studyUID: string | number | null = null,
     existingDataDictionaryName: Array<string> = []) => {
     history.push(redirectURL, {
       studyName, studyNumber, studyRegistrationAuthZ, studyUID, existingDataDictionaryName,
@@ -203,7 +228,9 @@ const DiscoveryDetails = (props: Props) => {
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field || '';
   const header = (
     <Space align='baseline'>
-      <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
+      <h3 className='discovery-modal__header-text'>
+        {jsonpath.query(props.modalData, `$.${headerField}`)}
+      </h3>
     </Space>
   );
 
@@ -271,7 +298,7 @@ const DiscoveryDetails = (props: Props) => {
               props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
               props.userAuthMapping,
             ))
-          // user is authenticated, VLMD submission button should be visible only on registered studies that they have access to
+            // user is authenticated, VLMD submission button should be visible only on registered studies that they have access to
             ? (
               <Button
                 type='text'
@@ -291,10 +318,10 @@ const DiscoveryDetails = (props: Props) => {
             : null}
           {(
             props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
-              && props.user.username
-              && !userHasMethodForServiceOnResource('access', 'study_registration',
-                props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
-                props.userAuthMapping)
+            && props.user.username
+            && !userHasMethodForServiceOnResource('access', 'study_registration',
+              props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+              props.userAuthMapping)
           ) ? (
               <Button
                 type='text'
@@ -331,7 +358,7 @@ const DiscoveryDetails = (props: Props) => {
                 });
             }}
           >
-            { props.permalinkCopied
+            {props.permalinkCopied
               ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
               : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
           </Button>
@@ -366,27 +393,27 @@ const DiscoveryDetails = (props: Props) => {
                 {header}
                 {(
                   props.config.features.authorization.enabled
-              && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-              && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
+                  && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
+                  && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
                 )
-            && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
-              ? (
-                <Alert
-                  className='discovery-modal__access-alert'
-                  type='success'
-                  message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
-                />
-              )
-              : (
-                <Alert
-                  className='discovery-modal__access-alert'
-                  type='warning'
-                  message={<React.Fragment>You do not have access to this study.</React.Fragment>}
-                />
-              )
-            )}
+                  && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
+                    ? (
+                      <Alert
+                        className='discovery-modal__access-alert'
+                        type='success'
+                        message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+                      />
+                    )
+                    : (
+                      <Alert
+                        className='discovery-modal__access-alert'
+                        type='warning'
+                        message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+                      />
+                    )
+                  )}
                 <div className='discovery-modal-attributes-container'>
-                  { props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
+                  {props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
                     let groupWidth;
                     switch (fieldGroup.groupWidth) {
                     case 'full':
@@ -399,33 +426,34 @@ const DiscoveryDetails = (props: Props) => {
                     }
                     return (
                       <div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
-                        { fieldGroup.includeName
-                    && <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>}
-                        { fieldGroup.fields.map((field) => {
-                        // display nothing if selected study doesn't have this field
-                        // and this field isn't configured to show a default value
-                          if (!props.modalData[field.field] && !field.includeIfNotAvailable) {
+                        {fieldGroup.includeName
+                          && <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>}
+                        {fieldGroup.fields.map((field) => {
+                          const fieldValue = jsonpath.query(props.modalData, `$.${field.field}`);
+                          const isFieldValueEmpty = !fieldValue || fieldValue.length === 0 || fieldValue.every((val) => val === '');
+                          // display nothing if selected study doesn't have this field
+                          // and this field isn't configured to show a default value
+                          if (isFieldValueEmpty && !field.includeIfNotAvailable) {
                             return null;
                           }
                           // If the field contains a particularly long string, add some special styles
                           const MULTILINE_FIELD_CHARLIMIT = 200;
-                          const multiline = props.modalData[field.field]
-                    && props.modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
-
+                          const multiline = fieldValue[0]
+                            && fieldValue[0].length > MULTILINE_FIELD_CHARLIMIT;
                           const renderedFieldContent = (
                             <div key={field.name} className='discovery-modal__attribute'>
-                              { field.includeName !== false
-                          && <span className='discovery-modal__attribute-name'>{field.name}</span>}
+                              {field.includeName !== false
+                                && <span className='discovery-modal__attribute-name'>{field.name}</span>}
                               <span className={`discovery-modal__attribute-value ${multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
-                                { props.modalData[field.field]
-                                  ? renderFieldContent(props.modalData[field.field], field.contentType, props.config)
+                                {!isFieldValueEmpty
+                                  ? renderFieldContent(fieldValue, field.contentType, props.config)
                                   : (field.valueIfNotAvailable || 'Not available')}
                               </span>
                             </div>
                           );
                           const linkingField = `${field.field}_link`;
                           if (props.modalData[linkingField] !== undefined) {
-                            return <a href={props.modalData[linkingField]}>{renderedFieldContent}</a>;
+                            return <a key={linkingField} href={props.modalData[linkingField]}>{renderedFieldContent}</a>;
                           }
                           return renderedFieldContent;
                         })}
@@ -433,8 +461,8 @@ const DiscoveryDetails = (props: Props) => {
                     );
                   })}
                 </div>
-                { (props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
-          && props.modalData[props.config.studyPageFields.downloadLinks.field])
+                {(props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
+                  && props.modalData[props.config.studyPageFields.downloadLinks.field])
                   ? (
                     <Collapse className='discovery-modal__download-panel' defaultActiveKey={['1']}>
                       <Panel
@@ -445,7 +473,7 @@ const DiscoveryDetails = (props: Props) => {
                         <List
                           itemLayout='horizontal'
                           dataSource={props.modalData[props.config.studyPageFields.downloadLinks.field]}
-                          renderItem={(item:ListItem) => (
+                          renderItem={(item: ListItem) => (
                             <List.Item
                               actions={[
                                 <Button
@@ -457,7 +485,7 @@ const DiscoveryDetails = (props: Props) => {
                                   disabled={!item.guid}
                                   icon={<DownloadOutlined />}
                                 >
-                        Download File
+                                  Download File
                                 </Button>]}
                             >
                               <List.Item.Meta

@@ -9,7 +9,7 @@ export interface DiscoveryConfig {
             enableDownloadZip: boolean
             downloadZipButtonText?: string
             verifyExternalLogins?: boolean
-        }
+        },
         // explorationIntegration: {
         //     enabled: boolean // not supported
         // },
@@ -21,7 +21,8 @@ export interface DiscoveryConfig {
         pageTitle: {
             enabled: boolean
             text: string
-        }
+        },
+        guidType?: string,
         search: {
             searchBar: {
                 enabled: boolean,
