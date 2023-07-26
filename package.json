@@ -92,7 +92,7 @@
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
     "regenerator-runtime": "^0.13.11",
-    "relay-compiler": "^15.0.0",
+    "relay-compiler": "^10.0.0",
     "relay-runtime": "^10.0.0",
     "semver": "^7.5.4",
     "showdown": "^1.9.0",
@@ -177,6 +177,9 @@
     },
     "has-ansi": {
       "ansi-regex": "3.0.1"
+    },
+    "strip-ansi": {
+      "ansi-regex": "6.0.1"
     },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
