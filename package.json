@@ -88,7 +88,7 @@
     "recharts": "^2.7.2",
     "redux": "^4.2.1",
     "redux-devtools": "^3.3.1",
-    "redux-form": "^8.3.10",
+    "redux-form": "^8.0.0",
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
     "regenerator-runtime": "^0.13.11",
@@ -183,7 +183,8 @@
     },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
-    "@reactour/mask": "0.5.1"
+    "@reactour/mask": "0.5.1",
+    "immutable": ""
   },
   "jest": {
     "verbose": true,
