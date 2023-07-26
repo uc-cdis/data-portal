@@ -43,7 +43,9 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
       metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
     }
     metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.clinical_trials_study_ID = updatedValues.clinical_trials_id;
-    metadataToUpdate.clinicaltrials_gov = updatedValues.clinicaltrials_gov;
+    if (updatedValues.clinical_trials_id) {
+      metadataToUpdate.clinicaltrials_gov = updatedValues.clinicaltrials_gov;
+    }
 
     return metadataToUpdate;
   } catch (err) {
