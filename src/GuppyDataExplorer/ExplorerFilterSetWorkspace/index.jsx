@@ -30,6 +30,8 @@ import './ExplorerFilterSetWorkspace.css';
 
 /** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').UnsavedExplorerFilterSet} UnsavedExplorerFilterSet */
 
 function ExplorerFilterSetWorkspace() {
   const dispatch = useAppDispatch();
@@ -48,6 +50,24 @@ function ExplorerFilterSetWorkspace() {
   const activeSavedFilterSet = savedFilterSets.data.find(
     ({ id }) => id === activeFilterSet.id
   );
+  const all = workspace.all;
+
+  // if any composed filter set contains a reference to the active filter set
+  // being removed we need to delete the composed filter set as well, since
+  // that reference will no longer exist, which will cause errors
+  const composedWithActive = Object.keys(all).filter((id) => {
+    /** @type {ExplorerFilterSet} */
+    let filterSet = all[id];
+    if (filterSet.filter.__type === 'COMPOSED') {
+      /** @type {UnsavedExplorerFilterSet['filter']} */
+      let filter = filterSet.filter;
+      if (filter.refIds?.some((id) => id === workspace.activeId)) {
+        return true;
+      }
+    }
+    return false;
+  });
+  const shouldNotRemove = composedWithActive.length > 0;
 
   const [actionFormType, setActionFormType] = useState(
     /** @type {ActionFormType} */ (undefined)
@@ -289,8 +309,12 @@ function ExplorerFilterSetWorkspace() {
               <button
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
+                title={shouldNotRemove ?
+                  'To remove the currently active filter set from the workspace, first remove it from any unsaved composed filter set in the workspace' :
+                  'Remove the currently active filter set from the workspace'
+                }
                 onClick={handleRemove}
-                disabled={workspace.size < 2}
+                disabled={shouldNotRemove || workspace.size < 2}
               >
                 Remove
               </button>

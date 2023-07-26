@@ -78,6 +78,8 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
 
       if (project.has_access) {
         row.push(<DataDownloadButton project={project} />)
+      } else {
+        row.push('');
       }
 
       if (isAdminActive) {
@@ -91,6 +93,8 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
             <i className='data-request__table-row-options-trigger-icon' />
           </button>
         );
+      } else {
+        row.push('');
       }
 
       return row;

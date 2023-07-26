@@ -155,7 +155,8 @@ const slice = createSlice({
       prepare: () => ({ payload: crypto.randomUUID() }),
       /** @param {PayloadAction<string>} action */
       reducer: (state, action) => {
-        const { activeId, all } = state.workspaces[state.explorerId];
+        const { activeId, all } = state.workspaces[state.explorerId]
+
         delete state.workspaces[state.explorerId].all[activeId];
 
         // if any composed filter set contains a reference to the active filter set
