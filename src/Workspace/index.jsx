@@ -174,10 +174,8 @@ class Workspace extends React.Component {
         }
         return null;
       }).catch(() => 'Error');
-    if (payModels?.current_pay_model) {
-      return payModels;
-    }
-    return {};
+
+    return payModels || {};
   }
 
   getIcon = (workspace) => {
@@ -547,7 +545,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu} disabled>
                                 <Btn block size='large'>
-                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <LoadingOutlined />
+                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model.workspace_type || 'N/A') : 'Select a Pay model'} <LoadingOutlined />
                                 </Btn>
                               </Dropdown>
                               <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
@@ -558,7 +556,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu}>
                                 <Btn block size='large'>
-                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <DownOutlined />
+                                  {(this.state.payModel.current_pay_model) ? (this.state.payModel.current_pay_model.workspace_type || 'N/A') : 'Select a Pay model'} <DownOutlined />
                                 </Btn>
                               </Dropdown>
                               {(this.state.workspaceStatus === 'Errored') ? (
@@ -685,6 +683,16 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
+                  {this.state.payModel?.current_pay_model == null
+                    ? (
+                      <Alert
+                        description='Please Select a Paymodel in order to launch a workspace'
+                        type='error'
+                        banner
+                        closable
+                      />
+                    )
+                    : null}
                   {showExternalLoginsHintBanner
                     ? (
                       <Alert
@@ -727,6 +735,7 @@ class Workspace extends React.Component {
                               (!!this.state.workspaceID
                               && this.state.workspaceID !== option.id)
                               || isPayModelAboveLimit
+                              || this.state.payModel?.current_pay_model == null
                             }
                           />
                         );
