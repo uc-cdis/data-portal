@@ -156,12 +156,6 @@
     "webpack-node-externals": "^3.0.0"
   },
   "overrides": {
-    "html-webpack-plugin": {
-      "strip-ansi": "6.0.1"
-    },
-    "showdown": {
-      "strip-ansi": "6.0.1"
-    },
     "@storybook/cli": {
       "trim": "0.0.3"
     },
@@ -172,11 +166,7 @@
       "meow": "6.1.0"
     },
     "@upsetjs/venn.js": {
-      "uglify-js": "3.14.3",
-      "ansi-regex": "3.0.1"
-    },
-    "has-ansi": {
-      "ansi-regex": "3.0.1"
+      "uglify-js": "3.14.3"
     },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
