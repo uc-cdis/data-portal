@@ -10,11 +10,14 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../Components/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import filterTableData from './tableDataProcessing/filterTableData';
+import {
+  filterTableData,
+  initialTableSort,
+} from './tableDataProcessing/tableDataProcessing';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import initialTableSort from './tableDataProcessing/initialTableSort';
+
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
