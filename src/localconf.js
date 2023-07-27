@@ -1,4 +1,4 @@
-const { components, requiredCerts, config } = require('./params');
+const { components, requiredCerts, config, dictionaryUrl } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -156,6 +156,7 @@ function buildConfig(opts) {
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    dictionaryUrl,
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,

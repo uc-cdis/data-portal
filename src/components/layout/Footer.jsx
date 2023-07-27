@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { contactEmail } from '../../localconf';
+import { contactEmail, dictionaryUrl } from '../../localconf';
 import './Footer.css';
 
 /**
@@ -11,6 +11,8 @@ import './Footer.css';
  * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
 function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
+  let dictionaryVersionMatch = dictionaryUrl.match(/.*\/[^\d]*(?<version>\d+)\.json/i);
+  let dictionaryVersion = dictionaryVersionMatch.groups?.version ?? '';
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
@@ -23,6 +25,11 @@ function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
           {portalVersion !== '' && (
             <div className='footer__version-info'>
               <span>Portal Version:</span> {portalVersion}
+            </div>
+          )}
+          {dictionaryVersion !== '' && (
+            <div className='footer__version-info'>
+              <span>Dictionary Version:</span> {dictionaryVersion}
             </div>
           )}
           <div className='footer__version-info'>
