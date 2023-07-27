@@ -300,7 +300,6 @@ const HomeTable = ({ data }) => {
   ].filter((item) => item.show);
 
   const initiallySortedData = initialTableSort(data);
-
   const [filteredData, setFilteredData] = useState(initiallySortedData);
   useEffect(() => {
     setFilteredData(filterTableData(initiallySortedData, homeTableState));
