@@ -52,7 +52,6 @@ const filterTableData = (data, homeTableState) => {
       homeTableState.finishedAtSelections,
     );
   }
-
   return filteredDataResult;
 };
 
