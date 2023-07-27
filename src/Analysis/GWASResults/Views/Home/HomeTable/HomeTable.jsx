@@ -14,8 +14,8 @@ import filterTableData from './tableDataProcessing/filterTableData';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import './HomeTable.css';
 import initialTableSort from './tableDataProcessing/initialTableSort';
+import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
 

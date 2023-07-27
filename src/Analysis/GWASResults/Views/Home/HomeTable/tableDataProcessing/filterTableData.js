@@ -32,7 +32,7 @@ const filterTableData = (data, homeTableState) => {
       homeTableState.wfNameSearchTerm,
     );
   }
-  if (homeTableState.submittedAtSelections.length > 1) {
+  if (homeTableState.submittedAtSelections.length > 0) {
     filteredDataResult = filterByDateRange(
       filteredDataResult,
       'submittedAt',
