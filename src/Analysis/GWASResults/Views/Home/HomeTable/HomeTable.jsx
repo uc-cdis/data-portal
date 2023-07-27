@@ -8,11 +8,12 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../Components/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import filterTableData from './filterTableData';
+import filterTableData from './tableDataProcessing/filterTableData';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './HomeTable.css';
+import initialTableSort from './tableDataProcessing/initialTableSort';
 
 const { RangePicker } = DatePicker;
 
@@ -222,10 +223,8 @@ const HomeTable = ({ data }) => {
       show: homeTableState.columnManagement.showDateFinished,
       sorter: (a, b) => {
         if (!a.finishedAt) return -1;
-        else if (!b.finishedAt) return -1;
-        else {
-          return a?.finishedAt.localeCompare(b?.finishedAt);
-        }
+        if (!b.finishedAt) return -1;
+        return a?.finishedAt.localeCompare(b?.finishedAt);
       },
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'finishedAt' &&
@@ -300,9 +299,11 @@ const HomeTable = ({ data }) => {
     },
   ].filter((item) => item.show);
 
-  const [filteredData, setFilteredData] = useState(data);
+  const initiallySortedData = initialTableSort(data);
+
+  const [filteredData, setFilteredData] = useState(initiallySortedData);
   useEffect(() => {
-    setFilteredData(filterTableData(data, homeTableState));
+    setFilteredData(filterTableData(initiallySortedData, homeTableState));
   }, [homeTableState, data]);
 
   const checkForShownColumn = () =>
