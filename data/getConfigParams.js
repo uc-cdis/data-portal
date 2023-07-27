@@ -144,7 +144,8 @@ const components = ${recursiveStringify(components, ['hostname'], 0, 2)};
 const config = ${JSON.stringify(config, null, '  ')};
 const requiredCerts = [${requiredCerts.map((item) => `'${item}'`)}];
 const consortiumList = ${JSON.stringify(consortiumList, null, 2)};
-module.exports = { components, config, gaTracking, requiredCerts, consortiumList };
+const dictionaryUrl = ${process.env.DICTIONARY_URL};
+module.exports = { components, config, gaTracking, requiredCerts, consortiumList, dictionaryUrl };
 `;
 
 const paramsPath = path.resolve(__dirname, '../src/params.js');
