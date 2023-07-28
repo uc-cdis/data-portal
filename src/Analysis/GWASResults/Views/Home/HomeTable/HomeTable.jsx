@@ -10,10 +10,14 @@ import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
 import DateForTable from '../../../Components/DateForTable/DateForTable';
 import PHASES from '../../../Utils/PhasesEnumeration';
-import filterTableData from './filterTableData';
+import {
+  filterTableData,
+  initialTableSort,
+} from './tableDataProcessing/tableDataProcessing';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+
 import './HomeTable.css';
 
 const { RangePicker } = DatePicker;
@@ -221,7 +225,11 @@ const HomeTable = ({ data }) => {
       title: 'Date/Time Finished',
       key: 'finishedAt',
       show: homeTableState.columnManagement.showDateFinished,
-      sorter: (a, b) => a.finishedAt.localeCompare(b.finishedAt),
+      sorter: (a, b) => {
+        if (!a.finishedAt) return -1;
+        if (!b.finishedAt) return -1;
+        return a?.finishedAt.localeCompare(b?.finishedAt);
+      },
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'finishedAt'
         && homeTableState.sortInfo.order,
@@ -294,9 +302,10 @@ const HomeTable = ({ data }) => {
     },
   ].filter((item) => item.show);
 
-  const [filteredData, setFilteredData] = useState(data);
+  const initiallySortedData = initialTableSort(data);
+  const [filteredData, setFilteredData] = useState(initiallySortedData);
   useEffect(() => {
-    setFilteredData(filterTableData(data, homeTableState));
+    setFilteredData(filterTableData(initiallySortedData, homeTableState));
   }, [homeTableState, data]);
 
   const checkForShownColumn = () => Object.values(homeTableState.columnManagement).includes(true);
@@ -310,7 +319,9 @@ const HomeTable = ({ data }) => {
           rowKey={(record) => record.uid}
           rowClassName={(record) => record.uid === selectedRowData?.uid && 'selected-row'}
           onRow={(record) => ({
-            onClick: () => { setSelectedRowData(record); },
+            onClick: () => {
+              setSelectedRowData(record);
+            },
           })}
           onChange={handleTableChange}
           pagination={{
