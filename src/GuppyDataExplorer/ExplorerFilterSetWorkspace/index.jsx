@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
+import Tooltip from 'rc-tooltip';
 import ButtonToggle from '../../gen3-ui-component/components/ButtonToggle';
 import { contactEmail } from '../../localconf';
 import {
@@ -306,26 +307,42 @@ function ExplorerFilterSetWorkspace() {
               >
                 Duplicate
               </button>
-              <button
-                className='explorer-filter-set-workspace__action-button'
-                type='button'
-                title={shouldNotRemove ?
+              <Tooltip
+                arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                overlay={shouldNotRemove ?
                   'To remove the currently active filter set from the workspace, first remove it from any unsaved composed filter set in the workspace' :
                   'Remove the currently active filter set from the workspace'
                 }
-                onClick={handleRemove}
-                disabled={shouldNotRemove || workspace.size < 2}
+                placement='bottom'
+                trigger={['hover', 'focus']}
               >
-                Remove
-              </button>
-              <button
-                className='explorer-filter-set-workspace__action-button'
-                type='button'
-                onClick={handleClear}
-                disabled={checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
+                <button
+                  className='explorer-filter-set-workspace__action-button'
+                  type='button'
+                  onClick={handleRemove}
+                  disabled={shouldNotRemove || workspace.size < 2}
+                >
+                  Remove
+                </button>
+              </Tooltip>
+              <Tooltip
+                arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                overlay={shouldNotRemove ?
+                  'To clear the currently active filter set from the workspace, first remove it from any unsaved composed filter set in the workspace' :
+                  'Clear the currently active filter set'
+                }
+                placement='bottom'
+                trigger={['hover', 'focus']}
               >
-                Clear
-              </button>
+                <button
+                  className='explorer-filter-set-workspace__action-button'
+                  type='button'
+                  onClick={handleClear}
+                  disabled={shouldNotRemove || checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
+                >
+                  Clear
+                </button>
+              </Tooltip>
               <button
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
