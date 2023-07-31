@@ -14,6 +14,7 @@ import {
   checkIfFilterInScope,
 } from './utils';
 import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
+import { gaEvents } from '../../hooks/useGoogleAnalytics';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
@@ -170,6 +171,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
 
   const submitUserInput = () => {
     setIsInputChanged(false);
+    gaEvents.clickApplySurvivalButtonEvent();
     onSubmit({
       timeInterval,
       startTime,

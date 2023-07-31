@@ -1,4 +1,4 @@
-const { components, requiredCerts, config } = require('./params');
+const { components, requiredCerts, config, dictionaryUrl } = require('./params');
 
 /**
  * Setup configuration variables based on the "app" the data-portal is
@@ -137,10 +137,10 @@ function buildConfig(opts) {
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'x-csrf-token': document.cookie.replace(
-      /(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/,
-      '$1'
-    ),
+    'x-csrf-token': document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken=") && row.length > "csrftoken=".length)
+      ?.split("=")[1],
   };
 
   return {
@@ -156,6 +156,7 @@ function buildConfig(opts) {
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
+    dictionaryUrl,
     indexdPath,
     graphqlPath,
     dataDictionaryTemplatePath,

@@ -18,6 +18,8 @@ import './Button.css';
  * @param {boolean} [props.tooltipEnabled]
  * @param {string} [props.tooltipText]
  * @param {string} [props.value]
+ * @param {boolean}[props.submit]
+ * @param {boolean | "dialog"} [props.hasPopup]
  */
 function Button({
   buttonType = 'primary',
@@ -32,6 +34,8 @@ function Button({
   tooltipEnabled = false,
   tooltipText,
   value,
+  submit = false,
+  hasPopup = false
 }) {
   function handleClick(e) {
     if (enabled && !isPending) onClick?.(e);
@@ -41,12 +45,13 @@ function Button({
     !enabled || isPending ? 'g3-button--disabled' : `g3-button--${buttonType}`;
   const buttonElement = (
     <button
-      type='button'
+      type={submit ? 'submit': 'button'}
       className={`${className} g3-button ${buttonTypeClassName}`}
       onClick={handleClick}
       onKeyPress={(e) => e.stopPropagation()}
       id={id}
       value={value}
+      aria-haspopup={hasPopup}
     >
       {leftIcon && (
         <i
@@ -93,6 +98,8 @@ Button.propTypes = {
   tooltipEnabled: PropTypes.bool,
   tooltipText: PropTypes.string,
   value: PropTypes.string,
+  submit: PropTypes.bool,
+  hasPopup: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
 };
 
 export default Button;

@@ -9,6 +9,7 @@
 #  WORKSPACE_TIMEOUT_IN_MINUTES = minutes after which to logout workspace user if logout_inactive false
 #  TIER_ACCESS_LEVEL = the access level of a common (libre, regular or private)
 #  TIER_ACCESS_LIMIT = the minimum visible count for aggregation results
+#  DICTIONARY_URL = url for th current instance of the data dictionary so we can extract version info at build time
 #
 # Script assumes npm install or npm ci has already run, and jq is installed.
 #
@@ -17,6 +18,7 @@ set -e
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-development}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export DICTIONARY_URL="${DICTIONARY_URL:-""}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
 export USE_INDEXD_AUTHZ="${USE_INDEXD_AUTHZ:-"false"}"

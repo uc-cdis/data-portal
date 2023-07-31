@@ -1,0 +1,14 @@
+.data-requests {
+    margin: 20px;
+}
+
+.data-requests--create-pending {
+    opacity: 0.5;
+}
+
+.data-requests__header > h1 {
+    font-size: 24px;
+    letter-spacing: 0.02rem;
+    line-height: 80px;
+    color: inherit;
+}

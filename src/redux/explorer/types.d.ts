@@ -10,6 +10,7 @@ import type {
   ExplorerFilterSet,
   PatientIdsConfig,
   SavedExplorerFilterSet,
+  UnsavedExplorerFilterSet,
   SurvivalAnalysisConfig,
   TableConfig,
 } from '../../GuppyDataExplorer/types';
@@ -36,6 +37,8 @@ export type ExplorerConfig = {
 export type ExplorerFilter = ExplorerFilter;
 
 export type ExplorerFilterSet = ExplorerFilterSet;
+
+export type UnsavedExplorerFilterSet = UnsavedExplorerFilterSet;
 
 export type ExplorerWorkspace = {
   activeId: string;

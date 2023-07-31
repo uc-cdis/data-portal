@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { matchPath, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { matchPath, Navigate, Outlet, Route, Routes, useSearchParams } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -25,12 +25,15 @@ import {
 import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
 import { fetchAccess } from './redux/userProfile/asyncThunks';
 import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
-import { fetchSurvivalConfig } from './redux/explorer/asyncThunks';
+import { fetchSurvivalConfig, fetchFilterSets } from './redux/explorer/asyncThunks';
+import { fetchProjects as fetchDataRequestProjects, fetchProjectStates } from './redux/dataRequest/asyncThunks';
+import { toggleAdminActive } from './redux/dataRequest/slice';
 import { useAppDispatch } from './redux/hooks';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
 const DataRequests = lazy(() => import('./DataRequests'));
+const DataRequestCreate = lazy(() => import('./DataRequests/create'));
 const Explorer = lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const IndexPage = lazy(() => import('./Index/page'));
@@ -53,6 +56,7 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 function App() {
   useSessionMonitor();
 
+  const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchDataVersion());
@@ -210,12 +214,37 @@ function App() {
         )}
         <Route
           path='requests'
-          element={
-            <ProtectedContent>
+          element={<Outlet />}
+        >
+          <Route index element={
+            <ProtectedContent preload={({ state }) => {
+                if (searchParams.get('admin') === 'true') {
+                  let { 
+                    is_admin,
+                    authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
+                  } = state.user;
+                  let isAdmin = is_admin || !!serviceAccessMethod;
+                  if (isAdmin && !state.dataRequest.isAdminActive) {
+                    dispatch(toggleAdminActive());
+                  }
+                  return Promise.all([
+                    dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
+                    dispatch(fetchProjectStates())
+                  ]);
+                }
+                return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
+            }}>
               <DataRequests />
             </ProtectedContent>
-          }
-        />
+          }/>
+          <Route 
+            path="create"
+            element={
+            <ProtectedContent preload={() => dispatch(fetchFilterSets())}>
+              <DataRequestCreate />
+            </ProtectedContent>
+          }/>
+        </Route>
         <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'

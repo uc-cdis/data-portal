@@ -24,6 +24,7 @@ import {
  */
 /** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').UnsavedExplorerFilterSet} */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
 /** @typedef {import('./types').ExplorerWorkspace} ExplorerWorkspace */
 
@@ -154,12 +155,33 @@ const slice = createSlice({
       prepare: () => ({ payload: crypto.randomUUID() }),
       /** @param {PayloadAction<string>} action */
       reducer: (state, action) => {
-        const { activeId, all } = state.workspaces[state.explorerId];
+        const { activeId, all } = state.workspaces[state.explorerId]
+
         delete state.workspaces[state.explorerId].all[activeId];
+
+        // if any composed filter set contains a reference to the active filter set
+        // being removed we need to delete the composed filter set as well, since
+        // that reference will no longer exist, which will cause errors
+        let composedWithDeleted = Object.keys(all).filter((id) => {
+          /** @type {import('./types').ExplorerFilterSet} */
+          let filterSet = all[id];
+          if (filterSet.filter.__type === 'COMPOSED') {
+            /** @type {import('./types').UnsavedExplorerFilterSet['filter']} */
+            let filter = filterSet.filter;
+            if (filter.refIds?.some((id) => id === activeId)) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        for (let composedWithDeletedID of composedWithDeleted) {
+          delete state.workspaces[state.explorerId].all[composedWithDeletedID];
+        }
 
         const [firstEntry] = Object.entries(all);
         const [id, filterSet] = firstEntry ?? [action.payload, { filter: {} }];
-
+ 
         state.workspaces[state.explorerId].activeId = id;
         state.workspaces[state.explorerId].all[id] = filterSet;
         updateFilterRefs(state.workspaces[state.explorerId]);

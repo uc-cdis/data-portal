@@ -10,15 +10,17 @@ import ScreenSizeWarning from '../components/ScreenSizeWarning';
 import ReduxTopBar from './ReduxTopBar';
 import ReduxNavBar from './ReduxNavBar';
 import './Layout.css';
+import { useAppSelector } from '../redux/hooks';
 
 /**
  * @param {Object} props
  * @param {React.ReactNode} props.children
  */
 function Layout({ children }) {
+  const userId = useAppSelector((state) => state.user.sub);
   const location = useLocation();
   // @ts-ignore
-  useGoogleAnalytics(location);
+  useGoogleAnalytics(userId);
 
   const isDashboardPage =
     location.pathname.toLowerCase().startsWith('/dd') ||
