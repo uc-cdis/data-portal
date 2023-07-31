@@ -165,7 +165,7 @@ const JobDetails = ({ attritionTableData }) => {
           <div>{getParameterData('source_population_cohort')}</div>
         </div>
         <div className='GWASResults-flex-row'>
-          <div>Phenotype</div>
+          <div>Outcome Phenotype</div>
           <div>{getPhenotype()}</div>
         </div>
         {displayTotalSizes()}
