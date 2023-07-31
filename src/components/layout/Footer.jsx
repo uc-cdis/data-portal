@@ -12,7 +12,7 @@ import './Footer.css';
  */
 function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
   let dictionaryVersionMatch = dictionaryUrl.match(/.*\/[^\d]*(?<version>\d+)\.json/i);
-  let dictionaryVersion = dictionaryVersionMatch.groups?.version ?? '';
+  let dictionaryVersion = dictionaryVersionMatch?.groups?.version ?? '';
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
