@@ -81,7 +81,7 @@ describe('Job Details', () => {
       expect(screen.getByText('Control Size')).toBeInTheDocument();
       expect(screen.getByText('Case Size')).toBeInTheDocument();
       expect(screen.getByText('Total Size')).toBeInTheDocument();
-      expect(screen.getByText('Phenotype')).toBeInTheDocument();
+      expect(screen.getByText('Outcome Phenotype')).toBeInTheDocument();
       expect(screen.getByText('Covariates')).toBeInTheDocument();
     });
   });
