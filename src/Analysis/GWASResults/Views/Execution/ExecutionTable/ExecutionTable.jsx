@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
-import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
+import DateForTable from '../../../Components/DateForTable/DateForTable';
 
 const subtractDates = (date1, date2) => {
   const timestamp1 = Date.parse(date1);

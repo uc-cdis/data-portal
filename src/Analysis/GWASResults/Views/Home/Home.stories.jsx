@@ -5,12 +5,11 @@ import { rest } from 'msw';
 import Home from './Home';
 import PHASES from '../../Utils/PhasesEnumeration';
 import TableData from '../../TestData/TableData';
-import InitialHomeTableState from '../../Utils/InitialHomeTableState';
+import InitialHomeTableState from './HomeTableState/InitialHomeTableState';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
-const setSelectedRowData = () => alert('setSelectedRowData called');
 
 export default {
   title: 'Tests2/GWASResults/Views/Home',
@@ -24,11 +23,13 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
+  const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
         value={{
+          selectedRowData,
           setSelectedRowData,
           setCurrentView,
           homeTableState,
@@ -68,23 +69,22 @@ const createWorkflowNum = () =>
 
 const getMockWorkflowList = () => {
   requestCount++;
-  // simulate a new workflow only at each 3rd request:
-  if (requestCount % 3 == 0) {
+  // simulate a new workflow only at each 2nd request:
+  if (requestCount % 2 == 0) {
     workflowList.splice(0, 0, {
       name: 'argo-wrapper-workflow-' + createWorkflowNum(),
       wf_name: 'User Added WF Name ' + requestCount,
       uid: 'uid-' + requestCount,
-      phase: getMockPhase(requestCount),
+      phase: getMockPhase(requestCount/2),
       finishedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
       submittedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
     });
     rowCount++;
   }
   // simulate status change of some recent items:
-  if (rowCount % 5 == 0) {
-    // just some status that is not used in getMockPhase:
-    workflowList[2].phase = PHASES.Pending;
-    workflowList[3].phase = PHASES.Pending;
+  if (rowCount % 3 == 0) {
+    workflowList[1].phase = PHASES.Succeeded;
+    workflowList[2].phase = PHASES.Failed;
   }
   console.log('workflowList: ', workflowList);
   return workflowList;
@@ -99,7 +99,41 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(4000), ctx.json(getMockWorkflowList()));
+          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.post(
+        'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
+        (req, res, ctx) => {
+          const { argowrapperpath, workflow } = req.params;
+          console.log(argowrapperpath);
+          console.log(workflow);
+          return res(ctx.delay(800), ctx.text(`${workflow} retried sucessfully`));
+        }
+      ),
+    ],
+  },
+};
+
+export const MockedSuccessButFailedRetry = MockTemplate.bind({});
+MockedSuccessButFailedRetry.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          console.log(argowrapperpath);
+          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.post(
+        'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
+        (req, res, ctx) => {
+          const { argowrapperpath, workflow } = req.params;
+          console.log(argowrapperpath);
+          console.log(workflow);
+          return res(ctx.delay(800), ctx.status(500), ctx.text(`${workflow} retry failed`));
         }
       ),
     ],
