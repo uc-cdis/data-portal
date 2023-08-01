@@ -539,6 +539,7 @@ class Workspace extends React.Component {
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
       const isPayModelAboveLimit = this.state.payModel.current_pay_model?.request_status === 'above limit';
+      const isPaymodelNeededToLaunch = this.state.payModel.length > 0 && this.state.payModel.current_pay_model == null;
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -713,7 +714,7 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
-                  {this.state.payModel?.current_pay_model == null
+                  {isPaymodelNeededToLaunch
                     ? (
                       <Alert
                         description='Please Select a Paymodel in order to launch a workspace'
@@ -765,7 +766,7 @@ class Workspace extends React.Component {
                               (!!this.state.workspaceID
                               && this.state.workspaceID !== option.id)
                               || isPayModelAboveLimit
-                              || this.state.payModel?.current_pay_model == null
+                              || isPaymodelNeededToLaunch
                             }
                           />
                         );
