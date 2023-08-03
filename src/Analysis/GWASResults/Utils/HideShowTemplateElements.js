@@ -15,6 +15,7 @@ const HideShowTemplateElements = (currentView) => {
   };
 
   const toggleBackLink = () => {
+    // hide or show back button created in data-portal/src/Analysis/AnalysisApp.jsx:
     if (currentView === VIEWS.home) {
       setElementsDisplay(backLinkSelector, 'inline');
     } else {
