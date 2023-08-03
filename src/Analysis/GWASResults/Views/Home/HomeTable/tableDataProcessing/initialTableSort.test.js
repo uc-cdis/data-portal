@@ -1,6 +1,6 @@
 import initialTableSort from './initialTableSort';
 
-describe('sortObjectsByFinishedAt', () => {
+describe('initialTableSort tests', () => {
   it('should sort objects correctly', () => {
     const input = [
       { finishedAt: '2023-08-01T12:00:00Z' },
