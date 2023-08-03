@@ -1,6 +1,5 @@
 import initialTableSort from './initialTableSort';
 
-
 describe('sortObjectsByFinishedAt', () => {
   it('should sort objects correctly', () => {
     const input = [
@@ -42,9 +41,7 @@ describe('sortObjectsByFinishedAt', () => {
 
   it('should return the same array if array is empty', () => {
     const input = [];
-
     const sortedArray = initialTableSort(input);
-
     expect(sortedArray).toEqual(input);
   });
 });
