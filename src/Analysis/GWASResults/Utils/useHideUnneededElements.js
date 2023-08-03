@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 const useHideUnneededElements = () => {
   const selectorsToHide = [
     '.analysis-app__description',
-    '.back-link',
     '.analysis-app__title',
   ];
   useEffect(() => {
