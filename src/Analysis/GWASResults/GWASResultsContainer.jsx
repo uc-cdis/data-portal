@@ -14,6 +14,10 @@ const GWASResultsContainer = () => {
   const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
+  useEffect(() => {
+    HideShowTemplateElements(currentView);
+  }, [currentView]);
+
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
@@ -28,10 +32,6 @@ const GWASResultsContainer = () => {
       return null;
     }
   };
-
-  useEffect(() => {
-    HideShowTemplateElements(currentView);
-  }, [currentView]);
 
   return (
     <div className='GWASResults'>

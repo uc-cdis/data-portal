@@ -5,27 +5,27 @@ const HideShowTemplateElements = (currentView) => {
     '.analysis-app__description',
     '.analysis-app__title',
   ];
+  const backLinkSelector = '.back-link';
 
   const setElementsDisplay = (selector, displayValue) => {
     document.querySelectorAll(selector).forEach((element) => {
       const temporaryElement = element;
       temporaryElement.style.display = displayValue;
     });
-  }
+  };
 
   const toggleBackLink = () => {
-    const backLinkSelector = '.back-link';
     if (currentView === VIEWS.home) {
       setElementsDisplay(backLinkSelector, 'inline');
-    }
-    else {
+    } else {
       setElementsDisplay(backLinkSelector, 'none');
     }
-  }
+  };
 
   selectorsToHide.forEach((selector) => {
     setElementsDisplay(selector, 'none');
   });
+
   toggleBackLink();
 };
 
