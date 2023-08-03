@@ -1,6 +1,6 @@
 import VIEWS from './ViewsEnumeration';
 
-const HideShowTemplateElements = (currentView) => {
+const HideShowElementsCreatedByOuterAnalysisApp = (currentView) => {
   const selectorsToHide = [
     '.analysis-app__description',
     '.analysis-app__title',
@@ -15,7 +15,6 @@ const HideShowTemplateElements = (currentView) => {
   };
 
   const toggleBackLink = () => {
-    // hide or show back button created in data-portal/src/Analysis/AnalysisApp.jsx:
     if (currentView === VIEWS.home) {
       setElementsDisplay(backLinkSelector, 'inline');
     } else {
@@ -30,4 +29,4 @@ const HideShowTemplateElements = (currentView) => {
   toggleBackLink();
 };
 
-export default HideShowTemplateElements;
+export default HideShowElementsCreatedByOuterAnalysisApp;

@@ -5,7 +5,7 @@ import Execution from './Views/Execution/Execution';
 import Input from './Views/Input/Input';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
-import HideShowTemplateElements from './Utils/HideShowTemplateElements';
+import HideShowElementsCreatedByOuterAnalysisApp from './Utils/HideShowElementsCreatedByOuterAnalysisApp';
 import InitialHomeTableState from './Views/Home/HomeTableState/InitialHomeTableState';
 import './GWASResultsContainer.css';
 
@@ -15,7 +15,7 @@ const GWASResultsContainer = () => {
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
   useEffect(() => {
-    HideShowTemplateElements(currentView);
+    HideShowElementsCreatedByOuterAnalysisApp(currentView);
   }, [currentView]);
 
   const generateStep = () => {
