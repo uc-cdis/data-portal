@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
@@ -14,7 +14,6 @@ const GWASResultsContainer = () => {
   const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
-  useHideUnneededElements();
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
@@ -29,6 +28,10 @@ const GWASResultsContainer = () => {
       return null;
     }
   };
+
+  useEffect(() => {
+   useHideUnneededElements(currentView)
+  },[currentView]);
 
   return (
     <div className='GWASResults'>
