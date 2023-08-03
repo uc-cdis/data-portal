@@ -329,8 +329,7 @@ class Workspace extends React.Component {
         path: `${workspaceTerminateUrl}`,
         method: 'POST',
       }).then(() => {
-        this.state.initiatePayModelCallUponTermination = true;
-        this.checkWorkspaceStatus();
+        this.checkWorkspaceStatus({ triggerPayModelCall: true });
       });
     });
   }
@@ -362,7 +361,7 @@ class Workspace extends React.Component {
     }
   }
 
-  checkWorkspaceStatus = async () => {
+  checkWorkspaceStatus = async (args) => {
     if (this.state.interval) {
       clearInterval(this.state.interval);
     }
@@ -372,8 +371,7 @@ class Workspace extends React.Component {
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
           let workspaceStatus = data.status;
-          if (this.state.initiatePayModelCallUponTermination && workspaceStatus === 'Not Found') {
-            this.state.initiatePayModelCallUponTermination = false;
+          if (args?.triggerPayModelCall && workspaceStatus === 'Not Found') {
             this.getWorkspacePayModel().then((payModelData) => {
               this.setState({
                 payModel: payModelData,
