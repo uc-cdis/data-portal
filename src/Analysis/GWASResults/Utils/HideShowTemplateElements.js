@@ -1,8 +1,6 @@
 import VIEWS from './ViewsEnumeration';
 
-
-
-const useHideUnneededElements = (currentView) => {
+const HideShowTemplateElements = (currentView) => {
   const selectorsToHide = [
     '.analysis-app__description',
     '.analysis-app__title',
@@ -31,4 +29,4 @@ const useHideUnneededElements = (currentView) => {
   toggleBackLink();
 };
 
-export default useHideUnneededElements;
+export default HideShowTemplateElements;
