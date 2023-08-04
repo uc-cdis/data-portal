@@ -4,10 +4,10 @@ import SharedContext from '../../../Utils/SharedContext';
 import DateForTable from '../../../Components/DateForTable/DateForTable';
 
 const subtractDates = (endDate, startDate) => {
-  let timestampEnd = Date.now();
-  if (endDate) {
-    timestampEnd = Date.parse(endDate);
+  if (!endDate) {
+    return '--';
   }
+  const timestampEnd = Date.parse(endDate);
   const timestampStart = Date.parse(startDate);
   const diffInMs = timestampEnd - timestampStart;
   // See here for more info:
