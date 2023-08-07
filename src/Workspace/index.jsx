@@ -328,7 +328,7 @@ class Workspace extends React.Component {
         path: `${workspaceTerminateUrl}`,
         method: 'POST',
       }).then(() => {
-        this.checkWorkspaceStatus();
+        this.checkWorkspaceStatus({ triggerPayModelCall: true });
       });
     });
   }
@@ -360,7 +360,7 @@ class Workspace extends React.Component {
     }
   }
 
-  checkWorkspaceStatus = async () => {
+  checkWorkspaceStatus = async (args) => {
     if (this.state.interval) {
       clearInterval(this.state.interval);
     }
@@ -370,6 +370,13 @@ class Workspace extends React.Component {
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
           let workspaceStatus = data.status;
+          if (args?.triggerPayModelCall && workspaceStatus === 'Not Found') {
+            this.getWorkspacePayModel().then((payModelData) => {
+              this.setState({
+                payModel: payModelData,
+              });
+            });
+          }
           if (workspaceLaunchStepsConfig && workspaceLaunchStepsConfig.currentStepsStatus === 'error') {
             workspaceStatus = 'Stopped';
           }
@@ -510,7 +517,7 @@ class Workspace extends React.Component {
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
       const isPayModelAboveLimit = this.state.payModel.current_pay_model?.request_status === 'above limit';
-      const isPaymodelNeededToLaunch = this.state.payModel.length > 0 && this.state.payModel.current_pay_model == null;
+      const isPaymodelNeededToLaunch = Object.keys(this.state.payModel).length > 0 && this.state.payModel.current_pay_model == null;
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
