@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import SharedContext from '../../../Utils/SharedContext';
-import DateForTable from '../../../SharedComponents/DateForTable/DateForTable';
+import DateForTable from '../../../Components/DateForTable/DateForTable';
 
-const subtractDates = (date1, date2) => {
-  const timestamp1 = Date.parse(date1);
-  const timestamp2 = Date.parse(date2);
-  const diffInMs = timestamp1 - timestamp2;
+const subtractDates = (endDate, startDate) => {
+  if (!endDate) {
+    return '--';
+  }
+  const timestampEnd = Date.parse(endDate);
+  const timestampStart = Date.parse(startDate);
+  const diffInMs = timestampEnd - timestampStart;
   // See here for more info:
   // https://momentjscom.readthedocs.io/en/latest/moment/08-durations/03-humanize/
   return moment.duration(diffInMs).humanize();
