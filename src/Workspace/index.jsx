@@ -59,7 +59,6 @@ class Workspace extends React.Component {
       workspaceID: null,
       hasWorkspaceAccess: true,
       workspaceIsFullpage: false,
-      initiatePayModelCallUponTermination: false,
       externalLoginOptions: [],
       payModel: {},
     };
