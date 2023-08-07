@@ -40,6 +40,31 @@
   padding-left: 10px;
   line-height: 1.3;
 }
+
+.GWASApp .dismissable-message.caution {
+  color: #996600;
+  border: 1px solid #FFE58F;
+  background: #FFFBE6;
+  position: relative;
+}
+
+.GWASApp .dismissable-message.caution > div:nth-child(2) {
+  margin-left: 40px;
+}
+.GWASApp .dismissable-message.caution > div:nth-child(2):before {
+  content: '⚠';
+  font-weight: bold;
+  height: 30px;
+  width: 30px;
+  margin-top: 3px;
+  position: absolute;
+  left: 10px;
+  padding-left: 10px;
+  line-height: 1.3;
+}
+
+
+
 .GWASApp .dismissable-message_close {
   cursor: pointer;
   float: right;

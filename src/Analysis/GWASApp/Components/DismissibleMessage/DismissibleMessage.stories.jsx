@@ -25,6 +25,11 @@ success.args = {
 export const warning = Template.bind({});
 warning.args = {
   title: 'Warning',
-
   messageType: 'warning',
+};
+
+export const caution = Template.bind({});
+caution.args = {
+  title: 'Caution',
+  messageType: 'caution',
 };
