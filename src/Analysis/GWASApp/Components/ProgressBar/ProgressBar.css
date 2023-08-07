@@ -40,6 +40,10 @@
   width: auto;
 }
 
+.progress-bar .ant-btn {
+  width: auto;
+}
+
 .progress-bar .ant-steps-item-container {
   border-bottom: 3px solid black;
 }

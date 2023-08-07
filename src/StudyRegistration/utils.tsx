@@ -33,26 +33,47 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
-    metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
+
+    // add all repository_study_ids as separate objects
+    if (updatedValues.repository_study_ids?.length > 0) {
+      const tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
+        repository_name: updatedValues.repository,
+        repository_study_ID: studyId,
+      }));
+      metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
+    }
+    metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.clinical_trials_study_ID = updatedValues.clinical_trials_id;
+    if (updatedValues.clinical_trials_id) {
+      metadataToUpdate.clinicaltrials_gov = updatedValues.clinicaltrials_gov;
+    }
+
     return metadataToUpdate;
   } catch (err) {
     throw new Error(`Request for query MDS failed: ${err}`);
   }
 };
 
-export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}):Promise<any> => {
+export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = { clinicaltrials_gov: {} }):Promise<any> => {
   const cedarCreationURL = `${cedarWrapperURL}/create`;
   let updatedMetadataToRegister = { ...metadataToRegister };
   updatedMetadataToRegister = await fetchWithCreds({
     path: cedarCreationURL,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ cedar_user_uuid: cedarUserUUID, metadata: metadataToRegister[STUDY_DATA_FIELD] }),
+    body: JSON.stringify({
+      cedar_user_uuid: cedarUserUUID,
+      metadata: {
+        appl_id: metadataToRegister[STUDY_DATA_FIELD].study_metadata.metadata_location.nih_application_id,
+        project_title: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_name,
+        study_description_summary: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_description,
+        clinicaltrials_gov: metadataToRegister.clinicaltrials_gov,
+      },
+    }),
   }).then(({ status, data }) => {
     if (status !== 201) {
       throw new Error(`Request for create CEDAR instance failed with status ${status}`);
     }
-    updatedMetadataToRegister[STUDY_DATA_FIELD].cedar_instance_id = data?.cedar_instance_id || '';
+    updatedMetadataToRegister[STUDY_DATA_FIELD].study_metadata.metadata_location.cedar_study_level_metadata_template_instance_ID = data?.cedar_instance_id || '';
     return Promise.resolve(updatedMetadataToRegister);
   })
     .catch((err) => { throw new Error(`Request for create CEDAR instance failed: ${err}`); });
