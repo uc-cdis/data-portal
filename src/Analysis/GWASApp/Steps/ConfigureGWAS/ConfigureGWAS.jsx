@@ -8,6 +8,8 @@ import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
+import ACTIONS from '../../Utils/StateManagement/Actions'
+import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -30,6 +32,7 @@ const ConfigureGWAS = ({
   const [successText, setSuccessText] = useState('');
 
   const [showError, setShowError] = useState(false);
+  const [showCaution, setShowCaution] = useState(false);
 
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
@@ -43,6 +46,20 @@ const ConfigureGWAS = ({
       setOpen(true);
     }
   }, [showModal]);
+
+  useEffect(()=>{
+    console.log("finalPopulationSizes",finalPopulationSizes)
+    finalPopulationSizes.forEach(obj=>{
+      console.log(obj)
+      if(obj?.size < minimumRecommendedCohortSize) {
+        dispatch({
+          type: ACTIONS.ADD_MESSAGE,
+          payload: MESSAGES.SMALL_COHORT_CAUTION,
+        });
+      }
+    })
+  },[finalPopulationSizes])
+
 
   const submitJob = useMutation(
     () => jobSubmission(
@@ -97,6 +114,7 @@ const ConfigureGWAS = ({
           messageType={'warning'}
         />
       )}
+
       {submitJob.isLoading && (
         <div className='GWASUI-spinnerContainer set-height'>
           <Spin />
@@ -143,7 +161,7 @@ ConfigureGWAS.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
-  finalPopulationSizes: PropTypes.array,
+  finalPopulationSizes: PropTypes.array.isRequired,
 };
 
 ConfigureGWAS.defaultProps = {
@@ -151,7 +169,6 @@ ConfigureGWAS.defaultProps = {
   mafThreshold: 0.01,
   imputationScore: 0.3,
   showModal: false,
-  finalPopulationSizes: [],
 };
 
 export default ConfigureGWAS;

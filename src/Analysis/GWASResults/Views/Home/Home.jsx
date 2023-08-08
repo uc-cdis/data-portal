@@ -16,6 +16,7 @@ const Home = () => {
   }
 
   const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
+
     refetchInterval,
   });
   if (status === 'loading') {
@@ -32,6 +33,7 @@ const Home = () => {
   if (status === 'error') {
     return <LoadingErrorMessage />;
   }
+  console.log(data);
   return (
     <React.Fragment>
       <ManageColumns />

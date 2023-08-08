@@ -22,7 +22,7 @@ export const isEnterOrSpace = (event) => event.key === 'Enter'
 
 // TODO - move this and function above to a .js file with a clearer name?
 export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
-
+export const minimumRecommendedCohortSize = 50000;
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
@@ -34,4 +34,9 @@ export const MESSAGES = {
       'None of the persons in the (remaining) population have a value for the selected concept',
     messageType: 'warning',
   },
+  SMALL_COHORT_CAUTION: {
+    title: 'The total cohort size is small and can lead to low statistical power or cause the GWAS model to fail. Use caution when submitting to minimize computational resource usage.',
+    messageType: 'caution',
+  }
+
 };
