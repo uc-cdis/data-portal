@@ -155,6 +155,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   height: 100%;
+  margin-bottom: 40px;
 }
 
 .data-request__fields {
@@ -162,12 +163,21 @@
 }
 
 .data-request__submit {
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
-.data-request__value-container {
+.data-request__value-container, .data-request__link-container {
   position: relative;
   left: -10%;
+  min-width: 400px;
+}
+
+.data-request__link-container {
+  margin: 0 1rem;
+}
+
+.data-request__link-container a {
+  margin-left: calc(20% + 10px);
 }
 
 .data-request__multi-value-row {
@@ -184,7 +194,6 @@
 .data-request__multi-value-values-row {
   display: flex;
   flex-flow: wrap;
-  min-width: 400px;
   max-height: 75px;
   border-color: #d9d9d9 #ccc #b3b3b3;
   border-radius: 4px;

@@ -22,6 +22,12 @@
   justify-content: space-between;
 }
 
+.explorer-visualization__request-access-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .explorer-visualization__view {
   position: relative;
 }
