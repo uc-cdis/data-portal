@@ -1,0 +1,98 @@
+.attrition-table .bar-chart-icon {
+  margin: 0 auto;
+}
+
+.attrition-table .ant-collapse-header {
+  background: #cfdbe6;
+}
+
+.attrition-table .ant-collapse-content-box {
+  padding: 0;
+  overflow-y: auto;
+  max-height: 300px;
+  position: static;
+}
+
+.attrition-table .ant-collapse-expand-icon svg {
+  display: none;
+}
+
+.attrition-table .ant-collapse-expand-icon {
+  background: #2e77b8;
+  border-radius: 16px;
+  color: white;
+  height: 18px;
+  width: 18px;
+  margin: 3px 10px 0;
+  text-align: center;
+}
+
+.attrition-table .ant-collapse-header .ant-collapse-expand-icon:before {
+  content: '\2303';
+  display: block;
+  font-size: 16px;
+  transition: all 0.1s ease-in-out;
+  margin-top: -1px;
+}
+
+.attrition-table
+.ant-collapse-header[aria-expanded='true']
+.ant-collapse-expand-icon:before {
+  margin-top: -1px;
+}
+
+.attrition-table
+.ant-collapse-header[aria-expanded='false']
+.ant-collapse-expand-icon:before {
+  transform: rotate(180deg);
+  transform-origin: 7px 9px;
+  margin: 1px 2px;
+}
+
+.attrition-table table tr {
+  border-top: 1px solid #e2e2e3;
+  height: 32px;
+}
+
+.attrition-table table tr:nth-child(2n) {
+  background-color: #fafafb;
+}
+
+.attrition-table table {
+  width: 100%;
+  padding: 0 16px;
+}
+
+.attrition-table table th,
+.attrition-table table td {
+  text-align: left;
+  padding: 0 16px;
+}
+
+.attrition-table table thead {
+  background-color: #e9eef2;
+  height: 40px;
+}
+
+.attrition-table .row-type {
+  text-transform: capitalize;
+}
+
+.attrition-table table .attrition-table--leftpad {
+  padding-left: 26px;
+}
+.attrition-table table .attrition-table--chart {
+  text-align: center;
+}
+.attrition-table table .attrition-table--rightborder {
+  border-right: 2px solid #e2e2e3;
+  padding-right: 32px;
+}
+
+.attrition-table--w5 {
+  width: 5%;
+}
+
+.attrition-table--w15 {
+  width: 15%;
+}
