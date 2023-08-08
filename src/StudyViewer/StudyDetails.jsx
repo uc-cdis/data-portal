@@ -405,7 +405,7 @@ class StudyDetails extends React.Component {
                      <div className='h3-typo'>{this.getLabel(k)}</div>
                      <Paragraph>
                        {/* strips out all html tags except br, strong, table, tr, td, th */}
-                       {parse(v.replace(/(<(?!(br\/?>)|(\/?strong>)|(\/?table>)|(\/?tr>)|(\/?td>|(\/?th>))[^>]+>)/ig, ''))}
+                       {parse(v.replace(/(<(?!(br\/?>)|(\/?strong>)|(\/?table>)|(\/?tr>)|(\/?td>|(\/?th>)))[^>]+>)/ig, ''))}
                      </Paragraph>
                    </div>
                  )))}
