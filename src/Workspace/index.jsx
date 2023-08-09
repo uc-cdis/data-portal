@@ -258,7 +258,7 @@ class Workspace extends React.Component {
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      workspaceLaunchStepsConfig.steps[2].description = 'In progress \n ';
       const cs = workspaceStatusData.containerStates;
       console.log('container status length:' + cs.length);
 
