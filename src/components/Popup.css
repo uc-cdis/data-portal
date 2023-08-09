@@ -62,9 +62,9 @@
 .popup__foot {
   width: 100%;
   padding: 0 30px 40px 30px;
-  margin-bottom: 40px;
+  margin: 40px 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 @media screen and (max-width: 1090px) {
@@ -78,11 +78,13 @@
 
 .popup__left-foot {
   display: flex;
+  margin-right: 20px;
 }
 
 @media screen and (max-width: 1090px) {
   .popup__left-foot {
     flex-flow: column;
+    margin-right: 0;
   }
 }
 

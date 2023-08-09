@@ -3,6 +3,7 @@ import { PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 type FetchProjectsThunk = createAsyncThunk;
 
 export type CreateParams = {
+  isAdmin: boolean,
   user_id: number,
   name: string,
   description: string,

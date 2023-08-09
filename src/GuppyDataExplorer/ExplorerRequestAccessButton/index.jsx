@@ -3,20 +3,17 @@ import Button from '../../gen3-ui-component/components/Button';
 
 /**
  * @typedef {Object} ExplorerRequestAccessButtonProps
- * @property {string} getAccessButtonLink
+ * @property {function} onClick
  * @property {string} tooltipText
  */
 
 /** @param {ExplorerRequestAccessButtonProps} props */
-function ExplorerRequestAccessButton({ getAccessButtonLink, tooltipText }) {
+function ExplorerRequestAccessButton({ onClick, tooltipText }) {
   return (
     <Button
       buttonType='secondary'
-      enabled={!!getAccessButtonLink}
       label='Request Access'
-      onClick={() => {
-        if (getAccessButtonLink !== undefined) window.open(getAccessButtonLink);
-      }}
+      onClick={(e) => onClick(e)}
       rightIcon='key'
       tooltipEnabled={!!tooltipText}
       tooltipText={tooltipText}

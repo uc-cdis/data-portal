@@ -11,10 +11,13 @@ import FilterSetOpenForm from "../GuppyDataExplorer/ExplorerFilterSetForms/Filte
 import ViewFilterDetail from "../GuppyDataExplorer/ExplorerFilterDisplay/ViewFilterDetail";
 import Button from "../gen3-ui-component/components/Button";
 import IconComponent from '../components/Icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Tooltip from 'rc-tooltip';
 import dictIcons from '../img/icons/index';
 import { useState } from "react";
 import { fetchWithToken } from '../redux/explorer/filterSetsAPI';
 import * as Yup from 'yup';
+import './create.css'
 import './DataRequests.css';
 
 function mapPropsToState(state) {
@@ -37,6 +40,21 @@ let schema = Yup.object().shape({
     .required('Must have Filter Sets')
 });
 
+let adminSchema = Yup.object().shape({
+  user_id: Yup.number().required('User Id is a required field'),
+  name: Yup.string().required('Project Name is a required field'),
+  institution: Yup.string().required('Institution is a required field'),
+  description: Yup.string().required('Description is a required field'),
+  associated_users_emails: Yup.array()
+    .of(Yup.string().email())
+    .min(1, 'Must have associated users')
+    .required('Must have associated users'),
+  filter_set_ids: Yup.array()
+    .of(Yup.number())
+    .min(1, 'Must have Filter Sets')
+    .required('Must have Filter Sets')
+});
+
 function errorObjectForField(errors, touched, fieldName) {
   return touched[fieldName] && errors[fieldName] ?
     { isError: true, message: errors[fieldName] } : 
@@ -45,11 +63,17 @@ function errorObjectForField(errors, touched, fieldName) {
 
 function DataRequestCreate({ isCreatePending }) {
   let dispatch = useAppDispatch();
+  const {
+    getAccessButtonLink,
+  } = useAppSelector((state) => state.explorer.config);
   let { 
+      is_admin,
+      authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] },
       email,
       additional_info: { institution },
-      user_id,
+      user_id: currentUserId,
   } = useAppSelector((state) => state.user);
+  let isAdmin = is_admin || !!serviceAccessMethod;
   let filterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
 	let navigate = useNavigate();
 	let goBack = () => {
@@ -61,26 +85,33 @@ function DataRequestCreate({ isCreatePending }) {
   let [viewFilter, setViewFilter] = useState(null);
   let [createRequestError, setRequestCreateError] = useState({ isError: false, message: '' });
 
+  let initialValues = {
+    name: "",
+    description: "",
+    institution: institution ?? "",
+    associated_users_emails: email ? [email] : [],
+    filter_set_ids: [],
+  };
+
   return <div className={`data-requests ${isCreatePending ? 'data-requests--create-pending' : ''}`}>
     {isCreatePending && <div className="create-pending-overlay"></div>}
     <button className="back-button" onClick={goBack}>
       <IconComponent dictIcons={dictIcons} iconName='back' height='12px' />
     </button>	
     <Formik
-      validationSchema={schema}
-      initialValues={{
-          name: "",
-          description: "",
-          institution: institution ?? "",
-          associated_users_emails: email ? [email] : [],
-          filter_set_ids: [],
-      }}
+      validationSchema={isAdmin ? adminSchema : schema}
+      initialValues={isAdmin ? { user_id: '', ...initialValues } : initialValues}
       onSubmit={async (values) => {
-        let createParams = { user_id, ...values };
-        let createRequest = /** @type {import('../redux/dataRequest/types').CreateRequest} */ (dispatch(createProject(createParams)));
+        let createParams = isAdmin ? 
+          { ...values, isAdmin, user_id: values.user_id } : 
+          { ...values, isAdmin, user_id: currentUserId };
+        let createRequest =
+          /** @type {import('../redux/dataRequest/types').CreateRequest} */ 
+          (dispatch(createProject(createParams)));
 
         createRequest.then((action) => {
           if (!action.payload.isError) {
+            window.open(getAccessButtonLink);
             navigate('/requests');
             return;
           }
@@ -96,6 +127,17 @@ function DataRequestCreate({ isCreatePending }) {
               <h2>Create Data Request</h2>
             </header>
             <div className="data-request__fields">
+              {isAdmin && 
+                <Field name="user_id">
+                  {({ field, meta }) => 
+                    <SimpleInputField
+                      className="data-request__value-container"
+                      label="User Id"
+                      input={<input type="text" {...field} />}
+                      error={errorObjectForField(errors, touched, 'user_id')}
+                    />}
+                </Field>
+              }
               <Field name="name">
                 {({ field, meta }) => 
                   <SimpleInputField
@@ -158,7 +200,13 @@ function DataRequestCreate({ isCreatePending }) {
                                 />
                               </div>
                               <div className="data-request__multi-value-row">
-                                <Button buttonType="secondary" label="Add Email" onClick={addEmail} />
+                                <Button buttonType="secondary" label="Add Email" className='data-request__add-email' onClick={addEmail} />
+                                <Tooltip
+                                  placement='top'
+                                  overlay='Email address must be backed by a Google account'
+                                >
+                                  <FontAwesomeIcon icon='circle-info' className='data-request__add-email-icon' />
+                                </Tooltip>
                               </div>
                           </>)}
                     </MultiValueField>;
@@ -217,6 +265,9 @@ function DataRequestCreate({ isCreatePending }) {
                     </MultiValueField>;
                   }}
               </FieldArray>
+              <div className="data-request__link-container">
+                <a target="_blank" rel="noopener noreferrer" href={getAccessButtonLink}>View and complete request form document</a>
+              </div>
             </div>
             <Button submit={true} className="data-request__submit" label="Create" />
             {createRequestError.isError && <span className="data-request__request-error">{createRequestError.message}</span>}

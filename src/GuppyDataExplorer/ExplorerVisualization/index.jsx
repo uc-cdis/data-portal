@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
@@ -9,6 +9,7 @@ import { components } from '../../params';
 import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
+import Popup from '../../components/Popup';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerFilterSetWorkspace from '../ExplorerFilterSetWorkspace';
 import ExplorerTable from '../ExplorerTable';
@@ -168,18 +169,19 @@ function ExplorerVisualization({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isRequestAccessModalOpen, setRequestAccessModalOpen] = useState(false);
 
   const {
     buttonConfig,
     chartConfig,
     filterConfig,
-    getAccessButtonLink,
     guppyConfig,
     hideGetAccessButton = false,
     patientIdsConfig,
     survivalAnalysisConfig,
     tableConfig,
   } = useAppSelector((state) => state.explorer.config);
+
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
 
@@ -259,16 +261,33 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='explorer-visualization__button-group'>
-          {accessibleCount < totalCount && !hideGetAccessButton && (
+          {true && !hideGetAccessButton && (<>
             <ExplorerRequestAccessButton
-              getAccessButtonLink={getAccessButtonLink}
+              onClick={() => setRequestAccessModalOpen(true)}
               tooltipText={
                 accessibleCount === 0
                   ? 'You do not have permissions to view line-level data.'
                   : 'You have only limited access to line-level data.'
               }
             />
-          )}
+            {isRequestAccessModalOpen && 
+              <Popup
+                onClose={() => setRequestAccessModalOpen(false)}
+                leftButtons={[{
+                  caption: 'Back to Explore',
+                  fn: () => setRequestAccessModalOpen(false)
+                }]}
+                rightButtons={[{
+                  caption: 'Continue to Request',
+                  fn: () => navigate('/requests/create')
+                }]}
+              >
+                <div className='explorer-visualization__request-access-modal'>
+                  Be sure to save the filter sets you want to use for your data request before continuing.
+                </div>
+              </Popup>
+            }
+          </>)}
           {patientIdsConfig?.export && (
             <ExplorerExploreExternalButton filter={filter} />
           )}

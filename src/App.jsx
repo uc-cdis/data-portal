@@ -218,21 +218,21 @@ function App() {
         >
           <Route index element={
             <ProtectedContent preload={({ state }) => {
-                if (searchParams.get('admin') === 'true') {
-                  let { 
-                    is_admin,
-                    authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
-                  } = state.user;
-                  let isAdmin = is_admin || !!serviceAccessMethod;
-                  if (isAdmin && !state.dataRequest.isAdminActive) {
-                    dispatch(toggleAdminActive());
-                  }
-                  return Promise.all([
-                    dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
-                    dispatch(fetchProjectStates())
-                  ]);
+              if (searchParams.get('admin') === 'true') {
+                let { 
+                  is_admin,
+                  authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
+                } = state.user;
+                let isAdmin = is_admin || !!serviceAccessMethod;
+                if (isAdmin && !state.dataRequest.isAdminActive) {
+                  dispatch(toggleAdminActive());
                 }
-                return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
+                return Promise.all([
+                  dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
+                  dispatch(fetchProjectStates())
+                ]);
+              }
+              return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
             }}>
               <DataRequests />
             </ProtectedContent>
