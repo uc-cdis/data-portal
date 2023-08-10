@@ -59,12 +59,19 @@ export const createProject = createAsyncThunk(
     'dataRequest/createProject',
     /** @param {import('./types').CreateParams} createParams */
     async (createParams, { getState, rejectWithValue }) => {  
-
+      let createBody = {
+        user_id: createParams.user_id,
+        name: createParams.name,
+        description:createParams.description,
+        institution: createParams.institution,
+        associated_users_emails: createParams.associated_users_emails,
+        filter_set_ids: createParams.filter_set_ids,
+      };
       try {
           const { data, response, status } = await fetchWithCreds({
               path: createParams.isAdmin ? '/amanuensis/admin/projects' : '/amanuensis/projects',
               method: 'POST',
-              body: JSON.stringify(createParams)
+              body: JSON.stringify(createBody)
           });
         
           if (statusCategory(status) !== '2XX') {
