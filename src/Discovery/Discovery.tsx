@@ -711,7 +711,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               </Collapse>
             </Space>
           </div>
-        ) : (
+        ) : (config.tagCategories && config.tagCategories.length > 0) && (
           <DiscoveryTagViewer
             config={config}
             studies={props.studies}
