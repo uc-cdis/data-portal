@@ -273,7 +273,8 @@ class Workspace extends React.Component {
           //Display Detailed Pod Statuses
           for (let i = 0; i < cs.length; i++)
           {
-            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(' \n Container ' + i + ' Ready: ' + cs[i].ready);
+            let j = i+1
+            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(' \n Container ' + j + ' Ready: ' + cs[i].ready);
           }
         }
       }
