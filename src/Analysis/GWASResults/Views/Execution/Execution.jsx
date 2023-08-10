@@ -94,7 +94,7 @@ const Execution = () => {
                 <br />
                 template: <span>{item?.step_template}</span>
                 <br />
-                error message: {determineEmptyErrorMessage(item?.error_interpreted)}
+                error message: <span>{determineEmptyErrorMessage(item?.error_interpreted)}</span>
               </p>
               <br />
             </React.Fragment>

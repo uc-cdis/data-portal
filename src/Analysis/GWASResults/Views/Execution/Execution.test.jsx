@@ -68,14 +68,14 @@ describe('Execution', () => {
           step_name: 'Step 1',
           step_template: 'Step 1 Template',
           error_message: null,
-          error_interpreted: 'Step 1 Error'
+          error_interpreted: 'Step 1 Error interpreted'
         },
         {
           name: 'Step 2',
           step_name: 'Step 2',
           step_template: 'Step 2 Template',
           error_message: 'Step 2 Error',
-          error_interpreted: 'Step 2 Error'
+          error_interpreted: 'Step 2 Error interpreted'
         },
       ],
     });
@@ -91,7 +91,7 @@ describe('Execution', () => {
       expect(screen.getByText('Step 1 Template')).toBeInTheDocument();
       expect(screen.getByText('Step 2')).toBeInTheDocument();
       expect(screen.getByText('Step 2 Template')).toBeInTheDocument();
-      expect(screen.getByText('Step 2 Error')).toBeInTheDocument();
+      expect(screen.getByText('Step 2 Error interpreted')).toBeInTheDocument();
     });
   });
 });
