@@ -221,8 +221,11 @@ function App() {
               if (searchParams.get('admin') === 'true') {
                 let { 
                   is_admin,
-                  authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] }
+                  authz: { '/services/amanuensis': serviceAccessMethods }
                 } = state.user;
+                let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+                  serviceAccessMethods[0]?.method :
+                  undefined;
                 let isAdmin = is_admin || !!serviceAccessMethod;
                 if (isAdmin && !state.dataRequest.isAdminActive) {
                   dispatch(toggleAdminActive());

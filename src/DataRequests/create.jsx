@@ -68,11 +68,14 @@ function DataRequestCreate({ isCreatePending }) {
   } = useAppSelector((state) => state.explorer.config);
   let { 
       is_admin,
-      authz: { '/services/amanuensis': [{ method: serviceAccessMethod }] },
+      authz: { '/services/amanuensis': serviceAccessMethods },
       email,
       additional_info: { institution },
       user_id: currentUserId,
   } = useAppSelector((state) => state.user);
+  let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+    serviceAccessMethods[0]?.method :
+    undefined;
   let isAdmin = is_admin || !!serviceAccessMethod;
   let filterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
 	let navigate = useNavigate();
