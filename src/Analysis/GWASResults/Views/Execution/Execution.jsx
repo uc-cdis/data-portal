@@ -89,7 +89,7 @@ const Execution = () => {
             <React.Fragment key={item?.name}>
               <p>
                 <strong>
-                Name: <span>{item?.name}</span>
+                Name: <span>{item?.step_name}</span>
                 </strong>
                 <br />
                 step template: <span>{item?.step_template}</span>
