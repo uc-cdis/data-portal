@@ -36,14 +36,14 @@ const MockedFailureJSON = [
     step_name: 'attrition-table',
     step_template: 'get-attrition-table',
     error_message: 'exit code 1',
-    error_interpreted: "Timeout occurred while fetching attrition table information."
+    error_interpreted: 'Timeout occurred while fetching attrition table information.'
   },
   {
     name: 'gwas-workflow-7875715375.get-pheno-csv',
     step_name: 'pheno-csv',
     step_template: 'get-pheno-csv',
     error_message: 'exit code 1',
-    error_interpreted: ""
+    error_interpreted: ''
   },
 ];
 
