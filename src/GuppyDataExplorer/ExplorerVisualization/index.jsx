@@ -261,7 +261,7 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='explorer-visualization__button-group'>
-          {true && !hideGetAccessButton && (<>
+          {accessibleCount < totalCount && !hideGetAccessButton && (<>
             <ExplorerRequestAccessButton
               onClick={() => setRequestAccessModalOpen(true)}
               tooltipText={
