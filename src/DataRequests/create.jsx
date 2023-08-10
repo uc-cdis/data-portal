@@ -103,7 +103,7 @@ function DataRequestCreate({ isCreatePending }) {
     </button>	
     <Formik
       validationSchema={isAdmin ? adminSchema : schema}
-      initialValues={isAdmin ? { user_id: '', ...initialValues } : initialValues}
+      initialValues={isAdmin ? { user_id: currentUserId, ...initialValues } : initialValues}
       onSubmit={async (values) => {
         let createParams = isAdmin ? 
           { ...values, isAdmin, user_id: values.user_id } : 
