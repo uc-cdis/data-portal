@@ -54,6 +54,17 @@ const Execution = () => {
     return <strong>Issue with workflow phase and no data returned</strong>;
   };
 
+  const determineEmptyErrorMessage = (error_interpreted) => {
+    if (
+      error_interpreted === ""
+    ) {
+      return <span>
+        Please refer to the <a href="https://va.data-commons.org/dashboard/Public/documentation/index.html">Documentation Page</a> to contact us with any questions on how you may solve this issue.
+      </span>;
+    }
+    return <span>error_interpreted</span>;
+  };
+
   return (
     <React.Fragment>
       <DetailPageHeader pageTitle={'Execution Details'} />
@@ -78,12 +89,12 @@ const Execution = () => {
             <React.Fragment key={item?.name}>
               <p>
                 <strong>
-                  Name: <span>{item?.name}</span>
+                Name: <span>{item?.name}</span>
                 </strong>
                 <br />
-                step_template: <span>{item?.step_template}</span>
+                step template: <span>{item?.step_template}</span>
                 <br />
-                error_message: <span>{item?.error_message}</span>
+                error message: {determineEmptyErrorMessage(item?.error_interpreted)}
               </p>
               <br />
             </React.Fragment>
