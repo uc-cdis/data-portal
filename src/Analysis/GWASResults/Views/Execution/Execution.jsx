@@ -62,7 +62,7 @@ const Execution = () => {
         Please refer to the <a href="https://va.data-commons.org/dashboard/Public/documentation/index.html">Documentation Page</a> to contact us with any questions on how you may solve this issue.
       </span>;
     }
-    return <span>error_interpreted</span>;
+    return error_interpreted;
   };
 
   return (
@@ -89,10 +89,10 @@ const Execution = () => {
             <React.Fragment key={item?.name}>
               <p>
                 <strong>
-                Name: <span>{item?.step_name}</span>
+                Step Name: <span>{item?.step_name}</span>
                 </strong>
                 <br />
-                step template: <span>{item?.step_template}</span>
+                template: <span>{item?.step_template}</span>
                 <br />
                 error message: {determineEmptyErrorMessage(item?.error_interpreted)}
               </p>
