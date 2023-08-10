@@ -102,7 +102,7 @@ const accessDescriptor = (resource: DiscoveryResource) => {
       <Alert
         className='discovery-modal__access-alert'
         type='success'
-        message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+        message={<React.Fragment><UnlockOutlined /> You have access to this data.</React.Fragment>}
       />
     );
   }
@@ -111,7 +111,7 @@ const accessDescriptor = (resource: DiscoveryResource) => {
       <Alert
         className='discovery-modal__access-alert'
         type='warning'
-        message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+        message={<React.Fragment>You do not have access to this data.</React.Fragment>}
       />
     );
   }
@@ -119,7 +119,7 @@ const accessDescriptor = (resource: DiscoveryResource) => {
     <Alert
       className='discovery-modal__access-alert'
       type='info'
-      message={<React.Fragment>This study does not include data access authorization details.</React.Fragment>}
+      message={<React.Fragment>This does not include data access authorization details.</React.Fragment>}
     />
   );
 };
@@ -401,14 +401,14 @@ const DiscoveryDetails = (props: Props) => {
                       <Alert
                         className='discovery-modal__access-alert'
                         type='success'
-                        message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+                        message={<React.Fragment><UnlockOutlined /> You have access to this data.</React.Fragment>}
                       />
                     )
                     : (
                       <Alert
                         className='discovery-modal__access-alert'
                         type='warning'
-                        message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+                        message={<React.Fragment>You do not have access to this data.</React.Fragment>}
                       />
                     )
                   )}
