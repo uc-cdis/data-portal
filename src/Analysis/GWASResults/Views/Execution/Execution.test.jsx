@@ -68,14 +68,14 @@ describe('Execution', () => {
           step_name: 'Step 1',
           step_template: 'Step 1 Template',
           error_message: null,
-          error_interpreted: 'Step 1 Error interpreted'
+          error_interpreted: 'Step 1 Error interpreted',
         },
         {
           name: 'Step 2',
           step_name: 'Step 2',
           step_template: 'Step 2 Template',
           error_message: 'Step 2 Error',
-          error_interpreted: 'Step 2 Error interpreted'
+          error_interpreted: 'Step 2 Error interpreted',
         },
       ],
     });

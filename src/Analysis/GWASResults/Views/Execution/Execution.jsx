@@ -54,15 +54,17 @@ const Execution = () => {
     return <strong>Issue with workflow phase and no data returned</strong>;
   };
 
-  const determineEmptyErrorMessage = (error_interpreted) => {
+  const determineEmptyErrorMessage = (errorInterpreted) => {
     if (
-      error_interpreted === ""
+      errorInterpreted === ''
     ) {
-      return <span>
-        Please refer to the <a href="https://va.data-commons.org/dashboard/Public/documentation/index.html">Documentation Page</a> to contact us with any questions on how you may solve this issue.
-      </span>;
+      return (
+        <span>
+        Please refer to the <a href='https://va.data-commons.org/dashboard/Public/documentation/index.html'>Documentation Page</a> to contact us with any questions on how you may solve this issue.
+        </span>
+      );
     }
-    return error_interpreted;
+    return errorInterpreted;
   };
 
   return (
