@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import parse from 'html-react-parser';
 import _ from 'lodash';
 import {
   Space, Typography, Descriptions, message, Divider, Alert, Modal, List,
@@ -404,8 +403,7 @@ class StudyDetails extends React.Component {
                    <div key={k}>
                      <div className='h3-typo'>{this.getLabel(k)}</div>
                      <Paragraph>
-                       {/* strips out all html tags except br, strong, table, tr, td, th */}
-                       {parse(v.replace(/(<(?!(br\/?>)|(\/?strong>)|(\/?table.*>)|(\/?tr>)|(\/?td>|(\/?th>)))[^>]+>)/ig, ''))}
+                       {v}
                      </Paragraph>
                    </div>
                  )))}
