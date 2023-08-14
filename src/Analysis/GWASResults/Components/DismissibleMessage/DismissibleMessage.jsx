@@ -13,7 +13,6 @@ const DismissibleMessage = ({
   title = 'Placeholder Title',
   description = 'placeholder description',
   messageType = 'success',
-  dismissMessage = null,
 }) => {
   const [open, setOpen] = useState(true);
 

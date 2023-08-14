@@ -7,7 +7,7 @@ import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import DismissibleMessage from './../../../Components/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../Components/DismissibleMessage/DismissibleMessage';
 
 const JobDetails = ({ attritionTableData }) => {
   const { selectedRowData } = useContext(SharedContext);
@@ -117,8 +117,8 @@ const JobDetails = ({ attritionTableData }) => {
     };
   };
   const { caseSize, controlSize, totalSize } = getTotalSizes();
-  const displayTotalSizes = () => {
-    return controlSize === null ? (
+  const displayTotalSizes = () =>
+    controlSize === null ? (
       <div className='GWASResults-flex-row'>
         <div>Total Size</div>
         <div>{totalSize || '---'}</div>
@@ -139,7 +139,6 @@ const JobDetails = ({ attritionTableData }) => {
         </div>
       </React.Fragment>
     );
-  };
 
   const showCautionMessages = () => {
     if (caseSize < minimumRecommendedCohortSize && controlSize === null) {
@@ -162,13 +161,13 @@ const JobDetails = ({ attritionTableData }) => {
           Use caution when submitting to minimize computational resource usage.`}
         />
       );
+    } else {
+      return null;
     }
   };
 
-  console.log('caseSize', caseSize);
-  console.log('controlSize', controlSize);
   return (
-    <>
+    <React.Fragment>
       {showCautionMessages()}
       <section data-testid='job-details' className='job-details'>
         <h2 className='job-details-title'>{data.wf_name}</h2>
@@ -205,7 +204,7 @@ const JobDetails = ({ attritionTableData }) => {
           </div>
         </div>
       </section>
-    </>
+    </React.Fragment>
   );
 };
 
