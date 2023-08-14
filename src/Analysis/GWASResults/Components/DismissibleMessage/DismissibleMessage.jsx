@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './DismissibleMessage.css';
 
-export const isEnterOrSpace = (event) =>
-  event.key === 'Enter' ||
-  event.key === ' ' ||
-  event.key === 'Spacebar' ||
-  event.keycode === '32' ||
-  event.keycode === '13';
+export const isEnterOrSpace = (event) => event.key === 'Enter'
+  || event.key === ' '
+  || event.key === 'Spacebar'
+  || event.keycode === '32'
+  || event.keycode === '13';
 
 const DismissibleMessage = ({
   title = 'Placeholder Title',
