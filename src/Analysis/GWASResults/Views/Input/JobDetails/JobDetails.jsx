@@ -44,12 +44,12 @@ const JobDetails = ({ attritionTableData }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -60,7 +60,7 @@ const JobDetails = ({ attritionTableData }) => {
   const removeOutcomeFromVariablesData = (variablesArray) => {
     const outcome = JSON.parse(getParameterData('outcome'));
     const filteredResult = variablesArray.filter(
-      (obj) => !isEqual(obj, outcome),
+      (obj) => !isEqual(obj, outcome)
     );
     return filteredResult;
   };
@@ -69,7 +69,7 @@ const JobDetails = ({ attritionTableData }) => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
       const covariatesArray = removeOutcomeFromVariablesData(
-        JSON.parse(variablesData),
+        JSON.parse(variablesData)
       );
       return covariatesArray;
     }
@@ -96,15 +96,16 @@ const JobDetails = ({ attritionTableData }) => {
   const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
     const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
     const datum = lastRowOfData?.concept_breakdown.find(
-      (obj) => obj.concept_value_name === hareAncestry,
+      (obj) => obj.concept_value_name === hareAncestry
     );
     return datum?.persons_in_cohort_with_value || 'Unexpected Error';
   };
 
   const getTotalSizes = () => {
     const hareAncestry = getParameterData('hare_population');
-    const caseSize = attritionTableData[0]?.rows
-      && findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
+    const caseSize =
+      attritionTableData[0]?.rows &&
+      findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
     const controlSize = attritionTableData[1]?.rows
       ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
       : null;
@@ -116,27 +117,28 @@ const JobDetails = ({ attritionTableData }) => {
     };
   };
   const { caseSize, controlSize, totalSize } = getTotalSizes();
-  const displayTotalSizes = () => (controlSize === null ? (
-    <div className='GWASResults-flex-row'>
-      <div>Total Size</div>
-      <div>{totalSize || '---'}</div>
-    </div>
-  ) : (
-    <React.Fragment>
-      <div className='GWASResults-flex-row'>
-        <div>Control Size</div>
-        <div>{controlSize}</div>
-      </div>
-      <div className='GWASResults-flex-row'>
-        <div>Case Size</div>
-        <div>{caseSize}</div>
-      </div>
+  const displayTotalSizes = () =>
+    controlSize === null ? (
       <div className='GWASResults-flex-row'>
         <div>Total Size</div>
-        <div>{totalSize}</div>
+        <div>{totalSize || '---'}</div>
       </div>
-    </React.Fragment>
-  ));
+    ) : (
+      <React.Fragment>
+        <div className='GWASResults-flex-row'>
+          <div>Control Size</div>
+          <div>{controlSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Case Size</div>
+          <div>{caseSize}</div>
+        </div>
+        <div className='GWASResults-flex-row'>
+          <div>Total Size</div>
+          <div>{totalSize}</div>
+        </div>
+      </React.Fragment>
+    );
 
   const showCautionMessages = () => {
     if (caseSize < minimumRecommendedCohortSize && controlSize === null) {
@@ -147,9 +149,10 @@ const JobDetails = ({ attritionTableData }) => {
           Use caution when submitting to minimize computational resource usage.`}
         />
       );
-    } if (
-      caseSize < minimumRecommendedCohortSize
-      || (controlSize !== null && controlSize < minimumRecommendedCohortSize)
+    }
+    if (
+      caseSize < minimumRecommendedCohortSize ||
+      (controlSize !== null && controlSize < minimumRecommendedCohortSize)
     ) {
       return (
         <DismissibleMessage
@@ -162,6 +165,8 @@ const JobDetails = ({ attritionTableData }) => {
     }
     return null;
   };
+  console.log('caseSize', caseSize);
+  console.log('controlSize', controlSize);
 
   return (
     <React.Fragment>
