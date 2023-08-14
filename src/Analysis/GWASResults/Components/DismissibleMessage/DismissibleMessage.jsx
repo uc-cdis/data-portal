@@ -48,13 +48,11 @@ DismissibleMessage.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   messageType: PropTypes.string,
-  dismissMessage: PropTypes.func,
 };
 
 DismissibleMessage.defaultProps = {
   description: '',
   messageType: 'success',
-  dismissMessage: null,
 };
 
 export default DismissibleMessage;
