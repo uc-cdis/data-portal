@@ -7,11 +7,13 @@ import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import DismissibleMessage from './../../../Components/DismissibleMessage/DismissibleMessage';
 
 const JobDetails = ({ attritionTableData }) => {
   const { selectedRowData } = useContext(SharedContext);
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
+  const minimumRecommendedCohortSize = 1000;
 
   const fetchData = async () => {
     const res = await fetch(endpoint);
@@ -42,12 +44,12 @@ const JobDetails = ({ attritionTableData }) => {
 
   const getPhenotype = () => {
     if (
-      getParameterData('outcome')
-      && IsJsonString(getParameterData('outcome'))
+      getParameterData('outcome') &&
+      IsJsonString(getParameterData('outcome'))
     ) {
       return (
-        JSON.parse(getParameterData('outcome'))?.concept_name
-        || JSON.parse(getParameterData('outcome'))?.provided_name
+        JSON.parse(getParameterData('outcome'))?.concept_name ||
+        JSON.parse(getParameterData('outcome'))?.provided_name
       );
     }
     /* eslint-disable-next-line no-console */
@@ -58,7 +60,7 @@ const JobDetails = ({ attritionTableData }) => {
   const removeOutcomeFromVariablesData = (variablesArray) => {
     const outcome = JSON.parse(getParameterData('outcome'));
     const filteredResult = variablesArray.filter(
-      (obj) => !isEqual(obj, outcome),
+      (obj) => !isEqual(obj, outcome)
     );
     return filteredResult;
   };
@@ -67,7 +69,7 @@ const JobDetails = ({ attritionTableData }) => {
     const variablesData = getParameterData('variables');
     if (IsJsonString(variablesData)) {
       const covariatesArray = removeOutcomeFromVariablesData(
-        JSON.parse(variablesData),
+        JSON.parse(variablesData)
       );
       return covariatesArray;
     }
@@ -94,15 +96,16 @@ const JobDetails = ({ attritionTableData }) => {
   const findAncestrySizeOfLastRow = (tableData, hareAncestry) => {
     const lastRowOfData = tableData?.rows[tableData?.rows.length - 1];
     const datum = lastRowOfData?.concept_breakdown.find(
-      (obj) => obj.concept_value_name === hareAncestry,
+      (obj) => obj.concept_value_name === hareAncestry
     );
     return datum?.persons_in_cohort_with_value || 'Unexpected Error';
   };
 
   const getTotalSizes = () => {
     const hareAncestry = getParameterData('hare_population');
-    const caseSize = attritionTableData[0]?.rows
-      && findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
+    const caseSize =
+      attritionTableData[0]?.rows &&
+      findAncestrySizeOfLastRow(attritionTableData[0], hareAncestry);
     const controlSize = attritionTableData[1]?.rows
       ? findAncestrySizeOfLastRow(attritionTableData[1], hareAncestry)
       : null;
@@ -113,9 +116,8 @@ const JobDetails = ({ attritionTableData }) => {
       totalSize,
     };
   };
-
+  const { caseSize, controlSize, totalSize } = getTotalSizes();
   const displayTotalSizes = () => {
-    const { caseSize, controlSize, totalSize } = getTotalSizes();
     return controlSize === null ? (
       <div className='GWASResults-flex-row'>
         <div>Total Size</div>
@@ -139,42 +141,71 @@ const JobDetails = ({ attritionTableData }) => {
     );
   };
 
+  const showCautionMessages = () => {
+    if (caseSize < minimumRecommendedCohortSize && controlSize === null) {
+      return (
+        <DismissibleMessage
+          messageType='caution'
+          title={`The total cohort size is small and can lead to low statistical power or cause the GWAS model to fail.
+          Use caution when submitting to minimize computational resource usage.`}
+        />
+      );
+    } else if (
+      caseSize < minimumRecommendedCohortSize ||
+      (controlSize !== null && controlSize < minimumRecommendedCohortSize)
+    ) {
+      return (
+        <DismissibleMessage
+          messageType='caution'
+          title={`The total cohort size of either your case or control groups that you have chosen is small
+          and can lead to low statistical power or cause the GWAS model to fail.
+          Use caution when submitting to minimize computational resource usage.`}
+        />
+      );
+    }
+  };
+
+  console.log('caseSize', caseSize);
+  console.log('controlSize', controlSize);
   return (
-    <section data-testid='job-details' className='job-details'>
-      <h2 className='job-details-title'>{data.wf_name}</h2>
-      <div className='GWASResults-flex-col job-details-table'>
-        <div className='GWASResults-flex-row'>
-          <div>Number of PCs</div>
-          <div>{getParameterData('n_pcs')}</div>
+    <>
+      {showCautionMessages()}
+      <section data-testid='job-details' className='job-details'>
+        <h2 className='job-details-title'>{data.wf_name}</h2>
+        <div className='GWASResults-flex-col job-details-table'>
+          <div className='GWASResults-flex-row'>
+            <div>Number of PCs</div>
+            <div>{getParameterData('n_pcs')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>MAF Cutoff</div>
+            <div>{getParameterData('maf_threshold')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>HARE Ancestry</div>
+            <div>{getParameterData('hare_population')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Imputation Score Cutoff</div>
+            <div>{getParameterData('imputation_score_cutoff')}</div>
+          </div>
+          <hr />
+          <div className='GWASResults-flex-row'>
+            <div>Cohort</div>
+            <div>{getParameterData('source_population_cohort')}</div>
+          </div>
+          <div className='GWASResults-flex-row'>
+            <div>Outcome Phenotype</div>
+            <div>{getPhenotype()}</div>
+          </div>
+          {displayTotalSizes()}
+          <div className='GWASResults-flex-row'>
+            <div>Covariates</div>
+            <div>{displayCovariates()}</div>
+          </div>
         </div>
-        <div className='GWASResults-flex-row'>
-          <div>MAF Cutoff</div>
-          <div>{getParameterData('maf_threshold')}</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>HARE Ancestry</div>
-          <div>{getParameterData('hare_population')}</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>Imputation Score Cutoff</div>
-          <div>{getParameterData('imputation_score_cutoff')}</div>
-        </div>
-        <hr />
-        <div className='GWASResults-flex-row'>
-          <div>Cohort</div>
-          <div>{getParameterData('source_population_cohort')}</div>
-        </div>
-        <div className='GWASResults-flex-row'>
-          <div>Outcome Phenotype</div>
-          <div>{getPhenotype()}</div>
-        </div>
-        {displayTotalSizes()}
-        <div className='GWASResults-flex-row'>
-          <div>Covariates</div>
-          <div>{displayCovariates()}</div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

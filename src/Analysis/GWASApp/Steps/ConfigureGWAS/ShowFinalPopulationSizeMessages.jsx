@@ -2,7 +2,7 @@ import ACTIONS from '../../Utils/StateManagement/Actions';
 import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
 
 const ShowFinalPopulationSizeMessages = (dispatch, finalPopulationSizes) => {
-  function checkFinalPopulationSizes() {
+  const checkFinalPopulationSizes = () => {
     let hasSizeIssue = false;
     finalPopulationSizes.forEach((obj) => {
       if (obj?.size < minimumRecommendedCohortSize) {
@@ -10,7 +10,7 @@ const ShowFinalPopulationSizeMessages = (dispatch, finalPopulationSizes) => {
       }
     });
     return hasSizeIssue;
-  }
+  };
 
   if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
     dispatch({
