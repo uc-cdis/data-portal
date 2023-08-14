@@ -8,7 +8,7 @@ import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
-import ACTIONS from '../../Utils/StateManagement/Actions'
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
 import '../../GWASApp.css';
 
@@ -30,10 +30,7 @@ const ConfigureGWAS = ({
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
-
   const [showError, setShowError] = useState(false);
-  const [showCaution, setShowCaution] = useState(false);
-
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
 
@@ -47,32 +44,54 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
-  useEffect(()=>{
-    console.log("finalPopulationSizes",finalPopulationSizes)
-    finalPopulationSizes.forEach(obj=>{
-      console.log(obj)
-      if(obj?.size < minimumRecommendedCohortSize) {
-        dispatch({
-          type: ACTIONS.ADD_MESSAGE,
-          payload: MESSAGES.SMALL_COHORT_CAUTION,
-        });
+  function checkFinalPopulationSizes() {
+    let hasSizeIssue = false;
+    finalPopulationSizes.forEach((obj) => {
+      if (obj?.size < minimumRecommendedCohortSize) {
+        console.log('returned true for checkFinalPopulationSizes');
+        hasSizeIssue = true;
       }
-    })
-  },[finalPopulationSizes])
+    });
+    return hasSizeIssue;
+  }
 
+  useEffect(() => {
+    console.log('finalPopulationSizes', finalPopulationSizes);
+    console.log(
+      'finalPopulationSizes.length === 1',
+      finalPopulationSizes.length === 1
+    );
+    console.log('checkFinalPopulationSizes()', checkFinalPopulationSizes());
+    if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
+      console.log(
+        'Made it here: finalPopulationSizes.length === 1 && checkFinalPopulationSizes()',
+        finalPopulationSizes.length === 1 && checkFinalPopulationSizes()
+      );
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_COHORT_CAUTION,
+      });
+    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes()) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
+      });
+    }
+  }, [finalPopulationSizes]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -83,13 +102,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {
