@@ -59,13 +59,13 @@ const ConfigureGWAS = ({
     console.log('finalPopulationSizes', finalPopulationSizes);
     console.log(
       'finalPopulationSizes.length === 1',
-      finalPopulationSizes.length === 1
+      finalPopulationSizes.length === 1,
     );
     console.log('checkFinalPopulationSizes()', checkFinalPopulationSizes());
     if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
       console.log(
         'Made it here: finalPopulationSizes.length === 1 && checkFinalPopulationSizes()',
-        finalPopulationSizes.length === 1 && checkFinalPopulationSizes()
+        finalPopulationSizes.length === 1 && checkFinalPopulationSizes(),
       );
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
@@ -80,18 +80,17 @@ const ConfigureGWAS = ({
   }, [finalPopulationSizes]);
 
   const submitJob = useMutation(
-    () =>
-      jobSubmission(
-        sourceId,
-        numOfPCs,
-        covariates,
-        outcome,
-        selectedHare,
-        mafThreshold,
-        imputationScore,
-        selectedCohort,
-        jobName
-      ),
+    () => jobSubmission(
+      sourceId,
+      numOfPCs,
+      covariates,
+      outcome,
+      selectedHare,
+      mafThreshold,
+      imputationScore,
+      selectedCohort,
+      jobName,
+    ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -102,13 +101,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`
+              `GWAS job failed with error: ${JSON.stringify(error)}`,
             );
             setShowError(true);
           });
         }
       },
-    }
+    },
   );
 
   const handleSubmit = () => {
