@@ -11,23 +11,19 @@ const args = {
 describe('DismissibleMessage', () => {
   it('renders with default props', () => {
     const { getByText } = render(<DismissibleMessage {...args} />);
-    expect(getByText('Custom Title')).toBeInTheDocument();
-    expect(getByText('custom description')).toBeInTheDocument();
+    expect(getByText(args.title)).toBeInTheDocument();
+    expect(getByText(args.description)).toBeInTheDocument();
   });
 
   it('renders with custom props', () => {
     const { getByText } = render(<DismissibleMessage {...args} />);
-    expect(getByText('Custom Title')).toBeInTheDocument();
-    expect(getByText('custom description')).toBeInTheDocument();
+    expect(getByText(args.title)).toBeInTheDocument();
+    expect(getByText(args.description)).toBeInTheDocument();
   });
 
   it('closes when the close button is clicked', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage
-        title='Custom Title'
-        description='custom description'
-        messageType='warning'
-      />
+      <DismissibleMessage {...args} />
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.click(closeButton);
@@ -44,7 +40,7 @@ describe('DismissibleMessage', () => {
     fireEvent.keyDown(closeButton, { key: 'Spacebar' });
     fireEvent.keyDown(closeButton, { keyCode: 32 });
     fireEvent.keyDown(closeButton, { keyCode: 13 });
-    expect(queryByText('Placeholder Title')).not.toBeInTheDocument();
+    expect(queryByText(args.title)).not.toBeInTheDocument();
   });
 
   it('does not close on other key presses', () => {
@@ -56,7 +52,7 @@ describe('DismissibleMessage', () => {
     fireEvent.keyDown(closeButton, { key: 'A' });
     fireEvent.keyDown(closeButton, { keyCode: 27 });
     fireEvent.keyDown(closeButton, { keyCode: 65 });
-    expect(queryByText('Custom Title')).toBeInTheDocument();
+    expect(queryByText(args.title)).toBeInTheDocument();
   });
 
   it('Validates logic of isEnterOrSpace function', () => {
