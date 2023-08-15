@@ -10,7 +10,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />
+      />,
     );
     expect(getByText('Custom Title')).toBeInTheDocument();
     expect(getByText('custom description')).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />
+      />,
     );
     expect(getByText('Custom Title')).toBeInTheDocument();
     expect(getByText('custom description')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />
+      />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.click(closeButton);
@@ -47,7 +47,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />
+      />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Enter' });
@@ -64,7 +64,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />
+      />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Escape' });
