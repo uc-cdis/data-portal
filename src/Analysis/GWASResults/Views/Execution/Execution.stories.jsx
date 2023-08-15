@@ -33,13 +33,17 @@ const { name, uid } = selectedRowData;
 const MockedFailureJSON = [
   {
     name: 'gwas-workflow-7875715375',
-    step_template: 'gwas-workflow',
-    error_message: 'No message provided',
+    step_name: 'attrition-table',
+    step_template: 'get-attrition-table',
+    error_message: 'exit code 1',
+    error_interpreted: "Timeout occurred while fetching attrition table information."
   },
   {
     name: 'gwas-workflow-7875715375.get-pheno-csv',
+    step_name: 'pheno-csv',
     step_template: 'get-pheno-csv',
-    error_message: 'pod deleted',
+    error_message: 'exit code 1',
+    error_interpreted: ""
   },
 ];
 
