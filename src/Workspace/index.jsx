@@ -256,13 +256,24 @@ class Workspace extends React.Component {
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
-      if (workspaceStatusData.containerStates.some((element) => (
+      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      const cs = workspaceStatusData.containerStates;
+
+      if (cs.some((element) => (
         (element.state && element.state.terminated)
       ))) {
         workspaceLaunchStepsConfig.steps[2].description = 'Error';
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
-      } else {
-        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      }
+      else
+      {
+        //If container states are available, display detailed pod statuses
+        if (cs.length > 0) {
+          for (let i = 0; i < cs.length; i++) {
+            const j = i+1
+            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(' \n Container ' + j + ' Ready: ' + cs[i].ready);
+          }
+        }
       }
       return workspaceLaunchStepsConfig;
     }
@@ -270,6 +281,19 @@ class Workspace extends React.Component {
     // here we are at step 3, step 3 have no k8s pod/container conditions
     workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
     workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+
+    // Display ECS status
+    if (workspaceStatusData.workspaceType === 'ECS') {
+      workspaceLaunchStepsConfig.currentIndex = 2;
+      if (workspaceStatusData.status === 'Launching') {
+        workspaceLaunchStepsConfig.steps[2].description = 'ECS task pending';
+      }
+      else if (workspaceStatusData.status !== 'Active') {
+        workspaceLaunchStepsConfig.steps[2].description = 'ECS task failed';
+      }
+      return workspaceLaunchStepsConfig;
+    }
+
     workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
 
     // condition type: ProxyConnected + status: false => at step 3
@@ -633,6 +657,7 @@ class Workspace extends React.Component {
                         >
                           {(this.state.workspaceLaunchStepsConfig.steps.map((step) => (
                             <Step
+                              classname = 'workspaceStep'
                               key={step.title}
                               title={step.title}
                               description={step.description}
