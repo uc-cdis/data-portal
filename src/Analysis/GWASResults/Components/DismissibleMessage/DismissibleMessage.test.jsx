@@ -27,7 +27,7 @@ describe('DismissibleMessage', () => {
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.click(closeButton);
-    expect(queryByText('Placeholder Title')).not.toBeInTheDocument();
+    expect(queryByText(args.title)).not.toBeInTheDocument();
   });
 
   it('closes when the close button is clicked using Enter or Space', () => {
