@@ -60,7 +60,7 @@ const Execution = () => {
     ) {
       return (
         <span>
-        Please refer to the <a href='https://va.data-commons.org/dashboard/Public/documentation/index.html'>Documentation Page</a> to contact us with any questions on how you may solve this issue.
+        Step failed with an uncategorized error. Please refer to the <a href='https://va.data-commons.org/dashboard/Public/documentation/index.html'>Documentation Page</a> to contact us with any questions on how you may solve this issue.
         </span>
       );
     }
