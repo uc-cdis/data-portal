@@ -3,27 +3,20 @@ import '@testing-library/jest-dom';
 import { render, fireEvent } from '@testing-library/react';
 import DismissibleMessage, { isEnterOrSpace } from './DismissibleMessage';
 
+const args = {
+  title: 'Custom Title',
+  description: 'custom description',
+  messageType: 'warning',
+};
 describe('DismissibleMessage', () => {
   it('renders with default props', () => {
-    const { getByText } = render(
-      <DismissibleMessage
-        title='Custom Title'
-        description='custom description'
-        messageType='warning'
-      />,
-    );
+    const { getByText } = render(<DismissibleMessage {...args} />);
     expect(getByText('Custom Title')).toBeInTheDocument();
     expect(getByText('custom description')).toBeInTheDocument();
   });
 
   it('renders with custom props', () => {
-    const { getByText } = render(
-      <DismissibleMessage
-        title='Custom Title'
-        description='custom description'
-        messageType='warning'
-      />,
-    );
+    const { getByText } = render(<DismissibleMessage {...args} />);
     expect(getByText('Custom Title')).toBeInTheDocument();
     expect(getByText('custom description')).toBeInTheDocument();
   });
@@ -34,7 +27,7 @@ describe('DismissibleMessage', () => {
         title='Custom Title'
         description='custom description'
         messageType='warning'
-      />,
+      />
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.click(closeButton);
@@ -43,11 +36,7 @@ describe('DismissibleMessage', () => {
 
   it('closes when the close button is clicked using Enter or Space', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage
-        title='Custom Title'
-        description='custom description'
-        messageType='warning'
-      />,
+      <DismissibleMessage {...args} />
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Enter' });
@@ -60,11 +49,7 @@ describe('DismissibleMessage', () => {
 
   it('does not close on other key presses', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage
-        title='Custom Title'
-        description='custom description'
-        messageType='warning'
-      />,
+      <DismissibleMessage {...args} />
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Escape' });
