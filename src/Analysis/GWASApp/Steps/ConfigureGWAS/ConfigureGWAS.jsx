@@ -56,17 +56,7 @@ const ConfigureGWAS = ({
   }
 
   useEffect(() => {
-    console.log('finalPopulationSizes', finalPopulationSizes);
-    console.log(
-      'finalPopulationSizes.length === 1',
-      finalPopulationSizes.length === 1,
-    );
-    console.log('checkFinalPopulationSizes()', checkFinalPopulationSizes());
     if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
-      console.log(
-        'Made it here: finalPopulationSizes.length === 1 && checkFinalPopulationSizes()',
-        finalPopulationSizes.length === 1 && checkFinalPopulationSizes(),
-      );
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
@@ -132,7 +122,6 @@ const ConfigureGWAS = ({
           messageType={'warning'}
         />
       )}
-
       {submitJob.isLoading && (
         <div className='GWASUI-spinnerContainer set-height'>
           <Spin />
