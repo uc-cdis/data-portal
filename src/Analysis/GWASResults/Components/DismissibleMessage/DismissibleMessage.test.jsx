@@ -23,7 +23,7 @@ describe('DismissibleMessage', () => {
 
   it('closes when the close button is clicked', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage {...args} />
+      <DismissibleMessage {...args} />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.click(closeButton);
@@ -32,7 +32,7 @@ describe('DismissibleMessage', () => {
 
   it('closes when the close button is clicked using Enter or Space', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage {...args} />
+      <DismissibleMessage {...args} />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Enter' });
@@ -45,7 +45,7 @@ describe('DismissibleMessage', () => {
 
   it('does not close on other key presses', () => {
     const { getByLabelText, queryByText } = render(
-      <DismissibleMessage {...args} />
+      <DismissibleMessage {...args} />,
     );
     const closeButton = getByLabelText('Close Message');
     fireEvent.keyDown(closeButton, { key: 'Escape' });
