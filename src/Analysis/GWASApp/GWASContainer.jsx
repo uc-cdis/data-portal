@@ -58,6 +58,7 @@ const GWASContainer = () => {
           selectedCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
           showModal={false}
+          finalPopulationSizes={state.finalPopulationSizes}
         />
       );
     case 4:
