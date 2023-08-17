@@ -86,7 +86,6 @@
     "react-virtualized": "^9.22.5",
     "recharts": "^2.7.2",
     "redux": "^4.2.1",
-    "redux-devtools": "^3.3.1",
     "redux-form": "^8.0.0",
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
