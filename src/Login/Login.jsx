@@ -18,30 +18,15 @@ function sleep(milliseconds) {
 
 const getInitialState = (height) => ({ height });
 
-const determineNext = () => {
-  if (location.from && !location.from.includes(basename)) {
-    console.log('first conditional met');
-    return basename + location.from;
-  } else if (location.from && location.from.includes(basename)) {
-    console.log('second conditional met');
-    return location.from;
-  }
-  return basename;
-};
-
 // Get a url for a given "location" (location object should have at least the .from attribute)
 
 export const getUrlForRedirectLocation = (location) => {
-  console.log('location', location);
-  // compose next according to location.from
-  // let next = (location.from) ? `${basename}${location.from}` : basename;
-  // let next = determineNext();
-  let next;
+  /*
   if (location.from && !location.from.includes(basename)) {
-    console.log('first conditional met');
+    console.log('line 27 first conditional met');
     next = basename + location.from;
   } else if (location.from && location.from.includes(basename)) {
-    console.log('second conditional met');
+    console.log('line 30 second conditional met');
     // next= location.from;
     // next = basename;
 
@@ -49,14 +34,14 @@ export const getUrlForRedirectLocation = (location) => {
     // NOT REMOVE IT, IF BASENAME IS ONLY A SLASH DO NOT REMOVE IT
     // CALLED VALIDATE nextValue => this function serves to fix malformed URLs
     next = location.from.replace(basename, '');
+    console.log('next', next);
+    console.log('basename', basename);
   } else {
     next = basename;
   }
+  */
 
-  // console.log('next', next);
-  // console.log('basename', basename);
-
-  sleep(20000);
+  let next = location.from ? `${basename}${location.from}` : basename;
   if (location.state && location.state.from) {
     next = `${basename}${location.state.from}`;
   }
@@ -66,16 +51,7 @@ export const getUrlForRedirectLocation = (location) => {
     location.search ? location.search.replace(/^\?+/, '') : ''
   );
   if (queryParams.next) {
-    console.log('queryParams.next', queryParams.next);
-    console.log('basename', basename);
-
-    if (basename === queryParams.next) {
-      console.log('first conditional');
-      next = basename === '/' ? queryParams.next : basename;
-    } else {
-      console.log('second conditional');
-      next = basename === '/' ? queryParams.next : basename + queryParams.next;
-    }
+    next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
   const regexp = /^\/.*/gi;
   const isValidRedirect = new RegExp(regexp).test(next);
@@ -84,6 +60,14 @@ export const getUrlForRedirectLocation = (location) => {
     return basename;
   }
   next = next.replace('?request_access', '?request_access_logged_in');
+
+  let count = (next.match(`/dev.html/`, /g/) || []).length;
+
+  if (count > 0) next = next.replace('/dev.html', '');
+  console.log('FINAL Basename:', basename);
+  console.log('FINAL COUNT', count);
+  console.log('FINAL NEXT VALUE:', next);
+  sleep(10000);
   return `${next}`;
 };
 

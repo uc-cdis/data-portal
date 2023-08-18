@@ -19,7 +19,6 @@ export const initWorkspaceRefreshToken = (
       method: 'GET',
     }).then(({ status }) => {
       if (status !== 200) {
-        //  if ( 1===1 ) {
         window.location.href = `${wtsPath}/authorization_url?redirect=${redirectUrl}`;
       } else if (connectedCallBack) {
         connectedCallBack();
