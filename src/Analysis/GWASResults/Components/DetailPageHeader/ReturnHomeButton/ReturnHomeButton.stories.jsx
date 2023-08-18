@@ -1,10 +1,10 @@
 import React from 'react';
-import SharedContext from '../../Utils/SharedContext';
-import DetailPageHeader from './DetailPageHeader';
+import SharedContext from '../../../Utils/SharedContext';
+import ReturnHomeButton from './ReturnHomeButton';
 
 export default {
-  title: 'Tests2/GWASResults/SharedComponents/DetailPageHeader',
-  component: 'DetailPageHeader',
+  title: 'Tests2/GWASResults/Components/ReturnHomeButton',
+  component: 'ReturnHomeButton',
 };
 
 const setCurrentView = (input) => {
@@ -17,7 +17,7 @@ const MockTemplate = () => {
         setCurrentView,
       }}
     >
-      <DetailPageHeader pageTitle='Example Page Title' />
+      <ReturnHomeButton />
     </SharedContext.Provider>
   );
 };
