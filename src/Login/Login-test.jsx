@@ -24,15 +24,14 @@ const determineNext = () => {
     return basename + location.from;
   } else if (location.from && location.from.includes(basename)) {
     console.log('second conditional met');
-    return location.from;
+    // return location.from;
+    return basename + location.from;
   }
   return basename;
 };
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
-
 export const getUrlForRedirectLocation = (location) => {
-  console.log('location', location);
   // compose next according to location.from
   // let next = (location.from) ? `${basename}${location.from}` : basename;
   // let next = determineNext();
@@ -40,21 +39,21 @@ export const getUrlForRedirectLocation = (location) => {
   if (location.from && !location.from.includes(basename)) {
     console.log('first conditional met');
     next = basename + location.from;
-  } else if (location.from && location.from.includes(basename)) {
+  } else if (
+    location.from &&
+    location.from.includes(basename) &&
+    !location.from.includes('#')
+  ) {
     console.log('second conditional met');
-    // next= location.from;
-    // next = basename;
-
-    // WRITE LOGIC TO REMOVE FIRST INSTANCE OF BASENAME BUT IF THERE IS ONE INSTANCE OF BASENAME DO
-    // NOT REMOVE IT, IF BASENAME IS ONLY A SLASH DO NOT REMOVE IT
-    // CALLED VALIDATE nextValue => this function serves to fix malformed URLs
-    next = location.from.replace(basename, '');
+    next = location.from + basename;
+    next = '/portal/dev.html/workspace#';
   } else {
     next = basename;
   }
 
-  // console.log('next', next);
-  // console.log('basename', basename);
+  console.log('next', next);
+  console.log('basename', basename);
+  console.log('location.from', location.from);
 
   sleep(20000);
   if (location.state && location.state.from) {
