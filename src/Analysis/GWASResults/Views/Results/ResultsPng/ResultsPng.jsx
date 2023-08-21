@@ -16,9 +16,8 @@ import '../Results.css';
   const { name, uid } = selectedRowData;
   const { data, status } = useQuery(
     ['fetchPresignedUrlForWorkflowArtifact', name, uid, 'manhattan_plot_index'],
-    () =>
-      fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
-    queryConfig
+    () => fetchPresignedUrlForWorkflowArtifact(name, uid, 'manhattan_plot_index'),
+    queryConfig,
   );
 
   const downloadManhattanPlot = () => {
