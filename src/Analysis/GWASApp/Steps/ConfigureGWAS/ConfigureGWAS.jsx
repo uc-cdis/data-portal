@@ -8,6 +8,8 @@ import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
+import ACTIONS from '../../Utils/StateManagement/Actions';
+import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -28,9 +30,7 @@ const ConfigureGWAS = ({
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
-
   const [showError, setShowError] = useState(false);
-
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
 
@@ -43,6 +43,31 @@ const ConfigureGWAS = ({
       setOpen(true);
     }
   }, [showModal]);
+
+  function checkFinalPopulationSizes() {
+    let hasSizeIssue = false;
+    finalPopulationSizes.forEach((obj) => {
+      if (obj?.size < minimumRecommendedCohortSize) {
+        console.log('returned true for checkFinalPopulationSizes');
+        hasSizeIssue = true;
+      }
+    });
+    return hasSizeIssue;
+  }
+
+  useEffect(() => {
+    if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_COHORT_CAUTION,
+      });
+    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes()) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
+      });
+    }
+  }, [finalPopulationSizes]);
 
   const submitJob = useMutation(
     () => jobSubmission(
@@ -143,7 +168,7 @@ ConfigureGWAS.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
-  finalPopulationSizes: PropTypes.array,
+  finalPopulationSizes: PropTypes.array.isRequired,
 };
 
 ConfigureGWAS.defaultProps = {
@@ -151,7 +176,6 @@ ConfigureGWAS.defaultProps = {
   mafThreshold: 0.01,
   imputationScore: 0.3,
   showModal: false,
-  finalPopulationSizes: [],
 };
 
 export default ConfigureGWAS;

@@ -1,10 +1,8 @@
-import React, { useState, useReducer } from 'react';
-import { rest } from 'msw';
-
+import React from 'react';
 import DismissibleMessage from './DismissibleMessage';
 
 export default {
-  title: 'Tests3/GWASApp/DismissibleMessage/DismissibleMessage',
+  title: 'Tests2/GWASResults/Components/DismissibleMessage',
   component: DismissibleMessage,
 };
 

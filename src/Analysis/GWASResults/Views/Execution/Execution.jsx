@@ -54,6 +54,19 @@ const Execution = () => {
     return <strong>Issue with workflow phase and no data returned</strong>;
   };
 
+  const determineEmptyErrorMessage = (errorInterpreted) => {
+    if (
+      errorInterpreted === ''
+    ) {
+      return (
+        <span>
+        Step failed with an uncategorized error. Please refer to the <a href='https://va.data-commons.org/dashboard/Public/documentation/index.html'>Documentation Page</a> to contact us with any questions on how you may solve this issue.
+        </span>
+      );
+    }
+    return errorInterpreted;
+  };
+
   return (
     <React.Fragment>
       <DetailPageHeader pageTitle={'Execution Details'} />
@@ -78,12 +91,12 @@ const Execution = () => {
             <React.Fragment key={item?.name}>
               <p>
                 <strong>
-                  Name: <span>{item?.name}</span>
+                Step Name: <span>{item?.step_name}</span>
                 </strong>
                 <br />
-                step_template: <span>{item?.step_template}</span>
+                template: <span>{item?.step_template}</span>
                 <br />
-                error_message: <span>{item?.error_message}</span>
+                error message: <span>{determineEmptyErrorMessage(item?.error_interpreted)}</span>
               </p>
               <br />
             </React.Fragment>

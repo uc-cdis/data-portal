@@ -44,7 +44,9 @@ const MockTemplate = () => {
           setCurrentView,
         }}
       >
-        <Input />
+        <div className='GWASResults'>
+          <Input />
+        </div>
       </SharedContext.Provider>
     </QueryClientProvider>
   );
