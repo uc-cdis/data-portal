@@ -366,7 +366,7 @@ function ExplorerFilterSetWorkspace() {
                 onClick={() => setActionFormType('SAVE')}
                 disabled={checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
               >
-                Save
+                {activeFilterSet.id ? 'Update' : 'Save'}
               </button>
               <button
                 className='explorer-filter-set-workspace__action-button'

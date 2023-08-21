@@ -77,7 +77,9 @@ function DataRequestCreate({ isCreatePending }) {
     serviceAccessMethods[0]?.method :
     undefined;
   let isAdmin = is_admin || !!serviceAccessMethod;
-  let filterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
+  let savedFilterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
+  let [sharedFilterSets] = useState([]);
+
 	let navigate = useNavigate();
 	let goBack = () => {
 		navigate(-1);
@@ -219,8 +221,14 @@ function DataRequestCreate({ isCreatePending }) {
                   {({ remove, unshift }) => {
                     let addFilter = (filterSet) => {
                       if (!filterSet) return;
+                      if (
+                        !savedFilterSets.some((o) => filterSet.id === o.id) &&
+                        !sharedFilterSets.some((o) => filterSet.id === o.id)
+                      ) {
+                        sharedFilterSets.push(filterSet);
+                      }
                       unshift(filterSet.id);
-                      setOpenAddFilter(false)
+                      setOpenAddFilter(false);
                     };
                     return <MultiValueField
                         label="Filter Sets"
@@ -231,7 +239,9 @@ function DataRequestCreate({ isCreatePending }) {
                         {({ valueContainerProps, valueProps }) => (<>
                           <div className="data-request__multi-value-row data-request__multi-value-values-row" {...valueContainerProps}>
                             {values.filter_set_ids.map((filter_id, index) => {
-                              let filter = filterSets.find((filter) => filter.id === filter_id);
+                              let filter = 
+                                savedFilterSets.find((filter) => filter.id === filter_id) ??
+                                sharedFilterSets.find((filter) => filter.id === filter_id);
                               return <span key={index} {...valueProps}>
                                 <Pill
                                   onClick={() => setViewFilter(filter)}
@@ -249,7 +259,7 @@ function DataRequestCreate({ isCreatePending }) {
                             <SimplePopup>
                               <FilterSetOpenForm
                                 currentFilterSet={{ name: '', description: '', filter: {} }}
-                                filterSets={filterSets}
+                                filterSets={savedFilterSets}
                                 fetchWithToken={fetchWithToken}
                                 onAction={addFilter}
                                 onClose={() => setOpenAddFilter(false)}

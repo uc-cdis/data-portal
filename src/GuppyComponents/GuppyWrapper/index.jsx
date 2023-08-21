@@ -270,6 +270,7 @@ function GuppyWrapper({
     sort,
     updateDataWhenReceive,
   }) {
+    console.log(getGQLFilter(augmentFilter(filter)));
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingRawData: true }));
     if (!fields || fields.length === 0) {
