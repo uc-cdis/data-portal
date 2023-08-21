@@ -20,7 +20,7 @@ const ResultsPheWeb = () => {
   const { data, status } = useQuery(
     ['getDataForWorkflowArtifact', name, uid, 'pheweb_manhattan_json_index'],
     () => getDataForWorkflowArtifact(name, uid, 'pheweb_manhattan_json_index'),
-    queryConfig,
+    queryConfig
   );
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (notificationMessage) => {
@@ -42,12 +42,12 @@ const ResultsPheWeb = () => {
 
     const svgAsInnerHTMLAsUtf8Buffer = Buffer.from(svgAsInnerHTML);
     const svgAsInnerHTMLAsBase64 = svgAsInnerHTMLAsUtf8Buffer.toString(
-      'base64',
+      'base64'
     );
 
     const svgData = `data:image/svg+xml;base64,${svgAsInnerHTMLAsBase64}`;
     const tmpImage = new Image();
-    tmpImage.onload = function () {
+    tmpImage.onload = function() {
       const hiddenCanvas = document.createElement('canvas');
       hiddenCanvas.width = document.body.clientWidth;
       hiddenCanvas.height = document.body.clientHeight * 0.6;
@@ -57,7 +57,7 @@ const ResultsPheWeb = () => {
         0,
         0,
         hiddenCanvas.width,
-        hiddenCanvas.height,
+        hiddenCanvas.height
       );
       const canvasData = hiddenCanvas.toDataURL('image/png');
 
@@ -66,7 +66,7 @@ const ResultsPheWeb = () => {
       a.href = canvasData;
       a.click();
     };
-    tmpImage.onerror = function (error) {
+    tmpImage.onerror = function(error) {
       // when SVG is invalid, the error.message will be undefined:
       if (!error.message) {
         openNotification('❌ Could not download. Invalid SVG');
@@ -92,7 +92,7 @@ const ResultsPheWeb = () => {
     return (
       <React.Fragment>
         {displayTopSection()}
-        <LoadingErrorMessage message='Error getting Manhattan plot data' />
+        <LoadingErrorMessage message='Plot cannot display. This workflow pre-dates the change in UI. To see the plot please download the results' />
       </React.Fragment>
     );
   }
