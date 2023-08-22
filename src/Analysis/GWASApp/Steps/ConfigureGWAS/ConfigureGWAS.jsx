@@ -9,7 +9,11 @@ import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
+import {
+  minimumRecommendedCohortSize,
+  MESSAGES,
+  checkFinalPopulationSizeZero,
+} from '../../Utils/constants';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -48,7 +52,6 @@ const ConfigureGWAS = ({
     let hasSizeIssue = false;
     finalPopulationSizes.forEach((obj) => {
       if (obj?.size < minimumRecommendedCohortSize) {
-        console.log('returned true for checkFinalPopulationSizes');
         hasSizeIssue = true;
       }
     });
@@ -56,7 +59,15 @@ const ConfigureGWAS = ({
   }
 
   useEffect(() => {
-    if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
+    if (checkFinalPopulationSizeZero(finalPopulationSizes)) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.ZERO_SIZE_WARNING,
+      });
+    } else if (
+      finalPopulationSizes.length === 1 &&
+      checkFinalPopulationSizes()
+    ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
@@ -70,17 +81,18 @@ const ConfigureGWAS = ({
   }, [finalPopulationSizes]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -91,13 +103,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {
