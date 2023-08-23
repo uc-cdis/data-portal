@@ -7,6 +7,7 @@ import './TopBar.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
 import { discoveryConfig } from '../../localconf';
 import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
+import Banner from '../Banner';
 
 const isEmailAddress = (input) => {
   // regexp for checking if a string is possibly an email address, got from https://www.w3resource.com/javascript/form/email-validation.php
@@ -24,6 +25,18 @@ class TopBar extends Component {
     return (
       <div className='top-bar'>
         <header className='top-bar__header'>
+          {this.props.banners
+            && this.props.banners.length > 0
+            && this.props.banners.map((banner) => (
+              <Banner
+                id={banner.id}
+                type={banner.type}
+                message={banner.message}
+                resetDate={banner.resetDate}
+                onClose={this.props.onCloseBanner}
+                key={banner.id}
+              />
+            ))}
           <nav className='top-bar__nav'>
             {
               this.props.topItems.filter(
@@ -189,12 +202,16 @@ TopBar.propTypes = {
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,
   discovery: PropTypes.shape({ selectedResources: PropTypes.array }).isRequired,
+  banners: PropTypes.array,
+  onCloseBanner: PropTypes.func,
 };
 
 TopBar.defaultProps = {
   useProfileDropdown: false,
   activeTab: '',
   onActiveTab: () => {},
+  banners: [],
+  onCloseBanner: () => {},
 };
 
 export default withRouter(TopBar);
