@@ -18,7 +18,7 @@ class Banner extends React.Component {
 
  * "type": "info", // Type of Alert styles, options: success, info, warning, error
  * "message": "I'm a banner", // message to be displayed
- * "resetMsgDays": // optional; set to number of days until displaying banner again, set to 0 to make it a browser session
+ * "resetMsgDays": // optional; set to number of days until displaying banner again, defaults to 365
  */
 
   render() {
