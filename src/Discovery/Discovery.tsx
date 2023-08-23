@@ -603,7 +603,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               title={'You have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
@@ -626,7 +626,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               title={'You do not have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
