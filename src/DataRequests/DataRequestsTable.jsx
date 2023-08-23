@@ -128,10 +128,6 @@ function DataRequestsTable({
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const [projectDisplayOptions, setProjectDisplayOptions] = useState(null);
   let [isMoreActionsPopupOpen, setMoreActionsPopupOpen] = useState(false);
-  let [appliedViewOptions, setAppliedViewOptions] = useState({
-    isAdminActive: false,
-    showApprovedOnly: false
-  });
   const tableData = useMemo(
     () => parseTableData({
       projects,
