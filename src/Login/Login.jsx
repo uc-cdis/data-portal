@@ -61,13 +61,30 @@ export const getUrlForRedirectLocation = (location) => {
   }
   next = next.replace('?request_access', '?request_access_logged_in');
 
+  /* JARVIS FIX */
+  /*
   let count = (next.match(`/dev.html/`, /g/) || []).length;
+  console.log('initial next value', next);
+  if (count > 1) next = next.replace('/dev.html', '');
+  */
+  function fixDuplicateBasename(url) {
+    //const pattern = /\/dev\.html(\/dev\.html)+/;
+    const pattern = basename + basename;
+    const fixedUrl = url.replace(pattern, basename);
+    return fixedUrl;
+  }
+  /*
+  console.log(
+    "Result of running fixDuplicateDevHtml('https://jraymond.planx-pla.net/dev.html/dev.html/workspace')",
+    fixDuplicateDevHtml(
+      'https://jraymond.planx-pla.net/dev.html/dev.html/workspace'
+    )
+  );*/
 
-  if (count > 0) next = next.replace('/dev.html', '');
-  console.log('FINAL Basename:', basename);
-  console.log('FINAL COUNT', count);
-  console.log('FINAL NEXT VALUE:', next);
-  sleep(10000);
+  next = fixDuplicateBasename(next);
+  // console.log('FINAL Basename:', basename);
+  // console.log('FINAL NEXT VALUE:', next);
+  // sleep(10000);
   return `${next}`;
 };
 
