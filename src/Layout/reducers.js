@@ -14,7 +14,7 @@ export const bar = (state = {}, action) => {
 export const banner = (state = {}, action) => {
   switch (action.type) {
   case 'RESET_BANNER': {
-    const closedBanners = state?.closedBanners?.[action.data.id];
+    const closedBanners = state?.closedBanners;
     delete closedBanners?.[action.data.id];
     return { ...state, closedBanners };
   }
