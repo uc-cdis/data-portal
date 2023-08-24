@@ -25,18 +25,6 @@ class TopBar extends Component {
     return (
       <div className='top-bar'>
         <header className='top-bar__header'>
-          {this.props.banners
-            && this.props.banners.length > 0
-            && this.props.banners.map((banner) => (
-              <Banner
-                id={banner.id}
-                type={banner.type}
-                message={banner.message}
-                resetDate={banner.resetDate}
-                onClose={this.props.onCloseBanner}
-                key={banner.id}
-              />
-            ))}
           <nav className='top-bar__nav'>
             {
               this.props.topItems.filter(
@@ -187,6 +175,18 @@ class TopBar extends Component {
               )
             }
           </nav>
+          {this.props.banners
+            && this.props.banners.length > 0
+            && this.props.banners.map((banner) => (
+              <Banner
+                id={banner.id}
+                type={banner.type}
+                message={banner.message}
+                resetDate={banner.resetDate}
+                onClose={this.props.onCloseBanner}
+                key={banner.id}
+              />
+            ))}
         </header>
       </div>
     );
