@@ -11,8 +11,8 @@ const filterByJobStatuses = (data, jobStatusSelections) => data.filter((item) =>
 const filterByDateRange = (data, key, dateSelection) => data.filter((obj) => {
   const utcDate = moment.utc(obj[key]);
   return (
-    utcDate.isSameOrAfter(dateSelection[0])
-      && utcDate.isSameOrBefore(dateSelection[1])
+    utcDate.isSameOrAfter(dateSelection[0], 'day')
+      && utcDate.isSameOrBefore(dateSelection[1], 'day')
   );
 });
 

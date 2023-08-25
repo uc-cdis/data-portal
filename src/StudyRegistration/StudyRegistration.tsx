@@ -73,7 +73,7 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
+  const resp = await fetch(`https://classic.clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
   if (!resp || resp.status !== 200) {
     return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
@@ -100,7 +100,7 @@ const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
     const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
     offset += limit;
     promiseList.push(
-      fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
+      fetch(`https://classic.clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
         .then(
           (resp) => {
             if (!resp || resp.status !== 200) {
@@ -207,10 +207,8 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       repository: formValues.repository || '',
       repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
+      clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
-    if (ctgovID) {
-      valuesToUpdate['clinicaltrials.gov'] = await getClinicalTrialMetadata(ctgovID);
-    }
     preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
