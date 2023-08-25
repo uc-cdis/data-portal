@@ -8,48 +8,18 @@ import { components } from '../params';
 
 import './Login.less';
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
 const getInitialState = (height) => ({ height });
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
-
 export const getUrlForRedirectLocation = (location) => {
-  /*
-  if (location.from && !location.from.includes(basename)) {
-    console.log('line 27 first conditional met');
-    next = basename + location.from;
-  } else if (location.from && location.from.includes(basename)) {
-    console.log('line 30 second conditional met');
-    // next= location.from;
-    // next = basename;
-
-    // WRITE LOGIC TO REMOVE FIRST INSTANCE OF BASENAME BUT IF THERE IS ONE INSTANCE OF BASENAME DO
-    // NOT REMOVE IT, IF BASENAME IS ONLY A SLASH DO NOT REMOVE IT
-    // CALLED VALIDATE nextValue => this function serves to fix malformed URLs
-    next = location.from.replace(basename, '');
-    console.log('next', next);
-    console.log('basename', basename);
-  } else {
-    next = basename;
-  }
-  */
-
-  let next = location.from ? `${basename}${location.from}` : basename;
+  // compose next according to location.from
+  let next = (location.from) ? `${basename}${location.from}` : basename;
   if (location.state && location.state.from) {
     next = `${basename}${location.state.from}`;
   }
   // clean up url: no double slashes
   next = next.replace(/\/+/g, '/');
-  const queryParams = querystring.parse(
-    location.search ? location.search.replace(/^\?+/, '') : ''
-  );
+  const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
   if (queryParams.next) {
     next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
@@ -61,30 +31,12 @@ export const getUrlForRedirectLocation = (location) => {
   }
   next = next.replace('?request_access', '?request_access_logged_in');
 
-  /* JARVIS FIX */
-  /*
-  let count = (next.match(`/dev.html/`, /g/) || []).length;
-  console.log('initial next value', next);
-  if (count > 1) next = next.replace('/dev.html', '');
-  */
-  function fixDuplicateBasename(url) {
-    //const pattern = /\/dev\.html(\/dev\.html)+/;
+  const fixDuplicateBasename = (nextVal) => {
     const pattern = basename + basename;
-    const fixedUrl = url.replace(pattern, basename);
-    return fixedUrl;
+    const fixedNextVal = nextVal.replace(pattern, basename);
+    return fixedNextVal;
   }
-  /*
-  console.log(
-    "Result of running fixDuplicateDevHtml('https://jraymond.planx-pla.net/dev.html/dev.html/workspace')",
-    fixDuplicateDevHtml(
-      'https://jraymond.planx-pla.net/dev.html/dev.html/workspace'
-    )
-  );*/
-
   next = fixDuplicateBasename(next);
-  // console.log('FINAL Basename:', basename);
-  // console.log('FINAL NEXT VALUE:', next);
-  // sleep(10000);
   return `${next}`;
 };
 
@@ -116,7 +68,7 @@ class Login extends React.Component {
     const { selectedLoginOption } = this.state;
     selectedLoginOption[index] = selectedOption;
     this.setState({ selectedLoginOption });
-  };
+  }
 
   resetState() {
     this.setState(getInitialState());
@@ -138,9 +90,7 @@ class Login extends React.Component {
         displaySideBoxImages = false;
       }
     }
-    const customImageStyle = {
-      backgroundImage: `url(/src/img/icons/${customImage}.svg)`,
-    };
+    const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
 
     let loginComponent = (
       <React.Fragment key='login-component'>
@@ -148,7 +98,7 @@ class Login extends React.Component {
           <div className='login-page__entry-login'>
             <Button
               className='login-page__entry-button'
-              onClick={() => {}}
+              onClick={() => { }}
               buttonType='primary'
               isPending
               enabled={false}
@@ -168,23 +118,22 @@ class Login extends React.Component {
         // (fence < 4.8.0), generate it from the deprecated "url" field
         let loginUrls = provider.urls;
         if (typeof loginUrls === 'undefined') {
-          loginUrls = [
-            {
-              name: provider.name,
-              url: provider.url,
-            },
-          ];
+          loginUrls = [{
+            name: provider.name,
+            url: provider.url,
+          }];
         }
         // sort login options by name
-        loginUrls = loginUrls.sort((a, b) => {
-          if (a.name.trim() > b.name.trim()) {
-            return 1;
-          }
-          if (b.name.trim() > a.name.trim()) {
-            return -1;
-          }
-          return 0;
-        });
+        loginUrls = loginUrls.sort(
+          (a, b) => {
+            if (a.name.trim() > b.name.trim()) {
+              return 1;
+            }
+            if (b.name.trim() > a.name.trim()) {
+              return -1;
+            }
+            return 0;
+          });
         // URLs in format expected by Select component
         loginOptions[i] = loginUrls.map((e) => ({
           value: e.url,
@@ -192,64 +141,61 @@ class Login extends React.Component {
         }));
       });
 
-      loginComponent = this.props.providers.map((p, i) => (
-        <React.Fragment key={i}>
-          <div className='login-page__entries'>
-            {p.desc}
-            <div className='login-page__entry-login'>
-              {// If there are multiple URLs, display a dropdown next to
-              // the login button We use createFilter here with
-              // `ignoreAccents: false` to increase performance when
-              // dealing with large numbers of IDPs (Incommon logins can
-              // have 3k+ options!). The `stringify` option to
-              // createFilter here ensures that react-select only searches
-              // over the login options' names (e.g. "The University of
-              // Chicago") and not the actual option values, which are
-              // URLs.
-              loginOptions[i].length > 1 && (
-                <Select
-                  isClearable
-                  isSearchable
-                  options={loginOptions[i]}
-                  filterOption={createFilter({
-                    ignoreAccents: false,
-                    matchFrom: 'any',
-                    stringify: (option) => `${option.label}`,
-                  })}
-                  onChange={(option) => this.selectChange(option, i)}
-                  value={
-                    this.state.selectedLoginOption &&
-                    this.state.selectedLoginOption[i]
-                  }
+      loginComponent = this.props.providers.map(
+        (p, i) => (
+          <React.Fragment key={i}>
+            <div className='login-page__entries'>
+              {p.desc}
+              <div className='login-page__entry-login'>
+                {
+                  // If there are multiple URLs, display a dropdown next to
+                  // the login button We use createFilter here with
+                  // `ignoreAccents: false` to increase performance when
+                  // dealing with large numbers of IDPs (Incommon logins can
+                  // have 3k+ options!). The `stringify` option to
+                  // createFilter here ensures that react-select only searches
+                  // over the login options' names (e.g. "The University of
+                  // Chicago") and not the actual option values, which are
+                  // URLs.
+                  loginOptions[i].length > 1 && (
+                    <Select
+                      isClearable
+                      isSearchable
+                      options={loginOptions[i]}
+                      filterOption={createFilter({ ignoreAccents: false, matchFrom: 'any', stringify: (option) => `${option.label}` })}
+                      onChange={(option) => this.selectChange(option, i)}
+                      value={this.state.selectedLoginOption
+                        && this.state.selectedLoginOption[i]}
+                    />
+                  )
+                }
+                <Button
+                  className='login-page__entry-button'
+                  onClick={() => {
+                    window.location.href = getLoginUrl(
+                      loginOptions[i].length > 1
+                        ? this.state.selectedLoginOption[i].value
+                        : loginOptions[i][0].value,
+                      next,
+                    );
+                  }}
+                  label={p.name}
+                  buttonType={p.secondary ? 'default' : 'primary'}
                 />
-              )}
-              <Button
-                className='login-page__entry-button'
-                onClick={() => {
-                  window.location.href = getLoginUrl(
-                    loginOptions[i].length > 1
-                      ? this.state.selectedLoginOption[i].value
-                      : loginOptions[i][0].value,
-                    next
-                  );
-                }}
-                label={p.name}
-                buttonType={p.secondary ? 'default' : 'primary'}
-              />
+              </div>
             </div>
-          </div>
-        </React.Fragment>
-      ));
+          </React.Fragment>
+        ),
+      );
     }
 
     return (
       <div className='login-page'>
-        {displaySideBoxImages ? (
-          <div
-            className='login-page__side-box login-page__side-box--left'
-            style={customImageStyle}
-          />
-        ) : null}
+        {
+          (displaySideBoxImages)
+            ? <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
@@ -262,34 +208,39 @@ class Login extends React.Component {
           {loginComponent}
           <div>
             {this.props.data.contact}
-            {this.props.data.email && !this.props.data.contact_link && (
-              <a href={`mailto:${this.props.data.email}`}>
-                {this.props.data.email}
-              </a>
-            )}
-            {this.props.data.contact_link && (
-              <a href={this.props.data.contact_link.href}>
-                {this.props.data.contact_link.text
-                  ? this.props.data.contact_link.text
-                  : this.props.data.contact_link.href}
-              </a>
-            )}
+            {(this.props.data.email && !this.props.data.contact_link)
+              && (
+                <a href={`mailto:${this.props.data.email}`}>
+                  {this.props.data.email}
+                </a>
+              )}
+            {
+              this.props.data.contact_link
+              && (
+                <a href={this.props.data.contact_link.href}>
+                  {this.props.data.contact_link.text
+                    ? this.props.data.contact_link.text
+                    : this.props.data.contact_link.href}
+                </a>
+              )
+            }
             {'.'}
           </div>
         </div>
-        {displaySideBoxImages ? (
-          <div
-            className='login-page__side-box login-page__side-box--left'
-            style={customImageStyle}
-          />
-        ) : null}
+        {
+          (displaySideBoxImages)
+            ? <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+            : null
+        }
       </div>
     );
   }
 }
 
 Login.propTypes = {
-  providers: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  providers: PropTypes.arrayOf(
+    PropTypes.objectOf(PropTypes.any),
+  ),
   location: PropTypes.object.isRequired,
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
