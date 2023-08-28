@@ -96,33 +96,35 @@ function FilterSetOpenForm({
     <div className='explorer-filter-set-form'>
       <h4>Select a saved Filter Set to open</h4>
       <form onSubmit={(e) => e.preventDefault()}>
-        <SimpleInputField
-          label='Source'
-          input={
-            <>
-              <label style={{ display: 'block', textAlign: 'initial' }}>
-                <input
-                  type='radio'
-                  value={FILTER_SET_SOURCE.saved}
-                  checked={source === FILTER_SET_SOURCE.saved}
-                  onChange={() => setSource(FILTER_SET_SOURCE.saved)}
-                  style={{ marginRight: '0.5rem' }}
-                />
-                Saved by me
-              </label>
-              <label style={{ display: 'block', textAlign: 'initial' }}>
-                <input
-                  type='radio'
-                  value={FILTER_SET_SOURCE.shared}
-                  checked={source === FILTER_SET_SOURCE.shared}
-                  onChange={() => setSource(FILTER_SET_SOURCE.shared)}
-                  style={{ marginRight: '0.5rem' }}
-                />
-                Shared via token
-              </label>
-            </>
-          }
-        />
+        {fetchWithToken && 
+          <SimpleInputField
+            label='Source'
+            input={
+              <>
+                <label style={{ display: 'block', textAlign: 'initial' }}>
+                  <input
+                    type='radio'
+                    value={FILTER_SET_SOURCE.saved}
+                    checked={source === FILTER_SET_SOURCE.saved}
+                    onChange={() => setSource(FILTER_SET_SOURCE.saved)}
+                    style={{ marginRight: '0.5rem' }}
+                  />
+                  Saved by me
+                </label>
+                <label style={{ display: 'block', textAlign: 'initial' }}>
+                  <input
+                    type='radio'
+                    value={FILTER_SET_SOURCE.shared}
+                    checked={source === FILTER_SET_SOURCE.shared}
+                    onChange={() => setSource(FILTER_SET_SOURCE.shared)}
+                    style={{ marginRight: '0.5rem' }}
+                  />
+                  Shared via token
+                </label>
+              </>
+            }
+          />
+        }
         {isSourceSaved ? (
           <div style={{ height: '8rem' }}>
             <SimpleInputField
