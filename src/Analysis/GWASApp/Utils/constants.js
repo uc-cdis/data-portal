@@ -52,6 +52,7 @@ export const MESSAGES = {
 
 export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
   let hasZeroSizeIssue = false;
+  // If any of the values in finalPopulationSizes: case, control or total are zero return true
   finalPopulationSizes.forEach((obj) => {
     if (obj?.size === 0) {
       hasZeroSizeIssue = true;
