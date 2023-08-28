@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
-import { GWASAppSteps } from './Utils/constants';
+import { GWASAppSteps, checkFinalPopulationSizeZero } from './Utils/constants';
 import { SourceContextProvider } from './Utils/Source';
 import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
@@ -87,6 +87,8 @@ const GWASContainer = () => {
     (state.currentStep === 0 && !state.selectedStudyPopulationCohort)
     || (state.currentStep === 1 && !state.outcome)
     || (state.currentStep === 3 && !state.selectedHare.concept_value)
+    || (state.currentStep === 3
+      && checkFinalPopulationSizeZero(state.finalPopulationSizes))
   ) {
     nextButtonEnabled = false;
   }
