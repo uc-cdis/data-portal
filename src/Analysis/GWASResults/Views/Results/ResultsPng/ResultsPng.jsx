@@ -50,7 +50,7 @@ import '../Results.css';
     return (
       <React.Fragment>
         {displayTopSection()}
-        <LoadingErrorMessage message='Plot cannot display. This workflow pre-dates the change in UI. To see the plot please download the results' />
+        <LoadingErrorMessage message='Error getting Manhattan plot' />
       </React.Fragment>
     );
   }
