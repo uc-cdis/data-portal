@@ -35,7 +35,7 @@ export const getUrlForRedirectLocation = (location) => {
     const pattern = basename + basename;
     const fixedNextVal = nextVal.replace(pattern, basename);
     return fixedNextVal;
-  }
+  };
   next = fixDuplicateBasename(next);
   return `${next}`;
 };
