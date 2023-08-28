@@ -91,7 +91,7 @@ const Results = () => {
     }
     // If none of the above, show error:
     return (
-      <LoadingErrorMessage message='Failed to load Manhattan Plot: no plot data available for this workflow' />
+      <LoadingErrorMessage message='Plot cannot display. This workflow pre-dates the availability of the plot in the user interface. To see the plot please use the “Download All Results” button.' />
     );
   };
 
