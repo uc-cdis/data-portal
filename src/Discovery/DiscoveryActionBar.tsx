@@ -22,11 +22,12 @@ import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
-  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl, bundle,
 } from '../localconf';
 
 interface User {
-  username: string
+  username: string;
+  fence_idp?: string; // eslint-disable-line camelcase
 }
 interface JobStatus {
   uid: string;
@@ -403,6 +404,7 @@ const DiscoveryActionBar = (props: Props) => {
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
+  const [healICPSRLoginNeeded, setHealICPSRLoginNeeded] = useState(false);
 
   // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
@@ -473,6 +475,23 @@ const DiscoveryActionBar = (props: Props) => {
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
+  useEffect(
+    () => {
+      if (bundle === 'heal') {
+        // check selected studies for ICPSR study
+        if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag) => tag?.name === 'ICPSR' && tag?.category === 'Data Repository'))) {
+          // check if user is logged in via InCommons
+          if (props.user.fence_idp !== 'shibboleth') {
+            // if not logged in via InCommons show special messaging
+            setHealICPSRLoginNeeded(true);
+            return;
+          }
+        }
+      }
+      setHealICPSRLoginNeeded(false);
+    },
+    [props.discovery.selectedResources, props.user.fence_idp],
+  );
 
   const downloadZipButton = (
     props.config.features.exportToWorkspace?.enableDownloadZip
@@ -483,7 +502,9 @@ const DiscoveryActionBar = (props: Props) => {
           arrowPointAtCenter
           content={(
             <React.Fragment>
-          Directly download data (up to 250Mb) from selected studies
+              {healICPSRLoginNeeded
+                ? 'This dataset is only accessible to users who have authenticated via InCommons. Please log back in using the InCommons option.'
+                : 'Directly download data (up to 250Mb) from selected studies'}
             </React.Fragment>
           )}
         >
@@ -506,7 +527,7 @@ const DiscoveryActionBar = (props: Props) => {
             }
             type='default'
             className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-            disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress}
+            disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress || healICPSRLoginNeeded}
             icon={<DownloadOutlined />}
             loading={downloadStatus.inProgress}
           >
