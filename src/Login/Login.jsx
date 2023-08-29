@@ -30,6 +30,13 @@ export const getUrlForRedirectLocation = (location) => {
     return basename;
   }
   next = next.replace('?request_access', '?request_access_logged_in');
+
+  const fixDuplicateBasename = (nextVal) => {
+    const pattern = basename + basename;
+    const fixedNextVal = nextVal.replace(pattern, basename);
+    return fixedNextVal;
+  };
+  next = fixDuplicateBasename(next);
   return `${next}`;
 };
 
