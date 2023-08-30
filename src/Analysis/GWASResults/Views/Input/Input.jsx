@@ -5,10 +5,8 @@ import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader
 import JobDetails from './JobDetails/JobDetails';
 import AttritionTableWrapper from './AttritionTable/AttrtitionTableWrapper';
 import SharedContext from '../../Utils/SharedContext';
-import {
-  getDataForWorkflowArtifact,
-  queryConfig,
-} from '../../Utils/gwasWorkflowApi';
+import { getDataForWorkflowArtifact } from '../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../SharedUtils/QueryConfig';
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Input.css';
 
