@@ -1,8 +1,8 @@
 const queryConfig = {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
-  };
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  retry: false,
+};
 
-  export default queryConfig;
+export default queryConfig;

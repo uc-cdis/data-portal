@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import { Spin, Button } from 'antd';
-import { fetchSimpleOverlapInfo,  addCDFilter } from '../../../Utils/cohortMiddlewareApi';
+import { fetchSimpleOverlapInfo, addCDFilter } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
 import CohortsOverlapLegend from './CohortsOverlapLegend';
