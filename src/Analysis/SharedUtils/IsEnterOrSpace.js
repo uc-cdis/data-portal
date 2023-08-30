@@ -4,4 +4,4 @@ const isEnterOrSpace = (event) => event.key === 'Enter'
   || event.keycode === '32'
   || event.keycode === '13';
 
-  export default isEnterOrSpace;
+export default isEnterOrSpace;

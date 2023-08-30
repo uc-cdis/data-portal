@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import './DismissibleMessage.css';
 import isEnterOrSpace from '../IsEnterOrSpace';
 
-
 const DismissibleMessage = ({
   title = 'Placeholder Title',
   description = 'placeholder description',
