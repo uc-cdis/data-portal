@@ -503,7 +503,7 @@ const DiscoveryActionBar = (props: Props) => {
           content={(
             <React.Fragment>
               {healICPSRLoginNeeded
-                ? 'This dataset is only accessible to users who have authenticated via InCommons. Please log back in using the InCommons option.'
+                ? 'This dataset is only accessible to users who have authenticated via InCommons. Please log in using the InCommons option.'
                 : 'Directly download data (up to 250Mb) from selected studies'}
             </React.Fragment>
           )}
