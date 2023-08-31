@@ -19,6 +19,18 @@ const isEmailAddress = (input) => {
  * NavBar renders row of nav-items of form { name, icon, link }
  */
 class TopBar extends Component {
+  componentDidMount() {
+    // clear global store of expired banners
+    if (this.props.closedBanners) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [key, value] of Object.entries(this.props.closedBanners)) {
+        if (Date.now() > value) {
+          this.props.onResetBanner({ id: key });
+        }
+      }
+    }
+  }
+
   isActive = (id) => this.props.activeTab === id;
 
   render() {
@@ -203,7 +215,9 @@ TopBar.propTypes = {
   onLogoutClick: PropTypes.func.isRequired,
   discovery: PropTypes.shape({ selectedResources: PropTypes.array }).isRequired,
   banners: PropTypes.array,
-  onCloseBanner: PropTypes.func,
+  closedBanners: PropTypes.array,
+  onCloseBanner: PropTypes.func.isRequired,
+  onResetBanner: PropTypes.func.isRequired,
 };
 
 TopBar.defaultProps = {
@@ -211,7 +225,7 @@ TopBar.defaultProps = {
   activeTab: '',
   onActiveTab: () => {},
   banners: [],
-  onCloseBanner: () => {},
+  closedBanners: [],
 };
 
 export default withRouter(TopBar);

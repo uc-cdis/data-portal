@@ -35,6 +35,7 @@ export const ReduxTopBar = (() => {
     userAuthMapping: state.userAuthMapping,
     isFullWidth: isPageFullScreen(state.bar.active),
     discovery: state.discovery,
+    closedBanners: state?.banner?.closedBanners,
     banners: components.banner?.map(({ type, message, resetMsgDays }) => ({
       id: `${type}_${message.replace(/\W/g, '_')}`,
       type,
@@ -42,7 +43,6 @@ export const ReduxTopBar = (() => {
       resetDate: Date.now() + ((resetMsgDays || 365) * 1000 * 60 * 60 * 24),
     })).filter((obj) => (// check if banner has been closed before
       !state?.banner?.closedBanners?.[obj.id]
-      || Date.now() > state.banner.closedBanners[obj.id]
     )),
   });
 
