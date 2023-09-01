@@ -12,7 +12,7 @@ import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
-import bar from './Layout/reducers';
+import { bar, banner } from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import study from './StudyViewer/reducers';
@@ -100,6 +100,7 @@ const reducers = combineReducers({
   study,
   privacyPolicy,
   bar,
+  banner,
   homepage,
   index,
   popups,
