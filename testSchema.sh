@@ -5,11 +5,7 @@ set -e
 # Do not use associative arrays - not supported on Mac!
 declare -a testCases
 testCases=(
-bpa "data.bloodpac.org"
-dcf "nci-crdc.datacommons.io"
-gtex "gen3.biodatacatalyst.nhlbi.nih.gov"
-anvil "gen3.theanvil.io"
-genomel "genomel.bionimbus.org"
+default "generic.planx-pla.net"
 )
 index=0
 while [[ $index -lt ${#testCases[@]} ]]; do
