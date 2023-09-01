@@ -256,6 +256,7 @@ const handleDownloadZipClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
   location,
+  healICPSRLoginNeeded,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
@@ -263,6 +264,10 @@ const handleDownloadZipClick = async (
     if (!isLinked) {
       return;
     }
+  }
+
+  if (healICPSRLoginNeeded) {
+    return;
   }
 
   const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
@@ -432,6 +437,27 @@ const DiscoveryActionBar = (props: Props) => {
     [props.discovery.selectedResources],
   );
 
+  const healICPSRLoginNeededLogic = () => {
+    if (bundle === 'heal') {
+      // check selected studies for ICPSR study
+      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag) => tag?.name === 'ICPSR' && tag?.category === 'Data Repository'))) {
+        // check if user is logged in via InCommons
+        if (props.user.fence_idp !== 'shibboleth') {
+          // if not logged in via InCommons show special messaging
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  useEffect(
+    () => {
+      setHealICPSRLoginNeeded(healICPSRLoginNeededLogic);
+    },
+    [props.discovery.selectedResources, props.user.fence_idp, healICPSRLoginNeededLogic],
+  );
+
   useEffect(
     () => {
       if (props.discovery.actionToResume === 'download') {
@@ -442,6 +468,7 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
+          healICPSRLoginNeededLogic(),
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
@@ -475,23 +502,6 @@ const DiscoveryActionBar = (props: Props) => {
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
-  useEffect(
-    () => {
-      if (bundle === 'heal') {
-        // check selected studies for ICPSR study
-        if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag) => tag?.name === 'ICPSR' && tag?.category === 'Data Repository'))) {
-          // check if user is logged in via InCommons
-          if (props.user.fence_idp !== 'shibboleth') {
-            // if not logged in via InCommons show special messaging
-            setHealICPSRLoginNeeded(true);
-            return;
-          }
-        }
-      }
-      setHealICPSRLoginNeeded(false);
-    },
-    [props.discovery.selectedResources, props.user.fence_idp],
-  );
 
   const downloadZipButton = (
     props.config.features.exportToWorkspace?.enableDownloadZip
@@ -511,7 +521,7 @@ const DiscoveryActionBar = (props: Props) => {
           <Button
             onClick={
               async () => {
-                if (props.user.username) {
+                if (props.user.username && !healICPSRLoginNeeded) {
                   handleDownloadZipClick(
                     props.config,
                     props.discovery.selectedResources,
@@ -519,6 +529,7 @@ const DiscoveryActionBar = (props: Props) => {
                     setDownloadStatus,
                     history,
                     location,
+                    healICPSRLoginNeeded,
                   );
                 } else {
                   handleRedirectToLoginClick('download');
@@ -527,13 +538,13 @@ const DiscoveryActionBar = (props: Props) => {
             }
             type='default'
             className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-            disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress || healICPSRLoginNeeded}
+            disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress}
             icon={<DownloadOutlined />}
             loading={downloadStatus.inProgress}
           >
             { (
               () => {
-                if (props.user.username) {
+                if (props.user.username && !healICPSRLoginNeeded) {
                   if (downloadStatus.inProgress) {
                     return 'Preparing download...';
                   }
