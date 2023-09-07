@@ -223,7 +223,7 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  height: 29px;
+  height: 200px;
   position: relative;
 }
 
@@ -251,6 +251,10 @@
 }
 
 .graphiql-container .variable-editor-title-text:active {
+  color: black;
+}
+
+.graphiql-container .variable-editor-title-text .active {
   color: black;
 }
 
