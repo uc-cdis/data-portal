@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { config } from '../../params';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
@@ -132,6 +133,12 @@ function getChartData({
   };
 }
 
+function openLink(link) {
+  if (link) {
+    window.open(link);
+  }
+}
+
 /**
  * @typedef {Object} ExplorerVisualizationProps
  * @property {number} accessibleCount
@@ -175,6 +182,7 @@ function ExplorerVisualization({
     buttonConfig,
     chartConfig,
     filterConfig,
+    getAccessButtonLink,
     guppyConfig,
     hideGetAccessButton = false,
     patientIdsConfig,
@@ -244,6 +252,7 @@ function ExplorerVisualization({
     guppyConfig,
     isLocked: isComponentLocked,
   };
+  const isDataRequestEnabled = config.dataRequests?.enabled ?? false;
 
   return (
     <div className={className}>
@@ -263,7 +272,7 @@ function ExplorerVisualization({
         <div className='explorer-visualization__button-group'>
           {accessibleCount < totalCount && !hideGetAccessButton && (<>
             <ExplorerRequestAccessButton
-              onClick={() => setRequestAccessModalOpen(true)}
+              onClick={() => isDataRequestEnabled ? setRequestAccessModalOpen(true) : openLink(getAccessButtonLink) }
               tooltipText={
                 accessibleCount === 0
                   ? 'You do not have permissions to view line-level data.'
