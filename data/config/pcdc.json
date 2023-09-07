@@ -335,6 +335,9 @@
           }
         ]
       },
+      "dataRequests": {
+        "enabled": true
+      },
       "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
     }
   ]
