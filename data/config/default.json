@@ -286,7 +286,7 @@
     }
   ],
   "dataRequests": {
-    "enabled": true
+    "enabled": false
   },
   "showFenceAuthzOnProfile": true,
   "componentToResourceMapping": {}
