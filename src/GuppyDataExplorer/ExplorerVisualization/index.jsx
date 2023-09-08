@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { config } from '../../params';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
 import { useAppSelector } from '../../redux/hooks';
-import { components } from '../../params';
+import { components, config } from '../../params';
 import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
