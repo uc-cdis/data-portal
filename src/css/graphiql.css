@@ -254,7 +254,7 @@
   color: black;
 }
 
-.graphiql-container .variable-editor-title-text .active {
+.graphiql-container .variable-editor-title-text.active {
   color: black;
 }
 
