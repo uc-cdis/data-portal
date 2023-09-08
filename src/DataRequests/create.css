@@ -12,3 +12,11 @@
     line-height: 80px;
     color: inherit;
 }
+
+.data-request__add-email {
+    margin-right: 20px;
+}
+
+.data-request__add-email-icon {
+    height: 20px;
+}

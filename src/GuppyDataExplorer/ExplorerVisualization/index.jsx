@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
 import { useAppSelector } from '../../redux/hooks';
-import { components } from '../../params';
+import { components, config } from '../../params';
 import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
+import Popup from '../../components/Popup';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerFilterSetWorkspace from '../ExplorerFilterSetWorkspace';
 import ExplorerTable from '../ExplorerTable';
@@ -131,6 +132,12 @@ function getChartData({
   };
 }
 
+function openLink(link) {
+  if (link) {
+    window.open(link);
+  }
+}
+
 /**
  * @typedef {Object} ExplorerVisualizationProps
  * @property {number} accessibleCount
@@ -168,6 +175,7 @@ function ExplorerVisualization({
 }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isRequestAccessModalOpen, setRequestAccessModalOpen] = useState(false);
 
   const {
     buttonConfig,
@@ -180,6 +188,7 @@ function ExplorerVisualization({
     survivalAnalysisConfig,
     tableConfig,
   } = useAppSelector((state) => state.explorer.config);
+
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
 
@@ -242,6 +251,7 @@ function ExplorerVisualization({
     guppyConfig,
     isLocked: isComponentLocked,
   };
+  const isDataRequestEnabled = config.dataRequests?.enabled ?? false;
 
   return (
     <div className={className}>
@@ -259,16 +269,33 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='explorer-visualization__button-group'>
-          {accessibleCount < totalCount && !hideGetAccessButton && (
+          {accessibleCount < totalCount && !hideGetAccessButton && (<>
             <ExplorerRequestAccessButton
-              getAccessButtonLink={getAccessButtonLink}
+              onClick={() => isDataRequestEnabled ? setRequestAccessModalOpen(true) : openLink(getAccessButtonLink) }
               tooltipText={
                 accessibleCount === 0
                   ? 'You do not have permissions to view line-level data.'
                   : 'You have only limited access to line-level data.'
               }
             />
-          )}
+            {isRequestAccessModalOpen && 
+              <Popup
+                onClose={() => setRequestAccessModalOpen(false)}
+                leftButtons={[{
+                  caption: 'Back to Explore',
+                  fn: () => setRequestAccessModalOpen(false)
+                }]}
+                rightButtons={[{
+                  caption: 'Continue to Request',
+                  fn: () => navigate('/requests/create')
+                }]}
+              >
+                <div className='explorer-visualization__request-access-modal'>
+                  Be sure to save the filter sets you want to use for your data request before continuing.
+                </div>
+              </Popup>
+            }
+          </>)}
           {patientIdsConfig?.export && (
             <ExplorerExploreExternalButton filter={filter} />
           )}
