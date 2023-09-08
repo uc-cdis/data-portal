@@ -87,6 +87,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
   new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
   new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
+  new webpack.EnvironmentPlugin(['GEN3_BUNDLE']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),

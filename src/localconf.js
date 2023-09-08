@@ -36,6 +36,7 @@ function buildConfig(opts) {
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
     ddApplicationId: process.env.DATADOG_APPLICATION_ID,
     ddClientToken: process.env.DATADOG_CLIENT_TOKEN,
+    bundle: process.env.GEN3_BUNDLE,
   };
 
   //
@@ -70,6 +71,7 @@ function buildConfig(opts) {
     mapboxAPIToken,
     ddApplicationId,
     ddClientToken,
+    bundle,
   } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
@@ -588,6 +590,7 @@ function buildConfig(opts) {
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,
+    bundle,
   };
 }
 
