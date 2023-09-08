@@ -387,6 +387,9 @@ Below is an example, with inline comments describing what each JSON block config
             "project_id",
             "data_type",
             "data_format"
+          ],
+          "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields, there is no behavior differences if used on text fields
+            "consortium_id"
           ]
         }
       ]
