@@ -7,7 +7,7 @@ import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
-import DismissibleMessage from '../../../Components/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 
 const JobDetails = ({ attritionTableData }) => {
   const { selectedRowData } = useContext(SharedContext);

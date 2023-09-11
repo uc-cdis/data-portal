@@ -11,7 +11,7 @@ import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopu
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
-import DismissibleMessagesList from './Components/DismissibleMessage/DismissibleMessagesList';
+import DismissibleMessagesList from './DismissibleMessagesList/DismissibleMessagesList';
 import './GWASApp.css';
 
 const GWASContainer = () => {

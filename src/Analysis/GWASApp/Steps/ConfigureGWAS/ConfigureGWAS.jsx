@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
-import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
