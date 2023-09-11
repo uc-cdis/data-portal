@@ -28,7 +28,7 @@
   linkNode.rel = 'stylesheet';
   document.body.appendChild(linkNode);
   // create local theme override node in body
-  const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css?_=${cssVersion}` : `https://localhost:9443/src/css/themeoverrides.css?_=${cssVersion}`;
+  const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css` : 'https://localhost:9443/src/css/themeoverrides.css';
   linkNode = document.createElement('link');
   linkNode.href = localThemeOverridesSrc;
   linkNode.type = 'text/css';
