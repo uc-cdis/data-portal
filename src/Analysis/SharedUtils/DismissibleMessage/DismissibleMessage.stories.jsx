@@ -2,7 +2,7 @@ import React from 'react';
 import DismissibleMessage from './DismissibleMessage';
 
 export default {
-  title: 'Tests3/SharedUtils/DismissibleMessage',
+  title: 'TESTS1/SharedUtils/DismissibleMessage',
   component: DismissibleMessage,
 };
 
