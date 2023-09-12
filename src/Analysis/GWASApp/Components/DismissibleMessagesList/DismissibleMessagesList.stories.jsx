@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DismissibleMessagesList from './DismissibleMessagesList';
-import '../GWASApp.css';
+import '../../GWASApp.css';
 
 export default {
   title: 'Tests3/GWASApp/DismissibleMessageList/DismissibleMessagesList',
