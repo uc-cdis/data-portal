@@ -44,7 +44,7 @@ export const MESSAGES = {
 };
 
 const minimumRecommendedCohortSize = 1000;
-export const checkFinalPopulationSizes = (finalPopulationSizes)=> {
+export const checkFinalPopulationSizes = (finalPopulationSizes) => {
   let hasSizeIssue = false;
   finalPopulationSizes.forEach((obj) => {
     if (obj?.size < minimumRecommendedCohortSize) {
@@ -52,7 +52,7 @@ export const checkFinalPopulationSizes = (finalPopulationSizes)=> {
     }
   });
   return hasSizeIssue;
-}
+};
 
 export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
   let hasZeroSizeIssue = false;

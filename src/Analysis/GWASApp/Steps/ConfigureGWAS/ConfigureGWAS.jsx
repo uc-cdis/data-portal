@@ -48,8 +48,6 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
-
-
   useEffect(() => {
     if (checkFinalPopulationSizeZero(finalPopulationSizes)) {
       dispatch({
