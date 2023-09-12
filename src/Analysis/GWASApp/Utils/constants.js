@@ -14,9 +14,8 @@ export const GWASAppSteps = [
   },
 ];
 
-// TODO - move this and function above to a .js file with a clearer name?
 export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
-export const minimumRecommendedCohortSize = 1000;
+
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
@@ -43,6 +42,17 @@ export const MESSAGES = {
     messageType: 'warning',
   },
 };
+
+const minimumRecommendedCohortSize = 1000;
+export const checkFinalPopulationSizes = (finalPopulationSizes)=> {
+  let hasSizeIssue = false;
+  finalPopulationSizes.forEach((obj) => {
+    if (obj?.size < minimumRecommendedCohortSize) {
+      hasSizeIssue = true;
+    }
+  });
+  return hasSizeIssue;
+}
 
 export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
   let hasZeroSizeIssue = false;

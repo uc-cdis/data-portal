@@ -10,8 +10,8 @@ import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import {
-  minimumRecommendedCohortSize,
   MESSAGES,
+  checkFinalPopulationSizes,
   checkFinalPopulationSizeZero,
 } from '../../Utils/constants';
 import '../../GWASApp.css';
@@ -48,15 +48,7 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
-  function checkFinalPopulationSizes() {
-    let hasSizeIssue = false;
-    finalPopulationSizes.forEach((obj) => {
-      if (obj?.size < minimumRecommendedCohortSize) {
-        hasSizeIssue = true;
-      }
-    });
-    return hasSizeIssue;
-  }
+
 
   useEffect(() => {
     if (checkFinalPopulationSizeZero(finalPopulationSizes)) {
@@ -66,13 +58,13 @@ const ConfigureGWAS = ({
       });
     } else if (
       finalPopulationSizes.length === 1
-      && checkFinalPopulationSizes()
+      && checkFinalPopulationSizes(finalPopulationSizes)
     ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
       });
-    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes()) {
+    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes(finalPopulationSizes)) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
