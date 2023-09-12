@@ -3,10 +3,8 @@ import { useQuery } from 'react-query';
 import { Spin, Button, notification } from 'antd';
 import * as d3 from 'd3-selection';
 import SharedContext from '../../../Utils/SharedContext';
-import {
-  getDataForWorkflowArtifact,
-  queryConfig,
-} from '../../../Utils/gwasWorkflowApi';
+import { getDataForWorkflowArtifact } from '../../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../../SharedUtils/QueryConfig';
 import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import QQPlotModal from './QQPlotModal/QQPlotModal';
 import ManhattanPlot from '../../../Components/Diagrams/ManhattanPlot/ManhattanPlot';

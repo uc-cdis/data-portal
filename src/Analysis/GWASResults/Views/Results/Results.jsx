@@ -3,11 +3,8 @@ import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
-import {
-  fetchPresignedUrlForWorkflowArtifact,
-  getWorkflowDetails,
-  queryConfig,
-} from '../../Utils/gwasWorkflowApi';
+import { fetchPresignedUrlForWorkflowArtifact, getWorkflowDetails } from '../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../SharedUtils/QueryConfig';
 import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';

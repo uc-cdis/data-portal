@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 import { Modal, Spin } from 'antd';
 import QQPlot from '../../../../Components/Diagrams/QQPlot/QQPlot';
 import SharedContext from '../../../../Utils/SharedContext';
-import {
-  getDataForWorkflowArtifact,
-  queryConfig,
-} from '../../../../Utils/gwasWorkflowApi';
+import { getDataForWorkflowArtifact } from '../../../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../../../SharedUtils/QueryConfig';
 import LoadingErrorMessage from '../../../../Components/LoadingErrorMessage/LoadingErrorMessage';
 
 const QQPlotModal = ({ modalOpen, setModalOpen }) => {
