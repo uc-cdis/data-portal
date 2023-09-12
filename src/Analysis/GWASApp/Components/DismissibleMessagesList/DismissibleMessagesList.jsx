@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import DismissibleMessage from '../../SharedUtils/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 
 // Messages in messages list need to follow this format:
 //   {
