@@ -45,10 +45,6 @@ const Congratulations = ({
               type: ACTIONS.SET_CURRENT_STEP,
               payload: 3,
             });
-            dispatch({
-              type: ACTIONS.UPDATE_SELECTED_HARE,
-              payload: '',
-            });
           }}
         >
           Submit Similar (Stay Here)

@@ -4,6 +4,7 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import ACTIONS from '../../Utils/StateManagement/Actions';
+import initialState from '../../Utils/StateManagement/InitialState';
 import './SelectCovariates.css';
 import '../../GWASApp.css';
 
@@ -15,10 +16,14 @@ const SelectCovariates = ({
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
-    () => () => dispatch({
+    () => () => {dispatch({
       type: ACTIONS.SET_SELECTION_MODE,
       payload: '',
-    }),
+    })
+    dispatch({
+      type: ACTIONS.UPDATE_SELECTED_HARE,
+      payload: initialState.selectedHare,
+    });},
     [],
   );
 
