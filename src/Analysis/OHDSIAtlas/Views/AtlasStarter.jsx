@@ -39,7 +39,14 @@ const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
         teamProjects={data.teams}
         setSelectedTeamProject={setSelectedTeamProject}
       />
-      <button type='button' style={{ height: '32px' }} onClick={() => { setCurrentViewAndTeamProject('atlas', selectedTeamProject); }}>Start Atlas</button>
+      <button
+        type='button'
+        style={{ height: '32px' }}
+        disabled={selectedTeamProject === ''}
+        onClick={() => { setCurrentViewAndTeamProject('atlas', selectedTeamProject); }}
+      >
+          Start Atlas
+      </button>
     </React.Fragment>
   );
 };
