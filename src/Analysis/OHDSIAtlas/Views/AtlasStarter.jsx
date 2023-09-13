@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../SharedUtils/QueryConfig';
 import fetchAuthorizationMappingsForCurrentUser from '../Utils/teamProjectApi';
@@ -39,14 +39,14 @@ const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
         teamProjects={data.teams}
         setSelectedTeamProject={setSelectedTeamProject}
       />
-      <button
+      <Button
         type='button'
         style={{ height: '32px' }}
         disabled={selectedTeamProject === ''}
         onClick={() => { setCurrentViewAndTeamProject('atlas', selectedTeamProject); }}
       >
           Start Atlas
-      </button>
+      </Button>
     </React.Fragment>
   );
 };
