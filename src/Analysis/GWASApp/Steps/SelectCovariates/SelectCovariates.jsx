@@ -15,17 +15,17 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
-  useEffect(
-    () => () => {dispatch({
+
+  useEffect(() => {
+    dispatch({
       type: ACTIONS.SET_SELECTION_MODE,
       payload: '',
-    })
+    });
     dispatch({
       type: ACTIONS.UPDATE_SELECTED_HARE,
       payload: initialState.selectedHare,
-    });},
-    [],
-  );
+    });
+  }, []);
 
   return (
     <React.Fragment>
