@@ -254,6 +254,7 @@ Below is an example, with inline comments describing what each JSON block config
         "systolic_blood_pressure",
         "url"
       ],
+      "ordered": false, // optional; by default table columns will be sorted alphabetically by Header, if true table fields will be displayed in the order of "fields" list above,
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
       ],
