@@ -111,7 +111,8 @@ function buildConfig(opts) {
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
-  const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
+  const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '').replace(/\/$/, '');
+  const graphqlSchemaUrl = `${hostname}${cleanBasename}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
   const Error403Url = '/403error';
@@ -146,6 +147,10 @@ function buildConfig(opts) {
   if (config.ddEnv) {
     ddEnv = config.ddEnv;
   }
+  let ddUrl = 'datadoghq.com';
+  if (config.ddUrl) {
+    ddUrl = config.ddUrl;
+  }
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
@@ -155,6 +160,8 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
+
+
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -586,6 +593,7 @@ function buildConfig(opts) {
     ddApplicationId,
     ddClientToken,
     ddEnv,
+    ddUrl,
     ddSampleRate,
     showSystemUse,
     showSystemUseOnlyOnLogin,
