@@ -7,7 +7,7 @@ import AttritionTableWrapper from './AttritionTable/AttrtitionTableWrapper';
 import SharedContext from '../../Utils/SharedContext';
 import { getDataForWorkflowArtifact } from '../../Utils/gwasWorkflowApi';
 import queryConfig from '../../../SharedUtils/QueryConfig';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import './Input.css';
 
 const Input = () => {

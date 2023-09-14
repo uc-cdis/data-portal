@@ -6,7 +6,7 @@ import SharedContext from '../../Utils/SharedContext';
 import ExecutionTable from './ExecutionTable/ExecutionTable';
 import PHASES from '../../Utils/PhasesEnumeration';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import './Execution.css';
 
 const Execution = () => {
