@@ -245,9 +245,17 @@ function App() {
             path="create"
             element={
             <ProtectedContent preload={({ state }) => {
+              let { 
+                is_admin,
+                authz: { '/services/amanuensis': serviceAccessMethods }
+              } = state.user;
+              let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+                serviceAccessMethods[0]?.method :
+                undefined;
+              let isAdmin = is_admin || !!serviceAccessMethod;
               /** @type {Promise[]} */
               let requests = [dispatch(fetchFilterSets())];
-              if (state.user.is_admin) {
+              if (isAdmin) {
                 requests.push(dispatch(adminFetchUsers()));
               }
               return Promise.all(requests);
