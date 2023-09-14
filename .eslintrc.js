@@ -42,6 +42,16 @@ module.exports = {
   },
   rules: {
     'no-underscore-dangle': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        'devDependencies': [
+          'src/stories/**',
+          '**/*.test.*',
+        ],
+        "peerDependencies": true
+      }
+    ],
     indent: [
       'error',
       2,
