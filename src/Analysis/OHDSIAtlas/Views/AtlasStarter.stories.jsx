@@ -8,8 +8,8 @@ export default {
   component: AtlasStarter,
 };
 
-const mockSetCurrentViewAndTeamProject = () => {
-  console.log('mockSetCurrentViewAndTeamProject');
+const mockSetCurrentViewAndTeamProject = (viewName, selectedTeamProject) => {
+  console.log(`mockSetCurrentViewAndTeamProject. (mock)Starting view ${viewName} with teamproject ${selectedTeamProject}`);
 }
 
 const mockedQueryClient = new QueryClient();
