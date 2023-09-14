@@ -40,6 +40,7 @@ if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
+  connectSrcURLs.push('https://*.browser-intake-ddog-gov.com');
 }
 if (process.env.MAPBOX_API_TOKEN) {
   connectSrcURLs.push('https://*.tiles.mapbox.com');
