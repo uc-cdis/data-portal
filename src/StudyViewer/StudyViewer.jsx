@@ -126,6 +126,13 @@ class StudyViewer extends React.Component {
             }
           });
         }
+        if (typeof aVal === 'string' && typeof bVal === 'string') {
+          if (desc) {
+            return bVal.localeCompare(aVal);
+          }
+          // asc by default
+          return aVal.localeCompare(bVal);
+        }
         if (desc) {
           return (bVal > aVal) ? 1 : -1;
         }
