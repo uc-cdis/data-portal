@@ -147,6 +147,10 @@ function buildConfig(opts) {
   if (config.ddEnv) {
     ddEnv = config.ddEnv;
   }
+  let ddUrl = 'datadoghq.com';
+  if (config.ddUrl) {
+    ddUrl = config.ddUrl;
+  }
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
@@ -156,6 +160,8 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
+
+
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -587,6 +593,7 @@ function buildConfig(opts) {
     ddApplicationId,
     ddClientToken,
     ddEnv,
+    ddUrl,
     ddSampleRate,
     showSystemUse,
     showSystemUseOnlyOnLogin,
