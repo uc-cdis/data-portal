@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import queryConfig from '../../SharedUtils/QueryConfig';
 import fetchAuthorizationMappingsForCurrentUser from '../Utils/teamProjectApi';
 import SelectTeamProjectDropDown from '../Components/SelectTeamProjectDropDown';
+import LoadingErrorMessage from '../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 
 const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
   const [selectedTeamProject, setSelectedTeamProject] = useState('');
@@ -30,7 +31,9 @@ const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
     );
   }
   if (status === 'error') {
-    return 'Error';
+    return (
+      <LoadingErrorMessage message={`Error while trying to retrieve user access details`} />
+    );
   }
   return (
     <React.Fragment>
