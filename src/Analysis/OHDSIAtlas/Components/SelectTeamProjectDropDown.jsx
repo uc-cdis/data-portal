@@ -13,7 +13,6 @@ const SelectTeamProjectDropDown = ({
   return (
     <Select
       id={'input-selectTeamProjectDropDown'}
-      showSearch
       labelInValue
       onChange={onChange}
       placeholder='-select one of the team projects below-'
@@ -21,9 +20,6 @@ const SelectTeamProjectDropDown = ({
       options={teamProjects}
       dropdownStyle={{ width: '300px' }}
       style={{ width: '300px' }}
-      filterOption={(searchTerm, option) => (option?.teamName ?? '')
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())}
     />
   );
 };
