@@ -4,7 +4,7 @@ import { Spin, Button, Tooltip } from 'antd';
 import SharedContext from '../../../Utils/SharedContext';
 import { fetchPresignedUrlForWorkflowArtifact } from '../../../Utils/gwasWorkflowApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import '../Results.css';
 
 /* eslint no-alert: 0 */ const ResultsPng = () => {

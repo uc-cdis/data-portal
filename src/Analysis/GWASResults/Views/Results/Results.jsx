@@ -5,7 +5,7 @@ import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader
 import SharedContext from '../../Utils/SharedContext';
 import { fetchPresignedUrlForWorkflowArtifact, getWorkflowDetails } from '../../Utils/gwasWorkflowApi';
 import queryConfig from '../../../SharedUtils/QueryConfig';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
 import ResultsPng from './ResultsPng/ResultsPng';

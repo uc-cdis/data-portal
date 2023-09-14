@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 import { gwasWorkflowPath } from '../../../../../localconf';
 import IsJsonString from '../../../Utils/IsJsonString';
 import SharedContext from '../../../Utils/SharedContext';
-import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import DismissibleMessage from '../../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 
 const JobDetails = ({ attritionTableData }) => {
