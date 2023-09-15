@@ -177,7 +177,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
               contents = contents.concat(`\n${key}: ${value}`);
             });
             // This is the CLI command to kick off the argo wf from AdminVM
-            const cliCmd = `argo submit -n argo --watch vlmd_submission_workflow.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
+            const cliCmd = `argo submit -n argo --watch vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
             createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
