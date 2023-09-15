@@ -146,20 +146,18 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
   ) {
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
 
-    if (fieldConfig.type === 'dataDownloadList') {
-      console.log('fieldConfig.type', fieldConfig.type);
+    if (fieldConfig.type === 'dataDownloadList' ) {
+      // console.log("discoveryConfig",discoveryConfig)
+      console.log("fieldConfig",fieldConfig)
+      // console.log('fieldConfig.type', fieldConfig.type);
       console.log('fieldConfig.sourceField', fieldConfig.sourceField);
       console.log('resourceFieldValue initial', fieldConfig.sourceField
        && jsonpath.query(resource, `$.${fieldConfig.sourceField}`),
       );
       console.log('fieldConfig.type', fieldConfig.title);
       console.log('resourceFieldValue', resourceFieldValue);
-      console.log('OUTPUT 0 0:', JSON.stringify(resourceFieldValue[0][0]));
-      console.log('OUTPUT 1:', JSON.stringify(resourceFieldValue[1]));
-      console.log('OUTPUT 2:', JSON.stringify(resourceFieldValue[2]));
-      console.log('OUTPUT 3:', JSON.stringify(resourceFieldValue[3]));
-      console.log('OUTPUT 4:', JSON.stringify(resourceFieldValue[4]));
-      console.log('OUTPUT 5:', JSON.stringify(resourceFieldValue[5]));
+      return <><h1>{fieldConfig.label}</h1><marquee>{JSON.stringify(fieldConfig.sourceField
+        && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</marquee></>
     }
 
     if (fieldConfig.type === 'text') {
@@ -226,6 +224,9 @@ const DiscoveryDetails = (props: Props) => {
   const history = useHistory();
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
+
+
+  console.log("THIS IS ITERATED OVER IN THE TABS JSX:", props.config)
 
   const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string | null = null,
     studyName: string | null = null,
