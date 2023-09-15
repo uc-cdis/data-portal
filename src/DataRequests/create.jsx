@@ -15,7 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tooltip from 'rc-tooltip';
 import dictIcons from '../img/icons/index';
 import { useState } from "react";
-import { fetchWithToken } from '../redux/explorer/filterSetsAPI';
 import * as Yup from 'yup';
 import './create.css'
 import './DataRequests.css';
@@ -32,8 +31,8 @@ let schema = Yup.object().shape({
   description: Yup.string().required('Description is a required field'),
   associated_users_emails: Yup.array()
     .of(Yup.string().email())
-    .min(1, 'Must have associated users')
-    .required('Must have associated users'),
+    .min(1, 'Must have Data Recipients')
+    .required('Must have Data Recipients'),
   filter_set_ids: Yup.array()
     .of(Yup.number())
     .min(1, 'Must have Filter Sets')
@@ -41,14 +40,14 @@ let schema = Yup.object().shape({
 });
 
 let adminSchema = Yup.object().shape({
-  user_id: Yup.number().required('User Id is a required field'),
+  user_id: Yup.string().required('User Id is a required field'),
   name: Yup.string().required('Project Name is a required field'),
   institution: Yup.string().required('Institution is a required field'),
   description: Yup.string().required('Description is a required field'),
   associated_users_emails: Yup.array()
     .of(Yup.string().email())
-    .min(1, 'Must have associated users')
-    .required('Must have associated users'),
+    .min(1, 'Must have Data Recipients')
+    .required('Must have Data Recipients'),
   filter_set_ids: Yup.array()
     .of(Yup.number())
     .min(1, 'Must have Filter Sets')
@@ -72,12 +71,14 @@ function DataRequestCreate({ isCreatePending }) {
       email,
       additional_info: { institution },
       user_id: currentUserId,
+      admin_user_list
   } = useAppSelector((state) => state.user);
   let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
     serviceAccessMethods[0]?.method :
     undefined;
   let isAdmin = is_admin || !!serviceAccessMethod;
   let savedFilterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
+  let userList = admin_user_list ?? [];
 
 	let navigate = useNavigate();
 	let goBack = () => {
@@ -133,13 +134,19 @@ function DataRequestCreate({ isCreatePending }) {
             <div className="data-request__fields">
               {isAdmin && 
                 <Field name="user_id">
-                  {({ field, meta }) => 
+                  {({ field, meta }) => <>
                     <SimpleInputField
-                      className="data-request__value-container"
-                      label="User Id"
-                      input={<input type="text" {...field} />}
-                      error={errorObjectForField(errors, touched, 'user_id')}
-                    />}
+                        className="data-request__value-container"
+                        label="User Id"
+                        input={<input type="text" {...field} list='user_list' />}
+                        error={errorObjectForField(errors, touched, 'user_id')}
+                    />
+                    <datalist id="user_list">
+                      {userList.map((user) => {
+                        return <option key={user.id} value={user.id} label={user.name}></option>
+                      })}
+                    </datalist>
+                  </>}
                 </Field>
               }
               <Field name="name">
@@ -177,7 +184,7 @@ function DataRequestCreate({ isCreatePending }) {
                       setCurrentEmailInput('');
                     };
                       return <MultiValueField
-                          label="Assosciated Users"
+                          label="Data Recipients"
                           fieldId="associated_users_emails"
                           className="data-request__value-container"
                           error={errorObjectForField(errors, touched, 'associated_users_emails')}

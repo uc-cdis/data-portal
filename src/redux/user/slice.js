@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser } from './asyncThunks';
+import { fetchUser, adminFetchUsers } from './asyncThunks';
 
 /**
  * @template T
@@ -37,14 +37,18 @@ const slice = createSlice({
           state.lastAuthMs = Date.now();
         }
       })
-
       .addCase(
         fetchUser.rejected,
         /** @param {PayloadAction<any>} action */ (state, action) => {
           state.fetch_error = action.payload;
           state.fetched_user = true;
         }
-      );
+      )
+      .addCase(adminFetchUsers.fulfilled, (state, action) => {
+        if (action.payload.status === 200) {
+          state.admin_user_list = action.payload.data.users;
+        }
+      })
   },
 });
 

@@ -24,6 +24,7 @@ import {
 } from './redux/submission/asyncThunks';
 import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
 import { fetchAccess } from './redux/userProfile/asyncThunks';
+import { adminFetchUsers } from './redux/user/asyncThunks';
 import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
 import { fetchSurvivalConfig, fetchFilterSets } from './redux/explorer/asyncThunks';
 import { fetchProjects as fetchDataRequestProjects, fetchProjectStates } from './redux/dataRequest/asyncThunks';
@@ -243,7 +244,22 @@ function App() {
           <Route 
             path="create"
             element={
-            <ProtectedContent preload={() => dispatch(fetchFilterSets())}>
+            <ProtectedContent preload={({ state }) => {
+              let { 
+                is_admin,
+                authz: { '/services/amanuensis': serviceAccessMethods }
+              } = state.user;
+              let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+                serviceAccessMethods[0]?.method :
+                undefined;
+              let isAdmin = is_admin || !!serviceAccessMethod;
+              /** @type {Promise[]} */
+              let requests = [dispatch(fetchFilterSets())];
+              if (isAdmin) {
+                requests.push(dispatch(adminFetchUsers()));
+              }
+              return Promise.all(requests);
+            }}>
               <DataRequestCreate />
             </ProtectedContent>
           }/>

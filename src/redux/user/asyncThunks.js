@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { hostname, userapiPath } from '../../localconf';
-import { fetchCreds } from '../../utils.fetch';
+import { fetchCreds, fetchWithCreds } from '../../utils.fetch';
 import { updatePopup } from '../popups/slice';
 import { requestErrored } from '../status/slice';
 
@@ -13,6 +13,24 @@ export const fetchUser = createAsyncThunk(
       });
       if (status === 200) return { data, status };
       if (status === 401) return { data: 'UPDATE_POPUP', status };
+      throw data.error;
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+
+
+export const adminFetchUsers = createAsyncThunk(
+  'user/admin/fetchUsers',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const { status, data } = await fetchWithCreds({
+        path: `${userapiPath}admin/user`,
+        onError: () => dispatch(requestErrored()),
+      });
+      if (status === 200) return { data, status };
+      if (status === 401) return { data: { users: [] }, status: 200 };
       throw data.error;
     } catch (e) {
       return rejectWithValue(e);
