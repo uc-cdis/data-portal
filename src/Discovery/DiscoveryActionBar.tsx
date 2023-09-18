@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useCallback,
 } from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
@@ -22,11 +22,12 @@ import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
-  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl, bundle,
 } from '../localconf';
 
 interface User {
-  username: string
+  username: string;
+  fence_idp?: string; // eslint-disable-line camelcase
 }
 interface JobStatus {
   uid: string;
@@ -255,6 +256,7 @@ const handleDownloadZipClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
   location,
+  healICPSRLoginNeeded,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
@@ -262,6 +264,10 @@ const handleDownloadZipClick = async (
     if (!isLinked) {
       return;
     }
+  }
+
+  if (healICPSRLoginNeeded) {
+    return;
   }
 
   const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
@@ -298,10 +304,14 @@ const handleDownloadZipClick = async (
   ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[], healICPSRLoginNeeded: boolean) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
+  }
+
+  if (healICPSRLoginNeeded) {
+    return;
   }
   // combine manifests from all selected studies
   const manifest:any = [];
@@ -340,10 +350,15 @@ const handleExportToWorkspaceClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
   location: any,
+  healICPSRLoginNeeded: boolean,
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
+  }
+
+  if (healICPSRLoginNeeded) {
+    return;
   }
 
   if (config.features.exportToWorkspace.verifyExternalLogins) {
@@ -403,6 +418,7 @@ const DiscoveryActionBar = (props: Props) => {
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
+  const [healICPSRLoginNeeded, setHealICPSRLoginNeeded] = useState(false);
 
   // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
@@ -430,6 +446,27 @@ const DiscoveryActionBar = (props: Props) => {
     [props.discovery.selectedResources],
   );
 
+  const healICPSRLoginNeededLogic = useCallback(() => {
+    if (bundle === 'heal') {
+      // check selected studies for ICPSR study
+      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag: { name: string; category: string; }) => tag?.name === 'ICPSR' && (tag?.category === 'Data Repository' || tag?.category === 'Commons')))) {
+        // check if user is logged in via InCommons
+        if (props.user.fence_idp !== 'shibboleth') {
+          // if not logged in via InCommons show special messaging
+          return true;
+        }
+      }
+    }
+    return false;
+  }, [props.discovery.selectedResources, props.user.fence_idp]);
+
+  useEffect(
+    () => {
+      setHealICPSRLoginNeeded(healICPSRLoginNeededLogic);
+    },
+    [props.discovery.selectedResources, props.user.fence_idp, healICPSRLoginNeededLogic],
+  );
+
   useEffect(
     () => {
       if (props.discovery.actionToResume === 'download') {
@@ -440,6 +477,7 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
+          healICPSRLoginNeededLogic(),
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
@@ -450,10 +488,15 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
+          healICPSRLoginNeededLogic(),
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'manifest') {
-        handleDownloadManifestClick(props.config, props.discovery.selectedResources);
+        handleDownloadManifestClick(
+          props.config,
+          props.discovery.selectedResources,
+          healICPSRLoginNeededLogic(),
+        );
         props.onActionResumed();
       }
     }, [props.discovery.actionToResume],
@@ -473,6 +516,7 @@ const DiscoveryActionBar = (props: Props) => {
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
+  const onlyInCommonMsg = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
 
   const downloadZipButton = (
     props.config.features.exportToWorkspace?.enableDownloadZip
@@ -483,14 +527,16 @@ const DiscoveryActionBar = (props: Props) => {
           arrowPointAtCenter
           content={(
             <React.Fragment>
-          Directly download data (up to 250Mb) from selected studies
+              {healICPSRLoginNeeded
+                ? onlyInCommonMsg
+                : 'Directly download data (up to 250Mb) from selected studies'}
             </React.Fragment>
           )}
         >
           <Button
             onClick={
               async () => {
-                if (props.user.username) {
+                if (props.user.username && !healICPSRLoginNeeded) {
                   handleDownloadZipClick(
                     props.config,
                     props.discovery.selectedResources,
@@ -498,6 +544,7 @@ const DiscoveryActionBar = (props: Props) => {
                     setDownloadStatus,
                     history,
                     location,
+                    healICPSRLoginNeeded,
                   );
                 } else {
                   handleRedirectToLoginClick('download');
@@ -512,7 +559,7 @@ const DiscoveryActionBar = (props: Props) => {
           >
             { (
               () => {
-                if (props.user.username) {
+                if (props.user.username && !healICPSRLoginNeeded) {
                   if (downloadStatus.inProgress) {
                     return 'Preparing download...';
                   }
@@ -557,10 +604,16 @@ const DiscoveryActionBar = (props: Props) => {
         arrowPointAtCenter
         title={(
           <React.Fragment>
+            {healICPSRLoginNeeded
+              ? onlyInCommonMsg
+              : (
+                <React.Fragment>
       Download a Manifest File for use with the&nbsp;
-            <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
-              {'Gen3 Client'}
-            </a>.
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+                    {'Gen3 Client'}
+                  </a>.
+                </React.Fragment>
+              )}
           </React.Fragment>
         )}
         content={(
@@ -570,8 +623,8 @@ const DiscoveryActionBar = (props: Props) => {
         )}
       >
         <Button
-          onClick={(props.user.username) ? () => {
-            handleDownloadManifestClick(props.config, props.discovery.selectedResources);
+          onClick={(props.user.username && !healICPSRLoginNeeded) ? () => {
+            handleDownloadManifestClick(props.config, props.discovery.selectedResources, healICPSRLoginNeeded);
           }
             : () => { handleRedirectToLoginClick('manifest'); }}
           type='default'
@@ -579,7 +632,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           icon={<FileTextOutlined />}
         >
-          {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+          {(props.user.username && !healICPSRLoginNeeded) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
             : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
         </Button>
 
@@ -594,11 +647,16 @@ const DiscoveryActionBar = (props: Props) => {
         className='discovery-popover'
         arrowPointAtCenter
         content={(
-          <React.Fragment>
+          <React.Fragment>{healICPSRLoginNeeded
+            ? onlyInCommonMsg
+            : (
+              <React.Fragment>
           Open selected studies in the&nbsp;
-            <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-              {'Gen3 Workspace'}
-            </a>.
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                  {'Gen3 Workspace'}
+                </a>.
+              </React.Fragment>
+            )}
           </React.Fragment>
         )}
       >
@@ -608,7 +666,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           loading={props.exportingToWorkspace}
           icon={<ExportOutlined />}
-          onClick={(props.user.username) ? async () => {
+          onClick={(props.user.username && !healICPSRLoginNeeded) ? async () => {
             handleExportToWorkspaceClick(
               props.config,
               props.discovery.selectedResources,
@@ -616,11 +674,12 @@ const DiscoveryActionBar = (props: Props) => {
               setDownloadStatus,
               history,
               location,
+              healICPSRLoginNeeded,
             );
           }
             : () => { handleRedirectToLoginClick('export'); }}
         >
-          {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
+          {(props.user.username && !healICPSRLoginNeeded) ? 'Open In Workspace' : 'Login to Open In Workspace'}
         </Button>
       </Popover>
     )
