@@ -223,7 +223,7 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  height: 29px;
+  height: 200px;
   position: relative;
 }
 
@@ -242,6 +242,16 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: flex;
+  cursor: row-resize;
+}
+
+.graphiql-container .variable-editor-title-text{
+  cursor: pointer;
+}
+
+.graphiql-container .variable-editor-title-text.active {
+  color: black;
 }
 
 .graphiql-container .codemirrorWrap {

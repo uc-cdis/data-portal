@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import Congratulations from './Congratulations';
-import DismissibleMessage from '../DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 
 describe('Congratulations component', () => {
   let wrapper;

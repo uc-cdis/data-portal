@@ -207,13 +207,6 @@ export const useSourceFetch = () => {
   return { loading, sourceId };
 };
 
-export const queryConfig = {
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-  retry: false,
-};
-
 export const getAllHareItems = (
   concept_value,
   allCaseHares,

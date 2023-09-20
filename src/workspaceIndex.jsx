@@ -28,7 +28,7 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
-  ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
+  ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import { components } from './params';
@@ -61,7 +61,7 @@ async function init() {
     datadogRum.init({
       applicationId: ddApplicationId,
       clientToken: ddClientToken,
-      site: 'datadoghq.com',
+      site: ddUrl,
       service: 'portal',
       env: ddEnv,
       version: portalVersion,

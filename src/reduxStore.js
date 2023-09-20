@@ -53,7 +53,7 @@ const getReduxStore = () => {
       }
 
       persistStore(store,
-        { whitelist: ['certificate'] },
+        { whitelist: ['certificate', 'banner'] },
         () => { resolve(store); },
       );
     } catch (e) {

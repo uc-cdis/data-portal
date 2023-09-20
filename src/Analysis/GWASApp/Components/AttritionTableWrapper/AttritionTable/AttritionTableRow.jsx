@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
-import {
-  fetchConceptStatsByHareSubset,
-  queryConfig,
-} from '../../../Utils/cohortMiddlewareApi';
+import { fetchConceptStatsByHareSubset } from '../../../Utils/cohortMiddlewareApi';
+import queryConfig from '../../../../SharedUtils/QueryConfig';
 import BarChart from '../ChartIcons/BarChart';
 import EulerDiagram from '../ChartIcons/EulerDiagram';
 import { useSourceContext } from '../../../Utils/Source';

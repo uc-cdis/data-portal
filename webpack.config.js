@@ -40,6 +40,7 @@ if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
+  connectSrcURLs.push('https://*.browser-intake-ddog-gov.com');
 }
 if (process.env.MAPBOX_API_TOKEN) {
   connectSrcURLs.push('https://*.tiles.mapbox.com');
@@ -87,6 +88,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
   new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
   new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
+  new webpack.EnvironmentPlugin(['GEN3_BUNDLE']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),

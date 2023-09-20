@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { create_gwas_plot } from '../lib/pheweb_plots';
-import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 
 /* eslint camelcase: 0 */ // --> OFF
 

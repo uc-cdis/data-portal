@@ -42,7 +42,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
   explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -86,7 +86,7 @@ async function init() {
     datadogRum.init({
       applicationId: ddApplicationId,
       clientToken: ddClientToken,
-      site: 'datadoghq.com',
+      site: ddUrl,
       service: 'portal',
       env: ddEnv,
       version: portalVersion,

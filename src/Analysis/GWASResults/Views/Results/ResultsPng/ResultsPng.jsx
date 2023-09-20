@@ -2,11 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Button, Tooltip } from 'antd';
 import SharedContext from '../../../Utils/SharedContext';
-import {
-  fetchPresignedUrlForWorkflowArtifact,
-  queryConfig,
-} from '../../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import { fetchPresignedUrlForWorkflowArtifact } from '../../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../../SharedUtils/QueryConfig';
+import LoadingErrorMessage from '../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import '../Results.css';
 
 /* eslint no-alert: 0 */ const ResultsPng = () => {

@@ -3,12 +3,9 @@ import { useQuery } from 'react-query';
 import { Spin, Button } from 'antd';
 import DetailPageHeader from '../../Components/DetailPageHeader/DetailPageHeader';
 import SharedContext from '../../Utils/SharedContext';
-import {
-  fetchPresignedUrlForWorkflowArtifact,
-  getWorkflowDetails,
-  queryConfig,
-} from '../../Utils/gwasWorkflowApi';
-import LoadingErrorMessage from '../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import { fetchPresignedUrlForWorkflowArtifact, getWorkflowDetails } from '../../Utils/gwasWorkflowApi';
+import queryConfig from '../../../SharedUtils/QueryConfig';
+import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import './Results.css';
 import ResultsPheWeb from './ResultsPheWeb/ResultsPheWeb';
 import ResultsPng from './ResultsPng/ResultsPng';
@@ -91,7 +88,7 @@ const Results = () => {
     }
     // If none of the above, show error:
     return (
-      <LoadingErrorMessage message='Failed to load Manhattan Plot: no plot data available for this workflow' />
+      <LoadingErrorMessage message='Plot cannot display. This workflow pre-dates the availability of the plot in the user interface. To see the plot please use the “Download All Results” button.' />
     );
   };
 

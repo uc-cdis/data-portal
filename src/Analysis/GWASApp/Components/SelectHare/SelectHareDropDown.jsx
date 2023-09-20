@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import { Spin, Select } from 'antd';
-import {
-  fetchConceptStatsByHareSubset,
-  queryConfig,
-} from '../../Utils/cohortMiddlewareApi';
+import { fetchConceptStatsByHareSubset } from '../../Utils/cohortMiddlewareApi';
+import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useSourceContext } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 
