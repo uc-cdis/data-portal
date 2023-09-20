@@ -116,7 +116,8 @@ function DataRequestCreate({ isCreatePending }) {
 
         createRequest.then((action) => {
           if (!action.payload.isError) {
-            window.open(getAccessButtonLink);
+            window.open(getAccessButtonLink, '_blank');
+            window.focus();
             navigate('/requests');
             return;
           }
