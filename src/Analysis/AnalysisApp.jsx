@@ -13,6 +13,7 @@ import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
+import AtlasContainer from './OHDSIAtlas/AtlasContainer';
 
 const queryClient = new QueryClient();
 
@@ -136,6 +137,12 @@ class AnalysisApp extends React.Component {
         </TourProvider>
       );
     }
+    case 'OHDSI Atlas':
+      return (
+        <div className='analysis-app_flex_row'>
+          <AtlasContainer atlasUrl={`${this.state.app.applicationUrl}#/home`} handleIframeApp={this.handleIframeApp} />
+        </div>
+      );
     default:
       // this will ensure the main window will process the app messages (if any):
       window.addEventListener('message', this.processAppMessages);
