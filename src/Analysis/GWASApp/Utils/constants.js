@@ -14,15 +14,8 @@ export const GWASAppSteps = [
   },
 ];
 
-export const isEnterOrSpace = (event) => event.key === 'Enter'
-  || event.key === ' '
-  || event.key === 'Spacebar'
-  || event.keycode === '32'
-  || event.keycode === '13';
-
-// TODO - move this and function above to a .js file with a clearer name?
 export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
-export const minimumRecommendedCohortSize = 1000;
+
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
@@ -44,4 +37,30 @@ export const MESSAGES = {
       'The total cohort size of either your case or control groups that you have chosen is small and can lead to low statistical power or cause the GWAS model to fail. Use caution when submitting to minimize computational resource usage.',
     messageType: 'caution',
   },
+  ZERO_SIZE_WARNING: {
+    title: 'Error, selected group has size 0 in case or control groups.',
+    messageType: 'warning',
+  },
+};
+
+const minimumRecommendedCohortSize = 1000;
+export const checkFinalPopulationSizes = (finalPopulationSizes) => {
+  let hasSizeIssue = false;
+  finalPopulationSizes.forEach((obj) => {
+    if (obj?.size < minimumRecommendedCohortSize) {
+      hasSizeIssue = true;
+    }
+  });
+  return hasSizeIssue;
+};
+
+export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
+  let hasZeroSizeIssue = false;
+  // If any of the values in finalPopulationSizes: case, control or total are zero return true
+  finalPopulationSizes.forEach((obj) => {
+    if (obj?.size === 0) {
+      hasZeroSizeIssue = true;
+    }
+  });
+  return hasZeroSizeIssue;
 };

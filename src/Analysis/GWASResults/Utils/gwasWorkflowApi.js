@@ -73,10 +73,3 @@ export const retryWorkflow = async (
   }
   return response.text();
 };
-
-export const queryConfig = {
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-  retry: false,
-};
