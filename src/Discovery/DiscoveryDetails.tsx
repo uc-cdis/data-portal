@@ -148,16 +148,24 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
 
     if (fieldConfig.type === 'dataDownloadList' ) {
       // console.log("discoveryConfig",discoveryConfig)
-      console.log("fieldConfig",fieldConfig)
+      // console.log("fieldConfig",fieldConfig)
       // console.log('fieldConfig.type', fieldConfig.type);
-      console.log('fieldConfig.sourceField', fieldConfig.sourceField);
-      console.log('resourceFieldValue initial', fieldConfig.sourceField
-       && jsonpath.query(resource, `$.${fieldConfig.sourceField}`),
-      );
-      console.log('fieldConfig.type', fieldConfig.title);
-      console.log('resourceFieldValue', resourceFieldValue);
-      return <><h1>{fieldConfig.label}</h1><marquee>{JSON.stringify(fieldConfig.sourceField
-        && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</marquee></>
+      // console.log('fieldConfig.sourceField', fieldConfig.sourceField);
+      // console.log('resourceFieldValue initial', fieldConfig.sourceField
+      //  && jsonpath.query(resource, `$.${fieldConfig.sourceField}`),
+      // );
+      // console.log('fieldConfig.type', fieldConfig.title);
+      // console.log('resourceFieldValue', resourceFieldValue);
+      const sourceFieldData = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
+      console.log("sourceFieldData",sourceFieldData);
+      return <>
+        <h1>{fieldConfig.label}</h1>
+        <code>{JSON.stringify(fieldConfig.sourceField
+        && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</code>
+        {sourceFieldData[0].map(obj=> <div>Title: {obj["title"]}</div>)}
+
+
+        </>
     }
 
     if (fieldConfig.type === 'text') {
