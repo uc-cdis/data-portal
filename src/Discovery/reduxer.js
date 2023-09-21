@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import DiscoveryActionBar from './DiscoveryActionBar';
-import DiscoveryDetails from './DiscoveryDetails';
+import DiscoveryDetails from './DiscoveryDetails/DiscoveryDetails';
 
 export const ReduxDiscoveryActionBar = (() => {
   const mapStateToProps = (state) => ({

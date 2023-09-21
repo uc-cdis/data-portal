@@ -14,12 +14,13 @@ import jsonpath from 'jsonpath';
 import { useHistory } from 'react-router-dom';
 import {
   hostname, basename, fenceDownloadPath, studyRegistrationConfig,
-} from '../localconf';
-import { DiscoveryConfig } from './DiscoveryConfig';
+} from '../../localconf';
+import { DiscoveryConfig } from '../DiscoveryConfig';
+import DataDownloadList from './DataDownloadList/DataDownloadList'
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
-} from './Discovery';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+} from '../Discovery';
+import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 
 const { Panel } = Collapse;
 
@@ -145,7 +146,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     && resourceFieldValue[0].length !== 0
   ) {
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
-
+    console.log('resourceFieldValue after processing', JSON.stringify(resourceFieldValue));
     if (fieldConfig.type === 'dataDownloadList' ) {
       // console.log("discoveryConfig",discoveryConfig)
       // console.log("fieldConfig",fieldConfig)
@@ -155,7 +156,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
       //  && jsonpath.query(resource, `$.${fieldConfig.sourceField}`),
       // );
       // console.log('fieldConfig.type', fieldConfig.title);
-      // console.log('resourceFieldValue', resourceFieldValue);
+      console.log('resourceFieldValue', resourceFieldValue[0]);
       const sourceFieldData = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
       console.log("sourceFieldData",sourceFieldData);
       return <>
@@ -163,7 +164,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
         <code>{JSON.stringify(fieldConfig.sourceField
         && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</code>
         {sourceFieldData[0].map(obj=> <div>Title: {obj["title"]}</div>)}
-
+          <DataDownloadList sourceFieldData={sourceFieldData}/>
 
         </>
     }
@@ -232,9 +233,6 @@ const DiscoveryDetails = (props: Props) => {
   const history = useHistory();
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
-
-
-  console.log("THIS IS ITERATED OVER IN THE TABS JSX:", props.config)
 
   const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string | null = null,
     studyName: string | null = null,
