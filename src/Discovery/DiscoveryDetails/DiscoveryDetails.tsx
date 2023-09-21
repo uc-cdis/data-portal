@@ -140,12 +140,12 @@ const formatResourceValuesWhenNestedArray = (resourceFieldValue: string[]) => {
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
   let resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
-  if (
+      if (
     resourceFieldValue
     && resourceFieldValue.length > 0
     && resourceFieldValue[0].length !== 0
   ) {
-    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
+    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue );
     console.log('resourceFieldValue after processing', JSON.stringify(resourceFieldValue));
     if (fieldConfig.type === 'dataDownloadList' ) {
       // console.log("discoveryConfig",discoveryConfig)
@@ -157,14 +157,15 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
       // );
       // console.log('fieldConfig.type', fieldConfig.title);
       console.log('resourceFieldValue', resourceFieldValue[0]);
-      const sourceFieldData = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
-      console.log("sourceFieldData",sourceFieldData);
+
       return <>
         <h1>{fieldConfig.label}</h1>
         <code>{JSON.stringify(fieldConfig.sourceField
         && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</code>
-        {sourceFieldData[0].map(obj=> <div>Title: {obj["title"]}</div>)}
-          <DataDownloadList sourceFieldData={sourceFieldData}/>
+
+          <DataDownloadList
+            sourceFieldData={fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`)}
+          />
 
         </>
     }

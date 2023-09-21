@@ -1,13 +1,51 @@
 import React from 'react';
+import { Collapse, List, Button } from 'antd';
+import {DownloadOutlined } from '@ant-design/icons';
 
 
 interface Props {
     sourceFieldData: any;
 }
 
+interface ListItem {
+    title: string,
+    description: string,
+  }
+
+const { Panel } = Collapse;
+
 const DataDownloadList = (props: Props) => {
+    const data = props.sourceFieldData[0].map((obj)=> (
+        {
+            title: obj.title,
+            description: obj.description,
+        })
+    );
     return (
-        <h1>Hello World from Data Download List</h1>
+         <Collapse defaultActiveKey={['1']}>
+            <Panel header={'Data Download Links'} key='1'>
+              <List
+                itemLayout='horizontal'
+                dataSource={data}
+                renderItem={(item:ListItem) => (
+                  <List.Item
+                    actions={[<Button
+                      type='text'
+                      disabled={true}
+                      icon={<DownloadOutlined />}
+                    >
+                      Download File
+                    </Button>]}
+                  >
+                    <List.Item.Meta
+                      title={item.title}
+                      description={item.description || ''}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          </Collapse>
     )
 }
 export default DataDownloadList;
