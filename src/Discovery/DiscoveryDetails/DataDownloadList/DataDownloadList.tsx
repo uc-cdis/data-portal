@@ -2,7 +2,6 @@ import React from 'react';
 import { Collapse, List, Button } from 'antd';
 import {DownloadOutlined } from '@ant-design/icons';
 
-
 interface Props {
     sourceFieldData: any;
 }
@@ -47,5 +46,5 @@ const DataDownloadList = (props: Props) => {
             </Panel>
           </Collapse>
     )
-}
+};
 export default DataDownloadList;

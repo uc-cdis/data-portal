@@ -146,28 +146,12 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     && resourceFieldValue[0].length !== 0
   ) {
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue );
-    console.log('resourceFieldValue after processing', JSON.stringify(resourceFieldValue));
     if (fieldConfig.type === 'dataDownloadList' ) {
-      // console.log("discoveryConfig",discoveryConfig)
-      // console.log("fieldConfig",fieldConfig)
-      // console.log('fieldConfig.type', fieldConfig.type);
-      // console.log('fieldConfig.sourceField', fieldConfig.sourceField);
-      // console.log('resourceFieldValue initial', fieldConfig.sourceField
-      //  && jsonpath.query(resource, `$.${fieldConfig.sourceField}`),
-      // );
-      // console.log('fieldConfig.type', fieldConfig.title);
-      console.log('resourceFieldValue', resourceFieldValue[0]);
-
-      return <>
-        <h1>{fieldConfig.label}</h1>
-        <code>{JSON.stringify(fieldConfig.sourceField
-        && jsonpath.query(resource, `$.${fieldConfig.sourceField}`))}</code>
-
-          <DataDownloadList
-            sourceFieldData={fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`)}
-          />
-
-        </>
+      return (
+        <DataDownloadList
+          sourceFieldData={fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`)}
+      />
+      )
     }
 
     if (fieldConfig.type === 'text') {
