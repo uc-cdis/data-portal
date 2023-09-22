@@ -134,7 +134,8 @@ function getChartData({
 
 function openLink(link) {
   if (link) {
-    window.open(link, '_blank');
+    let handle = window.open(link, '_blank', 'popup');
+    handle.blur();
     window.focus();
   }
 }
