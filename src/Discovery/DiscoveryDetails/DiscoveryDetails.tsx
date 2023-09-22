@@ -16,7 +16,7 @@ import {
   hostname, basename, fenceDownloadPath, studyRegistrationConfig,
 } from '../../localconf';
 import { DiscoveryConfig } from '../DiscoveryConfig';
-import DataDownloadList from './DataDownloadList/DataDownloadList'
+import DataDownloadList from './DataDownloadList/DataDownloadList';
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
 } from '../Discovery';
@@ -144,17 +144,17 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     resourceFieldValue
     && resourceFieldValue.length > 0
     && resourceFieldValue[0].length !== 0
-    ) {
-    console.log('ieldConfig.type',fieldConfig.type)
-    if (fieldConfig.type === 'dataDownloadList' ) {
+  ) {
+    console.log('fieldConfig.type', fieldConfig.type);
+    if (fieldConfig.type === 'dataDownloadList') {
       return (
         <DataDownloadList
           sourceFieldData={resourceFieldValue}
-      />
-      )
+        />
+      );
     }
 
-    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue );
+    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
