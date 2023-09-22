@@ -59,6 +59,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal={false}
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 4:
@@ -74,6 +75,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     default:
