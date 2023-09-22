@@ -140,20 +140,21 @@ const formatResourceValuesWhenNestedArray = (resourceFieldValue: string[]) => {
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
   let resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
-      if (
+  if (
     resourceFieldValue
     && resourceFieldValue.length > 0
     && resourceFieldValue[0].length !== 0
-  ) {
-    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue );
+    ) {
+    console.log('ieldConfig.type',fieldConfig.type)
     if (fieldConfig.type === 'dataDownloadList' ) {
       return (
         <DataDownloadList
-          sourceFieldData={fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`)}
+          sourceFieldData={resourceFieldValue}
       />
       )
     }
 
+    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue );
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }

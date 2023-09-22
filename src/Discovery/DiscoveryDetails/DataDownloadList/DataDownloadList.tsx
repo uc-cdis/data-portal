@@ -1,6 +1,7 @@
 import React from 'react';
 import { Collapse, List, Button } from 'antd';
 import {DownloadOutlined } from '@ant-design/icons';
+import CheckThatDataHasTitles from './CheckThatDataHasTitles';
 
 interface Props {
     sourceFieldData: any;
@@ -11,7 +12,8 @@ interface ListItem {
     description: string,
   }
 
-const { Panel } = Collapse;
+const { Panel } = Collapse;1
+
 
 const DataDownloadList = (props: Props) => {
     const data = props.sourceFieldData[0].map((obj)=> (
@@ -20,6 +22,7 @@ const DataDownloadList = (props: Props) => {
             description: obj.description,
         })
     );
+    if (CheckThatDataHasTitles(data) === false) return null;
     return (
          <Collapse defaultActiveKey={['1']}>
             <Panel header={'Data Download Links'} key='1'>
