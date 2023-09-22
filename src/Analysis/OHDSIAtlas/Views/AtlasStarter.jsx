@@ -3,20 +3,12 @@ import PropTypes from 'prop-types';
 import { Spin, Button } from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../SharedUtils/QueryConfig';
-import fetchAuthorizationMappingsForCurrentUser from '../Utils/teamProjectApi';
+import fetchArboristTeamProjectRoles from '../../SharedUtils/teamProjectApi';
 import SelectTeamProjectDropDown from '../Components/SelectTeamProjectDropDown';
 import LoadingErrorMessage from '../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 
 const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
   const [selectedTeamProject, setSelectedTeamProject] = useState('');
-
-  async function fetchArboristTeamProjectRoles() {
-    const authorizationMappings = await fetchAuthorizationMappingsForCurrentUser();
-    const teamProjectList = Object.keys(authorizationMappings)
-      .filter((key) => key.startsWith('/gwas_projects/'))
-      .map((key) => ({ teamName: key }));
-    return { teams: teamProjectList };
-  }
 
   const { data, status } = useQuery('teamprojects', fetchArboristTeamProjectRoles, queryConfig);
   if (status === 'loading') {
