@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './DataDictionaryTable.css';
 import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryCategory from '../DataDictionaryCategory';
+import { MDataDictionaryTable } from '../MDataDictionaryTable/MDataDictionaryTable';
 
 /**
  * Just exported for testing
@@ -16,17 +17,14 @@ import DataDictionaryCategory from '../DataDictionaryCategory';
 export function category2NodeList(dictionary) {
   /* helpers for the helper */
   const idFilter = (id) => id.charAt(0) !== '_' && id === dictionary[id].id;
-
   const categoryFilter = (node) => node.category && node.id && node.category.toLowerCase() !== 'internal';
-
   const res = Object.keys(dictionary).filter(
     (id) => idFilter(id),
   ).map(
     (id) => dictionary[id],
   ).filter(
     (node) => categoryFilter(node),
-  )
-    .reduce(
+  ).reduce(
       (lookup, node) => {
         if (!lookup[node.category]) {
           lookup[node.category] = [];
@@ -36,6 +34,7 @@ export function category2NodeList(dictionary) {
       }, {},
     );
   return res;
+
 }
 /* eslint-enable no-param-reassign */
 
@@ -67,6 +66,7 @@ const DataDictionaryTable = ({
   const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
     <React.Fragment>
+      <MDataDictionaryTable dictionary={dictionary} />
       <p>
         <span>{dictionaryName}</span>
         <span> dictionary has </span>
@@ -98,7 +98,7 @@ DataDictionaryTable.propTypes = {
 DataDictionaryTable.defaultProps = {
   dictionary: {},
   highlightingNodeID: null,
-  onExpandNode: () => {},
+  onExpandNode: () => { },
   dictionaryName: '',
 };
 
