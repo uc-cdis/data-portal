@@ -277,3 +277,43 @@ export const createProject = createAsyncThunk(
         }
     }
   );
+
+  export const addFiltersetToRequest = createAsyncThunk(
+    'dataRequest/addFiltersetToRequest',
+    /** @param {import('./types').AddFilterSetIdUpdateParams} updateParams */
+    async (updateParams, { getState, rejectWithValue }) => {  
+      try {
+          const { data, response, status } = await fetchWithCreds({
+              path: '/amanuensis/admin/copy-search-to-project',
+              method: 'POST',
+              body: JSON.stringify(updateParams)
+          });
+        
+          if (statusCategory(status) !== '2XX') {
+            switch (statusCategory(status)) {
+              case '5XX':
+                return {
+                  isError: true,
+                  message: 'Oops! An issue occured on our end, please try again',
+                  data: null,
+                };
+              case '4XX':
+                return {
+                  isError: true,
+                  message: 'Oop! We were unable to process your request, make sure you have the right permissions',
+                  data: null,
+                }
+            }
+            console.error(`WARNING: failed to with status ${response.statusText}`);
+            return {
+              isError: true,
+              message: 'An unknown error occured',
+              data: null,
+            };
+          }
+          return { data, isError: false, message: '' };
+        } catch (e) {
+          return rejectWithValue(e);
+        }
+    }
+  );

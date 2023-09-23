@@ -6,6 +6,7 @@ import { Formik, Field, Form, FieldArray } from "formik";
 import Select from 'react-select';
 import SimpleInputField from '../components/SimpleInputField';
 import MultiValueField from '../components/MultiValueField';
+import ExplorerFilterDisplay from '../GuppyDataExplorer/ExplorerFilterDisplay';
 import Pill from '../components/Pill';
 import dictIcons from '../img/icons';
 import { overrideSelectTheme } from '../utils';
@@ -13,9 +14,12 @@ import {
     updateProjectApprovedUrl,
     updateProjectState,
     updateProjectUsers,
-    updateUserDataAccess
+    updateUserDataAccess,
+    addFiltersetToRequest
 } from '../redux/dataRequest/asyncThunks';
 import * as Yup from 'yup';
+import '../GuppyDataExplorer/ExplorerFilterSetForms/ExplorerFilterSetForms.css';
+
 
 const data_access_schema = Yup.object().shape({
     email: Yup.string().email().required('Must be a valid email address')
@@ -44,9 +48,10 @@ function errorObjectForField(errors, touched, fieldName) {
    * @param {Object} props
    * @param {DataRequestProject} [props.project]
    * @param {RootState['dataRequest']['projectStates']} [props.projectStates]
+   * @param {RootState['explorer']['savedFilterSets']} props.savedFilterSets
    * @param {function} [props.onAction]
    */
-export default function AdminProjectActions({ project, projectStates, onAction }) {
+export default function AdminProjectActions({ project, projectStates, savedFilterSets, onAction }) {
     let dispatch = useAppDispatch();
     let [actionType, setActionType] = useState('')
     let [currentEmailInput, setCurrentEmailInput] = useState("");
@@ -54,6 +59,10 @@ export default function AdminProjectActions({ project, projectStates, onAction }
     let [actionRequestError, setRequestactionError] = useState({ isError: false, message: '' });
     let currentProjectState = projectStates[project.status] ?? { id: -1, code: '' };
     let projectStateOptions = Object.keys(projectStates).map((name) => ({ label: name, value: projectStates[name].id }));
+    let [selected, setSelected] = useState({
+        label: '',
+        value: null,
+    });
 
     return <div className={
             `data-request-admin__actions-container
@@ -297,6 +306,87 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                             </Form>
                         )}
                     </Formik>);
+                case 'ADD_FILTERSET_TO_REQUEST':
+                    let filterSets = savedFilterSets?.data ?? [];
+                    let options = filterSets.map((filterSet) => ({
+                        label: filterSet.name,
+                        value: filterSet,
+                    }));
+                    return (
+                    <Formik
+                        initialValues={{
+                            filtersetId: null
+                        }}
+                        onSubmit={({ filtersetId }) => {
+                            setActionPending(true);
+                            let actionRequest = 
+                                /** @type {import('../redux/dataRequest/types').Request} */ 
+                                (dispatch(addFiltersetToRequest({ filtersetId, project_id: project.id })));
+                    
+                            actionRequest.then((action) => {
+                                setActionPending(false);
+                                if (!action.payload.isError) {
+                                    onAction?.(actionType);
+                                    setActionType('ACTION_SUCCESS');
+                                    return;
+                                }
+                        
+                                let { isError, message } = action.payload;
+                                setRequestactionError({ isError, message });
+                            })
+                        }}
+                    >
+                        {({ values, errors, touched }) => (
+                            <Form className="data-request__form">
+                                <div className="data-request__header">
+                                    <h2>Add Filter Set to Request</h2>
+                                </div>
+                                <div className="data-request__fields">
+                                    <Field name="filtersetId">
+                                        {({ field, meta }) => 
+                                        <>
+                                            <div className='explorer-filter-set-form'>
+                                                <div>
+                                                    <SimpleInputField
+                                                        label='Filter Set'
+                                                        input={
+                                                            <Select
+                                                                inputId='open-filter-set-name'
+                                                                options={options}
+                                                                value={selected}
+                                                                isClearable={false}
+                                                                theme={overrideSelectTheme}
+                                                                onChange={(e) => {
+                                                                    values.filtersetId = e.value.id;
+                                                                    setSelected(e);
+                                                                }}
+                                                            />
+                                                        }
+                                                    />
+                                                    <SimpleInputField
+                                                        className='simple-input-field__container--label-top'
+                                                        label='Description'
+                                                        input={
+                                                            <textarea
+                                                                className={'filter-set-description'}
+                                                                id='open-filter-set-description'
+                                                                disabled
+                                                                placeholder='No description'
+                                                                value={selected.value?.description}
+                                                            />
+                                                        }
+                                                    />
+                                                </div>
+                                                <ExplorerFilterDisplay filter={selected.value?.filter} />
+                                            </div>
+                                        </>}
+                                    </Field>
+                                </div>
+                                <Button submit={true} className="data-request__submit" label="Add" />
+                                {actionRequestError.isError && <span className="data-request__request-error">{actionRequestError.message}</span>}
+                            </Form>
+                        )}
+                    </Formik>);
                 case 'ACTION_SUCCESS':
                     return <div className="data-request-admin__action-success">
                         <span>Success!</span>
@@ -329,6 +419,13 @@ export default function AdminProjectActions({ project, projectStates, onAction }
                                 <Button
                                     label="Update User Data Access"
                                     onClick={() => setActionType('PROJECT_DATA_ACCESS')}
+                                    buttonType="secondary"
+                                />
+                            </li>
+                            <li>
+                                <Button
+                                    label="Add Filter Set to Request"
+                                    onClick={() => setActionType('ADD_FILTERSET_TO_REQUEST')}
                                     buttonType="secondary"
                                 />
                             </li>

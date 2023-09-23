@@ -107,6 +107,7 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
  * @param {string} [props.className]
  * @param {DataRequestProject[]} props.projects
  * @param {RootState['dataRequest']['projectStates']} props.projectStates
+ * @param {RootState['explorer']['savedFilterSets']} props.savedFilterSets
  * @param {boolean} props.isAdmin
  * @param {boolean} props.isAdminActive
  * @param {function} props.onToggleAdmin
@@ -117,6 +118,7 @@ function DataRequestsTable({
   className = '',
   projects,
   projectStates,
+  savedFilterSets,
   isAdmin,
   isAdminActive,
   onToggleAdmin,
@@ -200,8 +202,9 @@ function DataRequestsTable({
               <AdminProjectActions
                 project={projectDisplayOptions}
                 projectStates={projectStates}
+                savedFilterSets={savedFilterSets}
                 onAction={(type) => {
-                  if (type === 'PROJECT_STATE' ) {  
+                  if (type === 'PROJECT_STATE') {  
                     shouldReloadProjectsOnActionClose = true;
                   }
                 }}
