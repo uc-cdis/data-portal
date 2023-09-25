@@ -580,6 +580,7 @@
 
 .discovery-modal__fieldlabel {
   padding-right: 10px;
+  flex-basis: 40%;
 }
 
 .discovery-modal__subheading {
