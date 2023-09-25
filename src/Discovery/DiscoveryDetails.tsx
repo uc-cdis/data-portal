@@ -50,19 +50,24 @@ interface User {
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
+const withLabelFieldCls = { className: 'discovery-modal__field discovery-modal__field--with_label' };
 const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
 const tabLabelCls = { className: 'discovery-modal__tablabel' };
 
-const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
+const getFieldCls = (label?: string) => ((label) ? withLabelFieldCls : fieldCls);
+
+const blockTextField = (text: string) => <div {...getFieldCls()}>{text}</div>;
 const label = (text: string) => ((text) ? (<b {...labelCls}>{text}</b>) : (<div />));
 const textField = (text: string) => <span>{text}</span>;
 const linkField = (text: string, title?: string) => <a href={text} target='_blank' rel='noreferrer'>{title || text}</a>;
 
 const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
-const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...fieldCls}>{label(labelText)} {textField(fieldText)}</div>;
+const labeledSingleTextField = (labelText: string, fieldText: string) => (
+  <div {...getFieldCls(labelText)}>{label(labelText)} {textField(fieldText)}</div>
+);
 const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
   fieldsText.length
     ? (
@@ -70,10 +75,10 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
         {
           [
             // labeled first field
-            <div {...fieldCls} key='root'>{label(labelText)} {textField(fieldsText[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {textField(fieldsText[0])}</div>,
             // unlabeled subsequent fields
             ...fieldsText.slice(1).map(
-              (text, i) => <div {...fieldCls} key={i}><div /> {textField(text)}</div>,
+              (text, i) => <div {...getFieldCls(labelText)} key={i}><div /> {textField(text)}</div>,
             ),
           ]
         }
@@ -83,9 +88,9 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
 );
 const labeledSingleLinkField = (labelText: string, linkObject: LinkItem|string) => {
   if (typeof linkObject === 'string') {
-    return (<div {...fieldCls}>{label(labelText)} {linkField(linkObject, linkObject)}</div>);
+    return (<div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObject, linkObject)}</div>);
   }
-  return (<div {...fieldCls}>{label(labelText)} {linkField(linkObject.link, linkObject.title)}</div>);
+  return (<div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObject.link, linkObject.title)}</div>);
 };
 const labeledMultipleLinkField = (labelText: string, linkObjects: LinkItem[]|string[]) => {
   if (!linkObjects.length) {
@@ -93,7 +98,7 @@ const labeledMultipleLinkField = (labelText: string, linkObjects: LinkItem[]|str
   }
   if (typeof linkObjects === 'string') {
     return (
-      <div {...fieldCls}>{label(labelText)} {linkField(linkObjects, linkObjects)}</div>
+      <div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObjects, linkObjects)}</div>
     );
   }
   if (typeof linkObjects[0] === 'string') {
@@ -102,10 +107,10 @@ const labeledMultipleLinkField = (labelText: string, linkObjects: LinkItem[]|str
         {
           [
             // labeled first field
-            <div {...fieldCls} key='root'>{label(labelText)} {linkField(linkObjects[0], linkObjects[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(linkObjects[0], linkObjects[0])}</div>,
             // unlabeled subsequent fields
             ...linkObjects.slice(1).map(
-              (linkObject, i) => <div {...fieldCls} key={i}><div /> {linkField(linkObject)}</div>,
+              (linkObject, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkObject)}</div>,
             ),
           ]
         }
@@ -117,10 +122,10 @@ const labeledMultipleLinkField = (labelText: string, linkObjects: LinkItem[]|str
       {
         [
           // labeled first field
-          <div {...fieldCls} key='root'>{label(labelText)} {linkField(linkObjects[0].link, linkObjects[0].title)}</div>,
+          <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(linkObjects[0].link, linkObjects[0].title)}</div>,
           // unlabeled subsequent fields
           ...linkObjects.slice(1)?.map(
-            (linkObject, i) => <div {...fieldCls} key={i}><div /> {linkField(linkObject.link, linkObject.title)}</div>,
+            (linkObject, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkObject.link, linkObject.title)}</div>,
           ),
         ]
       }

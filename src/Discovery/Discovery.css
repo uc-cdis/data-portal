@@ -574,8 +574,11 @@
 .discovery-modal__field {
   display: flex;
   white-space: pre-wrap;
-  justify-content: space-between;
   padding: 2px 0;
+}
+
+.discovery-modal__field--with_label {
+  justify-content: space-between;
 }
 
 .discovery-modal__fieldlabel {
