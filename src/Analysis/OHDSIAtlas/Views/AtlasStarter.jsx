@@ -32,7 +32,7 @@ const AtlasStarter = ({ setCurrentViewAndTeamProject }) => {
   }
   if (status === 'error') {
     return (
-      <LoadingErrorMessage message={`Error while trying to retrieve user access details`} />
+      <LoadingErrorMessage message={'Error while trying to retrieve user access details'} />
     );
   }
   return (

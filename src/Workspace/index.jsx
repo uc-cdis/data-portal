@@ -264,14 +264,12 @@ class Workspace extends React.Component {
       ))) {
         workspaceLaunchStepsConfig.steps[2].description = 'Error';
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
-      }
-      else
-      {
-        //If container states are available, display detailed pod statuses
+      } else {
+        // If container states are available, display detailed pod statuses
         if (cs.length > 0) {
           for (let i = 0; i < cs.length; i++) {
-            const j = i+1
-            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(' \n Container ' + j + ' Ready: ' + cs[i].ready);
+            const j = i + 1;
+            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(` \n Container ${j} Ready: ${cs[i].ready}`);
           }
         }
       }
@@ -287,8 +285,7 @@ class Workspace extends React.Component {
       workspaceLaunchStepsConfig.currentIndex = 2;
       if (workspaceStatusData.status === 'Launching') {
         workspaceLaunchStepsConfig.steps[2].description = 'ECS task pending';
-      }
-      else if (workspaceStatusData.status !== 'Active') {
+      } else if (workspaceStatusData.status !== 'Active') {
         workspaceLaunchStepsConfig.steps[2].description = 'ECS task failed';
       }
       return workspaceLaunchStepsConfig;
@@ -657,7 +654,7 @@ class Workspace extends React.Component {
                         >
                           {(this.state.workspaceLaunchStepsConfig.steps.map((step) => (
                             <Step
-                              classname = 'workspaceStep'
+                              classname='workspaceStep'
                               key={step.title}
                               title={step.title}
                               description={step.description}

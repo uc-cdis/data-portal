@@ -24,7 +24,8 @@ export function category2NodeList(dictionary) {
     (id) => dictionary[id],
   ).filter(
     (node) => categoryFilter(node),
-  ).reduce(
+  )
+    .reduce(
       (lookup, node) => {
         if (!lookup[node.category]) {
           lookup[node.category] = [];
@@ -34,7 +35,6 @@ export function category2NodeList(dictionary) {
       }, {},
     );
   return res;
-
 }
 /* eslint-enable no-param-reassign */
 
