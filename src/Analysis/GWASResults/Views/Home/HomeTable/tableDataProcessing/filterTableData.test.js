@@ -18,21 +18,17 @@ describe('filterTableData', () => {
     },
   ];
   const homeTableStateDefault = {
-    "nameSearchTerm": "",
-    "wfNameSearchTerm": "",
-    "submittedAtSelections": [],
-    "finishedAtSelections": [],
-    "jobStatusSelections": [],
-};
-
-
+    nameSearchTerm: '',
+    wfNameSearchTerm: '',
+    submittedAtSelections: [],
+    finishedAtSelections: [],
+    jobStatusSelections: [],
+  };
 
   it('should filter data by name search term', () => {
-    //const homeTableState = homeTableStateDefault;
-    //homeTableState.nameSearchTerm = "name-test";
-    const filteredData = filterTableData(testData, {...homeTableStateDefault,...{
-      "nameSearchTerm": "name-test-1"}
-  });
+    // const homeTableState = homeTableStateDefault;
+    // homeTableState.nameSearchTerm = "name-test";
+    const filteredData = filterTableData(testData, { ...homeTableStateDefault, ...{ nameSearchTerm: 'name-test-1' } });
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].name).toBe('name-test-1');
   });
@@ -67,5 +63,5 @@ describe('filterTableData', () => {
     const filteredData = filterTableData(testData, homeTableState);
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].name).toBe('John');
-  });*/
+  }); */
 });
