@@ -20,10 +20,9 @@ describe('filterTableData', () => {
     },
   ];
 
-
   it('should filter data by name search term', () => {
     const filteredData = filterTableData(testData,
-      { ...InitialHomeTableState, ...{ nameSearchTerm: 'name-test-1'}}
+      { ...InitialHomeTableState, ...{ nameSearchTerm: 'name-test-1' } },
     );
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].name).toBe('name-test-1');
@@ -31,7 +30,7 @@ describe('filterTableData', () => {
 
   it('should filter data by workflow name search term', () => {
     const filteredData = filterTableData(testData,
-      { ...InitialHomeTableState, ...{wfNameSearchTerm: 'workflow-name-test-2'}}
+      { ...InitialHomeTableState, ...{ wfNameSearchTerm: 'workflow-name-test-2' } },
     );
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].wf_name).toBe('workflow-name-test-2');
@@ -39,7 +38,7 @@ describe('filterTableData', () => {
 
   it('should filter data by submitted date range', () => {
     const filteredData = filterTableData(testData,
-      { ...InitialHomeTableState, ...{submittedAtSelections: [new Date('2023-01-01'), new Date('2023-03-01')]}}
+      { ...InitialHomeTableState, ...{ submittedAtSelections: [new Date('2023-01-01'), new Date('2023-03-01')] } },
     );
     expect(filteredData).toHaveLength(2);
     expect(filteredData[0].submittedAt).toBe(testData[0].submittedAt);
@@ -48,7 +47,7 @@ describe('filterTableData', () => {
 
   it('should filter data by job statuses', () => {
     const filteredData = filterTableData(testData,
-      { ...InitialHomeTableState, ...{jobStatusSelections: [PHASES.Succeeded]}}
+      { ...InitialHomeTableState, ...{ jobStatusSelections: [PHASES.Succeeded] } },
     );
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].phase).toBe(PHASES.Succeeded);
@@ -56,7 +55,7 @@ describe('filterTableData', () => {
 
   it('should filter data by finished date range', () => {
     const filteredData = filterTableData(testData,
-      { ...InitialHomeTableState, ...{finishedAtSelections: [new Date('2023-01-15'), new Date('2023-01-22')]}}
+      { ...InitialHomeTableState, ...{ finishedAtSelections: [new Date('2023-01-15'), new Date('2023-01-22')] } },
     );
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].finishedAt).toBe('2023-01-20T12:00:00Z');
