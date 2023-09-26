@@ -232,7 +232,6 @@ function App() {
                   dispatch(toggleAdminActive());
                 }
                 return Promise.all([
-                  dispatch(fetchFilterSets()),
                   dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
                   dispatch(fetchProjectStates())
                 ]);

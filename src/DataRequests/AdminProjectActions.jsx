@@ -321,7 +321,7 @@ export default function AdminProjectActions({ project, projectStates, savedFilte
                             setActionPending(true);
                             let actionRequest = 
                                 /** @type {import('../redux/dataRequest/types').Request} */ 
-                                (dispatch(addFiltersetToRequest({ filtersetId, project_id: project.id })));
+                                (dispatch(addFiltersetToRequest({ filtersetId, projectId: project.id })));
                     
                             actionRequest.then((action) => {
                                 setActionPending(false);
