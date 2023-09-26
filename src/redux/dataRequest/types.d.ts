@@ -68,6 +68,11 @@ export type UserRoleUpdateParams = {
   email: string
 }
 
+export type AddFilterSetIdUpdateParams = {
+  projectId: number,
+  filtersetId: number
+}
+
 export type ProjectUsersUpdateParams = {
   users: { project_id: number, email: string, id?: number }[]
 }

@@ -82,11 +82,11 @@ function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive,
               searchParams.delete('admin');
               if (isAdminActive) {
                 dispatch(fetchProjectStates());
+                dispatch(fetchFilterSets());
                 setSearchParams(new URLSearchParams([...Array.from(searchParams.entries()), ['admin', 'true']]));
               } else {
                 setSearchParams(searchParams);
               }
-              dispatch(fetchFilterSets()),
               dispatch(fetchProjects({ triggerReloading: true }));
             }}
             reloadProjects={() => { dispatch(fetchProjects({ triggerReloading: true })); }}
