@@ -581,9 +581,17 @@
   justify-content: space-between;
 }
 
+.discovery-modal__field--block {
+  text-align: justify;
+}
+
 .discovery-modal__fieldlabel {
   padding-right: 10px;
   flex-basis: 40%;
+}
+
+.discovery-modal__fieldtext {
+  text-align: end;
 }
 
 .discovery-modal__subheading {

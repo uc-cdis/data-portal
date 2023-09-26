@@ -51,17 +51,19 @@ interface User {
 
 const fieldCls = { className: 'discovery-modal__field' };
 const withLabelFieldCls = { className: 'discovery-modal__field discovery-modal__field--with_label' };
+const blockFieldCls = { className: 'discovery-modal__field discovery-modal__field--block' };
 const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
+const textCls = { className: 'discovery-modal__fieldtext' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
 const tabLabelCls = { className: 'discovery-modal__tablabel' };
 
 const getFieldCls = (label?: string) => ((label) ? withLabelFieldCls : fieldCls);
 
-const blockTextField = (text: string) => <div {...getFieldCls()}>{text}</div>;
+const blockTextField = (text: string) => <div {...blockFieldCls}>{text}</div>;
 const label = (text: string) => ((text) ? (<b {...labelCls}>{text}</b>) : (<div />));
-const textField = (text: string) => <span>{text}</span>;
+const textField = (text: string) => <span {...textCls}>{text}</span>;
 const linkField = (text: string, title?: string) => <a href={text} target='_blank' rel='noreferrer'>{title || text}</a>;
 
 const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
