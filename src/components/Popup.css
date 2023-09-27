@@ -32,22 +32,16 @@
   padding: 0 30px;
   background: var(--pcdc-color__primary);
   color: #ffffff;
-  display: table;
-}
-
-.popup__icon {
-  float: left;
-  display: table-cell;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .popup__title-text {
-  display: inline-flex;
-}
-
-.popup__close-button {
-  float: right;
-  display: table-cell;
-  outline: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical; 
+  overflow: hidden;
 }
 
 .popup__close-button:hover {

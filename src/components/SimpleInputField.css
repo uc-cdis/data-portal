@@ -7,6 +7,10 @@
   margin-bottom: 30px;
 }
 
+.simple-input-field__container--label-top {
+  flex-direction: column;
+}
+
 .simple-input-field__label {
   text-align: right;
   margin-right: 10px;

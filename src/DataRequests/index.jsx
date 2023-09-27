@@ -7,6 +7,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import DataRequestsTable from './DataRequestsTable';
 import { toggleAdminActive } from '../redux/dataRequest/slice';
 import { fetchProjects, fetchProjectStates } from '../redux/dataRequest/asyncThunks';
+import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import './DataRequests.css';
 
 /** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
@@ -19,6 +20,7 @@ function mapPropsToState(state) {
   return {
     projects: state.dataRequest.projects,
     projectStates: state.dataRequest.projectStates,
+    savedFilterSets: state.explorer.savedFilterSets,
     isProjectsReloading: state.dataRequest.isProjectsReloading,
     isAdminActive: state.dataRequest.isAdminActive
   };
@@ -28,10 +30,11 @@ function mapPropsToState(state) {
  * @param {Object} props
  * @param {DataRequestProject[]} [props.projects]
  * @param {RootState['dataRequest']['projectStates']} [props.projectStates]
+ * @param {RootState['explorer']['savedFilterSets']} props.savedFilterSets
  * @param {boolean} [props.isAdminActive]
  * @param {boolean} [props.isProjectsReloading]
  */
-function DataRequests({ projects, projectStates, isAdminActive, isProjectsReloading }) {
+function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive, isProjectsReloading }) {
   let [searchParams, setSearchParams] = useSearchParams();
   let dispatch = useAppDispatch();
   let { 
@@ -73,11 +76,13 @@ function DataRequests({ projects, projectStates, isAdminActive, isProjectsReload
             className='data-requests__table'
             projects={projects}
             projectStates={projectStates}
+            savedFilterSets={savedFilterSets}
             onToggleAdmin={(isAdminActive) => {
               dispatch(toggleAdminActive());
               searchParams.delete('admin');
               if (isAdminActive) {
                 dispatch(fetchProjectStates());
+                dispatch(fetchFilterSets());
                 setSearchParams(new URLSearchParams([...Array.from(searchParams.entries()), ['admin', 'true']]));
               } else {
                 setSearchParams(searchParams);

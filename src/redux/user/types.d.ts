@@ -33,8 +33,19 @@ export type User = {
   username: string;
 };
 
+type UserListItem = {
+  name: srring,
+  id: number,
+  last_auth?: string,
+  first_name?: string,
+  last_name?: string,
+  institution?: string,
+  role?: string
+}
+
 export type UserState = Partial<User> & {
   fetch_error?: any;
   fetched_user?: boolean;
+  admin_user_list?: UserListItem[]
   lastAuthMs?: number;
 };

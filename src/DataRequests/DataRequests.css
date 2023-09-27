@@ -217,7 +217,7 @@
 }
 
 .data-request-admin__actions-container {
-  height: 350px;
+  height: fit-content;
 }
 
 .data-request-admin__action-success {
