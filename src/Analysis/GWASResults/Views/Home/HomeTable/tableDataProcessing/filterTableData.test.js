@@ -28,12 +28,26 @@ describe('filterTableData', () => {
     expect(filteredData[0].name).toBe('name-test-1');
   });
 
+  it('should return an array of length zero if name search term is not found', () => {
+    const filteredData = filterTableData(testData,
+      { ...InitialHomeTableState, ...{ nameSearchTerm: 'name-test-3' } },
+    );
+    expect(filteredData).toHaveLength(0);
+  });
+
   it('should filter data by workflow name search term', () => {
     const filteredData = filterTableData(testData,
       { ...InitialHomeTableState, ...{ wfNameSearchTerm: 'workflow-name-test-2' } },
     );
     expect(filteredData).toHaveLength(1);
     expect(filteredData[0].wf_name).toBe('workflow-name-test-2');
+  });
+
+  it('should return an array of length zero if  workflow name search term is not found', () => {
+    const filteredData = filterTableData(testData,
+      { ...InitialHomeTableState, ...{ wfNameSearchTerm: 'workflow-name-test-3' } },
+    );
+    expect(filteredData).toHaveLength(0);
   });
 
   it('should filter data by submitted date range', () => {
