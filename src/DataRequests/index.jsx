@@ -7,6 +7,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import DataRequestsTable from './DataRequestsTable';
 import { toggleAdminActive } from '../redux/dataRequest/slice';
 import { fetchProjects, fetchProjectStates } from '../redux/dataRequest/asyncThunks';
+import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import './DataRequests.css';
 
 /** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
@@ -81,6 +82,7 @@ function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive,
               searchParams.delete('admin');
               if (isAdminActive) {
                 dispatch(fetchProjectStates());
+                dispatch(fetchFilterSets());
                 setSearchParams(new URLSearchParams([...Array.from(searchParams.entries()), ['admin', 'true']]));
               } else {
                 setSearchParams(searchParams);
