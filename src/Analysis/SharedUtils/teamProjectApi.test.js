@@ -44,7 +44,7 @@ describe('fetchArboristTeamProjectRoles', () => {
 
     // Call the function and expect it to throw an error
     await expect(fetchArboristTeamProjectRoles()).rejects.toThrow(
-      'Network error'
+      'Network error',
     );
 
     // Ensure that fetch was called with the correct URL
