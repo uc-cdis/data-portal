@@ -2,6 +2,9 @@
   background-color: var(--g3-color__white);
   padding: 1rem;
   margin-top: 10px;
+  resize: vertical;
+  overflow: -moz-scrollbars-vertical; 
+  overflow-y: scroll;
 }
 
 /* Medium screen and less */
@@ -30,8 +33,6 @@
 
 .explorer-filter-set-workspace > main {
   margin-top: 1rem;
-  max-height: 12rem;
-  overflow-y: scroll;
 }
 
 .explorer-filter-set-workspace button {
