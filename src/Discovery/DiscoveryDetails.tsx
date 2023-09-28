@@ -40,24 +40,36 @@ interface ListItem {
   guid: string
 }
 
+interface LinkItem {
+  title?: string,
+  link: string
+}
+
 interface User {
   username: string
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
+const withLabelFieldCls = { className: 'discovery-modal__field discovery-modal__field--with_label' };
+const blockFieldCls = { className: 'discovery-modal__field discovery-modal__field--block' };
 const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
+const textCls = { className: 'discovery-modal__fieldtext' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
 const tabLabelCls = { className: 'discovery-modal__tablabel' };
 
-const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
-const label = (text: string) => <b {...labelCls}>{text}</b>;
-const textField = (text: string) => <span>{text}</span>;
-const linkField = (text: string) => <a href={text} target='_blank' rel='noreferrer'>{text}</a>;
+const getFieldCls = (label?: string) => ((label) ? withLabelFieldCls : fieldCls);
+
+const blockTextField = (text: string) => <div {...blockFieldCls}>{text}</div>;
+const label = (text: string) => ((text) ? (<b {...labelCls}>{text}</b>) : (<div />));
+const textField = (text: string) => <span {...textCls}>{text}</span>;
+const linkField = (text: string, title?: string) => <a href={text} target='_blank' rel='noreferrer'>{title || text}</a>;
 
 const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
-const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...fieldCls}>{label(labelText)} {textField(fieldText)}</div>;
+const labeledSingleTextField = (labelText: string, fieldText: string) => (
+  <div {...getFieldCls(labelText)}>{label(labelText)} {textField(fieldText)}</div>
+);
 const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
   fieldsText.length
     ? (
@@ -65,36 +77,76 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
         {
           [
             // labeled first field
-            <div {...fieldCls}>{label(labelText)} {textField(fieldsText[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {textField(fieldsText[0])}</div>,
             // unlabeled subsequent fields
             ...fieldsText.slice(1).map(
-              (text, i) => <div {...fieldCls} key={i}><div /> {textField(text)}</div>,
+              (text, i) => <div {...getFieldCls(labelText)} key={i}><div /> {textField(text)}</div>,
             ),
           ]
         }
       </div>
     )
-    : <React.Fragment />
+    : null
 );
-const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...fieldCls}>{label(labelText)} {linkField(linkText)}</div>;
-const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
-  linksText.length
-    ? (
+const labeledSingleLinkField = (labelText: string, linkObject: LinkItem|string) => {
+  if (typeof linkObject === 'string') {
+    return (<div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObject, linkObject)}</div>);
+  }
+  return (<div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObject.link, linkObject.title)}</div>);
+};
+const labeledMultipleLinkField = (labelText: string, links: LinkItem[]|string[]) => {
+  if (!links.length) {
+    return null;
+  }
+  if (typeof links === 'string') {
+    return (
+      <div {...getFieldCls(labelText)}>{label(labelText)} {linkField(links, links)}</div>
+    );
+  }
+  if (typeof links[0] === 'string') {
+    return (
       <div>
         {
           [
             // labeled first field
-            <div {...fieldCls}>{label(labelText)} {linkField(linksText[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>
+              {label(labelText)} {linkField(links[0], links[0])}
+            </div>,
             // unlabeled subsequent fields
-            ...linksText.slice(1).map(
-              (linkText, i) => <div {...fieldCls} key={i}><div /> {linkField(linkText)}</div>,
+            ...links.slice(1).map(
+              (linkText, i) => (
+                <div {...getFieldCls(labelText)} key={i}>
+                  <div /> {linkField(linkText)}
+                </div>
+              ),
             ),
           ]
         }
       </div>
-    )
-    : <React.Fragment />
-);
+    );
+  }
+  // if links is an array of objects in the format of { link: aaa, title: bbb }
+  return (
+    <div>
+      {
+        [
+          // labeled first field
+          <div {...getFieldCls(labelText)} key='root'>
+            {label(labelText)} {linkField(links[0].link, links[0].title)}
+          </div>,
+          // unlabeled subsequent fields
+          ...links.slice(1)?.map(
+            (linkObject, i) => (
+              <div {...getFieldCls(labelText)} key={i}>
+                <div /> {linkField(linkObject.link, linkObject.title)}
+              </div>
+            ),
+          ),
+        ]
+      }
+    </div>
+  );
+};
 
 const accessDescriptor = (resource: DiscoveryResource) => {
   if (resource[accessibleFieldName] === AccessLevel.ACCESSIBLE) {
@@ -127,17 +179,30 @@ const accessDescriptor = (resource: DiscoveryResource) => {
 type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
-const formatResourceValuesWhenNestedArray = (resourceFieldValue: string[]) => {
+const formatResourceValuesWhenNestedArray = (resourceFieldValue: string|any[]) => {
   if (
     Array.isArray(resourceFieldValue)
-    && Array.isArray(resourceFieldValue[0])
   ) {
-    return resourceFieldValue[0].join(', ');
+    if (Array.isArray(resourceFieldValue[0]) && resourceFieldValue[0].every((val) => typeof val === 'string')) {
+      return resourceFieldValue[0].join(', ');
+    }
+    return resourceFieldValue[0];
   }
   return resourceFieldValue;
 };
 
-const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
+const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element|null => {
+  // Setup special fields first
+  if (fieldConfig.type === 'accessDescriptor') {
+    return accessDescriptor(resource);
+  }
+  if (fieldConfig.type === 'tags') {
+    const tags = fieldConfig.categories ? (resource.tags || []).filter(
+      (tag) => fieldConfig.categories?.includes(tag.category),
+    ) : resource.tags;
+    return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
+  }
+  // Here begins some normal fields (texts, links, etc...)
   let resourceFieldValue = fieldConfig.sourceField && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
   if (
     resourceFieldValue
@@ -161,26 +226,17 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     if (fieldConfig.type === 'block') {
       return blockTextField(resourceFieldValue);
     }
-  } else {
-    if (fieldConfig.type === 'accessDescriptor') {
-      return accessDescriptor(resource);
-    }
-    if (fieldConfig.type === 'tags') {
-      const tags = fieldConfig.categories ? (resource.tags || []).filter(
-        (tag) => fieldConfig.categories?.includes(tag.category),
-      ) : resource.tags;
-      return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
-    }
   }
-  return <React.Fragment />;
+  return null;
 };
 
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
   // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
   const groupHasContent = group.fields.some(
     (field) => {
+      // For special fields (tags, access descriptors, etc...)
       if (!field.sourceField) {
-        return false;
+        return true;
       }
       const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
       return (resourceFieldValue
