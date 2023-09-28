@@ -94,39 +94,40 @@ const labeledSingleLinkField = (labelText: string, linkObject: LinkItem|string) 
   }
   return (<div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObject.link, linkObject.title)}</div>);
 };
-const labeledMultipleLinkField = (labelText: string, linkObjects: LinkItem[]|string[]) => {
-  if (!linkObjects.length) {
+const labeledMultipleLinkField = (labelText: string, links: LinkItem[]|string[]) => {
+  if (!links.length) {
     return <React.Fragment />;
   }
-  if (typeof linkObjects === 'string') {
+  if (typeof links === 'string') {
     return (
-      <div {...getFieldCls(labelText)}>{label(labelText)} {linkField(linkObjects, linkObjects)}</div>
+      <div {...getFieldCls(labelText)}>{label(labelText)} {linkField(links, links)}</div>
     );
   }
-  if (typeof linkObjects[0] === 'string') {
+  if (typeof links[0] === 'string') {
     return (
       <div>
         {
           [
             // labeled first field
-            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(linkObjects[0], linkObjects[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(links[0], links[0])}</div>,
             // unlabeled subsequent fields
-            ...linkObjects.slice(1).map(
-              (linkObject, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkObject)}</div>,
+            ...links.slice(1).map(
+              (linkText, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkText)}</div>,
             ),
           ]
         }
       </div>
     );
   }
+  // if links is an array of objects in the format of { link: aaa, title: bbb }
   return (
     <div>
       {
         [
           // labeled first field
-          <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(linkObjects[0].link, linkObjects[0].title)}</div>,
+          <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(links[0].link, links[0].title)}</div>,
           // unlabeled subsequent fields
-          ...linkObjects.slice(1)?.map(
+          ...links.slice(1)?.map(
             (linkObject, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkObject.link, linkObject.title)}</div>,
           ),
         ]
@@ -221,7 +222,7 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
   // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
   const groupHasContent = group.fields.some(
     (field) => {
-      // Foe special fields (tags, access descriptors, etc...)
+      // For special fields (tags, access descriptors, etc...)
       if (!field.sourceField) {
         return true;
       }
