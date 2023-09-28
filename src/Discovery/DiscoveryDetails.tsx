@@ -86,7 +86,7 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
         }
       </div>
     )
-    : <React.Fragment />
+    : null
 );
 const labeledSingleLinkField = (labelText: string, linkObject: LinkItem|string) => {
   if (typeof linkObject === 'string') {
@@ -96,7 +96,7 @@ const labeledSingleLinkField = (labelText: string, linkObject: LinkItem|string) 
 };
 const labeledMultipleLinkField = (labelText: string, links: LinkItem[]|string[]) => {
   if (!links.length) {
-    return <React.Fragment />;
+    return null;
   }
   if (typeof links === 'string') {
     return (
@@ -109,10 +109,16 @@ const labeledMultipleLinkField = (labelText: string, links: LinkItem[]|string[])
         {
           [
             // labeled first field
-            <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(links[0], links[0])}</div>,
+            <div {...getFieldCls(labelText)} key='root'>
+              {label(labelText)} {linkField(links[0], links[0])}
+            </div>,
             // unlabeled subsequent fields
             ...links.slice(1).map(
-              (linkText, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkText)}</div>,
+              (linkText, i) => (
+                <div {...getFieldCls(labelText)} key={i}>
+                  <div /> {linkField(linkText)}
+                </div>
+              ),
             ),
           ]
         }
@@ -125,10 +131,16 @@ const labeledMultipleLinkField = (labelText: string, links: LinkItem[]|string[])
       {
         [
           // labeled first field
-          <div {...getFieldCls(labelText)} key='root'>{label(labelText)} {linkField(links[0].link, links[0].title)}</div>,
+          <div {...getFieldCls(labelText)} key='root'>
+            {label(labelText)} {linkField(links[0].link, links[0].title)}
+          </div>,
           // unlabeled subsequent fields
           ...links.slice(1)?.map(
-            (linkObject, i) => <div {...getFieldCls(labelText)} key={i}><div /> {linkField(linkObject.link, linkObject.title)}</div>,
+            (linkObject, i) => (
+              <div {...getFieldCls(labelText)} key={i}>
+                <div /> {linkField(linkObject.link, linkObject.title)}
+              </div>
+            ),
           ),
         ]
       }
@@ -167,7 +179,7 @@ const accessDescriptor = (resource: DiscoveryResource) => {
 type TabFieldConfig = TabFieldGroup['fields'][0]
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
-const formatResourceValuesWhenNestedArray = (resourceFieldValue) => {
+const formatResourceValuesWhenNestedArray = (resourceFieldValue: string|any[]) => {
   if (
     Array.isArray(resourceFieldValue)
   ) {
@@ -179,7 +191,7 @@ const formatResourceValuesWhenNestedArray = (resourceFieldValue) => {
   return resourceFieldValue;
 };
 
-const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
+const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element|null => {
   // Setup special fields first
   if (fieldConfig.type === 'accessDescriptor') {
     return accessDescriptor(resource);
@@ -215,7 +227,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
       return blockTextField(resourceFieldValue);
     }
   }
-  return <React.Fragment />;
+  return null;
 };
 
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
