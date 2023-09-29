@@ -214,7 +214,6 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     if (fieldConfig.type === 'dataDownloadList') {
       return <DataDownloadList sourceFieldData={resourceFieldValue} />;
     }
-
     // Format resourceFieldValue for all other field types
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
 
