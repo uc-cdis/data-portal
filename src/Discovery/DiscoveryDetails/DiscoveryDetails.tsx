@@ -208,10 +208,9 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
   if (
     resourceFieldValue
     && resourceFieldValue.length > 0
+    && resourceFieldValue[0]
     && resourceFieldValue[0].length !== 0
   ) {
-
-    console.log('fieldConfig.type', fieldConfig.type);
     if (fieldConfig.type === 'dataDownloadList') {
       return <DataDownloadList sourceFieldData={resourceFieldValue} />;
     }
@@ -246,9 +245,12 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
         return true;
       }
       const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
-      return (resourceFieldValue
+      return (
+        resourceFieldValue
         && resourceFieldValue.length > 0
-        && resourceFieldValue[0].length !== 0);
+        && resourceFieldValue[0]
+        && resourceFieldValue[0].length !== 0
+      );
     },
   );
   if (groupHasContent) {
@@ -566,7 +568,6 @@ const DiscoveryDetails = (props: Props) => {
             </React.Fragment>
           )
       }
-
     </Drawer>
   );
 };

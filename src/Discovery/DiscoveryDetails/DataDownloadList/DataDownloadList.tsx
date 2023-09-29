@@ -2,21 +2,19 @@ import React from 'react';
 import { Collapse, List, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import CheckThatDataHasTitles from './Utils/CheckThatDataHasTitles';
-import ListItem from './Utils/ListItem';
+import DataDownloadListItem from './Utils/DataDownloadListItem';
 
-interface Props {
-    sourceFieldData: any;
-}
 
 const { Panel } = Collapse;
 
-const DataDownloadList = (props: Props) => {
-  console.log('props.sourceFieldData', props.sourceFieldData);
-  const data = props.sourceFieldData[0].map((obj) => (
-    {
-      title: obj.title,
-      description: obj.description,
-    }),
+const DataDownloadList = (sourceFieldData: any) => {
+  console.log('props.sourceFieldData', sourceFieldData);
+  const data = sourceFieldData[0].map((obj:DataDownloadListItem) => (
+      {
+        title: obj.title,
+        description: obj.description,
+      }
+    ),
   );
   if (CheckThatDataHasTitles(data) === false) return null;
   return (
@@ -25,7 +23,7 @@ const DataDownloadList = (props: Props) => {
         <List
           itemLayout='horizontal'
           dataSource={data}
-          renderItem={(item:ListItem) => (
+          renderItem={(item:DataDownloadListItem) => (
             <List.Item
               actions={[
                 <Button
