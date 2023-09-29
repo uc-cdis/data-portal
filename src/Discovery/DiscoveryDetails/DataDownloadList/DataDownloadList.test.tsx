@@ -2,7 +2,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
-import DataDownloadListItem from './Utils/DataDownloadListItem';
 
 // Mock CheckThatDataHasTitles function
 jest.mock('./CheckThatDataHasTitles', () => ({
@@ -12,8 +11,6 @@ jest.mock('./CheckThatDataHasTitles', () => ({
 
 describe('DataDownloadList', () => {
   it('renders the component with titles and descriptions when CheckThatDataHasTitles returns true', () => {
-    // Mock CheckThatDataHasTitles to return true
-    require('./CheckThatDataHasTitles').default.mockReturnValue(true);
     const sourceFieldData = [
       [
         {
@@ -36,8 +33,6 @@ describe('DataDownloadList', () => {
   });
 
   it('renders the component when descriptions are missing', () => {
-    // Mock CheckThatDataHasTitles to return true
-    require('./CheckThatDataHasTitles').default.mockReturnValue(true);
     const sourceFieldData = [
       [
         {
@@ -58,8 +53,6 @@ describe('DataDownloadList', () => {
   });
 
   it('does not render the component when CheckThatDataHasTitles returns false', () => {
-    // Mock CheckThatDataHasTitles to return false
-    require('./CheckThatDataHasTitles').default.mockReturnValue(false);
     const sourceFieldData = [
       [
         {
