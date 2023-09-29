@@ -245,8 +245,7 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
         return true;
       }
       const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
-      return (
-        resourceFieldValue
+      return (resourceFieldValue
         && resourceFieldValue.length > 0
         && resourceFieldValue[0]
         && resourceFieldValue[0].length !== 0);
