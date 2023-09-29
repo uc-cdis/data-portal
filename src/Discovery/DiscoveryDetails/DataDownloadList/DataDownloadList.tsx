@@ -7,12 +7,12 @@ import DataDownloadListItem from './Utils/DataDownloadListItem';
 
 const { Panel } = Collapse;
 
-const DataDownloadList = (sourceFieldData: any) => {
-  console.log('props.sourceFieldData', sourceFieldData);
-  const data = sourceFieldData[0].map((obj:DataDownloadListItem) => (
+
+const DataDownloadList = ({sourceFieldData}: any) => {
+  const data = sourceFieldData[0].map((obj) => (
       {
         title: obj.title,
-        description: obj.description,
+        description: obj.description || null,
       }
     ),
   );
