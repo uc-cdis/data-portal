@@ -2,7 +2,11 @@ import CheckThatDataHasTitles from './CheckThatDataHasTitles'; // Import your fu
 
 describe('validateTitle function', () => {
   it('returns true when all objects have a "title" key that evaluates to true', () => {
-    const testData = [{ title: 'title', description: 'description' }, { title: 'title', description: 'description' }, { title: 'title', description: 'description' }];
+    const testData = [
+      { title: 'title', description: 'description' },
+      { title: 'title', description: 'description' },
+      { title: 'title', description: 'description' },
+    ];
     const result = CheckThatDataHasTitles(testData);
     expect(result).toBe(true);
   });
