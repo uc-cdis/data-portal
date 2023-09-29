@@ -12,7 +12,7 @@ const DataDownloadList = ({sourceFieldData}: any) => {
   const data = sourceFieldData[0].map((obj) => (
       {
         title: obj.title,
-        description: obj.description || null,
+        description: obj.description,
       }
     ),
   );
