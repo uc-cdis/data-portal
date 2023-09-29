@@ -207,6 +207,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
   if (
     resourceFieldValue
     && resourceFieldValue.length > 0
+    && resourceFieldValue[0]
     && resourceFieldValue[0].length !== 0
   ) {
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
@@ -241,6 +242,7 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
       const resourceFieldValue = jsonpath.query(resource, `$.${field.sourceField}`);
       return (resourceFieldValue
         && resourceFieldValue.length > 0
+        && resourceFieldValue[0]
         && resourceFieldValue[0].length !== 0);
     },
   );
