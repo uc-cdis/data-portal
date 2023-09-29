@@ -2,7 +2,7 @@ import CheckThatDataHasTitles from './CheckThatDataHasTitles';
 
 describe('validateTitle function', () => {
   it('returns true when all objects have a "title" key that evaluates to true', () => {
-    const testData = [{ title: true }, { title: true }, { title: true }];
+    const testData = [{ title: 'true' }, { title: 'true' }, { title: 'true' }];
     const result = CheckThatDataHasTitles(testData);
     expect(result).toBe(true);
   });

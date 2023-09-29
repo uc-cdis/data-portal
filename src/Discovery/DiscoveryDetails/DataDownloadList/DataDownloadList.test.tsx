@@ -3,12 +3,6 @@ import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 
-// Mock CheckThatDataHasTitles function
-jest.mock('./CheckThatDataHasTitles', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-
 describe('DataDownloadList', () => {
   it('renders the component with titles and descriptions when CheckThatDataHasTitles returns true', () => {
     const sourceFieldData = [
