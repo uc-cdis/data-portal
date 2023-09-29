@@ -1,4 +1,4 @@
-import CheckThatDataHasTitles from './CheckThatDataHasTitles'; // Import your function from the actual file
+import CheckThatDataHasTitles from './CheckThatDataHasTitles';
 
 describe('validateTitle function', () => {
   it('returns true when all objects have a "title" key that evaluates to true', () => {
