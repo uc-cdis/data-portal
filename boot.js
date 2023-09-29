@@ -20,17 +20,15 @@
   scriptNode.type = 'text/javascript';
   document.body.appendChild(scriptNode);
   // create theme override node in body
-  const themeOverridesSrc = (basename && basename !== '/') ? `${basename}/src/css/themeoverrides.css?_=${cssVersion}` : `/src/css/themeoverrides.css?_=${cssVersion}`;
   let linkNode = document.createElement('link');
-  linkNode.href = themeOverridesSrc;
+  linkNode.href = `/src/css/themeoverrides.css?_=${cssVersion}`;
   linkNode.type = 'text/css';
   linkNode.id = 'gen3-theme-overrides';
   linkNode.rel = 'stylesheet';
   document.body.appendChild(linkNode);
   // create local theme override node in body
-  const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css` : 'https://localhost:9443/src/css/themeoverrides.css';
   linkNode = document.createElement('link');
-  linkNode.href = localThemeOverridesSrc;
+  linkNode.href = 'https://localhost:9443/src/css/themeoverrides.css';
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet';
   document.body.appendChild(linkNode);
