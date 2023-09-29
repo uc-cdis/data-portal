@@ -566,6 +566,7 @@ const DiscoveryDetails = (props: Props) => {
             </React.Fragment>
           )
       }
+
     </Drawer>
   );
 };

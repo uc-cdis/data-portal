@@ -1,5 +1,5 @@
 import React from 'react';
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
@@ -24,15 +24,15 @@ describe('DataDownloadList', () => {
           title: 'Title 2',
           description: 'Description 2',
         },
-      ]
+      ],
     ];
     const { getByText } = render(<DataDownloadList sourceFieldData={sourceFieldData} />);
     // Verify that the component renders successfully
     expect(getByText('Data Download Links')).toBeInTheDocument();
-    sourceFieldData[0].forEach((obj)=>{
+    sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.title)).toBeInTheDocument();
       expect(getByText(obj.description)).toBeInTheDocument();
-    })
+    });
   });
 
   it('renders the component when descriptions are missing', () => {
@@ -46,15 +46,15 @@ describe('DataDownloadList', () => {
         {
           title: 'Title 2',
           description: 'Description 2',
-        }
-      ]
+        },
+      ],
     ];
     const { getByText } = render(<DataDownloadList sourceFieldData={sourceFieldData} />);
     // Verify that the component renders successfully
     expect(getByText('Data Download Links')).toBeInTheDocument();
-    sourceFieldData[0].forEach((obj)=>{
+    sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.title)).toBeInTheDocument();
-    })
+    });
   });
 
   it('does not render the component when CheckThatDataHasTitles returns false', () => {
@@ -70,7 +70,7 @@ describe('DataDownloadList', () => {
           title: 'Title 2',
           description: 'Description 2',
         },
-      ]
+      ],
     ];
     const { container } = render(<DataDownloadList sourceFieldData={sourceFieldData} />);
     // Verify that the component does not render (returns null)

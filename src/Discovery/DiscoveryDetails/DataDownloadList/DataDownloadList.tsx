@@ -4,17 +4,15 @@ import { DownloadOutlined } from '@ant-design/icons';
 import CheckThatDataHasTitles from './Utils/CheckThatDataHasTitles';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
 
-
 const { Panel } = Collapse;
 
-
-const DataDownloadList = ({sourceFieldData}: any) => {
+const DataDownloadList = ({ sourceFieldData }: any) => {
   const data = sourceFieldData[0].map((obj) => (
-      {
-        title: obj.title,
-        description: obj.description,
-      }
-    ),
+    {
+      title: obj.title,
+      description: obj.description,
+    }
+  ),
   );
   if (CheckThatDataHasTitles(data) === false) return null;
   return (

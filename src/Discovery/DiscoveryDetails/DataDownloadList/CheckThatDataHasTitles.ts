@@ -1,8 +1,6 @@
-import DataDownloadListItem from "./Utils/DataDownloadListItem";
-const CheckThatDataHasTitles = (data:DataDownloadListItem[]): boolean => {
-    return data.every(obj => {
-        return obj.hasOwnProperty('title') && obj.title;
-    });
-}
+import DataDownloadListItem from './Utils/DataDownloadListItem';
+
+const CheckThatDataHasTitles = (data:DataDownloadListItem[]): boolean =>
+    data.every((obj) => Object.prototype.hasOwnProperty.call(obj, 'title') && obj.title);
 
 export default CheckThatDataHasTitles;
