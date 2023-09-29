@@ -19,13 +19,6 @@
   scriptNode.src = buildSrc;
   scriptNode.type = 'text/javascript';
   document.body.appendChild(scriptNode);
-  // create theme override node in body
-  let linkNode = document.createElement('link');
-  linkNode.href = `/src/css/themeoverrides.css?_=${cssVersion}`;
-  linkNode.type = 'text/css';
-  linkNode.id = 'gen3-theme-overrides';
-  linkNode.rel = 'stylesheet';
-  document.body.appendChild(linkNode);
   // create local theme override node in body
   linkNode = document.createElement('link');
   linkNode.href = 'https://localhost:9443/src/css/themeoverrides.css';
