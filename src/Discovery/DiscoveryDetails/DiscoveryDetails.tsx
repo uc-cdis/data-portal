@@ -249,12 +249,7 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
         resourceFieldValue
         && resourceFieldValue.length > 0
         && resourceFieldValue[0]
-<<<<<<< HEAD:src/Discovery/DiscoveryDetails/DiscoveryDetails.tsx
-        && resourceFieldValue[0].length !== 0
-      );
-=======
         && resourceFieldValue[0].length !== 0);
->>>>>>> origin:src/Discovery/DiscoveryDetails.tsx
     },
   );
   if (groupHasContent) {
