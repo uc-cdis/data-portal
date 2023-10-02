@@ -133,11 +133,11 @@ export const MDataDictionaryTable: React.FC<MDataDictionaryTableProps> = ({
                                     <div style={{ display: "flex", fontSize: 12, flexGrow: 0, flexShrink: 0, justifyContent: "space-between", verticalAlign: "middle", paddingTop: 5 }}>
                                         <button onClick={(e) => {
                                             e.stopPropagation();
-                                            downloadTemplate(e, 'json')
+                                            downloadTemplate('json', id);
                                         }} style={{ height: 30, width: 60, margin: "0 5px", color: "white", backgroundColor: "#4981C3" }}>JSON</button>
                                         <button onClick={(e) => {
                                             e.stopPropagation();
-                                            downloadTemplate(e, 'tsv')
+                                            downloadTemplate('tsv', id);
                                         }} style={{ height: 30, width: 60, margin: "0 5px", color: "white", backgroundColor: "#4981C3" }}>TSV</button>
                                     </div>
                                 </div>
