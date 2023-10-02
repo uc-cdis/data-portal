@@ -108,7 +108,7 @@ gitops_config() {
         cp $copySource/*.* $copyDest/
       else
         echo "INFO: gitops_config - no $copySource in gitops"
-        rm $copyDest
+        rm -f $copyDest
       fi
     done
   fi
