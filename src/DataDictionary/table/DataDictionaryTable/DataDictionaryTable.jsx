@@ -66,7 +66,7 @@ const DataDictionaryTable = ({
   const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
     <React.Fragment>
-      <MDataDictionaryTable dictionary={dictionary} />
+      <MDataDictionaryTable dictionary={dictionary} dictionaryName={dictionaryName} />
       <p>
         <span>{dictionaryName}</span>
         <span> dictionary has </span>
