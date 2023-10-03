@@ -278,9 +278,11 @@ const HomeTable = ({ data }) => {
               </Button>
               <Button
                 onClick={() => {
+                  console.log('RECORD:', record);
                   setSelectedRowData(record);
                   setCurrentView(VIEWS.results);
                 }}
+                disabled={record.phase !== PHASES.Succeeded}
               >
                 Results
               </Button>
