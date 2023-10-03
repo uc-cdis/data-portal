@@ -11,6 +11,7 @@ export const jobSubmission = async (
   imputationScore,
   selectedCohort,
   jobName,
+  selectedTeamProject,
 ) => {
   const submitEndpoint = `${gwasWorkflowPath}submit`;
   const requestBody = {
@@ -26,6 +27,7 @@ export const jobSubmission = async (
     source_id: sourceId,
     source_population_cohort: selectedCohort.cohort_definition_id,
     workflow_name: jobName,
+    team_project: selectedTeamProject,
   };
   const res = await fetch(submitEndpoint, {
     method: 'POST',
