@@ -41,6 +41,9 @@ describe('HomeTable component', () => {
       ).toBeInTheDocument();
 
       // Check that the execution and results buttons render for each row
+      const inputButton = screen.getAllByText('Input');
+      expect(inputButton[iterator]).toBeInTheDocument();
+
       const executionButton = screen.getAllByText('Execution');
       expect(executionButton[iterator]).toBeInTheDocument();
 
