@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button, notification } from 'antd';
+import {
+  Space, Dropdown, Button, notification,
+} from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
   fetchPresignedUrlForWorkflowArtifact,
@@ -28,7 +30,7 @@ const ActionsDropdown = ({ record }) => {
             fetchPresignedUrlForWorkflowArtifact(
               record.name,
               record.uid,
-              'gwas_archive_index'
+              'gwas_archive_index',
             )
               .then((res) => {
                 window.open(res, '_blank');

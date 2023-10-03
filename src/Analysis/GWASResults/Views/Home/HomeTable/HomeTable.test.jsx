@@ -20,7 +20,7 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     // Check that each of the values from data that needed to be shown appear in the dom
@@ -33,11 +33,11 @@ describe('HomeTable component', () => {
       expect(screen.getAllByText(item.name)[0]).toBeInTheDocument();
       expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(formattedFinishedTestDate)[0]
+        screen.getAllByText(formattedFinishedTestDate)[0],
       ).toBeInTheDocument();
       expect(screen.getAllByText(item.phase)[0]).toBeInTheDocument();
       expect(
-        screen.getAllByText(formattedSubmittedTestDate)[0]
+        screen.getAllByText(formattedSubmittedTestDate)[0],
       ).toBeInTheDocument();
 
       // Check that the execution and results buttons render for each row
@@ -53,7 +53,7 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     data.forEach((item, iterator) => {
