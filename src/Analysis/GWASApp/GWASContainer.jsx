@@ -13,84 +13,85 @@ import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
 import './GWASApp.css';
+import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
     switch (state.currentStep) {
-    case 0:
-      return (
-        <div data-tour='cohort-intro'>
-          <SelectStudyPopulation
-            selectedCohort={state.selectedStudyPopulationCohort}
+      case 0:
+        return (
+          <div data-tour='cohort-intro'>
+            <SelectStudyPopulation
+              selectedCohort={state.selectedStudyPopulationCohort}
+              dispatch={dispatch}
+            />
+          </div>
+        );
+      case 1:
+        return (
+          <SelectOutcome
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
             dispatch={dispatch}
           />
-        </div>
-      );
-    case 1:
-      return (
-        <SelectOutcome
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 2:
-      return (
-        <SelectCovariates
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 3:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal={false}
-          finalPopulationSizes={state.finalPopulationSizes}
-          selectedTeamProject={state.selectedTeamProject}
-        />
-      );
-    case 4:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal
-          finalPopulationSizes={state.finalPopulationSizes}
-          selectedTeamProject={state.selectedTeamProject}
-        />
-      );
-    default:
-      return null;
+        );
+      case 2:
+        return (
+          <SelectCovariates
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
+        );
+      case 3:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal={false}
+            finalPopulationSizes={state.finalPopulationSizes}
+            selectedTeamProject={state.selectedTeamProject}
+          />
+        );
+      case 4:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal
+            finalPopulationSizes={state.finalPopulationSizes}
+            selectedTeamProject={state.selectedTeamProject}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   let nextButtonEnabled = true;
   // step specific conditions where progress to next step needs to be blocked:
   if (
-    (state.currentStep === 0 && !state.selectedStudyPopulationCohort)
-    || (state.currentStep === 1 && !state.outcome)
-    || (state.currentStep === 3 && !state.selectedHare.concept_value)
-    || (state.currentStep === 3
-      && checkFinalPopulationSizeZero(state.finalPopulationSizes))
+    (state.currentStep === 0 && !state.selectedStudyPopulationCohort) ||
+    (state.currentStep === 1 && !state.outcome) ||
+    (state.currentStep === 3 && !state.selectedHare.concept_value) ||
+    (state.currentStep === 3 &&
+      checkFinalPopulationSizeZero(state.finalPopulationSizes))
   ) {
     nextButtonEnabled = false;
   }
@@ -152,6 +153,7 @@ const GWASContainer = () => {
               </Button>
             )}
           </div>
+          <MakeFullscreenButton />
         </Space>
       </div>
     </SourceContextProvider>
