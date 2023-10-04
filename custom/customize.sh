@@ -29,7 +29,10 @@ fi
 
 if [ -f custom/css/$APP.css ]; then
   cp custom/css/$APP.css src/css/themeoverrides.css
+  mkdir -p public/src/css/
+  cp custom/css/$APP.css public/src/css/themeoverrides.css
 else
+  rm -rf public/src
   echo "/* generated file - see customize.sh */" > src/css/themeoverrides.css
 fi
 
