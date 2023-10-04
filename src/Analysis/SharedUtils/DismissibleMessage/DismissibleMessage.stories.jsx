@@ -1,10 +1,8 @@
-import React, { useState, useReducer } from 'react';
-import { rest } from 'msw';
-
+import React from 'react';
 import DismissibleMessage from './DismissibleMessage';
 
 export default {
-  title: 'Tests3/GWASApp/DismissibleMessage/DismissibleMessage',
+  title: 'TESTS1/SharedUtils/DismissibleMessage',
   component: DismissibleMessage,
 };
 
@@ -25,6 +23,11 @@ success.args = {
 export const warning = Template.bind({});
 warning.args = {
   title: 'Warning',
-
   messageType: 'warning',
+};
+
+export const caution = Template.bind({});
+caution.args = {
+  title: 'Caution',
+  messageType: 'caution',
 };

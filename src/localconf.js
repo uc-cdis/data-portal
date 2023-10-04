@@ -36,6 +36,7 @@ function buildConfig(opts) {
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
     ddApplicationId: process.env.DATADOG_APPLICATION_ID,
     ddClientToken: process.env.DATADOG_CLIENT_TOKEN,
+    bundle: process.env.GEN3_BUNDLE,
   };
 
   //
@@ -70,6 +71,7 @@ function buildConfig(opts) {
     mapboxAPIToken,
     ddApplicationId,
     ddClientToken,
+    bundle,
   } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
@@ -109,7 +111,8 @@ function buildConfig(opts) {
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
-  const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
+  const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '').replace(/\/$/, '');
+  const graphqlSchemaUrl = `${hostname}${cleanBasename}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
   const Error403Url = '/403error';
@@ -143,6 +146,10 @@ function buildConfig(opts) {
   }
   if (config.ddEnv) {
     ddEnv = config.ddEnv;
+  }
+  let ddUrl = 'datadoghq.com';
+  if (config.ddUrl) {
+    ddUrl = config.ddUrl;
   }
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
@@ -584,10 +591,12 @@ function buildConfig(opts) {
     ddApplicationId,
     ddClientToken,
     ddEnv,
+    ddUrl,
     ddSampleRate,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,
+    bundle,
   };
 }
 

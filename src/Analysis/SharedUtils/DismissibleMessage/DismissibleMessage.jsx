@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { isEnterOrSpace } from '../../Utils/constants';
 import './DismissibleMessage.css';
+import isEnterOrSpace from '../IsEnterOrSpace';
 
 const DismissibleMessage = ({
   title = 'Placeholder Title',
   description = 'placeholder description',
   messageType = 'success',
-  dismissMessage = null,
 }) => {
   const [open, setOpen] = useState(true);
+
   const close = () => {
-    // If a dismissMessage "callback" function is configured, call it:
-    if (dismissMessage) {
-      dismissMessage();
-    }
     setOpen(false);
   };
 
@@ -46,13 +42,11 @@ DismissibleMessage.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   messageType: PropTypes.string,
-  dismissMessage: PropTypes.func,
 };
 
 DismissibleMessage.defaultProps = {
   description: '',
   messageType: 'success',
-  dismissMessage: null,
 };
 
 export default DismissibleMessage;

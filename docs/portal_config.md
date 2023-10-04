@@ -12,6 +12,7 @@ Below is an example, with inline comments describing what each JSON block config
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
+  "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
@@ -48,6 +49,13 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "metaDescription": "", // optional; meta description used by search engines
+    "banner": [ // optional; banner displayed accross top of all of data portal
+      {
+        "type": "info", // Type of Alert styles, options: success, info, warning, error
+        "message": "I'm a banner", // message to be displayed
+        "resetMsgDays": 365// optional; set to number of days until displaying banner again, defaults to 365
+      }
+    ],
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
@@ -380,6 +388,9 @@ Below is an example, with inline comments describing what each JSON block config
             "project_id",
             "data_type",
             "data_format"
+          ],
+          "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
+            "consortium_id"
           ]
         }
       ]

@@ -35,12 +35,29 @@ export const ReduxTopBar = (() => {
     userAuthMapping: state.userAuthMapping,
     isFullWidth: isPageFullScreen(state.bar.active),
     discovery: state.discovery,
+    closedBanners: state?.banner?.closedBanners,
+    banners: components.banner?.map(({ type, message, resetMsgDays }) => ({
+      id: `${type}_${message.replace(/\W/g, '_')}`,
+      type,
+      message,
+      resetDate: Date.now() + ((resetMsgDays || 365) * 1000 * 60 * 60 * 24),
+    })).filter((obj) => (// check if banner has been closed before
+      !state?.banner?.closedBanners?.[obj.id]
+    )),
   });
 
   // Bar chart does not dispatch anything
   const mapDispatchToProps = (dispatch) => ({
     onActiveTab: (link) => dispatch(setActive(link)),
     onLogoutClick: () => dispatch(logoutAPI()),
+    onCloseBanner: (data) => dispatch({
+      type: 'CLOSE_BANNER',
+      data,
+    }),
+    onResetBanner: (data) => dispatch({
+      type: 'RESET_BANNER',
+      data,
+    }),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(TopBar);

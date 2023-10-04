@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
-import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
+import ACTIONS from '../../Utils/StateManagement/Actions';
+import {
+  MESSAGES,
+  checkFinalPopulationSizes,
+  checkFinalPopulationSizeZero,
+} from '../../Utils/constants';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -21,6 +27,7 @@ const ConfigureGWAS = ({
   outcome,
   showModal,
   finalPopulationSizes,
+  selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -28,9 +35,7 @@ const ConfigureGWAS = ({
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
-
   const [showError, setShowError] = useState(false);
-
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
 
@@ -44,6 +49,28 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
+  useEffect(() => {
+    if (checkFinalPopulationSizeZero(finalPopulationSizes)) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.ZERO_SIZE_WARNING,
+      });
+    } else if (
+      finalPopulationSizes.length === 1
+      && checkFinalPopulationSizes(finalPopulationSizes)
+    ) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_COHORT_CAUTION,
+      });
+    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes(finalPopulationSizes)) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
+      });
+    }
+  }, [finalPopulationSizes]);
+
   const submitJob = useMutation(
     () => jobSubmission(
       sourceId,
@@ -55,6 +82,7 @@ const ConfigureGWAS = ({
       imputationScore,
       selectedCohort,
       jobName,
+      selectedTeamProject,
     ),
     {
       onSuccess: (data) => {
@@ -143,7 +171,8 @@ ConfigureGWAS.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
-  finalPopulationSizes: PropTypes.array,
+  finalPopulationSizes: PropTypes.array.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 ConfigureGWAS.defaultProps = {
@@ -151,7 +180,6 @@ ConfigureGWAS.defaultProps = {
   mafThreshold: 0.01,
   imputationScore: 0.3,
   showModal: false,
-  finalPopulationSizes: [],
 };
 
 export default ConfigureGWAS;

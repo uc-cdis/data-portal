@@ -2,10 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
-import {
-  fetchHistogramInfo,
-  queryConfig,
-} from '../../../Utils/cohortMiddlewareApi';
+import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
+import queryConfig from '../../../../SharedUtils/QueryConfig';
 import Histogram from './Histogram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
