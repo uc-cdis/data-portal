@@ -4,9 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 const MakeFullscreenButton = () => {
   const [analysisIsFullscreen, setAnalysisIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    return () => HideShowElementsForFullscreen('block');
-  }, []);
+  useEffect(() => () => HideShowElementsForFullscreen('block'), []);
 
   const HideShowElementsForFullscreen = (displayValue) => {
     const selectors = [
