@@ -125,6 +125,7 @@ function DataRequestsTable({
   isLoading,
   reloadProjects
 }) {
+  console.log(projects);
   const transitionTo = useNavigate();
   const userId = useAppSelector((state) => state.user.user_id);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);

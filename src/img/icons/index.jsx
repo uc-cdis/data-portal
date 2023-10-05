@@ -27,6 +27,7 @@ import IcoStatusReady from './status_ready.svg';
 import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
+import IcoFilter from './filter-solid.svg';
 
 /** @type {{ [iconName: string]: (height: string, style: Object) => JSX.Element}} */
 const dictIcons = {
@@ -83,6 +84,7 @@ const dictIcons = {
   ),
   workspace: (height, style) => <IcoWorkspace height={height} style={style} />,
   uchicago: (height, style) => <IcoSignature height={height} style={style} />,
+  filter: (height, style) => <IcoFilter height={height} style={style} />
 };
 
 export default dictIcons;

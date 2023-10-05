@@ -1,24 +1,32 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import TableRow from './TableRow';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
+import innerText from 'react-innertext';
 import './Table.css';
 
 function Table({ title, header, data, footer }) {
-  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
-  /**
-   * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
-   */
+  let [filterArray, setFilters] = useState([]);
+
   return (
     <div className='base-table'>
       <h2>{title}</h2>
       <table className='base-table__body'>
-        <TableHead cols={header} />
+        <TableHead cols={header} setFilters={setFilters} />
         {footer.length > 0 && <TableFoot cols={footer} />}
         <tbody>
-          {data.map((datum, i) => (
-            <TableRow key={`${title}_${i}`} cols={datum} />
-          ))}
+          {data
+            .filter((row) => row.every(
+              (value, j) => {
+                let text = (typeof value === 'object' ? innerText(value) : value.toString()) ?? '';
+                console.log(text);
+                return text.startsWith(filterArray[j] ?? '');
+              }
+            ))
+            .map((row, i) => (
+              <TableRow key={`${title}_${i}`} cols={row} />
+            ))}
         </tbody>
       </table>
     </div>
