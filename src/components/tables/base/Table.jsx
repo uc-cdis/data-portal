@@ -20,7 +20,6 @@ function Table({ title, header, data, footer }) {
             .filter((row) => row.every(
               (value, j) => {
                 let text = (typeof value === 'object' ? innerText(value) : value.toString()) ?? '';
-                console.log(text);
                 return text.startsWith(filterArray[j] ?? '');
               }
             ))
