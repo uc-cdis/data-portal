@@ -18,7 +18,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />
+      <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
     expect(getByText('Data Download Links')).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />
+      <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
     expect(getByText('Data Download Links')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />
+      <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
     expect(getByText('Data Download Links')).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { container } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />
+      <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component does not render (returns null)
     expect(container.firstChild).toBeNull();

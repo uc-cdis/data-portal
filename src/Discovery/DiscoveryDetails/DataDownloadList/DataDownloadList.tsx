@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse, List, Button, Space } from 'antd';
+import { List, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import CheckThatDataHasTitles from './Utils/CheckThatDataHasTitles';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
