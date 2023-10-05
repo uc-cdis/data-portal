@@ -8,12 +8,13 @@ const { Panel } = Collapse;
 
 const DataDownloadList = ({ sourceFieldData }: any) => {
   const data = sourceFieldData[0].map((obj) => ({
-    title: obj.title,
+    title: obj.title || obj.file_name,
     description: obj.description,
   }));
   if (CheckThatDataHasTitles(data) === false) return null;
   return (
     <div className='discovery-modal__data-download-list'>
+      <h3>Data Download Links</h3>
       <List
         itemLayout='horizontal'
         dataSource={data}
