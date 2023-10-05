@@ -4,7 +4,12 @@ import Button from '@gen3/ui-component/dist/components/Button';
 const MakeFullscreenButton = () => {
   const [analysisIsFullscreen, setAnalysisIsFullscreen] = useState(false);
 
-  useEffect(() => () => HideShowElementsForFullscreen('block'), []);
+  const setElementsDisplay = (selector, displayValue) => {
+    document.querySelectorAll(selector).forEach((element) => {
+      const temporaryElement = element;
+      temporaryElement.style.display = displayValue;
+    });
+  };
 
   const HideShowElementsForFullscreen = (displayValue) => {
     const selectors = [
@@ -14,12 +19,6 @@ const MakeFullscreenButton = () => {
       '.analysis-app__title',
       '.analysis-app__description',
     ];
-    const setElementsDisplay = (selector, displayValue) => {
-      document.querySelectorAll(selector).forEach((element) => {
-        const temporaryElement = element;
-        temporaryElement.style.display = displayValue;
-      });
-    };
     selectors.forEach((selector) => {
       setElementsDisplay(selector, displayValue);
     });
@@ -34,6 +33,8 @@ const MakeFullscreenButton = () => {
     }
     setAnalysisIsFullscreen(!analysisIsFullscreen);
   };
+
+  useEffect(() => () => HideShowElementsForFullscreen('block'), []);
   return (
     <div style={{ textAlign: 'center' }}>
       <Button
