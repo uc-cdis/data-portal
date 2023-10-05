@@ -34,6 +34,7 @@ const MakeFullscreenButton = () => {
     setAnalysisIsFullscreen(!analysisIsFullscreen);
   };
 
+  // Reset any hidden elements when leaving the app
   useEffect(() => () => HideShowElementsForFullscreen('block'), []);
   return (
     <div style={{ textAlign: 'center' }}>
