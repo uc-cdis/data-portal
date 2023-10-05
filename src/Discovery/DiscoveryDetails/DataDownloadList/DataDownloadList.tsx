@@ -3,8 +3,7 @@ import { Collapse, List, Button, Space } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import CheckThatDataHasTitles from './Utils/CheckThatDataHasTitles';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
-
-const { Panel } = Collapse;
+import './DataDownloadList.css';
 
 const DataDownloadList = ({ sourceFieldData }: any) => {
   const data = sourceFieldData[0].map((obj) => ({
