@@ -21,7 +21,6 @@ describe('DataDownloadList', () => {
       <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
-    expect(getByText('Data Download Links')).toBeInTheDocument();
     sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.title)).toBeInTheDocument();
       expect(getByText(obj.description)).toBeInTheDocument();
@@ -45,7 +44,6 @@ describe('DataDownloadList', () => {
       <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
-    expect(getByText('Data Download Links')).toBeInTheDocument();
     sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.file_name)).toBeInTheDocument();
       expect(getByText(obj.description)).toBeInTheDocument();
@@ -68,7 +66,6 @@ describe('DataDownloadList', () => {
       <DataDownloadList sourceFieldData={sourceFieldData} />,
     );
     // Verify that the component renders successfully
-    expect(getByText('Data Download Links')).toBeInTheDocument();
     sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.title)).toBeInTheDocument();
     });

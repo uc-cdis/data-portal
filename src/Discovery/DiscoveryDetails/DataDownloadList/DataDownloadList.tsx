@@ -12,7 +12,6 @@ const DataDownloadList = ({ sourceFieldData }: any) => {
   }
   return (
     <div className='discovery-modal__data-download-list'>
-      <h3>Data Download Links</h3>
       <List
         itemLayout='horizontal'
         dataSource={data}
