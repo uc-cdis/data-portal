@@ -8,7 +8,7 @@ describe('ProcessData function', () => {
         { file_name: 'File1', description: 'Description2' },
         { other: 'Other1' },
         { title: 'Title2', description: 'Description3' },
-      ]
+      ],
     ];
 
     const result = ProcessData(sourceFieldData);
@@ -29,7 +29,7 @@ describe('ProcessData function', () => {
         { title: 'Title1', description: 'Description1' },
         { other: 'Other1' },
         { description: 'Description2' },
-      ]
+      ],
     ];
 
     ProcessData(sourceFieldData);

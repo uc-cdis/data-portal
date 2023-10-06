@@ -1,15 +1,13 @@
 import React from 'react';
 import { List, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import CheckThatDataHasTitles from './Utils/processData';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
 import './DataDownloadList.css';
-import ProcessData from './Utils/processData';
-
+import ProcessData from './Utils/ProcessData';
 
 const DataDownloadList = ({ sourceFieldData }: any) => {
   const data = ProcessData(sourceFieldData);
-  if ( data.length === 0 ) {
+  if (data.length === 0) {
     return null;
   }
   return (

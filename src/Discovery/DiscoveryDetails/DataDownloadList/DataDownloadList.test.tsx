@@ -80,7 +80,7 @@ describe('DataDownloadList', () => {
         {
           NotTheTitle: undefined, // No title
           NotTheFileName: '',
-          description: 'Some description'
+          description: 'Some description',
         },
       ],
     ];
