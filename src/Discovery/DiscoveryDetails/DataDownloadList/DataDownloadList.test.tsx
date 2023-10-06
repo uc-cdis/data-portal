@@ -74,16 +74,13 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the component when CheckThatDataHasTitles returns false', () => {
+  it('does not render the component when data is missing title and file_name', () => {
     const sourceFieldData = [
       [
         {
-          title: undefined, // No title
-          description: 'Description 1',
-        },
-        {
-          title: 'Title 2',
-          description: 'Description 2',
+          NotTheTitle: undefined, // No title
+          NotTheFileName: '',
+          description: 'Some description'
         },
       ],
     ];

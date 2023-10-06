@@ -8,18 +8,10 @@ import ProcessData from './Utils/processData';
 
 
 const DataDownloadList = ({ sourceFieldData }: any) => {
-  /* const data = sourceFieldData[0].filter((item:sourceFieldDataObj) => {
-    if (!("title" in item || "file_name" in item)) {
-      console.log("Item without title or file_name:", item);
-    }
-    return "title" in item || "file_name" in item;
-  }).map((obj:{title?:string, file_name?:string,description?:string,[key: string]: any }) => ({
-    title: obj.title || obj.file_name,
-    description: obj.description,
-  }));*/
-
   const data = ProcessData(sourceFieldData);
-
+  if ( data.length === 0 ) {
+    return null;
+  }
   return (
     <div className='discovery-modal__data-download-list'>
       <h3>Data Download Links</h3>

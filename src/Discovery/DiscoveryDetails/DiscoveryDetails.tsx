@@ -265,9 +265,7 @@ const tabField = (
   ) {
     if (fieldConfig.type === 'dataDownloadList') {
       return (
-        <div className='ADD-CLASS-HERE'>
-          <DataDownloadList sourceFieldData={resourceFieldValue} />
-        </div>
+        <DataDownloadList sourceFieldData={resourceFieldValue} />
       );
     }
     // Format resourceFieldValue for all other field types

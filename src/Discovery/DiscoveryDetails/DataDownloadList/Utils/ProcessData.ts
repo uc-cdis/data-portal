@@ -1,14 +1,11 @@
-interface sourceFieldDataObj {title?:string, file_name?:string,description?:string,[key: string]: any }
-
-
 const ProcessData = (sourceFieldData) => {
-    const dataWithOnlyTitlesOrFileNames = sourceFieldData[0].filter((item:sourceFieldDataObj) => {
+    const dataWithOnlyTitlesOrFileNames = sourceFieldData[0].filter((item:any) => {
         if (!("title" in item || "file_name" in item)) {
-          console.log("Item without title or file_name:", item);
+          console.debug('Item without title or file_name:',item);
         }
         return "title" in item || "file_name" in item;
       });
-      const processedDataForDataDownloadList = dataWithOnlyTitlesOrFileNames.map((obj:{title?:string, file_name?:string,description?:string,[key: string]: any }) => ({
+      const processedDataForDataDownloadList = dataWithOnlyTitlesOrFileNames.map((obj:any) => ({
         title: obj.title || obj.file_name,
         description: obj.description,
       }));

@@ -22,7 +22,7 @@ describe('ProcessData function', () => {
 
   it('logs items without title or file_name to console', () => {
     // Mock console.log to capture logs
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+    const consoleLogSpy = jest.spyOn(console, 'debug').mockImplementation();
 
     const sourceFieldData = [
       [
@@ -37,8 +37,5 @@ describe('ProcessData function', () => {
     // Check if console.log was called with the correct messages
     expect(consoleLogSpy).toHaveBeenCalledWith('Item without title or file_name:', { other: 'Other1' });
     expect(consoleLogSpy).toHaveBeenCalledWith('Item without title or file_name:', { description: 'Description2' });
-
-    // Restore the original console.log
-    consoleLogSpy.mockRestore();
   });
 });
