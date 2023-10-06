@@ -1,4 +1,4 @@
-const ProcessData = (sourceFieldData) => {
+const ProcessData = (sourceFieldData:any) => {
   const dataWithOnlyTitlesOrFileNames = sourceFieldData[0].filter((item:any) => {
     if (!('title' in item || 'file_name' in item)) {
       console.debug('Item without title or file_name:', item);
