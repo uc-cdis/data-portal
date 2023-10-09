@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MakeFullscreenButton from './MakeFullscreenButton';
-import FullScreenClassNames from './FullScreenClassNames';
+import FullScreenClassNames from './FullscreenClassNames';
 
 export default {
   title: 'Tests3/GWASApp/MakeFullScreenButton',

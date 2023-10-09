@@ -2,11 +2,11 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import MakeFullscreenButton from './MakeFullscreenButton';
-import FullScreenClassNames from './FullScreenClassNames';
+import FullScreenClassNames from './FullscreenClassNames';
 
 describe('MakeFullscreenButton', () => {
   beforeEach(() => {
-    // Manually add elements with selectors to the DOM
+    // Manually add elements with classNames to be hidden / shown to the DOM
     FullScreenClassNames.forEach((className) => {
       const element = document.createElement('div');
       element.className = className.replace('.', '');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
-import FullScreenClassNames from './FullScreenClassNames';
+import FullScreenClassNames from './FullscreenClassNames';
+import './MakeFullscreenButton.css';
 
 const MakeFullscreenButton = () => {
   const [analysisIsFullscreen, setAnalysisIsFullscreen] = useState(false);
@@ -31,7 +32,7 @@ const MakeFullscreenButton = () => {
   // Reset any hidden elements when leaving the app
   useEffect(() => () => HideShowElementsForFullscreen('block'), []);
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className='make-full-screen-button>
       <Button
         className='analysis-app__button'
         onClick={handleFullscreenButtonClick}
