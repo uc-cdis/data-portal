@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
+import FullScreenClassNames from './FullScreenClassNames';
 
 const MakeFullscreenButton = () => {
   const [analysisIsFullscreen, setAnalysisIsFullscreen] = useState(false);
@@ -12,14 +13,7 @@ const MakeFullscreenButton = () => {
   };
 
   const HideShowElementsForFullscreen = (displayValue) => {
-    const selectors = [
-      '.top-bar',
-      '.nav-bar',
-      '.footer-container',
-      '.analysis-app__title',
-      '.analysis-app__description',
-    ];
-    selectors.forEach((selector) => {
+    FullScreenClassNames.forEach((selector) => {
       setElementsDisplay(selector, displayValue);
     });
   };
