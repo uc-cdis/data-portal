@@ -113,7 +113,12 @@ class ExplorerTable extends React.Component {
 
         // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
-          let dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
+          if (this.props.tableConfig.dicomViewerUrl) {
+            dicomViewerUrl = this.props.tableConfig.dicomViewerUrl;
+          } else {
+            dicomViewerUrl = "dicom-viewer";
+          }
+          let dicomViewerLink = `${hostname}${dicomViewerUrl}/viewer/${valueStr}`;
           if (row.original.has_dicom_images !== undefined && !row.original.has_dicom_images) {
             dicomViewerLink = undefined;
           }
@@ -243,8 +248,15 @@ class ExplorerTable extends React.Component {
     if (haveField.length === this.props.rawData.length) {
       this.setState({ loading: true });
       // eslint-disable-next-line array-callback-return
+      
+      if (this.props.tableConfig.dicomServerURL) {
+        dicomServerURL = this.props.tableConfig.dicomServerURL;
+      } else {
+        dicomServerURL = "dicom-server";
+      }
+
       Promise.all(this.props.rawData.map((x) => {
-        const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
+        const dicomServerLink = `${hostname}${dicomServerURL}/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
         return fetch(dicomServerLink, {
           method: 'GET',
         })
