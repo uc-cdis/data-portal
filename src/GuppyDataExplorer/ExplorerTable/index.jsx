@@ -114,10 +114,11 @@ class ExplorerTable extends React.Component {
         // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
           let dicomViewerUrl = "dicom-viewer";
+          let dicomViewerLink = `${hostname}${dicomViewerUrl}/viewer/${valueStr}`;
           if (this.props.tableConfig.dicomViewerUrl) {
             dicomViewerUrl = this.props.tableConfig.dicomViewerUrl;
-          }
-          let dicomViewerLink = `${hostname}${dicomViewerUrl}/viewer/${valueStr}`;
+            dicomViewerLink = `${hostname}${dicomViewerUrl}/viewer?StudyInstanceUIDs=${valueStr}`;
+          }          
           if (row.original.has_dicom_images !== undefined && !row.original.has_dicom_images) {
             dicomViewerLink = undefined;
           }
