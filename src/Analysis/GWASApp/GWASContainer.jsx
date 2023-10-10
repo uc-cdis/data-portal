@@ -12,6 +12,7 @@ import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
+import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 import './GWASApp.css';
 
 const GWASContainer = () => {
@@ -152,6 +153,7 @@ const GWASContainer = () => {
               </Button>
             )}
           </div>
+          <MakeFullscreenButton />
         </Space>
       </div>
     </SourceContextProvider>
