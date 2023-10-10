@@ -12,8 +12,8 @@ import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
-import './GWASApp.css';
 import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
+import './GWASApp.css';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
