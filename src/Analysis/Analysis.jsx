@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Row, Col } from 'antd';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
 import './Analysis.less';
+import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 
 class Analysis extends React.Component {
   openApp = (app) => {
@@ -12,7 +14,14 @@ class Analysis extends React.Component {
   render() {
     return (
       <div className='analysis'>
-        <h2 className='analysis__title'>Apps</h2>
+        <Row>
+          <Col flex='1 0 auto'>
+            <h2 className='analysis__title'>Apps</h2>
+          </Col>
+          <Col flex='1 0 auto'>
+            <TeamProjectHeader />
+          </Col>
+        </Row>
         <div className='analysis-cards'>
           {
             Object.keys(analysisApps).map((appKey) => (
