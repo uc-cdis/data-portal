@@ -7,10 +7,10 @@ function TableRow({ cols }) {
       {cols.map((col, i) => {
         let displayedCol = col;
         if (Array.isArray(col)) {
-          displayedCol = <ul>
-            {col.map((consortium) => (
+          displayedCol = <ul className='base-table__cell-list-value'>
+            {col.map((value) => (
               <li>
-                {consortium}
+                {value}
               </li>
             ))}
           </ul>;
