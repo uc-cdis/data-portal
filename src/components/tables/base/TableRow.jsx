@@ -4,11 +4,21 @@ import './Table.css';
 function TableRow({ cols }) {
   return (
     <tr className='base-table__row base-table__row--stripe-color'>
-      {cols.map((col, i) => (
-        <td className='base-table__cell' key={`col_${i}`}>
-          {col}
-        </td>
-      ))}
+      {cols.map((col, i) => {
+        let displayedCol = col;
+        if (Array.isArray(col)) {
+          displayedCol = <ul>
+            {col.map((consortium) => (
+              <li>
+                {consortium}
+              </li>
+            ))}
+          </ul>;
+        }
+        return <td className='base-table__cell' key={`col_${i}`}>
+          {displayedCol}
+        </td>;
+      })}
     </tr>
   );
 }

@@ -40,3 +40,20 @@
 .base-table__cell {
   padding: 0.5rem 1rem;
 }
+
+.base-table__cell-list-value {
+  display: inline;
+  list-style: none;
+}
+
+.base-table__cell-list-value li {
+  display: inline;
+}
+
+.base-table__cell-list-value li:after {
+  content: ", ";
+}
+
+.base-table__cell-list-value li:last-child:after {
+  content: "";
+}

@@ -19,7 +19,20 @@ function Table({ title, header, data, footer }) {
           {data
             .filter((row) => row.every(
               (value, j) => {
-                let text = (typeof value === 'object' ? innerText(value) : value.toString()) ?? '';
+                let text = '';
+                if (Array.isArray(value)) {
+                  text = value.reduce((acc, value, index, array) => {
+                    if (index < array.length-1) {
+                      return acc + value + ', '
+                    } else {
+                      return acc + value;
+                    }
+                  }, '');
+                } else if (typeof value === 'object') {
+                  text = innerText(value);
+                } else {
+                  text = value?.toString?.() ?? '';
+                }
                 return text.startsWith(filterArray[j] ?? '');
               }
             ))

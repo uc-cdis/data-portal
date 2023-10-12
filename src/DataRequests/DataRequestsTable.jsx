@@ -22,6 +22,7 @@ const tableHeader = [
   'Submitted Date',
   'Completed Date',
   'Status',
+  'Consortia'
 ];
 
 /** @param {ResearcherInfo} researcher */
@@ -45,6 +46,7 @@ function parseResearcherInfo(researcher) {
  * @param {boolean} args.isAdminActive
  */
 function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdminActive }) {
+  console.log(projects);
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .sort((a, b) => {
@@ -73,7 +75,8 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
             .replaceAll(' ', '-')}`}
         >
           {project.status}
-        </span>
+        </span>,
+        project.consortia
       ];
 
       if (project.has_access) {
