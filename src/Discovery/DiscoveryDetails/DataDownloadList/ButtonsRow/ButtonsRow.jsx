@@ -1,10 +1,10 @@
 import React from 'react';
 import { Col, Row, Button } from 'antd';
-import './ActionBar.css';
+import './ButtonsRow.css';
 
-const ActionBar = () => {
+const ButtonsRow = () => {
   return (
-    <div className='discovery-modal_action-bar'>
+    <div className='discovery-modal_buttons-row'>
       <Row className='row'>
         <Col flex='1 0 auto'>
           <Button className='discovery-action-bar-button'>
@@ -32,4 +32,4 @@ const ActionBar = () => {
     </div>
   );
 };
-export default ActionBar;
+export default ButtonsRow;

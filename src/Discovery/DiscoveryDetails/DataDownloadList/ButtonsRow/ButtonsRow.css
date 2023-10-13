@@ -1,5 +1,4 @@
-.discovery-modal_action-bar button {
-  whitespace: 'normal';
+.discovery-modal_buttons-row button {
   height: auto;
   min-height: 54px;
   min-width: 160px;
