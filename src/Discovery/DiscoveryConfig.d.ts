@@ -127,7 +127,8 @@ export interface DiscoveryConfig {
             groups: {
                 header: string
                 fields: {
-                    type: 'block' | 'text' | 'link' | 'textList' | 'linkList' | 'accessDescriptor' | 'tags'
+                    type: 'block' | 'text' | 'link' | 'textList' | 'linkList'
+                     | 'accessDescriptor' | 'tags' | 'dataDownloadList'
                     sourceField?: string
                     label: string
                     // optionally refine tags by categories
