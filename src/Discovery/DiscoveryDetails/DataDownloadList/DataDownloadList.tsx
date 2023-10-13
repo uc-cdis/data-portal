@@ -1,6 +1,5 @@
 import React from 'react';
-import { List, Button } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import { List } from 'antd';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
 import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
