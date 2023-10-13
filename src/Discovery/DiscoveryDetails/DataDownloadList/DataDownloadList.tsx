@@ -16,13 +16,7 @@ const DataDownloadList = ({ sourceFieldData }: any) => {
         itemLayout='horizontal'
         dataSource={data}
         renderItem={(item: DataDownloadListItem) => (
-          <List.Item
-            actions={[
-              <Button type='text' disabled icon={<DownloadOutlined />}>
-                Download File
-              </Button>,
-            ]}
-          >
+          <List.Item>
             <List.Item.Meta
               title={item.title}
               description={item.description || ''}
