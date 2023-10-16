@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal } from 'antd';
-import './TeamProjectHeader.css';
 import EditIcon from './Icons/EditIcon';
+import isEnterOrSpace from '../../IsEnterOrSpace';
+import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
+import './TeamProjectHeader.css';
 
 const TeamProjectHeader = ({ showButton }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bannerText, setBannerText] = useState('- -');
-
   const showModal = () => {
     setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -26,45 +20,41 @@ const TeamProjectHeader = ({ showButton }) => {
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       <h3 className='team-project-header'>
         <strong>Team Project Header</strong>/{bannerText}
         {showButton && (
           <span
             className='team-project-header_modal-button'
+            tabIndex='0'
             role='button'
             onClick={() => {
               showModal();
-              const updatedTeamProject = Math.random();
-              setBannerText(updatedTeamProject);
-              localStorage.setItem('teamProject', updatedTeamProject);
+            }}
+            onKeyDown={(e) => {
+              if (isEnterOrSpace(e)) showModal();
             }}
           >
             <EditIcon />
           </span>
         )}
       </h3>
-      <Modal
-        title='Basic Modal'
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>Some contents...</p>
-      </Modal>
-    </>
+      {showButton && (
+        <TeamProjectModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setBannerText={setBannerText}
+        />
+      )}
+    </React.Fragment>
   );
 };
 
 TeamProjectHeader.propTypes = {
-  displayType: PropTypes.string,
-
   showButton: PropTypes.bool,
 };
 
 TeamProjectHeader.defaultProps = {
-  displayType: 'default',
-
   showButton: false,
 };
 

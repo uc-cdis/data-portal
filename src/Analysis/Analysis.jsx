@@ -21,7 +21,7 @@ class Analysis extends React.Component {
           </Col>
           {CheckForTeamProjectApplication(analysisApps) && (
             <Col flex='1 0 auto'>
-              <TeamProjectHeader showButton={true} />
+              <TeamProjectHeader showButton />
             </Col>
           )}
         </Row>
