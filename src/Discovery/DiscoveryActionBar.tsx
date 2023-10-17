@@ -54,6 +54,7 @@ interface Props {
     actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
+  systemPopupActivated: boolean;
   onActionResumed: () => any
 }
 
@@ -572,7 +573,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          open={downloadStatus.message.active}
+          open={downloadStatus.message.active && !props.systemPopupActivated}
           title={downloadStatus.message.title}
           footer={(
             <Button

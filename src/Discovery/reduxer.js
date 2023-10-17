@@ -6,6 +6,7 @@ export const ReduxDiscoveryActionBar = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     discovery: state.discovery,
+    systemPopupActivated: !!state.popups?.systemUseWarnPopup,
   });
 
   const mapDispatchToProps = (dispatch) => ({
