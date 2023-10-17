@@ -4,10 +4,12 @@
   font-size: 20px;
   line-height: 80px;
 }
+
 .team-project-header_modal-button {
   margin-left: 10px;
   cursor: pointer;
 }
+
 .team-project-header_modal-button:hover {
   opacity: 0.8;
 }
