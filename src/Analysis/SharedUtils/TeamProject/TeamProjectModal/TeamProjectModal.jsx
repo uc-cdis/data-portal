@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Modal } from 'antd';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const closeAndUpdateTeamProject = () => {
-    const updatedTeamProject =
-      'ORD_MVP_' + Math.floor(1000 + Math.random() * 9000);
+    setIsModalOpen(false);
+    const updatedTeamProject = `ORD_MVP_${Math.floor(
+      1000 + Math.random() * 9000,
+    )}`;
     setBannerText(updatedTeamProject);
     localStorage.setItem('teamProject', updatedTeamProject);
-    setIsModalOpen(false);
   };
 
   return (
@@ -27,8 +29,15 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
         </Button>,
       ]}
     >
-      <p>Click Submit to update team project</p>
+      Click Submit to update team project
     </Modal>
   );
 };
+
+TeamProjectModal.propTypes = {
+  isModalOpen: PropTypes.bool.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  setBannerText: PropTypes.func.isRequired,
+};
+
 export default TeamProjectModal;
