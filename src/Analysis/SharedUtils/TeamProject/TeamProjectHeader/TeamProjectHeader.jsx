@@ -22,12 +22,13 @@ const TeamProjectHeader = ({ showButton }) => {
   return (
     <React.Fragment>
       <h3 className='team-project-header'>
-        <strong>Team Project Header</strong> / {bannerText}
+        <strong>Team Project</strong> / {bannerText}
         {showButton && (
           <span
             className='team-project-header_modal-button'
             tabIndex='0'
             role='button'
+            data-testid='team-project-edit'
             onClick={() => {
               showModal();
             }}
