@@ -6,7 +6,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     const updatedTeamProject = `ORD_MVP_${Math.floor(
-      1000 + Math.random() * 9000,
+      1000 + Math.random() * 9000
     )}`;
     setBannerText(updatedTeamProject);
     localStorage.setItem('teamProject', updatedTeamProject);
@@ -14,7 +14,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
 
   return (
     <Modal
-      title='Basic Modal'
+      title='Team Projects'
       open={isModalOpen}
       onCancel={() => closeAndUpdateTeamProject()}
       closable={false}
