@@ -25,7 +25,7 @@ test('renders TeamProjectHeader with default props', () => {
 });
 
 test('renders TeamProjectHeader with edit button when showButton is true', () => {
-  render(<TeamProjectHeader showButton={true} />);
+  render(<TeamProjectHeader showButton />);
 
   // Assert that the component renders with the edit button
   expect(screen.queryByTestId('team-project-edit')).toBeInTheDocument();
