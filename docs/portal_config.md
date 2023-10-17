@@ -258,6 +258,8 @@ Below is an example, with inline comments describing what each JSON block config
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
       ],
+      "dicomServerURL": "", // optional; field to specify the sub-path to DICOM Server. It uses `dicom-server` as a default for backward compatibility if undefined
+      "dicomViewerUrl": "", // optional; field to specify the sub-path to DICOM Viewer. It uses `dicom-viewer` as a default for backward compatibility if undefined
       "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
