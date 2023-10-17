@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import {
-  fetchPresignedUrlForWorkflowArtifact, retryWorkflow,
+  fetchPresignedUrlForWorkflowArtifact,
+  retryWorkflow,
 } from '../../../../Utils/gwasWorkflowApi';
 import PHASES from '../../../../Utils/PhasesEnumeration';
 
@@ -30,17 +31,19 @@ const ActionsDropdown = ({ record }) => {
               record.name,
               record.uid,
               'gwas_archive_index',
-            ).then((res) => {
-              window.open(res, '_blank');
-            }).catch((error) => {
-              openNotification(`❌ Could not download. \n\n${error}`);
-            });
+            )
+              .then((res) => {
+                window.open(res, '_blank');
+              })
+              .catch((error) => {
+                openNotification(`❌ Could not download. \n\n${error}`);
+              });
           }}
         >
           Download
         </a>
       ),
-      disabled: false,
+      disabled: record.phase !== PHASES.Succeeded,
     },
     {
       key: '2',
@@ -49,14 +52,13 @@ const ActionsDropdown = ({ record }) => {
           href=''
           onClick={(e) => {
             e.preventDefault();
-            retryWorkflow(
-              record.name,
-              record.uid,
-            ).then(() => {
-              openNotification('Workflow successfully restarted.');
-            }).catch(() => {
-              openNotification('❌ Retry request failed.');
-            });
+            retryWorkflow(record.name, record.uid)
+              .then(() => {
+                openNotification('Workflow successfully restarted.');
+              })
+              .catch(() => {
+                openNotification('❌ Retry request failed.');
+              });
           }}
         >
           Retry

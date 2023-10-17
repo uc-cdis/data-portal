@@ -17,6 +17,7 @@ data/schema.graphql
 data/schema.json
 src/params.js
 src/css/themeoverrides.css
+public/*
 src/img/sponsors/gitops-sponsors/
 __generated__/
 *.log

@@ -57,7 +57,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, ddApplicationId, ddClientToken, ddUrl, ddSampleRate,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';

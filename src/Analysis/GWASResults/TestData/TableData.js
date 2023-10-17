@@ -17,6 +17,15 @@ const TableData = [
     phase: 'Running',
     submittedAt: '2022-02-16T10:30:00Z',
   },
+  {
+    uid: '789',
+    wf_name: 'User Added WF Name 3',
+    name: 'Workflow 3',
+    startedAt: '2023-02-16T10:00:00Z',
+    finishedAt: '2023-02-16T10:00:00Z',
+    phase: 'Succeeded',
+    submittedAt: '2023-02-16T10:30:00Z',
+  },
 ];
 
 export default TableData;

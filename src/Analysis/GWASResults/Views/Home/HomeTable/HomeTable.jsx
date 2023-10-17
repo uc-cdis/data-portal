@@ -281,6 +281,7 @@ const HomeTable = ({ data }) => {
                   setSelectedRowData(record);
                   setCurrentView(VIEWS.results);
                 }}
+                disabled={record.phase !== PHASES.Succeeded}
               >
                 Results
               </Button>

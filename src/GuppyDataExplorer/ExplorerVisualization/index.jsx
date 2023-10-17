@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
 import SummaryChartGroup from '@gen3/ui-component/dist/components/charts/SummaryChartGroup';
@@ -101,7 +102,7 @@ class ExplorerVisualization extends React.Component {
     const chartData = this.getData(this.props.aggsData, this.props.chartConfig, this.props.filter);
     const tableColumnsOrdered = (this.props.tableConfig.fields
       && this.props.tableConfig.fields.length > 0);
-    const tableColumns = tableColumnsOrdered ? this.props.tableConfig.fields : this.props.allFields;
+    const tableColumns = tableColumnsOrdered ? this.props.tableConfig.fields : _.union(this.props.allRegularAggFields, this.props.allAsTextAggFields);
     // don't lock components for libre commons
     const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
@@ -239,6 +240,8 @@ class ExplorerVisualization extends React.Component {
                 fields: tableColumns,
                 ordered: tableColumnsOrdered,
                 linkFields: this.props.tableConfig.linkFields || [],
+                dicomServerUrl: this.props.tableConfig.dicomServerUrl,
+                dicomViewerUrl: this.props.tableConfig.dicomViewerUrl,
                 dicomViewerId: this.props.tableConfig.dicomViewerId,
               }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
@@ -265,7 +268,8 @@ ExplorerVisualization.propTypes = {
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
-  allFields: PropTypes.array, // inherited from GuppyWrapper
+  allRegularAggFields: PropTypes.array, // inherited from GuppyWrapper
+  allAsTextAggFields: PropTypes.array, // inherited from GuppyWrapper
   accessibleFieldObject: PropTypes.object, // inherited from GuppyWrapper
   history: PropTypes.object.isRequired,
   className: PropTypes.string,
@@ -290,7 +294,8 @@ ExplorerVisualization.defaultProps = {
   getTotalCountsByTypeAndFilter: () => {},
   downloadRawDataByTypeAndFilter: () => {},
   rawData: [],
-  allFields: [],
+  allRegularAggFields: [],
+  allAsTextAggFields: [],
   accessibleFieldObject: {},
   className: '',
   chartConfig: {},

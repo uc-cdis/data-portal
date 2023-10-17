@@ -12,6 +12,7 @@ import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
+import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 import './GWASApp.css';
 
 const GWASContainer = () => {
@@ -59,6 +60,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal={false}
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 4:
@@ -74,6 +76,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     default:
@@ -150,6 +153,7 @@ const GWASContainer = () => {
               </Button>
             )}
           </div>
+          <MakeFullscreenButton />
         </Space>
       </div>
     </SourceContextProvider>

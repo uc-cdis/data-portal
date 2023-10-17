@@ -27,6 +27,7 @@ const ConfigureGWAS = ({
   outcome,
   showModal,
   finalPopulationSizes,
+  selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -81,6 +82,7 @@ const ConfigureGWAS = ({
       imputationScore,
       selectedCohort,
       jobName,
+      selectedTeamProject,
     ),
     {
       onSuccess: (data) => {
@@ -170,6 +172,7 @@ ConfigureGWAS.propTypes = {
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
   finalPopulationSizes: PropTypes.array.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 ConfigureGWAS.defaultProps = {
