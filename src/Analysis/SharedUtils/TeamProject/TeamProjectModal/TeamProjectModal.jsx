@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Spin } from 'antd';
 import { useQuery } from 'react-query';
+
 import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../../teamProjectApi';
 
@@ -39,7 +40,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       />
     );
   }
-  modalContent = <h1>Select a team project</h1>;
+  modalContent = <h1>{JSON.stringify(data)}</h1>;
 
   return (
     <Modal
