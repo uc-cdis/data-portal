@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
 
@@ -18,14 +19,22 @@ beforeEach(() => {
 
 test('renders TeamProjectHeader with default props', () => {
   localStorageMock.getItem.mockReturnValueOnce(null);
-  render(<TeamProjectHeader />);
+  render(
+    <QueryClientProvider client={new QueryClient()} contextSharing>
+      <TeamProjectHeader />
+    </QueryClientProvider>
+  );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
   expect(screen.getByText('/ - -')).toBeInTheDocument();
 });
 
 test('renders TeamProjectHeader with edit button when showButton is true', () => {
-  render(<TeamProjectHeader showButton />);
+  render(
+    <QueryClientProvider client={new QueryClient()} contextSharing>
+      <TeamProjectHeader showButton />
+    </QueryClientProvider>
+  );
 
   // Assert that the component renders with the edit button
   expect(screen.queryByTestId('team-project-edit')).toBeInTheDocument();
@@ -43,7 +52,11 @@ test('Renders project name based on local storage value', () => {
   // Set up a mock value for localStorage.getItem('teamProject')
   const teamProjectValue = 'Mock Team Project Name';
   localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
-  render(<TeamProjectHeader />);
+  render(
+    <QueryClientProvider client={new QueryClient()} contextSharing>
+      <TeamProjectHeader />
+    </QueryClientProvider>
+  );
   // Assert that the component renders with the banner text from localStorage
   expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();
 });
