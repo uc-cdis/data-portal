@@ -1,16 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Spin } from 'antd';
+import { useQuery } from 'react-query';
+import queryConfig from '../../QueryConfig';
+import fetchArboristTeamProjectRoles from '../../teamProjectApi';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     const updatedTeamProject = `ORD_MVP_${Math.floor(
-      1000 + Math.random() * 9000,
+      1000 + Math.random() * 9000
     )}`;
     setBannerText(updatedTeamProject);
     localStorage.setItem('teamProject', updatedTeamProject);
   };
+
+  let modalContent = '';
+  const { data, status } = useQuery(
+    'teamprojects',
+    fetchArboristTeamProjectRoles,
+    queryConfig
+  );
+  if (status === 'loading') {
+    modalContent = (
+      <React.Fragment>
+        <div className='spinner-container'>
+          <Spin /> Retrieving the list of team projects.
+          <br />
+          Please wait...
+        </div>
+      </React.Fragment>
+    );
+  }
+  if (status === 'error') {
+    modalContent = (
+      <LoadingErrorMessage
+        message={'Error while trying to retrieve user access details'}
+      />
+    );
+  }
+  modalContent = <h1>Select a team project</h1>;
 
   return (
     <Modal
@@ -29,7 +58,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
         </Button>,
       ]}
     >
-      Click Submit to update team project
+      {modalContent}
     </Modal>
   );
 };
