@@ -20,7 +20,7 @@ if (DAPTrackingURL) {
 }
 if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
   scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
-  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com']);
+  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net']);
   imgSrcURLs.push('https://www.google-analytics.com');
 } else {
   console.log('Unknown GA tag, skipping GA setup...');
