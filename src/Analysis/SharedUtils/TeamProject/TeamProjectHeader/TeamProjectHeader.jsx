@@ -16,6 +16,8 @@ const TeamProjectHeader = ({ showButton }) => {
     const storedTeamProject = localStorage.getItem('teamProject');
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
+    } else {
+      showModal();
     }
   }, []);
 
