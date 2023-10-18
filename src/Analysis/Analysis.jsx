@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
-import './Analysis.less';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/CheckForTeamProjectApplication';
+import './Analysis.less';
 
 class Analysis extends React.Component {
   openApp = (app) => {
@@ -21,7 +22,9 @@ class Analysis extends React.Component {
           </Col>
           {CheckForTeamProjectApplication(analysisApps) && (
             <Col flex='1 0 auto'>
-              <TeamProjectHeader showButton />
+              <QueryClientProvider client={new QueryClient()} contextSharing>
+                <TeamProjectHeader showButton />
+              </QueryClientProvider>
             </Col>
           )}
         </Row>
