@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Spin } from 'antd';
+import { Button, Modal, Spin, Select } from 'antd';
 import { useQuery } from 'react-query';
 
 import queryConfig from '../../QueryConfig';
@@ -9,30 +9,30 @@ import fetchArboristTeamProjectRoles from '../../teamProjectApi';
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
-    const updatedTeamProject = `ORD_MVP_${Math.floor(
-      1000 + Math.random() * 9000
-    )}`;
-    setBannerText(updatedTeamProject);
-    localStorage.setItem('teamProject', updatedTeamProject);
+    setBannerText(selectedTeamProject);
+    localStorage.setItem('teamProject', selectedTeamProject);
   };
 
-  let modalContent = '';
+  const [selectedTeamProject, setSelectedTeamProject] = useState(
+    localStorage.getItem('teamProject')
+  );
+
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
     queryConfig
   );
-  if (status === 'loading') {
-    modalContent = (
-      <React.Fragment>
-        <div className='spinner-container'>
-          <Spin /> Retrieving the list of team projects.
-          <br />
-          Please wait...
-        </div>
-      </React.Fragment>
-    );
-  }
+
+  let modalContent = (
+    <React.Fragment>
+      <div className='spinner-container'>
+        <Spin /> Retrieving the list of team projects.
+        <br />
+        Please wait...
+      </div>
+    </React.Fragment>
+  );
+
   if (status === 'error') {
     modalContent = (
       <LoadingErrorMessage
@@ -40,8 +40,21 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       />
     );
   }
-  modalContent = <h1>{JSON.stringify(data)}</h1>;
-
+  if (data) {
+    modalContent = (
+      <Select
+        id='input-selectTeamProjectDropDown'
+        labelInValue
+        defaultValue={selectedTeamProject ? selectedTeamProject : null}
+        onChange={(e) => setSelectedTeamProject(e.value)}
+        placeholder='-select one of the team projects below-'
+        fieldNames={{ label: 'teamName', value: 'teamName' }}
+        options={data.teams}
+        dropdownStyle={{ width: '300px' }}
+        style={{ width: '300px' }}
+      />
+    );
+  }
   return (
     <Modal
       title='Team Projects'
@@ -49,10 +62,12 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       onCancel={() => closeAndUpdateTeamProject()}
       closable={false}
       maskClosable={false}
+      keyboard={false}
       footer={[
         <Button
           key='submit'
           type='primary'
+          disabled={!selectedTeamProject}
           onClick={() => closeAndUpdateTeamProject()}
         >
           Submit
