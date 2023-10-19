@@ -265,7 +265,7 @@ const tabField = (
   ) {
     if (fieldConfig.type === 'dataDownloadList') {
       return (
-        <DataDownloadList sourceFieldData={resourceFieldValue} />
+        <DataDownloadList resourceInfo={resource} sourceFieldData={resourceFieldValue} />
       );
     }
     // Format resourceFieldValue for all other field types

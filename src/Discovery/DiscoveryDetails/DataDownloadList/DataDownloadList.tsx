@@ -5,14 +5,14 @@ import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
 import ButtonsRow from './ButtonsRow/ButtonsRow';
 
-const DataDownloadList = ({ sourceFieldData }: any) => {
+const DataDownloadList = ({ resourceInfo, sourceFieldData }) => {
   const data = ProcessData(sourceFieldData);
   if (data.length === 0) {
     return null;
   }
   return (
     <div className='discovery-modal__data-download-list'>
-      <ButtonsRow />
+      <ButtonsRow resourceInfo={resourceInfo} data={data}/>
       <List
         itemLayout='horizontal'
         dataSource={data}
