@@ -12,7 +12,7 @@ const DataDownloadList = ({ resourceInfo, sourceFieldData }) => {
   }
   return (
     <div className='discovery-modal__data-download-list'>
-      <ButtonsRow resourceInfo={resourceInfo} data={data}/>
+      <ButtonsRow resourceInfo={resourceInfo} data={data} />
       <List
         itemLayout='horizontal'
         dataSource={data}
