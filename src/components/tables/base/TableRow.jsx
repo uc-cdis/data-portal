@@ -8,8 +8,8 @@ function TableRow({ cols }) {
         let displayedCol = col;
         if (Array.isArray(col)) {
           displayedCol = <ul className='base-table__cell-list-value'>
-            {col.map((value) => (
-              <li>
+            {col.map((value, j) => (
+              <li key={`col_${i}_row_${j}`}>
                 {value}
               </li>
             ))}

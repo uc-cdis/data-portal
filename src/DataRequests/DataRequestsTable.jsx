@@ -46,7 +46,6 @@ function parseResearcherInfo(researcher) {
  * @param {boolean} args.isAdminActive
  */
 function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdminActive }) {
-  console.log(projects);
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .sort((a, b) => {
