@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Row, Button } from 'antd';
+import { Col, Row, Button, Modal } from 'antd';
 import './ButtonsRow.css';
 
 
@@ -18,8 +18,30 @@ const [downloadStatus, setDownloadStatus] = useState({
   message: { title: '', content: <h1>lol</h1>, active: false },
 });
 
+/* CONSTANTS */
+const JOB_POLLING_INTERVAL = 5000;
+
+const DOWNLOAD_FAIL_STATUS = {
+  inProgress: false,
+  message: {
+    title: 'Download failed',
+    content: (
+      <p> There was a problem preparing your download.
+        Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
+      </p>
+    ),
+    active: true,
+  },
+};
+
+
 const studyIDs = [resourceInfo.study_id];
-const initFetch = () => fetchWithCreds({
+
+
+/* FUNCS */
+const downloadAllFiles = () => {
+  alert('called downloadAllFiles')
+  fetchWithCreds({
   path: `${jobAPIPath}dispatch`,
   method: 'POST',
   body: JSON.stringify({ action: 'batch-export', input: { study_ids: studyIDs } }), // NEW TO FIND studyIDs
@@ -36,14 +58,7 @@ const initFetch = () => fetchWithCreds({
         },
       });
     } else if (dispatchResponse.status !== 200 || !uid) {
-      setDownloadStatus({
-        inProgress: false,
-        message: {
-          title: 'Download failed',
-          content: <p> { 'There was a problem preparing your download. Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.'} </p>,
-          active: true,
-        },
-      });
+      setDownloadStatus(DOWNLOAD_FAIL_STATUS);
     } else {
       setDownloadStatus({
         inProgress: true,
@@ -54,25 +69,131 @@ const initFetch = () => fetchWithCreds({
           active: true,
         },
       });
-      //setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
+      setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
     }
   },
-).catch(() => setDownloadStatus({
-  inProgress: false,
-  message: {
-    title: 'Download failed',
-    content: <p> { 'CATCH ERR: There was a problem preparing your download. Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.'} </p>,
-    active: true,
-  },
-}));
+).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+}
+// TO DO - put back type annontations
+const checkDownloadStatus = (
+  uid,
+  downloadStatus,
+  setDownloadStatus
+) => {
+  alert('called checkDownloadStatus')
+  fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
+    (statusResponse) => {
+      const { status } = statusResponse.data;
+      if (statusResponse.status !== 200 || !status) {
+        // usually empty status message means Sower can't find a job by its UID
+        setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+      } else if (status === 'Failed') {
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+          (outputResponse) => {
+            const { output } = outputResponse.data;
+            if (outputResponse.status !== 200 || !output) {
+              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+            } else {
+              setDownloadStatus({
+                inProgress: false,
+                message: {
+                  title: 'Download failed',
+                  content: <p>{output}</p>,
+                  active: true,
+                },
+              });
+            }
+          },
+        ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      } else if (status === 'Completed') {
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+          (outputResponse) => {
+            const { output } = outputResponse.data;
+            if (outputResponse.status !== 200 || !output) {
+              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+            } else {
+              try {
+                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                if (!new RegExp(regexp).test(output)) {
+                  throw new Error('Invalid download URL');
+                }
+                setDownloadStatus({
+                  inProgress: false,
+                  message: {
+                    title: 'Your download is ready',
+                    content: (
+                      <React.Fragment>
+                        <p> { DOWNLOAD_SUCCEEDED_MESSAGE } </p>
+                        <a href={output} target='_blank' rel='noreferrer'>{output}</a>
+                      </React.Fragment>
+                    ),
+                    active: true,
+                  },
+                });
+                setTimeout(() => window.open(output), 2000);
+              } catch {
+                // job output is not a url -> is an error message
+                setDownloadStatus({
+                  inProgress: false,
+                  message: {
+                    title: 'Download failed',
+                    content: <p>{output}</p>,
+                    active: true,
+                  },
+                });
+              }
+            }
+          },
+        ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      } else {
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
+      }
+    },
+  );
+};
 
+
+
+
+
+
+/*
 useEffect(() => {
   console.log("initFetch", initFetch());
 }, []);
+*/
 /* END NEW STUFF OCT 19 */
 
   return (
     <div className='discovery-modal_buttons-row'>
+
+<Modal
+          closable={false}
+          open={downloadStatus.message.active}
+          title={downloadStatus.message.title}
+          footer={(
+            <Button
+              onClick={
+                () => setDownloadStatus({
+                  ...downloadStatus,
+                  message: {
+                    title: '',
+                    content: <React.Fragment />,
+                    active: false,
+                  },
+                })
+              }
+            >
+            Close
+            </Button>
+          )}
+        >
+          { downloadStatus.message.content }
+        </Modal>
+
+
+
+
       <Row className='row'>
         <Col flex='1 0 auto'>
           <Button className='discovery-action-bar-button'>
@@ -92,7 +213,7 @@ useEffect(() => {
           </Button>
         </Col>
         <Col flex='1 0 auto'>
-          <Button className='discovery-action-bar-button'>
+          <Button className='discovery-action-bar-button' onClick={()=>downloadAllFiles()}>
             Download All Files
           </Button>
         </Col>
