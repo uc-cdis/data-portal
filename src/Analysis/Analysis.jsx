@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/CheckForTeamProjectApplication';
 import './Analysis.less';

@@ -1,0 +1,20 @@
+.team-project-modal .ant-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2e77b8;
+}
+.team-project-modal .ant-modal-header {
+  border-bottom: 1px solid #d0dce6;
+}
+.team-project-modal .team-project-modal_modal-description {
+  font-size: 17px;
+  color: #333;
+  margin-bottom: 8px;
+}
+.team-project-modal .ant-modal-footer {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  background-color: #e9eef2;
+}
