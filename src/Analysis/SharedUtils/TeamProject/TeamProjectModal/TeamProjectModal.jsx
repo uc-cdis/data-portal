@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Spin, Select } from 'antd';
 import { useQuery } from 'react-query';
-
 import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../../teamProjectApi';
+import './TeamProjectModal.css';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const closeAndUpdateTeamProject = () => {
@@ -42,25 +42,31 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   }
   if (data) {
     modalContent = (
-      <Select
-        id='input-selectTeamProjectDropDown'
-        labelInValue
-        defaultValue={selectedTeamProject ? selectedTeamProject : null}
-        onChange={(e) => setSelectedTeamProject(e.value)}
-        placeholder='-select one of the team projects below-'
-        fieldNames={{ label: 'teamName', value: 'teamName' }}
-        options={data.teams}
-        dropdownStyle={{ width: '300px' }}
-        style={{ width: '300px' }}
-      />
+      <>
+        <div className='team-project-modal_modal-description'>
+          Please select your team.
+        </div>
+        <Select
+          id='input-selectTeamProjectDropDown'
+          labelInValue
+          defaultValue={selectedTeamProject || null}
+          onChange={(e) => setSelectedTeamProject(e.value)}
+          placeholder='-select one of the team projects below-'
+          fieldNames={{ label: 'teamName', value: 'teamName' }}
+          options={data.teams}
+          dropdownStyle={{ width: '300px' }}
+          style={{ width: '300px' }}
+        />
+      </>
     );
   }
   return (
     <Modal
+      className='team-project-modal'
       title='Team Projects'
       open={isModalOpen}
-      onCancel={() => closeAndUpdateTeamProject()}
-      closable={false}
+      onCancel={() => setIsModalOpen(false)}
+      closable={localStorage.getItem('teamProject')}
       maskClosable={false}
       keyboard={false}
       footer={[
