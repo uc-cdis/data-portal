@@ -22,7 +22,7 @@ test('renders TeamProjectHeader with default props', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
@@ -33,7 +33,7 @@ test('renders TeamProjectHeader with edit button when showButton is true', () =>
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader showButton />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   // Assert that the component renders with the edit button
@@ -55,7 +55,7 @@ test('Renders project name based on local storage value', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
   // Assert that the component renders with the banner text from localStorage
   expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();
