@@ -41,44 +41,55 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
     );
   }
   if (data) {
+    // check to make sure stored value is within returned team names
+    const isStoredTeamNameValid =()=> {
+      let valid = false
+      if(selectedTeamProject) {
+        data.teams.forEach(team => {if(team.teamName === selectedTeamProject) valid = true});
+      }
+      return valid;
+    }
+
     modalContent = (
-      <>
+      <React.Fragment>
         <div className='team-project-modal_modal-description'>
           Please select your team.
         </div>
         <Select
           id='input-selectTeamProjectDropDown'
           labelInValue
-          defaultValue={selectedTeamProject || null}
+          defaultValue={isStoredTeamNameValid()? selectedTeamProject: null}
           onChange={(e) => setSelectedTeamProject(e.value)}
           placeholder='-select one of the team projects below-'
           fieldNames={{ label: 'teamName', value: 'teamName' }}
           options={data.teams}
-          dropdownStyle={{ width: '300px' }}
-          style={{ width: '300px' }}
+          dropdownStyle={{ width: '100%' }}
         />
-      </>
+      </React.Fragment>
     );
   }
   return (
+
     <Modal
       className='team-project-modal'
       title='Team Projects'
       open={isModalOpen}
       onCancel={() => setIsModalOpen(false)}
       closable={localStorage.getItem('teamProject')}
-      maskClosable={false}
-      keyboard={false}
-      footer={[
-        <Button
-          key='submit'
-          type='primary'
-          disabled={!selectedTeamProject}
-          onClick={() => closeAndUpdateTeamProject()}
-        >
-          Submit
-        </Button>,
-      ]}
+      maskClosable={localStorage.getItem('teamProject')}
+      keyboard={localStorage.getItem('teamProject')}
+      footer={
+        localStorage.getItem('teamProject') && [
+          <Button
+            key='submit'
+            type='primary'
+            disabled={!selectedTeamProject}
+            onClick={() => closeAndUpdateTeamProject()}
+          >
+            Submit
+          </Button>,
+        ]
+      }
     >
       {modalContent}
     </Modal>
