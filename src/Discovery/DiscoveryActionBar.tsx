@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useCallback,
 } from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
@@ -54,6 +54,7 @@ interface Props {
     actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
+  systemPopupActivated: boolean;
   onActionResumed: () => any
 }
 
@@ -446,10 +447,10 @@ const DiscoveryActionBar = (props: Props) => {
     [props.discovery.selectedResources],
   );
 
-  const healICPSRLoginNeededLogic = () => {
+  const healICPSRLoginNeededLogic = useCallback(() => {
     if (bundle === 'heal') {
       // check selected studies for ICPSR study
-      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag) => tag?.name === 'ICPSR' && tag?.category === 'Data Repository'))) {
+      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag: { name: string; category: string; }) => tag?.name === 'ICPSR' && (tag?.category === 'Data Repository' || tag?.category === 'Commons')))) {
         // check if user is logged in via InCommons
         if (props.user.fence_idp !== 'shibboleth') {
           // if not logged in via InCommons show special messaging
@@ -458,7 +459,7 @@ const DiscoveryActionBar = (props: Props) => {
       }
     }
     return false;
-  };
+  }, [props.discovery.selectedResources, props.user.fence_idp]);
 
   useEffect(
     () => {
@@ -572,7 +573,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          open={downloadStatus.message.active}
+          open={downloadStatus.message.active && !props.systemPopupActivated}
           title={downloadStatus.message.title}
           footer={(
             <Button

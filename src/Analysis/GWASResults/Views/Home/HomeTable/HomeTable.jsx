@@ -16,7 +16,7 @@ import {
 } from './tableDataProcessing/tableDataProcessing';
 import VIEWS from '../../../Utils/ViewsEnumeration';
 import isIterable from '../../../Utils/isIterable';
-import LoadingErrorMessage from '../../../Components/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 
 import './HomeTable.css';
 
@@ -281,6 +281,7 @@ const HomeTable = ({ data }) => {
                   setSelectedRowData(record);
                   setCurrentView(VIEWS.results);
                 }}
+                disabled={record.phase !== PHASES.Succeeded}
               >
                 Results
               </Button>

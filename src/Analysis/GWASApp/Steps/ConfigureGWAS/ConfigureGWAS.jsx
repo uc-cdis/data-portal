@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
-import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
+import DismissibleMessage from '../../../SharedUtils/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import { minimumRecommendedCohortSize, MESSAGES } from '../../Utils/constants';
+import {
+  MESSAGES,
+  checkFinalPopulationSizes,
+  checkFinalPopulationSizeZero,
+} from '../../Utils/constants';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -23,6 +27,7 @@ const ConfigureGWAS = ({
   outcome,
   showModal,
   finalPopulationSizes,
+  selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -44,24 +49,21 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
-  function checkFinalPopulationSizes() {
-    let hasSizeIssue = false;
-    finalPopulationSizes.forEach((obj) => {
-      if (obj?.size < minimumRecommendedCohortSize) {
-        console.log('returned true for checkFinalPopulationSizes');
-        hasSizeIssue = true;
-      }
-    });
-    return hasSizeIssue;
-  }
-
   useEffect(() => {
-    if (finalPopulationSizes.length === 1 && checkFinalPopulationSizes()) {
+    if (checkFinalPopulationSizeZero(finalPopulationSizes)) {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: MESSAGES.ZERO_SIZE_WARNING,
+      });
+    } else if (
+      finalPopulationSizes.length === 1
+      && checkFinalPopulationSizes(finalPopulationSizes)
+    ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
       });
-    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes()) {
+    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes(finalPopulationSizes)) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
@@ -80,6 +82,7 @@ const ConfigureGWAS = ({
       imputationScore,
       selectedCohort,
       jobName,
+      selectedTeamProject,
     ),
     {
       onSuccess: (data) => {
@@ -169,6 +172,7 @@ ConfigureGWAS.propTypes = {
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
   finalPopulationSizes: PropTypes.array.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 ConfigureGWAS.defaultProps = {

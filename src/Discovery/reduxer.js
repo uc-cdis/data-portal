@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import DiscoveryActionBar from './DiscoveryActionBar';
-import DiscoveryDetails from './DiscoveryDetails';
+import DiscoveryDetails from './DiscoveryDetails/DiscoveryDetails';
 
 export const ReduxDiscoveryActionBar = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     discovery: state.discovery,
+    systemPopupActivated: !!state.popups?.systemUseWarnPopup,
   });
 
   const mapDispatchToProps = (dispatch) => ({

@@ -12,6 +12,7 @@ Below is an example, with inline comments describing what each JSON block config
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
+  "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
@@ -257,6 +258,8 @@ Below is an example, with inline comments describing what each JSON block config
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
       ],
+      "dicomServerURL": "", // optional; field to specify the sub-path to DICOM Server. It uses `dicom-server` as a default for backward compatibility if undefined
+      "dicomViewerUrl": "", // optional; field to specify the sub-path to DICOM Viewer. It uses `dicom-viewer` as a default for backward compatibility if undefined
       "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
@@ -387,6 +390,9 @@ Below is an example, with inline comments describing what each JSON block config
             "project_id",
             "data_type",
             "data_format"
+          ],
+          "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
+            "consortium_id"
           ]
         }
       ]

@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
-import { GWASAppSteps } from './Utils/constants';
+import { GWASAppSteps, checkFinalPopulationSizeZero } from './Utils/constants';
 import { SourceContextProvider } from './Utils/Source';
 import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
@@ -11,7 +11,8 @@ import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopu
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
-import DismissibleMessagesList from './Components/DismissibleMessage/DismissibleMessagesList';
+import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
+import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 import './GWASApp.css';
 
 const GWASContainer = () => {
@@ -59,6 +60,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal={false}
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 4:
@@ -74,6 +76,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     default:
@@ -87,6 +90,8 @@ const GWASContainer = () => {
     (state.currentStep === 0 && !state.selectedStudyPopulationCohort)
     || (state.currentStep === 1 && !state.outcome)
     || (state.currentStep === 3 && !state.selectedHare.concept_value)
+    || (state.currentStep === 3
+      && checkFinalPopulationSizeZero(state.finalPopulationSizes))
   ) {
     nextButtonEnabled = false;
   }
@@ -148,6 +153,7 @@ const GWASContainer = () => {
               </Button>
             )}
           </div>
+          <MakeFullscreenButton />
         </Space>
       </div>
     </SourceContextProvider>
