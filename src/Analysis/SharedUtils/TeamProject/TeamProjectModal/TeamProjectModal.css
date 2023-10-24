@@ -18,3 +18,13 @@
   justify-content: right;
   background-color: #e9eef2;
 }
+.team-project-modal .ant-modal-content {
+  width: 500px;
+  border-radius: 8px 8px 0px 0px;
+}
+.team-project-modal .ant-modal-body {
+  width: unset;
+}
+.team-project-modal .ant-select {
+  width: 100%;
+}
