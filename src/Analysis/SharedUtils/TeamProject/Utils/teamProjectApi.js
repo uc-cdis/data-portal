@@ -1,4 +1,4 @@
-import { authzMappingPath } from '../../configs';
+import { authzMappingPath } from '../../../../configs';
 
 const fetchAuthorizationMappingsForCurrentUser = async () => {
   const response = await fetch(authzMappingPath);
