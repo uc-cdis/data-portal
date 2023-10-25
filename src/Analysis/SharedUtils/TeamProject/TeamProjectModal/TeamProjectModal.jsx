@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Spin, Select } from 'antd';
+import {
+  Button, Modal, Spin, Select,
+} from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
@@ -8,40 +10,38 @@ import fetchArboristTeamProjectRoles from '../../teamProjectApi';
 import './TeamProjectModal.css';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
+  const [selectedTeamProject, setSelectedTeamProject] = useState(
+    localStorage.getItem('teamProject'),
+  );
+
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
 
-  const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject')
-  );
-
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig
+    queryConfig,
   );
 
   let modalContent = (
-    <React.Fragment>
-      <Modal
-        open={isModalOpen}
-        className='team-project-modal'
-        title='Team Projects'
-        closable={false}
-        maskClosable={false}
-        keyboard={false}
-        footer={false}
-      >
-        <div className='spinner-container'>
-          <Spin /> Retrieving the list of team projects.
-          <br />
+    <Modal
+      open={isModalOpen}
+      className='team-project-modal'
+      title='Team Projects'
+      closable={false}
+      maskClosable={false}
+      keyboard={false}
+      footer={false}
+    >
+      <div className='spinner-container'>
+        <Spin /> Retrieving the list of team projects.
+        <br />
           Please wait...
-        </div>
-      </Modal>
-    </React.Fragment>
+      </div>
+    </Modal>
   );
 
   if (status === 'error') {
@@ -62,7 +62,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
     );
   }
   if (data) {
-    console.log("data",data)
+    console.log('data', data);
     modalContent = (
       <React.Fragment>
         <Modal
@@ -104,7 +104,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       </React.Fragment>
     );
   }
-  return <>{modalContent}</>;
+  return <React.Fragment>{modalContent}</React.Fragment>;
 };
 
 TeamProjectModal.propTypes = {
