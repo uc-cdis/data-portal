@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
-import CheckForTeamProjectApplication from './SharedUtils/TeamProject/CheckForTeamProjectApplication';
+import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import './Analysis.less';
 
 class Analysis extends React.Component {

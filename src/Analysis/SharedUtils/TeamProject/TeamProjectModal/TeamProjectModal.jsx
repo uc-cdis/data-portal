@@ -6,7 +6,7 @@ import {
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
-import fetchArboristTeamProjectRoles from '../../teamProjectApi';
+import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import './TeamProjectModal.css';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
