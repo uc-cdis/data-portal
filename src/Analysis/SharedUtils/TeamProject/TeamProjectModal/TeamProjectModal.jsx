@@ -62,7 +62,6 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
     );
   }
   if (data) {
-    console.log('data', data);
     modalContent = (
       <React.Fragment>
         <Modal
