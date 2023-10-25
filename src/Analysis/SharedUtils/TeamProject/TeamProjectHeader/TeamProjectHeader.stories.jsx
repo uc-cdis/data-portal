@@ -1,5 +1,6 @@
 import React from 'react';
 import TeamProjectHeader from './TeamProjectHeader';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export default {
   title: 'TESTS1/SharedUtils/TeamProjectHeader',
@@ -8,7 +9,9 @@ export default {
 
 const Template = (args) => (
   <div className='GWASApp'>
-    <TeamProjectHeader {...args} />
+    <QueryClientProvider client={new QueryClient()} contextSharing>
+      <TeamProjectHeader {...args}/>
+    </QueryClientProvider>,
   </div>
 );
 
