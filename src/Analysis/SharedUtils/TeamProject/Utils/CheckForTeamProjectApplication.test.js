@@ -4,7 +4,7 @@ describe('CheckForTeamProjectApplication', () => {
   it('should return true if the analysisApps contain a team project application', () => {
     const analysisApps = {
       'OHDSI Atlas': 1,
-      'SomeOtherApp': 2,
+      SomeOtherApp: 2,
     };
     const result = CheckForTeamProjectApplication(analysisApps);
     expect(result).toBe(true);
@@ -12,8 +12,8 @@ describe('CheckForTeamProjectApplication', () => {
 
   it('should return false if the analysisApps do not contain any team project application', () => {
     const analysisApps = {
-      'SomeOtherApp': 1,
-      'AnotherApp': 2,
+      SomeOtherApp: 1,
+      AnotherApp: 2,
     };
     const result = CheckForTeamProjectApplication(analysisApps);
     expect(result).toBe(false);

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, Spin, Select,
-} from 'antd';
+import { Button, Modal, Spin, Select } from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
@@ -11,7 +9,7 @@ import './TeamProjectModal.css';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject'),
+    localStorage.getItem('teamProject')
   );
 
   const closeAndUpdateTeamProject = () => {
@@ -23,7 +21,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig,
+    queryConfig
   );
 
   let modalContent = (
@@ -39,7 +37,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       <div className='spinner-container'>
         <Spin /> Retrieving the list of team projects.
         <br />
-          Please wait...
+        Please wait...
       </div>
     </Modal>
   );
@@ -72,18 +70,16 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
           closable={localStorage.getItem('teamProject')}
           maskClosable={localStorage.getItem('teamProject')}
           keyboard={localStorage.getItem('teamProject')}
-          footer={
-            localStorage.getItem('teamProject') && [
-              <Button
-                key='submit'
-                type='primary'
-                disabled={!selectedTeamProject}
-                onClick={() => closeAndUpdateTeamProject()}
-              >
-                Submit
-              </Button>,
-            ]
-          }
+          footer={[
+            <Button
+              key='submit'
+              type='primary'
+              disabled={!selectedTeamProject}
+              onClick={() => closeAndUpdateTeamProject()}
+            >
+              Submit
+            </Button>,
+          ]}
         >
           <div className='team-project-modal_modal-description'>
             Please select your team.
