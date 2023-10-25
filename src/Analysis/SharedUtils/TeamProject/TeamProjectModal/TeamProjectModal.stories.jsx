@@ -63,7 +63,7 @@ MockedSuccess.parameters = {
         'http://:arboristapi/authz/mapping',
         (req, res, ctx) => {
             return res(
-              ctx.delay(1000),
+              ctx.delay(3000),
               ctx.json({
                 "/gwas_projects/project11": [
                   {
