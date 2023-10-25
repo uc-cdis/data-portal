@@ -61,7 +61,7 @@ describe('TeamProjectModal', () => {
 
     // Mocking the success state
     useQuery.mockReturnValueOnce({
-      data: { teams: [{ value: 'selectedValue', label: 'Selected Value' }] },
+      data: { teams: [{ value: 'test string', label: 'test string' }] },
       status: 'success',
     });
 
@@ -86,13 +86,13 @@ describe('TeamProjectModal', () => {
     expect(screen.getByText(/Submit/i)).toBeInTheDocument();
   });
 
-  test('sets text based on localstorage state, calls setBannerText and closes modal on submit button click', async () => {
+  test('sets defaultValue text based on localstorage state, calls setBannerText and closes modal on submit button click', async () => {
     // Mocking the local storage variable
     localStorage.setItem('teamProject', 'test string');
 
     // Mocking the success state
     useQuery.mockReturnValueOnce({
-      data: { teams: [{ value: 'selectedValue', label: 'Selected Value' }] },
+      data: { teams: [{ value: 'test string', label: 'test string' }] },
       status: 'success',
     });
 
