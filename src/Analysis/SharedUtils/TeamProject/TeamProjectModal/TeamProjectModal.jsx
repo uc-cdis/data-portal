@@ -86,7 +86,6 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
             ]
           }
         >
-          {JSON.stringify(data)}
           <div className='team-project-modal_modal-description'>
             Please select your team.
           </div>

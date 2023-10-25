@@ -17,45 +17,26 @@ const mockedQueryClient = new QueryClient({
 const Template = (args) => (
   <div className='GWASApp'>
     <QueryClientProvider client={mockedQueryClient}  contextSharing>
-      <TeamProjectModal {...args} />
+      <TeamProjectModal  isModalOpen={true} setIsModalOpen={() => false} setBannerText={() => false}/>
     </QueryClientProvider>
     ,
   </div>
 );
 
-export const MockedFailureNoUserAccess = Template.bind({});
-MockedFailureNoUserAccess.args = {
-  isModalOpen: true,
-  setIsModalOpen: () => false,
-  setBannerText: () => 'new banner text ' + Math.random,
-};
-
-export const MockedSuccess = Template.bind({});
-MockedSuccess.args = {
-  isModalOpen: true,
-  setIsModalOpen: () => false,
-  setBannerText: () => 'new banner text ' + Math.random,
-};
-/*
-MockedSuccess.parameters = {
+export const MockedError403 = Template.bind({});
+MockedError403.parameters = {
   msw: {
     handlers: [
-      rest.get(`http://localhost/authz/mapping`, (req, res, ctx) => {
-        const { argowrapperpath } = req.params;
-        return res(
-          ctx.delay(3000),
-          ctx.json({
-            "teams": [
-              { "teamName": '/gwas_projects/project1' },
-              { "teamName": '/gwas_projects/project2' },
-            ],
-          })
-        );
-      }),
+      rest.get(
+        'http://:arboristapi/authz/mapping',
+        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+      ),
     ],
   },
 };
-*/
+
+
+export const MockedSuccess = Template.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
