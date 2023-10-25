@@ -1,5 +1,5 @@
 import fetchArboristTeamProjectRoles from './teamProjectApi';
-import { authzMappingPath } from '../../configs';
+import { authzMappingPath } from '../../../../configs';
 
 // Mocking the fetch function
 global.fetch = jest.fn();
