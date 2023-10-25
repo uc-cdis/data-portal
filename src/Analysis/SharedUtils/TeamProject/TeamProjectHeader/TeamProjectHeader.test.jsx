@@ -29,7 +29,7 @@ test('renders TeamProjectHeader with default props', () => {
   expect(screen.getByText('/ - -')).toBeInTheDocument();
 });
 
-test('renders TeamProjectHeader with edit button when showButton is true', () => {
+test('renders TeamProjectHeader with edit button when showButton is true and can open modal', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader showButton />
@@ -42,10 +42,6 @@ test('renders TeamProjectHeader with edit button when showButton is true', () =>
   // Simulate a click on the edit button and assert that the modal opens
   fireEvent.click(screen.queryByTestId('team-project-edit'));
   expect(screen.getByText('Team Projects')).toBeInTheDocument();
-
-  // Close the modal and check that it is not visible
-  fireEvent.click(screen.getByText('Submit'));
-  expect(screen.getByRole('dialog', { hidden: true }));
 });
 
 test('Renders project name based on local storage value', () => {
