@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, screen, fireEvent, waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useQuery } from 'react-query';
 import TeamProjectModal from './TeamProjectModal';
@@ -18,12 +16,12 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={() => {}}
         setBannerText={() => {}}
-      />,
+      />
     );
 
     expect(screen.getByText(/Please wait.../i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Retrieving the list of team projects./i),
+      screen.getByText(/Retrieving the list of team projects./i)
     ).toBeInTheDocument();
   });
 
@@ -42,18 +40,17 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));
     expect(
-      screen.getByText(/-select one of the team projects below-/i),
+      screen.getByText(/-select one of the team projects below-/i)
     ).toBeInTheDocument();
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-
-    expect(() => screen.getByText('Submit')).toThrow(
-      'Unable to find an element',
+    expect(screen.getByText('Submit').closest('button')).toHaveAttribute(
+      'disabled'
     );
   });
 
@@ -75,16 +72,20 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));
 
-    expect(() => screen.getByText('select one of the team projects below'),
+    expect(() =>
+      screen.getByText('select one of the team projects below')
     ).toThrow('Unable to find an element');
     expect(screen.getByText('test string')).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByText(/Submit/i)).toBeInTheDocument();
+    expect(screen.getByText('Submit')).toBeInTheDocument();
+    expect(screen.getByText('Submit').closest('button')).not.toHaveAttribute(
+      'disabled'
+    );
   });
 
   test('sets defaultValue text based on localstorage state, calls setBannerText and closes modal on submit button click', async () => {
@@ -105,7 +106,7 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));
