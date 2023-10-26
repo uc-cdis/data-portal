@@ -3,7 +3,8 @@ import { List } from 'antd';
 import DataDownloadListItem from './Utils/DataDownloadListItem';
 import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
-import ButtonsRow from './ButtonsRow/ButtonsRow';
+import ButtonsRow from './ActionButtons/ActionButtons';
+import ActionButtons from './ActionButtons/ActionButtons';
 
 const DataDownloadList = ({ resourceInfo, sourceFieldData }) => {
   const data = ProcessData(sourceFieldData);
@@ -12,7 +13,7 @@ const DataDownloadList = ({ resourceInfo, sourceFieldData }) => {
   }
   return (
     <div className='discovery-modal__data-download-list'>
-      <ButtonsRow resourceInfo={resourceInfo} data={data} />
+      <ActionButtons resourceInfo={resourceInfo} data={data} />
       <List
         itemLayout='horizontal'
         dataSource={data}

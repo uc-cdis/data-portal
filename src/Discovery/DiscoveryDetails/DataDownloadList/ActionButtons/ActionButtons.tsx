@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import {
-  Col, Row, Button, Modal,
-} from 'antd';
-import './ButtonsRow.css';
-
+import { Col, Row, Button, Modal } from 'antd';
 import { fetchWithCreds } from '../../../../actions';
 import { jobAPIPath } from '../../../../localconf';
+import './ActionButtons.css';
 
-const ButtonsRow = ({ resourceInfo, data }) => {
-/* NEW STUFF OCT 19 */
+const ActionButtons = ({ resourceInfo, data }) => {
+  /* NEW STUFF OCT 19 */
   console.log('resourceInfo ', resourceInfo);
   console.log('study_id', resourceInfo.study_id);
   console.log('data', data);
@@ -19,15 +16,18 @@ const ButtonsRow = ({ resourceInfo, data }) => {
 
   /* CONSTANTS */
   const JOB_POLLING_INTERVAL = 5000;
-  const DOWNLOAD_SUCCEEDED_MESSAGE = 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:';
+  const DOWNLOAD_SUCCEEDED_MESSAGE =
+    "Your download has been prepared. If your download doesn't start automatically, please follow this direct link:";
 
   const DOWNLOAD_FAIL_STATUS = {
     inProgress: false,
     message: {
       title: 'Download failed',
       content: (
-        <p> There was a problem preparing your download.
-        Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
+        <p>
+          {' '}
+          There was a problem preparing your download. Please consider using the
+          Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
         </p>
       ),
       active: true,
@@ -40,20 +40,33 @@ const ButtonsRow = ({ resourceInfo, data }) => {
   let checkDownloadStatusCnt = 0;
   /* FUNCS */
   const downloadAllFiles = () => {
-    console.log('called downloadAllFiles'+  downloadAllFilesCnt++);
+    console.log('called downloadAllFiles' + downloadAllFilesCnt++);
     fetchWithCreds({
       path: `${jobAPIPath}dispatch`,
       method: 'POST',
-      body: JSON.stringify({ action: 'batch-export', input: { study_ids: studyIDs } }), // NEW TO FIND studyIDs
-    }).then(
-      (dispatchResponse) => {
+      body: JSON.stringify({
+        action: 'batch-export',
+        input: { study_ids: studyIDs },
+      }), // NEW TO FIND studyIDs
+    })
+      .then((dispatchResponse) => {
         const { uid } = dispatchResponse.data;
-        if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
+        if (
+          dispatchResponse.status === 403 ||
+          dispatchResponse.status === 302
+        ) {
           setDownloadStatus({
             inProgress: false,
             message: {
               title: 'Download failed',
-              content: <p> { 'Unable to authorize download. Please refresh the page and ensure you are logged in.'} </p>,
+              content: (
+                <p>
+                  {' '}
+                  {
+                    'Unable to authorize download. Please refresh the page and ensure you are logged in.'
+                  }{' '}
+                </p>
+              ),
               active: true,
             },
           });
@@ -64,34 +77,40 @@ const ButtonsRow = ({ resourceInfo, data }) => {
             inProgress: true,
             message: {
               title: 'Your download is being prepared',
-              content: <p> { 'Please remain on this page until your download completes. When your download is ready, '
-          + 'it will begin automatically. You can close this window.' }
-              </p>,
+              content: (
+                <p>
+                  {' '}
+                  {'Please remain on this page until your download completes. When your download is ready, ' +
+                    'it will begin automatically. You can close this window.'}
+                </p>
+              ),
               active: true,
             },
           });
-          setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
+          setTimeout(
+            checkDownloadStatus,
+            JOB_POLLING_INTERVAL,
+            uid,
+            downloadStatus,
+            setDownloadStatus
+          );
         }
-      },
-    ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      })
+      .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
   };
   // TO DO - put back type annontations
-  const checkDownloadStatus = (
-    uid,
-    downloadStatus,
-    setDownloadStatus,
-  ) => {
-    console.log('called checkDownloadStatus'+checkDownloadStatusCnt++);
+  const checkDownloadStatus = (uid, downloadStatus, setDownloadStatus) => {
+    console.log('called checkDownloadStatus' + checkDownloadStatusCnt++);
     fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
       (statusResponse) => {
         const { status } = statusResponse.data;
         // alert(status);
         if (statusResponse.status !== 200 || !status) {
-        // usually empty status message means Sower can't find a job by its UID
+          // usually empty status message means Sower can't find a job by its UID
           setDownloadStatus(DOWNLOAD_FAIL_STATUS);
         } else if (status === 'Failed') {
-          fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
-            (outputResponse) => {
+          fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
+            .then((outputResponse) => {
               const { output } = outputResponse.data;
               if (outputResponse.status !== 200 || !output) {
                 setDownloadStatus(DOWNLOAD_FAIL_STATUS);
@@ -105,21 +124,24 @@ const ButtonsRow = ({ resourceInfo, data }) => {
                   },
                 });
               }
-            },
-          ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+            })
+            .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
         } else if (status === 'Completed') {
-          alert("WE COMPLETED!")
-          fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
-            (outputResponse) => {
+          alert('WE COMPLETED!');
+          fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
+            .then((outputResponse) => {
               const { output } = outputResponse.data;
               if (outputResponse.status !== 200 || !output) {
-                console.log('failed at ln 116 after completed')
+                console.log('failed at ln 116 after completed');
                 setDownloadStatus(DOWNLOAD_FAIL_STATUS);
               } else {
                 try {
-                  const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                  const regexp =
+                    /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
                   if (!new RegExp(regexp).test(output)) {
-                    console.log('failed at ln 123 after completed. output is:'+output)
+                    console.log(
+                      'failed at ln 123 after completed. output is:' + output
+                    );
                     throw new Error('Invalid download URL');
                   }
                   setDownloadStatus({
@@ -128,16 +150,22 @@ const ButtonsRow = ({ resourceInfo, data }) => {
                       title: 'Your download is ready',
                       content: (
                         <React.Fragment>
-                          <p> { DOWNLOAD_SUCCEEDED_MESSAGE } </p>
-                          <a href={output} target='_blank' rel='noreferrer'>{output}</a>
+                          <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
+                          <a href={output} target='_blank' rel='noreferrer'>
+                            {output}
+                          </a>
                         </React.Fragment>
                       ),
                       active: true,
                     },
                   });
-                  setTimeout(() => window.open(output), 2000, console.log('tried to open window'));
+                  setTimeout(
+                    () => window.open(output),
+                    2000,
+                    console.log('tried to open window')
+                  );
                 } catch {
-                // job output is not a url -> is an error message
+                  // job output is not a url -> is an error message
                   setDownloadStatus({
                     inProgress: false,
                     message: {
@@ -148,12 +176,19 @@ const ButtonsRow = ({ resourceInfo, data }) => {
                   });
                 }
               }
-            },
-          ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+            })
+            .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
         } else {
-          setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
+          setTimeout(
+            checkDownloadStatus,
+            JOB_POLLING_INTERVAL,
+            uid,
+            downloadStatus,
+            setDownloadStatus
+          );
         }
-      });
+      }
+    );
   };
 
   return (
@@ -162,10 +197,10 @@ const ButtonsRow = ({ resourceInfo, data }) => {
         closable={false}
         open={downloadStatus.message.active}
         title={downloadStatus.message.title}
-        footer={(
+        footer={
           <Button
-            onClick={
-              () => setDownloadStatus({
+            onClick={() =>
+              setDownloadStatus({
                 ...downloadStatus,
                 message: {
                   title: '',
@@ -177,9 +212,9 @@ const ButtonsRow = ({ resourceInfo, data }) => {
           >
             Close
           </Button>
-        )}
+        }
       >
-        { downloadStatus.message.content }
+        {downloadStatus.message.content}
       </Modal>
 
       <Row className='row'>
@@ -201,7 +236,10 @@ const ButtonsRow = ({ resourceInfo, data }) => {
           </Button>
         </Col>
         <Col flex='1 0 auto'>
-          <Button className='discovery-action-bar-button' onClick={() => downloadAllFiles()}>
+          <Button
+            className='discovery-action-bar-button'
+            onClick={() => downloadAllFiles()}
+          >
             Download All Files
           </Button>
         </Col>
@@ -209,4 +247,4 @@ const ButtonsRow = ({ resourceInfo, data }) => {
     </div>
   );
 };
-export default ButtonsRow;
+export default ActionButtons;
