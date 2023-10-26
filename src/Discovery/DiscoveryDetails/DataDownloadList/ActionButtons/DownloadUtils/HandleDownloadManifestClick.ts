@@ -7,6 +7,7 @@ const HandleDownloadManifestClick = (
   selectedResources: any[],
   healICPSRLoginNeeded: boolean
 ) => {
+  console.log('config', config);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(

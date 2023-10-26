@@ -6,14 +6,22 @@ import ProcessData from './Utils/ProcessData';
 import ButtonsRow from './ActionButtons/ActionButtons';
 import ActionButtons from './ActionButtons/ActionButtons';
 
-const DataDownloadList = ({ resourceInfo, sourceFieldData }) => {
+const DataDownloadList = ({
+  discoveryConfig,
+  resourceInfo,
+  sourceFieldData,
+}) => {
   const data = ProcessData(sourceFieldData);
   if (data.length === 0) {
     return null;
   }
   return (
     <div className='discovery-modal__data-download-list'>
-      <ActionButtons resourceInfo={resourceInfo} data={data} />
+      <ActionButtons
+        discoveryConfig={discoveryConfig}
+        resourceInfo={resourceInfo}
+        data={data}
+      />
       <List
         itemLayout='horizontal'
         dataSource={data}

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Col, Row, Button, Modal } from 'antd';
 import { fetchWithCreds } from '../../../../actions';
 import { jobAPIPath } from '../../../../localconf';
+import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import './ActionButtons.css';
 
-const ActionButtons = ({ resourceInfo, data }) => {
+const ActionButtons = ({ discoveryConfig, resourceInfo, data }) => {
   /* NEW STUFF OCT 19 */
   console.log('resourceInfo ', resourceInfo);
   console.log('study_id', resourceInfo.study_id);
@@ -61,10 +62,9 @@ const ActionButtons = ({ resourceInfo, data }) => {
               title: 'Download failed',
               content: (
                 <p>
-                  {' '}
                   {
                     'Unable to authorize download. Please refresh the page and ensure you are logged in.'
-                  }{' '}
+                  }
                 </p>
               ),
               active: true,
@@ -79,7 +79,6 @@ const ActionButtons = ({ resourceInfo, data }) => {
               title: 'Your download is being prepared',
               content: (
                 <p>
-                  {' '}
                   {'Please remain on this page until your download completes. When your download is ready, ' +
                     'it will begin automatically. You can close this window.'}
                 </p>
@@ -231,7 +230,17 @@ const ActionButtons = ({ resourceInfo, data }) => {
           </Button>
         </Col>
         <Col flex='1 0 auto'>
-          <Button className='discovery-action-bar-button'>
+          <Button
+            className='discovery-action-bar-button'
+            onClick={() => {
+              console.log('discoveryConfig', discoveryConfig);
+              HandleDownloadManifestClick(
+                discoveryConfig,
+                [resourceInfo],
+                false
+              );
+            }}
+          >
             Download File Manifest
           </Button>
         </Col>
