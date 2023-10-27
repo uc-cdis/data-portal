@@ -23,12 +23,100 @@ const DOWNLOAD_FAIL_STATUS: DownloadStatus = {
   },
 };
 
+const checkDownloadStatus = (
+  uid: string,
+  downloadStatus: DownloadStatus,
+  setDownloadStatus: (arg0: DownloadStatus) => void
+) => {
+  console.log(`called checkDownloadStatus${checkDownloadStatusCnt++}`);
+  fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
+    (statusResponse) => {
+      const { status } = statusResponse.data;
+      // alert(status);
+      if (statusResponse.status !== 200 || !status) {
+        // usually empty status message means Sower can't find a job by its UID
+        setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+      } else if (status === 'Failed') {
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
+          .then((outputResponse) => {
+            const { output } = outputResponse.data;
+            if (outputResponse.status !== 200 || !output) {
+              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+            } else {
+              setDownloadStatus({
+                inProgress: false,
+                message: {
+                  title: 'Download failed',
+                  content: { output },
+                  active: true,
+                },
+              });
+            }
+          })
+          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      } else if (status === 'Completed') {
+        alert('WE COMPLETED!');
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
+          .then((outputResponse) => {
+            const { output } = outputResponse.data;
+            if (outputResponse.status !== 200 || !output) {
+              console.log('failed at ln 116 after completed');
+              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+            } else {
+              try {
+                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                if (!new RegExp(regexp).test(output)) {
+                  throw new Error('Invalid download URL');
+                }
+                setDownloadStatus({
+                  inProgress: false,
+                  message: {
+                    title: 'Your download is ready',
+                    content: (
+                      <React.Fragment>
+                        <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
+                        <a href={output} target='_blank' rel='noreferrer'>
+                          {output}
+                        </a>
+                      </React.Fragment>
+                    ),
+                    active: true,
+                  },
+                });
+                setTimeout(() => window.open(output), 2000);
+              } catch {
+                // job output is not a url -> is an error message
+                setDownloadStatus({
+                  inProgress: false,
+                  message: {
+                    title: 'Download failed',
+                    content: <p>{output}</p>,
+                    active: true,
+                  },
+                });
+              }
+            }
+          })
+          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      } else {
+        setTimeout(
+          checkDownloadStatus,
+          JOB_POLLING_INTERVAL,
+          uid,
+          downloadStatus,
+          setDownloadStatus
+        );
+      }
+    }
+  );
+};
+
 const DownloadAllFiles = (
   studyIDs: any[],
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void
 ) => {
-  console.log('called downloadAllFiles' + downloadAllFilesCnt++);
+  console.log(`called downloadAllFiles${downloadAllFilesCnt++}`);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -79,94 +167,6 @@ const DownloadAllFiles = (
       }
     })
     .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
-};
-
-const checkDownloadStatus = (
-  uid: string,
-  downloadStatus: DownloadStatus,
-  setDownloadStatus: (arg0: DownloadStatus) => void
-) => {
-  console.log('called checkDownloadStatus' + checkDownloadStatusCnt++);
-  fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
-    (statusResponse) => {
-      const { status } = statusResponse.data;
-      // alert(status);
-      if (statusResponse.status !== 200 || !status) {
-        // usually empty status message means Sower can't find a job by its UID
-        setDownloadStatus(DOWNLOAD_FAIL_STATUS);
-      } else if (status === 'Failed') {
-        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
-          .then((outputResponse) => {
-            const { output } = outputResponse.data;
-            if (outputResponse.status !== 200 || !output) {
-              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
-            } else {
-              setDownloadStatus({
-                inProgress: false,
-                message: {
-                  title: 'Download failed',
-                  content: { output },
-                  active: true,
-                },
-              });
-            }
-          })
-          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
-      } else if (status === 'Completed') {
-        alert('WE COMPLETED!');
-        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
-          .then((outputResponse) => {
-            const { output } = outputResponse.data;
-            if (outputResponse.status !== 200 || !output) {
-              console.log('failed at ln 116 after completed');
-              setDownloadStatus(DOWNLOAD_FAIL_STATUS);
-            } else {
-              try {
-                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
-                if (!new RegExp(regexp).test(output)) {
-                  throw new Error('Invalid download URL');
-                }
-                setDownloadStatus({
-                  inProgress: false,
-                  message: {
-                    title: 'Your download is ready',
-                    content: (
-                      <>
-                        <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
-                        <a href={output} target='_blank' rel='noreferrer'>
-                          {output}
-                        </a>
-                      </>
-                    ),
-                    active: true,
-                  },
-                });
-                setTimeout(() => window.open(output), 2000);
-              } catch {
-                // job output is not a url -> is an error message
-                setDownloadStatus({
-                  inProgress: false,
-                  message: {
-                    title: 'Download failed',
-                    content: <p>{output}</p>,
-                    active: true,
-                  },
-                });
-              }
-            }
-          })
-          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
-      } else {
-        setTimeout(
-          checkDownloadStatus,
-          JOB_POLLING_INTERVAL,
-          uid,
-          downloadStatus,
-          setDownloadStatus
-        );
-      }
-    }
-  );
 };
 
 export default DownloadAllFiles;

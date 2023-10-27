@@ -1,17 +1,17 @@
+import FileSaver from 'file-saver';
 import { hostname } from '../../../../../localconf';
 import { DiscoveryConfig } from '../../../../DiscoveryConfig';
-import FileSaver from 'file-saver';
 
 const HandleDownloadManifestClick = (
   config: DiscoveryConfig,
   selectedResources: any[],
-  healICPSRLoginNeeded: boolean
+  healICPSRLoginNeeded: boolean,
 ) => {
   console.log('config', config);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`'
+      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
   if (healICPSRLoginNeeded) {
@@ -28,7 +28,7 @@ const HandleDownloadManifestClick = (
           ...study[manifestFieldName].map((x) => ({
             ...x,
             commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          }))
+          })),
         );
       } else {
         manifest.push(...study[manifestFieldName]);

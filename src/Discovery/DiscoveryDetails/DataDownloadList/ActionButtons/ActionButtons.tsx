@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Button, Modal } from 'antd';
+import { Col, Row, Button } from 'antd';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import './ActionButtons.css';

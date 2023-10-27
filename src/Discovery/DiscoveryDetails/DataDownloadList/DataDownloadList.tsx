@@ -1,6 +1,6 @@
 import React from 'react';
 import { List } from 'antd';
-import DataDownloadListItem from '../DataDownloadList/Interfaces/DataDownloadListItem';
+import DataDownloadListItem from './Interfaces/DataDownloadListItem';
 import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';

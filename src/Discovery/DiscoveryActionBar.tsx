@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { datadogRum } from '@datadog/browser-rum';
-import { Space, Popover, Button, Modal, Table } from 'antd';
+import {
+  Space, Popover, Button, Modal, Table,
+} from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
   LeftOutlined,
@@ -55,13 +57,10 @@ interface Props {
 
 const BATCH_EXPORT_JOB_PREFIX = 'batch-export';
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//;
-const DOWNLOAD_UNAUTHORIZED_MESSAGE =
-  'Unable to authorize download. Please refresh the page and ensure you are logged in.';
-const DOWNLOAD_STARTED_MESSAGE =
-  'Please remain on this page until your download completes. When your download is ready, ' +
-  'it will begin automatically. You can close this window.';
-const DOWNLOAD_SUCCEEDED_MESSAGE =
-  "Your download has been prepared. If your download doesn't start automatically, please follow this direct link:";
+const DOWNLOAD_UNAUTHORIZED_MESSAGE = 'Unable to authorize download. Please refresh the page and ensure you are logged in.';
+const DOWNLOAD_STARTED_MESSAGE = 'Please remain on this page until your download completes. When your download is ready, '
+  + 'it will begin automatically. You can close this window.';
+const DOWNLOAD_SUCCEEDED_MESSAGE = 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:';
 const JOB_POLLING_INTERVAL = 5000;
 
 const DOWNLOAD_FAIL_STATUS = {
@@ -84,111 +83,106 @@ const checkFederatedLoginStatus = async (
   selectedResources: any[],
   manifestFieldName: string,
   history,
-  location
-) =>
-  fetchWithCreds({
-    path: `${externalLoginOptionsUrl}`,
-    method: 'GET',
-  })
-    .then(async ({ data, status }) => {
-      if (status !== 200) {
-        return false;
-      }
-      const { providers } = data;
-      const unauthenticatedProviders = providers.filter(
-        (provider) => !provider.refresh_token_expiration
-      );
+  location,
+) => fetchWithCreds({
+  path: `${externalLoginOptionsUrl}`,
+  method: 'GET',
+})
+  .then(async ({ data, status }) => {
+    if (status !== 200) {
+      return false;
+    }
+    const { providers } = data;
+    const unauthenticatedProviders = providers.filter(
+      (provider) => !provider.refresh_token_expiration,
+    );
 
-      const guidsForHostnameResolution: any = [];
-      const guidPrefixes: any = [];
-      selectedResources.forEach((selectedResource) => {
-        (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
-          if (fileMetadata.object_id) {
-            const guidDomainPrefix = (
-              fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
-            ).shift();
-            if (guidDomainPrefix) {
-              if (!guidPrefixes.includes(guidDomainPrefix)) {
-                guidPrefixes.push(guidDomainPrefix);
-                guidsForHostnameResolution.push(fileMetadata.object_id);
-              }
-            } else {
+    const guidsForHostnameResolution: any = [];
+    const guidPrefixes: any = [];
+    selectedResources.forEach((selectedResource) => {
+      (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
+        if (fileMetadata.object_id) {
+          const guidDomainPrefix = (
+            fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
+          ).shift();
+          if (guidDomainPrefix) {
+            if (!guidPrefixes.includes(guidDomainPrefix)) {
+              guidPrefixes.push(guidDomainPrefix);
               guidsForHostnameResolution.push(fileMetadata.object_id);
             }
+          } else {
+            guidsForHostnameResolution.push(fileMetadata.object_id);
           }
-        });
+        }
       });
-      const guidResolutions = await Promise.all(
-        guidsForHostnameResolution.map((guid) =>
-          fetch(`https://dataguids.org/index/${guid}`)
-            .then((r) => r.json())
-            .catch(() => {})
-        )
+    });
+    const guidResolutions = await Promise.all(
+      guidsForHostnameResolution.map((guid) => fetch(`https://dataguids.org/index/${guid}`)
+        .then((r) => r.json())
+        .catch(() => {}),
+      ),
+    );
+    const externalHosts = guidResolutions
+      .filter(
+        (resolvedGuid) => resolvedGuid && resolvedGuid.from_index_service,
+      )
+      .map(
+        (resolvedGuid) => new URL(resolvedGuid.from_index_service.host).host,
       );
-      const externalHosts = guidResolutions
-        .filter(
-          (resolvedGuid) => resolvedGuid && resolvedGuid.from_index_service
-        )
-        .map(
-          (resolvedGuid) => new URL(resolvedGuid.from_index_service.host).host
-        );
-      const providersToAuthenticate = unauthenticatedProviders.filter(
-        (unauthenticatedProvider) =>
-          externalHosts.includes(
-            new URL(unauthenticatedProvider.base_url).hostname
-          )
-      );
-      if (providersToAuthenticate.length) {
-        setDownloadStatus({
-          inProgress: false,
-          message: {
-            title: 'Authorization Required',
-            active: true,
-            content: (
-              <React.Fragment>
-                <p>
+    const providersToAuthenticate = unauthenticatedProviders.filter(
+      (unauthenticatedProvider) => externalHosts.includes(
+        new URL(unauthenticatedProvider.base_url).hostname,
+      ),
+    );
+    if (providersToAuthenticate.length) {
+      setDownloadStatus({
+        inProgress: false,
+        message: {
+          title: 'Authorization Required',
+          active: true,
+          content: (
+            <React.Fragment>
+              <p>
                   The data you have selected requires authorization with the
                   following data resources:
-                </p>
-                <Table
-                  dataSource={providersToAuthenticate}
-                  columns={[
-                    { title: 'Name', dataIndex: 'name', key: 'name' },
-                    { title: 'IDP', dataIndex: 'idp', key: 'idp' },
-                  ]}
-                  size={'small'}
-                  pagination={false}
-                />
-                <p>
+              </p>
+              <Table
+                dataSource={providersToAuthenticate}
+                columns={[
+                  { title: 'Name', dataIndex: 'name', key: 'name' },
+                  { title: 'IDP', dataIndex: 'idp', key: 'idp' },
+                ]}
+                size={'small'}
+                pagination={false}
+              />
+              <p>
                   Please authorize these resources at the top of the
-                  <Button
-                    size={'small'}
-                    type='link'
-                    icon={<LinkOutlined />}
-                    onClick={() =>
-                      history.push('/identity', {
-                        from: `${location.pathname}`,
-                      })
-                    }
-                  >
+                <Button
+                  size={'small'}
+                  type='link'
+                  icon={<LinkOutlined />}
+                  onClick={() => history.push('/identity', {
+                    from: `${location.pathname}`,
+                  })}
+                >
                     profile page
-                  </Button>
-                </p>
-              </React.Fragment>
-            ),
-          },
-        });
-        return false;
-      }
-      return true;
-    })
-    .catch(() => false);
+                </Button>
+              </p>
+            </React.Fragment>
+          ),
+        },
+      });
+      return false;
+    }
+    return true;
+  })
+  .catch(() => false);
 
 const checkDownloadStatus = (
   uid: string,
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
-  selectedResources: any[]
+  selectedResources: any[],
 ) => {
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
@@ -243,13 +237,13 @@ const checkDownloadStatus = (
                 });
                 setTimeout(() => window.open(output), 2000);
                 const projectNumber = selectedResources.map(
-                  (study) => study.project_number
+                  (study) => study.project_number,
                 );
                 const studyName = selectedResources.map(
-                  (study) => study.study_name
+                  (study) => study.study_name,
                 );
                 const repositoryName = selectedResources.map(
-                  (study) => study.commons
+                  (study) => study.commons,
                 );
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
@@ -277,10 +271,10 @@ const checkDownloadStatus = (
           uid,
           downloadStatus,
           setDownloadStatus,
-          selectedResources
+          selectedResources,
         );
       }
-    }
+    },
   );
 };
 
@@ -291,7 +285,7 @@ const handleDownloadZipClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
   location,
-  healICPSRLoginNeeded
+  healICPSRLoginNeeded,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
@@ -300,7 +294,7 @@ const handleDownloadZipClick = async (
       selectedResources,
       manifestFieldName,
       history,
-      location
+      location,
     );
     if (!isLinked) {
       return;
@@ -312,7 +306,7 @@ const handleDownloadZipClick = async (
   }
 
   const studyIDs = selectedResources.map(
-    (study) => study[config.minimalFieldMapping.uid]
+    (study) => study[config.minimalFieldMapping.uid],
   );
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
@@ -350,7 +344,7 @@ const handleDownloadZipClick = async (
           uid,
           downloadStatus,
           setDownloadStatus,
-          selectedResources
+          selectedResources,
         );
       }
     })
@@ -360,13 +354,13 @@ const handleDownloadZipClick = async (
 const handleDownloadManifestClick = (
   config: DiscoveryConfig,
   selectedResources: any[],
-  healICPSRLoginNeeded: boolean
+  healICPSRLoginNeeded: boolean,
 ) => {
   console.log('selectedResources', selectedResources);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`'
+      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
 
@@ -384,7 +378,7 @@ const handleDownloadManifestClick = (
           ...study[manifestFieldName].map((x) => ({
             ...x,
             commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          }))
+          })),
         );
       } else {
         manifest.push(...study[manifestFieldName]);
@@ -414,12 +408,12 @@ const handleExportToWorkspaceClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
   location: any,
-  healICPSRLoginNeeded: boolean
+  healICPSRLoginNeeded: boolean,
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`'
+      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
 
@@ -433,7 +427,7 @@ const handleExportToWorkspaceClick = async (
       selectedResources,
       manifestFieldName,
       history,
-      location
+      location,
     );
     if (!isLinked) {
       return;
@@ -452,7 +446,7 @@ const handleExportToWorkspaceClick = async (
           ...study[manifestFieldName].map((x) => ({
             ...x,
             commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          }))
+          })),
         );
       } else {
         manifest.push(...study[manifestFieldName]);
@@ -477,7 +471,7 @@ const handleExportToWorkspaceClick = async (
   });
   if (res.status !== 200) {
     throw new Error(
-      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`
+      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
     );
   }
   setExportingToWorkspace(false);
@@ -503,8 +497,8 @@ const DiscoveryActionBar = (props: Props) => {
         const runningJobs: JobStatus[] = jobsListResponse.data;
         runningJobs.forEach((job) => {
           if (
-            job.status === 'Running' &&
-            job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)
+            job.status === 'Running'
+            && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)
           ) {
             setDownloadStatus({ ...downloadStatus, inProgress: true });
             setTimeout(
@@ -513,7 +507,7 @@ const DiscoveryActionBar = (props: Props) => {
               job.uid,
               downloadStatus,
               setDownloadStatus,
-              props.discovery.selectedResources
+              props.discovery.selectedResources,
             );
           }
         });
@@ -525,13 +519,11 @@ const DiscoveryActionBar = (props: Props) => {
     if (bundle === 'heal') {
       // check selected studies for ICPSR study
       if (
-        props.discovery.selectedResources.some((resource) =>
-          resource?.tags.some(
-            (tag: { name: string; category: string }) =>
-              tag?.name === 'ICPSR' &&
-              (tag?.category === 'Data Repository' ||
-                tag?.category === 'Commons')
-          )
+        props.discovery.selectedResources.some((resource) => resource?.tags.some(
+          (tag: { name: string; category: string }) => tag?.name === 'ICPSR'
+              && (tag?.category === 'Data Repository'
+                || tag?.category === 'Commons'),
+        ),
         )
       ) {
         // check if user is logged in via InCommons
@@ -561,7 +553,7 @@ const DiscoveryActionBar = (props: Props) => {
         setDownloadStatus,
         history,
         location,
-        healICPSRLoginNeededLogic()
+        healICPSRLoginNeededLogic(),
       );
       props.onActionResumed();
     } else if (props.discovery.actionToResume === 'export') {
@@ -572,21 +564,21 @@ const DiscoveryActionBar = (props: Props) => {
         setDownloadStatus,
         history,
         location,
-        healICPSRLoginNeededLogic()
+        healICPSRLoginNeededLogic(),
       );
       props.onActionResumed();
     } else if (props.discovery.actionToResume === 'manifest') {
       handleDownloadManifestClick(
         props.config,
         props.discovery.selectedResources,
-        healICPSRLoginNeededLogic()
+        healICPSRLoginNeededLogic(),
       );
       props.onActionResumed();
     }
   }, [props.discovery.actionToResume]);
 
   const handleRedirectToLoginClick = (
-    action: 'download' | 'export' | 'manifest' | null = null
+    action: 'download' | 'export' | 'manifest' | null = null,
   ) => {
     const serializableState = {
       ...props.discovery,
@@ -594,17 +586,16 @@ const DiscoveryActionBar = (props: Props) => {
       // reduce the size of the redirect url by only storing resource id
       // resource id is remapped to its resource after redirect and resources load in index component
       selectedResourceIDs: props.discovery.selectedResources.map(
-        (resource) => resource[props.config.minimalFieldMapping.uid]
+        (resource) => resource[props.config.minimalFieldMapping.uid],
       ),
     };
     delete serializableState.selectedResources;
     const queryStr = `?state=${encodeURIComponent(
-      JSON.stringify(serializableState)
+      JSON.stringify(serializableState),
     )}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
-  const onlyInCommonMsg =
-    'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
+  const onlyInCommonMsg = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
 
   const downloadZipButton = props.config.features.exportToWorkspace
     ?.enableDownloadZip && (
@@ -612,13 +603,13 @@ const DiscoveryActionBar = (props: Props) => {
       <Popover
         className='discovery-popover'
         arrowPointAtCenter
-        content={
+        content={(
           <React.Fragment>
             {healICPSRLoginNeeded
               ? onlyInCommonMsg
               : 'Directly download data (up to 250Mb) from selected studies'}
           </React.Fragment>
-        }
+        )}
       >
         <Button
           onClick={async () => {
@@ -630,7 +621,7 @@ const DiscoveryActionBar = (props: Props) => {
                 setDownloadStatus,
                 history,
                 location,
-                healICPSRLoginNeeded
+                healICPSRLoginNeeded,
               );
             } else {
               handleRedirectToLoginClick('download');
@@ -641,8 +632,8 @@ const DiscoveryActionBar = (props: Props) => {
             props.discovery.selectedResources.length === 0 ? '--disabled' : ''
           }`}
           disabled={
-            props.discovery.selectedResources.length === 0 ||
-            downloadStatus.inProgress
+            props.discovery.selectedResources.length === 0
+            || downloadStatus.inProgress
           }
           icon={<DownloadOutlined />}
           loading={downloadStatus.inProgress}
@@ -653,13 +644,13 @@ const DiscoveryActionBar = (props: Props) => {
                 return 'Preparing download...';
               }
               return `${
-                props.config.features.exportToWorkspace.downloadZipButtonText ||
-                'Download Zip'
+                props.config.features.exportToWorkspace.downloadZipButtonText
+                || 'Download Zip'
               }`;
             }
             return `Login to ${
-              props.config.features.exportToWorkspace.downloadZipButtonText ||
-              'Download Zip'
+              props.config.features.exportToWorkspace.downloadZipButtonText
+              || 'Download Zip'
             }`;
           })()}
         </Button>
@@ -668,22 +659,20 @@ const DiscoveryActionBar = (props: Props) => {
         closable={false}
         open={downloadStatus.message.active}
         title={downloadStatus.message.title}
-        footer={
+        footer={(
           <Button
-            onClick={() =>
-              setDownloadStatus({
-                ...downloadStatus,
-                message: {
-                  title: '',
-                  content: <React.Fragment />,
-                  active: false,
-                },
-              })
-            }
+            onClick={() => setDownloadStatus({
+              ...downloadStatus,
+              message: {
+                title: '',
+                content: <React.Fragment />,
+                active: false,
+              },
+            })}
           >
             Close
           </Button>
-        }
+        )}
       >
         {downloadStatus.message.content}
       </Modal>
@@ -695,7 +684,7 @@ const DiscoveryActionBar = (props: Props) => {
     <Popover
       className='discovery-popover'
       arrowPointAtCenter
-      title={
+      title={(
         <React.Fragment>
           {healICPSRLoginNeeded ? (
             onlyInCommonMsg
@@ -713,27 +702,27 @@ const DiscoveryActionBar = (props: Props) => {
             </React.Fragment>
           )}
         </React.Fragment>
-      }
-      content={
+      )}
+      content={(
         <span className='discovery-popover__text'>
           With the Manifest File, you can use the Gen3 Client to download the
           data from the selected studies to your local computer.
         </span>
-      }
+      )}
     >
       <Button
         onClick={
           props.user.username && !healICPSRLoginNeeded
             ? () => {
-                handleDownloadManifestClick(
-                  props.config,
-                  props.discovery.selectedResources,
-                  healICPSRLoginNeeded
-                );
-              }
+              handleDownloadManifestClick(
+                props.config,
+                props.discovery.selectedResources,
+                healICPSRLoginNeeded,
+              );
+            }
             : () => {
-                handleRedirectToLoginClick('manifest');
-              }
+              handleRedirectToLoginClick('manifest');
+            }
         }
         type='default'
         className={`discovery-action-bar-button${
@@ -744,13 +733,13 @@ const DiscoveryActionBar = (props: Props) => {
       >
         {props.user.username && !healICPSRLoginNeeded
           ? `${
-              props.config.features.exportToWorkspace
-                .downloadManifestButtonText || 'Download Manifest'
-            }`
+            props.config.features.exportToWorkspace
+              .downloadManifestButtonText || 'Download Manifest'
+          }`
           : `Login to ${
-              props.config.features.exportToWorkspace
-                .downloadManifestButtonText || 'Download Manifest'
-            }`}
+            props.config.features.exportToWorkspace
+              .downloadManifestButtonText || 'Download Manifest'
+          }`}
       </Button>
     </Popover>
   );
@@ -760,7 +749,7 @@ const DiscoveryActionBar = (props: Props) => {
     <Popover
       className='discovery-popover'
       arrowPointAtCenter
-      content={
+      content={(
         <React.Fragment>
           {healICPSRLoginNeeded ? (
             onlyInCommonMsg
@@ -778,7 +767,7 @@ const DiscoveryActionBar = (props: Props) => {
             </React.Fragment>
           )}
         </React.Fragment>
-      }
+      )}
     >
       <Button
         type='default'
@@ -791,19 +780,19 @@ const DiscoveryActionBar = (props: Props) => {
         onClick={
           props.user.username && !healICPSRLoginNeeded
             ? async () => {
-                handleExportToWorkspaceClick(
-                  props.config,
-                  props.discovery.selectedResources,
-                  props.setExportingToWorkspace,
-                  setDownloadStatus,
-                  history,
-                  location,
-                  healICPSRLoginNeeded
-                );
-              }
+              handleExportToWorkspaceClick(
+                props.config,
+                props.discovery.selectedResources,
+                props.setExportingToWorkspace,
+                setDownloadStatus,
+                history,
+                location,
+                healICPSRLoginNeeded,
+              );
+            }
             : () => {
-                handleRedirectToLoginClick('export');
-              }
+              handleRedirectToLoginClick('export');
+            }
         }
       >
         {props.user.username && !healICPSRLoginNeeded
@@ -824,8 +813,8 @@ const DiscoveryActionBar = (props: Props) => {
             disabled={props.disableFilterButton}
             type='text'
           >
-            {props.config.features.advSearchFilters.displayName ||
-              'ADVANCED SEARCH'}
+            {props.config.features.advSearchFilters.displayName
+              || 'ADVANCED SEARCH'}
             {props.filtersVisible ? <LeftOutlined /> : <RightOutlined />}
           </Button>
         ) : (
