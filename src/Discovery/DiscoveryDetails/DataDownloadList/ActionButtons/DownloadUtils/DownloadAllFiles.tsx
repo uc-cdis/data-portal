@@ -26,7 +26,7 @@ const DOWNLOAD_FAIL_STATUS: DownloadStatus = {
 const DownloadAllFiles = (
   studyIDs: any[],
   downloadStatus: DownloadStatus,
-  setDownloadStatus: (arg0: DownloadStatus)
+  setDownloadStatus: (arg0: DownloadStatus) => void
 ) => {
   console.log('called downloadAllFiles' + downloadAllFilesCnt++);
   fetchWithCreds({
@@ -44,8 +44,12 @@ const DownloadAllFiles = (
           inProgress: false,
           message: {
             title: 'Download failed',
-            content:
-               <p>Unable to authorize download. Please refresh the page and ensure you are logged in.</p>,
+            content: (
+              <p>
+                Unable to authorize download. Please refresh the page and ensure
+                you are logged in.
+              </p>
+            ),
             active: true,
           },
         });

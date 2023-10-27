@@ -1,9 +1,8 @@
 import React from 'react';
 import { List } from 'antd';
-import DataDownloadListItem from './Utils/DataDownloadListItem';
+import DataDownloadListItem from '../DataDownloadList/Interfaces/DataDownloadListItem';
 import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
-import ButtonsRow from './ActionButtons/ActionButtons';
 import ActionButtons from './ActionButtons/ActionButtons';
 
 const DataDownloadList = ({

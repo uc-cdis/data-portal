@@ -5,8 +5,11 @@ import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import './ActionButtons.css';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
 
-const ActionButtons = ({ discoveryConfig, resourceInfo, data }) => {
-  /* NEW STUFF OCT 19 */
+const ActionButtons = ({
+  discoveryConfig,
+  resourceInfo,
+  data,
+}): JSX.Element => {
   console.log('resourceInfo ', resourceInfo);
   console.log('study_id', resourceInfo.study_id);
   console.log('data', data);
@@ -36,31 +39,35 @@ const ActionButtons = ({ discoveryConfig, resourceInfo, data }) => {
             Study-Level Metadata
           </Button>
         </Col>
-        <Col flex='1 0 auto'>
-          <Button
-            className='discovery-action-bar-button'
-            onClick={() => {
-              console.log('discoveryConfig', discoveryConfig);
-              HandleDownloadManifestClick(
-                discoveryConfig,
-                [resourceInfo],
-                false
-              );
-            }}
-          >
-            Download File Manifest
-          </Button>
-        </Col>
-        <Col flex='1 0 auto'>
-          <Button
-            className='discovery-action-bar-button'
-            onClick={() =>
-              DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
-            }
-          >
-            Download All Files
-          </Button>
-        </Col>
+        {discoveryConfig.features.exportToWorkspace.enableDownloadManifest && (
+          <Col flex='1 0 auto'>
+            <Button
+              className='discovery-action-bar-button'
+              onClick={() => {
+                console.log('discoveryConfig', discoveryConfig);
+                HandleDownloadManifestClick(
+                  discoveryConfig,
+                  [resourceInfo],
+                  false
+                );
+              }}
+            >
+              Download File Manifest
+            </Button>
+          </Col>
+        )}
+        {discoveryConfig.features.exportToWorkspace.enableDownloadZip && (
+          <Col flex='1 0 auto'>
+            <Button
+              className='discovery-action-bar-button'
+              onClick={() =>
+                DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
+              }
+            >
+              Download All Files
+            </Button>
+          </Col>
+        )}
       </Row>
     </div>
   );

@@ -3,14 +3,14 @@ import { Button, Modal } from 'antd';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
 interface DownloadAllModalPropsInterface {
-  downloadStatus: DownloadStatus,
-  setDownloadStatus: (arg0: DownloadStatus),
+  downloadStatus: DownloadStatus;
+  setDownloadStatus: (arg0: DownloadStatus) => void;
 }
 
 const DownloadAllModal = ({
   downloadStatus,
-  setDownloadStatus
-}: DownloadAllModalPropsInterface) => {
+  setDownloadStatus,
+}: DownloadAllModalPropsInterface): JSX.Element => {
   return (
     <Modal
       closable={false}
