@@ -80,8 +80,12 @@ const DownloadAllFiles = (
     })
     .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
-// TO DO - put back type annontations
-const checkDownloadStatus = (uid, downloadStatus, setDownloadStatus) => {
+
+const checkDownloadStatus = (
+  uid: string,
+  downloadStatus: DownloadStatus,
+  setDownloadStatus: (arg0: DownloadStatus) => void
+) => {
   console.log('called checkDownloadStatus' + checkDownloadStatusCnt++);
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
