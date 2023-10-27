@@ -33,12 +33,16 @@ const ActionButtons = ({
             Variable-Level Metadata
           </Button>
         </Col>
-        <Col flex='1 0 auto'>
-          <Button className='discovery-action-bar-button'>
-            Download <br />
-            Study-Level Metadata
-          </Button>
-        </Col>
+        {discoveryConfig.features.exportToWorkspace.studyMetadataFieldName &&
+          discoveryConfig.features.exportToWorkspace
+            .enableDownloadStudyMetadata && (
+            <Col flex='1 0 auto'>
+              <Button className='discovery-action-bar-button'>
+                Download <br />
+                Study-Level Metadata
+              </Button>
+            </Col>
+          )}
         {discoveryConfig.features.exportToWorkspace.enableDownloadManifest && (
           <Col flex='1 0 auto'>
             <Button
