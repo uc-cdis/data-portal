@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Col, Row, Button, Modal } from 'antd';
-
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import './ActionButtons.css';
@@ -14,7 +13,7 @@ const ActionButtons = ({ discoveryConfig, resourceInfo, data }) => {
 
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
-    message: { title: '', content: '', active: false },
+    message: { title: '', content: <React.Fragment />, active: false },
   });
   const studyIDs = [resourceInfo.study_id];
 

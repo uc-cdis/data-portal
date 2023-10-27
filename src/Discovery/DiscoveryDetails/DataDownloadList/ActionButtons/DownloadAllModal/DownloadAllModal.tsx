@@ -1,7 +1,16 @@
 import React from 'react';
 import { Button, Modal } from 'antd';
+import DownloadStatus from '../../Interfaces/DownloadStatus';
 
-const DownloadAllModal = ({ downloadStatus, setDownloadStatus }) => {
+interface DownloadAllModalPropsInterface {
+  downloadStatus: DownloadStatus,
+  setDownloadStatus: (arg0: DownloadStatus),
+}
+
+const DownloadAllModal = ({
+  downloadStatus,
+  setDownloadStatus
+}: DownloadAllModalPropsInterface) => {
   return (
     <Modal
       closable={false}
