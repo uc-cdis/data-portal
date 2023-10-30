@@ -54,6 +54,7 @@ interface Props {
     actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
+  systemPopupActivated: boolean;
   onActionResumed: () => any
 }
 
@@ -256,7 +257,7 @@ const handleDownloadZipClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
   location,
-  healICPSRLoginNeeded,
+  healIDPLoginNeeded,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
@@ -266,7 +267,7 @@ const handleDownloadZipClick = async (
     }
   }
 
-  if (healICPSRLoginNeeded) {
+  if (healIDPLoginNeeded) {
     return;
   }
 
@@ -304,13 +305,13 @@ const handleDownloadZipClick = async (
   ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[], healICPSRLoginNeeded: boolean) => {
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[], healIDPLoginNeeded: boolean) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
 
-  if (healICPSRLoginNeeded) {
+  if (healIDPLoginNeeded) {
     return;
   }
   // combine manifests from all selected studies
@@ -350,14 +351,14 @@ const handleExportToWorkspaceClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
   location: any,
-  healICPSRLoginNeeded: boolean,
+  healIDPLoginNeeded: boolean,
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
 
-  if (healICPSRLoginNeeded) {
+  if (healIDPLoginNeeded) {
     return;
   }
 
@@ -418,7 +419,7 @@ const DiscoveryActionBar = (props: Props) => {
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
-  const [healICPSRLoginNeeded, setHealICPSRLoginNeeded] = useState(false);
+  const [healIDPLoginNeeded, setHealIDPLoginNeeded] = useState<string[]>([]);
 
   // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
@@ -446,25 +447,38 @@ const DiscoveryActionBar = (props: Props) => {
     [props.discovery.selectedResources],
   );
 
-  const healICPSRLoginNeededLogic = useCallback(() => {
+  const healRequiredIDPLogic = useCallback(() => {
     if (bundle === 'heal') {
-      // check selected studies for ICPSR study
-      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag: { name: string; category: string; }) => tag?.name === 'ICPSR' && (tag?.category === 'Data Repository' || tag?.category === 'Commons')))) {
-        // check if user is logged in via InCommons
-        if (props.user.fence_idp !== 'shibboleth') {
-          // if not logged in via InCommons show special messaging
-          return true;
+      // HP-1233 Generalize IdP-based access control
+      // Find which resources Required IDP
+      const requiredIDP:string[] = [];
+      props.discovery.selectedResources.forEach((resource) => resource?.tags.forEach((tag: { name: string; category: string; }) => {
+        if (tag?.category === 'RequiredIDP' && tag?.name) {
+          // If any resources RequiredIDP check if logged in
+          switch (tag.name) {
+          case 'InCommon':
+            if (props.user.fence_idp === 'shibboleth') {
+              return; // do not add tag to list
+            }
+            break;
+          default:
+            // eslint-disable-next-line no-console
+            console.log(`RequiredIDP does not expect: ${tag?.name}`);
+            return; // do not add tag to list
+          }
+          requiredIDP.push(tag.name);
         }
-      }
+      }));
+      return requiredIDP;
     }
-    return false;
+    return [];
   }, [props.discovery.selectedResources, props.user.fence_idp]);
 
   useEffect(
     () => {
-      setHealICPSRLoginNeeded(healICPSRLoginNeededLogic);
+      setHealIDPLoginNeeded(healRequiredIDPLogic);
     },
-    [props.discovery.selectedResources, props.user.fence_idp, healICPSRLoginNeededLogic],
+    [props.discovery.selectedResources, props.user.fence_idp, healRequiredIDPLogic],
   );
 
   useEffect(
@@ -477,7 +491,7 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
-          healICPSRLoginNeededLogic(),
+          healRequiredIDPLogic().length > 0,
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
@@ -488,14 +502,14 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
-          healICPSRLoginNeededLogic(),
+          healRequiredIDPLogic().length > 0,
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'manifest') {
         handleDownloadManifestClick(
           props.config,
           props.discovery.selectedResources,
-          healICPSRLoginNeededLogic(),
+          healRequiredIDPLogic().length > 0,
         );
         props.onActionResumed();
       }
@@ -516,7 +530,8 @@ const DiscoveryActionBar = (props: Props) => {
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
-  const onlyInCommonMsg = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
+  const onlyInCommonMsg = healIDPLoginNeeded.length > 1 ? `Data selection requires [${healIDPLoginNeeded.join(', ')}] credentials to access. Please change selection to only need one set of credentials and log in using appropriate credentials`
+    : `This dataset is only accessible to users who have authenticated via ${healIDPLoginNeeded}. Please log in using the ${healIDPLoginNeeded} option.`;
 
   const downloadZipButton = (
     props.config.features.exportToWorkspace?.enableDownloadZip
@@ -527,7 +542,7 @@ const DiscoveryActionBar = (props: Props) => {
           arrowPointAtCenter
           content={(
             <React.Fragment>
-              {healICPSRLoginNeeded
+              {healIDPLoginNeeded.length > 0
                 ? onlyInCommonMsg
                 : 'Directly download data (up to 250Mb) from selected studies'}
             </React.Fragment>
@@ -536,7 +551,7 @@ const DiscoveryActionBar = (props: Props) => {
           <Button
             onClick={
               async () => {
-                if (props.user.username && !healICPSRLoginNeeded) {
+                if (props.user.username && !(healIDPLoginNeeded.length > 0)) {
                   handleDownloadZipClick(
                     props.config,
                     props.discovery.selectedResources,
@@ -544,7 +559,7 @@ const DiscoveryActionBar = (props: Props) => {
                     setDownloadStatus,
                     history,
                     location,
-                    healICPSRLoginNeeded,
+                    healIDPLoginNeeded.length > 0,
                   );
                 } else {
                   handleRedirectToLoginClick('download');
@@ -559,7 +574,7 @@ const DiscoveryActionBar = (props: Props) => {
           >
             { (
               () => {
-                if (props.user.username && !healICPSRLoginNeeded) {
+                if (props.user.username && !(healIDPLoginNeeded.length > 0)) {
                   if (downloadStatus.inProgress) {
                     return 'Preparing download...';
                   }
@@ -572,7 +587,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          open={downloadStatus.message.active}
+          open={downloadStatus.message.active && !props.systemPopupActivated}
           title={downloadStatus.message.title}
           footer={(
             <Button
@@ -604,7 +619,7 @@ const DiscoveryActionBar = (props: Props) => {
         arrowPointAtCenter
         title={(
           <React.Fragment>
-            {healICPSRLoginNeeded
+            {healIDPLoginNeeded.length > 0
               ? onlyInCommonMsg
               : (
                 <React.Fragment>
@@ -623,8 +638,8 @@ const DiscoveryActionBar = (props: Props) => {
         )}
       >
         <Button
-          onClick={(props.user.username && !healICPSRLoginNeeded) ? () => {
-            handleDownloadManifestClick(props.config, props.discovery.selectedResources, healICPSRLoginNeeded);
+          onClick={(props.user.username && !(healIDPLoginNeeded.length > 0)) ? () => {
+            handleDownloadManifestClick(props.config, props.discovery.selectedResources, healIDPLoginNeeded.length > 0);
           }
             : () => { handleRedirectToLoginClick('manifest'); }}
           type='default'
@@ -632,7 +647,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           icon={<FileTextOutlined />}
         >
-          {(props.user.username && !healICPSRLoginNeeded) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+          {(props.user.username && !(healIDPLoginNeeded.length > 0)) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
             : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
         </Button>
 
@@ -647,7 +662,7 @@ const DiscoveryActionBar = (props: Props) => {
         className='discovery-popover'
         arrowPointAtCenter
         content={(
-          <React.Fragment>{healICPSRLoginNeeded
+          <React.Fragment>{healIDPLoginNeeded.length > 0
             ? onlyInCommonMsg
             : (
               <React.Fragment>
@@ -666,7 +681,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           loading={props.exportingToWorkspace}
           icon={<ExportOutlined />}
-          onClick={(props.user.username && !healICPSRLoginNeeded) ? async () => {
+          onClick={(props.user.username && !(healIDPLoginNeeded.length > 0)) ? async () => {
             handleExportToWorkspaceClick(
               props.config,
               props.discovery.selectedResources,
@@ -674,12 +689,12 @@ const DiscoveryActionBar = (props: Props) => {
               setDownloadStatus,
               history,
               location,
-              healICPSRLoginNeeded,
+              healIDPLoginNeeded.length > 0,
             );
           }
             : () => { handleRedirectToLoginClick('export'); }}
         >
-          {(props.user.username && !healICPSRLoginNeeded) ? 'Open In Workspace' : 'Login to Open In Workspace'}
+          {(props.user.username && !(healIDPLoginNeeded.length > 0)) ? 'Open In Workspace' : 'Login to Open In Workspace'}
         </Button>
       </Popover>
     )
