@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
-import { Spin } from 'antd';
+import { Spin, Row, Col } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { TourProvider } from '@reactour/tour';
@@ -9,10 +9,12 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
-import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
+import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
+import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
+import './AnalysisApp.css';
 
 const queryClient = new QueryClient();
 
@@ -67,8 +69,8 @@ class AnalysisApp extends React.Component {
     // ONLY process messages coming from the same domain as the app AND
     // which contain the message "refresh token!":
     if (
-      event.origin === applicationBaseUrl
-      && event.data === 'refresh token!'
+      event.origin === applicationBaseUrl &&
+      event.data === 'refresh token!'
     ) {
       // Call function to refresh session:
       sessionMonitor.updateUserActivity();
@@ -77,81 +79,81 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={analysisApps[app].options}
-            onChange={this.selectChange}
-          />
-          <Button
-            label='Run Analysis'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'ndhHIV':
-      return <HIVCohortFilter />;
-    case 'ndhVirus':
-      return (
-        <React.Fragment>
-          <input
-            className='text-input'
-            type='text'
-            placeholder='input data'
-            name='input'
-          />
-          <Button
-            label='Run'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'GWASResults':
-      return (
-        <div className='analysis-app_flex_row'>
-          <GWASResultsContainer />
-        </div>
-      );
-    case 'GWASUIApp': {
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-            setCurrentStep(0);
-          }}
-        >
-          <div>
-            <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-          </div>
-        </TourProvider>
-      );
-    }
-    default:
-      // this will ensure the main window will process the app messages (if any):
-      window.addEventListener('message', this.processAppMessages);
-      return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
-              onLoad={this.handleIframeApp}
+      case 'vaGWAS':
+        return (
+          <React.Fragment>
+            <Select
+              value={this.state.jobInput}
+              placeholder='Select your organ'
+              options={analysisApps[app].options}
+              onChange={this.selectChange}
             />
+            <Button
+              label='Run Analysis'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'ndhHIV':
+        return <HIVCohortFilter />;
+      case 'ndhVirus':
+        return (
+          <React.Fragment>
+            <input
+              className='text-input'
+              type='text'
+              placeholder='input data'
+              name='input'
+            />
+            <Button
+              label='Run'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'GWASResults':
+        return (
+          <div className='analysis-app_flex_row'>
+            <GWASResultsContainer />
           </div>
-        </React.Fragment>
-      );
+        );
+      case 'GWASUIApp': {
+        return (
+          <TourProvider
+            afterOpen={disableBody}
+            beforeClose={enableBody}
+            disableInteraction
+            onClickClose={({ setCurrentStep, setIsOpen }) => {
+              setIsOpen(false);
+              setCurrentStep(0);
+            }}
+          >
+            <div>
+              <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+            </div>
+          </TourProvider>
+        );
+      }
+      default:
+        // this will ensure the main window will process the app messages (if any):
+        window.addEventListener('message', this.processAppMessages);
+        return (
+          <React.Fragment>
+            <div className='analysis-app__iframe-wrapper'>
+              <iframe
+                className='analysis-app__iframe'
+                title='Analysis App'
+                frameBorder='0'
+                src={`${this.state.app.applicationUrl}`}
+                onLoad={this.handleIframeApp}
+              />
+            </div>
+          </React.Fragment>
+        );
     }
   };
 
@@ -167,7 +169,7 @@ class AnalysisApp extends React.Component {
         if (option === null || this.props.job) {
           this.props.resetJobState();
         }
-      },
+      }
     );
   };
 
@@ -227,7 +229,22 @@ class AnalysisApp extends React.Component {
         <BackLink url='/analysis' label='Back to Apps' />
         {loaded ? (
           <div className='analysis-app'>
-            <h2 className='analysis-app__title'>{app.title}</h2>
+            <Row>
+              <Col flex='1 0 auto'>
+                <h2>{app.title}</h2>
+              </Col>
+              {CheckForTeamProjectApplication(analysisApps) && (
+                <Col flex='1 0 auto'>
+                  <QueryClientProvider
+                    client={new QueryClient()}
+                    contextSharing
+                  >
+                    <TeamProjectHeader showButton={false} />
+                  </QueryClientProvider>
+                </Col>
+              )}
+            </Row>
+
             <p className='analysis-app__description'>{app.description}</p>
             <div
               className={`${
