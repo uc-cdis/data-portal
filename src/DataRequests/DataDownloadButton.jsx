@@ -43,12 +43,7 @@ DataDownloadButton.propTypes = {
   project: PropTypes.shape({
     has_access: PropTypes.bool,
     id: PropTypes.number,
-    status: PropTypes.oneOf([
-      'Approved',
-      'Rejected',
-      'In Review',
-      'Data Available',
-    ]),
+    status: PropTypes.string,
   }),
 };
 
