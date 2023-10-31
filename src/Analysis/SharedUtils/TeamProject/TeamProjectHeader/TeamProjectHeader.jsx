@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
@@ -11,13 +12,17 @@ const TeamProjectHeader = ({ showButton }) => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const history = useHistory();
 
   useEffect(() => {
     const storedTeamProject = localStorage.getItem('teamProject');
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
-    } else {
+    } else if (showButton) {
       showModal();
+    } else if (!showButton && !storedTeamProject) {
+      // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
+      history.push('/analysis');
     }
   }, []);
 
