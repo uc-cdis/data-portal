@@ -28,7 +28,7 @@ const TeamProjectHeader = ({ showButton }) => {
 
   return (
     <React.Fragment>
-      <h3 className='team-project-header'>
+      <div className='team-project-header'>
         <strong>Team Project</strong> / {bannerText}
         {showButton && (
           <span
@@ -46,7 +46,7 @@ const TeamProjectHeader = ({ showButton }) => {
             <EditIcon />
           </span>
         )}
-      </h3>
+      </div>
       {showButton && (
         <TeamProjectModal
           isModalOpen={isModalOpen}
