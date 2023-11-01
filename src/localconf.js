@@ -444,6 +444,8 @@ function buildConfig(opts) {
         default:
           break;
         }
+      } else if (at.appId) {
+        analysisApps[at.appId] = at;
       } else if (at.title) {
         analysisApps[at.title] = at;
       }
