@@ -1,9 +1,7 @@
-const TeamProjectApplications = ['OHDSI Atlas', 'GWASUIApp', 'GWASResults'];
-
 const CheckForTeamProjectApplication = (analysisApps) => {
   let hasTeamProjectApplication = false;
-  TeamProjectApplications.forEach((applicationKey) => {
-    if (applicationKey in analysisApps) {
+  Object.values(analysisApps).forEach((analysisApp) => {
+    if (analysisApp.needsTeamProject) {
       hasTeamProjectApplication = true;
     }
   });
