@@ -24,7 +24,7 @@ const TeamProjectHeader = ({ showButton }) => {
       // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
       history.push('/analysis');
     }
-  }, []);
+  }, [history, showButton]);
 
   return (
     <React.Fragment>
