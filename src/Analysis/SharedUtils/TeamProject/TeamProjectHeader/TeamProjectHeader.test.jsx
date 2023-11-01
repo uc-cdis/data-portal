@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, screen, fireEvent, waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -21,12 +19,12 @@ beforeEach(() => {
   });
 });
 
-test('renders TeamProjectHeader with default props when showButton is true', () => {
+test('renders TeamProjectHeader with default props when showButton is true and no local storage', () => {
   localStorageMock.getItem.mockReturnValueOnce(null);
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader showButton />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
@@ -34,7 +32,7 @@ test('renders TeamProjectHeader with default props when showButton is true', () 
 });
 
 test(`Calls useHistory for redirect to analysis page when showButton is
-  false and teamProject is not set in local storage`, async () => {
+  false and teamProject is not set in local storage`, () => {
   // Mock localStorage
   localStorageMock.getItem.mockReturnValueOnce(null);
   // Create a history object
@@ -46,21 +44,19 @@ test(`Calls useHistory for redirect to analysis page when showButton is
       <QueryClientProvider client={new QueryClient()} contextSharing>
         <TeamProjectHeader showButton={false} />
       </QueryClientProvider>
-    </Router>,
+    </Router>
   );
 
   // Check if history.push('/analysis') is called
-  // screen.debug();
-  await waitFor(() => {
-    expect(history.location.pathname).toBe('/analysis');
-  });
+
+  expect(history.location.pathname).toBe('/analysis');
 });
 
 test('renders TeamProjectHeader with edit button when showButton is true and can open modal', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader showButton />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 
   // Assert that the component renders with the edit button
@@ -78,7 +74,7 @@ test('Renders project name based on local storage value', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
   // Assert that the component renders with the banner text from localStorage
   expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();
