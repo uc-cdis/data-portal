@@ -22,6 +22,7 @@ const tableHeader = [
   'Submitted Date',
   'Completed Date',
   'Status',
+  'Consortia'
 ];
 
 /** @param {ResearcherInfo} researcher */
@@ -73,7 +74,8 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
             .replaceAll(' ', '-')}`}
         >
           {project.status}
-        </span>
+        </span>,
+        project.consortia
       ];
 
       if (project.has_access) {

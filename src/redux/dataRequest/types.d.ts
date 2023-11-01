@@ -45,6 +45,7 @@ export type ResearcherInfo = {
 
 export type DataRequestProject = {
   completed_at: string,
+  consortia: string[],
   has_access: boolean,
   id: number,
   name: string,
