@@ -1,7 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback,
+} from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
-  Space, Popover, Button, Modal, Table,
+  Space,
+  Popover,
+  Button,
+  Modal,
+  Table,
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -16,11 +22,7 @@ import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
-  manifestServiceApiPath,
-  hostname,
-  jobAPIPath,
-  externalLoginOptionsUrl,
-  bundle,
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl, bundle,
 } from '../localconf';
 
 interface User {
@@ -38,7 +40,7 @@ interface DownloadStatus {
     content: JSX.Element;
     active: boolean;
     title: string;
-  };
+  }
 }
 interface Props {
   config: DiscoveryConfig;
@@ -47,19 +49,19 @@ interface Props {
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   disableFilterButton: boolean;
-  user: User;
+  user: User,
   discovery: {
-    actionToResume: 'download' | 'export' | 'manifest';
+    actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
-  onActionResumed: () => any;
+  onActionResumed: () => any
 }
 
 const BATCH_EXPORT_JOB_PREFIX = 'batch-export';
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//;
 const DOWNLOAD_UNAUTHORIZED_MESSAGE = 'Unable to authorize download. Please refresh the page and ensure you are logged in.';
 const DOWNLOAD_STARTED_MESSAGE = 'Please remain on this page until your download completes. When your download is ready, '
-  + 'it will begin automatically. You can close this window.';
++ 'it will begin automatically. You can close this window.';
 const DOWNLOAD_SUCCEEDED_MESSAGE = 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:';
 const JOB_POLLING_INTERVAL = 5000;
 
@@ -68,10 +70,8 @@ const DOWNLOAD_FAIL_STATUS = {
   message: {
     title: 'Download failed',
     content: (
-      <p>
-        {' '}
-        There was a problem preparing your download. Please consider using the
-        Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
+      <p> There was a problem preparing your download.
+        Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
       </p>
     ),
     active: true,
@@ -87,52 +87,46 @@ const checkFederatedLoginStatus = async (
 ) => fetchWithCreds({
   path: `${externalLoginOptionsUrl}`,
   method: 'GET',
-})
-  .then(async ({ data, status }) => {
+}).then(
+  async ({ data, status }) => {
     if (status !== 200) {
       return false;
     }
     const { providers } = data;
-    const unauthenticatedProviders = providers.filter(
-      (provider) => !provider.refresh_token_expiration,
-    );
+    const unauthenticatedProviders = providers.filter((provider) => !provider.refresh_token_expiration);
 
-    const guidsForHostnameResolution: any = [];
-    const guidPrefixes: any = [];
-    selectedResources.forEach((selectedResource) => {
-      (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
-        if (fileMetadata.object_id) {
-          const guidDomainPrefix = (
-            fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
-          ).shift();
-          if (guidDomainPrefix) {
-            if (!guidPrefixes.includes(guidDomainPrefix)) {
-              guidPrefixes.push(guidDomainPrefix);
-              guidsForHostnameResolution.push(fileMetadata.object_id);
+    const guidsForHostnameResolution:any = [];
+    const guidPrefixes:any = [];
+    selectedResources.forEach(
+      (selectedResource) => {
+        (selectedResource[manifestFieldName] || []).forEach(
+          (fileMetadata) => {
+            if (fileMetadata.object_id) {
+              const guidDomainPrefix = (fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []).shift();
+              if (guidDomainPrefix) {
+                if (!guidPrefixes.includes(guidDomainPrefix)) {
+                  guidPrefixes.push(guidDomainPrefix);
+                  guidsForHostnameResolution.push(fileMetadata.object_id);
+                }
+              } else {
+                guidsForHostnameResolution.push(fileMetadata.object_id);
+              }
             }
-          } else {
-            guidsForHostnameResolution.push(fileMetadata.object_id);
-          }
-        }
-      });
-    });
+          });
+      },
+    );
     const guidResolutions = await Promise.all(
-      guidsForHostnameResolution.map((guid) => fetch(`https://dataguids.org/index/${guid}`)
-        .then((r) => r.json())
-        .catch(() => {}),
+      guidsForHostnameResolution.map(
+        (guid) => fetch(`https://dataguids.org/index/${guid}`).then((r) => r.json()).catch(() => {}),
       ),
     );
-    const externalHosts = guidResolutions
-      .filter(
-        (resolvedGuid) => resolvedGuid && resolvedGuid.from_index_service,
-      )
-      .map(
-        (resolvedGuid) => new URL(resolvedGuid.from_index_service.host).host,
-      );
+    const externalHosts = guidResolutions.filter(
+      (resolvedGuid) => resolvedGuid && resolvedGuid.from_index_service,
+    ).map(
+      (resolvedGuid) => new URL(resolvedGuid.from_index_service.host).host,
+    );
     const providersToAuthenticate = unauthenticatedProviders.filter(
-      (unauthenticatedProvider) => externalHosts.includes(
-        new URL(unauthenticatedProvider.base_url).hostname,
-      ),
+      (unauthenticatedProvider) => externalHosts.includes(new URL(unauthenticatedProvider.base_url).hostname),
     );
     if (providersToAuthenticate.length) {
       setDownloadStatus({
@@ -142,41 +136,33 @@ const checkFederatedLoginStatus = async (
           active: true,
           content: (
             <React.Fragment>
-              <p>
-                  The data you have selected requires authorization with the
-                  following data resources:
-              </p>
+              <p>The data you have selected requires authorization with the following data resources:</p>
               <Table
                 dataSource={providersToAuthenticate}
-                columns={[
-                  { title: 'Name', dataIndex: 'name', key: 'name' },
-                  { title: 'IDP', dataIndex: 'idp', key: 'idp' },
-                ]}
+                columns={[{ title: 'Name', dataIndex: 'name', key: 'name' }, { title: 'IDP', dataIndex: 'idp', key: 'idp' }]}
                 size={'small'}
                 pagination={false}
               />
-              <p>
-                  Please authorize these resources at the top of the
+              <p>Please authorize these resources at the top of the
                 <Button
                   size={'small'}
                   type='link'
                   icon={<LinkOutlined />}
-                  onClick={() => history.push('/identity', {
-                    from: `${location.pathname}`,
-                  })}
+                  onClick={() => history.push('/identity', { from: `${location.pathname}` })}
                 >
-                    profile page
+                  profile page
                 </Button>
               </p>
             </React.Fragment>
           ),
         },
-      });
+      },
+      );
       return false;
     }
     return true;
-  })
-  .catch(() => false);
+  },
+).catch(() => false);
 
 const checkDownloadStatus = (
   uid: string,
@@ -191,8 +177,8 @@ const checkDownloadStatus = (
         // usually empty status message means Sower can't find a job by its UID
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else if (status === 'Failed') {
-        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
-          .then((outputResponse) => {
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+          (outputResponse) => {
             const { output } = outputResponse.data;
             if (outputResponse.status !== 200 || !output) {
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
@@ -206,11 +192,11 @@ const checkDownloadStatus = (
                 },
               });
             }
-          })
-          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+          },
+        ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
       } else if (status === 'Completed') {
-        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
-          .then((outputResponse) => {
+        fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+          (outputResponse) => {
             const { output } = outputResponse.data;
             if (outputResponse.status !== 200 || !output) {
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
@@ -226,25 +212,17 @@ const checkDownloadStatus = (
                     title: 'Your download is ready',
                     content: (
                       <React.Fragment>
-                        <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
-                        <a href={output} target='_blank' rel='noreferrer'>
-                          {output}
-                        </a>
+                        <p> { DOWNLOAD_SUCCEEDED_MESSAGE } </p>
+                        <a href={output} target='_blank' rel='noreferrer'>{output}</a>
                       </React.Fragment>
                     ),
                     active: true,
                   },
                 });
                 setTimeout(() => window.open(output), 2000);
-                const projectNumber = selectedResources.map(
-                  (study) => study.project_number,
-                );
-                const studyName = selectedResources.map(
-                  (study) => study.study_name,
-                );
-                const repositoryName = selectedResources.map(
-                  (study) => study.commons,
-                );
+                const projectNumber = selectedResources.map((study) => study.project_number);
+                const studyName = selectedResources.map((study) => study.study_name);
+                const repositoryName = selectedResources.map((study) => study.commons);
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
                   datasetDownloadStudyName: studyName,
@@ -262,17 +240,10 @@ const checkDownloadStatus = (
                 });
               }
             }
-          })
-          .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+          },
+        ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
       } else {
-        setTimeout(
-          checkDownloadStatus,
-          JOB_POLLING_INTERVAL,
-          uid,
-          downloadStatus,
-          setDownloadStatus,
-          selectedResources,
-        );
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
       }
     },
   );
@@ -289,13 +260,7 @@ const handleDownloadZipClick = async (
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
-    const isLinked = await checkFederatedLoginStatus(
-      setDownloadStatus,
-      selectedResources,
-      manifestFieldName,
-      history,
-      location,
-    );
+    const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
     }
@@ -305,25 +270,20 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const studyIDs = selectedResources.map(
-    (study) => study[config.minimalFieldMapping.uid],
-  );
+  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
-    body: JSON.stringify({
-      action: 'batch-export',
-      input: { study_ids: studyIDs },
-    }),
-  })
-    .then((dispatchResponse) => {
+    body: JSON.stringify({ action: 'batch-export', input: { study_ids: studyIDs } }),
+  }).then(
+    (dispatchResponse) => {
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadStatus({
           inProgress: false,
           message: {
             title: 'Download failed',
-            content: <p> {DOWNLOAD_UNAUTHORIZED_MESSAGE} </p>,
+            content: <p> { DOWNLOAD_UNAUTHORIZED_MESSAGE } </p>,
             active: true,
           },
         });
@@ -334,52 +294,36 @@ const handleDownloadZipClick = async (
           inProgress: true,
           message: {
             title: 'Your download is being prepared',
-            content: <p> {DOWNLOAD_STARTED_MESSAGE} </p>,
+            content: <p> { DOWNLOAD_STARTED_MESSAGE } </p>,
             active: true,
           },
         });
-        setTimeout(
-          checkDownloadStatus,
-          JOB_POLLING_INTERVAL,
-          uid,
-          downloadStatus,
-          setDownloadStatus,
-          selectedResources,
-        );
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
       }
-    })
-    .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+    },
+  ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = (
-  config: DiscoveryConfig,
-  selectedResources: any[],
-  healICPSRLoginNeeded: boolean,
-) => {
-  console.log('selectedResources', selectedResources);
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[], healICPSRLoginNeeded: boolean) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
-    throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
-    );
+    throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
 
   if (healICPSRLoginNeeded) {
     return;
   }
   // combine manifests from all selected studies
-  const manifest: any = [];
+  const manifest:any = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      if ('commons_url' in study && !hostname.includes(study.commons_url)) {
-        // PlanX addition to allow hostname based DRS in manifest download clients
+      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
-        manifest.push(
-          ...study[manifestFieldName].map((x) => ({
-            ...x,
-            commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          })),
-        );
+        manifest.push(...study[manifestFieldName].map((x) => ({
+          ...x,
+          commons_url: ('commons_url' in x)
+            ? x.commons_url : study.commons_url,
+        })));
       } else {
         manifest.push(...study[manifestFieldName]);
       }
@@ -395,9 +339,7 @@ const handleDownloadManifestClick = (
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
-  const blob = new Blob([JSON.stringify(manifest, null, 2)], {
-    type: 'text/json',
-  });
+  const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
   FileSaver.saveAs(blob, MANIFEST_FILENAME);
 };
 
@@ -412,9 +354,7 @@ const handleExportToWorkspaceClick = async (
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
-    throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
-    );
+    throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
 
   if (healICPSRLoginNeeded) {
@@ -423,11 +363,7 @@ const handleExportToWorkspaceClick = async (
 
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
-      setDownloadStatus,
-      selectedResources,
-      manifestFieldName,
-      history,
-      location,
+      setDownloadStatus, selectedResources, manifestFieldName, history, location,
     );
     if (!isLinked) {
       return;
@@ -436,18 +372,16 @@ const handleExportToWorkspaceClick = async (
 
   setExportingToWorkspace(true);
   // combine manifests from all selected studies
-  const manifest: any = [];
+  const manifest:any = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      if ('commons_url' in study && !hostname.includes(study.commons_url)) {
-        // PlanX addition to allow hostname based DRS in manifest download clients
+      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
-        manifest.push(
-          ...study[manifestFieldName].map((x) => ({
-            ...x,
-            commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          })),
-        );
+        manifest.push(...study[manifestFieldName].map((x) => ({
+          ...x,
+          commons_url: ('commons_url' in x)
+            ? x.commons_url : study.commons_url,
+        })));
       } else {
         manifest.push(...study[manifestFieldName]);
       }
@@ -470,9 +404,7 @@ const handleExportToWorkspaceClick = async (
     method: 'POST',
   });
   if (res.status !== 200) {
-    throw new Error(
-      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
-    );
+    throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
   }
   setExportingToWorkspace(false);
   // redirect to Workspaces page
@@ -489,43 +421,35 @@ const DiscoveryActionBar = (props: Props) => {
   const [healICPSRLoginNeeded, setHealICPSRLoginNeeded] = useState(false);
 
   // begin monitoring download job when component mounts if one already exists and is running
-  useEffect(() => {
-    fetchWithCreds({ path: `${jobAPIPath}list` }).then((jobsListResponse) => {
-      const { status } = jobsListResponse;
-      // jobsListResponse will be boilerplate HTML when not logged in
-      if (status === 200 && typeof jobsListResponse.data === 'object') {
-        const runningJobs: JobStatus[] = jobsListResponse.data;
-        runningJobs.forEach((job) => {
-          if (
-            job.status === 'Running'
-            && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)
-          ) {
-            setDownloadStatus({ ...downloadStatus, inProgress: true });
-            setTimeout(
-              checkDownloadStatus,
-              JOB_POLLING_INTERVAL,
-              job.uid,
-              downloadStatus,
-              setDownloadStatus,
-              props.discovery.selectedResources,
+  useEffect(
+    () => {
+      fetchWithCreds({ path: `${jobAPIPath}list` }).then(
+        (jobsListResponse) => {
+          const { status } = jobsListResponse;
+          // jobsListResponse will be boilerplate HTML when not logged in
+          if (status === 200 && typeof jobsListResponse.data === 'object') {
+            const runningJobs: JobStatus[] = jobsListResponse.data;
+            runningJobs.forEach(
+              (job) => {
+                if (job.status === 'Running' && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
+                  setDownloadStatus({ ...downloadStatus, inProgress: true });
+                  setTimeout(
+                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus, props.discovery.selectedResources,
+                  );
+                }
+              },
             );
           }
-        });
-      }
-    });
-  }, [props.discovery.selectedResources]);
+        },
+      );
+    },
+    [props.discovery.selectedResources],
+  );
 
   const healICPSRLoginNeededLogic = useCallback(() => {
     if (bundle === 'heal') {
       // check selected studies for ICPSR study
-      if (
-        props.discovery.selectedResources.some((resource) => resource?.tags.some(
-          (tag: { name: string; category: string }) => tag?.name === 'ICPSR'
-              && (tag?.category === 'Data Repository'
-                || tag?.category === 'Commons'),
-        ),
-        )
-      ) {
+      if (props.discovery.selectedResources.some((resource) => resource?.tags.some((tag: { name: string; category: string; }) => tag?.name === 'ICPSR' && (tag?.category === 'Data Repository' || tag?.category === 'Commons')))) {
         // check if user is logged in via InCommons
         if (props.user.fence_idp !== 'shibboleth') {
           // if not logged in via InCommons show special messaging
@@ -536,50 +460,49 @@ const DiscoveryActionBar = (props: Props) => {
     return false;
   }, [props.discovery.selectedResources, props.user.fence_idp]);
 
-  useEffect(() => {
-    setHealICPSRLoginNeeded(healICPSRLoginNeededLogic);
-  }, [
-    props.discovery.selectedResources,
-    props.user.fence_idp,
-    healICPSRLoginNeededLogic,
-  ]);
+  useEffect(
+    () => {
+      setHealICPSRLoginNeeded(healICPSRLoginNeededLogic);
+    },
+    [props.discovery.selectedResources, props.user.fence_idp, healICPSRLoginNeededLogic],
+  );
 
-  useEffect(() => {
-    if (props.discovery.actionToResume === 'download') {
-      handleDownloadZipClick(
-        props.config,
-        props.discovery.selectedResources,
-        downloadStatus,
-        setDownloadStatus,
-        history,
-        location,
-        healICPSRLoginNeededLogic(),
-      );
-      props.onActionResumed();
-    } else if (props.discovery.actionToResume === 'export') {
-      handleExportToWorkspaceClick(
-        props.config,
-        props.discovery.selectedResources,
-        props.setExportingToWorkspace,
-        setDownloadStatus,
-        history,
-        location,
-        healICPSRLoginNeededLogic(),
-      );
-      props.onActionResumed();
-    } else if (props.discovery.actionToResume === 'manifest') {
-      handleDownloadManifestClick(
-        props.config,
-        props.discovery.selectedResources,
-        healICPSRLoginNeededLogic(),
-      );
-      props.onActionResumed();
-    }
-  }, [props.discovery.actionToResume]);
+  useEffect(
+    () => {
+      if (props.discovery.actionToResume === 'download') {
+        handleDownloadZipClick(
+          props.config,
+          props.discovery.selectedResources,
+          downloadStatus,
+          setDownloadStatus,
+          history,
+          location,
+          healICPSRLoginNeededLogic(),
+        );
+        props.onActionResumed();
+      } else if (props.discovery.actionToResume === 'export') {
+        handleExportToWorkspaceClick(
+          props.config,
+          props.discovery.selectedResources,
+          props.setExportingToWorkspace,
+          setDownloadStatus,
+          history,
+          location,
+          healICPSRLoginNeededLogic(),
+        );
+        props.onActionResumed();
+      } else if (props.discovery.actionToResume === 'manifest') {
+        handleDownloadManifestClick(
+          props.config,
+          props.discovery.selectedResources,
+          healICPSRLoginNeededLogic(),
+        );
+        props.onActionResumed();
+      }
+    }, [props.discovery.actionToResume],
+  );
 
-  const handleRedirectToLoginClick = (
-    action: 'download' | 'export' | 'manifest' | null = null,
-  ) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
@@ -590,243 +513,204 @@ const DiscoveryActionBar = (props: Props) => {
       ),
     };
     delete serializableState.selectedResources;
-    const queryStr = `?state=${encodeURIComponent(
-      JSON.stringify(serializableState),
-    )}`;
+    const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
   const onlyInCommonMsg = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
 
-  const downloadZipButton = props.config.features.exportToWorkspace
-    ?.enableDownloadZip && (
-    <React.Fragment>
+  const downloadZipButton = (
+    props.config.features.exportToWorkspace?.enableDownloadZip
+    && (
+      <React.Fragment>
+        <Popover
+          className='discovery-popover'
+          arrowPointAtCenter
+          content={(
+            <React.Fragment>
+              {healICPSRLoginNeeded
+                ? onlyInCommonMsg
+                : 'Directly download data (up to 250Mb) from selected studies'}
+            </React.Fragment>
+          )}
+        >
+          <Button
+            onClick={
+              async () => {
+                if (props.user.username && !healICPSRLoginNeeded) {
+                  handleDownloadZipClick(
+                    props.config,
+                    props.discovery.selectedResources,
+                    downloadStatus,
+                    setDownloadStatus,
+                    history,
+                    location,
+                    healICPSRLoginNeeded,
+                  );
+                } else {
+                  handleRedirectToLoginClick('download');
+                }
+              }
+            }
+            type='default'
+            className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+            disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress}
+            icon={<DownloadOutlined />}
+            loading={downloadStatus.inProgress}
+          >
+            { (
+              () => {
+                if (props.user.username && !healICPSRLoginNeeded) {
+                  if (downloadStatus.inProgress) {
+                    return 'Preparing download...';
+                  }
+                  return `${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+                }
+                return `Login to ${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+              }
+            )()}
+          </Button>
+        </Popover>
+        <Modal
+          closable={false}
+          open={downloadStatus.message.active}
+          title={downloadStatus.message.title}
+          footer={(
+            <Button
+              onClick={
+                () => setDownloadStatus({
+                  ...downloadStatus,
+                  message: {
+                    title: '',
+                    content: <React.Fragment />,
+                    active: false,
+                  },
+                })
+              }
+            >
+            Close
+            </Button>
+          )}
+        >
+          { downloadStatus.message.content }
+        </Modal>
+      </React.Fragment>
+    )
+  );
+
+  const downloadManifestButton = (
+    props.config.features.exportToWorkspace?.enableDownloadManifest && (
+      <Popover
+        className='discovery-popover'
+        arrowPointAtCenter
+        title={(
+          <React.Fragment>
+            {healICPSRLoginNeeded
+              ? onlyInCommonMsg
+              : (
+                <React.Fragment>
+      Download a Manifest File for use with the&nbsp;
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+                    {'Gen3 Client'}
+                  </a>.
+                </React.Fragment>
+              )}
+          </React.Fragment>
+        )}
+        content={(
+          <span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+    to download the data from the selected studies to your local computer.
+          </span>
+        )}
+      >
+        <Button
+          onClick={(props.user.username && !healICPSRLoginNeeded) ? () => {
+            handleDownloadManifestClick(props.config, props.discovery.selectedResources, healICPSRLoginNeeded);
+          }
+            : () => { handleRedirectToLoginClick('manifest'); }}
+          type='default'
+          className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+          disabled={props.discovery.selectedResources.length === 0}
+          icon={<FileTextOutlined />}
+        >
+          {(props.user.username && !healICPSRLoginNeeded) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+            : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
+        </Button>
+
+      </Popover>
+    )
+  );
+
+  const exportToWorkspaceButton = (
+    props.config.features.exportToWorkspace?.enabled
+    && (
       <Popover
         className='discovery-popover'
         arrowPointAtCenter
         content={(
-          <React.Fragment>
-            {healICPSRLoginNeeded
-              ? onlyInCommonMsg
-              : 'Directly download data (up to 250Mb) from selected studies'}
+          <React.Fragment>{healICPSRLoginNeeded
+            ? onlyInCommonMsg
+            : (
+              <React.Fragment>
+          Open selected studies in the&nbsp;
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                  {'Gen3 Workspace'}
+                </a>.
+              </React.Fragment>
+            )}
           </React.Fragment>
         )}
       >
         <Button
-          onClick={async () => {
-            if (props.user.username && !healICPSRLoginNeeded) {
-              handleDownloadZipClick(
-                props.config,
-                props.discovery.selectedResources,
-                downloadStatus,
-                setDownloadStatus,
-                history,
-                location,
-                healICPSRLoginNeeded,
-              );
-            } else {
-              handleRedirectToLoginClick('download');
-            }
-          }}
           type='default'
-          className={`discovery-action-bar-button${
-            props.discovery.selectedResources.length === 0 ? '--disabled' : ''
-          }`}
-          disabled={
-            props.discovery.selectedResources.length === 0
-            || downloadStatus.inProgress
+          className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+          disabled={props.discovery.selectedResources.length === 0}
+          loading={props.exportingToWorkspace}
+          icon={<ExportOutlined />}
+          onClick={(props.user.username && !healICPSRLoginNeeded) ? async () => {
+            handleExportToWorkspaceClick(
+              props.config,
+              props.discovery.selectedResources,
+              props.setExportingToWorkspace,
+              setDownloadStatus,
+              history,
+              location,
+              healICPSRLoginNeeded,
+            );
           }
-          icon={<DownloadOutlined />}
-          loading={downloadStatus.inProgress}
+            : () => { handleRedirectToLoginClick('export'); }}
         >
-          {(() => {
-            if (props.user.username && !healICPSRLoginNeeded) {
-              if (downloadStatus.inProgress) {
-                return 'Preparing download...';
-              }
-              return `${
-                props.config.features.exportToWorkspace.downloadZipButtonText
-                || 'Download Zip'
-              }`;
-            }
-            return `Login to ${
-              props.config.features.exportToWorkspace.downloadZipButtonText
-              || 'Download Zip'
-            }`;
-          })()}
+          {(props.user.username && !healICPSRLoginNeeded) ? 'Open In Workspace' : 'Login to Open In Workspace'}
         </Button>
       </Popover>
-      <Modal
-        closable={false}
-        open={downloadStatus.message.active}
-        title={downloadStatus.message.title}
-        footer={(
-          <Button
-            onClick={() => setDownloadStatus({
-              ...downloadStatus,
-              message: {
-                title: '',
-                content: <React.Fragment />,
-                active: false,
-              },
-            })}
-          >
-            Close
-          </Button>
-        )}
-      >
-        {downloadStatus.message.content}
-      </Modal>
-    </React.Fragment>
-  );
-
-  const downloadManifestButton = props.config.features.exportToWorkspace
-    ?.enableDownloadManifest && (
-    <Popover
-      className='discovery-popover'
-      arrowPointAtCenter
-      title={(
-        <React.Fragment>
-          {healICPSRLoginNeeded ? (
-            onlyInCommonMsg
-          ) : (
-            <React.Fragment>
-              Download a Manifest File for use with the&nbsp;
-              <a
-                target='_blank'
-                rel='noreferrer'
-                href='https://gen3.org/resources/user/gen3-client/'
-              >
-                {'Gen3 Client'}
-              </a>
-              .
-            </React.Fragment>
-          )}
-        </React.Fragment>
-      )}
-      content={(
-        <span className='discovery-popover__text'>
-          With the Manifest File, you can use the Gen3 Client to download the
-          data from the selected studies to your local computer.
-        </span>
-      )}
-    >
-      <Button
-        onClick={
-          props.user.username && !healICPSRLoginNeeded
-            ? () => {
-              handleDownloadManifestClick(
-                props.config,
-                props.discovery.selectedResources,
-                healICPSRLoginNeeded,
-              );
-            }
-            : () => {
-              handleRedirectToLoginClick('manifest');
-            }
-        }
-        type='default'
-        className={`discovery-action-bar-button${
-          props.discovery.selectedResources.length === 0 ? '--disabled' : ''
-        }`}
-        disabled={props.discovery.selectedResources.length === 0}
-        icon={<FileTextOutlined />}
-      >
-        {props.user.username && !healICPSRLoginNeeded
-          ? `${
-            props.config.features.exportToWorkspace
-              .downloadManifestButtonText || 'Download Manifest'
-          }`
-          : `Login to ${
-            props.config.features.exportToWorkspace
-              .downloadManifestButtonText || 'Download Manifest'
-          }`}
-      </Button>
-    </Popover>
-  );
-
-  const exportToWorkspaceButton = props.config.features.exportToWorkspace
-    ?.enabled && (
-    <Popover
-      className='discovery-popover'
-      arrowPointAtCenter
-      content={(
-        <React.Fragment>
-          {healICPSRLoginNeeded ? (
-            onlyInCommonMsg
-          ) : (
-            <React.Fragment>
-              Open selected studies in the&nbsp;
-              <a
-                target='blank'
-                rel='noreferrer'
-                href='https://gen3.org/resources/user/analyze-data/'
-              >
-                {'Gen3 Workspace'}
-              </a>
-              .
-            </React.Fragment>
-          )}
-        </React.Fragment>
-      )}
-    >
-      <Button
-        type='default'
-        className={`discovery-action-bar-button${
-          props.discovery.selectedResources.length === 0 ? '--disabled' : ''
-        }`}
-        disabled={props.discovery.selectedResources.length === 0}
-        loading={props.exportingToWorkspace}
-        icon={<ExportOutlined />}
-        onClick={
-          props.user.username && !healICPSRLoginNeeded
-            ? async () => {
-              handleExportToWorkspaceClick(
-                props.config,
-                props.discovery.selectedResources,
-                props.setExportingToWorkspace,
-                setDownloadStatus,
-                history,
-                location,
-                healICPSRLoginNeeded,
-              );
-            }
-            : () => {
-              handleRedirectToLoginClick('export');
-            }
-        }
-      >
-        {props.user.username && !healICPSRLoginNeeded
-          ? 'Open In Workspace'
-          : 'Login to Open In Workspace'}
-      </Button>
-    </Popover>
+    )
   );
 
   return (
     <React.Fragment>
-      <div className='discovery-studies__header'>
+      <div
+        className='discovery-studies__header'
+      >
         {/* Advanced search show/hide UI */}
-        {props.config.features.advSearchFilters?.enabled ? (
-          <Button
-            className='discovery-adv-filter-button'
-            onClick={() => props.setFiltersVisible(!props.filtersVisible)}
-            disabled={props.disableFilterButton}
-            type='text'
-          >
-            {props.config.features.advSearchFilters.displayName
-              || 'ADVANCED SEARCH'}
-            {props.filtersVisible ? <LeftOutlined /> : <RightOutlined />}
-          </Button>
-        ) : (
-          <div />
-        )}
+        { (props.config.features.advSearchFilters?.enabled)
+          ? (
+            <Button
+              className='discovery-adv-filter-button'
+              onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+              disabled={props.disableFilterButton}
+              type='text'
+            >
+              {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}
+              { props.filtersVisible
+                ? <LeftOutlined />
+                : <RightOutlined />}
+            </Button>
+          )
+          : <div />}
         <Space>
-          <span className='discovery-export__selected-ct'>
-            {props.discovery.selectedResources.length} selected
-          </span>
-          {downloadZipButton}
-          {downloadManifestButton}
-          {exportToWorkspaceButton}
+          <span className='discovery-export__selected-ct'>{props.discovery.selectedResources.length} selected</span>
+          { downloadZipButton }
+          { downloadManifestButton }
+          { exportToWorkspaceButton }
         </Space>
       </div>
     </React.Fragment>
