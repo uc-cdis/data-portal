@@ -48,7 +48,6 @@ const ActionButtons = ({
             <Button
               className='discovery-action-bar-button'
               onClick={() => {
-                console.log('discoveryConfig', discoveryConfig);
                 HandleDownloadManifestClick(
                   discoveryConfig,
                   [resourceInfo],
