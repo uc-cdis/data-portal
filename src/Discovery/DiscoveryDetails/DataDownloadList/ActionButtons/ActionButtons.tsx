@@ -11,10 +11,6 @@ const ActionButtons = ({
   resourceInfo,
   data,
 }): JSX.Element => {
-  console.log('resourceInfo ', resourceInfo);
-  console.log('study_id', resourceInfo.study_id);
-  console.log('data', data);
-
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
