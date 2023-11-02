@@ -1,13 +1,12 @@
-import FileSaver from 'file-saver';
 import { hostname } from '../../../../../localconf';
 import { DiscoveryConfig } from '../../../../DiscoveryConfig';
+import DownloadJsonFile from './DownloadJsonFile';
 
 const HandleDownloadManifestClick = (
   config: DiscoveryConfig,
   selectedResources: any[],
   healICPSRLoginNeeded: boolean,
 ) => {
-  console.log('config', config);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
@@ -35,12 +34,7 @@ const HandleDownloadManifestClick = (
       }
     }
   });
-  // download the manifest
-  const MANIFEST_FILENAME = 'manifest.json';
-  const blob = new Blob([JSON.stringify(manifest, null, 2)], {
-    type: 'text/json',
-  });
-  FileSaver.saveAs(blob, MANIFEST_FILENAME);
+  DownloadJsonFile('manifest', manifest)
 };
 
 export default HandleDownloadManifestClick;

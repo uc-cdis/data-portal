@@ -4,6 +4,7 @@ import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestC
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import './ActionButtons.css';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
+import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 
 const ActionButtons = ({
   discoveryConfig,
@@ -27,17 +28,21 @@ const ActionButtons = ({
         setDownloadStatus={setDownloadStatus}
       />
       <Row className='row'>
+        {/*
         <Col flex='1 0 auto'>
           <Button className='discovery-action-bar-button'>
             Download <br />
             Variable-Level Metadata
           </Button>
         </Col>
+        */}
         {discoveryConfig.features.exportToWorkspace.studyMetadataFieldName &&
-          discoveryConfig.features.exportToWorkspace
-            .enableDownloadStudyMetadata && (
+          discoveryConfig.features.exportToWorkspace.enableDownloadStudyMetadata &&
+          resourceInfo.study_metadata &&
+          (
             <Col flex='1 0 auto'>
-              <Button className='discovery-action-bar-button'>
+              <Button className='discovery-action-bar-button'
+              onClick={()=> DownloadJsonFile("study-level-metadata", resourceInfo.study_metadata)}>
                 Download <br />
                 Study-Level Metadata
               </Button>
