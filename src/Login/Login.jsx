@@ -100,7 +100,7 @@ function Login({ data, providers = defaultProviders, username }) {
         <div className='h1-typo login-page__title'>{data.title}</div>
         <div className='high-light login-page__sub-title'>{data.subTitle}</div>
         <hr className='login-page__separator' />
-        <div className='body-typo'>{data.text}</div>
+        <div className='body-typo' style={{ whiteSpace: 'pre-wrap' }}>{data.text}</div>
         {providers.map((provider, index) => (
           <div className='login-page__entries' key={provider.idp}>
             {provider.desc}
