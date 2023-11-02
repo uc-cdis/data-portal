@@ -113,13 +113,13 @@ class AnalysisApp extends React.Component {
           />
         </React.Fragment>
       );
-    case 'GWAS Results':
+    case 'GWASResults':
       return (
         <div className='analysis-app_flex_row'>
           <GWASResultsContainer />
         </div>
       );
-    case 'Gen3 GWAS': {
+    case 'GWASUIApp': {
       return (
         <TourProvider
           afterOpen={disableBody}
