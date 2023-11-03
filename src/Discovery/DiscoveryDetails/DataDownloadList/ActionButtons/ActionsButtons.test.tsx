@@ -3,10 +3,6 @@ import { render, rerender } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ActionButtons from './ActionButtons';
 
-
-
-
-
 describe('ActionButtons', () => {
   const mockDiscoveryConfig = {
     features: {
@@ -25,21 +21,33 @@ describe('ActionButtons', () => {
   };
 
   const mockData = { /* mock data */ };
+  const checkResourceInfoConditional = (buttonText: string) => {
+    const { queryByText } = render(
+      <ActionButtons
+        discoveryConfig={mockDiscoveryConfig}
+        resourceInfo={null}
+        data={mockData}
+      />
+    );
+    // Check that the button is no longer rendered
+    expect(queryByText(buttonText)).toBeNull();
+  }
 
-  const checkConditionalButton = (buttonText:string,condition: string )=>{
+  const checkExportToWorkspaceConditional = (buttonText:string,condition: string )=>{
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}        />
+        data={mockData} />
     );
     const targetButton = getByText(buttonText);
     expect(targetButton).toBeInTheDocument();
     // Disable the condition for rendering the button
-    mockDiscoveryConfig.features.exportToWorkspace[condition] = false;
+    const changedConfig = structuredClone(mockDiscoveryConfig);
+    changedConfig.features.exportToWorkspace[condition] = false;
     rerender(
       <ActionButtons
-        discoveryConfig={mockDiscoveryConfig}
+        discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
         data={mockData}
       />
@@ -47,14 +55,21 @@ describe('ActionButtons', () => {
     // Check that the button is no longer rendered
     expect(queryByText(buttonText)).toBeNull();
   }
+
+  /* TESTS */
   test('renders Download Study-Level Metadata button based on conditionals', () => {
-   checkConditionalButton('Study-Level Metadata', 'enableDownloadStudyMetadata');
+   const buttonText = 'Study-Level Metadata';
+   checkExportToWorkspaceConditional(buttonText, 'enableDownloadStudyMetadata');
+   checkExportToWorkspaceConditional(buttonText,'studyMetadataFieldName');
+   checkResourceInfoConditional(buttonText);
+
   });
+
   test('renders Download File Manifest button based on conditionals', () => {
-    checkConditionalButton('Download File Manifest','enableDownloadManifest' );
+    checkExportToWorkspaceConditional('Download File Manifest','enableDownloadManifest' );
   });
   test('renders Download All Files button based on conditionals', () => {
-    checkConditionalButton('Download All Files','enableDownloadZip' );
+    checkExportToWorkspaceConditional('Download All Files','enableDownloadZip' );
   });
 
 

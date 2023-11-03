@@ -15,7 +15,7 @@ const ActionButtons = ({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
-  const studyIDs = [resourceInfo.study_id];
+  const studyIDs = [resourceInfo?.study_id];
 
   return (
     <div className='discovery-modal_buttons-row'>
@@ -34,7 +34,7 @@ const ActionButtons = ({
         */}
         {discoveryConfig.features.exportToWorkspace.studyMetadataFieldName &&
           discoveryConfig.features.exportToWorkspace.enableDownloadStudyMetadata &&
-          resourceInfo.study_metadata &&
+          resourceInfo?.study_metadata &&
           (
             <Col flex='1 0 auto'>
               <Button className='discovery-action-bar-button'
