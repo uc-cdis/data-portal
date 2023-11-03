@@ -3,7 +3,6 @@ import { fetchWithCreds } from '../../../../../actions';
 import { jobAPIPath } from '../../../../../localconf';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
-let downloadAllFilesCnt = 0;
 let checkDownloadStatusCnt = 0;
 const JOB_POLLING_INTERVAL = 5000;
 const DOWNLOAD_SUCCEEDED_MESSAGE =
@@ -28,11 +27,9 @@ const checkDownloadStatus = (
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void
 ) => {
-  console.log(`called checkDownloadStatus${checkDownloadStatusCnt++}`);
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
       const { status } = statusResponse.data;
-      // alert(status);
       if (statusResponse.status !== 200 || !status) {
         // usually empty status message means Sower can't find a job by its UID
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
@@ -47,7 +44,7 @@ const checkDownloadStatus = (
                 inProgress: false,
                 message: {
                   title: 'Download failed',
-                  content: { output },
+                  content: <p>{ output }</p> ,
                   active: true,
                 },
               });
@@ -55,12 +52,10 @@ const checkDownloadStatus = (
           })
           .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
       } else if (status === 'Completed') {
-        alert('WE COMPLETED!');
         fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` })
           .then((outputResponse) => {
             const { output } = outputResponse.data;
             if (outputResponse.status !== 200 || !output) {
-              console.log('failed at ln 116 after completed');
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               try {
@@ -116,7 +111,6 @@ const DownloadAllFiles = (
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void
 ) => {
-  console.log(`called downloadAllFiles${downloadAllFilesCnt++}`);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
