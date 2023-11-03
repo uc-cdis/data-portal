@@ -3,7 +3,6 @@ import { fetchWithCreds } from '../../../../../actions';
 import { jobAPIPath } from '../../../../../localconf';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
-let checkDownloadStatusCnt = 0;
 const JOB_POLLING_INTERVAL = 5000;
 const DOWNLOAD_SUCCEEDED_MESSAGE =
   "Your download has been prepared. If your download doesn't start automatically, please follow this direct link:";
@@ -117,7 +116,7 @@ const DownloadAllFiles = (
     body: JSON.stringify({
       action: 'batch-export',
       input: { study_ids: studyIDs },
-    }), // NEW TO FIND studyIDs
+    }),
   })
     .then((dispatchResponse) => {
       const { uid } = dispatchResponse.data;
@@ -144,8 +143,8 @@ const DownloadAllFiles = (
             title: 'Your download is being prepared',
             content: (
               <p>
-                {'Please remain on this page until your download completes. When your download is ready, ' +
-                  'it will begin automatically. You can close this window.'}
+                Please remain on this page until your download completes. When your download is ready,
+                it will begin automatically. You can close this window.
               </p>
             ),
             active: true,
