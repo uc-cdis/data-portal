@@ -6,7 +6,7 @@ import isEnterOrSpace from '../../IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
 import './TeamProjectHeader.css';
 
-const TeamProjectHeader = ({ showButton }) => {
+const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bannerText, setBannerText] = useState('- -');
   const showModal = () => {
@@ -18,19 +18,19 @@ const TeamProjectHeader = ({ showButton }) => {
     const storedTeamProject = localStorage.getItem('teamProject');
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
-    } else if (showButton) {
+    } else if (isEditable) {
       showModal();
-    } else if (!showButton && !storedTeamProject) {
+    } else if (!isEditable && !storedTeamProject) {
       // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
       history.push('/analysis');
     }
-  }, [history, showButton]);
+  }, [history, isEditable]);
 
   return (
     <React.Fragment>
       <div className='team-project-header'>
         <strong>Team Project</strong> / {bannerText}
-        {showButton && (
+        {isEditable && (
           <span
             className='team-project-header_modal-button'
             tabIndex='0'
@@ -47,7 +47,7 @@ const TeamProjectHeader = ({ showButton }) => {
           </span>
         )}
       </div>
-      {showButton && (
+      {isEditable && (
         <TeamProjectModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
@@ -59,11 +59,11 @@ const TeamProjectHeader = ({ showButton }) => {
 };
 
 TeamProjectHeader.propTypes = {
-  showButton: PropTypes.bool,
+  isEditable: PropTypes.bool,
 };
 
 TeamProjectHeader.defaultProps = {
-  showButton: false,
+  isEditable: false,
 };
 
 export default TeamProjectHeader;
