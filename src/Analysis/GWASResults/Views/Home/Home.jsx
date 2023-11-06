@@ -10,7 +10,9 @@ const Home = () => {
   const refetchInterval = 5000;
 
   async function fetchGwasWorkflows() {
-    const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
+    const currentTeamProject = localStorage.getItem('teamProject');
+    const workflowsEndpoint = `${gwasWorkflowPath}workflows?teamproject=${currentTeamProject}`;
+    console.log("workflowsEndpoint", workflowsEndpoint)
     const getWorkflows = await fetch(workflowsEndpoint);
     return getWorkflows.json();
   }
