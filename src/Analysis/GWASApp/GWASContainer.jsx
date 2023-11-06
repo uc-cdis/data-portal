@@ -19,6 +19,7 @@ const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
+    console.log('initialState', state);
     switch (state.currentStep) {
     case 0:
       return (
