@@ -3,7 +3,6 @@ import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { GWASAppSteps, checkFinalPopulationSizeZero } from './Utils/constants';
 import { SourceContextProvider } from './Utils/Source';
-import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
 import ACTIONS from './Utils/StateManagement/Actions';
 import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
@@ -13,13 +12,13 @@ import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
 import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
+import InitializeCurrentState from './Utils/StateManagement/InitializeCurrentState';
 import './GWASApp.css';
 
 const GWASContainer = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, InitializeCurrentState());
 
   const generateStep = () => {
-    console.log('initialState', state);
     switch (state.currentStep) {
     case 0:
       return (

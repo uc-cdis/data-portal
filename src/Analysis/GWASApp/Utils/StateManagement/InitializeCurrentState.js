@@ -1,4 +1,4 @@
-const initialState = {
+const InitializeCurrentState = () => ({
   outcome: null,
   selectedStudyPopulationCohort: null,
   covariates: [],
@@ -12,6 +12,6 @@ const initialState = {
   selectionMode: '',
   messages: [],
   selectedTeamProject: localStorage.getItem('teamProject'),
-};
+});
 
-export default initialState;
+export default InitializeCurrentState;
