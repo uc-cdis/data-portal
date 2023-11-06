@@ -32,8 +32,8 @@ const ActionButtons = ({
           </Button>
         </Col>
         */}
-        {discoveryConfig.features.exportToWorkspace.studyMetadataFieldName &&
-          discoveryConfig.features.exportToWorkspace.enableDownloadStudyMetadata &&
+        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
+          discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
           resourceInfo?.study_metadata &&
           (
             <Col flex='1 0 auto'>
@@ -44,7 +44,7 @@ const ActionButtons = ({
               </Button>
             </Col>
           )}
-        {discoveryConfig.features.exportToWorkspace.enableDownloadManifest && (
+        {discoveryConfig?.features.exportToWorkspace.enableDownloadManifest && (
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
@@ -60,7 +60,7 @@ const ActionButtons = ({
             </Button>
           </Col>
         )}
-        {discoveryConfig.features.exportToWorkspace.enableDownloadZip && (
+        {discoveryConfig?.features.exportToWorkspace.enableDownloadZip && (
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
