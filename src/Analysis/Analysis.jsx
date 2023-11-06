@@ -23,7 +23,7 @@ class Analysis extends React.Component {
           {CheckForTeamProjectApplication(analysisApps) && (
             <Col flex='1 0 auto'>
               <QueryClientProvider client={new QueryClient()} contextSharing>
-                <TeamProjectHeader showButton />
+                <TeamProjectHeader isEditable />
               </QueryClientProvider>
             </Col>
           )}

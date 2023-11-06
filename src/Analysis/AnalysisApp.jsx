@@ -239,7 +239,7 @@ class AnalysisApp extends React.Component {
                     client={new QueryClient()}
                     contextSharing
                   >
-                    <TeamProjectHeader showButton={false} />
+                    <TeamProjectHeader isEditable={false} />
                   </QueryClientProvider>
                 </Col>
               )}

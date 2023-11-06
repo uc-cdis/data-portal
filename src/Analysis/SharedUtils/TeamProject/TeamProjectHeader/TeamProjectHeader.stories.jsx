@@ -17,10 +17,10 @@ const Template = (args) => (
 
 export const withButton = Template.bind({});
 withButton.args = {
-  showButton: true,
+  isEditable: true,
 };
 
 export const withNoButton = Template.bind({});
 withNoButton.args = {
-  showButton: false,
+  isEditable: false,
 };
