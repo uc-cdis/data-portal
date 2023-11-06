@@ -15,12 +15,12 @@ const Template = (args) => (
   </div>
 );
 
-export const withButton = Template.bind({});
-withButton.args = {
+export const isEditable = Template.bind({});
+isEditable.args = {
   isEditable: true,
 };
 
-export const withNoButton = Template.bind({});
-withNoButton.args = {
+export const notEditable = Template.bind({});
+notEditable.args = {
   isEditable: false,
 };
