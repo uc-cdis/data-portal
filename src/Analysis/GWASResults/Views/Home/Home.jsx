@@ -12,7 +12,6 @@ const Home = () => {
   async function fetchGwasWorkflows() {
     const currentTeamProject = localStorage.getItem('teamProject');
     const workflowsEndpoint = `${gwasWorkflowPath}workflows?teamproject=${currentTeamProject}`;
-    console.log("workflowsEndpoint", workflowsEndpoint)
     const getWorkflows = await fetch(workflowsEndpoint);
     return getWorkflows.json();
   }
