@@ -149,9 +149,9 @@ class AnalysisApp extends React.Component {
               title='Analysis App'
               frameBorder='0'
               src={
-                this.state.app.title === 'OHDSI Atlas'?
-                `${this.state.app.applicationUrl}?teamproject=${localStorage.getItem('teamProject')}`:
-                `${this.state.app.applicationUrl}`
+                this.state.app.title === 'OHDSI Atlas'
+                  ? `${this.state.app.applicationUrl}?teamproject=${localStorage.getItem('teamProject')}`
+                  : `${this.state.app.applicationUrl}`
               }
               onLoad={this.handleIframeApp}
             />
@@ -201,8 +201,6 @@ class AnalysisApp extends React.Component {
       isIframeApp: true,
     });
   };
-
-
 
   render() {
     const { job, params } = this.props;
