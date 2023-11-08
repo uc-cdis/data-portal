@@ -33,10 +33,11 @@ const Home = () => {
   if (status === 'error') {
     return <LoadingErrorMessage />;
   }
+  console.log("data",data)
   return (
     <React.Fragment>
       <ManageColumns />
-      <HomeTable data={data} />
+      <HomeTable data={data[0]} />
     </React.Fragment>
   );
 };
