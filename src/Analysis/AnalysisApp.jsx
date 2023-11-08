@@ -150,7 +150,7 @@ class AnalysisApp extends React.Component {
               frameBorder='0'
               src={
                 this.state.app.title === 'OHDSI Atlas'
-                  ? `${this.state.app.applicationUrl}?teamproject=${localStorage.getItem('teamProject')}`
+                  ? `${this.state.app.applicationUrl}#/home?teamproject=${localStorage.getItem('teamProject')}`
                   : `${this.state.app.applicationUrl}`
               }
               onLoad={this.handleIframeApp}
