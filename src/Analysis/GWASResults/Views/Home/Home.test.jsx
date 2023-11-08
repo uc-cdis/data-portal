@@ -46,7 +46,7 @@ describe('Home component', () => {
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(TableData),
+      json: jest.fn().mockResolvedValueOnce([TableData]),
     });
     render(testJSX());
     await screen.findByText(TableData[0].wf_name);
