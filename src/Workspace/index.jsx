@@ -473,7 +473,6 @@ class Workspace extends React.Component {
           this.setState({
             payModel: data,
           });
-          this.getWorkspaceOptions();
         });
       }
     });
