@@ -33,7 +33,6 @@ const Home = () => {
   if (status === 'error') {
     return <LoadingErrorMessage />;
   }
-  console.log('data', data);
   return (
     <React.Fragment>
       <ManageColumns />
