@@ -19,7 +19,6 @@ const DataDownloadList = ({
       <ActionButtons
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
-        data={data}
       />
       <List
         itemLayout='horizontal'

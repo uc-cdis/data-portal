@@ -9,7 +9,6 @@ import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 const ActionButtons = ({
   discoveryConfig,
   resourceInfo,
-  data,
 }): JSX.Element => {
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
@@ -32,13 +31,15 @@ const ActionButtons = ({
           </Button>
         </Col>
         */}
-        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
-          discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
-          resourceInfo?.study_metadata &&
-          (
+        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
+          && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
+          && resourceInfo?.study_metadata
+          && (
             <Col flex='1 0 auto'>
-              <Button className='discovery-action-bar-button'
-              onClick={()=> DownloadJsonFile("study-level-metadata", resourceInfo.study_metadata)}>
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() => DownloadJsonFile('study-level-metadata', resourceInfo.study_metadata)}
+              >
                 Download <br />
                 Study-Level Metadata
               </Button>
@@ -52,7 +53,7 @@ const ActionButtons = ({
                 HandleDownloadManifestClick(
                   discoveryConfig,
                   [resourceInfo],
-                  false
+                  false,
                 );
               }}
             >
@@ -64,9 +65,7 @@ const ActionButtons = ({
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
-              onClick={() =>
-                DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
-              }
+              onClick={() => DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)}
             >
               Download All Files
             </Button>

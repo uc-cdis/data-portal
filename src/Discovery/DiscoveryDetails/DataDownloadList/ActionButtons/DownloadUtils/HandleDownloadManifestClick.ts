@@ -34,7 +34,7 @@ const HandleDownloadManifestClick = (
       }
     }
   });
-  DownloadJsonFile('manifest', manifest)
+  DownloadJsonFile('manifest', manifest);
 };
 
 export default HandleDownloadManifestClick;

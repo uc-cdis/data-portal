@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import DownloadAllModal from './DownloadAllModal';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
@@ -22,7 +22,7 @@ test('DownloadAllModal renders correctly and closes on button click', () => {
     <DownloadAllModal
       downloadStatus={mockDownloadStatus}
       setDownloadStatus={mockSetDownloadStatus}
-    />
+    />,
   );
 
   // Check if the modal renders with the provided title and content
