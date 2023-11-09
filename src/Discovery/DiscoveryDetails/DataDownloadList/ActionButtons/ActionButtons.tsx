@@ -6,10 +6,7 @@ import './ActionButtons.css';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 
-const ActionButtons = ({
-  discoveryConfig,
-  resourceInfo,
-}): JSX.Element => {
+const ActionButtons = ({ discoveryConfig, resourceInfo }): JSX.Element => {
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
@@ -32,19 +29,22 @@ const ActionButtons = ({
         </Col>
         */}
         {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
-          && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
-          && resourceInfo?.study_metadata
-          && (
-            <Col flex='1 0 auto'>
-              <Button
-                className='discovery-action-bar-button'
-                onClick={() => DownloadJsonFile('study-level-metadata', resourceInfo.study_metadata)}
-              >
+          && discoveryConfig?.features.exportToWorkspace
+            .enableDownloadStudyMetadata
+          && resourceInfo?.study_metadata && (
+          <Col flex='1 0 auto'>
+            <Button
+              className='discovery-action-bar-button'
+              onClick={() => DownloadJsonFile(
+                'study-level-metadata',
+                resourceInfo.study_metadata,
+              )}
+            >
                 Download <br />
                 Study-Level Metadata
-              </Button>
-            </Col>
-          )}
+            </Button>
+          </Col>
+        )}
         {discoveryConfig?.features.exportToWorkspace.enableDownloadManifest && (
           <Col flex='1 0 auto'>
             <Button

@@ -42,7 +42,7 @@ const checkDownloadStatus = (
                 inProgress: false,
                 message: {
                   title: 'Download failed',
-                  content: <p>{ output }</p>,
+                  content: <p>{output}</p>,
                   active: true,
                 },
               });
@@ -142,8 +142,9 @@ const DownloadAllFiles = (
             title: 'Your download is being prepared',
             content: (
               <p>
-                Please remain on this page until your download completes. When your download is ready,
-                it will begin automatically. You can close this window.
+                Please remain on this page until your download completes. When
+                your download is ready, it will begin automatically. You can
+                close this window.
               </p>
             ),
             active: true,

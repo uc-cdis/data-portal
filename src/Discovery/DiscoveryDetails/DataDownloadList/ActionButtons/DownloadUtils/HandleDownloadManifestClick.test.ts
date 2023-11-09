@@ -19,7 +19,11 @@ describe('HandleDownloadManifestClick', () => {
     const healICPSRLoginNeeded = true;
 
     // Call the function
-    HandleDownloadManifestClick(config, selectedResources, healICPSRLoginNeeded);
+    HandleDownloadManifestClick(
+      config,
+      selectedResources,
+      healICPSRLoginNeeded,
+    );
 
     // Assertions
     expect(DownloadJsonFile).not.toHaveBeenCalled();
@@ -36,7 +40,12 @@ describe('HandleDownloadManifestClick', () => {
     const healICPSRLoginNeeded = false;
 
     // Assertions
-    expect(() => HandleDownloadManifestClick(config, selectedResources, healICPSRLoginNeeded)).toThrowError(
+    expect(() => HandleDownloadManifestClick(
+      config,
+      selectedResources,
+      healICPSRLoginNeeded,
+    ),
+    ).toThrowError(
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   });
@@ -53,9 +62,15 @@ describe('HandleDownloadManifestClick', () => {
     const healICPSRLoginNeeded = false;
 
     // Call the function
-    HandleDownloadManifestClick(config, selectedResources, healICPSRLoginNeeded);
+    HandleDownloadManifestClick(
+      config,
+      selectedResources,
+      healICPSRLoginNeeded,
+    );
 
     // Assertions
-    expect(DownloadJsonFile).toHaveBeenCalledWith('manifest', [{ item: 'value' }]);
+    expect(DownloadJsonFile).toHaveBeenCalledWith('manifest', [
+      { item: 'value' },
+    ]);
   });
 });

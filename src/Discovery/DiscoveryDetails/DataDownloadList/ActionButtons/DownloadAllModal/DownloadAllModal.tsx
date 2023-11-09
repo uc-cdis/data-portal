@@ -26,7 +26,7 @@ const DownloadAllModal = ({
           },
         })}
       >
-          Close
+        Close
       </Button>
     )}
   >

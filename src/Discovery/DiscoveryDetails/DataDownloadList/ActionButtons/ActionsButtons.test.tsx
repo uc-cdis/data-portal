@@ -17,10 +17,14 @@ describe('ActionButtons', () => {
 
   const mockResourceInfo = {
     study_id: 'mockStudyId',
-    study_metadata: { /* mock study metadata */ },
+    study_metadata: {
+      /* mock study metadata */
+    },
   };
 
-  const mockData = { /* mock data */ };
+  const mockData = {
+    /* mock data */
+  };
 
   /* Helper Functions */
   const checkResourceInfoConditional = (buttonText: string) => {
@@ -35,7 +39,10 @@ describe('ActionButtons', () => {
     expect(queryByText(buttonText)).toBeNull();
   };
 
-  const checkExportToWorkspaceConditional = (buttonText:string, condition: string) => {
+  const checkExportToWorkspaceConditional = (
+    buttonText: string,
+    condition: string,
+  ) => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
         discoveryConfig={mockDiscoveryConfig}
@@ -73,14 +80,23 @@ describe('ActionButtons', () => {
 
   test('renders Download Study-Level Metadata button based on conditionals', () => {
     const buttonText = 'Study-Level Metadata';
-    checkExportToWorkspaceConditional(buttonText, 'enableDownloadStudyMetadata');
+    checkExportToWorkspaceConditional(
+      buttonText,
+      'enableDownloadStudyMetadata',
+    );
     checkExportToWorkspaceConditional(buttonText, 'studyMetadataFieldName');
     checkResourceInfoConditional(buttonText);
   });
   test('renders Download File Manifest button based on conditionals', () => {
-    checkExportToWorkspaceConditional('Download File Manifest', 'enableDownloadManifest');
+    checkExportToWorkspaceConditional(
+      'Download File Manifest',
+      'enableDownloadManifest',
+    );
   });
   test('renders Download All Files button based on conditionals', () => {
-    checkExportToWorkspaceConditional('Download All Files', 'enableDownloadZip');
+    checkExportToWorkspaceConditional(
+      'Download All Files',
+      'enableDownloadZip',
+    );
   });
 });

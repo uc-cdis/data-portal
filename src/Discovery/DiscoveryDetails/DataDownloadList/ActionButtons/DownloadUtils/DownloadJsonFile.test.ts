@@ -15,6 +15,9 @@ describe('DownloadJsonFile', () => {
     DownloadJsonFile(fileName, testData);
 
     // Assert that saveAs is called with the correct arguments
-    expect(FileSaver.saveAs).toHaveBeenCalledWith(expect.any(Blob), 'testFile.json');
+    expect(FileSaver.saveAs).toHaveBeenCalledWith(
+      expect.any(Blob),
+      'testFile.json',
+    );
   });
 });
