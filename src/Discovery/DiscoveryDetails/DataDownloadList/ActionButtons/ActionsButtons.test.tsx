@@ -66,7 +66,7 @@ describe('ActionButtons', () => {
     expect(queryByText(buttonText)).toBeNull();
   };
 
-  /* TESTS */
+  /* Tests */
   test('Renders test id for ActionButtons', () => {
     render(
       <ActionButtons
