@@ -1,0 +1,20 @@
+.team-project-header {
+  text-align: right;
+  color: #2e77b8;
+  font-size: 20px;
+  line-height: 80px;
+}
+
+.team-project-header_modal-button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.team-project-header_modal-button:hover {
+  opacity: 0.8;
+}
+
+.team-project-header_modal-button:focus-visible {
+  padding: 2px;
+  outline: 2px solid #1890ff;
+}
