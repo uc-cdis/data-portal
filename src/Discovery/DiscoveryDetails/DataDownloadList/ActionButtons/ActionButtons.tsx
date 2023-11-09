@@ -29,8 +29,7 @@ const ActionButtons = ({ discoveryConfig, resourceInfo }): JSX.Element => {
         </Col>
         */}
         {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
-          && discoveryConfig?.features.exportToWorkspace
-            .enableDownloadStudyMetadata
+          && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
           && resourceInfo?.study_metadata && (
           <Col flex='1 0 auto'>
             <Button

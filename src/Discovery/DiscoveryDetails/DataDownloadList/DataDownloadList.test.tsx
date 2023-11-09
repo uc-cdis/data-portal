@@ -4,7 +4,8 @@ import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 
 describe('DataDownloadList', () => {
-  it('renders the component with titles and descriptions and action buttons when sourceFieledData has titles and descriptions', () => {
+  it(`renders the component with titles and descriptions and action buttons container
+  when sourceFieledData has titles and descriptions`, () => {
     const sourceFieldData = [
       [
         {
@@ -22,7 +23,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={null}
         resourceInfo={null}
         sourceFieldData={sourceFieldData}
-      />,
+      />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -46,7 +47,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList sourceFieldData={sourceFieldData} />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -68,7 +69,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList sourceFieldData={sourceFieldData} />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -87,7 +88,7 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { container } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList sourceFieldData={sourceFieldData} />
     );
     // Verify that the component does not render (returns null)
     expect(container.firstChild).toBeNull();
