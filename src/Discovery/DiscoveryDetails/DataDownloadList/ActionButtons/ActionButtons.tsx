@@ -17,7 +17,7 @@ const ActionButtons = ({
   const studyIDs = [resourceInfo?.study_id];
 
   return (
-    <div className='discovery-modal_buttons-row'>
+    <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <DownloadAllModal
         downloadStatus={downloadStatus}
         setDownloadStatus={setDownloadStatus}

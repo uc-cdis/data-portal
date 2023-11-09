@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ActionButtons from './ActionButtons';
 
@@ -21,6 +21,8 @@ describe('ActionButtons', () => {
   };
 
   const mockData = { /* mock data */ };
+
+  /* Helper Functions */
   const checkResourceInfoConditional = (buttonText: string) => {
     const { queryByText } = render(
       <ActionButtons
@@ -58,6 +60,17 @@ describe('ActionButtons', () => {
   };
 
   /* TESTS */
+  test('Renders test id for ActionButtons', () => {
+    render(
+      <ActionButtons
+        discoveryConfig={mockDiscoveryConfig}
+        resourceInfo={mockResourceInfo}
+        data={mockData}
+      />,
+    );
+    expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
+  });
+
   test('renders Download Study-Level Metadata button based on conditionals', () => {
     const buttonText = 'Study-Level Metadata';
     checkExportToWorkspaceConditional(buttonText, 'enableDownloadStudyMetadata');
