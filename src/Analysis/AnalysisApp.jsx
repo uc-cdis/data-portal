@@ -22,6 +22,9 @@ const queryClient = new QueryClient();
 const disableBody = (target) => disableBodyScroll(target);
 const enableBody = (target) => enableBodyScroll(target);
 
+const TeamProject = localStorage.getItem('teamProject');
+const TeamProjectQueryString = SanitizeTeamProjectString(TeamProject);
+
 class AnalysisApp extends React.Component {
   constructor(props) {
     super(props);
@@ -70,8 +73,8 @@ class AnalysisApp extends React.Component {
     // ONLY process messages coming from the same domain as the app AND
     // which contain the message "refresh token!":
     if (
-      event.origin === applicationBaseUrl
-      && event.data === 'refresh token!'
+      event.origin === applicationBaseUrl &&
+      event.data === 'refresh token!'
     ) {
       // Call function to refresh session:
       sessionMonitor.updateUserActivity();
@@ -80,89 +83,85 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={analysisApps[app].options}
-            onChange={this.selectChange}
-          />
-          <Button
-            label='Run Analysis'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'ndhHIV':
-      return <HIVCohortFilter />;
-    case 'ndhVirus':
-      return (
-        <React.Fragment>
-          <input
-            className='text-input'
-            type='text'
-            placeholder='input data'
-            name='input'
-          />
-          <Button
-            label='Run'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'GWASResults':
-      return (
-        <div className='analysis-app_flex_row'>
-          <GWASResultsContainer />
-        </div>
-      );
-    case 'GWASUIApp': {
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-            setCurrentStep(0);
-          }}
-        >
-          <div>
-            <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-          </div>
-        </TourProvider>
-      );
-    }
-    default:
-      // this will ensure the main window will process the app messages (if any):
-      window.addEventListener('message', this.processAppMessages);
-      return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={
-                this.state.app.title === 'OHDSI Atlas'
-                  ? `${
-                    this.state.app.applicationUrl
-                  }#/home?teamproject=${SanitizeTeamProjectString(
-                    localStorage.getItem('teamProject'),
-                  )}`
-                  : `${this.state.app.applicationUrl}`
-              }
-              onLoad={this.handleIframeApp}
+      case 'vaGWAS':
+        return (
+          <React.Fragment>
+            <Select
+              value={this.state.jobInput}
+              placeholder='Select your organ'
+              options={analysisApps[app].options}
+              onChange={this.selectChange}
             />
+            <Button
+              label='Run Analysis'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'ndhHIV':
+        return <HIVCohortFilter />;
+      case 'ndhVirus':
+        return (
+          <React.Fragment>
+            <input
+              className='text-input'
+              type='text'
+              placeholder='input data'
+              name='input'
+            />
+            <Button
+              label='Run'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'GWASResults':
+        return (
+          <div className='analysis-app_flex_row'>
+            <GWASResultsContainer />
           </div>
-        </React.Fragment>
-      );
+        );
+      case 'GWASUIApp': {
+        return (
+          <TourProvider
+            afterOpen={disableBody}
+            beforeClose={enableBody}
+            disableInteraction
+            onClickClose={({ setCurrentStep, setIsOpen }) => {
+              setIsOpen(false);
+              setCurrentStep(0);
+            }}
+          >
+            <div>
+              <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+            </div>
+          </TourProvider>
+        );
+      }
+      default:
+        // this will ensure the main window will process the app messages (if any):
+        window.addEventListener('message', this.processAppMessages);
+        return (
+          <React.Fragment>
+            <div className='analysis-app__iframe-wrapper'>
+              <iframe
+                className='analysis-app__iframe'
+                title='Analysis App'
+                frameBorder='0'
+                src={
+                  this.state.app.title === 'OHDSI Atlas'
+                    ? `${this.state.app.applicationUrl}#/home?teamproject=${TeamProjectQueryString}`
+                    : `${this.state.app.applicationUrl}`
+                }
+                onLoad={this.handleIframeApp}
+              />
+            </div>
+          </React.Fragment>
+        );
     }
   };
 
@@ -178,7 +177,7 @@ class AnalysisApp extends React.Component {
         if (option === null || this.props.job) {
           this.props.resetJobState();
         }
-      },
+      }
     );
   };
 
