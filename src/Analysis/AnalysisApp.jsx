@@ -53,11 +53,12 @@ class AnalysisApp extends React.Component {
 
   getAtlasURLWithTeamProject() {
     const TeamProject = localStorage.getItem('teamProject');
-    const regexp = /^\/.*/gi;
+    const regexp = /^\/\w[\w/]*$/gi;
     const isValidTeamProject = new RegExp(regexp).test(TeamProject);
     if (!isValidTeamProject) {
-      console.log(`Found illegal "teamProject" parameter value ${TeamProject}`);
-      return this.state.app.applicationUrl;
+      throw new Error(
+        `Found illegal "teamProject" parameter value ${TeamProject}`,
+      );
     }
     return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
   }
