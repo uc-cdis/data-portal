@@ -5,6 +5,8 @@ import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
 import './TeamProjectHeader.css';
+import CheckTeamProjectCurrentlyValid from './InvalidTeamProjectMessage';
+import InvalidTeamProjectMessage from './InvalidTeamProjectMessage';
 
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +17,7 @@ const TeamProjectHeader = ({ isEditable }) => {
   const history = useHistory();
 
   useEffect(() => {
-    const storedTeamProject = localStorage.getItem('teamProject');
+    let storedTeamProject = localStorage.getItem('teamProject');
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
     } else if (isEditable) {
@@ -28,6 +30,7 @@ const TeamProjectHeader = ({ isEditable }) => {
 
   return (
     <React.Fragment>
+      <InvalidTeamProjectMessage isEditable={isEditable} />
       <div className='team-project-header'>
         <strong>Team Project</strong> / {bannerText}
         {isEditable && (
