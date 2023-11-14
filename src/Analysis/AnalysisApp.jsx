@@ -161,7 +161,7 @@ class AnalysisApp extends React.Component {
               title='Analysis App'
               frameBorder='0'
               src={
-                this.state.app.title === 'OHDSI Atlas'
+                this.state.app.title === 'OHDSI Atlas' && this.state.app.needsTeamProject
                   ? this.getAtlasURLWithTeamProject()
                   : `${this.state.app.applicationUrl}`
               }
