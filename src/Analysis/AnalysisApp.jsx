@@ -14,6 +14,7 @@ import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
+import SanitizeTeamProjectString from './SharedUtils/TeamProject/Utils/SanitizeTeamProjectString';
 import './AnalysisApp.css';
 
 const queryClient = new QueryClient();
@@ -150,7 +151,11 @@ class AnalysisApp extends React.Component {
               frameBorder='0'
               src={
                 this.state.app.title === 'OHDSI Atlas'
-                  ? `${this.state.app.applicationUrl}#/home?teamproject=${localStorage.getItem('teamProject')}`
+                  ? `${
+                    this.state.app.applicationUrl
+                  }#/home?teamproject=${SanitizeTeamProjectString(
+                    localStorage.getItem('teamProject'),
+                  )}`
                   : `${this.state.app.applicationUrl}`
               }
               onLoad={this.handleIframeApp}
