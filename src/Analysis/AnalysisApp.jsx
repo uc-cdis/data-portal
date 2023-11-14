@@ -53,11 +53,14 @@ class AnalysisApp extends React.Component {
 
   getAtlasURLWithTeamProject() {
     const TeamProject = localStorage.getItem('teamProject');
-    const regexp = /^\/.*/gi;
-    const isValidTeamProject = new RegExp(regexp).test(TeamProject);
-    if (!isValidTeamProject) {
-      console.log(`Found illegal "teamProject" parameter value ${TeamProject}`);
-      return this.state.app.applicationUrl;
+    const regexp_alphanumericSlashUnderscore = /[^a-zA-Z0-9/_]/g;
+    const isInvalidTeamProject = new RegExp(
+      regexp_alphanumericSlashUnderscore
+    ).test(TeamProject);
+    if (isInvalidTeamProject) {
+      throw new Error(
+        `Found illegal "teamProject" parameter value: ${TeamProject}`
+      );
     }
     return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
   }
@@ -80,8 +83,8 @@ class AnalysisApp extends React.Component {
     // ONLY process messages coming from the same domain as the app AND
     // which contain the message "refresh token!":
     if (
-      event.origin === applicationBaseUrl
-      && event.data === 'refresh token!'
+      event.origin === applicationBaseUrl &&
+      event.data === 'refresh token!'
     ) {
       // Call function to refresh session:
       sessionMonitor.updateUserActivity();
@@ -90,85 +93,85 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={analysisApps[app].options}
-            onChange={this.selectChange}
-          />
-          <Button
-            label='Run Analysis'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'ndhHIV':
-      return <HIVCohortFilter />;
-    case 'ndhVirus':
-      return (
-        <React.Fragment>
-          <input
-            className='text-input'
-            type='text'
-            placeholder='input data'
-            name='input'
-          />
-          <Button
-            label='Run'
-            buttonType='primary'
-            onClick={this.onSubmitJob}
-            isPending={this.isJobRunning()}
-          />
-        </React.Fragment>
-      );
-    case 'GWASResults':
-      return (
-        <div className='analysis-app_flex_row'>
-          <GWASResultsContainer />
-        </div>
-      );
-    case 'GWASUIApp': {
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-            setCurrentStep(0);
-          }}
-        >
-          <div>
-            <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-          </div>
-        </TourProvider>
-      );
-    }
-    default:
-      // this will ensure the main window will process the app messages (if any):
-      window.addEventListener('message', this.processAppMessages);
-      return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={
-                this.state.app.title === 'OHDSI Atlas'
-                  ? this.getAtlasURLWithTeamProject()
-                  : `${this.state.app.applicationUrl}`
-              }
-              onLoad={this.handleIframeApp}
+      case 'vaGWAS':
+        return (
+          <React.Fragment>
+            <Select
+              value={this.state.jobInput}
+              placeholder='Select your organ'
+              options={analysisApps[app].options}
+              onChange={this.selectChange}
             />
+            <Button
+              label='Run Analysis'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'ndhHIV':
+        return <HIVCohortFilter />;
+      case 'ndhVirus':
+        return (
+          <React.Fragment>
+            <input
+              className='text-input'
+              type='text'
+              placeholder='input data'
+              name='input'
+            />
+            <Button
+              label='Run'
+              buttonType='primary'
+              onClick={this.onSubmitJob}
+              isPending={this.isJobRunning()}
+            />
+          </React.Fragment>
+        );
+      case 'GWASResults':
+        return (
+          <div className='analysis-app_flex_row'>
+            <GWASResultsContainer />
           </div>
-        </React.Fragment>
-      );
+        );
+      case 'GWASUIApp': {
+        return (
+          <TourProvider
+            afterOpen={disableBody}
+            beforeClose={enableBody}
+            disableInteraction
+            onClickClose={({ setCurrentStep, setIsOpen }) => {
+              setIsOpen(false);
+              setCurrentStep(0);
+            }}
+          >
+            <div>
+              <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+            </div>
+          </TourProvider>
+        );
+      }
+      default:
+        // this will ensure the main window will process the app messages (if any):
+        window.addEventListener('message', this.processAppMessages);
+        return (
+          <React.Fragment>
+            <div className='analysis-app__iframe-wrapper'>
+              <iframe
+                className='analysis-app__iframe'
+                title='Analysis App'
+                frameBorder='0'
+                src={
+                  this.state.app.title === 'OHDSI Atlas'
+                    ? this.getAtlasURLWithTeamProject()
+                    : `${this.state.app.applicationUrl}`
+                }
+                onLoad={this.handleIframeApp}
+              />
+            </div>
+          </React.Fragment>
+        );
     }
   };
 
@@ -184,7 +187,7 @@ class AnalysisApp extends React.Component {
         if (option === null || this.props.job) {
           this.props.resetJobState();
         }
-      },
+      }
     );
   };
 
