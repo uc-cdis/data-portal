@@ -53,9 +53,9 @@ class AnalysisApp extends React.Component {
 
   getAtlasURLWithTeamProject() {
     const TeamProject = localStorage.getItem('teamProject');
-    const regexp_alphanumericSlashUnderscore = /[^a-zA-Z0-9/_]/g;
+    const regexpAlphanumericSlashUnderscore = /[^a-zA-Z0-9/_]/g;
     const isInvalidTeamProject = new RegExp(
-      regexp_alphanumericSlashUnderscore
+      regexpAlphanumericSlashUnderscore
     ).test(TeamProject);
     if (isInvalidTeamProject) {
       throw new Error(
