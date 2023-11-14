@@ -1,5 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
@@ -17,11 +19,11 @@ beforeEach(() => {
   });
 });
 
-test('renders TeamProjectHeader with default props', () => {
+test('renders TeamProjectHeader with default props when isEditable is true and no local storage', () => {
   localStorageMock.getItem.mockReturnValueOnce(null);
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
-      <TeamProjectHeader />
+      <TeamProjectHeader isEditable />
     </QueryClientProvider>,
   );
   // Assert that the component renders without crashing without button
@@ -29,10 +31,26 @@ test('renders TeamProjectHeader with default props', () => {
   expect(screen.getByText('/ - -')).toBeInTheDocument();
 });
 
-test('renders TeamProjectHeader with edit button when showButton is true and can open modal', () => {
+test(`Calls useHistory for redirect to analysis page when isEditable is
+  false and teamProject is not set in local storage`, () => {
+  localStorageMock.getItem.mockReturnValueOnce(null);
+  const history = createMemoryHistory();
+
+  render(
+    <Router history={history}>
+      <QueryClientProvider client={new QueryClient()} contextSharing>
+        <TeamProjectHeader isEditable={false} />
+      </QueryClientProvider>
+    </Router>,
+  );
+
+  expect(history.location.pathname).toBe('/analysis');
+});
+
+test('renders TeamProjectHeader with edit button when isEditable is true and can open modal', () => {
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
-      <TeamProjectHeader showButton />
+      <TeamProjectHeader isEditable />
     </QueryClientProvider>,
   );
 
