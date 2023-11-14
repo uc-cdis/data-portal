@@ -14,16 +14,12 @@ import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
-import SanitizeTeamProjectString from './SharedUtils/TeamProject/Utils/SanitizeTeamProjectString';
 import './AnalysisApp.css';
 
 const queryClient = new QueryClient();
 
 const disableBody = (target) => disableBodyScroll(target);
 const enableBody = (target) => enableBodyScroll(target);
-
-const TeamProject = localStorage.getItem('teamProject');
-const TeamProjectQueryString = SanitizeTeamProjectString(TeamProject);
 
 class AnalysisApp extends React.Component {
   constructor(props) {
@@ -53,6 +49,17 @@ class AnalysisApp extends React.Component {
 
   componentWillUnmount() {
     this.props.resetJobState();
+  }
+
+  getAtlasURLWithTeamProject() {
+    const TeamProject = localStorage.getItem('teamProject');
+    const regexp = /^\/.*/gi;
+    const isValidTeamProject = new RegExp(regexp).test(TeamProject);
+    if (!isValidTeamProject) {
+      console.log(`Found illegal "teamProject" parameter value ${TeamProject}`);
+      return this.state.app.applicationUrl;
+    }
+    return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
   }
 
   onSubmitJob = (e) => {
@@ -154,7 +161,7 @@ class AnalysisApp extends React.Component {
                 frameBorder='0'
                 src={
                   this.state.app.title === 'OHDSI Atlas'
-                    ? `${this.state.app.applicationUrl}#/home?teamproject=${TeamProjectQueryString}`
+                    ? this.getAtlasURLWithTeamProject()
                     : `${this.state.app.applicationUrl}`
                 }
                 onLoad={this.handleIframeApp}
