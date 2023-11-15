@@ -4,9 +4,13 @@ import { useHistory } from 'react-router-dom';
 import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
-import './TeamProjectHeader.css';
+import { useQuery } from 'react-query';
+import queryConfig from '../../QueryConfig';
+import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import CheckTeamProjectCurrentlyValid from './InvalidTeamProjectMessage';
 import InvalidTeamProjectMessage from './InvalidTeamProjectMessage';
+import './TeamProjectHeader.css';
+import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
 
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,8 +20,19 @@ const TeamProjectHeader = ({ isEditable }) => {
   };
   const history = useHistory();
 
+  const { data, status } = useQuery(
+    'teamprojects',
+    fetchArboristTeamProjectRoles,
+    queryConfig
+  );
+  let currentTeamProjectIsValid = false;
+  if (data) {
+    currentTeamProjectIsValid = IsCurrentTeamProjectValid(data);
+  }
+
   useEffect(() => {
-    let storedTeamProject = localStorage.getItem('teamProject');
+    console.log('currentTeamProjectIsValid', currentTeamProjectIsValid);
+    const storedTeamProject = localStorage.getItem('teamProject');
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
     } else if (isEditable) {
@@ -26,11 +41,10 @@ const TeamProjectHeader = ({ isEditable }) => {
       // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
       history.push('/analysis');
     }
-  }, [history, isEditable]);
+  }, [history, isEditable, currentTeamProjectIsValid]);
 
   return (
     <React.Fragment>
-      <InvalidTeamProjectMessage isEditable={isEditable} />
       <div className='team-project-header'>
         <strong>Team Project</strong> / {bannerText}
         {isEditable && (
@@ -55,6 +69,8 @@ const TeamProjectHeader = ({ isEditable }) => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setBannerText={setBannerText}
+          data={data}
+          status={status}
         />
       )}
     </React.Fragment>

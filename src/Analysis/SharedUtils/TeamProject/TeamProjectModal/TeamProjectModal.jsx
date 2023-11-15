@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, Spin, Select,
-} from 'antd';
+import { Button, Modal, Spin, Select } from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import './TeamProjectModal.css';
 
-const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
+const TeamProjectModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  setBannerText,
+  data,
+  status,
+}) => {
   const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject'),
+    localStorage.getItem('teamProject')
   );
 
   const closeAndUpdateTeamProject = () => {
@@ -19,12 +23,6 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
-
-  const { data, status } = useQuery(
-    'teamprojects',
-    fetchArboristTeamProjectRoles,
-    queryConfig,
-  );
 
   let modalContent = (
     <Modal
@@ -98,7 +96,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       </Modal>
     );
   }
-  return <React.Fragment>{ modalContent }</React.Fragment>;
+  return <React.Fragment>{modalContent}</React.Fragment>;
 };
 
 TeamProjectModal.propTypes = {

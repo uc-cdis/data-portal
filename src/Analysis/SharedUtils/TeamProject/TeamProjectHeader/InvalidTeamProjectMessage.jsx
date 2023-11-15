@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import queryConfig from '../../QueryConfig';
 import { Button, Result } from 'antd';
+import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 
 const InvalidTeamProjectMessage = ({ isEditable }) => {
@@ -9,7 +9,7 @@ const InvalidTeamProjectMessage = ({ isEditable }) => {
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig
+    queryConfig,
   );
 
   if (data) {
@@ -30,20 +30,20 @@ const InvalidTeamProjectMessage = ({ isEditable }) => {
     }
   }
   return (
-    <>
+    <React.Fragment>
       {status}
       {!isEditable && !currentTeamProjectIsValid && status === 'success' && (
         <Result
           status='warning'
           title='There are some problems with your operation.'
-          extra={
+          extra={(
             <Button type='primary' key='console'>
               Go Console
             </Button>
-          }
+          )}
         />
       )}
-    </>
+    </React.Fragment>
   );
 };
 
