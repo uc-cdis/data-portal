@@ -93,26 +93,6 @@ class IndexPageComponent extends React.Component {
                 {homepageCharts}
               </Carousel>
             </MediaQuery>
-            <div className='nct-right-box emailSignUpForm'>
-              <h2>Sign Up For Updates</h2>
-              <form
-                action='https://public.govdelivery.com/accounts/USNIAID/subscribers/qualify'
-                target='_blank'
-                method='post'
-              >
-                <input name='utf8' type='hidden' value='&#x2713;' />
-                <input type='hidden' name='topic_id' id='topic_id' value='USNIAID_185' />
-                <label><span>Email Address</span>
-                  <Input
-                    name='email'
-                    placeholder='example@domain.com'
-                  />
-                </label>
-                <Button type='primary' htmlType='submit' className='g3-button g3-button--primary'>
-                  Submit
-                </Button>
-              </form>
-            </div>
             <div className='high-light nct-right-box'>
               <p><strong>Data Sharing and Submission</strong></p>
               <p>If you are interested in making your data available via this platform, please <a href={`mailto:${components.login.email}`}>contact us.</a></p>
