@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Spin, Select } from 'antd';
-import { useQuery } from 'react-query';
-import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
-import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import './TeamProjectModal.css';
 
 const TeamProjectModal = ({
@@ -13,11 +10,9 @@ const TeamProjectModal = ({
   setBannerText,
   data,
   status,
+  selectedTeamProject,
+  setSelectedTeamProject,
 }) => {
-  const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject')
-  );
-
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);
@@ -60,6 +55,7 @@ const TeamProjectModal = ({
     );
   }
   if (data) {
+    console.log('rendering modal');
     modalContent = (
       <Modal
         className='team-project-modal'

@@ -15,33 +15,48 @@ import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bannerText, setBannerText] = useState('- -');
+  const [selectedTeamProject, setSelectedTeamProject] = useState(
+    localStorage.getItem('teamProject')
+  );
   const showModal = () => {
     setIsModalOpen(true);
   };
   const history = useHistory();
+
+  const rerouteToAppSelection = () => {
+    if (!isEditable && !localStorage.getItem('teamProject')) {
+      // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
+      history.push('/analysis');
+    }
+  };
 
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
     queryConfig
   );
+
   let currentTeamProjectIsValid = false;
   if (data) {
     currentTeamProjectIsValid = IsCurrentTeamProjectValid(data);
+    if (!currentTeamProjectIsValid) {
+      localStorage.removeItem('teamProject');
+      rerouteToAppSelection();
+    }
   }
 
   useEffect(() => {
     console.log('currentTeamProjectIsValid', currentTeamProjectIsValid);
     const storedTeamProject = localStorage.getItem('teamProject');
+    console.log('storedTeamProject', storedTeamProject);
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
     } else if (isEditable) {
+      setSelectedTeamProject(null);
       showModal();
-    } else if (!isEditable && !storedTeamProject) {
-      // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
-      history.push('/analysis');
     }
-  }, [history, isEditable, currentTeamProjectIsValid]);
+    rerouteToAppSelection();
+  }, [history, isEditable, currentTeamProjectIsValid, data]);
 
   return (
     <React.Fragment>
@@ -71,6 +86,8 @@ const TeamProjectHeader = ({ isEditable }) => {
           setBannerText={setBannerText}
           data={data}
           status={status}
+          selectedTeamProject={selectedTeamProject}
+          setSelectedTeamProject={setSelectedTeamProject}
         />
       )}
     </React.Fragment>
