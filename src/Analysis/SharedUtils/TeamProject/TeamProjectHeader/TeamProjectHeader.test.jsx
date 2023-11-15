@@ -24,7 +24,7 @@ test('renders TeamProjectHeader with default props when isEditable is true and n
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
@@ -41,7 +41,7 @@ test(`Calls useHistory for redirect to analysis page when isEditable is
       <QueryClientProvider client={new QueryClient()} contextSharing>
         <TeamProjectHeader isEditable={false} />
       </QueryClientProvider>
-    </Router>,
+    </Router>
   );
 
   expect(history.location.pathname).toBe('/analysis');
@@ -51,7 +51,7 @@ test('renders TeamProjectHeader with edit button when isEditable is true and can
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 
   // Assert that the component renders with the edit button
@@ -67,9 +67,11 @@ test('Renders project name based on local storage value', () => {
   const teamProjectValue = 'Mock Team Project Name';
   localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
   render(
-    <QueryClientProvider client={new QueryClient()} contextSharing>
-      <TeamProjectHeader />
-    </QueryClientProvider>,
+    <Router history={history}>
+      <QueryClientProvider client={new QueryClient()} contextSharing>
+        <TeamProjectHeader />
+      </QueryClientProvider>
+    </Router>
   );
   // Assert that the component renders with the banner text from localStorage
   expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();
