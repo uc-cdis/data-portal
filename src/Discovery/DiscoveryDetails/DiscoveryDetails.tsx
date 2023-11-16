@@ -46,6 +46,7 @@ interface Props {
   permalinkCopied: boolean;
   user: User;
   userAuthMapping: any;
+  systemPopupActivated: boolean;
 }
 
 interface ListItem {
@@ -370,7 +371,8 @@ const DiscoveryDetails = (props: Props) => {
   return (
     <Drawer
       className='discovery-modal'
-      open={props.modalVisible}
+      // if system-level popup is visible, do not show details drawer
+      open={props.modalVisible && !props.systemPopupActivated}
       width={'50vw'}
       closable={false}
       onClose={() => {
