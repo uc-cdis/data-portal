@@ -147,6 +147,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      "@adobe/react-spectrum": path.resolve('./node_modules/@adobe/react-spectrum/dist/main.js'),
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react'), // Same issue.
       graphiql: path.resolve('./node_modules/graphiql'),
