@@ -17,6 +17,8 @@
 }
 
 .base-table__column-head {
+  position: relative;
+  max-width: 300px;
   letter-spacing: 0.02rem;
   color: #000000;
   font-size: 16px;

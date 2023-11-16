@@ -179,7 +179,7 @@ caption {
 
 button {
   border-radius: 4px;
-  width: 152px;
+  width: fit-content;
   height: 40px;
   font-family: inherit;
   font-size: 14px;
