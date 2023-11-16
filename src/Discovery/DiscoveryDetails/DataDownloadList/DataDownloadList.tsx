@@ -6,6 +6,7 @@ import ProcessData from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 
 const DataDownloadList = ({
+  user,
   discoveryConfig,
   resourceInfo,
   sourceFieldData,
@@ -14,9 +15,11 @@ const DataDownloadList = ({
   if (data.length === 0) {
     return null;
   }
+
   return (
     <div className='discovery-modal__data-download-list'>
       <ActionButtons
+        user={user}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
       />

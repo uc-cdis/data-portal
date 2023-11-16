@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import { Col, Row, Button } from 'antd';
+import HandleRedirectToLoginClick from './DownloadUtils/HandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
-import './ActionButtons.css';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
+import './ActionButtons.css';
 
-const ActionButtons = ({ discoveryConfig, resourceInfo }): JSX.Element => {
+const ActionButtons = ({
+  user,
+  discoveryConfig,
+  resourceInfo,
+}): JSX.Element => {
+  console.log('user', user);
+  const { useRedirectUser } = HandleRedirectToLoginClick(
+    resourceInfo,
+    discoveryConfig,
+    'manifest'
+  );
+
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
@@ -28,43 +40,61 @@ const ActionButtons = ({ discoveryConfig, resourceInfo }): JSX.Element => {
           </Button>
         </Col>
         */}
-        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
-          && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
-          && resourceInfo?.study_metadata && (
-          <Col flex='1 0 auto'>
-            <Button
-              className='discovery-action-bar-button'
-              onClick={() => DownloadJsonFile(
-                'study-level-metadata',
-                resourceInfo.study_metadata,
-              )}
-            >
+        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
+          discoveryConfig?.features.exportToWorkspace
+            .enableDownloadStudyMetadata &&
+          resourceInfo?.study_metadata && (
+            <Col flex='1 0 auto'>
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() =>
+                  DownloadJsonFile(
+                    'study-level-metadata',
+                    resourceInfo.study_metadata
+                  )
+                }
+              >
                 Download <br />
                 Study-Level Metadata
-            </Button>
-          </Col>
-        )}
+              </Button>
+            </Col>
+          )}
         {discoveryConfig?.features.exportToWorkspace.enableDownloadManifest && (
           <Col flex='1 0 auto'>
-            <Button
-              className='discovery-action-bar-button'
-              onClick={() => {
-                HandleDownloadManifestClick(
-                  discoveryConfig,
-                  [resourceInfo],
-                  false,
-                );
-              }}
-            >
-              Download File Manifest
-            </Button>
+            {user.name && (
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() => {
+                  HandleDownloadManifestClick(
+                    discoveryConfig,
+                    [resourceInfo],
+                    false
+                  );
+                }}
+              >
+                Download File Manifest
+              </Button>
+            )}
+            {!user.name && (
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() => {
+                  useRedirectUser();
+                }}
+              >
+                Login to
+                <br /> Download Manifest
+              </Button>
+            )}
           </Col>
         )}
         {discoveryConfig?.features.exportToWorkspace.enableDownloadZip && (
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
-              onClick={() => DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)}
+              onClick={() =>
+                DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
+              }
             >
               Download All Files
             </Button>

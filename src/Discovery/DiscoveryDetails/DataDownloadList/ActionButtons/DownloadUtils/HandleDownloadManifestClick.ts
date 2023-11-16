@@ -5,12 +5,12 @@ import DownloadJsonFile from './DownloadJsonFile';
 const HandleDownloadManifestClick = (
   config: DiscoveryConfig,
   selectedResources: any[],
-  healICPSRLoginNeeded: boolean,
+  healICPSRLoginNeeded: boolean
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
+      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`'
     );
   }
   if (healICPSRLoginNeeded) {
@@ -27,7 +27,7 @@ const HandleDownloadManifestClick = (
           ...study[manifestFieldName].map((x) => ({
             ...x,
             commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          })),
+          }))
         );
       } else {
         manifest.push(...study[manifestFieldName]);
