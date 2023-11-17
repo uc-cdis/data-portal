@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Spin, Select } from 'antd';
+import {
+  Button, Modal, Spin, Select,
+} from 'antd';
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
@@ -9,7 +11,7 @@ import './TeamProjectModal.css';
 
 const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject')
+    localStorage.getItem('teamProject'),
   );
 
   const closeAndUpdateTeamProject = () => {
@@ -21,7 +23,7 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig
+    queryConfig,
   );
 
   let modalContent = (

@@ -441,23 +441,11 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASUIApp':
-          analysisApps.GWASUIApp = {
-            title: 'Gen3 GWAS',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
-        case 'GWASResults':
-          analysisApps.GWASResults = {
-            title: 'GWAS Results',
-            description: 'Use this App to view status & results of submitted workflows',
-            image: '/src/img/analysis-icons/gwasResults.svg',
-          };
-          break;
         default:
           break;
         }
+      } else if (at.appId) {
+        analysisApps[at.appId] = at;
       } else if (at.title) {
         analysisApps[at.title] = at;
       }

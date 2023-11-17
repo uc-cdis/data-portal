@@ -708,6 +708,21 @@ Below is an example, with inline comments describing what each JSON block config
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
+  "analysisTools": [ // analysis apps to be diplayed at the /analysis/ page.
+    {
+      "appId": "myAppId", // Optional. Can be used to ensure the app path after the /analysis/ subpath is fixed, e.g. URL https://SERVER-DOMAIN/analysis/myAppId. If not set, then "title" (below) is used.
+      "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
+      "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
+      "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
+      "needsTeamProject": true // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
+    },
+    {
+      "title": "My other app",
+      "description": "etc",
+      "image": "/src/img/analysis-icons/etc.svg",
+    },
+    ...
+  ],
   "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
   "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
       "features":{ // Optional; Required when using study/Workspace registration
