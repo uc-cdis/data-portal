@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 const UseHandleRedirectToLoginClick = () => {
   const history = useHistory();
 
-  const HandleRedirectToLoginClic = (
+  const HandleRedirectToLoginClick = (
     resourceInfo,
     discoveryConfig,
     action: 'download' | 'export' | 'manifest' | null = null

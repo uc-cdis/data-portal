@@ -270,7 +270,7 @@ const tabField = (
     if (fieldConfig.type === 'dataDownloadList') {
       return (
         <DataDownloadList
-          user={user}
+          isUserLoggedIn={Boolean(user.username)}
           discoveryConfig={discoveryConfig}
           resourceInfo={resource}
           sourceFieldData={resourceFieldValue}
@@ -333,6 +333,7 @@ const fieldGrouping = (
       </div>
     );
   }
+
   return <React.Fragment />;
 };
 

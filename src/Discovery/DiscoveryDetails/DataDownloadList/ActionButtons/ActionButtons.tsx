@@ -8,11 +8,10 @@ import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import './ActionButtons.css';
 
 const ActionButtons = ({
-  user,
+  isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
 }): JSX.Element => {
-  console.log('user', user);
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
 
   const [downloadStatus, setDownloadStatus] = useState({
@@ -57,7 +56,7 @@ const ActionButtons = ({
           )}
         {discoveryConfig?.features.exportToWorkspace.enableDownloadManifest && (
           <Col flex='1 0 auto'>
-            {user.name && (
+            {isUserLoggedIn && (
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {
@@ -71,7 +70,7 @@ const ActionButtons = ({
                 Download File Manifest
               </Button>
             )}
-            {!user.name && (
+            {!isUserLoggedIn && (
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {
