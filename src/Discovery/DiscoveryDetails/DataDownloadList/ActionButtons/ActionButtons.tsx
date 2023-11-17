@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Button } from 'antd';
-import HandleRedirectToLoginClick from './DownloadUtils/HandleRedirectToLoginClick';
+import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
@@ -13,11 +13,7 @@ const ActionButtons = ({
   resourceInfo,
 }): JSX.Element => {
   console.log('user', user);
-  const { useRedirectUser } = HandleRedirectToLoginClick(
-    resourceInfo,
-    discoveryConfig,
-    'manifest'
-  );
+  const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
 
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
@@ -79,7 +75,11 @@ const ActionButtons = ({
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {
-                  useRedirectUser();
+                  HandleRedirectToLoginClick(
+                    resourceInfo,
+                    discoveryConfig,
+                    'manifest'
+                  );
                 }}
               >
                 Login to

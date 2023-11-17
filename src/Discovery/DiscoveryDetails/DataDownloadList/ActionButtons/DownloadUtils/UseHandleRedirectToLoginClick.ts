@@ -1,13 +1,13 @@
 import { useHistory } from 'react-router-dom';
 
-const HandleRedirectToLoginClick = (
-  resourceInfo,
-  discoveryConfig,
-  action: 'download' | 'export' | 'manifest' | null = null
-) => {
+const UseHandleRedirectToLoginClick = () => {
   const history = useHistory();
 
-  const useRedirectUser = () => {
+  const HandleRedirectToLoginClic = (
+    resourceInfo,
+    discoveryConfig,
+    action: 'download' | 'export' | 'manifest' | null = null
+  ) => {
     const serializableState = {
       // discovery,
       actionToResume: action,
@@ -23,7 +23,7 @@ const HandleRedirectToLoginClick = (
     )}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
-  return { useRedirectUser };
+  return { HandleRedirectToLoginClick };
 };
 
-export default HandleRedirectToLoginClick;
+export default UseHandleRedirectToLoginClick;
