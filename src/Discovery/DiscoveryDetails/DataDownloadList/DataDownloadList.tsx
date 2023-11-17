@@ -6,11 +6,12 @@ import ProcessData from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 
 const DataDownloadList = ({
-  user,
+  isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
   sourceFieldData,
 }) => {
+  console.log('isUserLoggedIn', isUserLoggedIn);
   const data = ProcessData(sourceFieldData);
   if (data.length === 0) {
     return null;
@@ -19,7 +20,7 @@ const DataDownloadList = ({
   return (
     <div className='discovery-modal__data-download-list'>
       <ActionButtons
-        user={user}
+        isUserLoggedIn={isUserLoggedIn}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
       />

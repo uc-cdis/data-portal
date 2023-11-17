@@ -34,6 +34,7 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
+import useHealRequiredIDPLogic from './Utils/useHealRequiredIDPLogic';
 
 const { Panel } = Collapse;
 
@@ -346,6 +347,20 @@ const DiscoveryDetails = (props: Props) => {
     props.modalData[props.config.minimalFieldMapping.uid]
   )}/`;
   const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
+
+  const [healIDPLoginNeeded, setHealIDPLoginNeeded] = useState<string[]>([]);
+  const { healRequiredIDPLogic } = useHealRequiredIDPLogic(
+    /* SORT THIS OUT NOV 30TH  */
+    props.config.selectedResources,
+    props.user.fence_idp
+  );
+  useEffect(() => {
+    setHealIDPLoginNeeded(healRequiredIDPLogic);
+  }, [
+    props.discovery.selectedResources,
+    props.user.fence_idp,
+    healRequiredIDPLogic,
+  ]);
 
   const handleRedirectClick = (
     redirectURL: string = '/',

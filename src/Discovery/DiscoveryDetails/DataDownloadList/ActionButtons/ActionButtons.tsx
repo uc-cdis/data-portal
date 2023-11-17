@@ -20,6 +20,17 @@ const ActionButtons = ({
   });
   const studyIDs = [resourceInfo?.study_id];
 
+  const showDownloadStudyLevelMetadataButtons =
+    discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
+    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
+    resourceInfo?.study_metadata;
+
+  const showDownloadFileManifestButtons =
+    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
+
+  const showDownloadAllFilesButtons =
+    discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <DownloadAllModal
@@ -35,26 +46,23 @@ const ActionButtons = ({
           </Button>
         </Col>
         */}
-        {discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
-          discoveryConfig?.features.exportToWorkspace
-            .enableDownloadStudyMetadata &&
-          resourceInfo?.study_metadata && (
-            <Col flex='1 0 auto'>
-              <Button
-                className='discovery-action-bar-button'
-                onClick={() =>
-                  DownloadJsonFile(
-                    'study-level-metadata',
-                    resourceInfo.study_metadata
-                  )
-                }
-              >
-                Download <br />
-                Study-Level Metadata
-              </Button>
-            </Col>
-          )}
-        {discoveryConfig?.features.exportToWorkspace.enableDownloadManifest && (
+        {showDownloadStudyLevelMetadataButtons && (
+          <Col flex='1 0 auto'>
+            <Button
+              className='discovery-action-bar-button'
+              onClick={() =>
+                DownloadJsonFile(
+                  'study-level-metadata',
+                  resourceInfo.study_metadata
+                )
+              }
+            >
+              Download <br />
+              Study-Level Metadata
+            </Button>
+          </Col>
+        )}
+        {showDownloadFileManifestButtons && (
           <Col flex='1 0 auto'>
             {isUserLoggedIn && (
               <Button
@@ -87,16 +95,33 @@ const ActionButtons = ({
             )}
           </Col>
         )}
-        {discoveryConfig?.features.exportToWorkspace.enableDownloadZip && (
+        {showDownloadAllFilesButtons && (
           <Col flex='1 0 auto'>
-            <Button
-              className='discovery-action-bar-button'
-              onClick={() =>
-                DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
-              }
-            >
-              Download All Files
-            </Button>
+            {isUserLoggedIn && (
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() =>
+                  DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
+                }
+              >
+                Download All Files
+              </Button>
+            )}
+            {!isUserLoggedIn && (
+              <Button
+                className='discovery-action-bar-button'
+                onClick={() => {
+                  HandleRedirectToLoginClick(
+                    resourceInfo,
+                    discoveryConfig,
+                    'download'
+                  );
+                }}
+              >
+                Login to
+                <br /> Download All Files
+              </Button>
+            )}
           </Col>
         )}
       </Row>
