@@ -3,13 +3,15 @@ import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
-import LoadingErrorMessage from '../../SharedComponents/LoadingErrorMessage/LoadingErrorMessage';
+import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
+import ManageColumns from './ManageColumns/ManageColumns';
 
 const Home = () => {
   const refetchInterval = 5000;
 
   async function fetchGwasWorkflows() {
-    const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
+    const currentTeamProject = localStorage.getItem('teamProject');
+    const workflowsEndpoint = `${gwasWorkflowPath}workflows?team_projects=${currentTeamProject}`;
     const getWorkflows = await fetch(workflowsEndpoint);
     return getWorkflows.json();
   }
@@ -33,6 +35,7 @@ const Home = () => {
   }
   return (
     <React.Fragment>
+      <ManageColumns />
       <HomeTable data={data} />
     </React.Fragment>
   );

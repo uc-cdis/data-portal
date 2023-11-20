@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useCallback,
 } from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
@@ -22,11 +22,12 @@ import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
-  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl, bundle,
 } from '../localconf';
 
 interface User {
-  username: string
+  username: string;
+  fence_idp?: string; // eslint-disable-line camelcase
 }
 interface JobStatus {
   uid: string;
@@ -53,6 +54,7 @@ interface Props {
     actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
+  systemPopupActivated: boolean;
   onActionResumed: () => any
 }
 
@@ -255,6 +257,7 @@ const handleDownloadZipClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
   location,
+  healIDPLoginNeeded,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const { manifestFieldName } = config.features.exportToWorkspace;
@@ -262,6 +265,10 @@ const handleDownloadZipClick = async (
     if (!isLinked) {
       return;
     }
+  }
+
+  if (healIDPLoginNeeded) {
+    return;
   }
 
   const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
@@ -298,10 +305,14 @@ const handleDownloadZipClick = async (
   ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[], healIDPLoginNeeded: boolean) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
+  }
+
+  if (healIDPLoginNeeded) {
+    return;
   }
   // combine manifests from all selected studies
   const manifest:any = [];
@@ -340,10 +351,15 @@ const handleExportToWorkspaceClick = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
   location: any,
+  healIDPLoginNeeded: boolean,
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
+  }
+
+  if (healIDPLoginNeeded) {
+    return;
   }
 
   if (config.features.exportToWorkspace.verifyExternalLogins) {
@@ -403,6 +419,7 @@ const DiscoveryActionBar = (props: Props) => {
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
+  const [healIDPLoginNeeded, setHealIDPLoginNeeded] = useState<string[]>([]);
 
   // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
@@ -430,6 +447,40 @@ const DiscoveryActionBar = (props: Props) => {
     [props.discovery.selectedResources],
   );
 
+  const healRequiredIDPLogic = useCallback(() => {
+    if (bundle === 'heal') {
+      // HP-1233 Generalize IdP-based access control
+      // Find which resources Required IDP
+      const requiredIDP:string[] = [];
+      props.discovery.selectedResources.forEach((resource) => resource?.tags.forEach((tag: { name: string; category: string; }) => {
+        if (tag?.category === 'RequiredIDP' && tag?.name) {
+          // If any resources RequiredIDP check if logged in
+          switch (tag.name) {
+          case 'InCommon':
+            if (props.user.fence_idp === 'shibboleth') {
+              return; // do not add tag to list
+            }
+            break;
+          default:
+            // eslint-disable-next-line no-console
+            console.log(`RequiredIDP does not expect: ${tag?.name}`);
+            return; // do not add tag to list
+          }
+          requiredIDP.push(tag.name);
+        }
+      }));
+      return requiredIDP;
+    }
+    return [];
+  }, [props.discovery.selectedResources, props.user.fence_idp]);
+
+  useEffect(
+    () => {
+      setHealIDPLoginNeeded(healRequiredIDPLogic);
+    },
+    [props.discovery.selectedResources, props.user.fence_idp, healRequiredIDPLogic],
+  );
+
   useEffect(
     () => {
       if (props.discovery.actionToResume === 'download') {
@@ -440,6 +491,7 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
+          healRequiredIDPLogic().length > 0,
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
@@ -450,10 +502,15 @@ const DiscoveryActionBar = (props: Props) => {
           setDownloadStatus,
           history,
           location,
+          healRequiredIDPLogic().length > 0,
         );
         props.onActionResumed();
       } else if (props.discovery.actionToResume === 'manifest') {
-        handleDownloadManifestClick(props.config, props.discovery.selectedResources);
+        handleDownloadManifestClick(
+          props.config,
+          props.discovery.selectedResources,
+          healRequiredIDPLogic().length > 0,
+        );
         props.onActionResumed();
       }
     }, [props.discovery.actionToResume],
@@ -473,6 +530,8 @@ const DiscoveryActionBar = (props: Props) => {
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push('/login', { from: `${location.pathname}${queryStr}` });
   };
+  const onlyInCommonMsg = healIDPLoginNeeded.length > 1 ? `Data selection requires [${healIDPLoginNeeded.join(', ')}] credentials to access. Please change selection to only need one set of credentials and log in using appropriate credentials`
+    : `This dataset is only accessible to users who have authenticated via ${healIDPLoginNeeded}. Please log in using the ${healIDPLoginNeeded} option.`;
 
   const downloadZipButton = (
     props.config.features.exportToWorkspace?.enableDownloadZip
@@ -483,14 +542,16 @@ const DiscoveryActionBar = (props: Props) => {
           arrowPointAtCenter
           content={(
             <React.Fragment>
-          Directly download data (up to 250Mb) from selected studies
+              {healIDPLoginNeeded.length > 0
+                ? onlyInCommonMsg
+                : 'Directly download data (up to 250Mb) from selected studies'}
             </React.Fragment>
           )}
         >
           <Button
             onClick={
               async () => {
-                if (props.user.username) {
+                if (props.user.username && !(healIDPLoginNeeded.length > 0)) {
                   handleDownloadZipClick(
                     props.config,
                     props.discovery.selectedResources,
@@ -498,6 +559,7 @@ const DiscoveryActionBar = (props: Props) => {
                     setDownloadStatus,
                     history,
                     location,
+                    healIDPLoginNeeded.length > 0,
                   );
                 } else {
                   handleRedirectToLoginClick('download');
@@ -512,7 +574,7 @@ const DiscoveryActionBar = (props: Props) => {
           >
             { (
               () => {
-                if (props.user.username) {
+                if (props.user.username && !(healIDPLoginNeeded.length > 0)) {
                   if (downloadStatus.inProgress) {
                     return 'Preparing download...';
                   }
@@ -525,7 +587,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          open={downloadStatus.message.active}
+          open={downloadStatus.message.active && !props.systemPopupActivated}
           title={downloadStatus.message.title}
           footer={(
             <Button
@@ -557,10 +619,16 @@ const DiscoveryActionBar = (props: Props) => {
         arrowPointAtCenter
         title={(
           <React.Fragment>
+            {healIDPLoginNeeded.length > 0
+              ? onlyInCommonMsg
+              : (
+                <React.Fragment>
       Download a Manifest File for use with the&nbsp;
-            <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
-              {'Gen3 Client'}
-            </a>.
+                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+                    {'Gen3 Client'}
+                  </a>.
+                </React.Fragment>
+              )}
           </React.Fragment>
         )}
         content={(
@@ -570,8 +638,8 @@ const DiscoveryActionBar = (props: Props) => {
         )}
       >
         <Button
-          onClick={(props.user.username) ? () => {
-            handleDownloadManifestClick(props.config, props.discovery.selectedResources);
+          onClick={(props.user.username && !(healIDPLoginNeeded.length > 0)) ? () => {
+            handleDownloadManifestClick(props.config, props.discovery.selectedResources, healIDPLoginNeeded.length > 0);
           }
             : () => { handleRedirectToLoginClick('manifest'); }}
           type='default'
@@ -579,7 +647,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           icon={<FileTextOutlined />}
         >
-          {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+          {(props.user.username && !(healIDPLoginNeeded.length > 0)) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
             : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
         </Button>
 
@@ -594,11 +662,16 @@ const DiscoveryActionBar = (props: Props) => {
         className='discovery-popover'
         arrowPointAtCenter
         content={(
-          <React.Fragment>
+          <React.Fragment>{healIDPLoginNeeded.length > 0
+            ? onlyInCommonMsg
+            : (
+              <React.Fragment>
           Open selected studies in the&nbsp;
-            <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-              {'Gen3 Workspace'}
-            </a>.
+                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                  {'Gen3 Workspace'}
+                </a>.
+              </React.Fragment>
+            )}
           </React.Fragment>
         )}
       >
@@ -608,7 +681,7 @@ const DiscoveryActionBar = (props: Props) => {
           disabled={props.discovery.selectedResources.length === 0}
           loading={props.exportingToWorkspace}
           icon={<ExportOutlined />}
-          onClick={(props.user.username) ? async () => {
+          onClick={(props.user.username && !(healIDPLoginNeeded.length > 0)) ? async () => {
             handleExportToWorkspaceClick(
               props.config,
               props.discovery.selectedResources,
@@ -616,11 +689,12 @@ const DiscoveryActionBar = (props: Props) => {
               setDownloadStatus,
               history,
               location,
+              healIDPLoginNeeded.length > 0,
             );
           }
             : () => { handleRedirectToLoginClick('export'); }}
         >
-          {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
+          {(props.user.username && !(healIDPLoginNeeded.length > 0)) ? 'Open In Workspace' : 'Login to Open In Workspace'}
         </Button>
       </Popover>
     )

@@ -1,0 +1,21 @@
+.details-page-header {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.details-page-header h1 {
+  font-size: 20px;
+  color: #2e77b8;
+  margin: 0;
+  padding: 0;
+  margin-left: 15px;
+  display: inline-block;
+  position: absolute;
+  line-height: 2em;
+  top: -5px;
+  min-width: 300px;
+}
+
+.details-page-header svg path {
+  fill: #343638;
+}

@@ -2,6 +2,7 @@ import React, {
   useState, useEffect, ReactNode, useMemo,
 } from 'react';
 import * as JsSearch from 'js-search';
+import jsonpath from 'jsonpath';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
 } from 'antd';
@@ -116,10 +117,13 @@ export const renderFieldContent = (content: any, contentType: 'string' | 'paragr
     return content;
   case 'number':
     if (Array.isArray(content)) {
-      return content.join(', ');
+      return content.map((v) => v.toLocaleString()).join('; ');
     }
     return content.toLocaleString();
   case 'paragraphs':
+    if (Array.isArray(content)) {
+      return content.join('\n').split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+    }
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
     return (
@@ -281,6 +285,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterState],
   );
 
+  const formatSearchIndex = (index: String) => {
+    // Removes [*] wild cards used by JSON Path and converts to array
+    const wildCardStringRegex = new RegExp(/\[\*\]/, 'g');
+    const indexWithoutWildcards = index.replace(wildCardStringRegex, '');
+    const indexArr = indexWithoutWildcards.split('.');
+    return indexArr;
+  };
+
   useEffect(() => {
     // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
@@ -294,17 +306,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     const searchableFields = config.features.search.searchBar.searchableTextFields;
     if (searchableFields) {
       searchableFields.forEach((field) => {
-        search.addIndex(field);
+        const formattedFields = formatSearchIndex(field);
+        search.addIndex(formattedFields);
       });
     } else {
       config.studyColumns.forEach((column) => {
         if (!column.contentType || column.contentType === 'string') {
-          search.addIndex(column.field);
+          const studyColumnFieldsArr = formatSearchIndex(column.field);
+          search.addIndex(studyColumnFieldsArr);
         }
       });
       // Also enable search over preview field if present
       if (config.studyPreviewField) {
-        search.addIndex(config.studyPreviewField.field);
+        const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
+        search.addIndex(studyPreviewFieldArr);
       }
     }
     // ---
@@ -327,7 +342,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         setModalVisible(true);
       } else {
         // eslint-disable-next-line no-console
-        console.error(`Could not find study with UID ${studyID}.`);
+        console.error(`Could not find data with UID ${studyID}.`);
       }
     }
   }, [props.params.studyUID, props.studies]);
@@ -348,10 +363,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
-      let value = record[column.field];
+      let value = jsonpath.query(record, `$.${column.field}`);
       let renderedCell: undefined | string | ReactNode;
 
-      if (!value) {
+      if (!value || value.length === 0 || value.every((val) => val === '')) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
@@ -365,9 +380,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
           : !column.contentType || column.contentType === 'string';
         if (columnIsSearchable && props.searchTerm) {
-          if (Array.isArray(value)) {
-            value = value.join(', ');
-          }
+          value = value.join(', '); // "value" will always be an array from jsonpath.query()
           renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
         } else if (column.hrefValueFromField) {
           renderedCell = <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{renderFieldContent(value, column.contentType, config)}</a>;
@@ -601,10 +614,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You have access to this study.'}
+              title={'You have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
@@ -624,10 +637,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You do not have access to this study.'}
+              title={'You do not have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
@@ -713,7 +726,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               </Collapse>
             </Space>
           </div>
-        ) : (
+        ) : (config.tagCategories && config.tagCategories.length > 0) && (
           <DiscoveryTagViewer
             config={config}
             studies={props.studies}

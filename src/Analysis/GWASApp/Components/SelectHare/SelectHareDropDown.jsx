@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import { Spin, Select } from 'antd';
-import {
-  fetchConceptStatsByHareSubset,
-  queryConfig,
-} from '../../Utils/cohortMiddlewareApi';
+import { fetchConceptStatsByHareSubset } from '../../Utils/cohortMiddlewareApi';
+import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useSourceContext } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 
@@ -92,6 +90,27 @@ const SelectHareDropDown = ({
       ],
   );
 
+  const determineDichotomousSizes = (selectedHareItem) => {
+    let finalControlCohortSize;
+    if (hareResults[0].data.concept_breakdown !== null) {
+      finalControlCohortSize = hareResults[0].data.concept_breakdown.find(
+        (hare) => selectedHareItem.value === hare.concept_value,
+      ).persons_in_cohort_with_value;
+    } else {
+      finalControlCohortSize = 0;
+    }
+
+    let finalCaseCohortSize;
+    if (hareResults[1].data.concept_breakdown !== null) {
+      finalCaseCohortSize = hareResults[1].data.concept_breakdown.find(
+        (hare) => selectedHareItem.value === hare.concept_value,
+      ).persons_in_cohort_with_value;
+    } else {
+      finalCaseCohortSize = 0;
+    }
+    return { finalControlCohortSize, finalCaseCohortSize };
+  };
+
   const getFinalPopulationSizes = (selectedHareItem) => {
     if (outcome.variable_type === 'concept') {
       // Quantitative outcome scenario:
@@ -101,12 +120,10 @@ const SelectHareDropDown = ({
       return [{ population: 'Total', size: finalCohortSize }];
     }
     // Dichotomous (aka Case/Control) outcome scenario:
-    const finalControlCohortSize = hareResults[0].data.concept_breakdown.find(
-      (hare) => selectedHareItem.value === hare.concept_value,
-    ).persons_in_cohort_with_value;
-    const finalCaseCohortSize = hareResults[1].data.concept_breakdown.find(
-      (hare) => selectedHareItem.value === hare.concept_value,
-    ).persons_in_cohort_with_value;
+    const {
+      finalControlCohortSize,
+      finalCaseCohortSize,
+    } = determineDichotomousSizes(selectedHareItem);
     return [
       { population: 'Control', size: finalControlCohortSize },
       { population: 'Case', size: finalCaseCohortSize },

@@ -593,12 +593,24 @@
 .discovery-modal__field {
   display: flex;
   white-space: pre-wrap;
-  justify-content: space-between;
   padding: 2px 0;
+}
+
+.discovery-modal__field--with_label {
+  justify-content: space-between;
+}
+
+.discovery-modal__field--block {
+  text-align: justify;
 }
 
 .discovery-modal__fieldlabel {
   padding-right: 10px;
+  flex-basis: 40%;
+}
+
+.discovery-modal__fieldtext {
+  text-align: end;
 }
 
 .discovery-modal__subheading {

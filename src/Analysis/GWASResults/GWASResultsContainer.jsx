@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
+import Input from './Views/Input/Input';
 import SharedContext from './Utils/SharedContext';
 import VIEWS from './Utils/ViewsEnumeration';
-import useHideUnneededElements from './Utils/useHideUnneededElements';
+import HideShowElementsCreatedByOuterAnalysisApp from './Utils/HideShowElementsCreatedByOuterAnalysisApp';
+import InitialHomeTableState from './Views/Home/HomeTableState/InitialHomeTableState';
 import './GWASResultsContainer.css';
-import InitialHomeTableState from './Utils/InitialHomeTableState';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
-  useHideUnneededElements();
+  useEffect(() => {
+    HideShowElementsCreatedByOuterAnalysisApp(currentView);
+  }, [currentView]);
+
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
@@ -22,6 +26,8 @@ const GWASResultsContainer = () => {
       return <Results />;
     case VIEWS.execution:
       return <Execution />;
+    case VIEWS.input:
+      return <Input />;
     default:
       return null;
     }

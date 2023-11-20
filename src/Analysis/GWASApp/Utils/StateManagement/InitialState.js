@@ -11,6 +11,7 @@ const initialState = {
   finalPopulationSizes: [],
   selectionMode: '',
   messages: [],
+  selectedTeamProject: localStorage.getItem('teamProject'),
 };
 
 export default initialState;
