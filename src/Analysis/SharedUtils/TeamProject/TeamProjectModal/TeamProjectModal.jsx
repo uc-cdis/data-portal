@@ -13,6 +13,10 @@ const TeamProjectModal = ({
   selectedTeamProject,
   setSelectedTeamProject,
 }) => {
+  console.log('data', data);
+  console.log('status', status);
+  console.log('selectedTeamProject', selectedTeamProject);
+
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);

@@ -5,6 +5,7 @@ import { Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
+import { useQuery } from 'react-query';
 
 const localStorageMock = {
   getItem: jest.fn(),
@@ -63,9 +64,18 @@ test('renders TeamProjectHeader with edit button when isEditable is true and can
 });
 
 test('Renders project name based on local storage value', () => {
+  // Mocking the useQuery hook
+  jest.mock('react-query');
+
   // Set up a mock value for localStorage.getItem('teamProject')
   const teamProjectValue = 'Mock Team Project Name';
   localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
+
+  useQuery.mockReturnValueOnce({
+    data: { teams: [{ team: 'Mock Team Project Name' }] },
+    status: 'success',
+  });
+
   render(
     <Router history={history}>
       <QueryClientProvider client={new QueryClient()} contextSharing>
