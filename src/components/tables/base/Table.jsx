@@ -41,6 +41,10 @@ function Table({ title, header, data, footer }) {
           let valueDate = new Date(value);        
           return new Date(`${filterValue.start}T00:00:00.000`) <= valueDate && 
             valueDate <= new Date(`${filterValue.end.add({days:1})}T00:00:00.000`);
+        } else if (Array.isArray(filterValue)) {
+          return filterValue.every((filterString) => {
+            return value.includes(filterString) || text.includes(filterString);
+          });
         } else if (typeof filterValue === 'number') {
           return filterValue > 0 &&  value <= filterValue;
         } else {

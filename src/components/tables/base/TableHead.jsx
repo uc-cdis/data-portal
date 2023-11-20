@@ -12,6 +12,7 @@ import {
   Button,
   Flex
 } from '@adobe/react-spectrum';
+import Select from 'react-select';
 
 /**
  * @typedef {Object} TableHeadProps
@@ -43,7 +44,7 @@ function TableHead({ cols, setFilters, data }) {
       <tr>
         {cols.map((col, i) => {
             let dataValues = data.map((dataCol) => dataCol[i]);
-            let stringValues = dataValues.map((val) => cellValueToText(val));
+            let stringValues = Array.isArray(dataValues[0]) ? dataValues.flat() : dataValues.map((val) => cellValueToText(val));
             let uniqueValues = Array.from(new Set(stringValues));
 
             if (dataValues[0] instanceof Date) {
@@ -89,6 +90,19 @@ function TableHead({ cols, setFilters, data }) {
                   typeof dataValues[0] === 'undefined' ||
                   dataValues[0] === '' ? 
                   null : (
+                    Array.isArray(dataValues[0]) ?
+                      <Select
+                        isMulti={Array.isArray(dataValues[0])}
+                        name="name"
+                        options={uniqueValues.map((value) => ({ value, label: value }))}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        onChange={(option) => {
+                          console.log(option);
+                          filters[i] = option.value;
+                          setFilters([...filters]);
+                        }}
+                      /> :
                       <select
                         onChange={(e) => {
                           filters[i] = e.target.value;
