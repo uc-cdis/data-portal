@@ -13,7 +13,7 @@ import {
   authzPath,
   authzMappingPath,
   wtsAggregateAuthzPath,
-  gen3openAIPath
+  gen3DiscoveryAIPath
 } from './configs';
 import { config } from './params';
 import { showSystemUse, showSystemUseOnlyOnLogin } from './localconf';
@@ -567,11 +567,11 @@ export const fetchUserAuthMapping = async (dispatch) => {
   });
 };
 
-export const fetchGen3OpenAIResponse = async (query) => {
+export const fetchGen3DiscoveryAIResponse = async (query) => {
     let body = JSON.stringify({"query": "" + query});
     console.log(body);
 
-    return fetchWithCreds({ path: gen3openAIPath, method: 'POST', body: body })
+    return fetchWithCreds({ path: gen3DiscoveryAIPath, method: 'POST', body: body })
       .then((response) => {
         try {
           if (response.status != 200) {

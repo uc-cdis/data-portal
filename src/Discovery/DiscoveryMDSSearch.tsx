@@ -5,7 +5,7 @@ import {
 import type CollapseProps from 'antd';
 import { SearchOutlined, RobotFilled } from '@ant-design/icons';
 import {
-  fetchGen3OpenAIResponse
+  fetchGen3DiscoveryAIResponse
 } from '../actions';
 
 const DiscoveryMDSSearch = (props: { searchTerm, handleSearchChange, inputSubtitle}) => (
@@ -37,7 +37,7 @@ class DiscoveryChatbot extends React.Component {
   }
 
   handleClick = () => {
-    fetchGen3OpenAIResponse(this.state.chatbotSearchTerm).then(
+    fetchGen3DiscoveryAIResponse(this.state.chatbotSearchTerm).then(
       (res) => {
         let newResponse = res;
         if (res === null) {
@@ -48,15 +48,11 @@ class DiscoveryChatbot extends React.Component {
         }
         this.setState({ response: newResponse }, () => {
           console.log('response updated:', newResponse);
-          console.log('response updated:', newResponse.sources);
+          console.log('response updated:', newResponse.documents);
 
           let newArray = []
-          newResponse.sources.map((str) => {
-            // Sources for the studies by default look like:
-            //    `library/phs002363.v1.p1.c1/DBGAP_FHIR_Description`
-            // Strip to only be:
-            //     phs002363.v1.p1.c1
-            newArray.push(str.split("/")[1]);
+          newResponse.documents.map((doc) => {
+            newArray.push(doc.metadata.source);
           });
           this.setState({ items: newArray });
         });

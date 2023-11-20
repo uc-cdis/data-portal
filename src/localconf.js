@@ -81,7 +81,7 @@ function buildConfig(opts) {
     u.search = '';
     return u.href;
   }
-  const gen3openAIPath = `${hostname}openai/ask/`;
+  const gen3DiscoveryAIPath = `${hostname}ai/ask/`;
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
@@ -488,7 +488,7 @@ function buildConfig(opts) {
     userAPIPath,
     jobAPIPath,
     apiPath,
-    gen3openAIPath,
+    gen3DiscoveryAIPath,
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
