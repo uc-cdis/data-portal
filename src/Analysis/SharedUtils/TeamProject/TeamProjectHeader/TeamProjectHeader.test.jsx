@@ -2,10 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
-import { useQuery } from 'react-query';
 
 const localStorageMock = {
   getItem: jest.fn(),
@@ -25,7 +24,7 @@ test('renders TeamProjectHeader with default props when isEditable is true and n
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
@@ -42,7 +41,7 @@ test(`Calls useHistory for redirect to analysis page when isEditable is
       <QueryClientProvider client={new QueryClient()} contextSharing>
         <TeamProjectHeader isEditable={false} />
       </QueryClientProvider>
-    </Router>
+    </Router>,
   );
 
   expect(history.location.pathname).toBe('/analysis');
@@ -52,7 +51,7 @@ test('renders TeamProjectHeader with edit button when isEditable is true and can
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   // Assert that the component renders with the edit button
@@ -70,20 +69,20 @@ test('Renders project name based on local storage value', () => {
   // Set up a mock value for localStorage.getItem('teamProject')
   const teamProjectValue = 'Mock Team Project Name';
   localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
-  /*
+
   useQuery.mockReturnValueOnce({
     data: { teams: [{ team: 'Mock Team Project Name' }] },
     status: 'success',
   });
-  */
   jest.mock('react-query');
 
+  const history = createMemoryHistory();
   render(
     <Router history={history}>
       <QueryClientProvider client={new QueryClient()} contextSharing>
         <TeamProjectHeader />
       </QueryClientProvider>
-    </Router>
+    </Router>,
   );
   // Assert that the component renders with the banner text from localStorage
   expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();

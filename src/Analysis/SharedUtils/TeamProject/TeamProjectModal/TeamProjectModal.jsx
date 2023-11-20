@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal, Spin, Select } from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
@@ -13,10 +13,6 @@ const TeamProjectModal = ({
   selectedTeamProject,
   setSelectedTeamProject,
 }) => {
-  console.log('data', data);
-  console.log('status', status);
-  console.log('selectedTeamProject', selectedTeamProject);
-
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);
@@ -59,7 +55,6 @@ const TeamProjectModal = ({
     );
   }
   if (data) {
-    console.log('rendering modal');
     modalContent = (
       <Modal
         className='team-project-modal'
@@ -103,6 +98,13 @@ TeamProjectModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
   setBannerText: PropTypes.func.isRequired,
+  data: PropTypes.object,
+  status: PropTypes.string.isRequired,
+  selectedTeamProject: PropTypes.string,
+  setSelectedTeamProject: PropTypes.func.isRequired,
 };
-
+TeamProjectModal.defaultProps = {
+  data: PropTypes.null,
+  selectedTeamProject: PropTypes.null,
+};
 export default TeamProjectModal;

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
-import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
@@ -44,9 +44,7 @@ const TeamProjectHeader = ({ isEditable }) => {
   }
 
   useEffect(() => {
-    console.log('currentTeamProjectIsValid', currentTeamProjectIsValid);
     const storedTeamProject = localStorage.getItem('teamProject');
-    console.log('storedTeamProject', storedTeamProject);
     if (storedTeamProject) {
       setBannerText(storedTeamProject);
     } else if (isEditable) {
