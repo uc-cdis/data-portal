@@ -14,7 +14,7 @@ const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bannerText, setBannerText] = useState('- -');
   const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject'),
+    localStorage.getItem('teamProject')
   );
   const showModal = () => {
     setIsModalOpen(true);
@@ -31,15 +31,13 @@ const TeamProjectHeader = ({ isEditable }) => {
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig,
+    queryConfig
   );
 
   let currentTeamProjectIsValid = false;
   if (data) {
-    console.log('data', data);
     currentTeamProjectIsValid = IsCurrentTeamProjectValid(data);
     if (!currentTeamProjectIsValid) {
-      console.log('REROUTING!');
       localStorage.removeItem('teamProject');
       rerouteToAppSelection();
     }

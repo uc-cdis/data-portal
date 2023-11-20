@@ -6,9 +6,6 @@ const IsCurrentTeamProjectValid = (data) => {
       currentTeamProjectIsValid = true;
     }
   });
-  if (currentTeamProjectIsValid === false) {
-    localStorage.removeItem('teamProject');
-  }
   return currentTeamProjectIsValid;
 };
 

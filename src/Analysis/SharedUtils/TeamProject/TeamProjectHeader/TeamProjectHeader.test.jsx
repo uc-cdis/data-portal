@@ -25,7 +25,7 @@ test('renders TeamProjectHeader with default props when isEditable is true and n
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
   // Assert that the component renders without crashing without button
   expect(screen.getByText('Team Project')).toBeInTheDocument();
@@ -42,7 +42,7 @@ test(`Calls useHistory for redirect to analysis page when isEditable is
       <QueryClientProvider client={new QueryClient()} contextSharing>
         <TeamProjectHeader isEditable={false} />
       </QueryClientProvider>
-    </Router>
+    </Router>,
   );
 
   expect(history.location.pathname).toBe('/analysis');
@@ -52,7 +52,7 @@ test('renders TeamProjectHeader with edit button when isEditable is true and can
   render(
     <QueryClientProvider client={new QueryClient()} contextSharing>
       <TeamProjectHeader isEditable />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   // Assert that the component renders with the edit button
@@ -82,7 +82,7 @@ test('renders TeamProjectHeader with team project name from localStorage', () =>
   render(
     <QueryClientProvider client={new QueryClient()}>
       <TeamProjectHeader isEditable={false} />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   // You can add more specific assertions based on your component's structure
