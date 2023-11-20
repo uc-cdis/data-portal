@@ -7,10 +7,8 @@ import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
 import { useQuery } from 'react-query';
 import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
-import CheckTeamProjectCurrentlyValid from './InvalidTeamProjectMessage';
-import InvalidTeamProjectMessage from './InvalidTeamProjectMessage';
-import './TeamProjectHeader.css';
 import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
+import './TeamProjectHeader.css';
 
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

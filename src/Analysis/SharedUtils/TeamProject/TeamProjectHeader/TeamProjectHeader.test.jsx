@@ -70,11 +70,13 @@ test('Renders project name based on local storage value', () => {
   // Set up a mock value for localStorage.getItem('teamProject')
   const teamProjectValue = 'Mock Team Project Name';
   localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
-
+  /*
   useQuery.mockReturnValueOnce({
     data: { teams: [{ team: 'Mock Team Project Name' }] },
     status: 'success',
   });
+  */
+  jest.mock('react-query');
 
   render(
     <Router history={history}>
