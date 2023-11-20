@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
 import TeamProjectTestData from '../TestData/TeamProjectTestData';
@@ -68,20 +68,14 @@ test('renders TeamProjectHeader with team project name from localStorage', () =>
   // Mock the data response from react-query
   jest.mock('react-query', () => ({
     ...jest.requireActual('react-query'),
-    useQuery: jest.fn(() => {
-      return testData;
-    }),
+    useQuery: jest.fn(() => testData),
   }));
 
-  // Mock localStorage
-  const localStorageMock = {
-    getItem: jest.fn(),
-  };
   Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
   });
 
-  const testName = '/gwas_projects/project1';
+  const testName = TeamProjectTestData.data.teams[0].teamName;
   // Set the localStorage variable for teamProject
   localStorageMock.getItem.mockReturnValue(testName);
 

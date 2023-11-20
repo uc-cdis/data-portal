@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Spin, Select } from 'antd';
+import {
+  Button, Modal, Spin, Select,
+} from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import './TeamProjectModal.css';
 
