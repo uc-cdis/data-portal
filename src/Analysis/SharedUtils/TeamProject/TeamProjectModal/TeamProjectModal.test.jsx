@@ -1,24 +1,13 @@
 import React from 'react';
-import {
-  render, screen, fireEvent, waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TeamProjectModal from './TeamProjectModal';
+import TeamProjectTestData from '../TestData/TeamProjectTestData';
 
 // Mocking the useQuery hook
 jest.mock('react-query');
 
-const modalTestData = {
-  teams: [
-    {
-      teamName: '/gwas_projects/project1',
-    },
-    {
-      teamName: '/gwas_projects/project2',
-    },
-  ],
-};
-const testTeamName = modalTestData.teams[0].teamName;
+const testTeamName = TeamProjectTestData.data.teams[0].teamName;
 
 const setIsModalOpen = jest.fn();
 const setBannerText = jest.fn();
@@ -36,12 +25,12 @@ describe('TeamProjectModal', () => {
         status='loading'
         selectedTeamProject='/gwas_projects/project1'
         setSelectedTeamProject={setSelectedTeamProject}
-      />,
+      />
     );
 
     expect(screen.getByText(/Please wait.../i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Retrieving the list of team projects./i),
+      screen.getByText(/Retrieving the list of team projects./i)
     ).toBeInTheDocument();
   });
 
@@ -51,21 +40,21 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-        data={modalTestData}
+        data={TeamProjectTestData.data}
         status='success'
         selectedTeamProject={null}
         setSelectedTeamProject={setSelectedTeamProject}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));
     expect(
-      screen.getByText(/-select one of the team projects below-/i),
+      screen.getByText(/-select one of the team projects below-/i)
     ).toBeInTheDocument();
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.getByText('Submit').closest('button')).toHaveAttribute(
-      'disabled',
+      'disabled'
     );
   });
 
@@ -77,22 +66,23 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-        data={modalTestData}
+        data={TeamProjectTestData.data}
         status='success'
         selectedTeamProject={testTeamName}
         setSelectedTeamProject={setSelectedTeamProject}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));
 
-    expect(() => screen.getByText('select one of the team projects below'),
+    expect(() =>
+      screen.getByText('select one of the team projects below')
     ).toThrow('Unable to find an element');
     expect(screen.getByText(testTeamName)).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.getByText('Submit')).toBeInTheDocument();
     expect(screen.getByText('Submit').closest('button')).not.toHaveAttribute(
-      'disabled',
+      'disabled'
     );
   });
 
@@ -102,11 +92,11 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-        data={modalTestData}
+        data={TeamProjectTestData.data}
         status='success'
         selectedTeamProject={testTeamName}
         setSelectedTeamProject={setSelectedTeamProject}
-      />,
+      />
     );
 
     await waitFor(() => screen.getByText(/Please select your team./i));

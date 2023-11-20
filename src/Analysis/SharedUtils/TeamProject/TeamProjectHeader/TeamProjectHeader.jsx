@@ -36,8 +36,10 @@ const TeamProjectHeader = ({ isEditable }) => {
 
   let currentTeamProjectIsValid = false;
   if (data) {
+    console.log('data', data);
     currentTeamProjectIsValid = IsCurrentTeamProjectValid(data);
     if (!currentTeamProjectIsValid) {
+      console.log('REROUTING!');
       localStorage.removeItem('teamProject');
       rerouteToAppSelection();
     }
