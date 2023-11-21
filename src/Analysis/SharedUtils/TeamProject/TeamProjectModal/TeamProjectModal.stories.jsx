@@ -1,7 +1,6 @@
 import React from 'react';
 import TeamProjectModal from './TeamProjectModal';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
 import TeamProjectTestData from '../TestData/TeamProjectTestData';
 
 export default {
@@ -20,7 +19,6 @@ const Template = (args) => (
     <QueryClientProvider client={mockedQueryClient} contextSharing>
       <TeamProjectModal {...args} />
     </QueryClientProvider>
-    ,
   </div>
 );
 

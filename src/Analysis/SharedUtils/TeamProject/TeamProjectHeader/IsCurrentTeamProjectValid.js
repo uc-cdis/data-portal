@@ -4,7 +4,6 @@ const IsCurrentTeamProjectValid = (data) => {
   }
   let currentTeamProjectIsValid = false;
   const currentTeamProject = localStorage.getItem('teamProject');
-  console.log("localStorage.getItem('teamProject')", currentTeamProject);
   data.teams.forEach((team) => {
     if (team.teamName === currentTeamProject) {
       currentTeamProjectIsValid = true;
