@@ -15,7 +15,7 @@ beforeEach(() => {
 });
 
 describe('IsCurrentTeamProjectValid', () => {
-  it("should return false if data doesn't contain teams", () => {
+  it('should return false if data doesn\'t contain teams', () => {
     const result = IsCurrentTeamProjectValid({ notTeams: [] });
     expect(result).toBe(false);
   });
@@ -29,7 +29,7 @@ describe('IsCurrentTeamProjectValid', () => {
 
   it('should return true if current team project is valid', () => {
     localStorageMock.getItem.mockReturnValue(
-      TeamProjectTestData.data.teams[0].teamName
+      TeamProjectTestData.data.teams[0].teamName,
     );
     const result = IsCurrentTeamProjectValid(TeamProjectTestData.data);
     expect(result).toBe(true);
