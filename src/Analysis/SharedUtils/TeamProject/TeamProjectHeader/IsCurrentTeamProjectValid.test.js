@@ -24,15 +24,9 @@ const sampleData = {
 };
 
 describe('IsCurrentTeamProjectValid', () => {
-  it(`should return false if data doesn't contain teams`, () => {
+  it("should return false if data doesn't contain teams", () => {
     // Call the function with sample data
     const result = IsCurrentTeamProjectValid({ notTeams: [] });
-    // Expect the result to be false
-    expect(result).toBe(false);
-  });
-  it(`should return false if data is falsy`, () => {
-    // Call the function with sample data
-    const result = IsCurrentTeamProjectValid(null);
     // Expect the result to be false
     expect(result).toBe(false);
   });

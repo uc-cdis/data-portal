@@ -14,14 +14,14 @@ const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bannerText, setBannerText] = useState('- -');
   const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject'),
+    localStorage.getItem('teamProject')
   );
   const showModal = () => {
     setIsModalOpen(true);
   };
   const history = useHistory();
 
-  const rerouteToAppSelection = () => {
+  const rerouteToAppSelectionIfNeeded = () => {
     if (!isEditable && !localStorage.getItem('teamProject')) {
       // non-editable view should redirect to app selection if user doesn't have a storedTeamProject
       history.push('/analysis');
@@ -31,7 +31,7 @@ const TeamProjectHeader = ({ isEditable }) => {
   const { data, status } = useQuery(
     'teamprojects',
     fetchArboristTeamProjectRoles,
-    queryConfig,
+    queryConfig
   );
 
   let currentTeamProjectIsValid = false;
@@ -39,7 +39,7 @@ const TeamProjectHeader = ({ isEditable }) => {
     currentTeamProjectIsValid = IsCurrentTeamProjectValid(data);
     if (!currentTeamProjectIsValid) {
       localStorage.removeItem('teamProject');
-      rerouteToAppSelection();
+      rerouteToAppSelectionIfNeeded();
     }
   }
 
@@ -51,7 +51,7 @@ const TeamProjectHeader = ({ isEditable }) => {
       setSelectedTeamProject(null);
       showModal();
     }
-    rerouteToAppSelection();
+    rerouteToAppSelectionIfNeeded();
   }, [history, isEditable, currentTeamProjectIsValid, data]);
 
   return (

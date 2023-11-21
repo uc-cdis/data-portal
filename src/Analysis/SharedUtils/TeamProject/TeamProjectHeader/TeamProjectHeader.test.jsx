@@ -84,6 +84,5 @@ test('renders TeamProjectHeader with team project name from localStorage', () =>
     </QueryClientProvider>
   );
 
-  // You can add more specific assertions based on your component's structure
   expect(screen.getByText(new RegExp(testName, 'i'))).toBeInTheDocument();
 });
