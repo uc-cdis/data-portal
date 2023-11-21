@@ -5,11 +5,11 @@ import { Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '@testing-library/jest-dom';
 import TeamProjectHeader from './TeamProjectHeader';
+import TeamProjectTestData from '../TestData/TeamProjectTestData';
 
 const localStorageMock = {
   getItem: jest.fn(),
   setItem: jest.fn(),
-  clear: jest.fn(),
 };
 
 beforeEach(() => {
@@ -57,20 +57,32 @@ test('renders TeamProjectHeader with edit button when isEditable is true and can
   // Assert that the component renders with the edit button
   expect(screen.queryByTestId('team-project-edit')).toBeInTheDocument();
 
-  // Simulate a click on the edit button and assert that the modal opens
+  // Simulate a click on the edit button and the modal with text "Team Projects" opens
   fireEvent.click(screen.queryByTestId('team-project-edit'));
   expect(screen.getByText('Team Projects')).toBeInTheDocument();
 });
 
-test('Renders project name based on local storage value', () => {
-  // Set up a mock value for localStorage.getItem('teamProject')
-  const teamProjectValue = 'Mock Team Project Name';
-  localStorageMock.getItem.mockReturnValueOnce(teamProjectValue);
+test('renders TeamProjectHeader with team project name from localStorage', () => {
+  const testData = TeamProjectTestData;
+  // Mock the data response from react-query
+  jest.mock('react-query', () => ({
+    ...jest.requireActual('react-query'),
+    useQuery: jest.fn(() => testData),
+  }));
+
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock,
+  });
+
+  const testName = TeamProjectTestData.data.teams[0].teamName;
+  // Set the localStorage variable for teamProject
+  localStorageMock.getItem.mockReturnValue(testName);
+
   render(
-    <QueryClientProvider client={new QueryClient()} contextSharing>
-      <TeamProjectHeader />
+    <QueryClientProvider client={new QueryClient()}>
+      <TeamProjectHeader isEditable={false} />
     </QueryClientProvider>,
   );
-  // Assert that the component renders with the banner text from localStorage
-  expect(screen.getByText(`/ ${teamProjectValue}`)).toBeInTheDocument();
+
+  expect(screen.getByText(new RegExp(testName, 'i'))).toBeInTheDocument();
 });

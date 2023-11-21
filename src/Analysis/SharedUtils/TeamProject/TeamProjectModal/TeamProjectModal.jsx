@@ -1,30 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Modal, Spin, Select,
 } from 'antd';
-import { useQuery } from 'react-query';
-import queryConfig from '../../QueryConfig';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
-import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import './TeamProjectModal.css';
 
-const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
-  const [selectedTeamProject, setSelectedTeamProject] = useState(
-    localStorage.getItem('teamProject'),
-  );
-
+const TeamProjectModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  setBannerText,
+  data,
+  status,
+  selectedTeamProject,
+  setSelectedTeamProject,
+}) => {
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
-
-  const { data, status } = useQuery(
-    'teamprojects',
-    fetchArboristTeamProjectRoles,
-    queryConfig,
-  );
 
   let modalContent = (
     <Modal
@@ -98,13 +93,20 @@ const TeamProjectModal = ({ isModalOpen, setIsModalOpen, setBannerText }) => {
       </Modal>
     );
   }
-  return <React.Fragment>{ modalContent }</React.Fragment>;
+  return <React.Fragment>{modalContent}</React.Fragment>;
 };
 
 TeamProjectModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
   setBannerText: PropTypes.func.isRequired,
+  data: PropTypes.object,
+  status: PropTypes.string.isRequired,
+  selectedTeamProject: PropTypes.string,
+  setSelectedTeamProject: PropTypes.func.isRequired,
 };
-
+TeamProjectModal.defaultProps = {
+  data: PropTypes.null,
+  selectedTeamProject: PropTypes.null,
+};
 export default TeamProjectModal;
