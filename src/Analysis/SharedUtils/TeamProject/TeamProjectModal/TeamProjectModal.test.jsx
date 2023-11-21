@@ -6,7 +6,6 @@ import '@testing-library/jest-dom';
 import TeamProjectModal from './TeamProjectModal';
 import TeamProjectTestData from '../TestData/TeamProjectTestData';
 
-// Mocking the useQuery hook
 jest.mock('react-query');
 
 const testTeamName = TeamProjectTestData.data.teams[0].teamName;
@@ -35,7 +34,8 @@ describe('TeamProjectModal', () => {
     ).toBeInTheDocument();
   });
 
-  test('Modal renders with expected components after successful load without team project local storage set', async () => {
+  test(`Modal renders with expected components after successful load
+  without team project local storage set`, async () => {
     render(
       <TeamProjectModal
         isModalOpen
@@ -59,7 +59,8 @@ describe('TeamProjectModal', () => {
     );
   });
 
-  test('Modal renders with expected content after successful load with team project local storage set', async () => {
+  test(`Modal renders with expected content after successful load
+  with team project local storage set`, async () => {
     // Mocking the local storage variable
 
     render(
