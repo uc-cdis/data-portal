@@ -20,6 +20,7 @@ export const ReduxDiscoveryDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
+    systemPopupActivated: !!state.popups?.systemUseWarnPopup,
   });
 
   return connect(mapStateToProps)(DiscoveryDetails);
