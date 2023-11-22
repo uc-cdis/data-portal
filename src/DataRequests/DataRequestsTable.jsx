@@ -29,7 +29,7 @@ function parseResearcherInfo(researcher) {
   return researcher ? (
     <span>
       {researcher.first_name} {researcher.last_name}
-      <br />({researcher.institution})
+      <br /> ({researcher.institution})
     </span>
   ) : (
     ''
@@ -62,9 +62,11 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
       let row = [
         project.id,
         project.name,
-        project.researcher?.id === userId
+        [
+          project.researcher?.id === userId
           ? 'Me'
-          : parseResearcherInfo(project.researcher),
+          : parseResearcherInfo(project.researcher)
+        ],
         new Date(project.submitted_at),
         new Date(project.completed_at),
         <span

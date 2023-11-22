@@ -7,6 +7,16 @@
   margin-bottom: 30px;
 }
 
+.label-screen-reader-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0); 
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; 
+  width: 1px;
+}
+
 .simple-input-field__container--label-top {
   flex-direction: column;
 }
