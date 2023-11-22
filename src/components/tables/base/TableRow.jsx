@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { cellValueToText } from './Table';
 import './Table.css';
+import { isValidElement } from 'react';
 
 function TableRow({ cols }) {
   return (
@@ -11,13 +12,15 @@ function TableRow({ cols }) {
           displayedCol = <ul className='base-table__cell-list-value'>
             {col.map((value, j) => {
               return <li key={`col_${i}_row_${j}`}>
-                {cellValueToText(value)}
+                {isValidElement(value) ? value : cellValueToText(value)}
               </li>;
             })}
           </ul>;
+        } else {
+          displayedCol = isValidElement(col) ? col : cellValueToText(col);
         }
         return <td className='base-table__cell' key={`col_${i}`}>
-          {Array.isArray(col) ? displayedCol : cellValueToText(col)}
+          {displayedCol}
         </td>;
       })}
     </tr>
