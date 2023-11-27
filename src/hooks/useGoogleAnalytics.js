@@ -24,9 +24,7 @@ export default function useGoogleAnalytics(userId) {
   if (isUsingGoogleAnalytics) {
     ReactGA.initialize(gaTrackingId, {
       testMode: gaDebug,
-      gaOptions: {
-        userId,
-      },
     });
+    ReactGA.set({ userId });
   }
 }

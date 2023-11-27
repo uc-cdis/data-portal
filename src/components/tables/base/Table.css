@@ -2,6 +2,10 @@
   overflow-x: auto;
 }
 
+.base-table__filter-field {
+  margin: 0 !important;
+}
+
 .base-table__body {
   border-collapse: collapse;
   overflow: auto;
@@ -17,6 +21,8 @@
 }
 
 .base-table__column-head {
+  position: relative;
+  max-width: 300px;
   letter-spacing: 0.02rem;
   color: #000000;
   font-size: 16px;

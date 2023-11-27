@@ -8,10 +8,11 @@ import './SimpleInputField.css';
  * @property {JSX.Element} input
  * @property {string | JSX.Element} label
  * @property {string} [className]
+ * @property {string} [hideLabel]
  */
 
 /** @param {SimpleInputFieldProps} props */
-function SimpleInputField({ error, input, label, className }) {
+function SimpleInputField({ error, input, label, className, hideLabel }) {
   const inputEl = useRef(input);
   const inputId =
     // id for native input elements, inputId for react-select
@@ -19,7 +20,7 @@ function SimpleInputField({ error, input, label, className }) {
 
   return (
     <div className={`simple-input-field__container ${className}`}>
-      <label className='simple-input-field__label' htmlFor={inputId}>
+      <label className={`simple-input-field__label ${hideLabel ? 'label-screen-reader-only' : ''}`} htmlFor={inputId}>
         {label}
       </label>
       <div
@@ -43,7 +44,8 @@ SimpleInputField.propTypes = {
   }),
   input: PropTypes.object.isRequired,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  hideLabel: PropTypes.bool
 };
 
 export default SimpleInputField;

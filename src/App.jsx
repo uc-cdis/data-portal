@@ -64,162 +64,188 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route
-        path='/'
-        element={
-          <Layout>
-            <Suspense
-              fallback={
-                <div style={{ height: '100vh' }}>
-                  <Spinner />
-                </div>
-              }
-            >
-              <Outlet />
-            </Suspense>
-          </Layout>
-        }
-      >
+      <Routes>
         <Route
-          index
+          path='/'
           element={
-            <ProtectedContent
-              preload={async () => dispatch(fetchIndexPageCounts())}
-            >
-              <IndexPage />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='login'
-          element={
-            <ProtectedContent isLoginPage>
-              <ReduxLogin />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='submission'
-          element={
-            <ProtectedContent
-              isAdminOnly
-              preload={({ location, state }) => {
-                function matchPattern(pattern) {
-                  return matchPath(`/submission${pattern}`, location.pathname);
+            <Layout>
+              <Suspense
+                fallback={
+                  <div style={{ height: '100vh' }}>
+                    <Spinner />
+                  </div>
                 }
-
-                const { username } = state.user;
-                const start = STARTING_DID;
-
-                if (matchPattern('/')) {
-                  return Promise.all([
-                    dispatch(getProjectsList()),
-                    dispatch(getTransactionList()),
-                    dispatch(
-                      fetchUnmappedFileStats({ start, total: [], username })
-                    ),
-                  ]);
-                }
-
-                if (matchPattern('/files'))
-                  return dispatch(
-                    fetchUnmappedFiles({ start, total: [], username })
-                  );
-
-                const { filesToMap } = state.submission;
-
-                if (matchPattern('/map') && filesToMap.length !== 0)
-                  return Promise.all([
-                    dispatch(fetchDictionary()),
-                    dispatch(getProjectsList()),
-                  ]);
-
-                if (matchPattern('/:project/*'))
-                  return dispatch(fetchDictionary());
-
-                return Promise.resolve();
-              }}
-            >
-              <Outlet />
-            </ProtectedContent>
+              >
+                <Outlet />
+              </Suspense>
+            </Layout>
           }
         >
-          <Route index element={<SubmissionPage />} />
-          <Route path='files' element={<ReduxMapFiles />} />
-          <Route path='map' element={<ReduxMapDataModel />} />
-          <Route path=':project' element={<Outlet />}>
-            <Route index element={<ProjectSubmission />} />
-            <Route path='search' element={<ReduxQueryNode />} />
-          </Route>
-        </Route>
-        <Route
-          path='query'
-          element={
-            <ProtectedContent
-              preload={() =>
-                Promise.all([
-                  dispatch(fetchSchema()),
-                  dispatch(fetchGuppySchema()),
-                ])
-              }
-            >
-              <GraphQLQuery />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='identity'
-          element={
-            <ProtectedContent preload={() => dispatch(fetchAccess())}>
-              <UserProfile />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='dd/*'
-          element={
-            <ProtectedContent
-              preload={() =>
-                Promise.all([
-                  dispatch(fetchDictionary()),
-                  dispatch(fetchGraphvizLayout()),
-                ])
-              }
-            >
-              <DataDictionary />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='explorer'
-          element={
-            <ProtectedContent preload={() => 
-              Promise.all([
-                dispatch(fetchDictionary()),
-                dispatch(fetchSurvivalConfig())
-              ])}>
-              <Explorer />
-            </ProtectedContent>
-          }
-        />
-        {enableResourceBrowser && (
           <Route
-            path='resource-browser'
+            index
             element={
-              <ProtectedContent>
-                <ResourceBrowser />
+              <ProtectedContent
+                preload={async () => dispatch(fetchIndexPageCounts())}
+              >
+                <IndexPage />
               </ProtectedContent>
             }
           />
-        )}
-        <Route
-          path='requests'
-          element={<Outlet />}
-        >
-          <Route index element={
-            <ProtectedContent preload={({ state }) => {
-              if (searchParams.get('admin') === 'true') {
+          <Route
+            path='login'
+            element={
+              <ProtectedContent isLoginPage>
+                <ReduxLogin />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='submission'
+            element={
+              <ProtectedContent
+                isAdminOnly
+                preload={({ location, state }) => {
+                  function matchPattern(pattern) {
+                    return matchPath(`/submission${pattern}`, location.pathname);
+                  }
+
+                  const { username } = state.user;
+                  const start = STARTING_DID;
+
+                  if (matchPattern('/')) {
+                    return Promise.all([
+                      dispatch(getProjectsList()),
+                      dispatch(getTransactionList()),
+                      dispatch(
+                        fetchUnmappedFileStats({ start, total: [], username })
+                      ),
+                    ]);
+                  }
+
+                  if (matchPattern('/files'))
+                    return dispatch(
+                      fetchUnmappedFiles({ start, total: [], username })
+                    );
+
+                  const { filesToMap } = state.submission;
+
+                  if (matchPattern('/map') && filesToMap.length !== 0)
+                    return Promise.all([
+                      dispatch(fetchDictionary()),
+                      dispatch(getProjectsList()),
+                    ]);
+
+                  if (matchPattern('/:project/*'))
+                    return dispatch(fetchDictionary());
+
+                  return Promise.resolve();
+                }}
+              >
+                <Outlet />
+              </ProtectedContent>
+            }
+          >
+            <Route index element={<SubmissionPage />} />
+            <Route path='files' element={<ReduxMapFiles />} />
+            <Route path='map' element={<ReduxMapDataModel />} />
+            <Route path=':project' element={<Outlet />}>
+              <Route index element={<ProjectSubmission />} />
+              <Route path='search' element={<ReduxQueryNode />} />
+            </Route>
+          </Route>
+          <Route
+            path='query'
+            element={
+              <ProtectedContent
+                preload={() =>
+                  Promise.all([
+                    dispatch(fetchSchema()),
+                    dispatch(fetchGuppySchema()),
+                  ])
+                }
+              >
+                <GraphQLQuery />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='identity'
+            element={
+              <ProtectedContent preload={() => dispatch(fetchAccess())}>
+                <UserProfile />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='dd/*'
+            element={
+              <ProtectedContent
+                preload={() =>
+                  Promise.all([
+                    dispatch(fetchDictionary()),
+                    dispatch(fetchGraphvizLayout()),
+                  ])
+                }
+              >
+                <DataDictionary />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='explorer'
+            element={
+              <ProtectedContent preload={() => 
+                Promise.all([
+                  dispatch(fetchDictionary()),
+                  dispatch(fetchSurvivalConfig())
+                ])}>
+                <Explorer />
+              </ProtectedContent>
+            }
+          />
+          {enableResourceBrowser && (
+            <Route
+              path='resource-browser'
+              element={
+                <ProtectedContent>
+                  <ResourceBrowser />
+                </ProtectedContent>
+              }
+            />
+          )}
+          <Route
+            path='requests'
+            element={<Outlet />}
+          >
+            <Route index element={
+              <ProtectedContent preload={({ state }) => {
+                if (searchParams.get('admin') === 'true') {
+                  let { 
+                    is_admin,
+                    authz: { '/services/amanuensis': serviceAccessMethods }
+                  } = state.user;
+                  let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
+                    serviceAccessMethods[0]?.method :
+                    undefined;
+                  let isAdmin = is_admin || !!serviceAccessMethod;
+                  if (isAdmin && !state.dataRequest.isAdminActive) {
+                    dispatch(toggleAdminActive());
+                  }
+                  return Promise.all([
+                    dispatch(fetchFilterSets()),
+                    dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
+                    dispatch(fetchProjectStates())
+                  ]);
+                }
+                return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
+              }}>
+                <DataRequests />
+              </ProtectedContent>
+            }/>
+            <Route 
+              path="create"
+              element={
+              <ProtectedContent preload={({ state }) => {
                 let { 
                   is_admin,
                   authz: { '/services/amanuensis': serviceAccessMethods }
@@ -228,82 +254,56 @@ function App() {
                   serviceAccessMethods[0]?.method :
                   undefined;
                 let isAdmin = is_admin || !!serviceAccessMethod;
-                if (isAdmin && !state.dataRequest.isAdminActive) {
-                  dispatch(toggleAdminActive());
+                /** @type {Promise[]} */
+                let requests = [dispatch(fetchFilterSets())];
+                if (isAdmin) {
+                  requests.push(dispatch(adminFetchUsers()));
                 }
-                return Promise.all([
-                  dispatch(fetchFilterSets()),
-                  dispatch(fetchDataRequestProjects({ triggerReloading: false })), 
-                  dispatch(fetchProjectStates())
-                ]);
-              }
-              return dispatch(fetchDataRequestProjects({ triggerReloading: false }));
-            }}>
-              <DataRequests />
-            </ProtectedContent>
-          }/>
-          <Route 
-            path="create"
+                return Promise.all(requests);
+              }}>
+                <DataRequestCreate />
+              </ProtectedContent>
+            }/>
+          </Route>
+          <Route path='*' element={<Navigate to='' replace />} />
+          {/* <Route
+            path='/indexing'
             element={
-            <ProtectedContent preload={({ state }) => {
-              let { 
-                is_admin,
-                authz: { '/services/amanuensis': serviceAccessMethods }
-              } = state.user;
-              let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
-                serviceAccessMethods[0]?.method :
-                undefined;
-              let isAdmin = is_admin || !!serviceAccessMethod;
-              /** @type {Promise[]} */
-              let requests = [dispatch(fetchFilterSets())];
-              if (isAdmin) {
-                requests.push(dispatch(adminFetchUsers()));
-              }
-              return Promise.all(requests);
-            }}>
-              <DataRequestCreate />
-            </ProtectedContent>
-          }/>
+              <ProtectedContent>
+                <Indexing />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='/files/*'
+            element={
+              <ProtectedContent
+                preload={() =>
+                  Promise.all([
+                    dispatch(fetchProjects()),
+                    dispatch(fetchCoreMetadata(props.match.params[0])),
+                  ])
+                }
+              >
+                <CoreMetadataPage />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='/workspace'
+            element={
+              <ProtectedContent>
+                <Workspace />
+              </ProtectedContent>
+            }
+          />
+          <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
+          <Route
+            path={workspaceErrorUrl}
+            element={<ErrorWorkspacePlaceholder />}
+          /> */}
         </Route>
-        <Route path='*' element={<Navigate to='' replace />} />
-        {/* <Route
-          path='/indexing'
-          element={
-            <ProtectedContent>
-              <Indexing />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='/files/*'
-          element={
-            <ProtectedContent
-              preload={() =>
-                Promise.all([
-                  dispatch(fetchProjects()),
-                  dispatch(fetchCoreMetadata(props.match.params[0])),
-                ])
-              }
-            >
-              <CoreMetadataPage />
-            </ProtectedContent>
-          }
-        />
-        <Route
-          path='/workspace'
-          element={
-            <ProtectedContent>
-              <Workspace />
-            </ProtectedContent>
-          }
-        />
-        <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
-        <Route
-          path={workspaceErrorUrl}
-          element={<ErrorWorkspacePlaceholder />}
-        /> */}
-      </Route>
-    </Routes>
+      </Routes>
   );
 }
 

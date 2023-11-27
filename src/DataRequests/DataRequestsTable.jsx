@@ -6,7 +6,6 @@ import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
 import AdminProjectActions from './AdminProjectActions';
 import { useAppSelector } from '../redux/hooks';
-import { formatLocalTime } from '../utils';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
 import Spinner from '../gen3-ui-component/components/Spinner/Spinner';
@@ -30,7 +29,7 @@ function parseResearcherInfo(researcher) {
   return researcher ? (
     <span>
       {researcher.first_name} {researcher.last_name}
-      <br />({researcher.institution})
+      <br /> ({researcher.institution})
     </span>
   ) : (
     ''
@@ -63,11 +62,13 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
       let row = [
         project.id,
         project.name,
-        project.researcher?.id === userId
+        [
+          project.researcher?.id === userId
           ? 'Me'
-          : parseResearcherInfo(project.researcher),
-        formatLocalTime(project.submitted_at),
-        formatLocalTime(project.completed_at),
+          : parseResearcherInfo(project.researcher)
+        ],
+        new Date(project.submitted_at),
+        new Date(project.completed_at),
         <span
           className={`data-requests__status-${project.status
             .toLowerCase()
