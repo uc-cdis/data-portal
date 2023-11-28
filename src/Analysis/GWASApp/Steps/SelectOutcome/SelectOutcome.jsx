@@ -29,7 +29,7 @@ const SelectOutcome = ({
           <ContinuousCovariates
             dispatch={dispatch}
             selectedStudyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
@@ -53,7 +53,7 @@ const SelectOutcome = ({
           <CustomDichotomousCovariates
             dispatch={dispatch}
             studyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
