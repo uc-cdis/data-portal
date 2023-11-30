@@ -34,7 +34,7 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import useHealRequiredIDPLogic from './Utils/useHealRequiredIDPLogic';
+import HealRequiredIdentityProviderInfo from './Utils/HealRequiredIdentityProviderInfo';
 
 const { Panel } = Collapse;
 
@@ -63,6 +63,7 @@ interface LinkItem {
 
 interface User {
   username: string;
+  fence_idp?: string; // eslint-disable-line camelcase
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
@@ -276,6 +277,10 @@ const tabField = (
           discoveryConfig={discoveryConfig}
           resourceInfo={resource}
           sourceFieldData={resourceFieldValue}
+          HealRequiredIdentityProviderInfo={HealRequiredIdentityProviderInfo(
+            [resource],
+            user.fence_idp
+          )}
         />
       );
     }
@@ -348,9 +353,10 @@ const DiscoveryDetails = (props: Props) => {
   )}/`;
   const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
 
+  /*
   const [healIDPLoginNeeded, setHealIDPLoginNeeded] = useState<string[]>([]);
   const { healRequiredIDPLogic } = useHealRequiredIDPLogic(
-    /* SORT THIS OUT NOV 30TH  */
+
     props.config.selectedResources,
     props.user.fence_idp
   );
@@ -361,6 +367,7 @@ const DiscoveryDetails = (props: Props) => {
     props.user.fence_idp,
     healRequiredIDPLogic,
   ]);
+  */
 
   const handleRedirectClick = (
     redirectURL: string = '/',
