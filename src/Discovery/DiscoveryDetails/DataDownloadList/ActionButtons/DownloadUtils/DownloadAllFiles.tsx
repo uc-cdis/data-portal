@@ -4,7 +4,8 @@ import { jobAPIPath } from '../../../../../localconf';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
 const JOB_POLLING_INTERVAL = 5000;
-const DOWNLOAD_SUCCEEDED_MESSAGE = 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:';
+const DOWNLOAD_SUCCEEDED_MESSAGE =
+  "Your download has been prepared. If your download doesn't start automatically, please follow this direct link:";
 
 const DOWNLOAD_FAIL_STATUS: DownloadStatus = {
   inProgress: false,
@@ -23,7 +24,7 @@ const DOWNLOAD_FAIL_STATUS: DownloadStatus = {
 const checkDownloadStatus = (
   uid: string,
   downloadStatus: DownloadStatus,
-  setDownloadStatus: (arg0: DownloadStatus) => void,
+  setDownloadStatus: (arg0: DownloadStatus) => void
 ) => {
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
@@ -97,10 +98,10 @@ const checkDownloadStatus = (
           JOB_POLLING_INTERVAL,
           uid,
           downloadStatus,
-          setDownloadStatus,
+          setDownloadStatus
         );
       }
-    },
+    }
   );
 };
 
@@ -108,7 +109,11 @@ const DownloadAllFiles = (
   studyIDs: any[],
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
+  healLoginNeeded: boolean
 ) => {
+  if (healLoginNeeded) {
+    return;
+  }
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -155,7 +160,7 @@ const DownloadAllFiles = (
           JOB_POLLING_INTERVAL,
           uid,
           downloadStatus,
-          setDownloadStatus,
+          setDownloadStatus
         );
       }
     })
