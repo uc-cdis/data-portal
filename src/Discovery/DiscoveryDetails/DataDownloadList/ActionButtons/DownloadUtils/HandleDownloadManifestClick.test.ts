@@ -6,7 +6,7 @@ import { DiscoveryConfig } from '../../../../DiscoveryConfig';
 jest.mock('./DownloadJsonFile');
 
 describe('HandleDownloadManifestClick', () => {
-  it('should not call DownloadJsonFile when healICPSRLoginNeeded is true', () => {
+  it('should not call DownloadJsonFile when healIDPLoginNeeded is true', () => {
     // Mock data
     const config = {
       features: {
@@ -16,14 +16,10 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healICPSRLoginNeeded = true;
+    const healIDPLoginNeeded = true;
 
     // Call the function
-    HandleDownloadManifestClick(
-      config,
-      selectedResources,
-      healICPSRLoginNeeded,
-    );
+    HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded);
 
     // Assertions
     expect(DownloadJsonFile).not.toHaveBeenCalled();
@@ -37,14 +33,10 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healICPSRLoginNeeded = false;
+    const healIDPLoginNeeded = false;
 
     // Assertions
-    expect(() => HandleDownloadManifestClick(
-      config,
-      selectedResources,
-      healICPSRLoginNeeded,
-    ),
+    expect(() => HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded),
     ).toThrowError(
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
@@ -59,14 +51,10 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healICPSRLoginNeeded = false;
+    const healIDPLoginNeeded = false;
 
     // Call the function
-    HandleDownloadManifestClick(
-      config,
-      selectedResources,
-      healICPSRLoginNeeded,
-    );
+    HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded);
 
     // Assertions
     expect(DownloadJsonFile).toHaveBeenCalledWith('manifest', [

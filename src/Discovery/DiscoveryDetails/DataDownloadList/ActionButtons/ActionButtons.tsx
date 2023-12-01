@@ -21,16 +21,13 @@ const ActionButtons = ({
   });
   const studyIDs = [resourceInfo?.study_id];
 
-  const showDownloadStudyLevelMetadataButtons =
-    discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
-    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
-    resourceInfo?.study_metadata;
+  const showDownloadStudyLevelMetadataButtons = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
+    && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
+    && resourceInfo?.study_metadata;
 
-  const showDownloadFileManifestButtons =
-    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
+  const showDownloadFileManifestButtons = discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
 
-  const showDownloadAllFilesButtons =
-    discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+  const showDownloadAllFilesButtons = discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
 
   const { healLoginNeeded } = HealRequiredIdentityProviderInfo;
 
@@ -53,12 +50,10 @@ const ActionButtons = ({
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
-              onClick={() =>
-                DownloadJsonFile(
-                  'study-level-metadata',
-                  resourceInfo.study_metadata
-                )
-              }
+              onClick={() => DownloadJsonFile(
+                'study-level-metadata',
+                resourceInfo.study_metadata,
+              )}
             >
               Download <br />
               Study-Level Metadata
@@ -74,7 +69,7 @@ const ActionButtons = ({
                   HandleDownloadManifestClick(
                     discoveryConfig,
                     [resourceInfo],
-                    false
+                    healLoginNeeded,
                   );
                 }}
               >
@@ -88,7 +83,7 @@ const ActionButtons = ({
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'manifest'
+                    'manifest',
                   );
                 }}
               >
@@ -100,24 +95,27 @@ const ActionButtons = ({
         )}
         {showDownloadAllFilesButtons && (
           <Col flex='1 0 auto'>
-            {isUserLoggedIn && (
-              <Button
-                className='discovery-action-bar-button'
-                onClick={() =>
-                  DownloadAllFiles(studyIDs, downloadStatus, setDownloadStatus)
-                }
-              >
-                Download All Files
-              </Button>
-            )}
-            {!isUserLoggedIn && (
+            {isUserLoggedIn
+              && !healLoginNeeded(
+                <Button
+                  className='discovery-action-bar-button'
+                  onClick={() => DownloadAllFiles(
+                    studyIDs,
+                    downloadStatus,
+                    setDownloadStatus,
+                  )}
+                >
+                  Download All Files
+                </Button>,
+              )}
+            {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'download'
+                    'download',
                   );
                 }}
               >

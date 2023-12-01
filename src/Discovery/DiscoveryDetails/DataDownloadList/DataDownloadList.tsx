@@ -15,7 +15,7 @@ const DataDownloadList = ({
   console.log('isUserLoggedIn', isUserLoggedIn);
   console.log(
     'HealRequiredIdentityProviderInfo',
-    HealRequiredIdentityProviderInfo
+    HealRequiredIdentityProviderInfo,
   );
   const data = ProcessData(sourceFieldData);
   if (data.length === 0) {
@@ -24,7 +24,7 @@ const DataDownloadList = ({
 
   console.log(
     'HealRequiredIdentityProviderInfo in DataDownloadList: ',
-    HealRequiredIdentityProviderInfo
+    HealRequiredIdentityProviderInfo,
   );
   return (
     <div className='discovery-modal__data-download-list'>
