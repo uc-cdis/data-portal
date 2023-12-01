@@ -4,7 +4,7 @@ import { bundle } from '../../../localconf';
 // props.discovery.selectedResources
 //  props.user.fence_idp
 
-const ProcessHealRequiredIdentityProviderInfo = (
+const CheckHealLoginNeeded = (
   selectedResources,
   fence_idp,
 ): {} => {
@@ -38,19 +38,14 @@ const ProcessHealRequiredIdentityProviderInfo = (
     }),
     );
     // return requiredIdentityProvider;
-    return {
-      healLoginNeeded: Boolean(requiredIdentityProvider.length),
-      healCredentialsNeeded: requiredIdentityProvider,
-    };
+    return  Boolean(requiredIdentityProvider.length),
+
   }
-  return {
-    healLoginNeeded: false,
-    healCredentialsNeeded: [],
-  };
+  return  false;
   // }, [selectedResources, fence_idp]);
   // return healRequiredIdentityProviderLogic;
 };
-export default ProcessHealRequiredIdentityProviderInfo;
+export default CheckHealLoginNeeded;
 
 // hdp99999 ICPSR TEST
 // hdp88888 ICPSR TEST

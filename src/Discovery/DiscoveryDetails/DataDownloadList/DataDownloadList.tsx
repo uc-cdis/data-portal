@@ -10,29 +10,22 @@ const DataDownloadList = ({
   discoveryConfig,
   resourceInfo,
   sourceFieldData,
-  HealRequiredIdentityProviderInfo,
+  healLoginNeeded,
 }) => {
   console.log('isUserLoggedIn', isUserLoggedIn);
-  console.log(
-    'HealRequiredIdentityProviderInfo',
-    HealRequiredIdentityProviderInfo,
-  );
+
   const data = ProcessData(sourceFieldData);
   if (data.length === 0) {
     return null;
   }
 
-  console.log(
-    'HealRequiredIdentityProviderInfo in DataDownloadList: ',
-    HealRequiredIdentityProviderInfo,
-  );
   return (
     <div className='discovery-modal__data-download-list'>
       <ActionButtons
         isUserLoggedIn={isUserLoggedIn}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
-        HealRequiredIdentityProviderInfo={HealRequiredIdentityProviderInfo}
+        healLoginNeeded={healLoginNeeded}
       />
       <List
         itemLayout='horizontal'
