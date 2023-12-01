@@ -11,6 +11,7 @@ const ActionButtons = ({
   isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
+  HealRequiredIdentityProviderInfo,
 }): JSX.Element => {
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
 
@@ -30,6 +31,8 @@ const ActionButtons = ({
 
   const showDownloadAllFilesButtons =
     discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+
+  const { healLoginNeeded } = HealRequiredIdentityProviderInfo;
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
@@ -64,7 +67,7 @@ const ActionButtons = ({
         )}
         {showDownloadFileManifestButtons && (
           <Col flex='1 0 auto'>
-            {isUserLoggedIn && (
+            {isUserLoggedIn && !healLoginNeeded && (
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {
@@ -78,7 +81,7 @@ const ActionButtons = ({
                 Download File Manifest
               </Button>
             )}
-            {!isUserLoggedIn && (
+            {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => {

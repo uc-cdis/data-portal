@@ -4,14 +4,18 @@ import { bundle } from '../../../localconf';
 // props.discovery.selectedResources
 //  props.user.fence_idp
 
-const HealRequiredIdentityProviderInfo = (
+const ProcessHealRequiredIdentityProviderInfo = (
   selectedResources,
   fence_idp
-): string[] => {
+): {} => {
   /*const healRequiredIdentityProviderLogic = useCallback(() => {*/
   if (bundle === 'heal') {
     // HP-1233 Generalize IdP-based access control2
     // Find which resources Required IDP
+    console.log(
+      'selectedResources in HealRequiredIdentityProviderInfo',
+      selectedResources
+    );
     const requiredIdentityProvider: string[] = [];
     selectedResources.forEach((resource) =>
       resource?.tags.forEach((tag: { name: string; category: string }) => {
@@ -34,10 +38,20 @@ const HealRequiredIdentityProviderInfo = (
         }
       })
     );
-    return requiredIdentityProvider;
+    // return requiredIdentityProvider;
+    return {
+      healLoginNeeded: Boolean(requiredIdentityProvider.length),
+      healCredentialsNeeded: requiredIdentityProvider,
+    };
   }
-  return [];
+  return {
+    healLoginNeeded: false,
+    healCredentialsNeeded: [],
+  };
   // }, [selectedResources, fence_idp]);
   // return healRequiredIdentityProviderLogic;
 };
-export default HealRequiredIdentityProviderInfo;
+export default ProcessHealRequiredIdentityProviderInfo;
+
+// hdp99999 ICPSR TEST
+// hdp88888 ICPSR TEST

@@ -34,7 +34,7 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import HealRequiredIdentityProviderInfo from './Utils/HealRequiredIdentityProviderInfo';
+import ProcessHealRequiredIdentityProviderInfo from './Utils/ProcessHealRequiredIdentityProviderInfo';
 
 const { Panel } = Collapse;
 
@@ -270,6 +270,7 @@ const tabField = (
     resourceFieldValue[0] &&
     resourceFieldValue[0].length !== 0
   ) {
+    console.log('fieldConfig.type ', fieldConfig.type);
     if (fieldConfig.type === 'dataDownloadList') {
       return (
         <DataDownloadList
@@ -277,7 +278,7 @@ const tabField = (
           discoveryConfig={discoveryConfig}
           resourceInfo={resource}
           sourceFieldData={resourceFieldValue}
-          HealRequiredIdentityProviderInfo={HealRequiredIdentityProviderInfo(
+          HealRequiredIdentityProviderInfo={ProcessHealRequiredIdentityProviderInfo(
             [resource],
             user.fence_idp
           )}
