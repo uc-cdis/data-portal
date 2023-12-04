@@ -9,6 +9,9 @@ export interface DiscoveryConfig {
             enableDownloadZip: boolean
             downloadZipButtonText?: string
             verifyExternalLogins?: boolean
+            enableFillRequestForm?: boolean
+            openFillRequestForm?: string
+            fillRequestFormURL?: string
         },
         // explorationIntegration: {
         //     enabled: boolean // not supported
