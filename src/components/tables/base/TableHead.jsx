@@ -4,6 +4,7 @@ import dictIcons from '../../../img/icons/index';
 import IconComponent from '../../Icon';
 import './Table.css';
 import { cellValueToText } from './Table';
+import AnotherDateRangePicker from '../../DateRangePicker';
 import { 
   DateRangePicker,
   defaultTheme,
@@ -55,7 +56,8 @@ function TableHead({ cols, setFilters, data }) {
                 <Provider theme={defaultTheme}>
                   <Form validationBehavior="native" maxWidth="size-3000">
                     <Flex margin={0} direction="row" alignItems='center' gap={8}>
-                      <DateRangePicker
+                      <AnotherDateRangePicker />
+                      {/* <DateRangePicker
                         value={filters[i] ?? { start: null, end: null }}
                         onChange={(range) => {
                           filters[i] = range;
@@ -64,7 +66,7 @@ function TableHead({ cols, setFilters, data }) {
                       />
                       <Button type="reset" variant="primary" minWidth="size-200">
                         <span>x</span>
-                      </Button>
+                      </Button> */}
                     </Flex>
                   </Form>
                 </Provider>
