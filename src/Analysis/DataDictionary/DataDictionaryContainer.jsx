@@ -25,10 +25,6 @@ const rows = TableData.data.map((object) => (
     <td>{outputValueAndPercentage(object.numberOfPeopleWhereValueIsFilled)}</td>
     <td>{outputValueAndPercentage(object.numberOfPeopleWhereValueIsNull)}</td>
     <td>{object.valueStoredAs}</td>
-    <td>{object.minValue}</td>
-    <td>{object.maxValue}</td>
-    <td>{object.meanValue}</td>
-    <td>{object.standardDeviation}</td>
     <td>{JSON.stringify(object.valueSummary)}</td>
   </tr>
 ));

@@ -23,27 +23,17 @@ const headerItems = [
     where&nbsp;Value&nbsp;is&nbsp;Null
   </span>,
   <span>Value&nbsp;Stored&nbsp;As</span>,
-  <span>Min&nbsp;Value</span>,
-  <span> Max&nbsp;Value</span>,
-  <span> Mean&nbsp;Value</span>,
-  <span>
-    Standard
-    <br />
-    Deviation
-  </span>,
   <span>Value&nbsp;Summary</span>,
 ];
 
-const TableHeaders = () => {
-  return (
-    <thead>
-      <tr>
-        {headerItems.map((header, key) => (
-          <Header header={header} key={key} />
-        ))}
-      </tr>
-    </thead>
-  );
-};
+const TableHeaders = () => (
+  <thead>
+    <tr>
+      {headerItems.map((header, key) => (
+        <Header header={header} key={key} />
+      ))}
+    </tr>
+  </thead>
+);
 
 export default TableHeaders;
