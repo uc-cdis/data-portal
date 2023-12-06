@@ -48,3 +48,22 @@
 .dataDictionary .table-column-sorter-up.active svg path {
   fill: #1890ff;
 }
+
+/*Entries Header*/
+.dataDictionary .entries-header {
+  background-color: #cfdbe6;
+  color: black;
+  padding: 8px 0 7px 10px;
+  width: 100%;
+  font-size: 12px;
+  font-family: inherit;
+  user-select: inherit;
+}
+.dataDictionary .entries-header th {
+  cursor: default;
+  font-weight: normal;
+  font-size: 12px;
+}
+.dataDictionary .entries-header th:hover {
+  background-color: #cfdbe6;
+}

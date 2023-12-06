@@ -6,10 +6,8 @@ const Header = ({ header, key }) => {
     bottom: false,
   });
   const handleClick = () => {
-    if (!isActive.top && !isActive.bottom)
-      setIsActive({ top: true, bottom: false });
-    else if (isActive.top && !isActive.bottom)
-      setIsActive({ top: false, bottom: true });
+    if (!isActive.top && !isActive.bottom) setIsActive({ top: true, bottom: false });
+    else if (isActive.top && !isActive.bottom) setIsActive({ top: false, bottom: true });
     else setIsActive({ top: false, bottom: false });
   };
 

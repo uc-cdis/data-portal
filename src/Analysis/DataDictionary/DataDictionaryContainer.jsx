@@ -3,9 +3,10 @@ import { Table } from '@mantine/core';
 import TableData from './TestData/TableData';
 import TableHeaders from './TableHeaders/TableHeaders';
 import './DataDictionary.css';
+import EntriesHeader from './EntriesHeader/EntriesHeader';
 
 const TableDataTotal = TableData.total;
-
+const columnsShown = 10;
 const outputValueAndPercentage = (value) => (
   <React.Fragment>
     {value}
@@ -32,8 +33,22 @@ const rows = TableData.data.map((object) => (
 const DataDictionaryContainer = () => (
   <div className='dataDictionary'>
     <Table striped>
+      <EntriesHeader
+        start={1}
+        stop={TableData.data.length}
+        total={TableData.data.length}
+        colspan={columnsShown}
+        position='top'
+      />
       <TableHeaders />
       <tbody>{rows}</tbody>
+      <EntriesHeader
+        start={1}
+        stop={TableData.data.length}
+        total={TableData.data.length}
+        colspan={columnsShown}
+        position='bottom'
+      />
     </Table>
   </div>
 );
