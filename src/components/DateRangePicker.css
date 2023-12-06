@@ -36,7 +36,7 @@
     flex: 1;
   }
   .react-aria-DateRangePicker .react-aria-Button {
-    background: slateblue;
+    background: black;
     color: white;
     border-radius: 4px;
     border: none;
@@ -52,7 +52,7 @@
     right: 0;
   }
   .react-aria-DateRangePicker .react-aria-Button[data-focus-visible] {
-    box-shadow: 0 0 0 2px slateblue;
+    box-shadow: 0 0 0 2px black;
   }
   .react-aria-DateRangePicker .react-aria-DateInput {
     width: unset;
@@ -131,7 +131,7 @@
     background: dimgray;
   }
   .clear-button[data-focus-visible] {
-    outline: 2px solid slateblue;
+    outline: 2px solid black;
     outline-offset: 2px;
   }
   .clear-button + .react-aria-Button {
