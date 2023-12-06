@@ -1,0 +1,11 @@
+.dataDictionary {
+  width: 100%;
+  max-width: 100%; /* set the maximum width of the table */
+  overflow-x: auto; /* enable horizontal scrolling when necessary */
+}
+.dataDictionary table {
+  border: 1px solid #e2e2e3;
+}
+.dataDictionary table thead {
+  background: #e9eef2;
+}
