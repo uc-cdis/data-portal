@@ -9,3 +9,35 @@
 .dataDictionary table thead {
   background: #e9eef2;
 }
+.dataDictionary table th {
+  line-height: 1.2;
+}
+.dataDictionary .table-column-sorters {
+  display: flex;
+  flex: auto;
+  align-items: center;
+  justify-content: space-between;
+}
+.dataDictionary .table-column-sorter-inner {
+  padding-left: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dataDictionary .table-column-sorter-inner span {
+  font-size: 11px;
+  line-height: 0;
+  display: inline-block;
+}
+
+.dataDictionary .table-column-sorter-down {
+  margin-top: -3px;
+}
+.dataDictionary .table-column-sorter-down svg path,
+.dataDictionary .table-column-sorter-up svg path {
+  fill: #ccc;
+}
+.dataDictionary .table-column-sorter-down.active svg path,
+.dataDictionary .table-column-sorter-up.active svg path {
+  fill: #1890ff;
+}
