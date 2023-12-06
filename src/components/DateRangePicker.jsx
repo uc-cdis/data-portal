@@ -9,11 +9,10 @@ import {
     Dialog,
     Group,
     Heading,
-    Label,
     Popover,
     RangeCalendar
 } from 'react-aria-components';
-import {DateRangePickerStateContext} from 'react-aria-components';
+import { DateRangePickerStateContext } from 'react-aria-components';
 import './DateRangePicker.css';
 
 function DateRangePickerClearButton() {
@@ -31,14 +30,15 @@ function DateRangePickerClearButton() {
   );
 }
 
-export default function AnotherDateRangePicker() {
+export default function AnotherDateRangePicker({ onChange }) {
     return <DateRangePicker
-    defaultValue={{
-      start: null,
-      end: null
-    }}
-  >
-    <Group>
+        onChange={onChange}
+        defaultValue={{
+        start: null,
+        end: null
+        }}
+    >
+    <Group >
       <DateInput slot="start">
         {(segment) => <DateSegment segment={segment} />}
       </DateInput>
