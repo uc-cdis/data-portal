@@ -3,8 +3,9 @@ import { Col, Row, Button } from 'antd';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
-import DownloadAllFiles from './DownloadUtils/DownloadAllFiles';
+import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
+import { useHistory, useLocation } from 'react-router-dom';
 import './ActionButtons.css';
 
 const ActionButtons = ({
@@ -20,6 +21,9 @@ const ActionButtons = ({
     message: { title: '', content: <React.Fragment />, active: false },
   });
   const studyIDs = [resourceInfo?.study_id];
+  const history = useHistory();
+  const location = useLocation();
+  console.log('discoveryConfig', discoveryConfig);
 
   const showDownloadStudyLevelMetadataButtons =
     discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
@@ -31,6 +35,11 @@ const ActionButtons = ({
 
   const showDownloadAllFilesButtons =
     discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+
+  const verifyExternalLoginsNeeded =
+    discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
+
+  const { manifestFieldName } = discoveryConfig?.features.exportToWorkspace;
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
@@ -106,7 +115,11 @@ const ActionButtons = ({
                     studyIDs,
                     downloadStatus,
                     setDownloadStatus,
-                    healLoginNeeded
+                    history,
+                    location,
+                    healLoginNeeded,
+                    verifyExternalLoginsNeeded,
+                    manifestFieldName
                   )
                 }
               >
