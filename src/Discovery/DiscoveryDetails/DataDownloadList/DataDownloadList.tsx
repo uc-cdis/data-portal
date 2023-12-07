@@ -15,9 +15,6 @@ const DataDownloadList = ({
   console.log('isUserLoggedIn', isUserLoggedIn);
 
   const data = ProcessData(sourceFieldData);
-  if (data.length === 0) {
-    return null;
-  }
 
   return (
     <div className='discovery-modal__data-download-list'>
@@ -27,18 +24,20 @@ const DataDownloadList = ({
         resourceInfo={resourceInfo}
         healLoginNeeded={healLoginNeeded}
       />
-      <List
-        itemLayout='horizontal'
-        dataSource={data}
-        renderItem={(item: DataDownloadListItem) => (
-          <List.Item>
-            <List.Item.Meta
-              title={item.title}
-              description={item.description || ''}
-            />
-          </List.Item>
-        )}
-      />
+      {data.length !== 0 && (
+        <List
+          itemLayout='horizontal'
+          dataSource={data}
+          renderItem={(item: DataDownloadListItem) => (
+            <List.Item>
+              <List.Item.Meta
+                title={item.title}
+                description={item.description || ''}
+              />
+            </List.Item>
+          )}
+        />
+      )}
     </div>
   );
 };
