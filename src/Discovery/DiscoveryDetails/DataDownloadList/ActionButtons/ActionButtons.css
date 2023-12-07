@@ -1,10 +1,10 @@
+.discovery-modal_buttons-row {
+  margin-bottom: 10px;
+}
+
 .discovery-modal_buttons-row button {
   height: 100%;
   min-width: 160px;
   padding: 0 8px;
   line-height: 1.2;
-}
-
-.discovery-modal_buttons-row {
-  margin-bottom: 10px;
 }

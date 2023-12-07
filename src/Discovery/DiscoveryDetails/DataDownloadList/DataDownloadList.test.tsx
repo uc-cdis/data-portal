@@ -3,6 +3,11 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 
+jest.mock('react-router-dom', () => ({
+  useHistory: jest.fn().mockReturnValue(0),
+  useLocation: jest.fn().mockReturnValue(0),
+}));
+
 describe('DataDownloadList', () => {
   it(`renders the component with titles and descriptions and action buttons container
   when sourceFieledData has titles and descriptions`, () => {
@@ -77,7 +82,7 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the component or action buttons when data is missing title and file_name', () => {
+  it('does not render the file list but does render the action buttons when data is missing title and file_name', () => {
     const sourceFieldData = [
       [
         {
@@ -87,11 +92,11 @@ describe('DataDownloadList', () => {
         },
       ],
     ];
-    const { container } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
-    );
-    // Verify that the component does not render (returns null)
-    expect(container.firstChild).toBeNull();
-    expect(screen.queryByTestId('actionButtons')).not.toBeInTheDocument();
+    render(<DataDownloadList sourceFieldData={sourceFieldData} />);
+    // Verify that the list does not render but the buttons do
+    expect(
+      screen.queryByTestId('dataDownloadFileList'),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
 });

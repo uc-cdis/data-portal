@@ -3,6 +3,11 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ActionButtons from './ActionButtons';
 
+jest.mock('react-router-dom', () => ({
+  useHistory: jest.fn().mockReturnValue(0),
+  useLocation: jest.fn().mockReturnValue(0),
+}));
+
 describe('ActionButtons', () => {
   const mockDiscoveryConfig = {
     features: {
@@ -30,6 +35,7 @@ describe('ActionButtons', () => {
   const checkResourceInfoConditional = (buttonText: string) => {
     const { queryByText } = render(
       <ActionButtons
+        isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={null}
         data={mockData}
@@ -45,6 +51,7 @@ describe('ActionButtons', () => {
   ) => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
+        isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         data={mockData}
@@ -57,6 +64,7 @@ describe('ActionButtons', () => {
     changedConfig.features.exportToWorkspace[condition] = false;
     rerender(
       <ActionButtons
+        isUserLoggedIn
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
         data={mockData}
@@ -70,12 +78,27 @@ describe('ActionButtons', () => {
   test('Renders test id for ActionButtons', () => {
     render(
       <ActionButtons
+        isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         data={mockData}
       />,
     );
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
+  });
+
+  test('ActionButtons should have "Login to" text when not logged in', () => {
+    render(
+      <ActionButtons
+        isUserLoggedIn={false}
+        discoveryConfig={mockDiscoveryConfig}
+        resourceInfo={mockResourceInfo}
+        data={mockData}
+      />,
+    );
+    const loginText = screen.getAllByText(/Login to/i);
+    expect(loginText[0]).toBeInTheDocument();
+    expect(loginText[1]).toBeInTheDocument();
   });
 
   test('renders Download Study-Level Metadata button based on conditionals', () => {

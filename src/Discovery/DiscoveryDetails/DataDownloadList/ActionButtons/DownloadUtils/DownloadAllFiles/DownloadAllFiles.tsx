@@ -29,7 +29,6 @@ const DownloadAllFiles = async (
       return;
     }
   }
-
   if (healLoginNeeded) {
     return;
   }

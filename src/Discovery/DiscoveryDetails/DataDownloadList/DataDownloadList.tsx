@@ -28,6 +28,7 @@ const DataDownloadList = ({
         <List
           itemLayout='horizontal'
           dataSource={data}
+          data-testid='dataDownloadFileList'
           renderItem={(item: DataDownloadListItem) => (
             <List.Item>
               <List.Item.Meta
