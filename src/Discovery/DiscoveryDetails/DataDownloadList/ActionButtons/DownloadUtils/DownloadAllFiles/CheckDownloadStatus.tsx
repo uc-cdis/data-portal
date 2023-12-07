@@ -11,7 +11,7 @@ import {
 const CheckDownloadStatus = (
   uid: string,
   downloadStatus: DownloadStatus,
-  setDownloadStatus: (arg0: DownloadStatus) => void
+  setDownloadStatus: (arg0: DownloadStatus) => void,
 ) => {
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
@@ -85,10 +85,10 @@ const CheckDownloadStatus = (
           JOB_POLLING_INTERVAL,
           uid,
           downloadStatus,
-          setDownloadStatus
+          setDownloadStatus,
         );
       }
-    }
+    },
   );
 };
 

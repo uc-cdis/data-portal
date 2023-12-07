@@ -1,11 +1,11 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { fetchWithCreds } from '../../../../../../actions';
 import { jobAPIPath } from '../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
-import { RouteComponentProps } from 'react-router-dom';
 
 const DownloadAllFiles = async (
   studyIDs: any[],
@@ -15,7 +15,7 @@ const DownloadAllFiles = async (
   location: RouteComponentProps['location'],
   healLoginNeeded: boolean,
   verifyExternalLoginsNeeded: boolean,
-  manifestFieldName: string
+  manifestFieldName: string,
 ) => {
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
@@ -23,7 +23,7 @@ const DownloadAllFiles = async (
       studyIDs,
       manifestFieldName,
       history,
-      location
+      location,
     );
     if (!isLinked) {
       return;
@@ -79,7 +79,7 @@ const DownloadAllFiles = async (
           JOB_POLLING_INTERVAL,
           uid,
           downloadStatus,
-          setDownloadStatus
+          setDownloadStatus,
         );
       }
     })

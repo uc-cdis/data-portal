@@ -1,9 +1,10 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { DiscoveryConfig } from '../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../Discovery';
 
 const UseHandleRedirectToLoginClick = () => {
   const history = useHistory();
+  const location = useLocation();
 
   const HandleRedirectToLoginClick = (
     resource: DiscoveryResource,
@@ -16,7 +17,7 @@ const UseHandleRedirectToLoginClick = () => {
       // reduce the size of the redirect url by only storing resource id
       // resource id is remapped to its resource after redirect and resources load in index component
       selectedResourceIDs: [resource].map(
-        (resource) => resource[discoveryConfig.minimalFieldMapping.uid],
+        (resourceObj) => resourceObj[discoveryConfig.minimalFieldMapping.uid],
       ),
     };
     // delete serializableState.selectedResources;

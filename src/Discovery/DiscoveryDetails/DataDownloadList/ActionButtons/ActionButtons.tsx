@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Col, Row, Button } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
-import { useHistory, useLocation } from 'react-router-dom';
 import './ActionButtons.css';
 
 const ActionButtons = ({
@@ -22,18 +22,13 @@ const ActionButtons = ({
   const studyIDs = [resourceInfo?.study_id];
   const history = useHistory();
   const location = useLocation();
-  const showDownloadStudyLevelMetadataButtons: boolean =
-    discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
-    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
-    resourceInfo?.study_metadata;
-  const showDownloadFileManifestButtons: boolean =
-    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
-  const showDownloadAllFilesButtons: boolean =
-    discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
-  const verifyExternalLoginsNeeded: boolean =
-    discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
-  const manifestFieldName: string =
-    discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+  const showDownloadStudyLevelMetadataButtons: boolean = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
+    && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
+    && resourceInfo?.study_metadata;
+  const showDownloadFileManifestButtons: boolean = discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
+  const showDownloadAllFilesButtons: boolean = discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+  const verifyExternalLoginsNeeded: boolean = discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
+  const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
@@ -54,12 +49,10 @@ const ActionButtons = ({
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
-              onClick={() =>
-                DownloadJsonFile(
-                  'study-level-metadata',
-                  resourceInfo.study_metadata
-                )
-              }
+              onClick={() => DownloadJsonFile(
+                'study-level-metadata',
+                resourceInfo.study_metadata,
+              )}
             >
               Download <br />
               Study-Level Metadata
@@ -75,7 +68,7 @@ const ActionButtons = ({
                   HandleDownloadManifestClick(
                     discoveryConfig,
                     [resourceInfo],
-                    healLoginNeeded
+                    healLoginNeeded,
                   );
                 }}
               >
@@ -89,7 +82,7 @@ const ActionButtons = ({
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'manifest'
+                    'manifest',
                   );
                 }}
               >
@@ -104,18 +97,16 @@ const ActionButtons = ({
             {isUserLoggedIn && !healLoginNeeded && (
               <Button
                 className='discovery-action-bar-button'
-                onClick={() =>
-                  DownloadAllFiles(
-                    studyIDs,
-                    downloadStatus,
-                    setDownloadStatus,
-                    history,
-                    location,
-                    healLoginNeeded,
-                    verifyExternalLoginsNeeded,
-                    manifestFieldName
-                  )
-                }
+                onClick={() => DownloadAllFiles(
+                  studyIDs,
+                  downloadStatus,
+                  setDownloadStatus,
+                  history,
+                  location,
+                  healLoginNeeded,
+                  verifyExternalLoginsNeeded,
+                  manifestFieldName,
+                )}
               >
                 Download All Files
               </Button>
@@ -127,7 +118,7 @@ const ActionButtons = ({
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'download'
+                    'download',
                   );
                 }}
               >
