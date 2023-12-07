@@ -55,9 +55,9 @@ class AnalysisApp extends React.Component {
     const TeamProject = localStorage.getItem('teamProject');
     const regexp = /^\/\w[\w/]*$/gi;
     const isValidTeamProject = new RegExp(regexp).test(TeamProject);
-    if (!isValidTeamProject) {
+    if (TeamProject && !isValidTeamProject) {
       throw new Error(
-        `Found illegal "teamProject" parameter value ${TeamProject}`,
+        `Found illegal "teamProject" parameter value: ${TeamProject}`,
       );
     }
     return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
@@ -161,7 +161,8 @@ class AnalysisApp extends React.Component {
               title='Analysis App'
               frameBorder='0'
               src={
-                this.state.app.title === 'OHDSI Atlas' && this.state.app.needsTeamProject
+                this.state.app.title === 'OHDSI Atlas'
+                  && this.state.app.needsTeamProject
                   ? this.getAtlasURLWithTeamProject()
                   : `${this.state.app.applicationUrl}`
               }

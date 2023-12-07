@@ -30,6 +30,17 @@ const getDataFromUrl = async (
   return response.json();
 };
 
+export const fetchGwasWorkflows = async () => {
+  const currentTeamProject = localStorage.getItem('teamProject');
+  const workflowsEndpoint = `${gwasWorkflowPath}workflows?team_projects=${currentTeamProject}`;
+  const response = await fetch(workflowsEndpoint, { headers });
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
+};
+
 export const fetchPresignedUrlForWorkflowArtifact = async (
   workflowName,
   workflowUid,
