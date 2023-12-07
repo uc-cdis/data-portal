@@ -15,7 +15,6 @@ const ActionButtons = ({
   healLoginNeeded,
 }): JSX.Element => {
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
-
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
@@ -23,23 +22,18 @@ const ActionButtons = ({
   const studyIDs = [resourceInfo?.study_id];
   const history = useHistory();
   const location = useLocation();
-  console.log('discoveryConfig', discoveryConfig);
-
-  const showDownloadStudyLevelMetadataButtons =
+  const showDownloadStudyLevelMetadataButtons: boolean =
     discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName &&
     discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
     resourceInfo?.study_metadata;
-
-  const showDownloadFileManifestButtons =
+  const showDownloadFileManifestButtons: boolean =
     discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
-
-  const showDownloadAllFilesButtons =
+  const showDownloadAllFilesButtons: boolean =
     discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
-
-  const verifyExternalLoginsNeeded =
+  const verifyExternalLoginsNeeded: boolean =
     discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
-
-  const { manifestFieldName } = discoveryConfig?.features.exportToWorkspace;
+  const manifestFieldName: string =
+    discoveryConfig?.features.exportToWorkspace.manifestFieldName;
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>

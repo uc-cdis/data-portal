@@ -5,16 +5,17 @@ import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
+import { RouteComponentProps } from 'react-router-dom';
 
 const DownloadAllFiles = async (
   studyIDs: any[],
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
-  history,
-  location,
+  history: RouteComponentProps['history'],
+  location: RouteComponentProps['location'],
   healLoginNeeded: boolean,
   verifyExternalLoginsNeeded: boolean,
-  manifestFieldName
+  manifestFieldName: string
 ) => {
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
