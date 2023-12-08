@@ -267,7 +267,6 @@ const tabField = (
     && resourceFieldValue[0]
     && resourceFieldValue[0].length !== 0
   ) {
-    console.log('fieldConfig.type ', fieldConfig.type);
     if (fieldConfig.type === 'dataDownloadList') {
       return (
         <DataDownloadList

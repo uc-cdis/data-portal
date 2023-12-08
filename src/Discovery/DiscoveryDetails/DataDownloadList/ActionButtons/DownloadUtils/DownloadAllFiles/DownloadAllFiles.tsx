@@ -8,7 +8,7 @@ import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
 
 const DownloadAllFiles = async (
-  studyIDs: any[],
+  resourceInfo: object,
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: RouteComponentProps['history'],
@@ -20,7 +20,7 @@ const DownloadAllFiles = async (
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
       setDownloadStatus,
-      studyIDs,
+      resourceInfo,
       manifestFieldName,
       history,
       location,
@@ -32,6 +32,7 @@ const DownloadAllFiles = async (
   if (healLoginNeeded) {
     return;
   }
+  const studyIDs = [resourceInfo._hdp_uid];
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',

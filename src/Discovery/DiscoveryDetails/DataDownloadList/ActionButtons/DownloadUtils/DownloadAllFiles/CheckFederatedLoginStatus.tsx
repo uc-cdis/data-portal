@@ -17,7 +17,7 @@ interface Iprovider {
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//;
 const CheckFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
-  selectedResources: any[],
+  selectedResource: {},
   manifestFieldName: string,
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
@@ -36,23 +36,23 @@ const CheckFederatedLoginStatus = async (
 
     const guidsForHostnameResolution: any = [];
     const guidPrefixes: any = [];
-    selectedResources.forEach((selectedResource) => {
-      (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
-        if (fileMetadata.object_id) {
-          const guidDomainPrefix = (
-            fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
-          ).shift();
-          if (guidDomainPrefix) {
-            if (!guidPrefixes.includes(guidDomainPrefix)) {
-              guidPrefixes.push(guidDomainPrefix);
-              guidsForHostnameResolution.push(fileMetadata.object_id);
-            }
-          } else {
+
+    (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
+      if (fileMetadata.object_id) {
+        const guidDomainPrefix = (
+          fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
+        ).shift();
+        if (guidDomainPrefix) {
+          if (!guidPrefixes.includes(guidDomainPrefix)) {
+            guidPrefixes.push(guidDomainPrefix);
             guidsForHostnameResolution.push(fileMetadata.object_id);
           }
+        } else {
+          guidsForHostnameResolution.push(fileMetadata.object_id);
         }
-      });
+      }
     });
+
     const guidResolutions = await Promise.all(
       guidsForHostnameResolution.map((guid) => fetch(`https://dataguids.org/index/${guid}`)
         .then((r) => r.json())

@@ -19,7 +19,6 @@ const ActionButtons = ({
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
   });
-  const studyIDs = [resourceInfo?.study_id];
   const history = useHistory();
   const location = useLocation();
   const showDownloadStudyLevelMetadataButtons: boolean = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
@@ -98,7 +97,7 @@ const ActionButtons = ({
               <Button
                 className='discovery-action-bar-button'
                 onClick={() => DownloadAllFiles(
-                  studyIDs,
+                  resourceInfo,
                   downloadStatus,
                   setDownloadStatus,
                   history,

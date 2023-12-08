@@ -12,10 +12,7 @@ const DataDownloadList = ({
   sourceFieldData,
   healLoginNeeded,
 }) => {
-  console.log('isUserLoggedIn', isUserLoggedIn);
-
   const data = ProcessData(sourceFieldData);
-
   return (
     <div className='discovery-modal__data-download-list'>
       <ActionButtons
