@@ -270,7 +270,7 @@ export default function AdminProjectActions({ project, projectStates, savedFilte
                             setActionPending(true);
                             let actionRequest = 
                                 /** @type {import('../redux/dataRequest/types').Request} */ 
-                                (dispatch(updateUserDataAccess({ email, project_id: project.id })));
+                                (dispatch(updateUserDataAccess({ email, project_id: project.id, role: 'DATA_ACCESS' })));
                     
                             actionRequest.then((action) => {
                                 setActionPending(false);
