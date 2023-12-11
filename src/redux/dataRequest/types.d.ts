@@ -66,7 +66,8 @@ export type ProjectUrlUpdateParams = {
 
 export type UserRoleUpdateParams = {
   project_id: number,
-  email: string
+  email: string,
+  role: string
 }
 
 export type AddFilterSetIdUpdateParams = {
