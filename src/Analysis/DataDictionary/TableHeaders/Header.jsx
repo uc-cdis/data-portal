@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 
-const Header = ({ header, key }) => {
+const Header = ({ handleSort, headerJSX, headerKey, sortConfig }) => {
   const [isActive, setIsActive] = useState({
     top: false,
     bottom: false,
   });
   const handleClick = () => {
-    if (!isActive.top && !isActive.bottom) setIsActive({ top: true, bottom: false });
-    else if (isActive.top && !isActive.bottom) setIsActive({ top: false, bottom: true });
-    else setIsActive({ top: false, bottom: false });
+    handleSort(headerKey);
   };
 
   return (
-    <th key={key} onClick={handleClick}>
+    <th key={headerKey} onClick={handleClick}>
       <div className='table-column-sorters'>
-        <span className='ant-table-column-title'>{header}</span>
+        <span className='ant-table-column-title'>
+          {headerJSX}
+          {sortConfig.sortKey === headerKey && `(${sortConfig.direction})`}
+          {JSON.stringify(sortConfig)}
+        </span>
         <span className='table-column-sorter-inner'>
           <span
             role='presentation'
