@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-const Header = ({ handleSort, headerJSX, headerKey, sortConfig }) => {
+const Header = ({
+  handleSort, headerJSX, headerKey, sortConfig,
+}) => {
   const getSortDirectionForCurrentColumn = () => {
     if (sortConfig.sortKey === headerKey) return sortConfig.direction;
   };

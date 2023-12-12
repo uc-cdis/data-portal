@@ -22,21 +22,30 @@ const DataDictionaryContainer = () => {
     </React.Fragment>
   );
 
-  const rows = data.map((object) => (
-    <tr key={object.vocabularyID}>
-      <td>{object.vocabularyID}</td>
-      <td>{object.conceptId}</td>
-      <td>{object.conceptCode}</td>
-      <td>{object.conceptName}</td>
-      <td>{object.conceptClassId}</td>
-      <td>{outputValueAndPercentage(object.numberOfPeopleWithVariable)}</td>
-      <td>
-        {outputValueAndPercentage(object.numberOfPeopleWhereValueIsFilled)}
-      </td>
-      <td>{outputValueAndPercentage(object.numberOfPeopleWhereValueIsNull)}</td>
-      <td>{object.valueStoredAs}</td>
-      <td>{JSON.stringify(object.valueSummary)}</td>
-    </tr>
+  const rows = data.map((object, i) => (
+    <React.Fragment key={object.vocabularyID}>
+      <tr colSpan={columnsShown}>
+        <td>{object.vocabularyID}</td>
+        <td>{object.conceptID}</td>
+        <td>{object.conceptCode}</td>
+        <td>{object.conceptName}</td>
+        <td>{object.conceptClassID}</td>
+        <td>{outputValueAndPercentage(object.numberOfPeopleWithVariable)}</td>
+        <td>
+          {outputValueAndPercentage(object.numberOfPeopleWhereValueIsFilled)}
+        </td>
+        <td>
+          {outputValueAndPercentage(object.numberOfPeopleWhereValueIsNull)}
+        </td>
+        <td>{object.valueStoredAs}</td>
+        <td>{JSON.stringify(object.valueSummary)}</td>
+      </tr>
+      <tr>
+        <td colSpan={columnsShown} style={{ background: 'green' }}>
+          Long Column!!! {object.vocabularyID}
+        </td>
+      </tr>
+    </React.Fragment>
   ));
 
   const handleSort = (sortKey) => {
@@ -52,22 +61,31 @@ const DataDictionaryContainer = () => {
     }
     setSortConfig({ sortKey, direction });
     // Perform sorting based on the selected column
+
     const sortedData = [...data].sort((a, b) => {
+      console.log('a[sortKey]', a[sortKey]);
       if (direction === 'ascending') {
-        return a[sortKey] - b[sortKey];
+        return a[sortKey].toString().localeCompare(b[sortKey].toString());
       }
       if (direction === 'descending') {
-        return b[sortKey] - a[sortKey];
+        return b[sortKey].toString().localeCompare(a[sortKey].toString());
       }
       return 0;
     });
-    setData(sortedData);
+    // if column is set to off reset to initial
+    if (direction === 'off') {
+      setData(TableData.data);
+    }
+    // Otherwise set with sortedData
+    else {
+      setData(sortedData);
+    }
   };
 
   return (
     <div className='dataDictionary'>
       {JSON.stringify(sortConfig)}
-      <Table striped>
+      <Table>
         <EntriesHeader
           start={1}
           stop={TableData.data.length}

@@ -6,6 +6,10 @@
 .dataDictionary table {
   border: 1px solid #e2e2e3;
 }
+.dataDictionary table tbody tr:nth-child(4n + 3) {
+  background-color: #fafafb;
+}
+
 .dataDictionary table thead {
   background: #e9eef2;
 }
