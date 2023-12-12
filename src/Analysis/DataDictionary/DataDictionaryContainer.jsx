@@ -8,6 +8,7 @@ import EntriesHeader from './EntriesHeader/EntriesHeader';
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
   const [data, setData] = useState(TableData.data);
+  const columnsShown = 10;
   const [sortConfig, setSortConfig] = useState({
     sortKey: null,
     direction: 'off',
@@ -49,13 +50,13 @@ const DataDictionaryContainer = () => {
         direction = 'ascending';
       }
     }
-    console.log('called handle sort with', sortKey);
     setSortConfig({ sortKey, direction });
     // Perform sorting based on the selected column
     const sortedData = [...data].sort((a, b) => {
       if (direction === 'ascending') {
         return a[sortKey] - b[sortKey];
-      } else if (direction === 'descending') {
+      }
+      if (direction === 'descending') {
         return b[sortKey] - a[sortKey];
       }
       return 0;
@@ -63,7 +64,6 @@ const DataDictionaryContainer = () => {
     setData(sortedData);
   };
 
-  const columnsShown = 10;
   return (
     <div className='dataDictionary'>
       {JSON.stringify(sortConfig)}

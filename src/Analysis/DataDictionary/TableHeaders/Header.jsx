@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
 
 const Header = ({ handleSort, headerJSX, headerKey, sortConfig }) => {
-  const [isActive, setIsActive] = useState({
-    top: false,
-    bottom: false,
-  });
-  const handleClick = () => {
-    handleSort(headerKey);
+  const getSortDirectionForCurrentColumn = () => {
+    if (sortConfig.sortKey === headerKey) return sortConfig.direction;
   };
-
   return (
-    <th key={headerKey} onClick={handleClick}>
+    <th key={headerKey} onClick={() => handleSort(headerKey)}>
       <div className='table-column-sorters'>
-        <span className='ant-table-column-title'>
-          {headerJSX}
-          {sortConfig.sortKey === headerKey && `(${sortConfig.direction})`}
-          {JSON.stringify(sortConfig)}
-        </span>
+        <span className='ant-table-column-title'>{headerJSX}</span>
         <span className='table-column-sorter-inner'>
           <span
             role='presentation'
             aria-label='caret-up'
-            className={`table-column-sorter-up ${isActive.top ? 'active' : ''}`}
+            className={`table-column-sorter-up ${
+              getSortDirectionForCurrentColumn() === 'ascending' && 'active'
+            }`}
           >
             <svg
               viewBox='0 0 1024 1024'
@@ -39,7 +32,7 @@ const Header = ({ handleSort, headerJSX, headerKey, sortConfig }) => {
             role='presentation'
             aria-label='caret-down'
             className={`table-column-sorter-down ${
-              isActive.bottom ? 'active' : ''
+              getSortDirectionForCurrentColumn() === 'descending' && 'active'
             }`}
           >
             <svg

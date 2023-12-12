@@ -1,6 +1,8 @@
 import React from 'react';
 
-const EntriesHeader = ({ start, stop, total, colspan, position }) => {
+const EntriesHeader = ({
+  start, stop, total, colspan, position,
+}) => {
   if (position === 'bottom') {
     return (
       <caption colSpan={colspan} className='entries-header'>
