@@ -2,11 +2,56 @@ import React, { useState } from 'react';
 import Header from './Header';
 
 const headerItems = [
-  { headerKey: 'vocabularyID', jsx: <span>Vocabulary&nbsp;ID</span> },
-  { headerKey: 'conceptID', jsx: <span>Concept&nbsp;ID</span> },
-  { headerKey: 'conceptCode', jsx: <span>Concept&nbsp;Code</span> },
-  { headerKey: 'conceptName', jsx: <span>Concept&nbsp;Name</span> },
-  { headerKey: 'conceptClassID', jsx: <span>Concept&nbsp;Class&nbsp;ID</span> },
+  {
+    headerKey: 'vocabularyID',
+    jsx: (
+      <span>
+        Vocabulary
+        <br />
+        ID
+      </span>
+    ),
+  },
+  {
+    headerKey: 'conceptID',
+    jsx: (
+      <span>
+        Concept
+        <br />
+        ID
+      </span>
+    ),
+  },
+  {
+    headerKey: 'conceptCode',
+    jsx: (
+      <span>
+        Concept
+        <br />
+        Code
+      </span>
+    ),
+  },
+  {
+    headerKey: 'conceptName',
+    jsx: (
+      <span>
+        Concept
+        <br />
+        Name
+      </span>
+    ),
+  },
+  {
+    headerKey: 'conceptClassID',
+    jsx: (
+      <span>
+        Concept
+        <br />
+        Class&nbsp;ID
+      </span>
+    ),
+  },
   {
     headerKey: 'numberOfPeopleWithVariable',
     jsx: (
@@ -51,6 +96,7 @@ const TableHeaders = ({ handleSort, sortConfig }) => (
           headerJSX={item.jsx}
           headerKey={item.headerKey}
           sortConfig={sortConfig}
+          sortable={item.headerKey !== 'valueSummary'}
         />
       ))}
     </tr>

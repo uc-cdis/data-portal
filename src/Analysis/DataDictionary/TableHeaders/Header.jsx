@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 
-const Header = ({
-  handleSort, headerJSX, headerKey, sortConfig,
-}) => {
+const Header = ({ handleSort, headerJSX, headerKey, sortConfig, sortable }) => {
   const getSortDirectionForCurrentColumn = () => {
     if (sortConfig.sortKey === headerKey) return sortConfig.direction;
   };
+  if (!sortable)
+    return (
+      <th className='not-sortable' key={headerKey}>
+        {headerJSX}
+      </th>
+    );
   return (
     <th key={headerKey} onClick={() => handleSort(headerKey)}>
       <div className='table-column-sorters'>

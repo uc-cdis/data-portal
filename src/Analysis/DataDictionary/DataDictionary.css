@@ -2,6 +2,8 @@
   width: 100%;
   max-width: 100%; /* set the maximum width of the table */
   overflow-x: auto; /* enable horizontal scrolling when necessary */
+  height: auto;
+  overflow-y: hidden;
 }
 .dataDictionary table {
   border: 1px solid #e2e2e3;
@@ -28,7 +30,10 @@
 .dataDictionary th:hover {
   background-color: #f5f5f5;
 }
-
+.dataDictionary th.not-sortable:hover {
+  background-color: inherit;
+  cursor: inherit;
+}
 .dataDictionary .table-column-sorter-inner {
   padding-left: 10px;
   display: inline-flex;
@@ -70,4 +75,19 @@
 }
 .dataDictionary .entries-header th:hover {
   background-color: #cfdbe6;
+}
+
+/* Expandable Columns */
+.dataDictionary tr.expandable td {
+  padding: 0;
+}
+
+.dataDictionary tr td div.expandable {
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+.dataDictionary tr td div.expandable.expanded {
+  max-height: 400px;
+  transition: max-height 0.5s;
 }

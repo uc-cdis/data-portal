@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Table } from '@mantine/core';
+import { Table, Input } from '@mantine/core';
 import TableData from './TestData/TableData';
 import TableHeaders from './TableHeaders/TableHeaders';
 import './DataDictionary.css';
 import EntriesHeader from './EntriesHeader/EntriesHeader';
+import SearchBar from './SearchBar/SearchBar';
+import TableRow from './TableRow/TableRow';
 
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
@@ -14,38 +16,12 @@ const DataDictionaryContainer = () => {
     direction: 'off',
   });
 
-  const outputValueAndPercentage = (value) => (
-    <React.Fragment>
-      {value}
-      <br />
-      {Math.trunc((value / TableDataTotal) * 100 * 100) / 100}%
-    </React.Fragment>
-  );
-
-  const rows = data.map((object, i) => (
-    <React.Fragment key={object.vocabularyID}>
-      <tr colSpan={columnsShown}>
-        <td>{object.vocabularyID}</td>
-        <td>{object.conceptID}</td>
-        <td>{object.conceptCode}</td>
-        <td>{object.conceptName}</td>
-        <td>{object.conceptClassID}</td>
-        <td>{outputValueAndPercentage(object.numberOfPeopleWithVariable)}</td>
-        <td>
-          {outputValueAndPercentage(object.numberOfPeopleWhereValueIsFilled)}
-        </td>
-        <td>
-          {outputValueAndPercentage(object.numberOfPeopleWhereValueIsNull)}
-        </td>
-        <td>{object.valueStoredAs}</td>
-        <td>{JSON.stringify(object.valueSummary)}</td>
-      </tr>
-      <tr>
-        <td colSpan={columnsShown} style={{ background: 'green' }}>
-          Long Column!!! {object.vocabularyID}
-        </td>
-      </tr>
-    </React.Fragment>
+  const rows = data.map((rowObject, i) => (
+    <TableRow
+      TableDataTotal={TableDataTotal}
+      rowObject={rowObject}
+      columnsShown={columnsShown}
+    />
   ));
 
   const handleSort = (sortKey) => {
@@ -60,10 +36,8 @@ const DataDictionaryContainer = () => {
       }
     }
     setSortConfig({ sortKey, direction });
-    // Perform sorting based on the selected column
 
     const sortedData = [...data].sort((a, b) => {
-      console.log('a[sortKey]', a[sortKey]);
       if (direction === 'ascending') {
         return a[sortKey].toString().localeCompare(b[sortKey].toString());
       }
@@ -72,7 +46,7 @@ const DataDictionaryContainer = () => {
       }
       return 0;
     });
-    // if column is set to off reset to initial
+    // if column is set to off reset to initial sort
     if (direction === 'off') {
       setData(TableData.data);
     }
@@ -85,6 +59,7 @@ const DataDictionaryContainer = () => {
   return (
     <div className='dataDictionary'>
       {JSON.stringify(sortConfig)}
+      <SearchBar TableData={TableData.data} setData={setData} />
       <Table>
         <EntriesHeader
           start={1}
@@ -94,7 +69,16 @@ const DataDictionaryContainer = () => {
           position='top'
         />
         <TableHeaders handleSort={handleSort} sortConfig={sortConfig} />
-        <tbody>{rows}</tbody>
+        <tbody>
+          {rows}
+          {!data.length && (
+            <tr style={{ textAlign: 'center' }}>
+              <td colSpan={columnsShown}>
+                <h2>No Data Found</h2>
+              </td>
+            </tr>
+          )}
+        </tbody>
         <EntriesHeader
           start={1}
           stop={TableData.data.length}

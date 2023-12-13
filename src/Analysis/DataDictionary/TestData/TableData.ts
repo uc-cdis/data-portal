@@ -17,12 +17,12 @@ const TableData = {
       standardDeviation: 2.5,
       valueSummary: [
         {
-          name: 'Male',
+          name: 'This is a very unique name!@#',
           value: 80,
         },
         {
           name: 'Female',
-          value: 20,
+          value: 21,
         },
       ],
     },
