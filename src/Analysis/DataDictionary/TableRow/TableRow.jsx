@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from '@mantine/core';
 
-const TableRow = ({ TableDataTotal, rowObject, columnsShown }) => {
+const TableRow = ({
+  TableDataTotal,
+  rowObject,
+  columnsShown,
+  searchInputValue,
+}) => {
   const [showDetails, setShowDetails] = useState(false);
   const outputValueAndPercentage = (value) => (
     <React.Fragment>
@@ -10,24 +15,77 @@ const TableRow = ({ TableDataTotal, rowObject, columnsShown }) => {
       {Math.trunc((value / TableDataTotal) * 100 * 100) / 100}%
     </React.Fragment>
   );
+
+  const checkIfCellContainsSearchTerm = (cellText) => {
+    if (
+      searchInputValue &&
+      cellText
+        .toString()
+        .toLowerCase()
+        .includes(searchInputValue.toLowerCase().trim())
+    ) {
+      return 'search-border';
+    }
+  };
+
   return (
     <React.Fragment key={rowObject.vocabularyID}>
       <tr colSpan={columnsShown}>
-        <td>{rowObject.vocabularyID}</td>
-        <td>{rowObject.conceptID}</td>
-        <td>{rowObject.conceptCode}</td>
-        <td>{rowObject.conceptName}</td>
-        <td>{rowObject.conceptClassID}</td>
-        <td>
+        <td className={checkIfCellContainsSearchTerm(rowObject.vocabularyID)}>
+          {rowObject.vocabularyID}
+        </td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.conceptID.toString()
+          )}
+        >
+          {rowObject.conceptID}
+        </td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.conceptCode.toString()
+          )}
+        >
+          {rowObject.conceptCode}
+        </td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.conceptName.toString()
+          )}
+        >
+          {rowObject.conceptName}
+        </td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.conceptClassID.toString()
+          )}
+        >
+          {rowObject.conceptClassID}
+        </td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.numberOfPeopleWithVariable
+          )}
+        >
           {outputValueAndPercentage(rowObject.numberOfPeopleWithVariable)}
         </td>
-        <td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.numberOfPeopleWhereValueIsFilled
+          )}
+        >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsFilled)}
         </td>
-        <td>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.numberOfPeopleWhereValueIsNull
+          )}
+        >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsNull)}
         </td>
-        <td>{rowObject.valueStoredAs}</td>
+        <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
+          {rowObject.valueStoredAs}
+        </td>
         <td>
           {!showDetails && (
             <Button variant='filled' onClick={() => setShowDetails(true)}>

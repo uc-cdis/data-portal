@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Input } from '@mantine/core';
+import { Table } from '@mantine/core';
 import TableData from './TestData/TableData';
 import TableHeaders from './TableHeaders/TableHeaders';
 import './DataDictionary.css';
@@ -10,6 +10,7 @@ import TableRow from './TableRow/TableRow';
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
   const [data, setData] = useState(TableData.data);
+  const [searchInputValue, setSearchInputValue] = useState('');
   const columnsShown = 10;
   const [sortConfig, setSortConfig] = useState({
     sortKey: null,
@@ -21,6 +22,7 @@ const DataDictionaryContainer = () => {
       TableDataTotal={TableDataTotal}
       rowObject={rowObject}
       columnsShown={columnsShown}
+      searchInputValue={searchInputValue}
     />
   ));
 
@@ -59,7 +61,12 @@ const DataDictionaryContainer = () => {
   return (
     <div className='dataDictionary'>
       {JSON.stringify(sortConfig)}
-      <SearchBar TableData={TableData.data} setData={setData} />
+      <SearchBar
+        TableData={TableData.data}
+        setData={setData}
+        searchInputValue={searchInputValue}
+        setSearchInputValue={setSearchInputValue}
+      />
       <Table>
         <EntriesHeader
           start={1}

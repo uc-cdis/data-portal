@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
 
-const SearchBar = ({ TableData, setData }) => {
-  const [inputValue, setInputValue] = useState('');
-
+const SearchBar = ({
+  TableData,
+  setData,
+  searchInputValue,
+  setSearchInputValue,
+}) => {
   useEffect(() => {
     const filteredData = TableData.filter((item) => {
-      let searchQuery = inputValue.toLowerCase().trim();
+      const searchQuery = searchInputValue.toLowerCase().trim();
 
       // return item.conceptName.toLowerCase().includes(searchQuery);
       return Object.values(item).some((value) => {
         if (typeof value === 'string' || typeof value === 'number') {
           return value.toString().toLowerCase().includes(searchQuery);
-        } else if (Array.isArray(value)) {
+        }
+        if (Array.isArray(value)) {
           console.log('GOT THE ARRAY', value);
           let doesArrayContainsSearchQuery = false;
           value.forEach((arrItem) => {
@@ -43,10 +47,10 @@ const SearchBar = ({ TableData, setData }) => {
     });
     console.log(filteredData);
     setData(filteredData);
-  }, [inputValue]);
+  }, [searchInputValue]);
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+    setSearchInputValue(event.target.value);
   };
 
   return (
@@ -54,7 +58,7 @@ const SearchBar = ({ TableData, setData }) => {
       <Input
         icon={<SearchIcon />}
         rightSection={
-          inputValue && (
+          searchInputValue && (
             <span
               style={{
                 display: 'block',
@@ -70,10 +74,10 @@ const SearchBar = ({ TableData, setData }) => {
                 textAlign: 'center',
                 opacity: '70%',
               }}
-              onClick={() => setInputValue('')}
+              onClick={() => setSearchInputValue('')}
               onKeyPress={(event) => {
                 if (event.key === 'Enter') {
-                  setInputValue('');
+                  setSearchInputValue('');
                 }
               }}
             >
@@ -82,7 +86,7 @@ const SearchBar = ({ TableData, setData }) => {
           )
         }
         placeholder='Search'
-        value={inputValue}
+        value={searchInputValue}
         onChange={handleInputChange}
       />
     </div>

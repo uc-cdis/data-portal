@@ -91,3 +91,7 @@
   max-height: 400px;
   transition: max-height 0.5s;
 }
+
+.dataDictionary td.search-border {
+  border: 2px solid orange;
+}
