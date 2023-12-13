@@ -69,8 +69,8 @@ const DataDictionaryContainer = () => {
       />
       <Table>
         <EntriesHeader
-          start={1}
-          stop={TableData.data.length}
+          start={data.length === 0 ? 0 : 1}
+          stop={data.length}
           total={TableData.data.length}
           colspan={columnsShown}
           position='top'

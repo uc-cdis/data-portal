@@ -92,6 +92,7 @@
   transition: max-height 0.5s;
 }
 
-.dataDictionary td.search-border {
+.dataDictionary .search-border,
+table > tbody > tr > td.search-border:last-of-type {
   border: 2px solid orange;
 }

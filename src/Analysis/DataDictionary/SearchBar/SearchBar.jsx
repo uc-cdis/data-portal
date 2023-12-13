@@ -22,17 +22,10 @@ const SearchBar = ({
           let doesArrayContainsSearchQuery = false;
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
-              /* CONSOLE STATEMENTS */
-              console.log('arrObjValue ln 20', arrObjValue);
               if (
                 typeof arrObjValue === 'string' ||
                 typeof arrObjValue === 'number'
               ) {
-                console.log(
-                  'arrObjValue.toString().toLowerCase().includes(searchQuery)',
-                  arrObjValue.toString().toLowerCase().includes(searchQuery)
-                );
-                /* END CONSOLE STATEMENTS */
                 if (
                   arrObjValue.toString().toLowerCase().includes(searchQuery)
                 ) {
