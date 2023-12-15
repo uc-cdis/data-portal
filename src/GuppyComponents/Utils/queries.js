@@ -2,19 +2,20 @@ import cloneDeep from 'lodash.clonedeep';
 import flat from 'flat';
 import papaparse from 'papaparse';
 import { FILE_DELIMITERS, FILTER_TYPE, GUPPY_URL } from './const';
+import { headers } from '../../localconf';
 
-/** @typedef {import('../types').AnchorConfig} AnchorConfig */
-/** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
-/** @typedef {import('../types').FilterState} FilterState */
-/** @typedef {import('../types').GqlFilter} GqlFilter */
-/** @typedef {import('../types').GqlInFilter} GqlInFilter */
-/** @typedef {import('../types').GqlSimpleFilter} GqlSimpleFilter */
-/** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
-/** @typedef {import('../types').GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
-/** @typedef {import('../types').GqlSort} GqlSort */
-/** @typedef {import('../types').EmptyFilter} EmptyFilter */
-/** @typedef {import('../types').OptionFilter} OptionFilter */
-/** @typedef {import('../types').RangeFilter} RangeFilter */
+/** @typedef {import("../types").AnchorConfig} AnchorConfig */
+/** @typedef {import("../types").AnchoredFilterState} AnchoredFilterState */
+/** @typedef {import("../types").FilterState} FilterState */
+/** @typedef {import("../types").GqlFilter} GqlFilter */
+/** @typedef {import("../types").GqlInFilter} GqlInFilter */
+/** @typedef {import("../types").GqlSimpleFilter} GqlSimpleFilter */
+/** @typedef {import("../types").GqlNestedFilter} GqlNestedFilter */
+/** @typedef {import("../types").GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
+/** @typedef {import("../types").GqlSort} GqlSort */
+/** @typedef {import("../types").EmptyFilter} EmptyFilter */
+/** @typedef {import("../types").OptionFilter} OptionFilter */
+/** @typedef {import("../types").RangeFilter} RangeFilter */
 
 const graphqlEndpoint = `${GUPPY_URL}/graphql`;
 const downloadEndpoint = `${GUPPY_URL}/download`;
@@ -30,7 +31,7 @@ function jsonToFormat(json, format) {
   return format in FILE_DELIMITERS
     ? papaparse.unparse(
         Object.values(json).map((value) => flat(value, { delimiter: '_' })),
-        { delimiter: FILE_DELIMITERS[format] }
+        { delimiter: FILE_DELIMITERS[format] },
       )
     : json;
 }
@@ -126,6 +127,7 @@ export function queryGuppyForAggregationChartData({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
     signal,
@@ -167,6 +169,7 @@ export function queryGuppyForAggregationCountData({ type, gqlFilter, signal }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
     signal,
@@ -210,7 +213,7 @@ export function getQueryInfoForAggregationOptionsData({
           if (!(path in gqlFilterByGroup)) {
             const combineMode = gqlFilter ? Object.keys(gqlFilter)[0] : 'AND';
             const groupGqlFilter = cloneDeep(
-              gqlFilter ?? { [combineMode]: [] }
+              gqlFilter ?? { [combineMode]: [] },
             );
 
             if (anchorValue !== '' && 'AND' in groupGqlFilter) {
@@ -224,7 +227,7 @@ export function getQueryInfoForAggregationOptionsData({
                 filters.push(
                   /** @type {GqlNestedAnchoredFilter} */ ({
                     nested: { path, AND: [anchorFilterPiece] },
-                  })
+                  }),
                 );
               } else if (Array.isArray(found.nested.AND)) {
                 found.nested.AND.push(anchorFilterPiece);
@@ -349,6 +352,7 @@ export function queryGuppyForAggregationOptionsData({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({ query, variables }),
     signal,
@@ -412,11 +416,11 @@ export function queryGuppyForSubAggregationData({
       ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
             ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
-          gqlFilter
-        )}, nestedAggFields: $nestedAggFields, accessibility: all) {
+              gqlFilter,
+            )}, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
-                numericAggAsText
+                numericAggAsText,
               )}
             }
           }
@@ -434,6 +438,7 @@ export function queryGuppyForSubAggregationData({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({
       query,
@@ -532,6 +537,7 @@ export function queryGuppyForRawData({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({
       query,
@@ -556,7 +562,7 @@ export function queryGuppyForRawData({
  */
 function parseSimpleFilter(fieldName, filterValues) {
   const invalidFilterError = new Error(
-    `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValues)}`
+    `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValues)}`,
   );
   if (filterValues === undefined) throw invalidFilterError;
 
@@ -610,7 +616,7 @@ function parseSimpleFilter(fieldName, filterValues) {
 /**
  * @param {string} anchorName Formatted as "[anchorFieldName]:[anchorValue]"
  * @param {AnchoredFilterState} anchoredFilterState
- * @param {'AND' | 'OR'} combineMode
+ * @param {"AND" | "OR"} combineMode
  * @returns {GqlNestedAnchoredFilter[]}
  */
 function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
@@ -638,13 +644,13 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
         nestedFilters.push(
           /** @type {GqlNestedAnchoredFilter} */ ({
             nested: { path, AND: [anchorFilter, { [combineMode]: [] }] },
-          })
+          }),
         );
         nestedFilterIndex += 1;
       }
 
       nestedFilters[nestedFilterIndices[path]].nested.AND[1][combineMode].push(
-        simpleFilter
+        simpleFilter,
       );
     }
   }
@@ -687,7 +693,7 @@ export function getGQLFilter(filterState) {
       const parsedAnchoredFilters = parseAnchoredFilters(
         fieldName,
         filterValues,
-        combineMode
+        combineMode,
       );
       for (const { nested } of parsedAnchoredFilters) {
         if (!(nested.path in nestedFilterIndices)) {
@@ -695,7 +701,7 @@ export function getGQLFilter(filterState) {
           nestedFilters.push(
             /** @type {GqlNestedFilter} */ ({
               nested: { path: nested.path, [combineMode]: [] },
-            })
+            }),
           );
           nestedFilterIndex += 1;
         }
@@ -716,13 +722,13 @@ export function getGQLFilter(filterState) {
             nestedFilters.push(
               /** @type {GqlNestedFilter} */ ({
                 nested: { path, [combineMode]: [] },
-              })
+              }),
             );
             nestedFilterIndex += 1;
           }
 
           nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
-            simpleFilter
+            simpleFilter,
           );
         } else {
           simpleFilters.push(simpleFilter);
@@ -764,7 +770,7 @@ export function downloadDataFromGuppy({
       sort,
     }),
   }).then((res) =>
-    JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
+    JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format),
   );
 }
 
@@ -801,6 +807,7 @@ export function queryGuppyForTotalCounts({ type, filter }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({
       query,
@@ -823,6 +830,7 @@ export function getAllFieldsFromGuppy({ type }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify({
       query: `{
