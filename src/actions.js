@@ -207,11 +207,21 @@ export const fetchWrapper = ({
 // if their auth is insufficient to perform the query.
 export const fetchGraphQL = (graphQLParams) => sessionMonitor.updateSession()
   .then(() => fetchWithCreds({ path: graphqlPath, body: JSON.stringify(graphQLParams), method: 'POST' })
-    .then((response) => response));
+    .then((response) => {
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return response;
+    }));
 
 export const fetchFlatGraphQL = (graphQLParams) => sessionMonitor.updateSession()
   .then(() => fetchWithCreds({ path: guppyGraphQLUrl, body: JSON.stringify(graphQLParams), method: 'POST' })
-    .then((response) => response));
+    .then((response) => {
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return response;
+    }));
 
 export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
