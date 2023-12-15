@@ -291,6 +291,10 @@ function buildConfig(opts) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
+  if (config.featureFlags && config.featureFlags.dropdownSingleLogin) {
+    dropdownSingleLogin = config.featureFlags.dropdownSingleLogin;
+  }
+
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -547,6 +551,7 @@ function buildConfig(opts) {
     explorerPublic,
     explorerHideEmptyFilterSection,
     explorerFilterValuesToHide,
+    dropdownSingleLogin,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
