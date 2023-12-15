@@ -291,6 +291,7 @@ function buildConfig(opts) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
+  let dropdownSingleLogin = false;
   if (config.featureFlags && config.featureFlags.dropdownSingleLogin) {
     dropdownSingleLogin = config.featureFlags.dropdownSingleLogin;
   }
