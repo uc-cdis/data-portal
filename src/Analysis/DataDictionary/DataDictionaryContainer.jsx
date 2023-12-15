@@ -6,6 +6,7 @@ import './DataDictionary.css';
 import EntriesHeader from './EntriesHeader/EntriesHeader';
 import SearchBar from './SearchBar/SearchBar';
 import TableRow from './TableRow/TableRow';
+import PaginationControls from './PaginationControls/PaginationControls';
 
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
@@ -94,6 +95,7 @@ const DataDictionaryContainer = () => {
           position='bottom'
         />
       </Table>
+      <PaginationControls />
     </div>
   );
 };

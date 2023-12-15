@@ -18,8 +18,8 @@ const TableRow = ({
 
   const checkIfCellContainsSearchTerm = (cellText) => {
     if (
-      searchInputValue &&
-      cellText
+      searchInputValue
+      && cellText
         .toString()
         .toLowerCase()
         .includes(searchInputValue.toLowerCase().trim())
@@ -72,49 +72,49 @@ const TableRow = ({
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptID.toString()
+            rowObject.conceptID.toString(),
           )}
         >
           {rowObject.conceptID}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptCode.toString()
+            rowObject.conceptCode.toString(),
           )}
         >
           {rowObject.conceptCode}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptName.toString()
+            rowObject.conceptName.toString(),
           )}
         >
           {rowObject.conceptName}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptClassID.toString()
+            rowObject.conceptClassID.toString(),
           )}
         >
           {rowObject.conceptClassID}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWithVariable
+            rowObject.numberOfPeopleWithVariable,
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWithVariable)}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsFilled
+            rowObject.numberOfPeopleWhereValueIsFilled,
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsFilled)}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsNull
+            rowObject.numberOfPeopleWhereValueIsNull,
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsNull)}

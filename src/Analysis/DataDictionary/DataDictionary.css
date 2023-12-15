@@ -96,3 +96,28 @@
 table > tbody > tr > td.search-border:last-of-type {
   border: 2px solid orange;
 }
+/* Pagination */
+.dataDictionary .pagination-wrapper button {
+  width: unset;
+  transform: scale(0.9);
+  padding: ;
+}
+.dataDictionary .pagination-container {
+  width: 358px;
+  margin-left: auto;
+}
+.dataDictionary .pagination-container div {
+  float: right;
+  color: #333333;
+  font-size: 12px;
+}
+
+.dataDictionary .entries-quantity-select select {
+  margin: 0 8px 0 5px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+  width: 44px;
+  text-align: center;
+}
