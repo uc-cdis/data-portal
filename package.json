@@ -13,7 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git#c92ed0f5984b5938bbc0c09c0e3b1456be71e029",
+    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git#8d2adb7370f63419d34585b24b64d1d875e5b1a7",
     "@gen3/ui-component": "^0.11.4",
     "@reactour/tour": "^2.12.0",
     "@upsetjs/venn.js": "^1.4.2",
