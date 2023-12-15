@@ -1,19 +1,31 @@
 import React, { useState } from 'react';
-import { Col, Row, Button } from 'antd';
+import {
+  Col, Row, Button, Popover,
+} from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
+import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import './ActionButtons.css';
+
+interface ActionButtonsProps {
+  isUserLoggedIn: boolean;
+  discoveryConfig: DiscoveryConfig;
+  resourceInfo: any;
+  healLoginNeeded: boolean;
+  noData: boolean;
+}
 
 const ActionButtons = ({
   isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
   healLoginNeeded,
-}): JSX.Element => {
+  noData,
+}: ActionButtonsProps): JSX.Element => {
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
@@ -21,13 +33,21 @@ const ActionButtons = ({
   });
   const history = useHistory();
   const location = useLocation();
-  const showDownloadStudyLevelMetadataButtons: boolean = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
+  const showDownloadStudyLevelMetadataButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
     && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
     && resourceInfo?.study_metadata;
-  const showDownloadFileManifestButtons: boolean = discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
-  const showDownloadAllFilesButtons: boolean = discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
-  const verifyExternalLoginsNeeded: boolean = discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
-  const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+  const showDownloadFileManifestButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
+  const showDownloadAllFilesButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
+  const verifyExternalLoginsNeeded: boolean | undefined = discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
+  const manifestFieldName: string | undefined = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+
+  const ConditionalPopover = ({ children }) => (noData ? (
+    <Popover title={'This file is not available for the selected study'}>
+      {children}
+    </Popover>
+  ) : (
+    children
+  ));
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
@@ -46,37 +66,44 @@ const ActionButtons = ({
         */}
         {showDownloadStudyLevelMetadataButtons && (
           <Col flex='1 0 auto'>
-            <Button
-              className='discovery-action-bar-button'
-              onClick={() => DownloadJsonFile(
-                'study-level-metadata',
-                resourceInfo.study_metadata,
-              )}
-            >
-              Download <br />
-              Study-Level Metadata
-            </Button>
+            <ConditionalPopover>
+              <Button
+                className='discovery-action-bar-button'
+                disabled={noData}
+                onClick={() => DownloadJsonFile(
+                  'study-level-metadata',
+                  resourceInfo.study_metadata,
+                )}
+              >
+                Download <br />
+                Study-Level Metadata
+              </Button>
+            </ConditionalPopover>
           </Col>
         )}
         {showDownloadFileManifestButtons && (
           <Col flex='1 0 auto'>
             {isUserLoggedIn && !healLoginNeeded && (
-              <Button
-                className='discovery-action-bar-button'
-                onClick={() => {
-                  HandleDownloadManifestClick(
-                    discoveryConfig,
-                    [resourceInfo],
-                    healLoginNeeded,
-                  );
-                }}
-              >
-                Download File Manifest
-              </Button>
+              <ConditionalPopover>
+                <Button
+                  className='discovery-action-bar-button'
+                  disabled={noData}
+                  onClick={() => {
+                    HandleDownloadManifestClick(
+                      discoveryConfig,
+                      [resourceInfo],
+                      healLoginNeeded,
+                    );
+                  }}
+                >
+                  Download File Manifest
+                </Button>
+              </ConditionalPopover>
             )}
             {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
+                disabled={noData}
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,
@@ -94,25 +121,29 @@ const ActionButtons = ({
         {showDownloadAllFilesButtons && (
           <Col flex='1 0 auto'>
             {isUserLoggedIn && !healLoginNeeded && (
-              <Button
-                className='discovery-action-bar-button'
-                onClick={() => DownloadAllFiles(
-                  resourceInfo,
-                  downloadStatus,
-                  setDownloadStatus,
-                  history,
-                  location,
-                  healLoginNeeded,
-                  verifyExternalLoginsNeeded,
-                  manifestFieldName,
-                )}
-              >
-                Download All Files
-              </Button>
+              <ConditionalPopover>
+                <Button
+                  className='discovery-action-bar-button'
+                  disabled={noData}
+                  onClick={() => DownloadAllFiles(
+                    resourceInfo,
+                    downloadStatus,
+                    setDownloadStatus,
+                    history,
+                    location,
+                    healLoginNeeded,
+                    verifyExternalLoginsNeeded,
+                    manifestFieldName,
+                  )}
+                >
+                  Download All Files
+                </Button>
+              </ConditionalPopover>
             )}
             {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
+                disabled={noData}
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,

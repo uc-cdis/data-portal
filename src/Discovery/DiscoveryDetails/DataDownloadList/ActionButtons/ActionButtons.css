@@ -4,6 +4,7 @@
 
 .discovery-modal_buttons-row button {
   height: 100%;
+  min-height: 40px;
   min-width: 160px;
   padding: 0 8px;
   line-height: 1.2;

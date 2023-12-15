@@ -14,7 +14,7 @@ const DownloadAllFiles = async (
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
   healLoginNeeded: boolean,
-  verifyExternalLoginsNeeded: boolean,
+  verifyExternalLoginsNeeded: boolean | undefined,
   manifestFieldName: string,
 ) => {
   if (verifyExternalLoginsNeeded) {
