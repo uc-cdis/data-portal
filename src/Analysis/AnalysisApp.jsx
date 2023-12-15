@@ -10,6 +10,7 @@ import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import sessionMonitor from '../SessionMonitor';
+import DataDictionaryContainer from './DataDictionary/DataDictionaryContainer';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
@@ -131,6 +132,12 @@ class AnalysisApp extends React.Component {
       return (
         <div className='analysis-app_flex_row'>
           <GWASResultsContainer />
+        </div>
+      );
+    case 'DataDictionary':
+      return (
+        <div className='analysis-app_flex_row'>
+          <DataDictionaryContainer />
         </div>
       );
     case 'GWASUIApp': {
