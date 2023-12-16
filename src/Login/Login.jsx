@@ -157,7 +157,7 @@ class Login extends React.Component {
                   // over the login options' names (e.g. "The University of
                   // Chicago") and not the actual option values, which are
                   // URLs.
-                  (dropdownSingleLogin || loginOptions[i].length > 1) && (
+                  ((dropdownSingleLogin && p.name === "InCommon Login") || loginOptions[i].length > 1) && (
                     <Select
                       isClearable
                       isSearchable
