@@ -7,13 +7,14 @@ import EntriesHeader from './EntriesHeader/EntriesHeader';
 import SearchBar from './SearchBar/SearchBar';
 import TableRow from './TableRow/TableRow';
 import PaginationControls from './PaginationControls/PaginationControls';
+import { ISortConfig } from './Interfaces/Interfaces';
 
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
   const [data, setData] = useState(TableData.data);
   const [searchInputValue, setSearchInputValue] = useState('');
   const columnsShown = 10;
-  const [sortConfig, setSortConfig] = useState({
+  const [sortConfig, setSortConfig] = useState<ISortConfig>({
     sortKey: null,
     direction: 'off',
   });

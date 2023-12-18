@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { Button, SimpleGrid } from '@mantine/core';
+import { IRowData, IValueSummary } from '../Interfaces/Interfaces';
+
+interface ITableRowProps {
+  TableDataTotal: number;
+  rowObject: IRowData;
+  columnsShown: number;
+  searchInputValue: string;
+}
 
 const TableRow = ({
   TableDataTotal,
   rowObject,
   columnsShown,
   searchInputValue,
-}) => {
+}: ITableRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const outputValueAndPercentage = (value) => (
     <React.Fragment>
@@ -16,20 +24,21 @@ const TableRow = ({
     </React.Fragment>
   );
 
-  const checkIfCellContainsSearchTerm = (cellText) => {
+  const checkIfCellContainsSearchTerm = (cellText: string | number | null) => {
     if (
-      searchInputValue
-      && cellText
+      searchInputValue &&
+      cellText &&
+      cellText
         .toString()
         .toLowerCase()
         .includes(searchInputValue.toLowerCase().trim())
     ) {
       return 'search-border';
     }
-    return false;
+    return '';
   };
 
-  const checkIfDetailTableContainsSearchTerm = (rowObject) => {
+  const checkIfDetailTableContainsSearchTerm = (rowObject: IRowData) => {
     let searchTermFound = false;
     const hiddenKeys = [
       'minValue',
@@ -45,7 +54,7 @@ const TableRow = ({
     if (searchTermFound) return 'search-border';
     return '';
   };
-  const checkIfChartContainsSearchTerm = (rowObject) => {
+  const checkIfChartContainsSearchTerm = (rowObject: IRowData) => {
     let searchTermFound = false;
     rowObject.valueSummary.forEach((arrObj) => {
       Object.values(arrObj).forEach((arrObjVal) => {
@@ -58,63 +67,63 @@ const TableRow = ({
     return '';
   };
 
-  const checkIfHiddenCellsContainSearchTerm = (rowObject) => {
+  const checkIfHiddenCellsContainSearchTerm = (rowObject: IRowData) => {
     if (checkIfDetailTableContainsSearchTerm(rowObject)) return 'search-border';
     if (checkIfChartContainsSearchTerm(rowObject)) return 'search-border';
-    return false;
+    return '';
   };
 
   return (
     <React.Fragment key={rowObject.vocabularyID}>
-      <tr colSpan={columnsShown}>
+      <tr>
         <td className={checkIfCellContainsSearchTerm(rowObject.vocabularyID)}>
           {rowObject.vocabularyID}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptID.toString(),
+            rowObject.conceptID.toString()
           )}
         >
           {rowObject.conceptID}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptCode.toString(),
+            rowObject.conceptCode.toString()
           )}
         >
           {rowObject.conceptCode}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptName.toString(),
+            rowObject.conceptName.toString()
           )}
         >
           {rowObject.conceptName}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptClassID.toString(),
+            rowObject.conceptClassID.toString()
           )}
         >
           {rowObject.conceptClassID}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWithVariable,
+            rowObject.numberOfPeopleWithVariable
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWithVariable)}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsFilled,
+            rowObject.numberOfPeopleWhereValueIsFilled
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsFilled)}
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsNull,
+            rowObject.numberOfPeopleWhereValueIsNull
           )}
         >
           {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsNull)}

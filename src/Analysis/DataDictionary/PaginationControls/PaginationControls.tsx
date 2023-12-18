@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, Pagination, SimpleGrid } from '@mantine/core';
 import EntriesQuanitySelector from './EntriesQuantitySelector';
 
-const PaginationControls = () => {
+const PaginationControls: React.FC = (): JSX.Element => {
   interface Data {
     id: number;
     name: string;

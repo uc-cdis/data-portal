@@ -1,5 +1,11 @@
 import React from 'react';
 import Header from './Header';
+import { ISortConfig } from '../Interfaces/Interfaces';
+
+interface ITableHeadersProps {
+  handleSort: Function;
+  sortConfig: ISortConfig;
+}
 
 const headerItems = [
   {
@@ -86,7 +92,7 @@ const headerItems = [
   { headerKey: 'valueSummary', jsx: <span>Value&nbsp;Summary</span> },
 ];
 
-const TableHeaders = ({ handleSort, sortConfig }) => (
+const TableHeaders = ({ handleSort, sortConfig }: ITableHeadersProps) => (
   <thead>
     <tr>
       {headerItems.map((item, i) => (
