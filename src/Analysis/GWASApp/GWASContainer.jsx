@@ -21,7 +21,6 @@ const GWASContainer = () => {
   const generateStep = () => {
     switch (state.currentStep) {
     case 0:
-      console.log('current state', state);
       return (
         <div data-tour='cohort-intro'>
           <SelectStudyPopulation
