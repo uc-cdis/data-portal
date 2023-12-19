@@ -13,7 +13,7 @@ const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
   const [data, setData] = useState(TableData.data);
   const [searchInputValue, setSearchInputValue] = useState('');
-  const columnsShown = 10;
+  const columnsShown = 11;
   const [sortConfig, setSortConfig] = useState<ISortConfig>({
     sortKey: null,
     direction: 'off',
@@ -21,6 +21,7 @@ const DataDictionaryContainer = () => {
 
   const rows = data.map((rowObject, i) => (
     <TableRow
+      key={i}
       TableDataTotal={TableDataTotal}
       rowObject={rowObject}
       columnsShown={columnsShown}
@@ -62,7 +63,6 @@ const DataDictionaryContainer = () => {
 
   return (
     <div className='dataDictionary'>
-      {JSON.stringify(sortConfig)}
       <SearchBar
         TableData={TableData.data}
         setData={setData}

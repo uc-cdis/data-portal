@@ -7,15 +7,7 @@ const PaginationControls: React.FC = (): JSX.Element => {
     id: number;
     name: string;
   }
-  const sampleData: Data[] = [
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Mary' },
-    { id: 3, name: 'Jane' },
-  ];
-  const [data, setData] = useState<Data[]>(sampleData);
-
   const [activePage, setActivePage] = useState(1);
-
   return (
     <div className='pagination-wrapper'>
       <SimpleGrid cols={2}>
@@ -23,10 +15,9 @@ const PaginationControls: React.FC = (): JSX.Element => {
         <div className='pagination-container'>
           <Pagination
             align='right'
-            totalItems={data.length}
+            total={53}
             value={activePage}
             onChange={setActivePage}
-            total={10}
           />
         </div>
       </SimpleGrid>

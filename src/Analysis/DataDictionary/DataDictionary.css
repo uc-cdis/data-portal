@@ -92,9 +92,9 @@
   transition: max-height 0.5s;
 }
 
-.dataDictionary .search-border,
-table > tbody > tr > td.search-border:last-of-type {
-  border: 2px solid orange;
+.dataDictionary .search-highlight,
+table > tbody > tr > td.search-highlight:last-of-type {
+  background: #fcefe4;
 }
 /* Pagination */
 .dataDictionary .pagination-wrapper button {

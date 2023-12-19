@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
+import { IRowData } from '../Interfaces/Interfaces';
+
+interface ISearchBarProps {
+  TableData: IRowData[];
+  setData: Function;
+  searchInputValue: string;
+  setSearchInputValue: Function;
+}
 
 const SearchBar = ({
   TableData,
   setData,
   searchInputValue,
   setSearchInputValue,
-}) => {
+}: ISearchBarProps) => {
   useEffect(() => {
     const filteredData = TableData.filter((item) => {
       const searchQuery = searchInputValue.toLowerCase().trim();
@@ -18,13 +26,12 @@ const SearchBar = ({
           return value.toString().toLowerCase().includes(searchQuery);
         }
         if (Array.isArray(value)) {
-          console.log('GOT THE ARRAY', value);
           let doesArrayContainsSearchQuery = false;
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                typeof arrObjValue === 'string'
-                || typeof arrObjValue === 'number'
+                typeof arrObjValue === 'string' ||
+                typeof arrObjValue === 'number'
               ) {
                 if (
                   arrObjValue.toString().toLowerCase().includes(searchQuery)
@@ -38,7 +45,6 @@ const SearchBar = ({
         }
       });
     });
-    console.log(filteredData);
     setData(filteredData);
   }, [searchInputValue]);
 

@@ -9,6 +9,10 @@ interface ITableHeadersProps {
 
 const headerItems = [
   {
+    headerKey: '',
+    jsx: <></>,
+  },
+  {
     headerKey: 'vocabularyID',
     jsx: (
       <span>
@@ -88,7 +92,16 @@ const headerItems = [
       </span>
     ),
   },
-  { headerKey: 'valueStoredAs', jsx: <span>Value&nbsp;Stored&nbsp;As</span> },
+  {
+    headerKey: 'valueStoredAs',
+    jsx: (
+      <span>
+        Value
+        <br />
+        Stored&nbsp;As
+      </span>
+    ),
+  },
   { headerKey: 'valueSummary', jsx: <span>Value&nbsp;Summary</span> },
 ];
 
@@ -102,7 +115,7 @@ const TableHeaders = ({ handleSort, sortConfig }: ITableHeadersProps) => (
           headerJSX={item.jsx}
           headerKey={item.headerKey}
           sortConfig={sortConfig}
-          sortable={item.headerKey !== 'valueSummary'}
+          sortable={item.headerKey !== 'valueSummary' && item.headerKey !== ''}
         />
       ))}
     </tr>

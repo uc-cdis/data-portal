@@ -33,7 +33,7 @@ const TableRow = ({
         .toLowerCase()
         .includes(searchInputValue.toLowerCase().trim())
     ) {
-      return 'search-border';
+      return 'search-highlight';
     }
     return '';
   };
@@ -51,7 +51,7 @@ const TableRow = ({
         searchTermFound = true;
       }
     });
-    if (searchTermFound) return 'search-border';
+    if (searchTermFound) return 'search-highlight';
     return '';
   };
   const checkIfChartContainsSearchTerm = (rowObject: IRowData) => {
@@ -63,19 +63,32 @@ const TableRow = ({
         }
       });
     });
-    if (searchTermFound) return 'search-border';
+    if (searchTermFound) return 'search-highlight';
     return '';
   };
 
   const checkIfHiddenCellsContainSearchTerm = (rowObject: IRowData) => {
-    if (checkIfDetailTableContainsSearchTerm(rowObject)) return 'search-border';
-    if (checkIfChartContainsSearchTerm(rowObject)) return 'search-border';
+    if (checkIfDetailTableContainsSearchTerm(rowObject))
+      return 'search-highlight';
+    if (checkIfChartContainsSearchTerm(rowObject)) return 'search-highlight';
     return '';
   };
 
   return (
     <React.Fragment key={rowObject.vocabularyID}>
       <tr>
+        <td>
+          {!showDetails && (
+            <Button variant='subtle' onClick={() => setShowDetails(true)}>
+              <strong>〉</strong>
+            </Button>
+          )}
+          {showDetails && (
+            <Button variant='subtle' onClick={() => setShowDetails(false)}>
+              <strong>&#xfe40;</strong>
+            </Button>
+          )}
+        </td>
         <td className={checkIfCellContainsSearchTerm(rowObject.vocabularyID)}>
           {rowObject.vocabularyID}
         </td>
@@ -132,16 +145,7 @@ const TableRow = ({
           {rowObject.valueStoredAs}
         </td>
         <td className={checkIfHiddenCellsContainSearchTerm(rowObject)}>
-          {!showDetails && (
-            <Button variant='filled' onClick={() => setShowDetails(true)}>
-              Show More
-            </Button>
-          )}
-          {showDetails && (
-            <Button variant='filled' onClick={() => setShowDetails(false)}>
-              Hide Details
-            </Button>
-          )}
+          {JSON.stringify(rowObject.valueSummary)}
         </td>
       </tr>
       <tr className={`expandable ${showDetails ? 'expanded' : ''}`}>
