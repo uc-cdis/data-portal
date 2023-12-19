@@ -12,6 +12,7 @@ const SelectOutcome = ({
   studyPopulationCohort,
   outcome,
   covariates,
+  selectedTeamProject,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
@@ -67,6 +68,7 @@ const SelectOutcome = ({
                 payload: chosenOutcome,
               });
             }}
+            selectedTeamProject={selectedTeamProject}
           />
         </div>
       );
@@ -131,6 +133,7 @@ SelectOutcome.propTypes = {
   studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object,
   covariates: PropTypes.array,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 SelectOutcome.defaultProps = {
