@@ -21,7 +21,16 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
   switch (type) {
   case 'sum': {
     // parse any string representation of an integer
-    fields = fields.map((item) => (typeof item === 'string' ? parseInt(item, 10) || 0 : item));
+    // if it's not a number, return 0 so as not to break the sum
+    fields = fields.map((item) => {
+      if (typeof item === 'number') {
+        return item;
+      }
+      if (typeof item === 'string') {
+        return parseInt(item, 10) || 0;
+      }
+      return 0;
+    });
     return sum(fields).toLocaleString();
   }
   case 'count':
