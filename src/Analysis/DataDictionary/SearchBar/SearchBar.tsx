@@ -30,8 +30,8 @@ const SearchBar = ({
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                typeof arrObjValue === 'string' ||
-                typeof arrObjValue === 'number'
+                typeof arrObjValue === 'string'
+                || typeof arrObjValue === 'number'
               ) {
                 if (
                   arrObjValue.toString().toLowerCase().includes(searchQuery)

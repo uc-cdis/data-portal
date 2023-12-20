@@ -19,6 +19,8 @@ const DataDictionaryContainer = () => {
     direction: 'off',
   });
 
+  const [activePage, setActivePage] = useState(1);
+
   const rows = data.map((rowObject, i) => (
     <TableRow
       key={i}
@@ -69,14 +71,11 @@ const DataDictionaryContainer = () => {
         searchInputValue={searchInputValue}
         setSearchInputValue={setSearchInputValue}
       />
+      <PaginationControls
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
       <Table>
-        <EntriesHeader
-          start={data.length === 0 ? 0 : 1}
-          stop={data.length}
-          total={TableData.data.length}
-          colspan={columnsShown}
-          position='top'
-        />
         <TableHeaders handleSort={handleSort} sortConfig={sortConfig} />
         <tbody>
           {rows}
@@ -96,7 +95,6 @@ const DataDictionaryContainer = () => {
           position='bottom'
         />
       </Table>
-      <PaginationControls />
     </div>
   );
 };

@@ -10,7 +10,7 @@ interface ITableHeadersProps {
 const headerItems = [
   {
     headerKey: '',
-    jsx: <></>,
+    jsx: <React.Fragment />,
   },
   {
     headerKey: 'vocabularyID',

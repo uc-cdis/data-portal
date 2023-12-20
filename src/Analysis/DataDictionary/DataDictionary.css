@@ -7,6 +7,7 @@
 }
 .dataDictionary table {
   border: 1px solid #e2e2e3;
+  border-top: 4px solid #cfdbe6;
 }
 .dataDictionary table tbody tr:nth-child(4n + 3) {
   background-color: #fafafb;
@@ -77,33 +78,63 @@
   background-color: #cfdbe6;
 }
 
-/* Expandable Columns */
-.dataDictionary tr.expandable td {
+/* Expandable rows */
+.dataDictionary tr.expandable > td:first-child {
   padding: 0;
 }
 
 .dataDictionary tr td div.expandable {
   max-height: 0px;
   overflow: hidden;
-  transition: max-height 0.5s;
+  height: 0;
+  transition: all 0.5s;
 }
 .dataDictionary tr td div.expandable.expanded {
-  max-height: 400px;
+  max-height: 321px;
+  height: 321px;
   transition: max-height 0.5s;
+  padding: 16px;
+  background: #e2e2e3;
+}
+.dataDictionary .expanded-container {
+  background: #fff;
+  height: 290px;
+  padding: 16px;
 }
 
+.dataDictionary .chart-details-wrapper {
+  background: #fff;
+}
+.dataDictionary .chart-details-wrapper.expanded-container.search-highlight {
+  background: #fcefe4;
+  width: 100%;
+}
+
+.dataDictionary .td-container {
+  width: 80%;
+  word-wrap: break-word;
+}
 .dataDictionary .search-highlight,
 table > tbody > tr > td.search-highlight:last-of-type {
   background: #fcefe4;
+  background: linear-gradient(
+    to right,
+    orange,
+    orange 4px,
+    #fcefe4 4px,
+    #fcefe4 80%,
+    transparent 80%,
+    transparent
+  );
 }
 /* Pagination */
 .dataDictionary .pagination-wrapper button {
   width: unset;
   transform: scale(0.9);
-  padding: ;
+  padding: 0;
 }
 .dataDictionary .pagination-container {
-  width: 358px;
+  width: 450px;
   margin-left: auto;
 }
 .dataDictionary .pagination-container div {

@@ -12,33 +12,14 @@ const EntriesHeader = ({
   stop,
   total,
   colspan,
-  position,
 }: IEntriesHeaderProps) => {
-  const EntriesHeaderContent = () => (
-    <>
-      Showing <strong>{start.toLocaleString()}</strong> to{' '}
+  return (
+    <caption colSpan={colspan} className='entries-header'>
+      Showing <strong>{start.toLocaleString()}</strong> to
       <strong>{stop.toLocaleString()}</strong> of
       <strong> {total.toLocaleString()}</strong> entries
-    </>
+    </caption>
   );
-
-  if (position === 'bottom') {
-    return (
-      <caption colSpan={colspan} className='entries-header'>
-        <EntriesHeaderContent />
-      </caption>
-    );
-  } else {
-    return (
-      <thead className='entries-header'>
-        <tr>
-          <th colSpan={colspan}>
-            <EntriesHeaderContent />
-          </th>
-        </tr>
-      </thead>
-    );
-  }
 };
 
 export default EntriesHeader;

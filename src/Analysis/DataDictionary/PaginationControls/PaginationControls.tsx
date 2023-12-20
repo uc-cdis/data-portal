@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Text, Pagination, SimpleGrid } from '@mantine/core';
 import EntriesQuanitySelector from './EntriesQuantitySelector';
 
-const PaginationControls: React.FC = (): JSX.Element => {
+const PaginationControls: React.FC = ({
+  activePage,
+  setActivePage,
+}): JSX.Element => {
   interface Data {
     id: number;
     name: string;
   }
-  const [activePage, setActivePage] = useState(1);
+
   return (
     <div className='pagination-wrapper'>
       <SimpleGrid cols={2}>
