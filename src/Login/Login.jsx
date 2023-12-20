@@ -10,7 +10,9 @@ import './Login.less';
 
 const getInitialState = (height) => ({ height });
 
-const determineIfEntryLoginSelectShown = (name, loginOptionsLength) => ((forceSingleLoginDropdownOptions && forceSingleLoginDropdownOptions.includes(name)) || loginOptionsLength > 1);
+const determineIfEntryLoginSelectShown = (name, loginOptionsLength) => ((forceSingleLoginDropdownOptions
+    && forceSingleLoginDropdownOptions.includes(name))
+  || loginOptionsLength > 1);
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
 export const getUrlForRedirectLocation = (location) => {
