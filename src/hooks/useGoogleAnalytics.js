@@ -19,12 +19,10 @@ export const gaEvents = {
   clickApplySurvivalButtonEvent,
 };
 
-/** @param {string} userId */
-export default function useGoogleAnalytics(userId) {
+export default function useGoogleAnalytics() {
   if (isUsingGoogleAnalytics) {
     ReactGA.initialize(gaTrackingId, {
       testMode: gaDebug,
     });
-    ReactGA.set({ userId });
   }
 }
