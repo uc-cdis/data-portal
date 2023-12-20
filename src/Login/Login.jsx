@@ -3,12 +3,14 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { basename, dropdownSingleLogin } from '../localconf';
+import { basename, forceSingleLoginDropdownOptions } from '../localconf';
 import { components } from '../params';
 
 import './Login.less';
 
 const getInitialState = (height) => ({ height });
+
+const determineIfEntryLoginSelectShown = (name, loginOptionsLength) => ((forceSingleLoginDropdownOptions && forceSingleLoginDropdownOptions.includes(name)) || loginOptionsLength > 1);
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
 export const getUrlForRedirectLocation = (location) => {
@@ -157,7 +159,7 @@ class Login extends React.Component {
                   // over the login options' names (e.g. "The University of
                   // Chicago") and not the actual option values, which are
                   // URLs.
-                  ((forceSingleLoginOptionDropdownFor && forceSingleLoginOptionDropdownFor.includes(p.name)) || loginOptions[i].length > 1) && (
+                  determineIfEntryLoginSelectShown(p.name, loginOptions[i].length) && (
                     <Select
                       isClearable
                       isSearchable

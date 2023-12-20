@@ -291,9 +291,9 @@ function buildConfig(opts) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
-  let forceSingleLoginOptionDropdownFor = [];
-  if (config.featureFlags && config.featureFlags.forceSingleOptionDropdownFor) {
-    forceSingleLoginOptionDropdownFor = config.featureFlags.forceSingleOptionDropdownFor;
+  let forceSingleLoginDropdownOptions = [];
+  if (config.featureFlags && config.featureFlags.forceSingleLoginDropdownOptions) {
+    forceSingleLoginDropdownOptions = config.featureFlags.forceSingleLoginDropdownOptions;
   }
 
   const enableResourceBrowser = !!config.resourceBrowser;
@@ -552,7 +552,7 @@ function buildConfig(opts) {
     explorerPublic,
     explorerHideEmptyFilterSection,
     explorerFilterValuesToHide,
-    forceSingleLoginOptionDropdownFor,
+    forceSingleLoginDropdownOptions,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
