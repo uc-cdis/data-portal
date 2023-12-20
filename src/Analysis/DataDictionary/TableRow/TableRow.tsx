@@ -26,9 +26,9 @@ const TableRow = ({
 
   const checkIfCellContainsSearchTerm = (cellText: string | number | null) => {
     if (
-      searchInputValue &&
-      cellText &&
-      cellText
+      searchInputValue
+      && cellText
+      && cellText
         .toString()
         .toLowerCase()
         .includes(searchInputValue.toLowerCase().trim())
@@ -68,8 +68,7 @@ const TableRow = ({
   };
 
   const checkIfHiddenCellsContainSearchTerm = (rowObject: IRowData) => {
-    if (checkIfDetailTableContainsSearchTerm(rowObject))
-      return 'search-highlight';
+    if (checkIfDetailTableContainsSearchTerm(rowObject)) return 'search-highlight';
     if (checkIfChartContainsSearchTerm(rowObject)) return 'search-highlight';
     return '';
   };
@@ -100,70 +99,70 @@ const TableRow = ({
           )}
         </td>
         <td className={checkIfCellContainsSearchTerm(rowObject.vocabularyID)}>
-          <div className={`td-container `}>{rowObject.vocabularyID}</div>
+          <div className={'td-container '}>{rowObject.vocabularyID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptID.toString()
+            rowObject.conceptID.toString(),
           )}
         >
-          <div className={`td-container `}>{rowObject.conceptID}</div>
+          <div className={'td-container '}>{rowObject.conceptID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptCode.toString()
+            rowObject.conceptCode.toString(),
           )}
         >
-          <div className={`td-container `}>{rowObject.conceptCode}</div>
+          <div className={'td-container '}>{rowObject.conceptCode}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptName.toString()
+            rowObject.conceptName.toString(),
           )}
         >
-          <div className={`td-container `}>{rowObject.conceptName}</div>
+          <div className={'td-container '}>{rowObject.conceptName}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptClassID.toString()
+            rowObject.conceptClassID.toString(),
           )}
         >
-          <div className={`td-container `}>{rowObject.conceptClassID}</div>
+          <div className={'td-container '}>{rowObject.conceptClassID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWithVariable
+            rowObject.numberOfPeopleWithVariable,
           )}
         >
-          <div className={`td-container`}>
+          <div className={'td-container'}>
             {outputValueAndPercentage(rowObject.numberOfPeopleWithVariable)}
           </div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsFilled
+            rowObject.numberOfPeopleWhereValueIsFilled,
           )}
         >
-          <div className={`td-container`}>
+          <div className={'td-container'}>
             {outputValueAndPercentage(
-              rowObject.numberOfPeopleWhereValueIsFilled
+              rowObject.numberOfPeopleWhereValueIsFilled,
             )}
           </div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsNull
+            rowObject.numberOfPeopleWhereValueIsNull,
           )}
         >
-          <div className={`td-container `}>
+          <div className={'td-container '}>
             {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsNull)}
           </div>
         </td>
         <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
-          <div className={`td-container`}>{rowObject.valueStoredAs}</div>
+          <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
         <td className={checkIfHiddenCellsContainSearchTerm(rowObject)}>
-          <div className={`td-container `}>
+          <div className={'td-container '}>
             {JSON.stringify(rowObject.valueSummary)}
           </div>
         </td>
@@ -173,7 +172,7 @@ const TableRow = ({
           <div className={`expandable ${showDetails ? 'expanded' : ''}`}>
             <Grid>
               <Grid.Col span={5}>
-                <div className={`expanded-container`}>
+                <div className={'expanded-container'}>
                   <h3>Data Viz Info</h3>
                   <Table striped>
                     <thead>
@@ -207,37 +206,37 @@ const TableRow = ({
                       <tr>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.minValue
+                            rowObject.minValue,
                           )}
                         >
-                          <div className={`td-container`}>
+                          <div className={'td-container'}>
                             {rowObject.minValue}
                           </div>
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.maxValue
+                            rowObject.maxValue,
                           )}
                         >
-                          <div className={`td-container`}>
+                          <div className={'td-container'}>
                             {rowObject.maxValue}
                           </div>
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.meanValue
+                            rowObject.meanValue,
                           )}
                         >
-                          <div className={`td-container`}>
+                          <div className={'td-container'}>
                             {rowObject.meanValue}
                           </div>
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.standardDeviation
+                            rowObject.standardDeviation,
                           )}
                         >
-                          <div className={`td-container`}>
+                          <div className={'td-container'}>
                             {rowObject.standardDeviation}
                           </div>
                         </td>
@@ -249,7 +248,7 @@ const TableRow = ({
               <Grid.Col span={7}>
                 <div
                   className={`expanded-container chart-details-wrapper ${checkIfDetailTableContainsSearchTerm(
-                    rowObject
+                    rowObject,
                   )}`}
                 >
                   <h3>Value Summary</h3>

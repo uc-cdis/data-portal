@@ -107,6 +107,14 @@
 }
 .dataDictionary .chart-details-wrapper.expanded-container.search-highlight {
   background: #fcefe4;
+  background: linear-gradient(
+    to right,
+    orange,
+    orange 4px,
+    #fcefe4 4px,
+    #fcefe4 80%,
+    #fcefe4
+  );
   width: 100%;
 }
 

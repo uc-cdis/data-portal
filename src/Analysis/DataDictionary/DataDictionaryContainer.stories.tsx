@@ -6,12 +6,10 @@ export default {
   component: 'DataDictionaryContainer',
 };
 
-const MockTemplate = () => {
-  return (
-    <>
-      <DataDictionaryContainer />
-    </>
-  );
-};
+const MockTemplate = () => (
+  <React.Fragment>
+    <DataDictionaryContainer />
+  </React.Fragment>
+);
 
 export const MockedSuccess = MockTemplate.bind({});
