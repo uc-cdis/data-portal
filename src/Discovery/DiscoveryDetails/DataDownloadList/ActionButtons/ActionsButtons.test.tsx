@@ -12,7 +12,7 @@ describe('ActionButtons', () => {
   const mockDiscoveryConfig = {
     features: {
       exportToWorkspace: {
-        studyMetadataFieldName: true,
+        studyMetadataFieldName: 'study_metadata',
         enableDownloadStudyMetadata: true,
         enableDownloadManifest: true,
         enableDownloadZip: true,
@@ -22,9 +22,7 @@ describe('ActionButtons', () => {
 
   const mockResourceInfo = {
     study_id: 'mockStudyId',
-    study_metadata: {
-      /* mock study metadata */
-    },
+    study_metadata: true,
   };
 
   const mockData = {

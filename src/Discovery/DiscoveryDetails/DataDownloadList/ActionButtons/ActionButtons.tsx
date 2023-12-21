@@ -10,11 +10,12 @@ import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles'
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import './ActionButtons.css';
+import { DiscoveryResource } from '../../../Discovery';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
   discoveryConfig: DiscoveryConfig;
-  resourceInfo: any;
+  resourceInfo: DiscoveryResource;
   healLoginNeeded: boolean;
   noData: boolean;
 }
@@ -33,13 +34,23 @@ const ActionButtons = ({
   });
   const history = useHistory();
   const location = useLocation();
-  const showDownloadStudyLevelMetadataButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName
-    && discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
-    && resourceInfo?.study_metadata;
-  const showDownloadFileManifestButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.enableDownloadManifest;
-  const showDownloadAllFilesButtons: boolean | undefined = discoveryConfig?.features.exportToWorkspace.enableDownloadZip;
-  const verifyExternalLoginsNeeded: boolean | undefined = discoveryConfig?.features.exportToWorkspace.verifyExternalLogins;
+
+  const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string | undefined = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+  const showDownloadStudyLevelMetadataButtons = Boolean(
+    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
+      && studyMetadataFieldNameReference
+      && resourceInfo?.[studyMetadataFieldNameReference],
+  );
+  const showDownloadFileManifestButtons = Boolean(
+    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest,
+  );
+  const showDownloadAllFilesButtons = Boolean(
+    discoveryConfig?.features.exportToWorkspace.enableDownloadZip,
+  );
+  const verifyExternalLoginsNeeded = Boolean(
+    discoveryConfig?.features.exportToWorkspace.verifyExternalLogins,
+  );
 
   const ConditionalPopover = ({ children }) => (noData ? (
     <Popover title={'This file is not available for the selected study'}>
@@ -72,7 +83,8 @@ const ActionButtons = ({
                 disabled={noData}
                 onClick={() => DownloadJsonFile(
                   'study-level-metadata',
-                  resourceInfo.study_metadata,
+                  studyMetadataFieldNameReference
+                      && resourceInfo[studyMetadataFieldNameReference],
                 )}
               >
                 Download <br />
