@@ -12,8 +12,11 @@ interface IRowData {
   conceptName: string;
   conceptClassID: string;
   numberOfPeopleWithVariable: number;
+  numberOfPeopleWithVariablePercent: number;
   numberOfPeopleWhereValueIsFilled: number;
+  numberOfPeopleWhereValueIsFilledPercent: number;
   numberOfPeopleWhereValueIsNull: number;
+  numberOfPeopleWhereValueIsNullPercent: number;
   valueStoredAs: string;
   minValue: number | null;
   maxValue: number | null;
@@ -30,6 +33,4 @@ interface ISortConfig {
   sortKey: string | null;
   direction: 'ascending' | 'descending' | 'off';
 }
-export {
-  IRowData, IValueSummary, ITableData, ISortConfig,
-};
+export { IRowData, IValueSummary, ITableData, ISortConfig };

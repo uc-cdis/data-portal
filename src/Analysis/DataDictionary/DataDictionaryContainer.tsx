@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { Table } from '@mantine/core';
 import TableData from './TestData/TableData';
 import TableHeaders from './TableHeaders/TableHeaders';
-import './DataDictionary.css';
 import EntriesHeader from './EntriesHeader/EntriesHeader';
 import SearchBar from './SearchBar/SearchBar';
 import TableRow from './TableRow/TableRow';
 import PaginationControls from './PaginationControls/PaginationControls';
 import { ISortConfig } from './Interfaces/Interfaces';
+import PreprocessTableData from './Utils/PreprocessTableData';
+import './DataDictionary.css';
 
 const DataDictionaryContainer = () => {
   const TableDataTotal = TableData.total;
-  const [data, setData] = useState(TableData.data);
+  const preprocessedTableData = PreprocessTableData(TableData);
+
+  const [data, setData] = useState(preprocessedTableData);
+  console.log('data', data);
   const [searchInputValue, setSearchInputValue] = useState('');
   const columnsShown = 11;
   const [sortConfig, setSortConfig] = useState<ISortConfig>({
@@ -32,7 +36,7 @@ const DataDictionaryContainer = () => {
   ));
 
   const handleSort = (sortKey) => {
-    let direction = 'ascending';
+    let direction: ISortConfig['direction'] = 'ascending';
     if (sortConfig.sortKey === sortKey) {
       if (sortConfig.direction === 'ascending') {
         direction = 'descending';
@@ -55,7 +59,7 @@ const DataDictionaryContainer = () => {
     });
     // if column is set to off reset to initial sort
     if (direction === 'off') {
-      setData(TableData.data);
+      setData(preprocessedTableData);
     } else {
       // Otherwise set with sortedData
       setData(sortedData);
@@ -65,7 +69,7 @@ const DataDictionaryContainer = () => {
   return (
     <div className='dataDictionary'>
       <SearchBar
-        TableData={TableData.data}
+        TableData={data}
         setData={setData}
         searchInputValue={searchInputValue}
         setSearchInputValue={setSearchInputValue}
@@ -85,10 +89,9 @@ const DataDictionaryContainer = () => {
         </tbody>
         <EntriesHeader
           start={1}
-          stop={TableData.data.length}
-          total={TableData.data.length}
+          stop={data.length}
+          total={data.length}
           colspan={columnsShown}
-          position='bottom'
         />
       </Table>
       <PaginationControls

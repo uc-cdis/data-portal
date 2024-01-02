@@ -16,19 +16,14 @@ const TableRow = ({
   searchInputValue,
 }: ITableRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
-  const outputValueAndPercentage = (value) => (
-    <React.Fragment>
-      {value}
-      <br />
-      {Math.trunc((value / TableDataTotal) * 100 * 100) / 100}%
-    </React.Fragment>
-  );
 
-  const checkIfCellContainsSearchTerm = (cellText: string | number | null) => {
+  const checkIfCellContainsSearchTerm = (
+    cellText: string | number | null | undefined
+  ) => {
     if (
-      searchInputValue
-      && cellText
-      && cellText
+      searchInputValue &&
+      cellText &&
+      cellText
         .toString()
         .toLowerCase()
         .includes(searchInputValue.toLowerCase().trim())
@@ -77,6 +72,7 @@ const TableRow = ({
     return '';
   };
 
+  console.log('rowObject', rowObject);
   return (
     <React.Fragment key={rowObject.vocabularyID}>
       <tr>
@@ -107,59 +103,78 @@ const TableRow = ({
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptID.toString(),
+            rowObject.conceptID.toString()
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptCode.toString(),
+            rowObject.conceptCode.toString()
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptName.toString(),
+            rowObject.conceptName.toString()
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptClassID.toString(),
+            rowObject.conceptClassID.toString()
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
         </td>
         <td
-          className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWithVariable,
-          )}
+          className={
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWithVariable
+            ) ||
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWithVariablePercent
+            )
+          }
         >
           <div className={'td-container'}>
-            {outputValueAndPercentage(rowObject.numberOfPeopleWithVariable)}
+            {rowObject.numberOfPeopleWithVariable}
+            <br />
+            {rowObject.numberOfPeopleWithVariablePercent}%
           </div>
         </td>
         <td
-          className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsFilled,
-          )}
+          className={`${
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsFilled
+            ) ||
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsFilledPercent
+            )
+          } `}
         >
           <div className={'td-container'}>
-            {outputValueAndPercentage(
-              rowObject.numberOfPeopleWhereValueIsFilled,
-            )}
+            {rowObject.numberOfPeopleWhereValueIsFilled}
+            <br />
+            {rowObject.numberOfPeopleWhereValueIsFilledPercent}%
           </div>
         </td>
         <td
-          className={checkIfCellContainsSearchTerm(
-            rowObject.numberOfPeopleWhereValueIsNull,
-          )}
+          className={
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsNull
+            ) ||
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsNullPercent
+            )
+          }
         >
           <div className={'td-container '}>
-            {outputValueAndPercentage(rowObject.numberOfPeopleWhereValueIsNull)}
+            {rowObject.numberOfPeopleWhereValueIsNull}
+            <br />
+            {rowObject.numberOfPeopleWhereValueIsNullPercent}%
           </div>
         </td>
         <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
@@ -210,7 +225,7 @@ const TableRow = ({
                       <tr>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.minValue,
+                            rowObject.minValue
                           )}
                         >
                           <div className={'td-container'}>
@@ -219,7 +234,7 @@ const TableRow = ({
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.maxValue,
+                            rowObject.maxValue
                           )}
                         >
                           <div className={'td-container'}>
@@ -228,7 +243,7 @@ const TableRow = ({
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.meanValue,
+                            rowObject.meanValue
                           )}
                         >
                           <div className={'td-container'}>
@@ -237,7 +252,7 @@ const TableRow = ({
                         </td>
                         <td
                           className={checkIfCellContainsSearchTerm(
-                            rowObject.standardDeviation,
+                            rowObject.standardDeviation
                           )}
                         >
                           <div className={'td-container'}>
