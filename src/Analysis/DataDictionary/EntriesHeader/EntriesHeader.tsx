@@ -5,7 +5,6 @@ interface IEntriesHeaderProps {
   stop: Number;
   total: Number;
   colspan: Number;
-  position: string;
 }
 const EntriesHeader = ({
   start,
@@ -14,7 +13,7 @@ const EntriesHeader = ({
   colspan,
 }: IEntriesHeaderProps) => (
   <caption colSpan={colspan} className='entries-header'>
-      Showing <strong>{start.toLocaleString()}</strong> to
+    Showing <strong>{start.toLocaleString()}</strong> to
     <strong>{stop.toLocaleString()}</strong> of
     <strong> {total.toLocaleString()}</strong> entries
   </caption>

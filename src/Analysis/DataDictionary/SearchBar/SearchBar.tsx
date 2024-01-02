@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Input, Button } from '@mantine/core';
+import React, { useEffect } from 'react';
+import { Input } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
 import { IRowData } from '../Interfaces/Interfaces';
 
@@ -30,8 +30,8 @@ const SearchBar = ({
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                typeof arrObjValue === 'string' ||
-                typeof arrObjValue === 'number'
+                typeof arrObjValue === 'string'
+                || typeof arrObjValue === 'number'
               ) {
                 if (
                   arrObjValue.toString().toLowerCase().includes(searchQuery)
@@ -39,10 +39,12 @@ const SearchBar = ({
                   doesArrayContainsSearchQuery = true;
                 }
               }
+              return null;
             });
           });
           return doesArrayContainsSearchQuery;
         }
+        return null;
       });
     });
     setData(filteredData);
@@ -59,6 +61,7 @@ const SearchBar = ({
           rightSection={
             searchInputValue ? (
               <button
+                type='button'
                 className='search-bar-input-control'
                 onClick={() => setSearchInputValue('')}
                 onKeyPress={(event) => {

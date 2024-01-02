@@ -1,5 +1,4 @@
 import React from 'react';
-import { NativeSelect } from '@mantine/core';
 
 const EntriesQuanitySelector = (): JSX.Element => (
   <div className='entries-quantity-select'>

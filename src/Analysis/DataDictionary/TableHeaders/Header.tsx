@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ISortConfig } from '../Interfaces/Interfaces';
 import CaretUp from '../Icons/CaretUp';
 import CaretDown from '../Icons/CaretDown';
@@ -19,7 +19,10 @@ const Header = ({
   sortable,
 }: IHeaderProps) => {
   const getSortDirectionForCurrentColumn = () => {
-    if (sortConfig.sortKey === headerKey) return sortConfig.direction;
+    if (sortConfig.sortKey === headerKey) {
+      return sortConfig.direction;
+    }
+    return null;
   };
 
   if (!sortable) {

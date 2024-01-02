@@ -103,15 +103,8 @@
   background: #fff;
 }
 .dataDictionary .chart-details-wrapper.expanded-container.search-highlight {
-  background: #fcefe4;
-  background: linear-gradient(
-    to right,
-    #ef8523,
-    #ef8523 2px,
-    #fcefe4 2px,
-    #fcefe4 80%,
-    #fcefe4
-  );
+  background: #fff;
+  border: 2px solid #ef8523;
   width: 100%;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Grid, Table } from '@mantine/core';
-import { IRowData, IValueSummary } from '../Interfaces/Interfaces';
+import { IRowData } from '../Interfaces/Interfaces';
 
 interface ITableRowProps {
   TableDataTotal: number;
@@ -38,7 +38,7 @@ const TableRow = ({
     return '';
   };
 
-  const checkIfDetailTableContainsSearchTerm = (rowObject: IRowData) => {
+  const checkIfDetailTableContainsSearchTerm = () => {
     let searchTermFound = false;
     const hiddenKeys = [
       'minValue',
@@ -54,22 +54,26 @@ const TableRow = ({
     if (searchTermFound) return 'search-highlight';
     return '';
   };
-  const checkIfChartContainsSearchTerm = (rowObject: IRowData) => {
+  const checkIfChartContainsSearchTerm = () => {
     let searchTermFound = false;
     rowObject.valueSummary.forEach((arrObj) => {
       Object.values(arrObj).forEach((arrObjVal) => {
         if (checkIfCellContainsSearchTerm(arrObjVal)) {
+          console.log('FOUND!');
           searchTermFound = true;
         }
       });
     });
-    if (searchTermFound) return 'search-highlight';
+    if (searchTermFound) {
+      console.log(searchTermFound, searchInputValue);
+      return 'search-highlight';
+    }
     return '';
   };
 
-  const checkIfHiddenCellsContainSearchTerm = (rowObject: IRowData) => {
-    if (checkIfDetailTableContainsSearchTerm(rowObject)) return 'search-highlight';
-    if (checkIfChartContainsSearchTerm(rowObject)) return 'search-highlight';
+  const checkIfHiddenCellsContainSearchTerm = () => {
+    if (checkIfDetailTableContainsSearchTerm()) return 'search-highlight';
+    if (checkIfChartContainsSearchTerm()) return 'search-highlight';
     return '';
   };
 
@@ -161,7 +165,7 @@ const TableRow = ({
         <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
-        <td className={checkIfHiddenCellsContainSearchTerm(rowObject)}>
+        <td className={checkIfHiddenCellsContainSearchTerm()}>
           <div className={'td-container '}>
             {JSON.stringify(rowObject.valueSummary)}
           </div>
@@ -247,9 +251,7 @@ const TableRow = ({
               </Grid.Col>
               <Grid.Col span={7}>
                 <div
-                  className={`expanded-container chart-details-wrapper ${checkIfDetailTableContainsSearchTerm(
-                    rowObject,
-                  )}`}
+                  className={`expanded-container chart-details-wrapper ${checkIfChartContainsSearchTerm()}`}
                 >
                   <h3>Value Summary</h3>
                   {JSON.stringify(rowObject.valueSummary)}

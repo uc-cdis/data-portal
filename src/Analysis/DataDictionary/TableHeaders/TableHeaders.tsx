@@ -108,7 +108,7 @@ const headerItems = [
 const TableHeaders = ({ handleSort, sortConfig }: ITableHeadersProps) => (
   <thead>
     <tr>
-      {headerItems.map((item, i) => (
+      {headerItems.map((item) => (
         <Header
           key={item.headerKey}
           handleSort={handleSort}

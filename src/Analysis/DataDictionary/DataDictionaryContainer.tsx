@@ -56,9 +56,8 @@ const DataDictionaryContainer = () => {
     // if column is set to off reset to initial sort
     if (direction === 'off') {
       setData(TableData.data);
-    }
-    // Otherwise set with sortedData
-    else {
+    } else {
+      // Otherwise set with sortedData
       setData(sortedData);
     }
   };
