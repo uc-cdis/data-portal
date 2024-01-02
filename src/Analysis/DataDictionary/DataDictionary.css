@@ -5,10 +5,7 @@
   height: auto;
   overflow-y: hidden;
 }
-.dataDictionary table {
-  border: 1px solid #e2e2e3;
-  border-top: 4px solid #cfdbe6;
-}
+
 .dataDictionary table tbody tr:nth-child(4n + 3) {
   background-color: #fafafb;
 }
@@ -109,9 +106,9 @@
   background: #fcefe4;
   background: linear-gradient(
     to right,
-    orange,
-    orange 4px,
-    #fcefe4 4px,
+    #ef8523,
+    #ef8523 2px,
+    #fcefe4 2px,
     #fcefe4 80%,
     #fcefe4
   );
@@ -127,13 +124,36 @@ table > tbody > tr > td.search-highlight:last-of-type {
   background: #fcefe4;
   background: linear-gradient(
     to right,
-    orange,
-    orange 4px,
-    #fcefe4 4px,
+    #ef8523,
+    #ef8523 2px,
+    #fcefe4 2px,
     #fcefe4 80%,
     transparent 80%,
     transparent
   );
+}
+/* Search Bar */
+.search-bar {
+  background: #cfdbe6;
+}
+.search-bar-container {
+  width: 425px;
+  padding: 14px 0 14px 16px;
+}
+.search-bar-input-control {
+  display: block;
+  cursor: pointer;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: white;
+  border-radius: 7px;
+  border: none;
+  background: #adb5bd;
+  line-height: 0;
+  text-align: center;
+  opacity: 70%;
+  padding-bottom: 2px;
 }
 /* Pagination */
 .dataDictionary .pagination-wrapper button {

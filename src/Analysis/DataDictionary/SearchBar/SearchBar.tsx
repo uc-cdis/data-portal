@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input } from '@mantine/core';
+import { Input, Button } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
 import { IRowData } from '../Interfaces/Interfaces';
 
@@ -30,8 +30,8 @@ const SearchBar = ({
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                typeof arrObjValue === 'string'
-                || typeof arrObjValue === 'number'
+                typeof arrObjValue === 'string' ||
+                typeof arrObjValue === 'number'
               ) {
                 if (
                   arrObjValue.toString().toLowerCase().includes(searchQuery)
@@ -53,41 +53,31 @@ const SearchBar = ({
   };
 
   return (
-    <div style={{ width: '425px', marginBottom: '10px' }}>
-      <Input
-        icon={<SearchIcon />}
-        rightSection={
-          searchInputValue && (
-            <span
-              style={{
-                display: 'block',
-                cursor: 'pointer',
-                fontSize: '15px',
-                width: '15px',
-                height: '15px',
-                color: '#adb5bd',
-                borderRadius: '7px',
-                background: '#adb5bd',
-                color: 'white',
-                lineHeight: '12px',
-                textAlign: 'center',
-                opacity: '70%',
-              }}
-              onClick={() => setSearchInputValue('')}
-              onKeyPress={(event) => {
-                if (event.key === 'Enter') {
-                  setSearchInputValue('');
-                }
-              }}
-            >
-              x
-            </span>
-          )
-        }
-        placeholder='Search'
-        value={searchInputValue}
-        onChange={handleInputChange}
-      />
+    <div className='search-bar'>
+      <div className='search-bar-container'>
+        <Input
+          rightSection={
+            searchInputValue ? (
+              <button
+                className='search-bar-input-control'
+                onClick={() => setSearchInputValue('')}
+                onKeyPress={(event) => {
+                  if (event.key === 'Enter') {
+                    setSearchInputValue('');
+                  }
+                }}
+              >
+                x
+              </button>
+            ) : (
+              <SearchIcon />
+            )
+          }
+          placeholder='Search'
+          value={searchInputValue}
+          onChange={handleInputChange}
+        />
+      </div>
     </div>
   );
 };

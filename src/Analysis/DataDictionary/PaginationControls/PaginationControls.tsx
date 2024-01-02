@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { Text, Pagination, SimpleGrid } from '@mantine/core';
 import EntriesQuanitySelector from './EntriesQuantitySelector';
 
-const PaginationControls: React.FC = ({
+interface IPaginationControlsProps {
+  activePage: number;
+  setActivePage: Function;
+}
+
+const PaginationControls = ({
   activePage,
   setActivePage,
-}): JSX.Element => {
+}: IPaginationControlsProps): JSX.Element => {
   interface Data {
     id: number;
     name: string;

@@ -71,10 +71,7 @@ const DataDictionaryContainer = () => {
         searchInputValue={searchInputValue}
         setSearchInputValue={setSearchInputValue}
       />
-      <PaginationControls
-        activePage={activePage}
-        setActivePage={setActivePage}
-      />
+
       <Table>
         <TableHeaders handleSort={handleSort} sortConfig={sortConfig} />
         <tbody>
@@ -95,6 +92,10 @@ const DataDictionaryContainer = () => {
           position='bottom'
         />
       </Table>
+      <PaginationControls
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
     </div>
   );
 };
