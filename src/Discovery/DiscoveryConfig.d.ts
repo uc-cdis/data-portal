@@ -9,6 +9,8 @@ export interface DiscoveryConfig {
             enableDownloadZip: boolean
             downloadZipButtonText?: string
             verifyExternalLogins?: boolean
+            studyMetadataFieldName?: string
+            enableDownloadStudyMetadata?: boolean
         },
         // explorationIntegration: {
         //     enabled: boolean // not supported

@@ -34,6 +34,7 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
+import CheckHealLoginNeeded from './Utils/CheckHealLoginNeeded';
 
 const { Panel } = Collapse;
 
@@ -62,6 +63,7 @@ interface LinkItem {
 
 interface User {
   username: string;
+  fence_idp?: string; // eslint-disable-line camelcase
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
@@ -236,6 +238,7 @@ const formatResourceValuesWhenNestedArray = (
 };
 
 const tabField = (
+  user: User,
   fieldConfig: TabFieldConfig,
   discoveryConfig: DiscoveryConfig,
   resource: DiscoveryResource,
@@ -266,7 +269,13 @@ const tabField = (
   ) {
     if (fieldConfig.type === 'dataDownloadList') {
       return (
-        <DataDownloadList sourceFieldData={resourceFieldValue} />
+        <DataDownloadList
+          isUserLoggedIn={Boolean(user.username)}
+          discoveryConfig={discoveryConfig}
+          resourceInfo={resource}
+          sourceFieldData={resourceFieldValue}
+          healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
+        />
       );
     }
     // Format resourceFieldValue for all other field types
@@ -292,6 +301,7 @@ const tabField = (
 };
 
 const fieldGrouping = (
+  user: User,
   group: TabFieldGroup,
   discoveryConfig: DiscoveryConfig,
   resource: DiscoveryResource,
@@ -318,7 +328,7 @@ const fieldGrouping = (
       <div {...fieldGroupingClass}>
         {group.header ? subHeading(group.header) : null}
         {group.fields.map((field, i) => (
-          <div key={i}>{tabField(field, discoveryConfig, resource)}</div>
+          <div key={i}>{tabField(user, field, discoveryConfig, resource)}</div>
         ))}
       </div>
     );
@@ -586,7 +596,12 @@ const DiscoveryDetails = (props: Props) => {
                 key: `${tabIndex}`,
                 children: (groups || []).map((group, i) => (
                   <div key={i}>
-                    {fieldGrouping(group, props.config, props.modalData)}
+                    {fieldGrouping(
+                      props.user,
+                      group,
+                      props.config,
+                      props.modalData,
+                    )}
                   </div>
                 )),
               }),
