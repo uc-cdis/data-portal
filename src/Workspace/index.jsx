@@ -323,7 +323,7 @@ class Workspace extends React.Component {
           this.checkWorkspaceStatus();
           break;
         default:
-          message.error('There is an error when trying to launch your workspace');
+          message.error('There was an error when trying to launch your workspace');
           this.setState({
             workspaceID: null,
             workspaceLaunchStepsConfig: null,
