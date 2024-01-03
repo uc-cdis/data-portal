@@ -76,8 +76,13 @@ class ExplorerTable extends React.Component {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
           if (_.isArray(row.value)) {
-            // replace empty nested values with null so we can still join cleanly and display 1 value per nested row
-            valueStr = row.value.map((x) => _.get(x, nestedChildFieldName) || 'null').join(', ');
+            valueStr = row.value.map((x) => {
+              let val = _.get(x, nestedChildFieldName);
+              // replace empty, null and undefined nested values with explicit "null" strings
+              // so that we can still display 1 value per nested row
+              if (val == null || val === '') val = 'null';
+              return val;
+            }).join(', ');
           } else {
             valueStr = _.get(row.value, nestedChildFieldName);
           }
