@@ -319,49 +319,51 @@ function ControlForm({ countByFilterSet, onSubmit }) {
         }}
         value={timeInterval}
       />
-      <div className='explorer-survival-analysis__filter-set-select'>
-        <Select
-          inputId='survival-filter-sets'
-          placeholder='Select Filter Set to analyze'
-          options={filterSetOptions}
-          onChange={setSelectFilterSet}
-          maxMenuHeight={160}
-          value={selectFilterSet}
-          theme={overrideSelectTheme}
-          menuPlacement='auto'
-        />
-        <Button
-          label='Add'
-          buttonType='default'
-          enabled={selectFilterSet !== null}
-          onClick={() => {
-            setUsedFilterSetIds((ids) => [...ids, selectFilterSet.value]);
-            setSelectFilterSet(null);
-            setIsInputChanged(true);
-          }}
-        />
-      </div>
-      {usedFilterSets.length === 0 ? (
-        <span style={{ fontStyle: 'italic' }}>
-          Nothing to show here. Try select and use Filter Sets for survival
-          analysis.
-        </span>
-      ) : (
-        usedFilterSets.map((filterSet, i) => (
-          <FilterSetCard
-            key={filterSet.id}
-            count={countByFilterSet?.[filterSet.name]}
-            filterSet={filterSet}
-            label={`${i + 1}. ${filterSet.name}`}
-            onClose={() => {
-              setUsedFilterSetIds((ids) =>
-                ids.filter((id) => id !== filterSet.id)
-              );
+      <div className='explorer-survival-analysis__filter-group'>
+        <div className='explorer-survival-analysis__filter-set-select'>
+          <Select
+            inputId='survival-filter-sets'
+            placeholder='Select Filter Set to analyze'
+            options={filterSetOptions}
+            onChange={setSelectFilterSet}
+            maxMenuHeight={160}
+            value={selectFilterSet}
+            theme={overrideSelectTheme}
+            menuPlacement='auto'
+          />
+          <Button
+            label='Add'
+            buttonType='default'
+            enabled={selectFilterSet !== null}
+            onClick={() => {
+              setUsedFilterSetIds((ids) => [...ids, selectFilterSet.value]);
+              setSelectFilterSet(null);
               setIsInputChanged(true);
             }}
           />
-        ))
-      )}
+        </div>
+        {usedFilterSets.length === 0 ? (
+          <span style={{ fontStyle: 'italic' }}>
+            Nothing to show here. Try select and use Filter Sets for survival
+            analysis.
+          </span>
+        ) : (
+          usedFilterSets.map((filterSet, i) => (
+            <FilterSetCard
+              key={filterSet.id}
+              count={countByFilterSet?.[filterSet.name]}
+              filterSet={filterSet}
+              label={`${i + 1}. ${filterSet.name}`}
+              onClose={() => {
+                setUsedFilterSetIds((ids) =>
+                  ids.filter((id) => id !== filterSet.id)
+                );
+                setIsInputChanged(true);
+              }}
+            />
+          ))
+        )}
+      </div>
       <div className='explorer-survival-analysis__button-group'>
         <Button label='Reset' buttonType='default' onClick={resetUserInput} />
         <Button
