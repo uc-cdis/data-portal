@@ -193,6 +193,7 @@ Below is an example, with inline comments describing what each JSON block config
     // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "forceSingleLoginDropdownOptions": [], // optional, Values set in array will be used to force single login option dropdown for a list of IdPs. For example, if a single InCommon login needs to be shown as dropdown, this option will contain `["InCommon Login"]` and will be displayed as such.
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
@@ -708,6 +709,21 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
+  ],
+  "analysisTools": [ // analysis apps to be diplayed at the /analysis/ page.
+    {
+      "appId": "myAppId", // Optional. Can be used to ensure the app path after the /analysis/ subpath is fixed, e.g. URL https://SERVER-DOMAIN/analysis/myAppId. If not set, then "title" (below) is used.
+      "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
+      "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
+      "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
+      "needsTeamProject": true // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
+    },
+    {
+      "title": "My other app",
+      "description": "etc",
+      "image": "/src/img/analysis-icons/etc.svg",
+    },
+    ...
   ],
   "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
   "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
