@@ -4,6 +4,7 @@ import SearchIcon from '../Icons/SearchIcon';
 import { IRowData } from '../Interfaces/Interfaces';
 
 interface ISearchBarProps {
+  columnsShown: number;
   TableData: IRowData[];
   setData: Function;
   searchInputValue: string;
@@ -11,16 +12,16 @@ interface ISearchBarProps {
 }
 
 const SearchBar = ({
+  columnsShown,
   TableData,
   setData,
   searchInputValue,
   setSearchInputValue,
 }: ISearchBarProps) => {
   useEffect(() => {
+    console.log('TableData.length', TableData.length);
     const filteredData = TableData.filter((item) => {
       const searchQuery = searchInputValue.toLowerCase().trim();
-
-      // return item.conceptName.toLowerCase().includes(searchQuery);
       return Object.values(item).some((value) => {
         if (typeof value === 'string' || typeof value === 'number') {
           return value.toString().toLowerCase().includes(searchQuery);
@@ -30,16 +31,12 @@ const SearchBar = ({
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                typeof arrObjValue === 'string'
-                || typeof arrObjValue === 'number'
+                (typeof arrObjValue === 'string' ||
+                  typeof arrObjValue === 'number') &&
+                arrObjValue.toString().toLowerCase().includes(searchQuery)
               ) {
-                if (
-                  arrObjValue.toString().toLowerCase().includes(searchQuery)
-                ) {
-                  doesArrayContainsSearchQuery = true;
-                }
+                doesArrayContainsSearchQuery = true;
               }
-              return null;
             });
           });
           return doesArrayContainsSearchQuery;
@@ -55,33 +52,39 @@ const SearchBar = ({
   };
 
   return (
-    <div className='search-bar'>
-      <div className='search-bar-container'>
-        <Input
-          rightSection={
-            searchInputValue ? (
-              <button
-                type='button'
-                className='search-bar-input-control'
-                onClick={() => setSearchInputValue('')}
-                onKeyPress={(event) => {
-                  if (event.key === 'Enter') {
-                    setSearchInputValue('');
-                  }
-                }}
-              >
-                x
-              </button>
-            ) : (
-              <SearchIcon />
-            )
-          }
-          placeholder='Search'
-          value={searchInputValue}
-          onChange={handleInputChange}
-        />
-      </div>
-    </div>
+    <thead className={'search-bar'}>
+      <tr>
+        <th colSpan={columnsShown}>
+          <div className='search-bar'>
+            <div className='search-bar-container'>
+              <Input
+                rightSection={
+                  searchInputValue ? (
+                    <button
+                      type='button'
+                      className='search-bar-input-control'
+                      onClick={() => setSearchInputValue('')}
+                      onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                          setSearchInputValue('');
+                        }
+                      }}
+                    >
+                      x
+                    </button>
+                  ) : (
+                    <SearchIcon />
+                  )
+                }
+                placeholder='Search'
+                value={searchInputValue}
+                onChange={(e) => handleInputChange(e)}
+              />
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
   );
 };
 

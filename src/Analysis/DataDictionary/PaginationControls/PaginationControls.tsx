@@ -1,25 +1,44 @@
 import React from 'react';
 import { Pagination, SimpleGrid } from '@mantine/core';
-import EntriesQuanitySelector from './EntriesQuantitySelector';
 
 interface IPaginationControlsProps {
+  entriesShown: number;
+  setEntriesShown: Function;
   activePage: number;
   setActivePage: Function;
+  totalEntriesAvailable: number;
 }
 
 const PaginationControls = ({
+  entriesShown,
+  setEntriesShown,
   activePage,
   setActivePage,
+  totalEntriesAvailable,
 }: IPaginationControlsProps): JSX.Element => (
   <div className='pagination-wrapper'>
     <SimpleGrid cols={2}>
-      <EntriesQuanitySelector />
+      <div className='entries-quantity-select'>
+        <label htmlFor='entriesSelect'>Show</label>
+        <select
+          id='entriesSelect'
+          name='entriesSelect'
+          value={entriesShown}
+          onChange={(e) => setEntriesShown(Number(e.target.value))}
+        >
+          <option value='10'>10</option>
+          <option value='20'>20</option>
+          <option value='30'>30</option>
+        </select>
+        <label htmlFor='entriesSelect'>entries</label>
+      </div>
+
       <div className='pagination-container'>
         <Pagination
           align='right'
-          total={53}
+          total={totalEntriesAvailable / entriesShown}
           value={activePage}
-          onChange={setActivePage}
+          onChange={(e) => setActivePage(Number(e))}
         />
       </div>
     </SimpleGrid>

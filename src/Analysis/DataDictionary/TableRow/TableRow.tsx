@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Button, Grid, Table } from '@mantine/core';
 import { IRowData } from '../Interfaces/Interfaces';
+import ExpandIcon from '../Icons/ExpandIcon';
+import CollapseIcon from '../Icons/CollapseIcon';
 
 interface ITableRowProps {
-  TableDataTotal: number;
   rowObject: IRowData;
   columnsShown: number;
   searchInputValue: string;
 }
 
 const TableRow = ({
-  TableDataTotal,
   rowObject,
   columnsShown,
   searchInputValue,
@@ -54,13 +54,11 @@ const TableRow = ({
     rowObject.valueSummary.forEach((arrObj) => {
       Object.values(arrObj).forEach((arrObjVal) => {
         if (checkIfCellContainsSearchTerm(arrObjVal)) {
-          console.log('FOUND!');
           searchTermFound = true;
         }
       });
     });
     if (searchTermFound) {
-      console.log(searchTermFound, searchInputValue);
       return 'search-highlight';
     }
     return '';
@@ -72,7 +70,6 @@ const TableRow = ({
     return '';
   };
 
-  console.log('rowObject', rowObject);
   return (
     <React.Fragment key={rowObject.vocabularyID}>
       <tr>
@@ -84,7 +81,7 @@ const TableRow = ({
               compact
               onClick={() => setShowDetails(true)}
             >
-              <strong>〉</strong>
+              <ExpandIcon />
             </Button>
           )}
           {showDetails && (
@@ -94,7 +91,7 @@ const TableRow = ({
               compact
               onClick={() => setShowDetails(false)}
             >
-              <strong>&#xfe40;</strong>
+              <CollapseIcon />
             </Button>
           )}
         </td>

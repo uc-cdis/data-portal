@@ -14,7 +14,7 @@ const EntriesHeader = ({
 }: IEntriesHeaderProps) => (
   <caption colSpan={colspan} className='entries-header'>
     Showing <strong>{start.toLocaleString()}</strong> to
-    <strong>{stop.toLocaleString()}</strong> of
+    <strong> {stop.toLocaleString()}</strong> of
     <strong> {total.toLocaleString()}</strong> entries
   </caption>
 );

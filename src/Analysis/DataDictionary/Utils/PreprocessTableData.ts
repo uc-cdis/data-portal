@@ -1,9 +1,10 @@
-import { IRowData, ITableData } from '../Interfaces/Interfaces';
+import { IRowData } from '../Interfaces/Interfaces';
+
 const PreprocessTableData = (TableData: any): IRowData[] => {
   const UnprocessedTableData = TableData.data;
-  const total = TableData.total;
+  const { total } = TableData;
 
-  const processedTableData = UnprocessedTableData.map((object) => {
+  const processedTableData = UnprocessedTableData.map((object: any) => {
     const numberOfPeopleWithVariablePercent = Math.trunc(
       (object.numberOfPeopleWithVariable / total) * 100
     );

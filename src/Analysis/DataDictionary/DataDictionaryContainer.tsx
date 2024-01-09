@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table } from '@mantine/core';
 import TableData from './TestData/TableData';
-import TableHeaders from './TableHeaders/TableHeaders';
+import ColumnHeaders from './ColumnHeaders/ColumnHeaders';
 import EntriesHeader from './EntriesHeader/EntriesHeader';
 import SearchBar from './SearchBar/SearchBar';
 import TableRow from './TableRow/TableRow';
@@ -11,11 +11,8 @@ import PreprocessTableData from './Utils/PreprocessTableData';
 import './DataDictionary.css';
 
 const DataDictionaryContainer = () => {
-  const TableDataTotal = TableData.total;
   const preprocessedTableData = PreprocessTableData(TableData);
-
   const [data, setData] = useState(preprocessedTableData);
-  console.log('data', data);
   const [searchInputValue, setSearchInputValue] = useState('');
   const columnsShown = 11;
   const [sortConfig, setSortConfig] = useState<ISortConfig>({
@@ -23,12 +20,18 @@ const DataDictionaryContainer = () => {
     direction: 'off',
   });
 
+  /* Pagination */
+  const [entriesShown, setEntriesShown] = useState(10);
+  console.log('entriesShown', entriesShown);
   const [activePage, setActivePage] = useState(1);
+  const paginatedData = data.slice(
+    entriesShown * activePage - entriesShown,
+    entriesShown * activePage
+  );
 
-  const rows = data.map((rowObject, i) => (
+  const rows = paginatedData.map((rowObject, i) => (
     <TableRow
       key={i}
-      TableDataTotal={TableDataTotal}
       rowObject={rowObject}
       columnsShown={columnsShown}
       searchInputValue={searchInputValue}
@@ -68,15 +71,16 @@ const DataDictionaryContainer = () => {
 
   return (
     <div className='dataDictionary'>
-      <SearchBar
-        TableData={data}
-        setData={setData}
-        searchInputValue={searchInputValue}
-        setSearchInputValue={setSearchInputValue}
-      />
-
       <Table>
-        <TableHeaders handleSort={handleSort} sortConfig={sortConfig} />
+        <SearchBar
+          columnsShown={columnsShown}
+          TableData={preprocessedTableData}
+          setData={setData}
+          searchInputValue={searchInputValue}
+          setSearchInputValue={setSearchInputValue}
+        />
+
+        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} />
         <tbody>
           {rows}
           {!data.length && (
@@ -88,15 +92,18 @@ const DataDictionaryContainer = () => {
           )}
         </tbody>
         <EntriesHeader
-          start={1}
-          stop={data.length}
+          start={entriesShown * activePage - entriesShown}
+          stop={entriesShown * activePage}
           total={data.length}
           colspan={columnsShown}
         />
       </Table>
       <PaginationControls
+        entriesShown={entriesShown}
+        setEntriesShown={setEntriesShown}
         activePage={activePage}
         setActivePage={setActivePage}
+        totalEntriesAvailable={data.length}
       />
     </div>
   );
