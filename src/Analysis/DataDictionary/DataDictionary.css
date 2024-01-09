@@ -88,19 +88,20 @@
   max-height: 0px;
   overflow: hidden;
   height: 0;
-  transition: all 0.5s;
+  transition: height 0.3s, max-height 0.3s;
 }
+
 .dataDictionary tr td div.expandable.expanded {
   max-height: 321px;
   height: 321px;
-  transition: max-height 0.5s;
-  padding: 16px;
   background: #e2e2e3;
 }
 .dataDictionary .expanded-container {
   background: #fff;
   height: 290px;
   padding: 16px;
+  margin: 16px;
+  overflow-y: auto;
 }
 
 .dataDictionary .chart-details-wrapper {
@@ -109,7 +110,6 @@
 .dataDictionary .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
-  width: 100%;
 }
 
 .dataDictionary .td-container {
@@ -129,6 +129,11 @@ table > tbody > tr > td.search-highlight:last-of-type {
     transparent
   );
 }
+.dataDictionary .search-highlight,
+table > tbody > tr > td.preview-chart {
+  min-width: 145px;
+}
+
 /* Search Bar */
 .search-bar {
   background: #cfdbe6;

@@ -79,7 +79,6 @@ const DataDictionaryContainer = () => {
           searchInputValue={searchInputValue}
           setSearchInputValue={setSearchInputValue}
         />
-
         <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} />
         <tbody>
           {rows}

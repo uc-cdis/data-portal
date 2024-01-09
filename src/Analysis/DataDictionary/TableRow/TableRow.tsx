@@ -3,6 +3,9 @@ import { Button, Grid, Table } from '@mantine/core';
 import { IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
+import PreviewChart from './PreviewChart/PreviewChart';
+import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
+import NonNumericDetailsTable from './NonNumericDetails/NonNumericDetailsTable';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -177,9 +180,11 @@ const TableRow = ({
         <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
-        <td className={checkIfHiddenCellsContainSearchTerm()}>
+        <td
+          className={'preview-chart ' + checkIfHiddenCellsContainSearchTerm()}
+        >
           <div className={'td-container '}>
-            {JSON.stringify(rowObject.valueSummary)}
+            <PreviewChart />
           </div>
         </td>
       </tr>
@@ -189,76 +194,22 @@ const TableRow = ({
             <Grid>
               <Grid.Col span={5}>
                 <div className={'expanded-container'}>
-                  <h3>Data Viz Info</h3>
-                  <Table striped>
-                    <thead>
-                      <tr>
-                        <th>Value as String</th>
-                        <th>Value as Concept ID</th>
-                        <th>Concept Name</th>
-                        <th>Person Count</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Value as String</td>
-                        <td>Value as Concept ID</td>
-                        <td>Concept Name</td>
-                        <td>Person Count</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                  <h3>Additional Info</h3>
-                  <Table striped>
-                    <thead>
-                      <tr>
-                        <th>Min Value</th>
-                        <th>Max Value</th>
-                        <th>Mean Value</th>
-                        <th>Standard Deviation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td
-                          className={checkIfCellContainsSearchTerm(
-                            rowObject.minValue
-                          )}
-                        >
-                          <div className={'td-container'}>
-                            {rowObject.minValue}
-                          </div>
-                        </td>
-                        <td
-                          className={checkIfCellContainsSearchTerm(
-                            rowObject.maxValue
-                          )}
-                        >
-                          <div className={'td-container'}>
-                            {rowObject.maxValue}
-                          </div>
-                        </td>
-                        <td
-                          className={checkIfCellContainsSearchTerm(
-                            rowObject.meanValue
-                          )}
-                        >
-                          <div className={'td-container'}>
-                            {rowObject.meanValue}
-                          </div>
-                        </td>
-                        <td
-                          className={checkIfCellContainsSearchTerm(
-                            rowObject.standardDeviation
-                          )}
-                        >
-                          <div className={'td-container'}>
-                            {rowObject.standardDeviation}
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
+                  {rowObject.valueStoredAs !== 'Number' && (
+                    <NonNumericDetailsTable
+                      rowObject={rowObject}
+                      checkIfCellContainsSearchTerm={
+                        checkIfCellContainsSearchTerm
+                      }
+                    />
+                  )}
+                  {rowObject.valueStoredAs === 'Number' && (
+                    <NumericDetailsTable
+                      rowObject={rowObject}
+                      checkIfCellContainsSearchTerm={
+                        checkIfCellContainsSearchTerm
+                      }
+                    />
+                  )}
                 </div>
               </Grid.Col>
               <Grid.Col span={7}>

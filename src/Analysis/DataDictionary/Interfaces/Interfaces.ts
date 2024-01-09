@@ -1,4 +1,6 @@
 interface IValueSummary {
+  valueAsString?: string;
+  valueAsConceptID?: string;
   name?: string;
   personCount?: number;
   start?: number;
@@ -33,6 +35,4 @@ interface ISortConfig {
   sortKey: string | null;
   direction: 'ascending' | 'descending' | 'off';
 }
-export {
-  IRowData, IValueSummary, ITableData, ISortConfig,
-};
+export { IRowData, IValueSummary, ITableData, ISortConfig };
