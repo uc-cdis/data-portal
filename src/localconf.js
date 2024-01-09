@@ -486,6 +486,8 @@ function buildConfig(opts) {
 
   };
 
+  const topNavLogin = !components?.login?.hideNavLink;
+
   return {
     app,
     basename,
@@ -597,6 +599,7 @@ function buildConfig(opts) {
     showSystemUseOnlyOnLogin,
     Error403Url,
     bundle,
+    topNavLogin,
   };
 }
 
