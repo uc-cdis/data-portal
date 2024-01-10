@@ -192,6 +192,7 @@ Below is an example, with inline comments describing what each JSON block config
     // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "forceSingleLoginDropdownOptions": [], // optional, Values set in array will be used to force single login option dropdown for a list of IdPs. For example, if a single InCommon login needs to be shown as dropdown, this option will contain `["InCommon Login"]` and will be displayed as such.
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).

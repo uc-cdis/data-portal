@@ -5,6 +5,7 @@ import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
+import { csrfToken } from '../configs';
 import { labelToPlural, getQueryParameter, IsValidJSONString } from './utils';
 import {
   GuppyConfigType,
@@ -117,6 +118,7 @@ class GuppyDataExplorer extends React.Component {
           onFilterChange={this.handleFilterChangeForQueryStateUrl}
           rawDataFields={this.props.tableConfig.fields}
           accessibleFieldCheckList={this.props.guppyConfig.accessibleFieldCheckList}
+          csrfToken={csrfToken}
         >
           <ExplorerTopMessageBanner
             className='guppy-data-explorer__top-banner'

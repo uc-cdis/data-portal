@@ -1,10 +1,16 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 
+jest.mock('react-router-dom', () => ({
+  useHistory: jest.fn().mockReturnValue(0),
+  useLocation: jest.fn().mockReturnValue(0),
+}));
+
 describe('DataDownloadList', () => {
-  it('renders the component with titles and descriptions when sourceFieledData has titles and descriptions', () => {
+  it(`renders the component with titles and descriptions and action buttons container
+  when sourceFieledData has titles and descriptions`, () => {
     const sourceFieldData = [
       [
         {
@@ -18,13 +24,18 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList
+        discoveryConfig={null}
+        resourceInfo={null}
+        sourceFieldData={sourceFieldData}
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
       expect(getByText(obj.title)).toBeInTheDocument();
       expect(getByText(obj.description)).toBeInTheDocument();
     });
+    expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
 
   it('renders the component with titles and descriptions when sourceFieledData has file_names and descriptions', () => {
@@ -71,7 +82,7 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the component when data is missing title and file_name', () => {
+  it('does not render the file list but does render the action buttons when data is missing title and file_name', () => {
     const sourceFieldData = [
       [
         {
@@ -81,10 +92,11 @@ describe('DataDownloadList', () => {
         },
       ],
     ];
-    const { container } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
-    );
-    // Verify that the component does not render (returns null)
-    expect(container.firstChild).toBeNull();
+    render(<DataDownloadList sourceFieldData={sourceFieldData} />);
+    // Verify that the list does not render but the buttons do
+    expect(
+      screen.queryByTestId('dataDownloadFileList'),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
 });
