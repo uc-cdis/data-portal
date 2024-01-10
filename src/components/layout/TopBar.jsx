@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
-import { discoveryConfig } from '../../localconf';
+import { discoveryConfig, topNavLogin } from '../../localconf';
 import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 import Banner from '../Banner';
 
@@ -148,6 +148,7 @@ class TopBar extends Component {
               )
             }
             {
+              topNavLogin &&
               typeof this.props.user.username === 'undefined'
               && (
                 <React.Fragment>
