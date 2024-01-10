@@ -1,3 +1,12 @@
+// Generates test data for DataDictionary
+// Run in terminal like so:
+// Node GenerateTableData.js
+
+const fs = require('fs');
+const numberOfEntries = 6000;
+const maxValueSummarySize = 25;
+const fileName = 'TableData.ts';
+
 function randomString() {
   const length = 10;
   let result = '';
@@ -45,23 +54,11 @@ const GenerateEntry = (type, i) => {
       maxValue: randomNum(),
       meanValue: randomNum(),
       standardDeviation: randomNum(),
-      valueSummary: [
-        {
-          start: randomNum(),
-          end: randomNum(),
-          personCount: randomNum(),
-        },
-        {
-          start: randomNum(),
-          end: randomNum(),
-          personCount: randomNum(),
-        },
-        {
-          start: randomNum(),
-          end: randomNum() + 10,
-          personCount: randomNum(),
-        },
-      ],
+      valueSummary: Array.from({ length: maxValueSummarySize }, () => ({
+        start: randomNum(),
+        end: randomNum(),
+        personCount: randomNum(),
+      })),
     };
   }
   // barchart, qualitative
@@ -79,33 +76,30 @@ const GenerateEntry = (type, i) => {
     maxValue: null,
     meanValue: null,
     standardDeviation: null,
-    valueSummary: [
-      {
-        name: `valueSummaryName${randomString()}`,
-        valueAsString: randomString(),
-        valueAsConceptID: randomNum(),
-        personCount: randomNum(),
-      },
-      {
-        name: `valueSummaryName2${randomString()}`,
-        valueAsString: randomString(),
-        valueAsConceptID: randomNum(),
-        personCount: randomNum(),
-      },
-      {
-        name: `valueSummaryName3${randomString()}`,
-        valueAsString: randomString(),
-        valueAsConceptID: randomNum(),
-        personCount: randomNum(),
-      },
-    ],
+    valueSummary: Array.from({ length: maxValueSummarySize }, () => ({
+      name: `valueSummaryName${randomString()}`,
+      valueAsString: randomString(),
+      valueAsConceptID: randomNum(),
+      personCount: randomNum(),
+    })),
   };
 };
 
-const GenerateTableEntry = () => {
-  for (let i = 1; i < 6000; i = i + 2) {
-    console.log(JSON.stringify(GenerateEntry('barChart', i)), ',');
-    console.log(JSON.stringify(GenerateEntry('nonqualitative', i + 1)), ',');
+let entries = '';
+const GenerateTableEntries = () => {
+  for (let i = 1; i < numberOfEntries; i = i + 2) {
+    entries = `${entries}
+    ${JSON.stringify(GenerateEntry('barChart', i))},
+    ${JSON.stringify(GenerateEntry('histogram', i + 1))},`;
   }
 };
-GenerateTableEntry();
+GenerateTableEntries();
+
+const output = `const TableData = {
+  total: 250,
+  data: [${entries}],
+}
+export default TableData;
+`;
+fs.writeFileSync(fileName, output);
+console.log('Created test data!');
