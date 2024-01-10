@@ -102,4 +102,4 @@ const output = `const TableData = {
 export default TableData;
 `;
 fs.writeFileSync(fileName, output);
-console.log('Created test data!');
+console.info('Created test data!');
