@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DownloadAllModal from './DownloadAllModal';
+import DownloadAllModal from './DownloadModal';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
 // Mock the setDownloadStatus function
@@ -9,6 +9,7 @@ const mockSetDownloadStatus = jest.fn();
 
 // Mock the DownloadStatus for testing
 const mockDownloadStatus: DownloadStatus = {
+  inProgress: false,
   message: {
     title: 'Test Title',
     content: <div>Test Content</div>,
@@ -22,7 +23,7 @@ test('DownloadAllModal renders correctly and closes on button click', () => {
     <DownloadAllModal
       downloadStatus={mockDownloadStatus}
       setDownloadStatus={mockSetDownloadStatus}
-    />,
+    />
   );
 
   // Check if the modal renders with the provided title and content

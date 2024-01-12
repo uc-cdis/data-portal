@@ -3,7 +3,7 @@ import { Col, Row, Button, Popover } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
-import DownloadAllModal from './DownloadAllModal/DownloadAllModal';
+import DownloadModal from './DownloadModal/DownloadModal';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
@@ -26,11 +26,17 @@ const ActionButtons = ({
   healLoginNeeded,
   noData,
 }: ActionButtonsProps): JSX.Element => {
-  const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
-  const [downloadStatus, setDownloadStatus] = useState({
+  const INITIAL_DOWNLOAD_STATUS = {
     inProgress: false,
     message: { title: '', content: <React.Fragment />, active: false },
-  });
+  };
+  const [downloadAllStatus, setDownloadAllStatus] = useState(
+    INITIAL_DOWNLOAD_STATUS
+  );
+  const [downloadVariableMetadataStatus, setDownloadVariableMetadataStatus] =
+    useState(INITIAL_DOWNLOAD_STATUS);
+
+  const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
   const history = useHistory();
   const location = useLocation();
 
@@ -64,17 +70,23 @@ const ActionButtons = ({
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
-      <DownloadAllModal
-        downloadStatus={downloadStatus}
-        setDownloadStatus={setDownloadStatus}
+      <DownloadModal
+        downloadStatus={downloadAllStatus}
+        setDownloadStatus={setDownloadAllStatus}
+      />
+      <DownloadModal
+        downloadStatus={downloadVariableMetadataStatus}
+        setDownloadStatus={setDownloadVariableMetadataStatus}
       />
       <Row className='row'>
         <Col flex='1 0 auto'>
           <Button
             className='discovery-action-bar-button'
             onClick={() => {
-              console.log('discoveryConfig', discoveryConfig);
-              DownloadVariableMetadata(resourceInfo);
+              DownloadVariableMetadata(
+                resourceInfo,
+                setDownloadVariableMetadataStatus
+              );
             }}
           >
             Download <br />
@@ -82,7 +94,7 @@ const ActionButtons = ({
           </Button>
         </Col>
         {showDownloadStudyLevelMetadataButtons && (
-          <Col fslex='1 0 auto'>
+          <Col flex='1 0 auto'>
             <ConditionalPopover>
               <Button
                 className='discovery-action-bar-button'
@@ -148,8 +160,8 @@ const ActionButtons = ({
                   onClick={() =>
                     DownloadAllFiles(
                       resourceInfo,
-                      downloadStatus,
-                      setDownloadStatus,
+                      downloadAllStatus,
+                      setDownloadAllStatus,
                       history,
                       location,
                       healLoginNeeded,
