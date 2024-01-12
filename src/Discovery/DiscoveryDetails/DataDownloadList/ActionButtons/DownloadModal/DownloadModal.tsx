@@ -7,7 +7,7 @@ interface DownloadAllModalPropsInterface {
   setDownloadStatus: (arg0: DownloadStatus) => void;
 }
 
-const DownloadAllModal = ({
+const DownloadModal = ({
   downloadStatus,
   setDownloadStatus,
 }: DownloadAllModalPropsInterface): JSX.Element => (
@@ -15,22 +15,24 @@ const DownloadAllModal = ({
     closable={false}
     open={downloadStatus.message.active}
     title={downloadStatus.message.title}
-    footer={(
+    footer={
       <Button
-        onClick={() => setDownloadStatus({
-          ...downloadStatus,
-          message: {
-            title: '',
-            content: <React.Fragment />,
-            active: false,
-          },
-        })}
+        onClick={() =>
+          setDownloadStatus({
+            ...downloadStatus,
+            message: {
+              title: '',
+              content: <React.Fragment />,
+              active: false,
+            },
+          })
+        }
       >
         Close
       </Button>
-    )}
+    }
   >
     {downloadStatus.message.content}
   </Modal>
 );
-export default DownloadAllModal;
+export default DownloadModal;
