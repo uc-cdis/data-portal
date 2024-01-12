@@ -16,11 +16,11 @@ const DownloadVariableMetadata = async (
   resourceInfo: DiscoveryResource,
   setDownloadStatus: Function
 ) => {
+  const zip = new JSZip();
   // const studyID = resourceInfo['_hdp_uid']; ??????
   // Need to follow up regarding how to get studyID?
 
   const studyID = 'HDP00001';
-  const zip = new JSZip();
   const projectTitle = resourceInfo.project_title;
 
   const DOWNLOAD_FAIL_INFO: DownloadStatus = {
@@ -77,6 +77,7 @@ const DownloadVariableMetadata = async (
     if (statusResponse.status !== 200 || !data) {
       setDownloadStatus(DOWNLOAD_FAIL_INFO);
     } else {
+      console.log('data', data);
       const dataDictionaries: IdataDictionaries = data.data_dictionaries;
       if (Object.keys(dataDictionaries).length !== 0) {
         fetchDataForAllFiles(dataDictionaries);
