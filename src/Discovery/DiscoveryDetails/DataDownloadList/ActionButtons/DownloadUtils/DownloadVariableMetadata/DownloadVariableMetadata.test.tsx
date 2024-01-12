@@ -99,39 +99,13 @@ const mockResourceInfo = {
   project_title: 'Sample Project',
 };
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 const mockSetDownloadStatus = jest.fn();
 
 describe('DownloadVariableMetadata', () => {
-  it('should download variable metadata when called with valid resource info', async () => {
-    const mockDataDictionaries = {
-      'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
-    };
-
-    const mockStatusResponse = {
-      status: 200,
-      data: {
-        data_dictionaries: mockDataDictionaries,
-      },
-    };
-
-    const mockGenerateAsync = jest.fn().mockResolvedValue('zipContent');
-    // const mockSaveAs = jest.spyOn(FileSaver, 'saveAs');
-
-    jest
-      .spyOn(JSZip.prototype, 'generateAsync')
-      .mockImplementation(mockGenerateAsync);
-
-    (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
-
-    await act(async () => {
-      await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
-    });
-
-    expect(mockSetDownloadStatus).not.toHaveBeenCalledWith(); // Assuming download is successful
-  });
-
-  /******SECOND TEST WORKS! */
-
   it('should set download status when status response is not successful', async () => {
     const mockStatusResponse = {
       status: 500,
@@ -147,6 +121,35 @@ describe('DownloadVariableMetadata', () => {
     expect(fetchWithCreds).toHaveBeenCalledWith({
       path: expect.stringContaining(`${mdsURL}/HDP00001`),
     });
-    expect(mockSetDownloadStatus).toHaveBeenCalled();
+    expect(mockSetDownloadStatus).toHaveBeenCalled(); // Assumes download was unsuccessful
+    expect(require('file-saver').saveAs).not.toHaveBeenCalled(); // Assumes zip file didn't downloaded
+  });
+
+  it('should download variable metadata when called with valid resource info', async () => {
+    const mockDataDictionaries = {
+      'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
+    };
+
+    const mockStatusResponse = {
+      status: 200,
+      data: {
+        data_dictionaries: mockDataDictionaries,
+      },
+    };
+
+    const mockGenerateAsync = jest.fn().mockResolvedValue('zipContent');
+
+    jest
+      .spyOn(JSZip.prototype, 'generateAsync')
+      .mockImplementation(mockGenerateAsync);
+
+    (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
+
+    await act(async () => {
+      await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
+    });
+
+    expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Assumes download is successful
+    expect(require('file-saver').saveAs).toHaveBeenCalledTimes(1); // Assumes zip file downloaded
   });
 });
