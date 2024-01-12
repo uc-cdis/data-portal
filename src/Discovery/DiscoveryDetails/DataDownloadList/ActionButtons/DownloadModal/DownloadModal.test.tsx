@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DownloadAllModal from './DownloadModal';
+import DownloadModal from './DownloadModal';
 import DownloadStatus from '../../Interfaces/DownloadStatus';
 
 // Mock the setDownloadStatus function
@@ -17,13 +17,13 @@ const mockDownloadStatus: DownloadStatus = {
   },
 };
 
-test('DownloadAllModal renders correctly and closes on button click', () => {
+test('DownloadModal renders correctly and closes on button click', () => {
   // Render the component with necessary props
   const { getByText } = render(
-    <DownloadAllModal
+    <DownloadModal
       downloadStatus={mockDownloadStatus}
       setDownloadStatus={mockSetDownloadStatus}
-    />,
+    />
   );
 
   // Check if the modal renders with the provided title and content
@@ -35,6 +35,7 @@ test('DownloadAllModal renders correctly and closes on button click', () => {
 
   // Check that the setDownloadStatus function is called with the expected argument
   expect(mockSetDownloadStatus).toHaveBeenCalledWith({
+    inProgress: false,
     message: {
       title: '',
       content: <React.Fragment />,
