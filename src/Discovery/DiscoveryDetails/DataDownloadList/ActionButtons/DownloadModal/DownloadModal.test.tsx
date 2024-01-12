@@ -23,7 +23,7 @@ test('DownloadAllModal renders correctly and closes on button click', () => {
     <DownloadAllModal
       downloadStatus={mockDownloadStatus}
       setDownloadStatus={mockSetDownloadStatus}
-    />
+    />,
   );
 
   // Check if the modal renders with the provided title and content
