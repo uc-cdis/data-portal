@@ -97,26 +97,25 @@ const labeledSingleTextField = (labelText: string, fieldText: string) => (
     {label(labelText)} {textField(fieldText)}
   </div>
 );
-const labeledMultipleTextField = (labelText: string, fieldsText: string[]) =>
-  fieldsText.length ? (
-    <div>
-      {[
-        // labeled first field
-        <div {...getFieldCls(labelText)} key='root'>
-          {label(labelText)} {textField(fieldsText[0])}
-        </div>,
-        // unlabeled subsequent fields
-        ...fieldsText.slice(1).map((text, i) => (
-          <div {...getFieldCls(labelText)} key={i}>
-            <div /> {textField(text)}
-          </div>
-        )),
-      ]}
-    </div>
-  ) : null;
+const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (fieldsText.length ? (
+  <div>
+    {[
+      // labeled first field
+      <div {...getFieldCls(labelText)} key='root'>
+        {label(labelText)} {textField(fieldsText[0])}
+      </div>,
+      // unlabeled subsequent fields
+      ...fieldsText.slice(1).map((text, i) => (
+        <div {...getFieldCls(labelText)} key={i}>
+          <div /> {textField(text)}
+        </div>
+      )),
+    ]}
+  </div>
+) : null);
 const labeledSingleLinkField = (
   labelText: string,
-  linkObject: LinkItem | string
+  linkObject: LinkItem | string,
 ) => {
   if (typeof linkObject === 'string') {
     return (
@@ -133,7 +132,7 @@ const labeledSingleLinkField = (
 };
 const labeledMultipleLinkField = (
   labelText: string,
-  links: LinkItem[] | string[]
+  links: LinkItem[] | string[],
 ) => {
   if (!links.length) {
     return null;
@@ -188,11 +187,11 @@ const accessDescriptor = (resource: DiscoveryResource) => {
       <Alert
         className='discovery-modal__access-alert'
         type='success'
-        message={
+        message={(
           <React.Fragment>
             <UnlockOutlined /> You have access to this data.
           </React.Fragment>
-        }
+        )}
       />
     );
   }
@@ -211,11 +210,11 @@ const accessDescriptor = (resource: DiscoveryResource) => {
     <Alert
       className='discovery-modal__access-alert'
       type='info'
-      message={
+      message={(
         <React.Fragment>
           This does not include data access authorization details.
         </React.Fragment>
-      }
+      )}
     />
   );
 };
@@ -224,12 +223,12 @@ type TabFieldConfig = TabFieldGroup['fields'][0];
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const formatResourceValuesWhenNestedArray = (
-  resourceFieldValue: string | any[]
+  resourceFieldValue: string | any[],
 ) => {
   if (Array.isArray(resourceFieldValue)) {
     if (
-      Array.isArray(resourceFieldValue[0]) &&
-      resourceFieldValue[0].every((val) => typeof val === 'string')
+      Array.isArray(resourceFieldValue[0])
+      && resourceFieldValue[0].every((val) => typeof val === 'string')
     ) {
       return resourceFieldValue[0].join(', ');
     }
@@ -242,7 +241,7 @@ const tabField = (
   user: User,
   fieldConfig: TabFieldConfig,
   discoveryConfig: DiscoveryConfig,
-  resource: DiscoveryResource
+  resource: DiscoveryResource,
 ): JSX.Element | null => {
   // Setup special fields first
   if (fieldConfig.type === 'accessDescriptor') {
@@ -250,9 +249,8 @@ const tabField = (
   }
   if (fieldConfig.type === 'tags') {
     const tags = fieldConfig.categories
-      ? (resource.tags || []).filter((tag) =>
-          fieldConfig.categories?.includes(tag.category)
-        )
+      ? (resource.tags || []).filter((tag) => fieldConfig.categories?.includes(tag.category),
+      )
       : resource.tags;
     return (
       <div {...tagsCls}>
@@ -261,19 +259,18 @@ const tabField = (
     );
   }
   // Here begins some normal fields (texts, links, etc...)
-  let resourceFieldValue =
-    fieldConfig.sourceField &&
-    jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
+  let resourceFieldValue = fieldConfig.sourceField
+    && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
   if (
-    resourceFieldValue &&
-    resourceFieldValue.length > 0 &&
-    resourceFieldValue[0] &&
-    resourceFieldValue[0].length !== 0
+    resourceFieldValue
+    && resourceFieldValue.length > 0
+    && resourceFieldValue[0]
+    && resourceFieldValue[0].length !== 0
   ) {
-    //console.log('fieldConfig.type', fieldConfig.type);
-    //console.log('discoveryConfig', discoveryConfig);
-    //console.log('resourceInfo', resource);
-    //console.log('resourceFieldValue', resourceFieldValue);
+    // console.log('fieldConfig.type', fieldConfig.type);
+    // console.log('discoveryConfig', discoveryConfig);
+    // console.log('resourceInfo', resource);
+    // console.log('resourceFieldValue', resourceFieldValue);
     if (fieldConfig.type === 'dataDownloadList') {
       return (
         <DataDownloadList
@@ -286,8 +283,7 @@ const tabField = (
       );
     }
     // Format resourceFieldValue for all other field types
-    resourceFieldValue =
-      formatResourceValuesWhenNestedArray(resourceFieldValue);
+    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
 
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
@@ -312,7 +308,7 @@ const fieldGrouping = (
   user: User,
   group: TabFieldGroup,
   discoveryConfig: DiscoveryConfig,
-  resource: DiscoveryResource
+  resource: DiscoveryResource,
 ) => {
   // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
   const groupHasContent = group.fields.some((field) => {
@@ -322,13 +318,13 @@ const fieldGrouping = (
     }
     const resourceFieldValue = jsonpath.query(
       resource,
-      `$.${field.sourceField}`
+      `$.${field.sourceField}`,
     );
     return (
-      resourceFieldValue &&
-      resourceFieldValue.length > 0 &&
-      resourceFieldValue[0] &&
-      resourceFieldValue[0].length !== 0
+      resourceFieldValue
+      && resourceFieldValue.length > 0
+      && resourceFieldValue[0]
+      && resourceFieldValue[0].length !== 0
     );
   });
   if (groupHasContent) {
@@ -350,7 +346,7 @@ const DiscoveryDetails = (props: Props) => {
 
   const history = useHistory();
   const pagePath = `/discovery/${encodeURIComponent(
-    props.modalData[props.config.minimalFieldMapping.uid]
+    props.modalData[props.config.minimalFieldMapping.uid],
   )}/`;
   const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
 
@@ -360,7 +356,7 @@ const DiscoveryDetails = (props: Props) => {
     studyName: string | null = null,
     studyNumber: string | null = null,
     studyUID: string | number | null = null,
-    existingDataDictionaryName: Array<string> = []
+    existingDataDictionaryName: Array<string> = [],
   ) => {
     history.push(redirectURL, {
       studyName,
@@ -375,10 +371,9 @@ const DiscoveryDetails = (props: Props) => {
     history.push('/login', { from: pagePath });
   };
 
-  const headerField =
-    props.config.detailView?.headerField ||
-    props.config.studyPageFields.header?.field ||
-    '';
+  const headerField = props.config.detailView?.headerField
+    || props.config.studyPageFields.header?.field
+    || '';
   const header = (
     <Space align='baseline'>
       <h3 className='discovery-modal__header-text'>
@@ -415,53 +410,10 @@ const DiscoveryDetails = (props: Props) => {
           {props.modalData[
             studyRegistrationConfig.studyRegistrationValidationField
           ] === false ? (
-            <Button
-              type='text'
-              className='discovery-modal__request-button'
-              onClick={() => {
-                if (props.user.username) {
-                  if (
-                    userHasMethodForServiceOnResource(
-                      'access',
-                      'study_registration',
-                      props.modalData[
-                        studyRegistrationConfig
-                          .studyRegistrationAccessCheckField
-                      ],
-                      props.userAuthMapping
-                    )
-                  ) {
-                    return handleRedirectClick(
-                      '/study-reg',
-                      props.modalData[
-                        studyRegistrationConfig
-                          .studyRegistrationAccessCheckField
-                      ],
-                      props.modalData.project_title,
-                      props.modalData.project_number,
-                      props.modalData[
-                        studyRegistrationConfig.studyRegistrationUIDField
-                      ]
-                    );
-                  }
-                  return handleRedirectClick(
-                    '/study-reg/request-access',
-                    props.modalData[
-                      studyRegistrationConfig.studyRegistrationAccessCheckField
-                    ],
-                    props.modalData.project_title,
-                    props.modalData.project_number,
-                    props.modalData[
-                      studyRegistrationConfig.studyRegistrationUIDField
-                    ]
-                  );
-                }
-                return handleRedirectToLoginClick();
-              }}
-            >
-              <React.Fragment>
-                <AuditOutlined />
-                {(() => {
+              <Button
+                type='text'
+                className='discovery-modal__request-button'
+                onClick={() => {
                   if (props.user.username) {
                     if (
                       userHasMethodForServiceOnResource(
@@ -469,38 +421,80 @@ const DiscoveryDetails = (props: Props) => {
                         'study_registration',
                         props.modalData[
                           studyRegistrationConfig
-                            ?.studyRegistrationAccessCheckField
+                            .studyRegistrationAccessCheckField
                         ],
-                        props.userAuthMapping
+                        props.userAuthMapping,
                       )
                     ) {
-                      return ' Register This Study ';
+                      return handleRedirectClick(
+                        '/study-reg',
+                        props.modalData[
+                          studyRegistrationConfig
+                            .studyRegistrationAccessCheckField
+                        ],
+                        props.modalData.project_title,
+                        props.modalData.project_number,
+                        props.modalData[
+                          studyRegistrationConfig.studyRegistrationUIDField
+                        ],
+                      );
                     }
-                    return ' Request Access to Register This Study ';
+                    return handleRedirectClick(
+                      '/study-reg/request-access',
+                      props.modalData[
+                        studyRegistrationConfig.studyRegistrationAccessCheckField
+                      ],
+                      props.modalData.project_title,
+                      props.modalData.project_number,
+                      props.modalData[
+                        studyRegistrationConfig.studyRegistrationUIDField
+                      ],
+                    );
                   }
-                  return ' Login to Register This Study ';
-                })()}
-              </React.Fragment>
-            </Button>
-          ) : null}
+                  return handleRedirectToLoginClick();
+                }}
+              >
+                <React.Fragment>
+                  <AuditOutlined />
+                  {(() => {
+                    if (props.user.username) {
+                      if (
+                        userHasMethodForServiceOnResource(
+                          'access',
+                          'study_registration',
+                          props.modalData[
+                            studyRegistrationConfig
+                              ?.studyRegistrationAccessCheckField
+                          ],
+                          props.userAuthMapping,
+                        )
+                      ) {
+                        return ' Register This Study ';
+                      }
+                      return ' Request Access to Register This Study ';
+                    }
+                    return ' Login to Register This Study ';
+                  })()}
+                </React.Fragment>
+              </Button>
+            ) : null}
           {props.modalData[
             studyRegistrationConfig.studyRegistrationValidationField
-          ] &&
-          props.user.username &&
-          userHasMethodForServiceOnResource(
+          ]
+          && props.user.username
+          && userHasMethodForServiceOnResource(
             'access',
             'study_registration',
             props.modalData[
               studyRegistrationConfig.studyRegistrationAccessCheckField
             ],
-            props.userAuthMapping
+            props.userAuthMapping,
           ) ? (
             // user is authenticated, VLMD submission button should be visible only on registered studies that they have access to
-            <Button
-              type='text'
-              className='discovery-modal__request-button'
-              onClick={() =>
-                handleRedirectClick(
+              <Button
+                type='text'
+                className='discovery-modal__request-button'
+                onClick={() => handleRedirectClick(
                   '/data-dictionary-submission',
                   props.modalData[
                     studyRegistrationConfig.studyRegistrationAccessCheckField
@@ -514,34 +508,32 @@ const DiscoveryDetails = (props: Props) => {
                   Object.keys(
                     props.modalData[
                       studyRegistrationConfig.dataDictionaryField
-                    ] || {}
-                  )
-                )
-              }
-            >
-              <React.Fragment>
-                <AuditOutlined />
-                {' Submit a Data Dictionary '}
-              </React.Fragment>
-            </Button>
-          ) : null}
+                    ] || {},
+                  ),
+                )}
+              >
+                <React.Fragment>
+                  <AuditOutlined />
+                  {' Submit a Data Dictionary '}
+                </React.Fragment>
+              </Button>
+            ) : null}
           {props.modalData[
             studyRegistrationConfig.studyRegistrationValidationField
-          ] &&
-          props.user.username &&
-          !userHasMethodForServiceOnResource(
+          ]
+          && props.user.username
+          && !userHasMethodForServiceOnResource(
             'access',
             'study_registration',
             props.modalData[
               studyRegistrationConfig.studyRegistrationAccessCheckField
             ],
-            props.userAuthMapping
+            props.userAuthMapping,
           ) ? (
-            <Button
-              type='text'
-              className='discovery-modal__request-button'
-              onClick={() =>
-                handleRedirectClick(
+              <Button
+                type='text'
+                className='discovery-modal__request-button'
+                onClick={() => handleRedirectClick(
                   '/data-dictionary-submission/request-access',
                   props.modalData[
                     studyRegistrationConfig.studyRegistrationAccessCheckField
@@ -550,28 +542,27 @@ const DiscoveryDetails = (props: Props) => {
                   props.modalData.project_number,
                   props.modalData[
                     studyRegistrationConfig.studyRegistrationUIDField
-                  ]
-                )
-              }
-            >
-              {' '}
-              <React.Fragment>
-                <AuditOutlined />
-                {' Request Access to Submit a Data Dictionary '}
-              </React.Fragment>
-            </Button>
-          ) : null}
+                  ],
+                )}
+              >
+                {' '}
+                <React.Fragment>
+                  <AuditOutlined />
+                  {' Request Access to Submit a Data Dictionary '}
+                </React.Fragment>
+              </Button>
+            ) : null}
 
           {props.modalData[
             studyRegistrationConfig.studyRegistrationValidationField
           ] && !props.user.username ? ( // user is NOT authenticated, Login in to VLMD submission button should be visible only on registered studies
-            <Button type='text' onClick={() => handleRedirectToLoginClick()}>
-              <React.Fragment>
-                <AuditOutlined />
-                {' Login to Submit a Data Dictionary '}
-              </React.Fragment>
-            </Button>
-          ) : null}
+              <Button type='text' onClick={() => handleRedirectToLoginClick()}>
+                <React.Fragment>
+                  <AuditOutlined />
+                  {' Login to Submit a Data Dictionary '}
+                </React.Fragment>
+              </Button>
+            ) : null}
           <Button
             type='text'
             onClick={() => {
@@ -613,11 +604,11 @@ const DiscoveryDetails = (props: Props) => {
                       props.user,
                       group,
                       props.config,
-                      props.modalData
+                      props.modalData,
                     )}
                   </div>
                 )),
-              })
+              }),
             )}
           />
         </div>
@@ -625,44 +616,44 @@ const DiscoveryDetails = (props: Props) => {
         <React.Fragment>
           <div className='discovery-modal-content'>
             {header}
-            {props.config.features.authorization.enabled &&
-              props.modalData[accessibleFieldName] !==
-                AccessLevel.NOT_AVAILABLE &&
-              props.modalData[accessibleFieldName] !== AccessLevel.PENDING &&
-              (props.modalData[accessibleFieldName] ===
-              AccessLevel.ACCESSIBLE ? (
-                <Alert
-                  className='discovery-modal__access-alert'
-                  type='success'
-                  message={
-                    <React.Fragment>
-                      <UnlockOutlined /> You have access to this data.
-                    </React.Fragment>
-                  }
-                />
-              ) : (
-                <Alert
-                  className='discovery-modal__access-alert'
-                  type='warning'
-                  message={
-                    <React.Fragment>
+            {props.config.features.authorization.enabled
+              && props.modalData[accessibleFieldName]
+                !== AccessLevel.NOT_AVAILABLE
+              && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
+              && (props.modalData[accessibleFieldName]
+              === AccessLevel.ACCESSIBLE ? (
+                  <Alert
+                    className='discovery-modal__access-alert'
+                    type='success'
+                    message={(
+                      <React.Fragment>
+                        <UnlockOutlined /> You have access to this data.
+                      </React.Fragment>
+                    )}
+                  />
+                ) : (
+                  <Alert
+                    className='discovery-modal__access-alert'
+                    type='warning'
+                    message={(
+                      <React.Fragment>
                       You do not have access to this data.
-                    </React.Fragment>
-                  }
-                />
-              ))}
+                      </React.Fragment>
+                    )}
+                  />
+                ))}
             <div className='discovery-modal-attributes-container'>
               {props.config.studyPageFields.fieldsToShow.map(
                 (fieldGroup, i) => {
                   let groupWidth;
                   switch (fieldGroup.groupWidth) {
-                    case 'full':
-                      groupWidth = 'fullwidth';
-                      break;
-                    case 'half':
-                    default:
-                      groupWidth = 'halfwidth';
-                      break;
+                  case 'full':
+                    groupWidth = 'fullwidth';
+                    break;
+                  case 'half':
+                  default:
+                    groupWidth = 'halfwidth';
+                    break;
                   }
                   return (
                     <div
@@ -677,12 +668,11 @@ const DiscoveryDetails = (props: Props) => {
                       {fieldGroup.fields.map((field) => {
                         const fieldValue = jsonpath.query(
                           props.modalData,
-                          `$.${field.field}`
+                          `$.${field.field}`,
                         );
-                        const isFieldValueEmpty =
-                          !fieldValue ||
-                          fieldValue.length === 0 ||
-                          fieldValue.every((val) => val === '');
+                        const isFieldValueEmpty = !fieldValue
+                          || fieldValue.length === 0
+                          || fieldValue.every((val) => val === '');
                         // display nothing if selected study doesn't have this field
                         // and this field isn't configured to show a default value
                         if (isFieldValueEmpty && !field.includeIfNotAvailable) {
@@ -690,9 +680,8 @@ const DiscoveryDetails = (props: Props) => {
                         }
                         // If the field contains a particularly long string, add some special styles
                         const MULTILINE_FIELD_CHARLIMIT = 200;
-                        const multiline =
-                          fieldValue[0] &&
-                          fieldValue[0].length > MULTILINE_FIELD_CHARLIMIT;
+                        const multiline = fieldValue[0]
+                          && fieldValue[0].length > MULTILINE_FIELD_CHARLIMIT;
                         const renderedFieldContent = (
                           <div
                             key={field.name}
@@ -712,10 +701,10 @@ const DiscoveryDetails = (props: Props) => {
                             >
                               {!isFieldValueEmpty
                                 ? renderFieldContent(
-                                    fieldValue,
-                                    field.contentType,
-                                    props.config
-                                  )
+                                  fieldValue,
+                                  field.contentType,
+                                  props.config,
+                                )
                                 : field.valueIfNotAvailable || 'Not available'}
                             </span>
                           </div>
@@ -735,67 +724,67 @@ const DiscoveryDetails = (props: Props) => {
                       })}
                     </div>
                   );
-                }
+                },
               )}
             </div>
-            {props.config.studyPageFields.downloadLinks &&
-            props.config.studyPageFields.downloadLinks.field &&
-            props.modalData[
+            {props.config.studyPageFields.downloadLinks
+            && props.config.studyPageFields.downloadLinks.field
+            && props.modalData[
               props.config.studyPageFields.downloadLinks.field
             ] ? (
-              <Collapse
-                className='discovery-modal__download-panel'
-                defaultActiveKey={['1']}
-              >
-                <Panel
-                  className='discovery-modal__download-panel-header'
-                  header={
-                    props.config.studyPageFields.downloadLinks.name ||
-                    'Data Download Links'
-                  }
-                  key='1'
+                <Collapse
+                  className='discovery-modal__download-panel'
+                  defaultActiveKey={['1']}
                 >
-                  <List
-                    itemLayout='horizontal'
-                    dataSource={
-                      props.modalData[
-                        props.config.studyPageFields.downloadLinks.field
-                      ]
+                  <Panel
+                    className='discovery-modal__download-panel-header'
+                    header={
+                      props.config.studyPageFields.downloadLinks.name
+                    || 'Data Download Links'
                     }
-                    renderItem={(item: ListItem) => (
-                      <List.Item
-                        actions={[
-                          <Button
-                            className='discovery-modal__download-button'
-                            href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
-                            target='_blank'
-                            type='text'
-                            // disable button if data has no GUID
-                            disabled={!item.guid}
-                            icon={<DownloadOutlined />}
-                          >
+                    key='1'
+                  >
+                    <List
+                      itemLayout='horizontal'
+                      dataSource={
+                        props.modalData[
+                          props.config.studyPageFields.downloadLinks.field
+                        ]
+                      }
+                      renderItem={(item: ListItem) => (
+                        <List.Item
+                          actions={[
+                            <Button
+                              className='discovery-modal__download-button'
+                              href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
+                              target='_blank'
+                              type='text'
+                              // disable button if data has no GUID
+                              disabled={!item.guid}
+                              icon={<DownloadOutlined />}
+                            >
                             Download File
-                          </Button>,
-                        ]}
-                      >
-                        <List.Item.Meta
-                          title={
-                            <div className='discovery-modal__download-list-title'>
-                              {item.title}
-                            </div>
-                          }
-                          description={
-                            <div className='discovery-modal__download-list-description'>
-                              {item.description || ''}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </Panel>
-              </Collapse>
-            ) : null}
+                            </Button>,
+                          ]}
+                        >
+                          <List.Item.Meta
+                            title={(
+                              <div className='discovery-modal__download-list-title'>
+                                {item.title}
+                              </div>
+                            )}
+                            description={(
+                              <div className='discovery-modal__download-list-description'>
+                                {item.description || ''}
+                              </div>
+                            )}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Panel>
+                </Collapse>
+              ) : null}
           </div>
         </React.Fragment>
       )}
