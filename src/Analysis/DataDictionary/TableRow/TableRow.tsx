@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Grid, Table } from '@mantine/core';
+import { Button, Grid } from '@mantine/core';
 import { IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
 import PreviewChart from './PreviewChart/PreviewChart';
 import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
 import NonNumericDetailsTable from './NonNumericDetails/NonNumericDetailsTable';
+import { checkIfCellContainsSearchTerm } from './CheckSearchTermUtils';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -20,22 +21,6 @@ const TableRow = ({
 }: ITableRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  const checkIfCellContainsSearchTerm = (
-    cellText: string | number | null | undefined
-  ) => {
-    if (
-      searchInputValue &&
-      cellText &&
-      cellText
-        .toString()
-        .toLowerCase()
-        .includes(searchInputValue.toLowerCase().trim())
-    ) {
-      return 'search-highlight';
-    }
-    return '';
-  };
-
   const checkIfDetailTableContainsSearchTerm = () => {
     let searchTermFound = false;
     const hiddenKeys = [
@@ -45,7 +30,9 @@ const TableRow = ({
       'standardDeviation',
     ];
     hiddenKeys.forEach((keyString) => {
-      if (checkIfCellContainsSearchTerm(rowObject[keyString])) {
+      if (
+        checkIfCellContainsSearchTerm(rowObject[keyString], searchInputValue)
+      ) {
         searchTermFound = true;
       }
     });
@@ -56,7 +43,7 @@ const TableRow = ({
     let searchTermFound = false;
     rowObject.valueSummary.forEach((arrObj) => {
       Object.values(arrObj).forEach((arrObjVal) => {
-        if (checkIfCellContainsSearchTerm(arrObjVal)) {
+        if (checkIfCellContainsSearchTerm(arrObjVal, searchInputValue)) {
           searchTermFound = true;
         }
       });
@@ -98,33 +85,42 @@ const TableRow = ({
             </Button>
           )}
         </td>
-        <td className={checkIfCellContainsSearchTerm(rowObject.vocabularyID)}>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.vocabularyID,
+            searchInputValue,
+          )}
+        >
           <div className={'td-container '}>{rowObject.vocabularyID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptID.toString()
+            rowObject.conceptID.toString(),
+            searchInputValue,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptCode.toString()
+            rowObject.conceptCode.toString(),
+            searchInputValue,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptName.toString()
+            rowObject.conceptName.toString(),
+            searchInputValue,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
-            rowObject.conceptClassID.toString()
+            rowObject.conceptClassID.toString(),
+            searchInputValue,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -132,10 +128,12 @@ const TableRow = ({
         <td
           className={
             checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWithVariable
-            ) ||
-            checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWithVariablePercent
+              rowObject.numberOfPeopleWithVariable,
+              searchInputValue,
+            )
+            || checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWithVariablePercent,
+              searchInputValue,
             )
           }
         >
@@ -148,10 +146,12 @@ const TableRow = ({
         <td
           className={`${
             checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWhereValueIsFilled
-            ) ||
-            checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWhereValueIsFilledPercent
+              rowObject.numberOfPeopleWhereValueIsFilled,
+              searchInputValue,
+            )
+            || checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsFilledPercent,
+              searchInputValue,
             )
           } `}
         >
@@ -164,10 +164,12 @@ const TableRow = ({
         <td
           className={
             checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWhereValueIsNull
-            ) ||
-            checkIfCellContainsSearchTerm(
-              rowObject.numberOfPeopleWhereValueIsNullPercent
+              rowObject.numberOfPeopleWhereValueIsNull,
+              searchInputValue,
+            )
+            || checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsNullPercent,
+              searchInputValue,
             )
           }
         >
@@ -177,11 +179,16 @@ const TableRow = ({
             {rowObject.numberOfPeopleWhereValueIsNullPercent}%
           </div>
         </td>
-        <td className={checkIfCellContainsSearchTerm(rowObject.valueStoredAs)}>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.valueStoredAs,
+            searchInputValue,
+          )}
+        >
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
         <td
-          className={'preview-chart ' + checkIfHiddenCellsContainSearchTerm()}
+          className={`preview-chart ${checkIfHiddenCellsContainSearchTerm()}`}
         >
           <div className={'td-container '}>
             <PreviewChart />
@@ -197,17 +204,13 @@ const TableRow = ({
                   {rowObject.valueStoredAs !== 'Number' && (
                     <NonNumericDetailsTable
                       rowObject={rowObject}
-                      checkIfCellContainsSearchTerm={
-                        checkIfCellContainsSearchTerm
-                      }
+                      searchInputValue={searchInputValue}
                     />
                   )}
                   {rowObject.valueStoredAs === 'Number' && (
                     <NumericDetailsTable
                       rowObject={rowObject}
-                      checkIfCellContainsSearchTerm={
-                        checkIfCellContainsSearchTerm
-                      }
+                      searchInputValue={searchInputValue}
                     />
                   )}
                 </div>

@@ -25,7 +25,7 @@ const DataDictionaryContainer = () => {
   const [activePage, setActivePage] = useState(1);
   const paginatedData = data.slice(
     entriesShown * activePage - entriesShown,
-    entriesShown * activePage
+    entriesShown * activePage,
   );
 
   const rows = paginatedData.map((rowObject, i) => (
@@ -69,7 +69,10 @@ const DataDictionaryContainer = () => {
   };
 
   return (
-    <div className='data-dictionary-container'>
+    <div
+      className='data-dictionary-container'
+      data-testid='data-dictionary-container'
+    >
       <Table>
         <SearchBar
           columnsShown={columnsShown}

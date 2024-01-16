@@ -30,12 +30,13 @@ const SearchBar = ({
           value.forEach((arrItem) => {
             Object.values(arrItem).some((arrObjValue) => {
               if (
-                (typeof arrObjValue === 'string' ||
-                  typeof arrObjValue === 'number') &&
-                arrObjValue.toString().toLowerCase().includes(searchQuery)
+                (typeof arrObjValue === 'string'
+                  || typeof arrObjValue === 'number')
+                && arrObjValue.toString().toLowerCase().includes(searchQuery)
               ) {
                 doesArrayContainsSearchQuery = true;
               }
+              return null;
             });
           });
           return doesArrayContainsSearchQuery;
@@ -51,35 +52,33 @@ const SearchBar = ({
   };
 
   return (
-    <thead className={'search-bar'}>
+    <thead className={'search-bar'} data-testid='search-bar'>
       <tr>
         <th colSpan={columnsShown}>
-          <div className='search-bar'>
-            <div className='search-bar-container'>
-              <Input
-                rightSection={
-                  searchInputValue ? (
-                    <button
-                      type='button'
-                      className='search-bar-input-control'
-                      onClick={() => setSearchInputValue('')}
-                      onKeyPress={(event) => {
-                        if (event.key === 'Enter') {
-                          setSearchInputValue('');
-                        }
-                      }}
-                    >
-                      x
-                    </button>
-                  ) : (
-                    <SearchIcon />
-                  )
-                }
-                placeholder='Search'
-                value={searchInputValue}
-                onChange={(e) => handleInputChange(e)}
-              />
-            </div>
+          <div className='search-bar-container'>
+            <Input
+              rightSection={
+                searchInputValue ? (
+                  <button
+                    type='button'
+                    className='search-bar-input-control'
+                    onClick={() => setSearchInputValue('')}
+                    onKeyPress={(event) => {
+                      if (event.key === 'Enter') {
+                        setSearchInputValue('');
+                      }
+                    }}
+                  >
+                    x
+                  </button>
+                ) : (
+                  <SearchIcon />
+                )
+              }
+              placeholder='Search'
+              value={searchInputValue}
+              onChange={(e) => handleInputChange(e)}
+            />
           </div>
         </th>
       </tr>

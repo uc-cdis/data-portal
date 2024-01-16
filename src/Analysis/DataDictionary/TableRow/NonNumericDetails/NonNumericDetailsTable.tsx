@@ -1,11 +1,9 @@
 import React from 'react';
 import { Table } from '@mantine/core';
 import { IValueSummary } from '../../Interfaces/Interfaces';
+import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
 
-const NonNumericDetailsTable = ({
-  rowObject,
-  checkIfCellContainsSearchTerm,
-}) => (
+const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
   <Table striped>
     <thead>
       <tr>
@@ -16,34 +14,44 @@ const NonNumericDetailsTable = ({
       </tr>
     </thead>
     <tbody>
-      {rowObject.valueSummary.map((valueSummaryObj: IValueSummary) => (
-        <tr>
-          <td
-            className={checkIfCellContainsSearchTerm(
-              valueSummaryObj.valueAsString
-            )}
-          >
-            {valueSummaryObj.valueAsString}
-          </td>
-          <td
-            className={checkIfCellContainsSearchTerm(
-              valueSummaryObj.valueAsConceptID
-            )}
-          >
-            {valueSummaryObj.valueAsConceptID}
-          </td>
-          <td className={checkIfCellContainsSearchTerm(valueSummaryObj.name)}>
-            {valueSummaryObj.name}
-          </td>
-          <td
-            className={checkIfCellContainsSearchTerm(
-              valueSummaryObj.personCount
-            )}
-          >
-            {valueSummaryObj.personCount}
-          </td>
-        </tr>
-      ))}
+      {rowObject.valueSummary.map(
+        (valueSummaryObj: IValueSummary, i: number) => (
+          <tr key={i}>
+            <td
+              className={checkIfCellContainsSearchTerm(
+                valueSummaryObj.valueAsString,
+                searchInputValue,
+              )}
+            >
+              {valueSummaryObj.valueAsString}
+            </td>
+            <td
+              className={checkIfCellContainsSearchTerm(
+                valueSummaryObj.valueAsConceptID,
+                searchInputValue,
+              )}
+            >
+              {valueSummaryObj.valueAsConceptID}
+            </td>
+            <td
+              className={checkIfCellContainsSearchTerm(
+                valueSummaryObj.name,
+                searchInputValue,
+              )}
+            >
+              {valueSummaryObj.name}
+            </td>
+            <td
+              className={checkIfCellContainsSearchTerm(
+                valueSummaryObj.personCount,
+                searchInputValue,
+              )}
+            >
+              {valueSummaryObj.personCount}
+            </td>
+          </tr>
+        ),
+      )}
     </tbody>
   </Table>
 );

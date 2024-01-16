@@ -16,7 +16,7 @@ const PaginationControls = ({
   setActivePage,
   totalEntriesAvailable,
 }: IPaginationControlsProps): JSX.Element => (
-  <div className='pagination-wrapper'>
+  <div className='pagination-wrapper' data-testid='pagination-controls'>
     <SimpleGrid cols={2}>
       <div className='entries-quantity-select'>
         <label htmlFor='entriesSelect'>Show</label>

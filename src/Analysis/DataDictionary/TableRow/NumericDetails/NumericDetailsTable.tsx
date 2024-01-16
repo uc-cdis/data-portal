@@ -1,7 +1,8 @@
 import React from 'react';
 import { Table } from '@mantine/core';
+import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
 
-const NumericDetailsTable = ({ rowObject, checkIfCellContainsSearchTerm }) => (
+const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
   <Table striped>
     <thead>
       <tr>
@@ -13,17 +14,35 @@ const NumericDetailsTable = ({ rowObject, checkIfCellContainsSearchTerm }) => (
     </thead>
     <tbody>
       <tr>
-        <td className={checkIfCellContainsSearchTerm(rowObject.minValue)}>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.minValue,
+            searchInputValue,
+          )}
+        >
           <div className={'td-container'}>{rowObject.minValue}</div>
         </td>
-        <td className={checkIfCellContainsSearchTerm(rowObject.maxValue)}>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.maxValue,
+            searchInputValue,
+          )}
+        >
           <div className={'td-container'}>{rowObject.maxValue}</div>
         </td>
-        <td className={checkIfCellContainsSearchTerm(rowObject.meanValue)}>
+        <td
+          className={checkIfCellContainsSearchTerm(
+            rowObject.meanValue,
+            searchInputValue,
+          )}
+        >
           <div className={'td-container'}>{rowObject.meanValue}</div>
         </td>
         <td
-          className={checkIfCellContainsSearchTerm(rowObject.standardDeviation)}
+          className={checkIfCellContainsSearchTerm(
+            rowObject.standardDeviation,
+            searchInputValue,
+          )}
         >
           <div className={'td-container'}>{rowObject.standardDeviation}</div>
         </td>

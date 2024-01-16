@@ -106,7 +106,7 @@ const headerItems = [
 ];
 
 const ColumnHeaders = ({ handleSort, sortConfig }: ITableHeadersProps) => (
-  <thead className={'column-headers'}>
+  <thead className={'column-headers'} data-testid='column-headers'>
     <tr>
       {headerItems.map((item) => (
         <Header

@@ -12,7 +12,11 @@ const EntriesHeader = ({
   total,
   colspan,
 }: IEntriesHeaderProps) => (
-  <caption colSpan={colspan} className='entries-header'>
+  <caption
+    colSpan={colspan}
+    className='entries-header'
+    data-testid='entries-header'
+  >
     Showing <strong>{start.toLocaleString()}</strong> to
     <strong> {stop.toLocaleString()}</strong> of
     <strong> {total.toLocaleString()}</strong> entries
