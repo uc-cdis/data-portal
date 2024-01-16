@@ -2,11 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRow from './TableRow';
-import TableData from '../TestData/TableData';
 import { IRowData } from '../Interfaces/Interfaces';
 
 describe('TableRow test', () => {
-  const initialSearchInputValue = 'searchTerm';
   const rowData: IRowData = {
     vocabularyID: 'histogram_nonqualitative_hotdog_gp01ADjyWo',
     conceptID: 10,
@@ -96,5 +94,5 @@ describe('TableRow test', () => {
     fireEvent.click(getByTestId('expandable-td'));
 
     expect(queryByTestId('grid')).toBeInTheDocument(); // Adjust the test id based on your component implementation
-  });*/
+  }); */
 });
