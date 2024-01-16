@@ -95,7 +95,7 @@ class IndexPageComponent extends React.Component {
             </MediaQuery>
             <div className='high-light nct-right-box'>
               <p><strong>Data Sharing and Submission</strong></p>
-              <p>If you are interested in making your data available via this platform, please <a href={`mailto:${components.login.email}`}>contact us.</a></p>
+              <p>If you are interested in making your data available via this platform, please contact <a href="mailto:accessclinicaldatasupport@niaid.nih.gov">accessclinicaldatasupport@niaid.nih.gov</a></p>
             </div>
           </div>
         </div>
