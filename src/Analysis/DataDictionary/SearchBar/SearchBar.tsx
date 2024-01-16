@@ -19,7 +19,6 @@ const SearchBar = ({
   setSearchInputValue,
 }: ISearchBarProps) => {
   useEffect(() => {
-    console.log('TableData.length', TableData.length);
     const filteredData = TableData.filter((item) => {
       const searchQuery = searchInputValue.toLowerCase().trim();
       return Object.values(item).some((value) => {
