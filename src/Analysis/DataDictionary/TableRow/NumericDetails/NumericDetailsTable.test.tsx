@@ -22,7 +22,7 @@ describe('NumericDetailsTable', () => {
       <NumericDetailsTable
         rowObject={rowObject}
         checkIfCellContainsSearchTerm={() => {}}
-      />
+      />,
     );
 
     headers.forEach((header) => {
@@ -35,7 +35,7 @@ describe('NumericDetailsTable', () => {
       <NumericDetailsTable
         rowObject={rowObject}
         checkIfCellContainsSearchTerm={() => {}}
-      />
+      />,
     );
 
     Object.values(rowObject).forEach((value) => {

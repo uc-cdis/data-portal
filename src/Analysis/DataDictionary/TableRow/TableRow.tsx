@@ -6,7 +6,11 @@ import CollapseIcon from '../Icons/CollapseIcon';
 import PreviewChart from './PreviewChart/PreviewChart';
 import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
 import NonNumericDetailsTable from './NonNumericDetails/NonNumericDetailsTable';
-import { checkIfCellContainsSearchTerm } from './CheckSearchTermUtils';
+import {
+  checkIfCellContainsSearchTerm,
+  checkIfChartContainsSearchTerm,
+  checkIfHiddenCellsContainSearchTerm,
+} from './CheckSearchTermUtils';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -20,45 +24,6 @@ const TableRow = ({
   searchInputValue,
 }: ITableRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
-
-  const checkIfDetailTableContainsSearchTerm = () => {
-    let searchTermFound = false;
-    const hiddenKeys = [
-      'minValue',
-      'maxValue',
-      'meanValue',
-      'standardDeviation',
-    ];
-    hiddenKeys.forEach((keyString) => {
-      if (
-        checkIfCellContainsSearchTerm(rowObject[keyString], searchInputValue)
-      ) {
-        searchTermFound = true;
-      }
-    });
-    if (searchTermFound) return 'search-highlight';
-    return '';
-  };
-  const checkIfChartContainsSearchTerm = () => {
-    let searchTermFound = false;
-    rowObject.valueSummary.forEach((arrObj) => {
-      Object.values(arrObj).forEach((arrObjVal) => {
-        if (checkIfCellContainsSearchTerm(arrObjVal, searchInputValue)) {
-          searchTermFound = true;
-        }
-      });
-    });
-    if (searchTermFound) {
-      return 'search-highlight';
-    }
-    return '';
-  };
-
-  const checkIfHiddenCellsContainSearchTerm = () => {
-    if (checkIfDetailTableContainsSearchTerm()) return 'search-highlight';
-    if (checkIfChartContainsSearchTerm()) return 'search-highlight';
-    return '';
-  };
 
   return (
     <React.Fragment key={rowObject.vocabularyID}>
@@ -188,7 +153,8 @@ const TableRow = ({
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
         <td
-          className={`preview-chart ${checkIfHiddenCellsContainSearchTerm()}`}
+          className={`preview-chart
+          ${checkIfHiddenCellsContainSearchTerm(rowObject, searchInputValue)}`}
         >
           <div className={'td-container '}>
             <PreviewChart />
@@ -217,7 +183,11 @@ const TableRow = ({
               </Grid.Col>
               <Grid.Col span={7}>
                 <div
-                  className={`expanded-container chart-details-wrapper ${checkIfChartContainsSearchTerm()}`}
+                  className={`expanded-container chart-details-wrapper
+                  ${checkIfChartContainsSearchTerm(
+      rowObject,
+      searchInputValue,
+    )}`}
                 >
                   <h3>Value Summary</h3>
                   {JSON.stringify(rowObject.valueSummary)}
