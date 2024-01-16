@@ -6,6 +6,7 @@ const ExpandIcon = () => (
     width='12'
     height='12'
     viewBox='0 0 12 12'
+    data-testid='expand-icon'
   >
     <g transform='translate(0 12) rotate(-90)'>
       <g fill='#fff' stroke='#707070' strokeWidth='1' opacity='0'>
