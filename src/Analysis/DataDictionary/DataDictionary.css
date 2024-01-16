@@ -18,15 +18,40 @@
   background: #cfdbe6;
 }
 
+/* Column and Entries Headers */
 .data-dictionary-container table thead.column-headers {
   background: #e9eef2;
 }
 
-.data-dictionary-container table .column-headers th {
+.data-dictionary-container table thead.column-headers th {
   line-height: 1.2;
   cursor: pointer;
   user-select: none;
   transition: 0.3s;
+}
+
+.data-dictionary-container table caption.entries-header th {
+  cursor: default;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.data-dictionary-container .column-header th:hover {
+  background-color: #f5f5f5;
+}
+
+.data-dictionary-container table caption.entries-header {
+  background-color: #cfdbe6;
+  color: black;
+  padding: 8px 0 7px 10px;
+  width: 100%;
+  font-size: 12px;
+  font-family: inherit;
+  user-select: inherit;
+}
+
+.data-dictionary-container table caption.entries-header th:hover {
+  background-color: #cfdbe6;
 }
 
 .data-dictionary-container .table-column-sorters {
@@ -34,10 +59,6 @@
   flex: auto;
   align-items: center;
   justify-content: space-between;
-}
-
-.data-dictionary-container .column-header th:hover {
-  background-color: #f5f5f5;
 }
 
 .data-dictionary-container th.not-sortable:hover {
@@ -72,34 +93,13 @@
   fill: #1890ff;
 }
 
-/*Entries Header*/
-.data-dictionary-container .entries-header {
-  background-color: #cfdbe6;
-  color: black;
-  padding: 8px 0 7px 10px;
-  width: 100%;
-  font-size: 12px;
-  font-family: inherit;
-  user-select: inherit;
-}
-
-.data-dictionary-container .entries-header th {
-  cursor: default;
-  font-weight: normal;
-  font-size: 12px;
-}
-
-.data-dictionary-container .entries-header th:hover {
-  background-color: #cfdbe6;
-}
-
 /* Expandable rows */
 .data-dictionary-container tr.expandable > td:first-child {
   padding: 0;
 }
 
 .data-dictionary-container tr td div.expandable {
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
   height: 0;
   transition: height 0.3s, max-height 0.3s;
@@ -124,7 +124,7 @@
 }
 
 .data-dictionary-container
-  .chart-details-wrapper.expanded-container.search-highlight {
+.chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }

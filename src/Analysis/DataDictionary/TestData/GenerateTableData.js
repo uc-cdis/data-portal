@@ -3,7 +3,7 @@
 // Node GenerateTableData.js
 
 const fs = require('fs');
-const numberOfEntries = 6000;
+const numberOfEntries = 600;
 const maxValueSummarySize = 25;
 const fileName = 'TableData.ts';
 
@@ -38,7 +38,7 @@ const funName = () => {
 const randomNum = () => Math.floor(Math.random() * 100) + 1;
 
 const GenerateEntry = (type, i) => {
-  if (type === 'nonqualitative') {
+  if (type === 'histogram') {
     // histogram, nonqualitative
     return {
       vocabularyID: `histogram_nonqualitative_${funName()}_${randomString()}`,
