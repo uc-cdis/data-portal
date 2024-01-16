@@ -69,7 +69,7 @@ const DataDictionaryContainer = () => {
   };
 
   return (
-    <div className='dataDictionary'>
+    <div className='data-dictionary-container'>
       <Table>
         <SearchBar
           columnsShown={columnsShown}
@@ -82,7 +82,7 @@ const DataDictionaryContainer = () => {
         <tbody>
           {rows}
           {!data.length && (
-            <tr style={{ textAlign: 'center' }}>
+            <tr className='no-data-found'>
               <td colSpan={columnsShown}>
                 <h2>No Data Found</h2>
               </td>

@@ -1,67 +1,79 @@
-.dataDictionary {
+.data-dictionary-container {
   width: 100%;
-  max-width: 100%; /* set the maximum width of the table */
-  overflow-x: auto; /* enable horizontal scrolling when necessary */
+  max-width: 100%;
+  overflow-x: auto;
   height: auto;
   overflow-y: hidden;
 }
 
-.dataDictionary table tbody tr:nth-child(4n + 3) {
+.data-dictionary-container .no-data-found {
+  text-align: center;
+}
+
+.data-dictionary-container table tbody tr:nth-child(4n + 3) {
   background-color: #fafafb;
 }
 
-.dataDictionary table thead.search-bar {
+.data-dictionary-container table thead.search-bar {
   background: #cfdbe6;
 }
 
-.dataDictionary table thead.column-headers {
+.data-dictionary-container table thead.column-headers {
   background: #e9eef2;
 }
-.dataDictionary table .column-headers th {
+
+.data-dictionary-container table .column-headers th {
   line-height: 1.2;
   cursor: pointer;
   user-select: none;
   transition: 0.3s;
 }
-.dataDictionary .table-column-sorters {
+
+.data-dictionary-container .table-column-sorters {
   display: flex;
   flex: auto;
   align-items: center;
   justify-content: space-between;
 }
-.dataDictionary .column-header th:hover {
+
+.data-dictionary-container .column-header th:hover {
   background-color: #f5f5f5;
 }
-.dataDictionary th.not-sortable:hover {
+
+.data-dictionary-container th.not-sortable:hover {
   background-color: inherit;
   cursor: inherit;
 }
-.dataDictionary .table-column-sorter-inner {
+
+.data-dictionary-container .table-column-sorter-inner {
   padding-left: 10px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
 }
-.dataDictionary .table-column-sorter-inner span {
+
+.data-dictionary-container .table-column-sorter-inner span {
   font-size: 11px;
   line-height: 0;
   display: inline-block;
 }
 
-.dataDictionary .table-column-sorter-down {
+.data-dictionary-container .table-column-sorter-down {
   margin-top: 4px;
 }
-.dataDictionary .table-column-sorter-down svg path,
-.dataDictionary .table-column-sorter-up svg path {
+
+.data-dictionary-container .table-column-sorter-down svg path,
+.data-dictionary-container .table-column-sorter-up svg path {
   fill: #ccc;
 }
-.dataDictionary .table-column-sorter-down.active svg path,
-.dataDictionary .table-column-sorter-up.active svg path {
+
+.data-dictionary-container .table-column-sorter-down.active svg path,
+.data-dictionary-container .table-column-sorter-up.active svg path {
   fill: #1890ff;
 }
 
 /*Entries Header*/
-.dataDictionary .entries-header {
+.data-dictionary-container .entries-header {
   background-color: #cfdbe6;
   color: black;
   padding: 8px 0 7px 10px;
@@ -70,33 +82,36 @@
   font-family: inherit;
   user-select: inherit;
 }
-.dataDictionary .entries-header th {
+
+.data-dictionary-container .entries-header th {
   cursor: default;
   font-weight: normal;
   font-size: 12px;
 }
-.dataDictionary .entries-header th:hover {
+
+.data-dictionary-container .entries-header th:hover {
   background-color: #cfdbe6;
 }
 
 /* Expandable rows */
-.dataDictionary tr.expandable > td:first-child {
+.data-dictionary-container tr.expandable > td:first-child {
   padding: 0;
 }
 
-.dataDictionary tr td div.expandable {
+.data-dictionary-container tr td div.expandable {
   max-height: 0px;
   overflow: hidden;
   height: 0;
   transition: height 0.3s, max-height 0.3s;
 }
 
-.dataDictionary tr td div.expandable.expanded {
+.data-dictionary-container tr td div.expandable.expanded {
   max-height: 321px;
   height: 321px;
   background: #e2e2e3;
 }
-.dataDictionary .expanded-container {
+
+.data-dictionary-container .expanded-container {
   background: #fff;
   height: 290px;
   padding: 16px;
@@ -104,19 +119,22 @@
   overflow-y: auto;
 }
 
-.dataDictionary .chart-details-wrapper {
+.data-dictionary-container .chart-details-wrapper {
   background: #fff;
 }
-.dataDictionary .chart-details-wrapper.expanded-container.search-highlight {
+
+.data-dictionary-container
+  .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }
 
-.dataDictionary .td-container {
+.data-dictionary-container .td-container {
   width: 80%;
   word-wrap: break-word;
 }
-.dataDictionary .search-highlight,
+
+.data-dictionary-container .search-highlight,
 table > tbody > tr > td.search-highlight:last-of-type {
   background: #fcefe4;
   background: linear-gradient(
@@ -129,20 +147,23 @@ table > tbody > tr > td.search-highlight:last-of-type {
     transparent
   );
 }
-.dataDictionary .search-highlight,
+
+.data-dictionary-container .search-highlight,
 table > tbody > tr > td.preview-chart {
   min-width: 145px;
 }
 
 /* Search Bar */
-.search-bar {
+.data-dictionary-container .search-bar {
   background: #cfdbe6;
 }
-.search-bar-container {
+
+.data-dictionary-container .search-bar-container {
   width: 425px;
   padding: 6px 0 6px 0;
 }
-.search-bar-input-control {
+
+.data-dictionary-container .search-bar-input-control {
   display: block;
   cursor: pointer;
   font-size: 15px;
@@ -157,23 +178,26 @@ table > tbody > tr > td.preview-chart {
   opacity: 70%;
   padding-bottom: 2px;
 }
+
 /* Pagination */
-.dataDictionary .pagination-wrapper button {
+.data-dictionary-container .pagination-wrapper button {
   width: unset;
   transform: scale(0.9);
   padding: 0;
 }
-.dataDictionary .pagination-container {
+
+.data-dictionary-container .pagination-container {
   width: 450px;
   margin-left: auto;
 }
-.dataDictionary .pagination-container div {
+
+.data-dictionary-container .pagination-container div {
   float: right;
   color: #333333;
   font-size: 12px;
 }
 
-.dataDictionary .entries-quantity-select select {
+.data-dictionary-container .entries-quantity-select select {
   margin: 0 8px 0 5px;
   background-color: #fff;
   border: none;
