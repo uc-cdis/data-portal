@@ -8,7 +8,6 @@ const CaretDown = (): JSX.Element => (
     viewBox='0 0 7.998 4'
   >
     <path
-      id='caret-down'
       d='M1.332,13.5H8.254a.469.469,0,0,1,.379.809L5.174,17.361a.591.591,0,0,1-.761,0L.953,14.309A.469.469,0,0,1,1.332,13.5Z'
       transform='translate(-0.794 -13.5)'
       fill='#9b9b9b'
