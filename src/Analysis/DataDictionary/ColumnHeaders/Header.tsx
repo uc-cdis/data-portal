@@ -33,7 +33,11 @@ const Header = ({
     );
   }
   return (
-    <th key={headerKey} onClick={() => handleSort(headerKey)}>
+    <th
+      data-testid='header'
+      key={headerKey}
+      onClick={() => handleSort(headerKey)}
+    >
       <div className='table-column-sorters'>
         <span className='ant-table-column-title'>{headerJSX}</span>
         <span className='table-column-sorter-inner'>

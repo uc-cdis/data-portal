@@ -15,10 +15,10 @@ describe('EntriesHeader', () => {
     render(
       <table>
         <EntriesHeader {...defaultProps} />
-      </table>
+      </table>,
     );
     expect(screen.getByTestId('entries-header').textContent).toBe(
-      'Showing 1 to 5 of 10 entries'
+      'Showing 1 to 5 of 10 entries',
     );
   });
 });
