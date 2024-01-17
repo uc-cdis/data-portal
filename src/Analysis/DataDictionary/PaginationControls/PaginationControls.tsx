@@ -22,6 +22,7 @@ const PaginationControls = ({
         <label htmlFor='entriesSelect'>Show</label>
         <select
           id='entriesSelect'
+          data-testid='entries-select'
           name='entriesSelect'
           value={entriesShown}
           onChange={(e) => setEntriesShown(Number(e.target.value))}
