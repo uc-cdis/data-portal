@@ -1,13 +1,14 @@
 import React from 'react';
-import { ISortConfig, IHeaderProps } from './Interfaces/Interfaces'; // adjust the import path if necessary
+import {
+  render, fireEvent, screen, cleanup,
+} from '@testing-library/react';
+import { ISortConfig } from '../Interfaces/Interfaces';
 import Header from './Header'; // adjust the import path if necessary
-import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup } from '@testing-library/react';
 
 describe('Header component', () => {
   afterEach(cleanup);
-  const defaultProps: IHeaderProps = {
+  const defaultProps: any = {
     handleSort: jest.fn(),
     headerJSX: <div data-testid='header'>Test Header Text</div>, // adjust the JSX for your headerJSX
     headerKey: 'key1',
@@ -23,26 +24,26 @@ describe('Header component', () => {
             <Header {...defaultProps} />
           </tr>
         </thead>
-      </table>
+      </table>,
     );
     expect(screen.getAllByText('Test Header Text').length).toBeGreaterThan(0);
   });
 
   it(`renders the Header component correctly when sortable is true and
   there is a sort config with ascending direction`, () => {
-    const sortConfig: ISortConfig = {
+    const sortConfig: any = {
       key: 'key1',
       sortKey: 'key1',
       direction: 'ascending',
-    }; // adjust for your use case
-    const { getByTestId } = render(
+    };
+    render(
       <table>
         <thead>
           <tr>
             <Header {...defaultProps} sortConfig={sortConfig} />
           </tr>
         </thead>
-      </table>
+      </table>,
     );
     expect(screen.getAllByText('Test Header Text').length).toBeGreaterThan(0);
     const caretUpArrows = screen.getAllByRole('presentation', {
@@ -51,7 +52,7 @@ describe('Header component', () => {
 
     let activeCaretUp = false;
     caretUpArrows.forEach((caretUpArrow) => {
-      if (caretUpArrow['className'].includes('active')) activeCaretUp = true;
+      if (caretUpArrow.className.includes('active')) activeCaretUp = true;
     });
     expect(activeCaretUp).toBe(true);
   });
@@ -63,14 +64,14 @@ describe('Header component', () => {
       sortKey: 'key1',
       direction: 'descending',
     }; // adjust for your use case
-    const { getByTestId } = render(
+    render(
       <table>
         <thead>
           <tr>
             <Header {...defaultProps} sortConfig={sortConfig} />
           </tr>
         </thead>
-      </table>
+      </table>,
     );
     expect(screen.getAllByText('Test Header Text').length).toBeGreaterThan(0);
     const caretDownArrows = screen.getAllByRole('presentation', {
@@ -79,8 +80,7 @@ describe('Header component', () => {
 
     let activeCaretDown = false;
     caretDownArrows.forEach((caretDownArrow) => {
-      if (caretDownArrow['className'].includes('active'))
-        activeCaretDown = true;
+      if (caretDownArrow.className.includes('active')) activeCaretDown = true;
     });
     expect(activeCaretDown).toBe(true);
   });
@@ -94,7 +94,7 @@ describe('Header component', () => {
             <Header {...defaultProps} handleSort={handleSort} />
           </tr>
         </thead>
-      </table>
+      </table>,
     );
     fireEvent.click(screen.getAllByText('Test Header Text')[0]);
     expect(handleSort).toHaveBeenCalledTimes(1);
