@@ -5,7 +5,6 @@ import {
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
 import TableData from '../TestData/TableData';
-import { IRowData } from '../Interfaces/Interfaces';
 
 const rowObject: any = TableData.data[0];
 const impossibleSearchInputValue = 'ThisStringIsTooLongTooHaveBeenGeneratedByTheTestDataGenerator';
@@ -13,7 +12,7 @@ const impossibleSearchInputValue = 'ThisStringIsTooLongTooHaveBeenGeneratedByThe
 describe('checkIfHiddenCellsContainSearchTerm', () => {
   it(`should return search-highlight if the row object contains the given
   searchInputValue in any of its hidden cells`, () => {
-    const searchInputValue = TableData.data[0].valueSummary[0].name;
+    const searchInputValue = TableData.data[0].valueSummary[0].personCount.toString();
     expect(
       checkIfHiddenCellsContainSearchTerm(rowObject, searchInputValue),
     ).toBe('search-highlight');

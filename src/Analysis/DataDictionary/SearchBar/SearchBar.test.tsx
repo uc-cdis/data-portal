@@ -23,7 +23,7 @@ describe('SearchBar', () => {
           searchInputValue={searchInputValue}
           setSearchInputValue={setSearchInputValue}
         />
-      </table>
+      </table>,
     );
 
     // Simulate input change event
@@ -37,11 +37,8 @@ describe('SearchBar', () => {
     fireEvent.keyPress(input, { key: 'Enter' });
 
     expect(setData).toHaveBeenCalledTimes(1);
-    const filteredData = TableData.filter((item) => {
-      return Object.values(item).some((value) =>
-        value?.toString()?.toLowerCase()?.includes('do')
-      );
-    });
+    const filteredData = TableData.filter((item) => Object.values(item).some((value) => value?.toString()?.toLowerCase()?.includes('do'),
+    ));
     expect(setData).toHaveBeenLastCalledWith(filteredData);
   });
 });
