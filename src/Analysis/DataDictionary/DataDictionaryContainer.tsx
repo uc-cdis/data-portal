@@ -25,7 +25,7 @@ const DataDictionaryContainer = () => {
   const [activePage, setActivePage] = useState(1);
   const paginatedData = data.slice(
     entriesShown * activePage - entriesShown,
-    entriesShown * activePage
+    entriesShown * activePage,
   );
 
   const rows = paginatedData.map((rowObject, i) => (
