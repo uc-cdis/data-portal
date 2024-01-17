@@ -54,7 +54,7 @@ describe('TableRow test', () => {
             searchInputValue={''}
           />
         </tbody>
-      </table>
+      </table>,
     );
     const testIDs = ['expand-icon', 'table-row'];
 
@@ -72,12 +72,12 @@ describe('TableRow test', () => {
             searchInputValue={''}
           />
         </tbody>
-      </table>
+      </table>,
     );
     displayedKeys.forEach((key: string) => {
       console.log(rowData[key]);
       expect(
-        screen.getAllByText(rowData[key], { exact: false })[0]
+        screen.getAllByText(rowData[key], { exact: false })[0],
       ).toBeInTheDocument();
     });
   });
