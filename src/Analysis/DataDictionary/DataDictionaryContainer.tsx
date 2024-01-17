@@ -25,7 +25,7 @@ const DataDictionaryContainer = () => {
   const [activePage, setActivePage] = useState(1);
   const paginatedData = data.slice(
     entriesShown * activePage - entriesShown,
-    entriesShown * activePage,
+    entriesShown * activePage
   );
 
   const rows = paginatedData.map((rowObject, i) => (
@@ -93,7 +93,7 @@ const DataDictionaryContainer = () => {
           )}
         </tbody>
         <EntriesHeader
-          start={entriesShown * activePage - entriesShown}
+          start={entriesShown * activePage - entriesShown + 1}
           stop={entriesShown * activePage}
           total={data.length}
           colspan={columnsShown}
