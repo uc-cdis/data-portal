@@ -26,6 +26,7 @@ const GWASContainer = () => {
           <SelectStudyPopulation
             selectedCohort={state.selectedStudyPopulationCohort}
             dispatch={dispatch}
+            selectedTeamProject={state.selectedTeamProject}
           />
         </div>
       );
@@ -36,6 +37,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           covariates={state.covariates}
           dispatch={dispatch}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 2:
@@ -45,6 +47,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           covariates={state.covariates}
           dispatch={dispatch}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 3:

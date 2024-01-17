@@ -13,6 +13,7 @@ const SelectCovariates = ({
   studyPopulationCohort,
   outcome,
   covariates,
+  selectedTeamProject,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(() => {
@@ -76,6 +77,7 @@ const SelectCovariates = ({
                   });
                 }}
                 submitButtonLabel={'Add'}
+                selectedTeamProject={selectedTeamProject}
               />
             </div>
           )}
@@ -137,6 +139,7 @@ SelectCovariates.propTypes = {
   studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   covariates: PropTypes.array.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 export default SelectCovariates;

@@ -153,8 +153,8 @@ export const fetchCovariateStats = async (
   return response.json();
 };
 
-export const fetchCohortDefinitions = async (sourceId) => {
-  const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
+export const fetchCohortDefinitions = async (sourceId, selectedTeamProject) => {
+  const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}/by-team-project?team-project=${selectedTeamProject}`;
   const response = await fetch(cohortEndPoint);
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`;
