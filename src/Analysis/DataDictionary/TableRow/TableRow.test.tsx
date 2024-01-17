@@ -75,24 +75,9 @@ describe('TableRow test', () => {
       </table>,
     );
     displayedKeys.forEach((key: string) => {
-      console.log(rowData[key]);
       expect(
         screen.getAllByText(rowData[key], { exact: false })[0],
       ).toBeInTheDocument();
     });
   });
-  /*
-  it('handles click event on expandable row', () => {
-    const { getByTestId, queryByTestId } = render(
-      <TableRow
-        rowObject={rowData}
-        columnsShown={10}
-        searchInputValue={initialSearchInputValue}
-      />
-    );
-
-    fireEvent.click(getByTestId('expandable-td'));
-
-    expect(queryByTestId('grid')).toBeInTheDocument(); // Adjust the test id based on your component implementation
-  }); */
 });

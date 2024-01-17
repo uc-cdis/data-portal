@@ -10,9 +10,9 @@ describe('Header component', () => {
   afterEach(cleanup);
   const defaultProps: any = {
     handleSort: jest.fn(),
-    headerJSX: <div data-testid='header'>Test Header Text</div>, // adjust the JSX for your headerJSX
+    headerJSX: <div data-testid='header'>Test Header Text</div>,
     headerKey: 'key1',
-    sortConfig: { key: 'key1', sortKey: '', direction: '' }, // adjust the ISortConfig interface for your use case
+    sortConfig: { key: 'key1', sortKey: '', direction: '' },
     sortable: true,
   };
 
@@ -31,8 +31,7 @@ describe('Header component', () => {
 
   it(`renders the Header component correctly when sortable is true and
   there is a sort config with ascending direction`, () => {
-    const sortConfig: any = {
-      key: 'key1',
+    const sortConfig: ISortConfig = {
       sortKey: 'key1',
       direction: 'ascending',
     };
@@ -60,10 +59,9 @@ describe('Header component', () => {
   it(`renders the Header component correctly when sortable is true and
   there is a sort config with descending direction`, () => {
     const sortConfig: ISortConfig = {
-      key: 'key1',
       sortKey: 'key1',
       direction: 'descending',
-    }; // adjust for your use case
+    };
     render(
       <table>
         <thead>
@@ -98,6 +96,6 @@ describe('Header component', () => {
     );
     fireEvent.click(screen.getAllByText('Test Header Text')[0]);
     expect(handleSort).toHaveBeenCalledTimes(1);
-    expect(handleSort).toHaveBeenCalledWith('key1'); // adjust for your use case
+    expect(handleSort).toHaveBeenCalledWith('key1');
   });
 });

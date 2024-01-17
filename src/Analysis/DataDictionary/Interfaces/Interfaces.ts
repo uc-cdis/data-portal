@@ -26,6 +26,7 @@ interface IRowData {
   standardDeviation: number;
   valueSummary: IValueSummary[];
 }
+
 interface ITableData {
   total: number;
   data: IRowData[];
@@ -35,6 +36,7 @@ interface ISortConfig {
   sortKey: string | null;
   direction: 'ascending' | 'descending' | 'off';
 }
+
 export {
   IRowData, IValueSummary, ITableData, ISortConfig,
 };

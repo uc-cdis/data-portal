@@ -38,7 +38,8 @@ describe('SearchBar', () => {
 
     expect(setData).toHaveBeenCalledTimes(1);
     const filteredData = TableData.filter((item) => Object.values(item).some((value) => value?.toString()?.toLowerCase()?.includes('do'),
-    ));
+    ),
+    );
     expect(setData).toHaveBeenLastCalledWith(filteredData);
   });
 });
