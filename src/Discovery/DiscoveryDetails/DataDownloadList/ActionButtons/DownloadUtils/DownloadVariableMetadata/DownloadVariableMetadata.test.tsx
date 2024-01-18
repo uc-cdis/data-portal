@@ -119,17 +119,16 @@ describe('DownloadVariableMetadata', () => {
     });
 
     expect(fetchWithCreds).toHaveBeenCalledWith({
-      path: expect.stringContaining(`${mdsURL}/HDP00001`),
+      path: expect.stringContaining(`${mdsURL}/${mockResourceInfo._hdp_uid}`),
     });
-    expect(mockSetDownloadStatus).toHaveBeenCalled(); // Assumes download was unsuccessful
-    expect(require('file-saver').saveAs).not.toHaveBeenCalled(); // Assumes zip file didn't downloaded
+    expect(mockSetDownloadStatus).toHaveBeenCalled(); // download was unsuccessful
+    expect(require('file-saver').saveAs).not.toHaveBeenCalled(); // zip file didn't downloaded
   });
 
   it('should download variable metadata when called with valid resource info', async () => {
     const mockDataDictionaries = {
       'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
     };
-
     const mockStatusResponse = {
       status: 200,
       data: {
@@ -144,12 +143,11 @@ describe('DownloadVariableMetadata', () => {
       .mockImplementation(mockGenerateAsync);
 
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
-
     await act(async () => {
       await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
     });
 
-    expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Assumes download is successful
-    expect(require('file-saver').saveAs).toHaveBeenCalledTimes(1); // Assumes zip file downloaded
+    expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Download is successful, fail msg isn't set
+    expect(require('file-saver').saveAs).toHaveBeenCalledTimes(1); // Zip file downloaded
   });
 });
