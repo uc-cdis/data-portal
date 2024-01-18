@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Col, Row, Button, Popover } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
+import { DiscoveryConfig } from '../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../Discovery';
+import { INITIAL_DOWNLOAD_STATUS } from './DownloadUtils/Constants';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadModal from './DownloadModal/DownloadModal';
 import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
-import { DiscoveryConfig } from '../../../DiscoveryConfig';
-import { DiscoveryResource } from '../../../Discovery';
 import DownloadVariableMetadata from './DownloadUtils/DownloadVariableMetadata/DownloadVariableMetadata';
-import { INITIAL_DOWNLOAD_STATUS } from './DownloadUtils/Constants';
 import './ActionButtons.css';
 
 interface ActionButtonsProps {
