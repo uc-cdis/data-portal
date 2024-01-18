@@ -1,17 +1,20 @@
 // Generates test data for DataDictionary
 // Run in terminal like so:
 // Node GenerateTableData.js
+// Change variable numberOfEntries to create
+// differet sizes of test data
 
 const fs = require('fs');
 
-const numberOfEntries = 6000;
+const numberOfEntries = 60;
 const maxValueSummarySize = 25;
 const fileName = 'TableData.ts';
 
 function randomString() {
   const length = 10;
   let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
