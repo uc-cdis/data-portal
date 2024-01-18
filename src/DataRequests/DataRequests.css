@@ -2,6 +2,10 @@
   margin: 20px;
 }
 
+.data-requests .base-table__body {
+  width: 1500px;
+}
+
 .data-requests__header {
   margin-bottom: 20px;
 }

@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import dictIcons from '../../../img/icons/index';
 import IconComponent from '../../Icon';
 import './Table.css';
 import { cellValueToText } from './Table';
+import DateRangePicker from '../../DateRangePicker';
 import { 
-  DateRangePicker,
   defaultTheme,
   Provider,
   Form,
-  Button,
   Flex
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
@@ -55,16 +54,11 @@ function TableHead({ cols, setFilters, data }) {
                 <Provider theme={defaultTheme}>
                   <Form validationBehavior="native" maxWidth="size-3000">
                     <Flex margin={0} direction="row" alignItems='center' gap={8}>
-                      <DateRangePicker
-                        value={filters[i] ?? { start: null, end: null }}
-                        onChange={(range) => {
+                      <DateRangePicker onChange={(range) => {
                           filters[i] = range;
                           setFilters([...filters]);
                         }}
                       />
-                      <Button type="reset" variant="primary" minWidth="size-200">
-                        <span>x</span>
-                      </Button>
                     </Flex>
                   </Form>
                 </Provider>
