@@ -254,7 +254,7 @@ class ExplorerTable extends React.Component {
       this.setState({ loading: true });
       // eslint-disable-next-line array-callback-return
 
-      let dicomServerURL = 'dicom-server';
+      let dicomServerURL = "dicom-server";
       if (this.props.tableConfig.dicomServerURL) {
         dicomServerURL = this.props.tableConfig.dicomServerURL;
       }
