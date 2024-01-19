@@ -14,7 +14,7 @@ interface IdataDictionaries {
 
 const DownloadVariableMetadata = async (
   resourceInfo: DiscoveryResource,
-  setDownloadStatus: Function
+  setDownloadStatus: Function,
 ) => {
   const zip = new JSZip();
   const studyID = resourceInfo._hdp_uid;
@@ -37,45 +37,41 @@ const DownloadVariableMetadata = async (
       active: true,
     },
   };
-  const createUniqueDownloadErrorMsg = (key: string) => {
-    return {
-      ...DOWNLOAD_FAIL_INFO,
-      message: {
-        ...DOWNLOAD_FAIL_INFO.message,
-        content: (
-          <React.Fragment>
-            <p>
+  const createUniqueDownloadErrorMsg = (key: string) => ({
+    ...DOWNLOAD_FAIL_INFO,
+    message: {
+      ...DOWNLOAD_FAIL_INFO.message,
+      content: (
+        <React.Fragment>
+          <p>
               Data Dictionary with name <em>{key}</em> cannot download data
               dictionary with name <em>{key}</em>.
-            </p>
-            <p>Please try again later and contact support.</p>
-          </React.Fragment>
-        ),
-      },
-    };
-  };
+          </p>
+          <p>Please try again later and contact support.</p>
+        </React.Fragment>
+      ),
+    },
+  });
 
-  const fetchData = async (key: string, value: string) =>
-    new Promise((resolve, reject) => {
-      fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
-        const { data } = statusResponse;
-        if (statusResponse.status !== 200 || !data) {
-          setDownloadStatus(createUniqueDownloadErrorMsg(key));
+  const fetchData = async (key: string, value: string) => new Promise((resolve, reject) => {
+    fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
+      const { data } = statusResponse;
+      if (statusResponse.status !== 200 || !data) {
+        setDownloadStatus(createUniqueDownloadErrorMsg(key));
 
-          reject(new Error(`Issue with ${key}: ${value}`));
-        } else {
-          zip.file(key, JSON.stringify(data));
-          resolve(`Data resolved for ${key}: ${value}`);
-        }
-      });
+        reject(new Error(`Issue with ${key}: ${value}`));
+      } else {
+        zip.file(key, JSON.stringify(data));
+        resolve(`Data resolved for ${key}: ${value}`);
+      }
     });
+  });
 
   const fetchDataForAllFiles = async (dataDictionaries: IdataDictionaries) => {
     try {
       await Promise.all(
-        Object.entries(dataDictionaries).map(([key, value]) =>
-          fetchData(key, value)
-        )
+        Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
+        ),
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
           FileSaver.saveAs(content, 'variable-metadata.zip');

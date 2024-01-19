@@ -4,6 +4,8 @@ import DownloadVariableMetadata from './DownloadVariableMetadata';
 import { fetchWithCreds } from '../../../../../../actions';
 import { mdsURL } from '../../../../../../localconf';
 
+/* eslint global-require: 0 */ // --> OFF
+
 jest.mock('../../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
@@ -23,7 +25,7 @@ afterEach(() => {
 const mockSetDownloadStatus = jest.fn();
 
 describe('DownloadVariableMetadata', () => {
-  it('should set download status when status response is not successful', async () => {
+  it('should set download status when status response is not successful due to response status', async () => {
     const mockStatusResponse = {
       status: 500,
       data: null,
@@ -65,6 +67,7 @@ describe('DownloadVariableMetadata', () => {
     });
 
     expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Download is successful, fail msg isn't set
-    expect('file-saver'.saveAs).toHaveBeenCalledTimes(1); // Zip file downloaded
+
+    expect(require('file-saver').saveAs).toHaveBeenCalled(); // Zip file downloaded
   });
 });
