@@ -27,9 +27,9 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-            Study with name:<em> {projectTitle}</em> cannot download
+            Study with name:<strong> {projectTitle}</strong> cannot download
             variable-level metadata with ID:
-            <em> {studyID}</em>.
+            <strong> {studyID}</strong>.
           </p>
           <p>Please try again later and contact support.</p>
         </React.Fragment>
@@ -44,8 +44,8 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-            Data Dictionary with name <em>{key}</em> cannot download data
-            dictionary with name <em>{key}</em>.
+            Data Dictionary with name <strong>{key}</strong> cannot download data
+            dictionary with name <strong>{key}</strong>.
           </p>
           <p>Please try again later and contact support.</p>
         </React.Fragment>
@@ -58,7 +58,6 @@ const DownloadVariableMetadata = async (
       const { data } = statusResponse;
       if (statusResponse.status !== 200 || !data) {
         setDownloadStatus(createUniqueDownloadErrorMsg(key));
-
         reject(new Error(`Issue with ${key}: ${value}`));
       } else {
         zip.file(key, JSON.stringify(data));
