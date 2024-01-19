@@ -100,7 +100,7 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the file list but does render the action buttons when  showList is false', () => {
+  it('does not render the file list but does render the action buttons when showList is false', () => {
     const sourceFieldData = [
       [
         {
