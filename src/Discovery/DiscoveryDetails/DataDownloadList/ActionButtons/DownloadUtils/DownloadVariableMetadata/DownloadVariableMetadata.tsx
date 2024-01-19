@@ -27,7 +27,7 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-            Study with name:<em> {projectTitle || studyID}</em> cannot download
+            Study with name:<em> {projectTitle}</em> cannot download
             variable-level metadata with ID:
             <em> {studyID}</em>.
           </p>
@@ -44,8 +44,8 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-              Data Dictionary with name <em>{key}</em> cannot download data
-              dictionary with name <em>{key}</em>.
+            Data Dictionary with name <em>{key}</em> cannot download data
+            dictionary with name <em>{key}</em>.
           </p>
           <p>Please try again later and contact support.</p>
         </React.Fragment>
