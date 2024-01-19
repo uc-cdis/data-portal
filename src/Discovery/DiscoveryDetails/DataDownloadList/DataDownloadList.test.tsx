@@ -8,6 +8,15 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn().mockReturnValue(0),
 }));
 
+const testDiscoveryConfig = {
+  features: {
+    exportToWorkspace: {
+      variableMetadataFieldName: 'variableMetadataFieldName',
+      enableDownloadVariableMetadata: true,
+    },
+  },
+};
+
 describe('DataDownloadList', () => {
   it(`renders the component with titles and descriptions and action buttons container
   when sourceFieledData has titles and descriptions`, () => {
@@ -25,7 +34,8 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        discoveryConfig={null}
+        showList
+        discoveryConfig={testDiscoveryConfig}
         resourceInfo={null}
         sourceFieldData={sourceFieldData}
       />,
@@ -52,7 +62,11 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList
+        showList
+        discoveryConfig={testDiscoveryConfig}
+        sourceFieldData={sourceFieldData}
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -74,7 +88,11 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList
+        discoveryConfig={testDiscoveryConfig}
+        showList
+        sourceFieldData={sourceFieldData}
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -82,17 +100,23 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the file list but does render the action buttons when data is missing title and file_name', () => {
+  it('does not render the file list but does render the action buttons when  showList is false', () => {
     const sourceFieldData = [
       [
         {
-          NotTheTitle: undefined, // No title
+          NotTheTitle: 'some title',
           NotTheFileName: '',
           description: 'Some description',
         },
       ],
     ];
-    render(<DataDownloadList sourceFieldData={sourceFieldData} />);
+    render(
+      <DataDownloadList
+        discoveryConfig={testDiscoveryConfig}
+        showList={false}
+        sourceFieldData={sourceFieldData}
+      />,
+    );
     // Verify that the list does not render but the buttons do
     expect(
       screen.queryByTestId('dataDownloadFileList'),
