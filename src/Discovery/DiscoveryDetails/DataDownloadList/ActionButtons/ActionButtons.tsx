@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Col, Row, Button, Popover } from 'antd';
+import {
+  Col, Row, Button, Popover,
+} from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../Discovery';
@@ -28,42 +30,43 @@ const ActionButtons = ({
   noData,
 }: ActionButtonsProps): JSX.Element => {
   const [downloadAllStatus, setDownloadAllStatus] = useState(
-    INITIAL_DOWNLOAD_STATUS
+    INITIAL_DOWNLOAD_STATUS,
   );
-  const [downloadVariableMetadataStatus, setDownloadVariableMetadataStatus] =
-    useState(INITIAL_DOWNLOAD_STATUS);
+  const [downloadVariableMetadataStatus, setDownloadVariableMetadataStatus] = useState(INITIAL_DOWNLOAD_STATUS);
 
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
   const history = useHistory();
   const location = useLocation();
 
-  const studyMetadataFieldNameReference: string | undefined =
-    discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
-  const manifestFieldName: string | undefined =
-    discoveryConfig?.features.exportToWorkspace.manifestFieldName;
-  const showDownloadStudyLevelMetadataButtons = Boolean(
-    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata &&
-      studyMetadataFieldNameReference &&
-      resourceInfo?.[studyMetadataFieldNameReference]
+  const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
+  const manifestFieldName: string | undefined = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+
+  const showDownloadVariableMetadataButton = Boolean(
+    discoveryConfig.features.exportToWorkspace.variableMetadataFieldName
+      && discoveryConfig.features.exportToWorkspace.enableDownloadVariableMetadata,
+  );
+  const showDownloadStudyLevelMetadataButton = Boolean(
+    discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
+      && studyMetadataFieldNameReference
+      && resourceInfo?.[studyMetadataFieldNameReference],
   );
   const showDownloadFileManifestButtons = Boolean(
-    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest
+    discoveryConfig?.features.exportToWorkspace.enableDownloadManifest,
   );
   const showDownloadAllFilesButtons = Boolean(
-    discoveryConfig?.features.exportToWorkspace.enableDownloadZip
+    discoveryConfig?.features.exportToWorkspace.enableDownloadZip,
   );
   const verifyExternalLoginsNeeded = Boolean(
-    discoveryConfig?.features.exportToWorkspace.verifyExternalLogins
+    discoveryConfig?.features.exportToWorkspace.verifyExternalLogins,
   );
 
-  const ConditionalPopover = ({ children }) =>
-    noData ? (
-      <Popover title={'This file is not available for the selected study'}>
-        {children}
-      </Popover>
-    ) : (
-      children
-    );
+  const ConditionalPopover = ({ children }) => (noData ? (
+    <Popover title={'This file is not available for the selected study'}>
+      {children}
+    </Popover>
+  ) : (
+    children
+  ));
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
@@ -76,33 +79,33 @@ const ActionButtons = ({
         setDownloadStatus={setDownloadVariableMetadataStatus}
       />
       <Row className='row'>
-        <Col flex='1 0 auto'>
-          <Button
-            className='discovery-action-bar-button'
-            onClick={() => {
-              DownloadVariableMetadata(
-                resourceInfo,
-                setDownloadVariableMetadataStatus
-              );
-            }}
-          >
-            Download <br />
-            Variable-Level Metadata
-          </Button>
-        </Col>
-        {showDownloadStudyLevelMetadataButtons && (
+        {showDownloadVariableMetadataButton && (
+          <Col flex='1 0 auto'>
+            <Button
+              className='discovery-action-bar-button'
+              onClick={() => {
+                DownloadVariableMetadata(
+                  resourceInfo,
+                  setDownloadVariableMetadataStatus,
+                );
+              }}
+            >
+              Download <br />
+              Variable-Level Metadata
+            </Button>
+          </Col>
+        )}
+        {showDownloadStudyLevelMetadataButton && (
           <Col flex='1 0 auto'>
             <ConditionalPopover>
               <Button
                 className='discovery-action-bar-button'
                 disabled={noData}
-                onClick={() =>
-                  DownloadJsonFile(
-                    'study-level-metadata',
-                    studyMetadataFieldNameReference &&
-                      resourceInfo[studyMetadataFieldNameReference]
-                  )
-                }
+                onClick={() => DownloadJsonFile(
+                  'study-level-metadata',
+                  studyMetadataFieldNameReference
+                      && resourceInfo[studyMetadataFieldNameReference],
+                )}
               >
                 Download <br />
                 Study-Level Metadata
@@ -121,7 +124,7 @@ const ActionButtons = ({
                     HandleDownloadManifestClick(
                       discoveryConfig,
                       [resourceInfo],
-                      healLoginNeeded
+                      healLoginNeeded,
                     );
                   }}
                 >
@@ -137,7 +140,7 @@ const ActionButtons = ({
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'manifest'
+                    'manifest',
                   );
                 }}
               >
@@ -154,18 +157,16 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   disabled={noData}
-                  onClick={() =>
-                    DownloadAllFiles(
-                      resourceInfo,
-                      downloadAllStatus,
-                      setDownloadAllStatus,
-                      history,
-                      location,
-                      healLoginNeeded,
-                      verifyExternalLoginsNeeded,
-                      manifestFieldName
-                    )
-                  }
+                  onClick={() => DownloadAllFiles(
+                    resourceInfo,
+                    downloadAllStatus,
+                    setDownloadAllStatus,
+                    history,
+                    location,
+                    healLoginNeeded,
+                    verifyExternalLoginsNeeded,
+                    manifestFieldName,
+                  )}
                 >
                   Download All Files
                 </Button>
@@ -179,7 +180,7 @@ const ActionButtons = ({
                   HandleRedirectToLoginClick(
                     resourceInfo,
                     discoveryConfig,
-                    'download'
+                    'download',
                   );
                 }}
               >

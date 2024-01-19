@@ -65,6 +65,6 @@ describe('DownloadVariableMetadata', () => {
     });
 
     expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Download is successful, fail msg isn't set
-    expect(require('file-saver').saveAs).toHaveBeenCalledTimes(1); // Zip file downloaded
+    expect('file-saver'.saveAs).toHaveBeenCalledTimes(1); // Zip file downloaded
   });
 });
