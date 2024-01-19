@@ -8,6 +8,7 @@ import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { DiscoveryResource } from '../../Discovery';
 
 interface DataDownloadListProps {
+  showList: boolean;
   isUserLoggedIn: boolean;
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
@@ -16,6 +17,7 @@ interface DataDownloadListProps {
 }
 
 const DataDownloadList = ({
+  showList,
   isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
@@ -24,6 +26,7 @@ const DataDownloadList = ({
 }: DataDownloadListProps) => {
   const data = ProcessData(sourceFieldData);
   const noData = data.length === 0;
+
   return (
     <div className='discovery-modal__data-download-list'>
       <ActionButtons
@@ -33,7 +36,7 @@ const DataDownloadList = ({
         healLoginNeeded={healLoginNeeded}
         noData={noData}
       />
-      {!noData && (
+      {!noData && showList && (
         <List
           itemLayout='horizontal'
           dataSource={data}

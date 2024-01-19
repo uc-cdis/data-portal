@@ -261,27 +261,24 @@ const tabField = (
   // Here begins some normal fields (texts, links, etc...)
   let resourceFieldValue = fieldConfig.sourceField
     && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
-  if (
-    resourceFieldValue
+  const resourceFieldValueIsValid: boolean = resourceFieldValue
     && resourceFieldValue.length > 0
     && resourceFieldValue[0]
-    && resourceFieldValue[0].length !== 0
-  ) {
-    // console.log('fieldConfig.type', fieldConfig.type);
-    // console.log('discoveryConfig', discoveryConfig);
-    // console.log('resourceInfo', resource);
-    // console.log('resourceFieldValue', resourceFieldValue);
-    if (fieldConfig.type === 'dataDownloadList') {
-      return (
-        <DataDownloadList
-          isUserLoggedIn={Boolean(user.username)}
-          discoveryConfig={discoveryConfig}
-          resourceInfo={resource}
-          sourceFieldData={resourceFieldValue}
-          healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
-        />
-      );
-    }
+    && resourceFieldValue[0].length !== 0;
+
+  if (fieldConfig.type === 'dataDownloadList') {
+    return (
+      <DataDownloadList
+        showList={resourceFieldValueIsValid}
+        isUserLoggedIn={Boolean(user.username)}
+        discoveryConfig={discoveryConfig}
+        resourceInfo={resource}
+        sourceFieldData={resourceFieldValue}
+        healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
+      />
+    );
+  }
+  if (resourceFieldValueIsValid) {
     // Format resourceFieldValue for all other field types
     resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
 
