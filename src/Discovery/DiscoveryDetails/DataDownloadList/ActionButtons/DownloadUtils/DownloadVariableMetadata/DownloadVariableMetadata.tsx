@@ -37,6 +37,7 @@ const DownloadVariableMetadata = async (
       active: true,
     },
   };
+
   const createUniqueDownloadErrorMsg = (key: string) => ({
     ...DOWNLOAD_FAIL_INFO,
     message: {
