@@ -5,11 +5,9 @@ import { fetchWithCreds } from '../../../../../../actions';
 import { mdsURL } from '../../../../../../localconf';
 
 /* eslint global-require: 0 */ // --> OFF
-
 jest.mock('../../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
-
 jest.mock('file-saver', () => ({
   saveAs: jest.fn(),
 }));
@@ -17,12 +15,11 @@ const mockResourceInfo = {
   _hdp_uid: 'HDP00001',
   project_title: 'Sample Project',
 };
+const mockSetDownloadStatus = jest.fn();
 
 afterEach(() => {
   jest.clearAllMocks();
 });
-
-const mockSetDownloadStatus = jest.fn();
 
 describe('DownloadVariableMetadata', () => {
   it('should set download status when status response is not successful due to response status', async () => {
@@ -30,13 +27,10 @@ describe('DownloadVariableMetadata', () => {
       status: 500,
       data: null,
     };
-
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
-
     await act(async () => {
       await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
     });
-
     expect(fetchWithCreds).toHaveBeenCalledWith({
       path: expect.stringContaining(`${mdsURL}/${mockResourceInfo._hdp_uid}`),
     });
@@ -54,20 +48,15 @@ describe('DownloadVariableMetadata', () => {
         data_dictionaries: mockDataDictionaries,
       },
     };
-
     const mockGenerateAsync = jest.fn().mockResolvedValue('zipContent');
-
     jest
       .spyOn(JSZip.prototype, 'generateAsync')
       .mockImplementation(mockGenerateAsync);
-
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
       await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
     });
-
     expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Download is successful, fail msg isn't set
-
     expect(require('file-saver').saveAs).toHaveBeenCalled(); // Zip file downloaded
   });
 });
