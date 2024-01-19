@@ -15,7 +15,7 @@ const AtlasDataDictionaryButton = () => {
   };
 
   return (
-    <div style={{ float: 'right', marginTop: '-60px' }}>
+    <div style={{ float: 'right', marginTop: '-65px' }}>
       <Modal
         title="You're now leaving the VA Data Commons"
         open={isModalOpen}
