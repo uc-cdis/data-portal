@@ -9,10 +9,12 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
-import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
+import AtlasDataDictionaryContainer from './AtlasDataDictionary/AtlasDataDictionaryContainer';
+import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
+import './AnalysisApp.css';
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,7 @@ class AnalysisApp extends React.Component {
   };
 
   getAppContent = (app) => {
+    console.log('app is:',app)
     switch (app) {
     case 'vaGWAS':
       return (
@@ -119,29 +122,40 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-    case 'GWASUIApp': {
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-            setCurrentStep(0);
-          }}
-        >
+      case 'Atlas Data Dictionary': {
+        return (
+          <div className='analysis-app_flex_row'>
+            <AtlasDataDictionaryContainer />
+          </div>
+        );
+      }
+      case 'GWASUIApp': {
+        return (
+          <TourProvider
+            afterOpen={disableBody}
+            beforeClose={enableBody}
+            disableInteraction
+            onClickClose={({ setCurrentStep, setIsOpen }) => {
+              setIsOpen(false);
+              setCurrentStep(0);
+            }}
+          >
           <div>
             <GWASContainer refreshWorkflows={this.refreshWorkflows} />
           </div>
         </TourProvider>
       );
     }
+
     default:
       // this will ensure the main window will process the app messages (if any):
       window.addEventListener('message', this.processAppMessages);
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
+          {this.state.app.title === 'OHDSI Atlas' && (
+              <AtlasDataDictionaryButton />
+            )}
             <iframe
               className='analysis-app__iframe'
               title='Analysis App'
