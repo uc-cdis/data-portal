@@ -15,7 +15,7 @@ import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
-import AtlasDataDictionaryButton from './AtlasDataDictionaryButton/AtlasDataDictionaryButton';
+import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 import './AnalysisApp.css';
 
 const queryClient = new QueryClient();
