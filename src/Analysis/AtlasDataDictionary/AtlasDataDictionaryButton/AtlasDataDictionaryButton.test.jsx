@@ -6,7 +6,6 @@ import AtlasDataDictionaryButton from './AtlasDataDictionaryButton';
 describe('AtlasDataDictionaryButton', () => {
   it('renders the AtlasDataDictionaryButton component with an "Atlas Data Dictionary" Button', () => {
     const { getByRole, getByTestId } = render(<AtlasDataDictionaryButton />);
-
     expect(getByRole('button')).toBeInTheDocument();
     expect(getByRole('button')).toHaveTextContent('Atlas Data Dictionary');
     expect(getByTestId('atlas-data-dictionary-button')).toBeInTheDocument();
@@ -14,7 +13,6 @@ describe('AtlasDataDictionaryButton', () => {
 
   it('shows the Modal when the button is clicked', () => {
     const { getByRole, queryByText } = render(<AtlasDataDictionaryButton />);
-
     fireEvent.click(getByRole('button'));
     expect(queryByText('You\'re now leaving the VA Data Commons')).toBeInTheDocument();
   });
