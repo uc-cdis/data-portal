@@ -78,7 +78,7 @@ class AnalysisApp extends React.Component {
   };
 
   getAppContent = (app) => {
-    console.log('app is:',app)
+    console.log('app is:', app);
     switch (app) {
     case 'vaGWAS':
       return (
@@ -122,24 +122,24 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-      case 'Atlas Data Dictionary': {
-        return (
-          <div className='analysis-app_flex_row'>
-            <AtlasDataDictionaryContainer />
-          </div>
-        );
-      }
-      case 'GWASUIApp': {
-        return (
-          <TourProvider
-            afterOpen={disableBody}
-            beforeClose={enableBody}
-            disableInteraction
-            onClickClose={({ setCurrentStep, setIsOpen }) => {
-              setIsOpen(false);
-              setCurrentStep(0);
-            }}
-          >
+    case 'Atlas Data Dictionary': {
+      return (
+        <div className='analysis-app_flex_row'>
+          <AtlasDataDictionaryContainer />
+        </div>
+      );
+    }
+    case 'GWASUIApp': {
+      return (
+        <TourProvider
+          afterOpen={disableBody}
+          beforeClose={enableBody}
+          disableInteraction
+          onClickClose={({ setCurrentStep, setIsOpen }) => {
+            setIsOpen(false);
+            setCurrentStep(0);
+          }}
+        >
           <div>
             <GWASContainer refreshWorkflows={this.refreshWorkflows} />
           </div>
@@ -153,7 +153,7 @@ class AnalysisApp extends React.Component {
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
-          {this.state.app.title === 'OHDSI Atlas' && (
+            {this.state.app.title === 'OHDSI Atlas' && (
               <AtlasDataDictionaryButton />
             )}
             <iframe
