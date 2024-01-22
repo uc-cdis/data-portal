@@ -166,7 +166,6 @@ class AnalysisApp extends React.Component {
           <React.Fragment>
             <div
               className='analysis-app__iframe-wrapper'
-              style={{ marginBottom: '50px' }}
             >
               {this.state.app.title === 'OHDSI Atlas' && (
                 <AtlasDataDictionaryButton />

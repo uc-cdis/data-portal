@@ -1,0 +1,12 @@
+.atlas-data-dictionary-button {
+   float: right;
+   margin-top: -65px;
+}
+
+.atlas-data-dictionary-button-modal button:focus {
+  outline: 1px dotted;
+}
+
+.analysis-app__iframe-wrapper {
+  margin-bottom: 20px;
+}

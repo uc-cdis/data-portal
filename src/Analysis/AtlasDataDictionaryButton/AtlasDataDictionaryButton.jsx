@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import { Modal } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
+import './AtlasDataDictionaryButton.css';
 
 const AtlasDataDictionaryButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   return (
-    <div style={{ float: 'right', marginTop: '-65px' }}>
+    <div className="atlas-data-dictionary-button">
       <Modal
         title="You're now leaving the VA Data Commons"
         open={isModalOpen}
+        className="atlas-data-dictionary-button-modal"
         onOk={() => {
-          window.open('http://www.altavista.com', '_blank');
+          window.open('http://www.askjeeves.com', '_blank');
           handleCancel();
         }}
         onCancel={handleCancel}
