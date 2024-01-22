@@ -26,7 +26,7 @@ const AtlasDataDictionaryButton = () => {
       >
         <p>
           The VADC website, privacy and security policies don&apos;t apply to the
-          site or app you're about to visit.
+          site or app you&apos;re about to visit.
         </p>
       </Modal>
       <Button
