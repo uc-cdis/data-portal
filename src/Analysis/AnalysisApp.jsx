@@ -78,7 +78,6 @@ class AnalysisApp extends React.Component {
   };
 
   getAppContent = (app) => {
-    console.log('app is:', app);
     switch (app) {
     case 'vaGWAS':
       return (
