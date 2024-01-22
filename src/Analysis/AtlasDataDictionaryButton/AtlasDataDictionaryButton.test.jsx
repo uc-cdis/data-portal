@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import AtlasDataDictionaryButton from './AtlasDataDictionaryButton';
 
 describe('AtlasDataDictionaryButton', () => {
-  it('renders the AtlasDataDictionaryButton component with an "Atlas Data Dictionary" Button and a Modal', () => {
+  it('renders the AtlasDataDictionaryButton component with an "Atlas Data Dictionary" Button', () => {
     const { getByRole, getByTestId } = render(<AtlasDataDictionaryButton />);
 
     expect(getByRole('button')).toBeInTheDocument();

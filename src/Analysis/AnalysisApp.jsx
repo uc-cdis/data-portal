@@ -164,9 +164,7 @@ class AnalysisApp extends React.Component {
 
       return (
         <React.Fragment>
-          <div
-            className='analysis-app__iframe-wrapper'
-          >
+          <div className='analysis-app__iframe-wrapper'>
             {this.state.app.title === 'OHDSI Atlas' && (
               <AtlasDataDictionaryButton />
             )}
