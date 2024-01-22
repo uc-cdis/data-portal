@@ -13,11 +13,11 @@ const AtlasDataDictionaryButton = () => {
   };
 
   return (
-    <div className="atlas-data-dictionary-button">
+    <div className='atlas-data-dictionary-button' data-testid='atlas-data-dictionary-button'>
       <Modal
         title="You're now leaving the VA Data Commons"
         open={isModalOpen}
-        className="atlas-data-dictionary-button-modal"
+        className='atlas-data-dictionary-button-modal'
         onOk={() => {
           window.open('http://www.askjeeves.com', '_blank');
           handleCancel();
