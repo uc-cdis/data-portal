@@ -10,7 +10,7 @@ import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import sessionMonitor from '../SessionMonitor';
-import DataDictionaryContainer from './DataDictionary/DataDictionaryContainer';
+import AtlasDataDictionaryContainer from './AtlasDataDictionary/AtlasDataDictionaryContainer';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
@@ -91,6 +91,7 @@ class AnalysisApp extends React.Component {
   };
 
   getAppContent = (app) => {
+    console.log('app',app)
     switch (app) {
     case 'vaGWAS':
       return (
@@ -134,12 +135,13 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-    case 'DataDictionary':
-      return (
-        <div className='analysis-app_flex_row'>
-          <DataDictionaryContainer />
-        </div>
-      );
+      case 'AtlasDataDictionary': {
+        return (
+          <div className='analysis-app_flex_row'>
+            <AtlasDataDictionaryContainer />
+          </div>
+        );
+      }
     case 'GWASUIApp': {
       return (
         <TourProvider

@@ -10,7 +10,7 @@ import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
 import './DataDictionary.css';
 
-const DataDictionaryContainer = () => {
+const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
   const [data, setData] = useState(preprocessedTableData);
   const [searchInputValue, setSearchInputValue] = useState('');
@@ -110,4 +110,4 @@ const DataDictionaryContainer = () => {
   );
 };
 
-export default DataDictionaryContainer;
+export default AtlasDataDictionaryContainer;
