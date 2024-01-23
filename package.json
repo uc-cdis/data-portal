@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@gen3/guppy": "^0.18.1",
     "@gen3/ui-component": "^0.11.4",
+    "@mantine/core": "^6.0.21",
     "@reactour/tour": "^2.12.0",
     "@upsetjs/venn.js": "^1.4.2",
     "antd": "^4.24.10",
