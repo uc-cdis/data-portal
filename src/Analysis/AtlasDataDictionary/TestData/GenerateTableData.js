@@ -1,4 +1,4 @@
-// Generates test data for DataDictionary
+// Generates test data for AtlasDataDictionary
 // Run in terminal like so:
 // Node GenerateTableData.js
 // Change variable numberOfEntries to create

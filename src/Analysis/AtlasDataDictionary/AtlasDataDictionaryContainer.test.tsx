@@ -11,8 +11,8 @@ const atlasDataDictionaryUITestIds = [
   'pagination-controls',
 ];
 
-describe('DataDictionaryContainer', () => {
-  it('renders the DataDictionaryContainer component and associated UI elements correctly', () => {
+describe('AtlasDataDictionaryContainer', () => {
+  it('renders the AtlasDataDictionaryContainer component and associated UI elements correctly', () => {
     render(<AtlasDataDictionaryContainer />);
     atlasDataDictionaryUITestIds.forEach((testID) => {
       expect(screen.getByTestId(testID)).toBeInTheDocument();
