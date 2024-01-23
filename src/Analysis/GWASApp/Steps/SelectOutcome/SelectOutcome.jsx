@@ -12,6 +12,7 @@ const SelectOutcome = ({
   studyPopulationCohort,
   outcome,
   covariates,
+  selectedTeamProject,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
@@ -29,7 +30,7 @@ const SelectOutcome = ({
           <ContinuousCovariates
             dispatch={dispatch}
             selectedStudyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
@@ -53,7 +54,7 @@ const SelectOutcome = ({
           <CustomDichotomousCovariates
             dispatch={dispatch}
             studyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
@@ -67,6 +68,7 @@ const SelectOutcome = ({
                 payload: chosenOutcome,
               });
             }}
+            selectedTeamProject={selectedTeamProject}
           />
         </div>
       );
@@ -131,6 +133,7 @@ SelectOutcome.propTypes = {
   studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object,
   covariates: PropTypes.array,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 SelectOutcome.defaultProps = {

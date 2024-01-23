@@ -295,6 +295,11 @@ function buildConfig(opts) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
+  let forceSingleLoginDropdownOptions = [];
+  if (config.featureFlags && config.featureFlags.forceSingleLoginDropdownOptions) {
+    forceSingleLoginDropdownOptions = config.featureFlags.forceSingleLoginDropdownOptions;
+  }
+
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -478,6 +483,8 @@ function buildConfig(opts) {
 
   };
 
+  const topNavLogin = !components?.login?.hideNavLink;
+
   return {
     app,
     basename,
@@ -551,6 +558,7 @@ function buildConfig(opts) {
     explorerPublic,
     explorerHideEmptyFilterSection,
     explorerFilterValuesToHide,
+    forceSingleLoginDropdownOptions,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
@@ -590,6 +598,7 @@ function buildConfig(opts) {
     showSystemUseOnlyOnLogin,
     Error403Url,
     bundle,
+    topNavLogin,
   };
 }
 
