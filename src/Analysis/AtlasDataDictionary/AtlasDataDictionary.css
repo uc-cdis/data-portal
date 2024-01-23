@@ -1,4 +1,4 @@
-.data-dictionary-container {
+.atlas-data-dictionary-container {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
@@ -6,41 +6,41 @@
   overflow-y: hidden;
 }
 
-.data-dictionary-container .no-data-found {
+.atlas-data-dictionary-container .no-data-found {
   text-align: center;
 }
 
-.data-dictionary-container table tbody tr:nth-child(4n + 3) {
+.atlas-data-dictionary-container table tbody tr:nth-child(4n + 3) {
   background-color: #fafafb;
 }
 
-.data-dictionary-container table thead.search-bar {
+.atlas-data-dictionary-container table thead.search-bar {
   background: #cfdbe6;
 }
 
 /* Column and Entries Headers */
-.data-dictionary-container table thead.column-headers {
+.atlas-data-dictionary-container table thead.column-headers {
   background: #e9eef2;
 }
 
-.data-dictionary-container table thead.column-headers th {
+.atlas-data-dictionary-container table thead.column-headers th {
   line-height: 1.2;
   cursor: pointer;
   user-select: none;
   transition: 0.3s;
 }
 
-.data-dictionary-container table caption.entries-header th {
+.atlas-data-dictionary-container table caption.entries-header th {
   cursor: default;
   font-weight: normal;
   font-size: 12px;
 }
 
-.data-dictionary-container .column-header th:hover {
+.atlas-data-dictionary-container .column-header th:hover {
   background-color: #f5f5f5;
 }
 
-.data-dictionary-container table caption.entries-header {
+.atlas-data-dictionary-container table caption.entries-header {
   background-color: #cfdbe6;
   color: black;
   padding: 8px 0 7px 10px;
@@ -50,68 +50,68 @@
   user-select: inherit;
 }
 
-.data-dictionary-container table caption.entries-header th:hover {
+.atlas-data-dictionary-container table caption.entries-header th:hover {
   background-color: #cfdbe6;
 }
 
-.data-dictionary-container .table-column-sorters {
+.atlas-data-dictionary-container .table-column-sorters {
   display: flex;
   flex: auto;
   align-items: center;
   justify-content: space-between;
 }
 
-.data-dictionary-container th.not-sortable:hover {
+.atlas-data-dictionary-container th.not-sortable:hover {
   background-color: inherit;
   cursor: inherit;
 }
 
-.data-dictionary-container .table-column-sorter-inner {
+.atlas-data-dictionary-container .table-column-sorter-inner {
   padding-left: 10px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
 }
 
-.data-dictionary-container .table-column-sorter-inner span {
+.atlas-data-dictionary-container .table-column-sorter-inner span {
   font-size: 11px;
   line-height: 0;
   display: inline-block;
 }
 
-.data-dictionary-container .table-column-sorter-down {
+.atlas-data-dictionary-container .table-column-sorter-down {
   margin-top: 4px;
 }
 
-.data-dictionary-container .table-column-sorter-down svg path,
-.data-dictionary-container .table-column-sorter-up svg path {
+.atlas-data-dictionary-container .table-column-sorter-down svg path,
+.atlas-data-dictionary-container .table-column-sorter-up svg path {
   fill: #ccc;
 }
 
-.data-dictionary-container .table-column-sorter-down.active svg path,
-.data-dictionary-container .table-column-sorter-up.active svg path {
+.atlas-data-dictionary-container .table-column-sorter-down.active svg path,
+.atlas-data-dictionary-container .table-column-sorter-up.active svg path {
   fill: #1890ff;
 }
 
 /* Expandable rows */
-.data-dictionary-container tr.expandable > td:first-child {
+.atlas-data-dictionary-container tr.expandable > td:first-child {
   padding: 0;
 }
 
-.data-dictionary-container tr td div.expandable {
+.atlas-data-dictionary-container tr td div.expandable {
   max-height: 0;
   overflow: hidden;
   height: 0;
   transition: height 0.3s, max-height 0.3s;
 }
 
-.data-dictionary-container tr td div.expandable.expanded {
+.atlas-data-dictionary-container tr td div.expandable.expanded {
   max-height: 321px;
   height: 321px;
   background: #e2e2e3;
 }
 
-.data-dictionary-container .expanded-container {
+.atlas-data-dictionary-container .expanded-container {
   background: #fff;
   height: 290px;
   padding: 16px;
@@ -119,22 +119,22 @@
   overflow-y: auto;
 }
 
-.data-dictionary-container .chart-details-wrapper {
+.atlas-data-dictionary-container .chart-details-wrapper {
   background: #fff;
 }
 
-.data-dictionary-container
+.atlas-data-dictionary-container
 .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }
 
-.data-dictionary-container .td-container {
+.atlas-data-dictionary-container .td-container {
   width: 80%;
   word-wrap: break-word;
 }
 
-.data-dictionary-container .search-highlight,
+.atlas-data-dictionary-container .search-highlight,
 table > tbody > tr > td.search-highlight:last-of-type {
   background: #fcefe4;
   background: linear-gradient(
@@ -148,22 +148,22 @@ table > tbody > tr > td.search-highlight:last-of-type {
   );
 }
 
-.data-dictionary-container .search-highlight,
+.atlas-data-dictionary-container .search-highlight,
 table > tbody > tr > td.preview-chart {
   min-width: 145px;
 }
 
 /* Search Bar */
-.data-dictionary-container .search-bar {
+.atlas-data-dictionary-container .search-bar {
   background: #cfdbe6;
 }
 
-.data-dictionary-container .search-bar-container {
+.atlas-data-dictionary-container .search-bar-container {
   width: 425px;
   padding: 6px 0 6px 0;
 }
 
-.data-dictionary-container .search-bar-input-control {
+.atlas-data-dictionary-container .search-bar-input-control {
   display: block;
   cursor: pointer;
   font-size: 15px;
@@ -180,24 +180,24 @@ table > tbody > tr > td.preview-chart {
 }
 
 /* Pagination */
-.data-dictionary-container .pagination-wrapper button {
+.atlas-data-dictionary-container .pagination-wrapper button {
   width: unset;
   transform: scale(0.9);
   padding: 0;
 }
 
-.data-dictionary-container .pagination-container {
+.atlas-data-dictionary-container .pagination-container {
   width: 450px;
   margin-left: auto;
 }
 
-.data-dictionary-container .pagination-container div {
+.atlas-data-dictionary-container .pagination-container div {
   float: right;
   color: #333333;
   font-size: 12px;
 }
 
-.data-dictionary-container .entries-quantity-select select {
+.atlas-data-dictionary-container .entries-quantity-select select {
   margin: 0 8px 0 5px;
   background-color: #fff;
   border: none;

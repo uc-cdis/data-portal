@@ -8,7 +8,7 @@ import TableRow from './TableRow/TableRow';
 import PaginationControls from './PaginationControls/PaginationControls';
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
-import './DataDictionary.css';
+import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
@@ -70,8 +70,8 @@ const AtlasDataDictionaryContainer = () => {
 
   return (
     <div
-      className='data-dictionary-container'
-      data-testid='data-dictionary-container'
+      className='atlas-data-dictionary-container'
+      data-testid='atlas-data-dictionary-container'
     >
       <Table>
         <SearchBar
