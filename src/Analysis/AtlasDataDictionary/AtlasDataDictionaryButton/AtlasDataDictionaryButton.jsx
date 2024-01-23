@@ -4,6 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './AtlasDataDictionaryButton.css';
 
 const AtlasDataDictionaryButton = () => {
+  const dataDictionaryURL = "https://www.askjeeves.com";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -19,7 +20,7 @@ const AtlasDataDictionaryButton = () => {
         open={isModalOpen}
         className='atlas-data-dictionary-button-modal'
         onOk={() => {
-          window.open('http://www.askjeeves.com', '_blank');
+          window.open(dataDictionaryURL, '_blank');
           handleCancel();
         }}
         onCancel={handleCancel}
@@ -32,9 +33,9 @@ const AtlasDataDictionaryButton = () => {
       <Button
         className='analysis-app__button'
         onClick={showModal}
-        label={'Atlas Data Dictionary'}
+        label='MVP Data Dictionary'
         buttonType='secondary'
-        rightIcon={'external-link'}
+        rightIcon='external-link'
       />
     </div>
   );
