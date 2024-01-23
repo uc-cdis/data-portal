@@ -1,14 +1,14 @@
 import React from 'react';
-import DataDictionaryContainer from './DataDictionaryContainer';
+import AtlasDataDictionaryContainer from './AtlasDataDictionaryContainer';
 
 export default {
-  title: 'Tests2/DataDictionary/Components/DataDictionaryContainer',
-  component: 'DataDictionaryContainer',
+  title: 'Tests2/AtlasDataDictionary/Components/AtlasDataDictionaryContainer',
+  component: 'AtlasDataDictionaryContainer',
 };
 
 const MockTemplate = () => (
   <React.Fragment>
-    <DataDictionaryContainer />
+    <AtlasDataDictionaryContainer />
   </React.Fragment>
 );
 

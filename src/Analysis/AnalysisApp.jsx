@@ -91,7 +91,7 @@ class AnalysisApp extends React.Component {
   };
 
   getAppContent = (app) => {
-    console.log('app',app)
+    console.log('app', app);
     switch (app) {
     case 'vaGWAS':
       return (
@@ -135,13 +135,13 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-      case 'AtlasDataDictionary': {
-        return (
-          <div className='analysis-app_flex_row'>
-            <AtlasDataDictionaryContainer />
-          </div>
-        );
-      }
+    case 'AtlasDataDictionary': {
+      return (
+        <div className='analysis-app_flex_row'>
+          <AtlasDataDictionaryContainer />
+        </div>
+      );
+    }
     case 'GWASUIApp': {
       return (
         <TourProvider
