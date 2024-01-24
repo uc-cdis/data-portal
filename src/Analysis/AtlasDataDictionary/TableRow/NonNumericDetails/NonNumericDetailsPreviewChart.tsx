@@ -13,18 +13,16 @@ interface INonNumericDetailsPreviewChart {
 // SIMPLE BARCHART
 const NonNumericDetailsPreviewChart = ({
   chartData,
-}: INonNumericDetailsPreviewChart) => {
-  return (
-    <React.Fragment>
-      <BarChart
-        width={PREVIEW_CHART_WIDTH}
-        height={PREVIEW_CHART_HEIGHT}
-        data={chartData}
-      >
-        <Bar dataKey='personCount' fill={BARCHART_FILL_COLOR} />
-      </BarChart>
-    </React.Fragment>
-  );
-};
+}: INonNumericDetailsPreviewChart) => (
+  <React.Fragment>
+    <BarChart
+      width={PREVIEW_CHART_WIDTH}
+      height={PREVIEW_CHART_HEIGHT}
+      data={chartData}
+    >
+      <Bar dataKey='personCount' fill={BARCHART_FILL_COLOR} />
+    </BarChart>
+  </React.Fragment>
+);
 
 export default NonNumericDetailsPreviewChart;

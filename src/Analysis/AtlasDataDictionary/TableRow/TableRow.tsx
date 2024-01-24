@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Grid } from '@mantine/core';
-import { IRowData } from '../Interfaces/Interfaces';
+import { INumericValueSummary, IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
 import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
@@ -159,7 +159,10 @@ const TableRow = ({
         >
           <div className={'td-container '}>
             {rowObject.valueStoredAs === 'Number' && (
-              <NumericDetailsPreviewChart chartData={rowObject.valueSummary} />
+              <NumericDetailsPreviewChart
+                chartData={rowObject.valueSummary as INumericValueSummary[]}
+                preview={true}
+              />
             )}
             {rowObject.valueStoredAs !== 'Number' && (
               <NonNumericDetailsPreviewChart
