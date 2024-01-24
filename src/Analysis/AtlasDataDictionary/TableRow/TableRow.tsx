@@ -3,7 +3,6 @@ import { Button, Grid } from '@mantine/core';
 import { IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
-import PreviewChart from './PreviewChart/PreviewChart';
 import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
 import NonNumericDetailsTable from './NonNumericDetails/NonNumericDetailsTable';
 import {
@@ -11,6 +10,8 @@ import {
   checkIfChartContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
+import NumericDetailsPreviewChart from './NumericDetails/NumericDetailsPreviewChart';
+import NonNumericDetailsPreviewChart from './NonNumericDetails/NonNumericDetailsPreviewChart';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -53,7 +54,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.vocabularyID,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.vocabularyID}</div>
@@ -61,7 +62,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
@@ -69,7 +70,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptCode.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
@@ -77,7 +78,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptName.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
@@ -85,7 +86,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptClassID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -94,11 +95,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariable,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariablePercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -112,11 +113,11 @@ const TableRow = ({
           className={`${
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilled,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilledPercent,
-              searchInputValue,
+              searchInputValue
             )
           } `}
         >
@@ -130,11 +131,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNull,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNullPercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -147,7 +148,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.valueStoredAs,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
@@ -157,7 +158,12 @@ const TableRow = ({
           ${checkIfHiddenCellsContainSearchTerm(rowObject, searchInputValue)}`}
         >
           <div className={'td-container '}>
-            <PreviewChart />
+            {rowObject.valueStoredAs === 'Number' && (
+              <NumericDetailsPreviewChart chartData={rowObject.valueSummary} />
+            )}
+            {rowObject.valueStoredAs !== 'Number' && (
+              <NonNumericDetailsPreviewChart />
+            )}
           </div>
         </td>
       </tr>
@@ -185,9 +191,9 @@ const TableRow = ({
                 <div
                   className={`expanded-container chart-details-wrapper
                   ${checkIfChartContainsSearchTerm(
-      rowObject,
-      searchInputValue,
-    )}`}
+                    rowObject,
+                    searchInputValue
+                  )}`}
                 >
                   <h3>Value Summary</h3>
                   {JSON.stringify(rowObject.valueSummary)}
