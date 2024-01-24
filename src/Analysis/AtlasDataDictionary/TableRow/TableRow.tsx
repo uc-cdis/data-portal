@@ -162,7 +162,9 @@ const TableRow = ({
               <NumericDetailsPreviewChart chartData={rowObject.valueSummary} />
             )}
             {rowObject.valueStoredAs !== 'Number' && (
-              <NonNumericDetailsPreviewChart />
+              <NonNumericDetailsPreviewChart
+                chartData={rowObject.valueSummary}
+              />
             )}
           </div>
         </td>
