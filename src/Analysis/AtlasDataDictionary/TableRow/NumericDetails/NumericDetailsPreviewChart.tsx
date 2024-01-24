@@ -1,69 +1,56 @@
 import React from 'react';
-import { BarChart, Bar } from 'recharts';
-import { IValueSummary } from '../../Interfaces/Interfaces';
+import { BarChart, Bar, XAxis } from 'recharts';
+import {
+  HISTROGRAM_CHART_FILL_COLOR,
+  PREVIEW_CHART_HEIGHT,
+  PREVIEW_CHART_WIDTH,
+} from '../Constants';
+//import * as d3Array from 'd3-array';
 
 interface INumericDetailsPreviewChart {
-  chartData: IValueSummary[];
+  chartData: {
+    personCount: number;
+    start: number;
+    end: number;
+  }[];
 }
+
+// HISTOGRAM
+/*
+Histogram has: Numeric X and Y Axis
+  See file: data-portal/src/Analysis/GWASApp/Components/Diagrams/PhenotypeHistogram/Histogram.jsx
+  USES:         { start: 7, end: 51, personCount: 54 },
+  Y Axis is Person count
+  Position of the bar is according to value in the
+
+
+  FOR EXAMPLE:
+        <XAxis
+        dataKey={start}
+        minTickGap={50}
+        tickFormatter={(tick) => formatNumber(tick)}
+      >
+
+Bar chart: Logs person count on X Axis
+
+*/
 
 const NumericDetailsPreviewChart = ({
   chartData,
 }: INumericDetailsPreviewChart) => {
-  /* EXAMPLE DATA */
-  const data = [
-    {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page F',
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: 'Page G',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
-  /* END EXAMPLE DATA */
-
+  const minimumValueToRemoveSpacesBetweenBars = 4;
+  const sortedChartData = chartData.sort((a, b) => a.start - b.start);
   return (
-    <>
-      NumericDetailsPreviewChart
-      {JSON.stringify(chartData)}
-      <BarChart width={150} height={40} data={chartData}>
-        <Bar dataKey='personCount' fill='#8884d8' />
+    <React.Fragment>
+      <BarChart
+        width={PREVIEW_CHART_WIDTH}
+        height={PREVIEW_CHART_HEIGHT}
+        data={sortedChartData}
+        barCategoryGap={minimumValueToRemoveSpacesBetweenBars}
+      >
+        <Bar dataKey='personCount' fill={HISTROGRAM_CHART_FILL_COLOR} />
       </BarChart>
-    </>
+    </React.Fragment>
   );
 };
 
