@@ -5,14 +5,12 @@ import {
   PREVIEW_CHART_HEIGHT,
   PREVIEW_CHART_WIDTH,
 } from '../Constants';
-//import * as d3Array from 'd3-array';
+import { INumericValueSummary } from '../../Interfaces/Interfaces';
+// import * as d3Array from 'd3-array';
 
 interface INumericDetailsPreviewChart {
-  chartData: {
-    personCount: number;
-    start: number;
-    end: number;
-  }[];
+  chartData: INumericValueSummary[];
+  preview: boolean;
 }
 
 // HISTOGRAM
@@ -22,7 +20,6 @@ Histogram has: Numeric X and Y Axis
   USES:         { start: 7, end: 51, personCount: 54 },
   Y Axis is Person count
   Position of the bar is according to value in the
-
 
   FOR EXAMPLE:
         <XAxis
@@ -37,6 +34,7 @@ Bar chart: Logs person count on X Axis
 
 const NumericDetailsPreviewChart = ({
   chartData,
+  preview,
 }: INumericDetailsPreviewChart) => {
   const minimumValueToRemoveSpacesBetweenBars = 4;
   const sortedChartData = chartData.sort((a, b) => a.start - b.start);

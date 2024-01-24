@@ -7,6 +7,12 @@ interface IValueSummary {
   end?: number;
 }
 
+interface INumericValueSummary {
+  personCount: number;
+  start: number;
+  end: number;
+}
+
 interface IRowData {
   vocabularyID: string;
   conceptID: number;
@@ -38,5 +44,9 @@ interface ISortConfig {
 }
 
 export {
-  IRowData, IValueSummary, ITableData, ISortConfig,
+  IRowData,
+  IValueSummary,
+  ITableData,
+  ISortConfig,
+  INumericValueSummary,
 };
