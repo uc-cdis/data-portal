@@ -3,6 +3,7 @@ import { DiscoveryConfig } from '../../../../DiscoveryConfig';
 import DownloadJsonFile from './DownloadJsonFile';
 
 const HandleDownloadManifestClick = (
+  setDownloadStatus: Function,
   config: DiscoveryConfig,
   selectedResources: any[],
   healIDPLoginNeeded: boolean,

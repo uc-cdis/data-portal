@@ -66,6 +66,7 @@ const ActionButtons = ({
     children
   ));
 
+  console.log('downloadStatus', downloadStatus);
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <DownloadModal
@@ -78,6 +79,7 @@ const ActionButtons = ({
             <Button
               className='discovery-action-bar-button'
               disabled={downloadStatus.inProgress}
+              loading={downloadStatus.inProgress === 'DownloadVariableMetadata'}
               onClick={() => {
                 DownloadVariableMetadata(
                   resourceInfo,
@@ -95,7 +97,7 @@ const ActionButtons = ({
             <ConditionalPopover>
               <Button
                 className='discovery-action-bar-button'
-                disabled={noData || downloadStatus.inProgress}
+                disabled={Boolean(noData || downloadStatus.inProgress)}
                 onClick={() => DownloadJsonFile(
                   'study-level-metadata',
                   studyMetadataFieldNameReference
@@ -114,7 +116,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={noData || downloadStatus.inProgress}
+                  disabled={Boolean(noData || downloadStatus.inProgress)}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
@@ -130,7 +132,7 @@ const ActionButtons = ({
             {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
-                disabled={noData || downloadStatus.inProgress}
+                disabled={Boolean(noData || downloadStatus.inProgress)}
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,
@@ -151,7 +153,8 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={noData || downloadStatus.inProgress}
+                  disabled={Boolean(noData || downloadStatus.inProgress)}
+                  loading={downloadStatus.inProgress === 'DownloadAllFiles'}
                   onClick={() => DownloadAllFiles(
                     resourceInfo,
                     downloadStatus,

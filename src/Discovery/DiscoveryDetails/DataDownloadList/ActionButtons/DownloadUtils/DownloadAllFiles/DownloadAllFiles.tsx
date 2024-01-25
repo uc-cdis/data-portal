@@ -61,7 +61,7 @@ const DownloadAllFiles = async (
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else {
         setDownloadStatus({
-          inProgress: true,
+          inProgress: 'DownloadAllFiles',
           message: {
             title: 'Your download is being prepared',
             content: (
