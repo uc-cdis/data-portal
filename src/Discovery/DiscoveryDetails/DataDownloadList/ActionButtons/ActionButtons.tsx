@@ -29,11 +29,9 @@ const ActionButtons = ({
   healLoginNeeded,
   noData,
 }: ActionButtonsProps): JSX.Element => {
-  const [downloadAllStatus, setDownloadAllStatus] = useState(
+  const [downloadStatus, setDownloadStatus] = useState(
     INITIAL_DOWNLOAD_STATUS,
   );
-  const [downloadVariableMetadataStatus, setDownloadVariableMetadataStatus] = useState(INITIAL_DOWNLOAD_STATUS);
-
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
   const history = useHistory();
   const location = useLocation();
@@ -71,22 +69,19 @@ const ActionButtons = ({
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <DownloadModal
-        downloadStatus={downloadAllStatus}
-        setDownloadStatus={setDownloadAllStatus}
-      />
-      <DownloadModal
-        downloadStatus={downloadVariableMetadataStatus}
-        setDownloadStatus={setDownloadVariableMetadataStatus}
+        downloadStatus={downloadStatus}
+        setDownloadStatus={setDownloadStatus}
       />
       <Row className='row'>
         {showDownloadVariableMetadataButton && (
           <Col flex='1 0 auto'>
             <Button
               className='discovery-action-bar-button'
+              disabled={downloadStatus.inProgress}
               onClick={() => {
                 DownloadVariableMetadata(
                   resourceInfo,
-                  setDownloadVariableMetadataStatus,
+                  setDownloadStatus,
                 );
               }}
             >
@@ -100,7 +95,7 @@ const ActionButtons = ({
             <ConditionalPopover>
               <Button
                 className='discovery-action-bar-button'
-                disabled={noData}
+                disabled={noData || downloadStatus.inProgress}
                 onClick={() => DownloadJsonFile(
                   'study-level-metadata',
                   studyMetadataFieldNameReference
@@ -119,7 +114,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={noData}
+                  disabled={noData || downloadStatus.inProgress}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
@@ -135,7 +130,7 @@ const ActionButtons = ({
             {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
-                disabled={noData}
+                disabled={noData || downloadStatus.inProgress}
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,
@@ -156,11 +151,11 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={noData}
+                  disabled={noData || downloadStatus.inProgress}
                   onClick={() => DownloadAllFiles(
                     resourceInfo,
-                    downloadAllStatus,
-                    setDownloadAllStatus,
+                    downloadStatus,
+                    setDownloadStatus,
                     history,
                     location,
                     healLoginNeeded,
@@ -175,7 +170,7 @@ const ActionButtons = ({
             {(!isUserLoggedIn || healLoginNeeded) && (
               <Button
                 className='discovery-action-bar-button'
-                disabled={noData}
+                disabled={noData || downloadStatus.inProgress}
                 onClick={() => {
                   HandleRedirectToLoginClick(
                     resourceInfo,

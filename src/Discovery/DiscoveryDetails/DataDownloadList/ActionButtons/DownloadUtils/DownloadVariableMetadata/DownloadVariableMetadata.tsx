@@ -89,12 +89,13 @@ const DownloadVariableMetadata = async (
     } else {
       try {
         const dataDictionaries: IdataDictionaries = data.data_dictionaries;
+        console.log("dataDictionaries line 91", dataDictionaries)
         if (Object.keys(dataDictionaries).length !== 0) {
           fetchDataForAllFiles(dataDictionaries);
         }
       } catch (error) {
         setDownloadStatus(DOWNLOAD_FAIL_INFO);
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data line 98:', error);
       }
     }
   });
