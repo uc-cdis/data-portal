@@ -45,7 +45,7 @@ const DownloadAllFiles = async (
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadStatus({
-          inProgress: false,
+          inProgress: '',
           message: {
             title: 'Download failed',
             content: (
