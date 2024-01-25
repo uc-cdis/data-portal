@@ -136,7 +136,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
     return fetchRequestedAccess(receivedData).then(
       (requestedAccess) => {
         receivedData.forEach((dataElement) => {
-          const processedItem = {};
+          const processedItem = { ...dataElement }; // copy all queried fields
           processedItem.title = dataElement[targetStudyViewerConfig.titleField];
           processedItem.rowAccessorValue = dataElement[targetStudyViewerConfig.rowAccessor];
           processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
@@ -145,9 +145,9 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           processedItem.accessibleValidationValue = dataElement.auth_resource_path;
           processedItem.accessRequested = !!(requestedAccess
           && requestedAccess[dataElement.auth_resource_path]);
-          processedDataset.push(processedItem);
           processedItem.requiredIdpField = dataElement[requiredIdpField];
           processedItem.overrideDownloadUrlField = dataElement[overrideUrlField];
+          processedDataset.push(processedItem);
         });
       },
     ).then(() => processedDataset);
@@ -179,6 +179,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
+  fieldsToFetch.push(targetStudyViewerConfig.defaultOrderBy[0]);
 
   const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.requiredIdpField;
   if (requiredIdpField) {
@@ -198,7 +199,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
     ...itemConfig.tableFields,
     ...displayButtonsFields,
   ];
-  fieldsToFetch = _.uniq(fieldsToFetch);
+  fieldsToFetch = _.uniq(fieldsToFetch).filter(e => e !== undefined);
 
   const body = generateGQLQuery(
     dataType,
