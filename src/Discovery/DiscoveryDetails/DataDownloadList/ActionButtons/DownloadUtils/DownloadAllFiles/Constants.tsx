@@ -2,7 +2,7 @@ import React from 'react';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 
 export const DOWNLOAD_FAIL_STATUS: DownloadStatus = {
-  inProgress: false,
+  inProgress: '',
   message: {
     title: 'Download failed',
     content: (

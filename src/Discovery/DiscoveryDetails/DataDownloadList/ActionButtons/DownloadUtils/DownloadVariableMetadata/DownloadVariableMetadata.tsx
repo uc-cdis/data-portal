@@ -22,7 +22,7 @@ const DownloadVariableMetadata = async (
   const projectTitle = resourceInfo.project_title;
 
   const DOWNLOAD_FAIL_INFO: DownloadStatus = {
-    inProgress: false,
+    inProgress: '',
     message: {
       title: 'Download failed',
       content: (
