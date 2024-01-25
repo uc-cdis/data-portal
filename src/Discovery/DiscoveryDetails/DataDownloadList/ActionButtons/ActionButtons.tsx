@@ -66,7 +66,6 @@ const ActionButtons = ({
     children
   ));
 
-  console.log('downloadStatus', downloadStatus);
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <DownloadModal
