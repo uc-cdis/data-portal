@@ -3,6 +3,7 @@ import DownloadStatus from '../../Interfaces/DownloadStatus';
 
 export const INITIAL_DOWNLOAD_STATUS: DownloadStatus = {
   inProgress: false,
+  activator: '',
   message: { title: '', content: <React.Fragment />, active: false },
 };
 

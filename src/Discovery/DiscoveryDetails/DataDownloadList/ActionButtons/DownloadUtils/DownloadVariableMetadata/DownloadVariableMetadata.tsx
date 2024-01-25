@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import { fetchWithCreds } from '../../../../../../actions';
 import { mdsURL } from '../../../../../../localconf';
+import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../Discovery';
 
@@ -69,6 +70,7 @@ const DownloadVariableMetadata = async (
 
   const fetchDataForAllFiles = async (dataDictionaries: IdataDictionaries) => {
     try {
+      setDownloadStatus({ ...INITIAL_DOWNLOAD_STATUS, inProgress: 'DownloadVariableMetadata' });
       await Promise.all(
         Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
         ),
@@ -76,8 +78,10 @@ const DownloadVariableMetadata = async (
         zip.generateAsync({ type: 'blob' }).then((content) => {
           FileSaver.saveAs(content, 'variable-metadata.zip');
         });
+        setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       });
     } catch (error) {
+      setDownloadStatus(DOWNLOAD_FAIL_INFO);
       console.error('Error fetching data:', error);
     }
   };
@@ -89,7 +93,7 @@ const DownloadVariableMetadata = async (
     } else {
       try {
         const dataDictionaries: IdataDictionaries = data.data_dictionaries;
-        console.log("dataDictionaries line 91", dataDictionaries)
+        console.log('dataDictionaries line 91', dataDictionaries);
         if (Object.keys(dataDictionaries).length !== 0) {
           fetchDataForAllFiles(dataDictionaries);
         }
