@@ -179,7 +179,9 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
-  fieldsToFetch.push(targetStudyViewerConfig.defaultOrderBy[0]);
+  if (targetStudyViewerConfig.defaultOrderBy) {
+    fieldsToFetch.push(targetStudyViewerConfig.defaultOrderBy[0]);
+  }
 
   const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.requiredIdpField;
   if (requiredIdpField) {
