@@ -13,7 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@gen3/guppy": "^0.18.0",
+    "@gen3/guppy": "git+https://github.com/uc-cdis/guppy.git#fix/search-fields-csrf",
     "@gen3/ui-component": "^0.11.4",
     "@reactour/tour": "^2.12.0",
     "@upsetjs/venn.js": "^1.4.2",
