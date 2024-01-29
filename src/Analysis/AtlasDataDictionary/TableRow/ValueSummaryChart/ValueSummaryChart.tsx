@@ -1,5 +1,8 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+} from 'recharts';
+import * as d3Scale from 'd3-scale';
 import {
   FULLSIZE_CHART_HEIGHT,
   CHART_FILL_COLOR,
@@ -10,7 +13,6 @@ import {
   FULLSIZE_CHART_MAX_EXPECTED_NUM_BARS,
 } from '../Constants';
 import { INumericValueSummary } from '../../Interfaces/Interfaces';
-import * as d3Scale from 'd3-scale';
 
 interface INumericDetailsChart {
   chartData: INumericValueSummary[];
@@ -18,7 +20,7 @@ interface INumericDetailsChart {
   chartType: string;
 }
 
-let scaleWidthBasedOnChartDataLength = d3Scale
+const scaleWidthBasedOnChartDataLength = d3Scale
   .scaleLinear()
   .domain([1, FULLSIZE_CHART_MAX_EXPECTED_NUM_BARS])
   .range([FULLSIZE_CHART_WIDTH_MIN, FULLSIZE_CHART_WIDTH_MAX]);
@@ -43,15 +45,14 @@ const ValueSummaryChart = ({
   console.log(
     ' FULLSIZE_CHART_WIDTH_MIN,  FULLSIZE_CHART_WIDTH_MAX',
     FULLSIZE_CHART_WIDTH_MIN,
-    FULLSIZE_CHART_WIDTH_MAX
+    FULLSIZE_CHART_WIDTH_MAX,
   );
   console.log('chartData.length', chartData.length);
   console.log('chartWidth', chartWidth);
 
-  const processedChartData =
-    chartType === 'Number'
-      ? chartData.sort((a, b) => a.start - b.start)
-      : chartData;
+  const processedChartData = chartType === 'Number'
+    ? chartData.sort((a, b) => a.start - b.start)
+    : chartData;
 
   const formatXAxis = (tick: string) => {
     const maxLabelLength = 15;
