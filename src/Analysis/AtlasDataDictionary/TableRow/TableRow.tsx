@@ -10,8 +10,9 @@ import {
   checkIfChartContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
-import NumericDetailsChart from './NumericDetails/NumericDetailsChart';
+import NumericDetailsChart from './ValueSummaryChart/ValueSummaryChart';
 import NonNumericDetailsPreviewChart from './NonNumericDetails/NonNumericDetailsPreviewChart';
+import ValueSummaryChart from './ValueSummaryChart/ValueSummaryChart';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -158,17 +159,11 @@ const TableRow = ({
           ${checkIfHiddenCellsContainSearchTerm(rowObject, searchInputValue)}`}
         >
           <div className={'td-container '}>
-            {rowObject.valueStoredAs === 'Number' && (
-              <NumericDetailsChart
-                chartData={rowObject.valueSummary as INumericValueSummary[]}
-                preview
-              />
-            )}
-            {rowObject.valueStoredAs !== 'Number' && (
-              <NonNumericDetailsPreviewChart
-                chartData={rowObject.valueSummary}
-              />
-            )}
+            <ValueSummaryChart
+              chartType={rowObject.valueStoredAs}
+              chartData={rowObject.valueSummary as INumericValueSummary[]}
+              preview
+            />
           </div>
         </td>
       </tr>
@@ -200,7 +195,7 @@ const TableRow = ({
                     searchInputValue
                   )}`}
                 >
-                  <NumericDetailsChart
+                  <ValueSummaryChart
                     chartData={rowObject.valueSummary}
                     preview={false}
                     chartType={rowObject.valueStoredAs}
