@@ -10,7 +10,7 @@ import {
   checkIfChartContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
-import NumericDetailsPreviewChart from './NumericDetails/NumericDetailsPreviewChart';
+import NumericDetailsChart from './NumericDetails/NumericDetailsChart';
 import NonNumericDetailsPreviewChart from './NonNumericDetails/NonNumericDetailsPreviewChart';
 
 interface ITableRowProps {
@@ -159,9 +159,9 @@ const TableRow = ({
         >
           <div className={'td-container '}>
             {rowObject.valueStoredAs === 'Number' && (
-              <NumericDetailsPreviewChart
+              <NumericDetailsChart
                 chartData={rowObject.valueSummary as INumericValueSummary[]}
-                preview={true}
+                preview
               />
             )}
             {rowObject.valueStoredAs !== 'Number' && (
@@ -200,9 +200,11 @@ const TableRow = ({
                     searchInputValue
                   )}`}
                 >
-                  <h3>Value Summary</h3>
-                  {JSON.stringify(rowObject.valueSummary)}
-                  <br />
+                  <NumericDetailsChart
+                    chartData={rowObject.valueSummary}
+                    preview={false}
+                    chartType={rowObject.valueStoredAs}
+                  />
                 </div>
               </Grid.Col>
             </Grid>
