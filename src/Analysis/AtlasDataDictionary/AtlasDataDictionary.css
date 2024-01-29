@@ -106,14 +106,14 @@
 }
 
 .atlas-data-dictionary-container tr td div.expandable.expanded {
-  max-height: 321px;
-  height: 321px;
+  max-height: 359px;
+  height: 359px;
   background: #e2e2e3;
 }
 
 .atlas-data-dictionary-container .expanded-container {
   background: #fff;
-  height: 290px;
+  height: 327px;
   padding: 16px;
   margin: 16px;
   overflow-y: auto;
@@ -124,7 +124,7 @@
 }
 
 .atlas-data-dictionary-container
-.chart-details-wrapper.expanded-container.search-highlight {
+  .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }
@@ -205,4 +205,10 @@ table > tbody > tr > td.preview-chart {
   scroll-behavior: smooth;
   width: 44px;
   text-align: center;
+}
+
+/* Data Viz */
+.atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
+  opacity: 0;
+  z-index: -100;
 }
