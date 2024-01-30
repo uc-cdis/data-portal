@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRowDropdown from './TableRowDropdown';
 import TableData from '../../TestData/TableData';
@@ -19,7 +19,7 @@ describe('TableRowDropdown', () => {
   it('renders non-numeric details table when valueStoredAs is not Number', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails={true}
+        showDetails
         columnsShown={columnsShown}
         rowObject={firstNonNumericRow as IRowData}
         searchInputValue=''
@@ -31,7 +31,7 @@ describe('TableRowDropdown', () => {
   it('renders numeric details table when valueStoredAs is Number', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails={true}
+        showDetails
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
         searchInputValue=''
@@ -43,7 +43,7 @@ describe('TableRowDropdown', () => {
   it('renders value summary chart ', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails={true}
+        showDetails
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
         searchInputValue={''}

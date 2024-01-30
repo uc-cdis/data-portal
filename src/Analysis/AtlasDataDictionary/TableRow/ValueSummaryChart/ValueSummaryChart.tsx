@@ -1,5 +1,7 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+} from 'recharts';
 import * as d3Scale from 'd3-scale';
 import {
   FULLSIZE_CHART_HEIGHT,
@@ -44,10 +46,9 @@ const ValueSummaryChart = ({
   const xAxisFontSize = 10;
   const maxXAxisLabelLength = 15;
 
-  const processedChartData =
-    chartType === 'Number'
-      ? chartData.sort((a: any, b: any) => a.start - b.start)
-      : chartData;
+  const processedChartData = chartType === 'Number'
+    ? chartData.sort((a: any, b: any) => a.start - b.start)
+    : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
     if (tick.length > 5) return `${tick.substring(0, maxXAxisLabelLength)}...`;

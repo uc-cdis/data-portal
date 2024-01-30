@@ -1,11 +1,8 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ValueSummaryChart from './ValueSummaryChart';
-import {
-  IValueSummary,
-  INumericValueSummary,
-} from '../../Interfaces/Interfaces';
+import { IValueSummary } from '../../Interfaces/Interfaces';
 
 describe('ValueSummaryChart', () => {
   it('renders the component for numeric data', () => {
