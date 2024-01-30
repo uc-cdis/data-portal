@@ -44,14 +44,6 @@ const ValueSummaryChart = ({
   const xAxisFontSize = 10;
   const maxXAxisLabelLength = 15;
 
-  console.log(
-    ' FULLSIZE_CHART_WIDTH_MIN,  FULLSIZE_CHART_WIDTH_MAX',
-    FULLSIZE_CHART_WIDTH_MIN,
-    FULLSIZE_CHART_WIDTH_MAX
-  );
-  console.log('chartData.length', chartData.length);
-  console.log('chartWidth', chartWidth);
-
   const processedChartData =
     chartType === 'Number'
       ? chartData.sort((a: any, b: any) => a.start - b.start)
@@ -63,7 +55,10 @@ const ValueSummaryChart = ({
   };
 
   return (
-    <div style={{ margin: '0 auto', width: chartWidth, textAlign: 'center' }}>
+    <div
+      data-testid='value-summary-chart'
+      style={{ margin: '0 auto', width: chartWidth, textAlign: 'center' }}
+    >
       <BarChart
         width={chartWidth}
         height={chartHeight}
