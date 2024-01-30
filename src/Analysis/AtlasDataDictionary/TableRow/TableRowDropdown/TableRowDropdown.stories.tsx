@@ -17,26 +17,27 @@ const firstNonNumericRow = processedTableData.find(
   (obj) => obj.valueStoredAs !== 'Number'
 );
 
-const MockNumericTemplate = () => (
+console.log('firstNonNumericRow', firstNonNumericRow);
+
+let defaultArgs = {
+  showDetails: true,
+  columnsShown: 11,
+  rowObject: firstNonNumericRow as IRowData,
+  searchInputValue: (firstNonNumericRow as IRowData).conceptName,
+};
+
+const NonNumericTemplate = () => (
   <React.Fragment>
-    <TableRowDropdown
-      showDetails={true}
-      columnsShown={11}
-      rowObject={firstNumericRow as IRowData}
-      searchInputValue={(firstNumericRow as IRowData).conceptName}
-    />
+    <TableRowDropdown {...defaultArgs} />
   </React.Fragment>
 );
-const MockNonNumericTemplate = () => (
+const NumericTemplate = () => (
   <React.Fragment>
     <TableRowDropdown
-      showDetails={true}
-      columnsShown={11}
-      rowObject={firstNonNumericRow as IRowData}
-      searchInputValue={(firstNonNumericRow as IRowData).conceptName}
+      {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
     />
   </React.Fragment>
 );
 
-export const MockedNumericRow = MockNumericTemplate.bind({});
-export const MockedNonNumericRow = MockNonNumericTemplate.bind({});
+export const NonNumericDropdown = NonNumericTemplate.bind({});
+export const NumericDropdown = NumericTemplate.bind({});

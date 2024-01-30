@@ -1,6 +1,6 @@
 interface IValueSummary {
   valueAsString?: string;
-  valueAsConceptID?: string;
+  valueAsConceptID?: number;
   name?: string;
   personCount?: number;
   start?: number;
