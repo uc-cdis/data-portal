@@ -211,8 +211,7 @@ table > tbody > tr > td.preview-chart {
   text-align: center;
 }
 
-/* Data Viz */
+/* Charts */
 .atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
   opacity: 0;
-  z-index: -100;
 }
