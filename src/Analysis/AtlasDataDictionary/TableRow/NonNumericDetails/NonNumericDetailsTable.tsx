@@ -20,7 +20,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.valueAsString,
-                searchInputValue
+                searchInputValue,
               )}
             >
               {valueSummaryObj.valueAsString}
@@ -28,7 +28,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.valueAsConceptID,
-                searchInputValue
+                searchInputValue,
               )}
             >
               {valueSummaryObj.valueAsConceptID}
@@ -36,7 +36,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.name,
-                searchInputValue
+                searchInputValue,
               )}
             >
               {valueSummaryObj.name}
@@ -44,13 +44,13 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.personCount,
-                searchInputValue
+                searchInputValue,
               )}
             >
               {valueSummaryObj.personCount}
             </td>
           </tr>
-        )
+        ),
       )}
     </tbody>
   </Table>

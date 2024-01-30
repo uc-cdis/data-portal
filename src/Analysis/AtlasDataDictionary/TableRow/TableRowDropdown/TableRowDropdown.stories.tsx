@@ -11,15 +11,15 @@ export default {
 
 const processedTableData = PreprocessTableData(TableData);
 const firstNumericRow = processedTableData.find(
-  (obj) => obj.valueStoredAs === 'Number'
+  (obj) => obj.valueStoredAs === 'Number',
 );
 const firstNonNumericRow = processedTableData.find(
-  (obj) => obj.valueStoredAs !== 'Number'
+  (obj) => obj.valueStoredAs !== 'Number',
 );
 
 console.log('firstNonNumericRow', firstNonNumericRow);
 
-let defaultArgs = {
+const defaultArgs = {
   showDetails: true,
   columnsShown: 11,
   rowObject: firstNonNumericRow as IRowData,
