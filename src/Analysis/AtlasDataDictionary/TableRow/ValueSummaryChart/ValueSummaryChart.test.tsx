@@ -15,7 +15,7 @@ describe('ValueSummaryChart', () => {
         chartData={NumericChartData}
         preview={false}
         chartType='Number'
-      />,
+      />
     );
     expect(screen.getByTestId('value-summary-chart')).toBeInTheDocument();
     expect(screen.getByText('VALUE AS NUMBER')).toBeInTheDocument();
@@ -35,9 +35,9 @@ describe('ValueSummaryChart', () => {
         chartData={NonNumericChartData}
         preview={false}
         chartType='Other'
-      />,
+      />
     );
     expect(screen.getByTestId('value-summary-chart')).toBeInTheDocument();
-    expect(screen.queryByText('VALUE AS NUMBER')).toBeNull(); // it doesn't exist
+    expect(screen.queryByText('VALUE AS NUMBER')).toBeNull();
   });
 });
