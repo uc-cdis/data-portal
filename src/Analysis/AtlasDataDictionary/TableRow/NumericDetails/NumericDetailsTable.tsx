@@ -3,7 +3,7 @@ import { Table } from '@mantine/core';
 import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
 
 const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
-  <Table striped>
+  <Table data-testid='numeric-details-table' striped>
     <thead>
       <tr>
         <th>Min Value</th>
@@ -17,7 +17,7 @@ const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.minValue,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.minValue}</div>
@@ -25,7 +25,7 @@ const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.maxValue,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.maxValue}</div>
@@ -33,7 +33,7 @@ const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.meanValue,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.meanValue}</div>
@@ -41,7 +41,7 @@ const NumericDetailsTable = ({ rowObject, searchInputValue }) => (
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.standardDeviation,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.standardDeviation}</div>
