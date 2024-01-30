@@ -129,6 +129,10 @@
   border: 2px solid #ef8523;
 }
 
+.atlas-data-dictionary-container .expanded-container table thead {
+  background: #e9eef2;
+}
+
 .atlas-data-dictionary-container .td-container {
   width: 80%;
   word-wrap: break-word;
