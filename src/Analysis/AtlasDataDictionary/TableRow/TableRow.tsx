@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Grid } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { INumericValueSummary, IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
-import NumericDetailsTable from './NumericDetails/NumericDetailsTable';
-import NonNumericDetailsTable from './NonNumericDetails/NonNumericDetailsTable';
 import {
   checkIfCellContainsSearchTerm,
-  checkIfChartContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
 import ValueSummaryChart from './ValueSummaryChart/ValueSummaryChart';
+import TableRowDropdown from './TableRowDropdown/TableRowDropdown';
 
 interface ITableRowProps {
   rowObject: IRowData;
@@ -53,7 +51,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.vocabularyID,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.vocabularyID}</div>
@@ -61,7 +59,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
@@ -69,7 +67,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptCode.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
@@ -77,7 +75,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptName.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
@@ -85,7 +83,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptClassID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -94,11 +92,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariable,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariablePercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -112,11 +110,11 @@ const TableRow = ({
           className={`${
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilled,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilledPercent,
-              searchInputValue,
+              searchInputValue
             )
           } `}
         >
@@ -130,11 +128,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNull,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNullPercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -147,7 +145,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.valueStoredAs,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
@@ -165,45 +163,12 @@ const TableRow = ({
           </div>
         </td>
       </tr>
-      <tr className={`expandable ${showDetails ? 'expanded' : ''}`}>
-        <td colSpan={columnsShown}>
-          <div className={`expandable ${showDetails ? 'expanded' : ''}`}>
-            <Grid>
-              <Grid.Col span={5}>
-                <div className={'expanded-container'}>
-                  {rowObject.valueStoredAs !== 'Number' && (
-                    <NonNumericDetailsTable
-                      rowObject={rowObject}
-                      searchInputValue={searchInputValue}
-                    />
-                  )}
-                  {rowObject.valueStoredAs === 'Number' && (
-                    <NumericDetailsTable
-                      rowObject={rowObject}
-                      searchInputValue={searchInputValue}
-                    />
-                  )}
-                </div>
-              </Grid.Col>
-              <Grid.Col span={7}>
-                <div
-                  className={`expanded-container chart-details-wrapper
-                  ${checkIfChartContainsSearchTerm(
-      rowObject,
-      searchInputValue,
-    )}`}
-                >
-                  <ValueSummaryChart
-                    chartData={rowObject.valueSummary}
-                    preview={false}
-                    chartType={rowObject.valueStoredAs}
-                  />
-                </div>
-              </Grid.Col>
-            </Grid>
-          </div>
-        </td>
-      </tr>
+      <TableRowDropdown
+        showDetails={showDetails}
+        columnsShown={columnsShown}
+        rowObject={rowObject}
+        searchInputValue={searchInputValue}
+      />
     </React.Fragment>
   );
 };
