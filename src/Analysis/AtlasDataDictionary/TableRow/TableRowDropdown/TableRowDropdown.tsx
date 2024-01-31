@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mantine/core';
-import NonNumericDetailsTable from '../NonNumericDetails/NonNumericDetailsTable';
-import NumericDetailsTable from '../NumericDetails/NumericDetailsTable';
+import NonNumericDetailsTable from '../NonNumericDetailsTable/NonNumericDetailsTable';
+import NumericDetailsTable from '../NumericDetailsTable/NumericDetailsTable';
 import { checkIfChartContainsSearchTerm } from '../CheckSearchTermUtils';
 import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
 import { IRowData } from '../../Interfaces/Interfaces';
@@ -45,7 +45,7 @@ const TableRowDropdown = ({
             <Grid.Col span={gridColSpanForChart}>
               <div
                 className={`expanded-container chart-details-wrapper
-              ${checkIfChartContainsSearchTerm(rowObject, searchInputValue)}`}
+                ${checkIfChartContainsSearchTerm(rowObject, searchInputValue)}`}
               >
                 <ValueSummaryChart
                   chartData={rowObject.valueSummary}

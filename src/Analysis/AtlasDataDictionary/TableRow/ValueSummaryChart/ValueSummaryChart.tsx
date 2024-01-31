@@ -9,7 +9,11 @@ import {
   FULLSIZE_CHART_WIDTH_MIN,
   FULLSIZE_CHART_WIDTH_MAX,
   FULLSIZE_CHART_MAX_EXPECTED_NUM_BARS,
-} from './Constants';
+  X_AXIS_FONT_SIZE,
+  MAX_X_AXIS_LABEL_LENGTH,
+  X_AXIS_CHARACTER_CUT_OFF,
+  GRID_OPACITY,
+} from './ValueSummaryChartConstants';
 import {
   IValueSummary,
   INumericValueSummary,
@@ -41,9 +45,6 @@ const ValueSummaryChart = ({
   const xAxisDataKey = chartType === 'Number' ? 'start' : 'name';
   const xAxisAngle = chartType === 'Number' ? 0 : -25;
   const xAxisTextAnchor = chartType === 'Number' ? 'middle' : 'end';
-  const xAxisFontSize = 10;
-  const maxXAxisLabelLength = 15;
-  const XAxisCharacterCutOff = maxXAxisLabelLength - 3;
 
   const processedChartData =
     chartType === 'Number'
@@ -51,15 +52,16 @@ const ValueSummaryChart = ({
       : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
-    if (tick.length > XAxisCharacterCutOff)
-      return `${tick.substring(0, maxXAxisLabelLength)}...`;
+    if (tick.length > X_AXIS_CHARACTER_CUT_OFF)
+      return `${tick.substring(0, MAX_X_AXIS_LABEL_LENGTH)}...`;
     return tick;
   };
 
   return (
     <div
       data-testid='value-summary-chart'
-      style={{ margin: '0 auto', width: chartWidth, textAlign: 'center' }}
+      className='value-summary-chart'
+      style={{ width: chartWidth }}
     >
       <BarChart
         width={chartWidth}
@@ -72,13 +74,13 @@ const ValueSummaryChart = ({
         <Tooltip />
         {!preview && (
           <React.Fragment>
-            <CartesianGrid opacity={0.5} />
+            <CartesianGrid opacity={GRID_OPACITY} />
             <XAxis
               height={xAxisHeight}
               dataKey={xAxisDataKey}
               angle={xAxisAngle}
               textAnchor={xAxisTextAnchor}
-              fontSize={xAxisFontSize}
+              fontSize={X_AXIS_FONT_SIZE}
               tickFormatter={(tick) => formatXAxisWithEllipsisIfTooLong(tick)}
               tickLine
             />
@@ -89,9 +91,7 @@ const ValueSummaryChart = ({
       </BarChart>
 
       {!preview && chartType === 'Number' && (
-        <strong style={{ fontSize: '10px', paddingLeft: '65px' }}>
-          VALUE AS NUMBER
-        </strong>
+        <strong className='value-summary-chart-title'>VALUE AS NUMBER</strong>
       )}
     </div>
   );
