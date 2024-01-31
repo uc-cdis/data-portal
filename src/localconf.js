@@ -1,3 +1,5 @@
+import crawlers from 'crawler-user-agents';
+
 /* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
@@ -160,6 +162,8 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
+  const ddKnownBotPattern = crawlers.map((c) => c.pattern).join('|');
+  const ddKnownBotRegex = new RegExp(ddKnownBotPattern, 'i');
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -479,6 +483,8 @@ function buildConfig(opts) {
 
   };
 
+  const topNavLogin = !components?.login?.hideNavLink;
+
   return {
     app,
     basename,
@@ -587,10 +593,12 @@ function buildConfig(opts) {
     ddEnv,
     ddUrl,
     ddSampleRate,
+    ddKnownBotRegex,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,
     bundle,
+    topNavLogin,
   };
 }
 

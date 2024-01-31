@@ -5,7 +5,6 @@
 // differet sizes of test data
 
 const fs = require('fs');
-
 const numberOfEntries = 30;
 const maxValueSummarySize = 45;
 const fileName = 'TableData.ts';
