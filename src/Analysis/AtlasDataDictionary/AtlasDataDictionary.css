@@ -215,3 +215,13 @@ table > tbody > tr > td.preview-chart {
 .atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
   opacity: 0;
 }
+
+.atlas-data-dictionary-container .value-summary-chart {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.atlas-data-dictionary-container .value-summary-chart-title {
+  font-size: 10px;
+  padding-left: 65px;
+}

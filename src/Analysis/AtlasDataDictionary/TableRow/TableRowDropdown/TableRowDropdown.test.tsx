@@ -8,14 +8,14 @@ import { IRowData } from '../../Interfaces/Interfaces';
 
 const processedTableData = PreprocessTableData(TableData);
 const firstNumericRow = processedTableData.find(
-  (obj) => obj.valueStoredAs === 'Number',
+  (obj) => obj.valueStoredAs === 'Number'
 );
 const firstNonNumericRow = processedTableData.find(
-  (obj) => obj.valueStoredAs !== 'Number',
+  (obj) => obj.valueStoredAs !== 'Number'
 );
 
 describe('TableRowDropdown', () => {
-  const columnsShown = 11; // You can adjust the number of columns as needed
+  const columnsShown = 11;
   it('renders non-numeric details table when valueStoredAs is not Number', () => {
     const { getByTestId } = render(
       <TableRowDropdown
@@ -23,7 +23,7 @@ describe('TableRowDropdown', () => {
         columnsShown={columnsShown}
         rowObject={firstNonNumericRow as IRowData}
         searchInputValue=''
-      />,
+      />
     );
     expect(getByTestId('non-numeric-details-table')).toBeInTheDocument();
   });
@@ -35,7 +35,7 @@ describe('TableRowDropdown', () => {
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
         searchInputValue=''
-      />,
+      />
     );
     expect(getByTestId('numeric-details-table')).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe('TableRowDropdown', () => {
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
         searchInputValue={''}
-      />,
+      />
     );
     expect(getByTestId('value-summary-chart')).toBeInTheDocument();
   });
