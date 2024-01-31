@@ -124,7 +124,7 @@
 }
 
 .atlas-data-dictionary-container
-.chart-details-wrapper.expanded-container.search-highlight {
+  .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }
@@ -223,6 +223,10 @@ table > tbody > tr > td.preview-chart {
 
 .atlas-data-dictionary-container .value-summary-chart.Number {
   margin: 10px auto 0 auto;
+}
+
+.atlas-data-dictionary-container .value-summary-chart.preview {
+  margin: 0 auto;
 }
 
 .atlas-data-dictionary-container .value-summary-chart.Number .recharts-wrapper {
