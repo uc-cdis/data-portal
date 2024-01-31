@@ -217,10 +217,12 @@ table > tbody > tr > td.preview-chart {
 }
 
 .atlas-data-dictionary-container .value-summary-chart {
-  margin: 0 auto;
+  margin: 35px auto 0 auto;
   text-align: center;
 }
-
+.atlas-data-dictionary-container .value-summary-chart.Number {
+  margin: 10px auto 0 auto;
+}
 .atlas-data-dictionary-container .value-summary-chart.Number .recharts-wrapper {
   margin-bottom: 10px;
 }
