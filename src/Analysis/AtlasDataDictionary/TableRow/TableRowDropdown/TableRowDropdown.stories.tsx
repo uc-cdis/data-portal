@@ -17,8 +17,6 @@ const firstNonNumericRow = processedTableData.find(
   (obj) => obj.valueStoredAs !== 'Number',
 );
 
-console.log('firstNonNumericRow', firstNonNumericRow);
-
 const defaultArgs = {
   showDetails: true,
   columnsShown: 11,
@@ -27,16 +25,16 @@ const defaultArgs = {
 };
 
 const NonNumericTemplate = () => (
-  <React.Fragment>
+  <div className='atlas-data-dictionary-container'>
     <TableRowDropdown {...defaultArgs} />
-  </React.Fragment>
+  </div>
 );
 const NumericTemplate = () => (
-  <React.Fragment>
+  <div className='atlas-data-dictionary-container'>
     <TableRowDropdown
       {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
     />
-  </React.Fragment>
+  </div>
 );
 
 export const NonNumericDropdown = NonNumericTemplate.bind({});
