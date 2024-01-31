@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@mantine/core';
-import { INumericValueSummary, IRowData } from '../Interfaces/Interfaces';
+import { IValueSummary, IRowData } from '../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
 import {
@@ -51,7 +51,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.vocabularyID,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.vocabularyID}</div>
@@ -59,7 +59,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
@@ -67,7 +67,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptCode.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
@@ -75,7 +75,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptName.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
@@ -83,7 +83,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptClassID.toString(),
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -92,11 +92,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariable,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariablePercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -110,11 +110,11 @@ const TableRow = ({
           className={`${
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilled,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilledPercent,
-              searchInputValue,
+              searchInputValue
             )
           } `}
         >
@@ -128,11 +128,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNull,
-              searchInputValue,
-            )
-            || checkIfCellContainsSearchTerm(
+              searchInputValue
+            ) ||
+            checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNullPercent,
-              searchInputValue,
+              searchInputValue
             )
           }
         >
@@ -145,7 +145,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.valueStoredAs,
-            searchInputValue,
+            searchInputValue
           )}
         >
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
@@ -157,7 +157,7 @@ const TableRow = ({
           <div className={'td-container '}>
             <ValueSummaryChart
               chartType={rowObject.valueStoredAs}
-              chartData={rowObject.valueSummary as INumericValueSummary[]}
+              chartData={rowObject.valueSummary as IValueSummary[]}
               preview
             />
           </div>

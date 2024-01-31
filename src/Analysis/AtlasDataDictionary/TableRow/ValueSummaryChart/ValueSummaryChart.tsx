@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import * as d3Scale from 'd3-scale';
 import {
   FULLSIZE_CHART_HEIGHT,
@@ -16,13 +14,10 @@ import {
   X_AXIS_CHARACTER_CUT_OFF,
   GRID_OPACITY,
 } from './ValueSummaryChartConstants';
-import {
-  IValueSummary,
-  INumericValueSummary,
-} from '../../Interfaces/Interfaces';
+import { IValueSummary } from '../../Interfaces/Interfaces';
 
 interface IValueSummaryChartProps {
-  chartData: IValueSummary[] | INumericValueSummary[];
+  chartData: IValueSummary[];
   preview: boolean;
   chartType: string;
 }
@@ -48,12 +43,15 @@ const ValueSummaryChart = ({
   const xAxisAngle = chartType === 'Number' ? 0 : -25;
   const xAxisTextAnchor = chartType === 'Number' ? 'middle' : 'end';
 
-  const processedChartData = chartType === 'Number'
-    ? chartData.sort((a: any, b: any) => a.start - b.start)
-    : chartData;
+  const processedChartData =
+    chartType === 'Number'
+      ? chartData.sort((a: any, b: any) => a.start - b.start)
+      : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
-    if (tick.length > X_AXIS_CHARACTER_CUT_OFF) return `${tick.substring(0, MAX_X_AXIS_LABEL_LENGTH)}...`;
+    if (tick.length > X_AXIS_CHARACTER_CUT_OFF) {
+      return `${tick.substring(0, MAX_X_AXIS_LABEL_LENGTH)}...`;
+    }
     return tick;
   };
 
