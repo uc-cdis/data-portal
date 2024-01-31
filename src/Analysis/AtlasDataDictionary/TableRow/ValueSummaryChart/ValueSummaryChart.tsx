@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import * as d3Scale from 'd3-scale';
 import {
   FULLSIZE_CHART_HEIGHT,
@@ -45,9 +43,10 @@ const ValueSummaryChart = ({
   const xAxisAngle = chartType === 'Number' ? 0 : -25;
   const xAxisTextAnchor = chartType === 'Number' ? 'middle' : 'end';
 
-  const processedChartData = chartType === 'Number'
-    ? chartData.sort((a: any, b: any) => a.start - b.start)
-    : chartData;
+  const processedChartData =
+    chartType === 'Number'
+      ? chartData.sort((a: any, b: any) => a.start - b.start)
+      : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
     if (tick.length > X_AXIS_CHARACTER_CUT_OFF) {
@@ -59,7 +58,7 @@ const ValueSummaryChart = ({
   return (
     <div
       data-testid='value-summary-chart'
-      className='value-summary-chart'
+      className={`value-summary-chart ${chartType}`}
       style={{ width: chartWidth }}
     >
       <BarChart
@@ -88,7 +87,6 @@ const ValueSummaryChart = ({
         )}
         <Bar dataKey='personCount' fill={CHART_FILL_COLOR} />
       </BarChart>
-
       {!preview && chartType === 'Number' && (
         <strong className='value-summary-chart-title'>VALUE AS NUMBER</strong>
       )}

@@ -221,6 +221,10 @@ table > tbody > tr > td.preview-chart {
   text-align: center;
 }
 
+.atlas-data-dictionary-container .value-summary-chart.Number .recharts-wrapper {
+  margin-bottom: 10px;
+}
+
 .atlas-data-dictionary-container .value-summary-chart-title {
   font-size: 10px;
   padding-left: 65px;
