@@ -37,4 +37,6 @@ interface ISortConfig {
   direction: 'ascending' | 'descending' | 'off';
 }
 
-export { IRowData, IValueSummary, ITableData, ISortConfig };
+export {
+  IRowData, IValueSummary, ITableData, ISortConfig,
+};
