@@ -5,6 +5,7 @@ import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import innerText from 'react-innertext';
 import './Table.css';
+import { filter } from 'jszip';
 
 export function cellValueToText(value) {
   let text = '';
@@ -42,8 +43,11 @@ function Table({ title, header, data, footer }) {
           return new Date(`${filterValue.start}T00:00:00.000`) <= valueDate && 
             valueDate <= new Date(`${filterValue.end.add({days:1})}T00:00:00.000`);
         } else if (Array.isArray(filterValue)) {
+          if (filterValue.length === 0) {
+            return true;
+          }
           return filterValue.some((filterString) => {
-            return value.includes(filterString) || text.includes(filterString);
+            return value.includes?.(filterString) || text.includes(filterString);
           });
         } else if (typeof filterValue === 'number') {
           return filterValue > 0 &&  value <= filterValue;

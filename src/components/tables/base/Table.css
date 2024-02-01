@@ -1,4 +1,5 @@
 .base-table {
+  min-height: 300px;
   overflow-x: auto;
 }
 
@@ -8,7 +9,7 @@
 
 .base-table__body {
   border-collapse: collapse;
-  overflow: auto;
+  overflow: scroll;
   margin: 1em 0;
   text-align: left;
   width: 100%;
@@ -62,4 +63,8 @@
 
 .base-table__cell-list-value li:last-child:after {
   content: "";
+}
+
+.base-table__filter-field {
+  min-width: 200px;
 }

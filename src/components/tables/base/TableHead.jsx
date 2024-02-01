@@ -52,7 +52,7 @@ function TableHead({ cols, setFilters, data }) {
             if (dataValues[0] instanceof Date) {
               return <th className='base-table__column-head' key={`col_${col}_${i}`}>
                 <Provider theme={defaultTheme}>
-                  <Form validationBehavior="native" maxWidth="size-3000">
+                  <Form validationBehavior="native">
                     <Flex margin={0} direction="row" alignItems='center' gap={8}>
                       <DateRangePicker onChange={(range) => {
                           filters[i] = range;
@@ -95,13 +95,13 @@ function TableHead({ cols, setFilters, data }) {
                   dataValues[0] === '' ? 
                   null :
                   <Select
-                    isMulti={Array.isArray(dataValues[0])}
+                    isMulti={true}
                     name={`${col}-filter-input`}
                     options={uniqueValues.map((value) => ({ value, label: value }))}
-                    className="basic-multi-select"
+                    className="base-table__filter-field"
                     classNamePrefix="select"
-                    onChange={(option) => {
-                      filters[i] = option.value;
+                    onChange={(options) => {
+                      filters[i] = options.map((opt) => opt.value);
                       setFilters([...filters]);
                     }}
                   />
