@@ -38,7 +38,7 @@ export default function AnotherDateRangePicker({ onChange }) {
         end: null
         }}
     >
-    <Group >
+    <Group>
       <DateInput slot="start">
         {(segment) => <DateSegment segment={segment} />}
       </DateInput>

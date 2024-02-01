@@ -79,7 +79,7 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
         project.consortia
       ];
 
-      if (project.has_access) {
+      if (true) {
         row.push(<DataDownloadButton project={project} />)
       } else {
         row.push('');
