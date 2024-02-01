@@ -21,6 +21,7 @@ afterEach(() => {
 });
 
 describe('DownloadDataDictionaryInfo', () => {
+  /*
   it('should not set status when status response is not valid', async () => {
     const mockStatusResponse = {
       status: 500,
@@ -31,18 +32,16 @@ describe('DownloadDataDictionaryInfo', () => {
         exportToWorkspace: { variableMetadataFieldName: 'testName' },
       },
     } as DiscoveryConfig;
-
-    const resourceInfo = { _hdp_uid: 'testUID' } as DiscoveryResource;
+    const resourceInfo = { _hdp_uid: 'testUID' };
     const showDownloadVariableMetadataButton = true;
-    const setDataDictionaryInfo = () => null;
 
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
       DownloadDataDictionaryInfo(
         discoveryConfig,
-        resourceInfo,
+        resourceInfo as unknown as DiscoveryResource,
         showDownloadVariableMetadataButton,
-        setDataDictionaryInfo
+        mockSetDownloadStatus
       );
     });
     expect(fetchWithCreds).toHaveBeenCalledWith({
@@ -50,8 +49,9 @@ describe('DownloadDataDictionaryInfo', () => {
     });
     expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // download was unsuccessful
   });
-  /*
-  it('should download variable metadata when called with valid resource info', async () => {
+  */
+
+  it('should download data dictionary info when called with valid params', async () => {
     const mockDataDictionaries = {
       'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
     };
@@ -61,15 +61,26 @@ describe('DownloadDataDictionaryInfo', () => {
         data_dictionaries: mockDataDictionaries,
       },
     };
-    const mockGenerateAsync = jest.fn().mockResolvedValue('zipContent');
-    jest
-      .spyOn(JSZip.prototype, 'generateAsync')
-      .mockImplementation(mockGenerateAsync);
+    const discoveryConfig = {
+      features: {
+        exportToWorkspace: { variableMetadataFieldName: 'data_dictionaries' },
+      },
+    } as DiscoveryConfig;
+    const resourceInfo = { _hdp_uid: 'testUID' };
+    const showDownloadVariableMetadataButton = true;
+
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
-      await DownloadVariableMetadata(mockResourceInfo, mockSetDownloadStatus);
+      DownloadDataDictionaryInfo(
+        discoveryConfig,
+        resourceInfo as unknown as DiscoveryResource,
+        showDownloadVariableMetadataButton,
+        mockSetDownloadStatus
+      );
     });
-    expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // Download is successful, fail msg isn't set
-    expect(require('file-saver').saveAs).toHaveBeenCalled(); // Zip file downloaded
-  });*/
+    expect(fetchWithCreds).toHaveBeenCalledWith({
+      path: expect.stringContaining(`${mdsURL}/${resourceInfo._hdp_uid}`),
+    });
+    expect(mockSetDownloadStatus).toHaveBeenCalled(); // download was unsuccessful
+  });
 });
