@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Button, Popover } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
@@ -14,6 +14,7 @@ import DownloadVariableMetadata from './DownloadUtils/DownloadVariableMetadata/D
 import { mdsURL } from '../../../../localconf';
 import { fetchWithCreds } from '../../../../actions';
 import './ActionButtons.css';
+import DownloadDataDictionaryInfo from './DownloadUtils/DownloadDataDictionaryInfo';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -58,31 +59,19 @@ const ActionButtons = ({
     discoveryConfig.features.exportToWorkspace.variableMetadataFieldName &&
       discoveryConfig.features.exportToWorkspace.enableDownloadVariableMetadata
   );
+  const [dataDictionaryInfo, setDataDictionaryInfo] = useState({
+    noVariableLevelMetadata: true,
+    dataDictionaries: { value: {} },
+  });
 
-  // let noVariableLevelMetadata = true;
-  const [noVariableLevelMetadata, setNoVariableLevelMetadata] = useState(true);
-  const dataDictionaryReference =
-    discoveryConfig.features.exportToWorkspace.variableMetadataFieldName;
-  let dataDictionaries: DataDictionaries;
-  if (showDownloadVariableMetadataButton) {
-    const studyID = resourceInfo._hdp_uid;
-    fetchWithCreds({ path: `${mdsURL}/${studyID}` }).then((statusResponse) => {
-      const { data } = statusResponse;
-      if (
-        statusResponse.status !== 200 ||
-        !data ||
-        !data[dataDictionaryReference as string] ||
-        Array.isArray(data[dataDictionaryReference as string]) ||
-        data[dataDictionaryReference as string].length
-      ) {
-        return;
-      } else {
-        dataDictionaries = data.data_dictionaries;
-        setNoVariableLevelMetadata(false);
-        console.log(dataDictionaries);
-      }
-    });
-  }
+  useEffect(() => {
+    DownloadDataDictionaryInfo(
+      discoveryConfig,
+      resourceInfo,
+      showDownloadVariableMetadataButton,
+      setDataDictionaryInfo
+    );
+  }, [resourceInfo]);
 
   const ConditionalPopover = ({ children }) =>
     noData ? (
@@ -105,12 +94,13 @@ const ActionButtons = ({
             <Button
               className='discovery-action-bar-button'
               disabled={Boolean(
-                downloadStatus.inProgress || noVariableLevelMetadata
+                downloadStatus.inProgress ||
+                  dataDictionaryInfo.noVariableLevelMetadata
               )}
               loading={downloadStatus.inProgress === 'DownloadVariableMetadata'}
               onClick={() => {
                 DownloadVariableMetadata(
-                  dataDictionaries,
+                  dataDictionaryInfo.dataDictionaries,
                   resourceInfo,
                   setDownloadStatus
                 );
