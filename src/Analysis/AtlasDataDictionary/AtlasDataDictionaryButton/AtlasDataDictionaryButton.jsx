@@ -4,7 +4,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './AtlasDataDictionaryButton.css';
 
 const AtlasDataDictionaryButton = () => {
-  const dataDictionaryURL = 'https://www.askjeeves.com';
+  const dataDictionaryURL = 'https://vincicentral.vinci.med.va.gov/SitePages/VINCI_University-VADC_Academy.aspx';
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
