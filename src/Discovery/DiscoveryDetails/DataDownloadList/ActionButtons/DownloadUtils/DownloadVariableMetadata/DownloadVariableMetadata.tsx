@@ -6,16 +6,12 @@ import { mdsURL } from '../../../../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../Discovery';
-
-interface IdataDictionaries {
-  value: {
-    [key: string]: any;
-  };
-}
+import DataDictionaries from '../../../Interfaces/DataDictionaries';
 
 const DownloadVariableMetadata = async (
+  dataDictionaries: DataDictionaries,
   resourceInfo: DiscoveryResource,
-  setDownloadStatus: Function,
+  setDownloadStatus: Function
 ) => {
   const zip = new JSZip();
   const studyID = resourceInfo._hdp_uid;
@@ -46,8 +42,8 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-            Data Dictionary with name <strong>{key}</strong> cannot download data
-            dictionary with name <strong>{key}</strong>.
+            Data Dictionary with name <strong>{key}</strong> cannot download
+            data dictionary with name <strong>{key}</strong>.
           </p>
           <p>Please try again later and contact support.</p>
         </React.Fragment>
@@ -55,25 +51,30 @@ const DownloadVariableMetadata = async (
     },
   });
 
-  const fetchData = async (key: string, value: string) => new Promise((resolve, reject) => {
-    fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
-      const { data } = statusResponse;
-      if (statusResponse.status !== 200 || !data) {
-        setDownloadStatus(createUniqueDownloadErrorMsg(key));
-        reject(new Error(`Issue with ${key}: ${value}`));
-      } else {
-        zip.file(key, JSON.stringify(data));
-        resolve(`Data resolved for ${key}: ${value}`);
-      }
+  const fetchData = async (key: string, value: string) =>
+    new Promise((resolve, reject) => {
+      fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
+        const { data } = statusResponse;
+        if (statusResponse.status !== 200 || !data) {
+          setDownloadStatus(createUniqueDownloadErrorMsg(key));
+          reject(new Error(`Issue with ${key}: ${value}`));
+        } else {
+          zip.file(key, JSON.stringify(data));
+          resolve(`Data resolved for ${key}: ${value}`);
+        }
+      });
     });
-  });
 
   const fetchDataForAllFiles = async (dataDictionaries: IdataDictionaries) => {
     try {
-      setDownloadStatus({ ...INITIAL_DOWNLOAD_STATUS, inProgress: 'DownloadVariableMetadata' });
+      setDownloadStatus({
+        ...INITIAL_DOWNLOAD_STATUS,
+        inProgress: 'DownloadVariableMetadata',
+      });
       await Promise.all(
-        Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
-        ),
+        Object.entries(dataDictionaries).map(([key, value]) =>
+          fetchData(key, value)
+        )
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
           FileSaver.saveAs(content, 'variable-metadata.zip');
@@ -86,6 +87,9 @@ const DownloadVariableMetadata = async (
     }
   };
 
+  fetchDataForAllFiles(dataDictionaries);
+
+  /*
   fetchWithCreds({ path: `${mdsURL}/${studyID}` }).then((statusResponse) => {
     const { data } = statusResponse;
     if (statusResponse.status !== 200 || !data) {
@@ -103,6 +107,7 @@ const DownloadVariableMetadata = async (
       }
     }
   });
+  */
   return null;
 };
 
