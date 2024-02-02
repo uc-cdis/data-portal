@@ -11,26 +11,10 @@ const DownloadDataDictionaryInfo = (
 ) => {
   const dataDictionaryReference =
     discoveryConfig.features.exportToWorkspace.variableMetadataFieldName;
-  console.log('dataDictionaryReference', dataDictionaryReference);
   if (showDownloadVariableMetadataButton) {
     const studyID = resourceInfo._hdp_uid;
     fetchWithCreds({ path: `${mdsURL}/${studyID}` }).then((statusResponse) => {
       const { data } = statusResponse;
-      console.log(data[dataDictionaryReference as string]);
-      console.log(
-        `if (
-        statusResponse.status === 200 &&
-        data &&
-        data[dataDictionaryReference as string] &&
-        Object.keys(data[dataDictionaryReference as string]).length !== 0
-      )`,
-        Boolean(
-          statusResponse.status === 200 &&
-            data &&
-            data[dataDictionaryReference as string] /* &&
-            Object.keys(data[dataDictionaryReference as string]).length !== 0*/
-        )
-      );
       if (
         statusResponse.status === 200 &&
         data &&
