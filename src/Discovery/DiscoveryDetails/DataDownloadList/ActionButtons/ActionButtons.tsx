@@ -14,6 +14,7 @@ import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import DownloadVariableMetadata from './DownloadUtils/DownloadVariableMetadata/DownloadVariableMetadata';
 import './ActionButtons.css';
 import DownloadDataDictionaryInfo from './DownloadUtils/DownloadDataDictionaryInfo';
+import DataDictionaries from '../Interfaces/DataDictionaries';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -58,7 +59,7 @@ const ActionButtons = ({
   );
   const [dataDictionaryInfo, setDataDictionaryInfo] = useState({
     noVariableLevelMetadata: true,
-    dataDictionaries: { key: '' },
+    dataDictionaries: {} as DataDictionaries,
   });
 
   useEffect(() => {
