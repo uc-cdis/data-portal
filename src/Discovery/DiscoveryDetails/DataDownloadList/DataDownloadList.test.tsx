@@ -2,6 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
+import { DiscoveryConfig } from '../../DiscoveryConfig';
+import { DiscoveryResource } from '../../Discovery';
 
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn().mockReturnValue(0),
@@ -16,6 +18,8 @@ const testDiscoveryConfig = {
     },
   },
 };
+
+const testResourceInfo = { _hdp_uid: 'test_hdp_uid' };
 
 describe('DataDownloadList', () => {
   it(`renders the component with titles and descriptions and action buttons container
@@ -36,9 +40,9 @@ describe('DataDownloadList', () => {
       <DataDownloadList
         showList
         discoveryConfig={testDiscoveryConfig}
-        resourceInfo={null}
+        resourceInfo={testResourceInfo}
         sourceFieldData={sourceFieldData}
-      />,
+      />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -64,9 +68,12 @@ describe('DataDownloadList', () => {
     const { getByText } = render(
       <DataDownloadList
         showList
-        discoveryConfig={testDiscoveryConfig}
+        isUserLoggedIn={true}
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         sourceFieldData={sourceFieldData}
-      />,
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
+        healLoginNeeded={false}
+      />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -89,10 +96,13 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        discoveryConfig={testDiscoveryConfig}
         showList
+        isUserLoggedIn={true}
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-      />,
+        healLoginNeeded={false}
+      />
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -112,14 +122,17 @@ describe('DataDownloadList', () => {
     ];
     render(
       <DataDownloadList
-        discoveryConfig={testDiscoveryConfig}
         showList={false}
+        isUserLoggedIn={true}
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-      />,
+        healLoginNeeded={false}
+      />
     );
     // Verify that the list does not render but the buttons do
     expect(
-      screen.queryByTestId('dataDownloadFileList'),
+      screen.queryByTestId('dataDownloadFileList')
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
