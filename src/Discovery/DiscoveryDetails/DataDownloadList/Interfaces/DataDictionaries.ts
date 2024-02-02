@@ -1,6 +1,4 @@
 interface DataDictionaries {
-  value: {
-    [key: string]: any;
-  };
+  [key: string]: string;
 }
 export default DataDictionaries;
