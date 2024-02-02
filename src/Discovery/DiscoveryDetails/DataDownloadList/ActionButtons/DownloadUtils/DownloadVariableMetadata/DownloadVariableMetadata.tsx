@@ -11,7 +11,7 @@ import DataDictionaries from '../../../Interfaces/DataDictionaries';
 const DownloadVariableMetadata = async (
   dataDictionaries: DataDictionaries,
   resourceInfo: DiscoveryResource,
-  setDownloadStatus: Function
+  setDownloadStatus: Function,
 ) => {
   const zip = new JSZip();
   const studyID = resourceInfo._hdp_uid;
@@ -51,30 +51,28 @@ const DownloadVariableMetadata = async (
     },
   });
 
-  const fetchData = async (key: string, value: string) =>
-    new Promise((resolve, reject) => {
-      fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
-        const { data } = statusResponse;
-        if (statusResponse.status !== 200 || !data) {
-          setDownloadStatus(createUniqueDownloadErrorMsg(key));
-          reject(new Error(`Issue with ${key}: ${value}`));
-        } else {
-          zip.file(key, JSON.stringify(data));
-          resolve(`Data resolved for ${key}: ${value}`);
-        }
-      });
+  const fetchData = async (key: string, value: string) => new Promise((resolve, reject) => {
+    fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
+      const { data } = statusResponse;
+      if (statusResponse.status !== 200 || !data) {
+        setDownloadStatus(createUniqueDownloadErrorMsg(key));
+        reject(new Error(`Issue with ${key}: ${value}`));
+      } else {
+        zip.file(key, JSON.stringify(data));
+        resolve(`Data resolved for ${key}: ${value}`);
+      }
     });
+  });
 
-  const fetchDataForAllFiles = async (dataDictionaries: IdataDictionaries) => {
+  const fetchDataForAllFiles = async () => {
     try {
       setDownloadStatus({
         ...INITIAL_DOWNLOAD_STATUS,
         inProgress: 'DownloadVariableMetadata',
       });
       await Promise.all(
-        Object.entries(dataDictionaries).map(([key, value]) =>
-          fetchData(key, value)
-        )
+        Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
+        ),
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
           FileSaver.saveAs(content, 'variable-metadata.zip');
@@ -87,28 +85,7 @@ const DownloadVariableMetadata = async (
     }
   };
 
-  fetchDataForAllFiles(dataDictionaries);
-
-  /*
-  fetchWithCreds({ path: `${mdsURL}/${studyID}` }).then((statusResponse) => {
-    const { data } = statusResponse;
-    if (statusResponse.status !== 200 || !data) {
-      setDownloadStatus(DOWNLOAD_FAIL_INFO);
-    } else {
-      try {
-        const dataDictionaries: IdataDictionaries = data.data_dictionaries;
-        console.log('dataDictionaries line 91', dataDictionaries);
-        if (Object.keys(dataDictionaries).length !== 0) {
-          fetchDataForAllFiles(dataDictionaries);
-        }
-      } catch (error) {
-        setDownloadStatus(DOWNLOAD_FAIL_INFO);
-        console.error('Error fetching data line 98:', error);
-      }
-    }
-  });
-  */
-  return null;
+  fetchDataForAllFiles();
 };
 
 export default DownloadVariableMetadata;

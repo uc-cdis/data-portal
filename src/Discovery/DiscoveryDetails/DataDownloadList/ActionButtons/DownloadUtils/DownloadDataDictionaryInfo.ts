@@ -7,19 +7,18 @@ const DownloadDataDictionaryInfo = (
   discoveryConfig: DiscoveryConfig,
   resourceInfo: DiscoveryResource,
   showDownloadVariableMetadataButton: Boolean,
-  setDataDictionaryInfo: Function
+  setDataDictionaryInfo: Function,
 ) => {
-  const dataDictionaryReference =
-    discoveryConfig.features.exportToWorkspace.variableMetadataFieldName;
+  const dataDictionaryReference = discoveryConfig.features.exportToWorkspace.variableMetadataFieldName;
   if (showDownloadVariableMetadataButton) {
     const studyID = resourceInfo._hdp_uid;
     fetchWithCreds({ path: `${mdsURL}/${studyID}` }).then((statusResponse) => {
       const { data } = statusResponse;
       if (
-        statusResponse.status === 200 &&
-        data &&
-        data[dataDictionaryReference as string] &&
-        Object.keys(data[dataDictionaryReference as string]).length !== 0
+        statusResponse.status === 200
+        && data
+        && data[dataDictionaryReference as string]
+        && Object.keys(data[dataDictionaryReference as string]).length !== 0
       ) {
         setDataDictionaryInfo({
           noVariableLevelMetadata: false,
