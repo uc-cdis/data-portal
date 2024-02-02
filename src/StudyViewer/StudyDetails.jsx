@@ -485,7 +485,7 @@ class StudyDetails extends React.Component {
 StudyDetails.propTypes = {
   data: PropTypes.shape({
     accessRequested: PropTypes.bool.isRequired,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.object.isRequired,
     rowAccessorValue: PropTypes.string.isRequired,
     blockData: PropTypes.object,
     tableData: PropTypes.object,
