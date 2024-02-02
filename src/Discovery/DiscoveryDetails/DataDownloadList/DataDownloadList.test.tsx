@@ -42,7 +42,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig}
         resourceInfo={testResourceInfo}
         sourceFieldData={sourceFieldData}
-      />
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -68,12 +68,12 @@ describe('DataDownloadList', () => {
     const { getByText } = render(
       <DataDownloadList
         showList
-        isUserLoggedIn={true}
+        isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         sourceFieldData={sourceFieldData}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         healLoginNeeded={false}
-      />
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -97,12 +97,12 @@ describe('DataDownloadList', () => {
     const { getByText } = render(
       <DataDownloadList
         showList
-        isUserLoggedIn={true}
+        isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
         healLoginNeeded={false}
-      />
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -123,16 +123,16 @@ describe('DataDownloadList', () => {
     render(
       <DataDownloadList
         showList={false}
-        isUserLoggedIn={true}
+        isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
         healLoginNeeded={false}
-      />
+      />,
     );
     // Verify that the list does not render but the buttons do
     expect(
-      screen.queryByTestId('dataDownloadFileList')
+      screen.queryByTestId('dataDownloadFileList'),
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });

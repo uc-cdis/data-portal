@@ -1,4 +1,3 @@
-import React from 'react';
 import JSZip from 'jszip';
 import { act } from 'react-dom/test-utils';
 import DownloadVariableMetadata from './DownloadVariableMetadata';
@@ -6,6 +5,7 @@ import { fetchWithCreds } from '../../../../../../actions';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import { DiscoveryResource } from '../../../../../Discovery';
 
+/* eslint global-require: 0 */ // --> OFF
 jest.mock('../../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
@@ -43,17 +43,17 @@ describe('DownloadVariableMetadata', () => {
       await DownloadVariableMetadata(
         mockDataDictionaries,
         mockResourceInfo as unknown as DiscoveryResource,
-        mockSetDownloadStatus
+        mockSetDownloadStatus,
       );
     });
     expect(mockSetDownloadStatus).toHaveBeenCalled(); // Status should be set to in progress and then cleared
     expect(mockSetDownloadStatus).toHaveBeenCalledWith({
       inProgress: 'DownloadVariableMetadata',
-      message: { active: false, content: <React.Fragment />, title: '' },
+      message: INITIAL_DOWNLOAD_STATUS.message,
     });
     expect(mockSetDownloadStatus).toHaveBeenCalledWith({
-      inProgress: '',
-      message: { active: false, content: <React.Fragment />, title: '' },
+      ...INITIAL_DOWNLOAD_STATUS,
+      inProgress: 'DownloadVariableMetadata',
     });
     expect(require('file-saver').saveAs).toHaveBeenCalled(); // Zip file downloaded
   });
@@ -63,21 +63,15 @@ describe('DownloadVariableMetadata', () => {
       status: 500,
       data: { test: 'json-response' },
     };
-    /*
-    const mockGenerateAsync = jest.fn().mockResolvedValue('zipContent');
-    jest
-      .spyOn(JSZip.prototype, 'generateAsync')
-      .mockImplementation(mockGenerateAsync);
-      */
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
       await DownloadVariableMetadata(
         mockDataDictionaries,
         mockResourceInfo as unknown as DiscoveryResource,
-        mockSetDownloadStatus
+        mockSetDownloadStatus,
       );
     });
-    expect(mockSetDownloadStatus).toHaveBeenCalled(); // Status should be set to in progress and then cleared
+    expect(mockSetDownloadStatus).toHaveBeenCalled();
     expect(require('file-saver').saveAs).not.toHaveBeenCalled(); // Zip file downloaded
   });
 });
