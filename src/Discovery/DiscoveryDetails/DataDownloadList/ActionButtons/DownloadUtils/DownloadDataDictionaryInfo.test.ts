@@ -10,10 +10,6 @@ jest.mock('../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
 
-const mockResourceInfo = {
-  _hdp_uid: 'HDP00001',
-  project_title: 'Sample Project',
-};
 const mockSetDownloadStatus = jest.fn();
 
 afterEach(() => {
@@ -21,15 +17,19 @@ afterEach(() => {
 });
 
 describe('DownloadDataDictionaryInfo', () => {
-  /*
-  it('should not set status when status response is not valid', async () => {
+  it('should set download data dictionary info when called with invalid status number', async () => {
+    const mockDataDictionaries = {
+      'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
+    };
     const mockStatusResponse = {
       status: 500,
-      data: null,
+      data: {
+        data_dictionaries: mockDataDictionaries,
+      },
     };
     const discoveryConfig = {
       features: {
-        exportToWorkspace: { variableMetadataFieldName: 'testName' },
+        exportToWorkspace: { variableMetadataFieldName: 'data_dictionaries' },
       },
     } as DiscoveryConfig;
     const resourceInfo = { _hdp_uid: 'testUID' };
@@ -47,11 +47,43 @@ describe('DownloadDataDictionaryInfo', () => {
     expect(fetchWithCreds).toHaveBeenCalledWith({
       path: expect.stringContaining(`${mdsURL}/${resourceInfo._hdp_uid}`),
     });
-    expect(mockSetDownloadStatus).not.toHaveBeenCalled(); // download was unsuccessful
+    expect(mockSetDownloadStatus).not.toHaveBeenCalled();
   });
-  */
 
-  it('should download data dictionary info when called with valid params', async () => {
+  it('should not download data dictionary info when called with invalid data', async () => {
+    const mockDataDictionaries = {
+      'QA_minimal_json_20230817.json': null,
+    };
+    const mockStatusResponse = {
+      status: 500,
+      data: {
+        data_dictionaries: mockDataDictionaries,
+      },
+    };
+    const discoveryConfig = {
+      features: {
+        exportToWorkspace: { variableMetadataFieldName: 'data_dictionaries' },
+      },
+    } as DiscoveryConfig;
+    const resourceInfo = { _hdp_uid: 'testUID' };
+    const showDownloadVariableMetadataButton = true;
+
+    (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
+    await act(async () => {
+      DownloadDataDictionaryInfo(
+        discoveryConfig,
+        resourceInfo as unknown as DiscoveryResource,
+        showDownloadVariableMetadataButton,
+        mockSetDownloadStatus
+      );
+    });
+    expect(fetchWithCreds).toHaveBeenCalledWith({
+      path: expect.stringContaining(`${mdsURL}/${resourceInfo._hdp_uid}`),
+    });
+    expect(mockSetDownloadStatus).not.toHaveBeenCalled();
+  });
+
+  it('should set data dictionary info when called with valid params', async () => {
     const mockDataDictionaries = {
       'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
     };
@@ -81,6 +113,9 @@ describe('DownloadDataDictionaryInfo', () => {
     expect(fetchWithCreds).toHaveBeenCalledWith({
       path: expect.stringContaining(`${mdsURL}/${resourceInfo._hdp_uid}`),
     });
-    expect(mockSetDownloadStatus).toHaveBeenCalled(); // download was unsuccessful
+    expect(mockSetDownloadStatus).toHaveBeenCalledWith({
+      noVariableLevelMetadata: false,
+      dataDictionaries: mockDataDictionaries,
+    });
   });
 });
