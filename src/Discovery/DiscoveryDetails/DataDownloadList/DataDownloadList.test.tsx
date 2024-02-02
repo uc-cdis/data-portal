@@ -38,10 +38,12 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        showList
-        discoveryConfig={testDiscoveryConfig}
-        resourceInfo={testResourceInfo}
+        resourceFieldValueIsValid
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as unknown as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
+        healLoginNeeded={false}
       />,
     );
     // Verify that the component renders successfully
@@ -67,7 +69,7 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        showList
+        resourceFieldValueIsValid
         isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         sourceFieldData={sourceFieldData}
@@ -96,7 +98,7 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        showList
+        resourceFieldValueIsValid
         isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
@@ -110,7 +112,8 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the file list but does render the action buttons when showList is false', () => {
+  it(`does not render the file list but does render the action buttons
+    when isResourceFieldValueValid is false`, () => {
     const sourceFieldData = [
       [
         {
@@ -122,7 +125,7 @@ describe('DataDownloadList', () => {
     ];
     render(
       <DataDownloadList
-        showList={false}
+        resourceFieldValueIsValid={false}
         isUserLoggedIn
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}

@@ -268,7 +268,7 @@ const tabField = (
   if (fieldConfig.type === 'dataDownloadList') {
     return (
       <DataDownloadList
-        showList={resourceFieldValueIsValid}
+        resourceFieldValueIsValid={resourceFieldValueIsValid}
         isUserLoggedIn={Boolean(user.username)}
         discoveryConfig={discoveryConfig}
         resourceInfo={resource}

@@ -8,7 +8,7 @@ import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { DiscoveryResource } from '../../Discovery';
 
 interface DataDownloadListProps {
-  showList: boolean;
+  resourceFieldValueIsValid: boolean;
   isUserLoggedIn: boolean;
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
@@ -17,7 +17,7 @@ interface DataDownloadListProps {
 }
 
 const DataDownloadList = ({
-  showList,
+  resourceFieldValueIsValid,
   isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
@@ -36,7 +36,7 @@ const DataDownloadList = ({
         healLoginNeeded={healLoginNeeded}
         noData={noData}
       />
-      {!noData && showList && (
+      {!noData && resourceFieldValueIsValid && (
         <List
           itemLayout='horizontal'
           dataSource={data}

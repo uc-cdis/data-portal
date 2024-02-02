@@ -58,7 +58,7 @@ const ActionButtons = ({
   );
   const [dataDictionaryInfo, setDataDictionaryInfo] = useState({
     noVariableLevelMetadata: true,
-    dataDictionaries: { value: {} },
+    dataDictionaries: { key: '' },
   });
 
   useEffect(() => {
