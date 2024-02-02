@@ -39,7 +39,6 @@ const DownloadVariableMetadata = async (
         setDownloadStatus(createUniqueDownloadErrorMsg(key));
         reject(new Error(`Issue with ${key}: ${value}`));
       } else {
-        console.log(JSON.stringify(data));
         zip.file(key, JSON.stringify(data));
         resolve(`Data resolved for ${key}: ${value}`);
       }
