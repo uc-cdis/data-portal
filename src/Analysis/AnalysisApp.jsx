@@ -121,7 +121,7 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-    case 'Atlas Data Dictionary': {
+    case 'MVP Data Dictionary': {
       return (
         <div className='analysis-app_flex_row'>
           <AtlasDataDictionaryContainer />
