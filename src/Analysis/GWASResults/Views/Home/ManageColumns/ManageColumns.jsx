@@ -29,6 +29,7 @@ const ManageColumns = () => {
 
   const filteringResets = {
     runId: { nameSearchTerm: '' },
+    userName: { userNameSearchTerm: '' },
     workflowName: { wfNameSearchTerm: '' },
     dateSubmitted: { submittedAtSelections: [] },
     jobStatus: { jobStatusSelections: [] },
@@ -95,29 +96,32 @@ const ManageColumns = () => {
       key: '1',
     },
     {
-      label: columnSwitch('Workflow Name', 'showWorkflowName'),
+      label: columnSwitch('User Name', 'showUserName'),
       key: '2',
     },
-
     {
-      label: columnSwitch('Date/Time Submitted', 'showDateSubmitted'),
+      label: columnSwitch('Workflow Name', 'showWorkflowName'),
       key: '3',
     },
     {
-      label: columnSwitch('Job Status', 'showJobStatus'),
+      label: columnSwitch('Date/Time Submitted', 'showDateSubmitted'),
       key: '4',
     },
     {
-      label: columnSwitch('Date/Time Finished', 'showDateFinished'),
+      label: columnSwitch('Job Status', 'showJobStatus'),
       key: '5',
     },
     {
-      label: columnSwitch('View Details', 'showViewDetails'),
+      label: columnSwitch('Date/Time Finished', 'showDateFinished'),
       key: '6',
     },
     {
-      label: columnSwitch('Actions', 'showActions'),
+      label: columnSwitch('View Details', 'showViewDetails'),
       key: '7',
+    },
+    {
+      label: columnSwitch('Actions', 'showActions'),
+      key: '8',
     },
   ];
 
