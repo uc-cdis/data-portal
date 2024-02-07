@@ -31,6 +31,8 @@ const HomeTable = ({ data }) => {
     setHomeTableState,
   } = useContext(SharedContext);
 
+  console.log("homeTableState ln 34",homeTableState)
+
   const handleTableChange = (pagination, filters, sorter) => {
     if (pagination.current !== homeTableState.currentPage) {
       // User changes page selection, set page to current pagination selection
@@ -48,6 +50,7 @@ const HomeTable = ({ data }) => {
   };
 
   const handleSearchTermChange = (event, searchTermKey) => {
+    console.log("called handleSearchTerm with: ", searchTermKey)
     if (searchTermKey === 'name') {
       setHomeTableState({
         ...homeTableState,
@@ -148,7 +151,7 @@ const HomeTable = ({ data }) => {
       dataIndex: 'userName',
       key: 'userName',
       show: homeTableState.columnManagement.showUserName,
-      sorter: (a, b) => a.userName.localeCompare(b.userName),
+      sorter: (a, b) => {console.log(0); return a.userName.localeCompare(b.userName)},
       sortOrder:
         homeTableState.sortInfo?.columnKey === 'userName'
         && homeTableState.sortInfo.order,
