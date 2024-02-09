@@ -4,7 +4,7 @@ const CheckHealLoginNeeded = (
   selectedResources: any[],
   fenceIdentityProvider: string | undefined,
 ): boolean => {
-  if (bundle === 'heal') {
+  if (bundle === 'heal' && Array.isArray(selectedResources) && Object.keys(selectedResources[0]).length > 0) {
     const requiredIdentityProvider: string[] = [];
     selectedResources.forEach((resource) => resource?.tags.forEach((tag: { name: string; category: string }) => {
       if (tag?.category === 'RequiredIDP' && tag?.name) {
