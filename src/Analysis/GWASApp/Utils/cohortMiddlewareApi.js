@@ -197,8 +197,14 @@ export const useSourceFetch = () => {
   const [sourceId, setSourceId] = useState(undefined);
   const getSources = () => { // fetch sources on initialization
     fetchSources().then((data) => {
-      setSourceId(data.sources[0].source_id);
-      setLoading(false);
+      if (Array.isArray(data?.sources) && data.sources.length === 1) {
+        setSourceId(data.sources[0].source_id);
+        setLoading(false);
+      } else {
+        const message = `Data source recieved in an invalid format:
+        ${JSON.stringify(data?.sources)}`;
+        throw new Error(message);
+      }
     });
   };
   useEffect(() => {
