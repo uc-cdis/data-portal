@@ -24,7 +24,9 @@ const DataDownloadList = ({
   sourceFieldData,
   healLoginNeeded,
 }: DataDownloadListProps) => {
-  const data = ProcessData(sourceFieldData);
+  const data: [] = resourceFieldValueIsValid
+    ? ProcessData(sourceFieldData)
+    : [];
   const noData = data.length === 0;
 
   return (
