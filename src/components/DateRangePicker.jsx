@@ -34,8 +34,8 @@ export default function AnotherDateRangePicker({ onChange }) {
     return <DateRangePicker
         onChange={onChange}
         defaultValue={{
-        start: null,
-        end: null
+          start: null,
+          end: null
         }}
     >
     <Group>

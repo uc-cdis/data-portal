@@ -11,8 +11,8 @@ import {
   Form,
   Flex
 } from '@adobe/react-spectrum';
-import Select from 'react-select';
 import SimpleInputField from '../../SimpleInputField';
+import MultiSelect from '../../MultiSelect';
 
 /**
  * @typedef {Object} TableHeadProps
@@ -94,17 +94,19 @@ function TableHead({ cols, setFilters, data }) {
                   typeof dataValues[0] === 'undefined' ||
                   dataValues[0] === '' ? 
                   null :
-                  <Select
-                    isMulti={true}
-                    name={`${col}-filter-input`}
-                    options={uniqueValues.map((value) => ({ value, label: value }))}
-                    className="base-table__filter-field"
-                    classNamePrefix="select"
-                    onChange={(options) => {
-                      filters[i] = options.map((opt) => opt.value);
-                      setFilters([...filters]);
-                    }}
-                  />
+                  <Provider theme={defaultTheme}>
+                    <Form validationBehavior="native">
+                      <Flex margin={0} direction="row" alignItems='center' gap={8}>
+                        <MultiSelect
+                          onChange={(options) => {
+                              filters[i] = options.map((opt) => opt.text);
+                              setFilters([...filters]);
+                          }}
+                          items={uniqueValues.map((value, index) => ({ id: index, text: value}))} 
+                        />
+                      </Flex>
+                    </Form>
+                  </Provider>
                 )
               }
             </th>;

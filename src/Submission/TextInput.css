@@ -1,7 +1,7 @@
 .text-input__input {
   width: 400px;
-  height: 40px;
-  padding: 0 10px;
+  height: var(--pcdc-input-height);
+  padding: 2px 10px;
 }
 
 .text-input__label {
