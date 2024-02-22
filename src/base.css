@@ -58,6 +58,8 @@
 
   --g3-font__medium-weight: 500;
   --g3-font__semi-bold-weight: 600;
+
+  --pcdc-input-height: 1.429rem;
 }
 
 * {
@@ -384,15 +386,16 @@ a.button {
   text-align: center;
 }
 
+input[type="text"] {
+  height: var(--pcdc-input-height);
+}
+
 .text-input {
   width: 152px;
-  height: 40px;
   font-size: 14px;
   border: 0;
   background: white;
   box-shadow: none;
-  border-radius: 0;
-  padding: 0 10px;
   margin-right: 20px;
 }
 

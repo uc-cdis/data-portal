@@ -8,7 +8,7 @@ import './SimpleInputField.css';
  * @property {JSX.Element} input
  * @property {string | JSX.Element} label
  * @property {string} [className]
- * @property {string} [hideLabel]
+ * @property {boolean} [hideLabel]
  */
 
 /** @param {SimpleInputFieldProps} props */

@@ -1,5 +1,5 @@
 .react-aria-DateRangePicker {
-    --field-border: var(--spectrum-global-color-gray-400);
+    --field-border: var(--g3-color__lightgray);
     --field-background: var(--spectrum-global-color-gray-50);
     --text-color: var(--spectrum-alias-text-color);
     --text-color-placeholder: var(--spectrum-global-color-gray-700);
@@ -8,13 +8,12 @@
     --highlight-foreground: white;
     --highlight-background-invalid: var(--spectrum-global-color-static-red-600);
     color: var(--text-color);
+    width: 100%;
   }
   .react-aria-DateRangePicker .react-aria-Group {
     display: flex;
     align-items: center;
     width: fit-content;
-    min-width: 220px;
-    max-width: 100%;
     box-sizing: border-box;
     overflow: auto;
     position: relative;
@@ -39,7 +38,6 @@
     background: black;
     color: white;
     border-radius: 4px;
-    border: none;
     margin-left: auto;
     width: 1.429rem;
     height: 1.429rem;
