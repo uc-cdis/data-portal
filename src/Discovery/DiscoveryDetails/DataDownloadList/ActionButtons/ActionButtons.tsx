@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import {
   Col, Row, Button, Popover,
 } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../Discovery';
-import { INITIAL_DOWNLOAD_STATUS } from './DownloadUtils/Constants';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
-import DownloadModal from './DownloadModal/DownloadModal';
-import DownloadAllFiles from './DownloadUtils/DownloadAllFiles/DownloadAllFiles';
+import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import DownloadVariableMetadata from './DownloadUtils/DownloadVariableMetadata/DownloadVariableMetadata';
 import './ActionButtons.css';
 import DownloadDataDictionaryInfo from './DownloadUtils/DownloadDataDictionaryInfo';
 import DataDictionaries from '../Interfaces/DataDictionaries';
+import DownloadStatus from '../Interfaces/DownloadStatus';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -22,6 +21,10 @@ interface ActionButtonsProps {
   resourceInfo: DiscoveryResource;
   healLoginNeeded: boolean;
   noData: boolean;
+  downloadStatus: DownloadStatus;
+  setDownloadStatus: React.Dispatch<React.SetStateAction<DownloadStatus>>;
+  history: RouteComponentProps['history'],
+  location: RouteComponentProps['location'],
 }
 
 const ActionButtons = ({
@@ -30,14 +33,19 @@ const ActionButtons = ({
   resourceInfo,
   healLoginNeeded,
   noData,
+  downloadStatus,
+  setDownloadStatus,
+  history,
+  location,
 }: ActionButtonsProps): JSX.Element => {
-  const [downloadStatus, setDownloadStatus] = useState(INITIAL_DOWNLOAD_STATUS);
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
-  const history = useHistory();
-  const location = useLocation();
 
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
-  const manifestFieldName: string | undefined = discoveryConfig?.features.exportToWorkspace.manifestFieldName;
+  const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
+  let fileManifest: any[] = [];
+  if (manifestFieldName) {
+    fileManifest = resourceInfo?.[manifestFieldName] || [];
+  }
   const showDownloadStudyLevelMetadataButton = Boolean(
     discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
       && studyMetadataFieldNameReference
@@ -52,11 +60,11 @@ const ActionButtons = ({
   const verifyExternalLoginsNeeded = Boolean(
     discoveryConfig?.features.exportToWorkspace.verifyExternalLogins,
   );
-
   const showDownloadVariableMetadataButton = Boolean(
     discoveryConfig.features.exportToWorkspace.variableMetadataFieldName
       && discoveryConfig.features.exportToWorkspace.enableDownloadVariableMetadata,
   );
+
   const [dataDictionaryInfo, setDataDictionaryInfo] = useState({
     noVariableLevelMetadata: true,
     dataDictionaries: {} as DataDictionaries,
@@ -81,10 +89,6 @@ const ActionButtons = ({
 
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
-      <DownloadModal
-        downloadStatus={downloadStatus}
-        setDownloadStatus={setDownloadStatus}
-      />
       <Row className='row'>
         {showDownloadVariableMetadataButton && (
           <Col flex='1 0 auto'>
@@ -170,16 +174,15 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   disabled={Boolean(noData || downloadStatus.inProgress)}
-                  loading={downloadStatus.inProgress === 'DownloadAllFiles'}
-                  onClick={() => DownloadAllFiles(
-                    resourceInfo,
+                  loading={downloadStatus.inProgress === 'DownloadDataFiles'}
+                  onClick={() => DownloadDataFiles(
                     downloadStatus,
                     setDownloadStatus,
                     history,
                     location,
                     healLoginNeeded,
                     verifyExternalLoginsNeeded,
-                    manifestFieldName,
+                    fileManifest,
                   )}
                 >
                   Download All Files

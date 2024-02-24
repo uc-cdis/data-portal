@@ -1,5 +1,5 @@
 interface DownloadStatus {
-  inProgress:'DownloadVariableMetadata' | 'DownloadAllFiles' |
+  inProgress:'DownloadVariableMetadata' | 'DownloadDataFiles' |
   'DownloadManifest'| 'DownloadStudyLevelMetadata'| '';
   message: {
     content: JSX.Element;

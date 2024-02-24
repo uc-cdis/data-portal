@@ -7,24 +7,24 @@ import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
 
-const DownloadAllFiles = async (
-  resourceInfo: object,
+const DownloadDataFiles = async (
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
   healLoginNeeded: boolean,
   verifyExternalLoginsNeeded: boolean | undefined,
-  manifestFieldName: string,
+  fileManifest: any[],
 ) => {
   if (verifyExternalLoginsNeeded) {
+    console.log(fileManifest);
     const isLinked = await CheckFederatedLoginStatus(
       setDownloadStatus,
-      resourceInfo,
-      manifestFieldName,
+      fileManifest,
       history,
       location,
     );
+    console.log(isLinked);
     if (!isLinked) {
       return;
     }
@@ -32,13 +32,12 @@ const DownloadAllFiles = async (
   if (healLoginNeeded) {
     return;
   }
-  const studyIDs = [resourceInfo._hdp_uid];
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { study_ids: studyIDs },
+      input: { file_manifest: fileManifest || [] },
     }),
   })
     .then((dispatchResponse) => {
@@ -61,7 +60,7 @@ const DownloadAllFiles = async (
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else {
         setDownloadStatus({
-          inProgress: 'DownloadAllFiles',
+          inProgress: 'DownloadDataFiles',
           message: {
             title: 'Your download is being prepared',
             content: (
@@ -86,4 +85,4 @@ const DownloadAllFiles = async (
     .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-export default DownloadAllFiles;
+export default DownloadDataFiles;
