@@ -41,7 +41,10 @@ const DataDownloadList = ({
   const history = useHistory();
   const location = useLocation();
   const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
-  const data = ProcessData(sourceFieldData);
+
+  const data: [] = resourceFieldValueIsValid
+    ? ProcessData(sourceFieldData)
+    : [];
   const noData = data.length === 0;
 
   const DataDownloadButton = (item: DataDownloadListItem) => {
