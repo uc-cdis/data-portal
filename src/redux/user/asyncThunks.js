@@ -13,7 +13,11 @@ export const fetchUser = createAsyncThunk(
         onError: () => dispatch(requestErrored()),
       });
       if (status === 200) {
-        ReactGA.set({ userId: data.user_id.toString() });
+        const userId = data.user_id.toString();
+        ReactGA.set({ userId });
+        ReactGA.gtag('set', 'user_properties', {
+          userId,
+        });
         return { data, status };
       }
       if (status === 401) return { data: 'UPDATE_POPUP', status };
