@@ -50,6 +50,7 @@ const DataDownloadList = ({
     if (!manifestFieldName || noData) {
       return null;
     }
+    // Ask user to login before downloading
     if (!isUserLoggedIn || healLoginNeeded.length) {
       return (
         <Button
@@ -70,6 +71,7 @@ const DataDownloadList = ({
     const verifyExternalLoginsNeeded = Boolean(
       discoveryConfig?.features.exportToWorkspace.verifyExternalLogins,
     );
+    // for data ecosystem, if using batch export sower job
     if (isEcosystemPortal && useBatchExportForDataDownloadButton) {
       const fileManifestFromStudyMetadata: any[] = resourceInfo?.[manifestFieldName] || [];
       let selectedFileManifest: any[] = [];
@@ -95,6 +97,7 @@ const DataDownloadList = ({
         </Button>
       );
     }
+    // regular download button
     return (
       <Button
         className='discovery-action-bar-button'
