@@ -35,6 +35,7 @@ import {
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import CheckHealLoginNeeded from './Utils/CheckHealLoginNeeded';
+import GetPermaLink from './Utils/GetPermaLink';
 
 const { Panel } = Collapse;
 
@@ -266,6 +267,7 @@ const tabField = (
     && resourceFieldValue[0].length !== 0;
 
   if (fieldConfig.type === 'dataDownloadList') {
+    console.log(user);
     return (
       <DataDownloadList
         resourceFieldValueIsValid={resourceFieldValueIsValid}
@@ -343,10 +345,7 @@ const DiscoveryDetails = (props: Props) => {
   const [tabActiveKey, setTabActiveKey] = useState('0');
 
   const history = useHistory();
-  const pagePath = `/discovery/${encodeURIComponent(
-    props.modalData[props.config.minimalFieldMapping.uid],
-  )}/`;
-  const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
+  const permalink = GetPermaLink(props.modalData[props.config.minimalFieldMapping.uid]);
 
   const handleRedirectClick = (
     redirectURL: string = '/',
@@ -584,6 +583,7 @@ const DiscoveryDetails = (props: Props) => {
         </Space>
       </div>
       {props.config.detailView?.tabs ? (
+        // Here is the tabbed version of discovery details page
         <div className='discovery-modal-content'>
           {header}
           <Tabs
@@ -611,6 +611,7 @@ const DiscoveryDetails = (props: Props) => {
           />
         </div>
       ) : (
+        // Non-tabbed version discovery details page begins here
         <React.Fragment>
           <div className='discovery-modal-content'>
             {header}

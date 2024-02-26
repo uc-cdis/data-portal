@@ -9,10 +9,7 @@ import ActionButtons from './ActionButtons/ActionButtons';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { DiscoveryResource } from '../../Discovery';
 import {
-  hostname,
-  basename,
   fenceDownloadPath,
-  studyRegistrationConfig,
   bundle,
 } from '../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from './ActionButtons/DownloadUtils/Constants';
@@ -26,7 +23,7 @@ interface DataDownloadListProps {
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
   sourceFieldData: any[];
-  healLoginNeeded: boolean;
+  healLoginNeeded: string[];
 }
 
 const DataDownloadList = ({
@@ -40,29 +37,26 @@ const DataDownloadList = ({
   const [downloadStatus, setDownloadStatus] = useState(INITIAL_DOWNLOAD_STATUS);
   const history = useHistory();
   const location = useLocation();
-  const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
+  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClick();
 
   const data: [] = resourceFieldValueIsValid
     ? ProcessData(sourceFieldData)
     : [];
   const noData = data.length === 0;
 
+  const uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
   const DataDownloadButton = (item: DataDownloadListItem) => {
     const manifestFieldName: string | undefined = discoveryConfig?.features?.exportToWorkspace?.manifestFieldName;
     if (!manifestFieldName || noData) {
       return null;
     }
-    if (!isUserLoggedIn || healLoginNeeded) {
+    if (!isUserLoggedIn || healLoginNeeded.length) {
       return (
         <Button
           className='discovery-modal__download-button'
           disabled={Boolean(noData || downloadStatus.inProgress)}
           onClick={() => {
-            HandleRedirectToLoginClick(
-              resourceInfo,
-              discoveryConfig,
-              null,
-            );
+            HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
           }}
         >
           Login to Download File

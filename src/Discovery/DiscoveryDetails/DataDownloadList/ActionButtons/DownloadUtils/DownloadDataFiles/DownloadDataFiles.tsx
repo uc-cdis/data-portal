@@ -12,24 +12,22 @@ const DownloadDataFiles = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
-  healLoginNeeded: boolean,
+  healLoginNeeded: string[],
   verifyExternalLoginsNeeded: boolean | undefined,
   fileManifest: any[],
 ) => {
   if (verifyExternalLoginsNeeded) {
-    console.log(fileManifest);
     const isLinked = await CheckFederatedLoginStatus(
       setDownloadStatus,
       fileManifest,
       history,
       location,
     );
-    console.log(isLinked);
     if (!isLinked) {
       return;
     }
   }
-  if (healLoginNeeded) {
+  if (healLoginNeeded.length) {
     return;
   }
   fetchWithCreds({

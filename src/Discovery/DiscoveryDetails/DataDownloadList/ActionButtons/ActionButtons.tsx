@@ -19,7 +19,7 @@ interface ActionButtonsProps {
   isUserLoggedIn: boolean;
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
-  healLoginNeeded: boolean;
+  healLoginNeeded: string[];
   noData: boolean;
   downloadStatus: DownloadStatus;
   setDownloadStatus: React.Dispatch<React.SetStateAction<DownloadStatus>>;
@@ -38,7 +38,7 @@ const ActionButtons = ({
   history,
   location,
 }: ActionButtonsProps): JSX.Element => {
-  const { HandleRedirectToLoginClick } = UseHandleRedirectToLoginClick();
+  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClick();
 
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
@@ -70,6 +70,8 @@ const ActionButtons = ({
     dataDictionaries: {} as DataDictionaries,
   });
 
+  const uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
+
   useEffect(() => {
     DownloadDataDictionaryInfo(
       discoveryConfig,
@@ -79,19 +81,41 @@ const ActionButtons = ({
     );
   }, [resourceInfo]);
 
-  const ConditionalPopover = ({ children }) => (noData ? (
-    <Popover title={'This file is not available for the selected study'}>
-      {children}
-    </Popover>
-  ) : (
-    children
-  ));
+  const ConditionalPopover = ({ children }) => {
+    if (noData) {
+      return (
+        <Popover title={'This file is not available for the selected study'}>
+          {children}
+        </Popover>
+      );
+    }
+    if (healLoginNeeded.length) {
+      const onlyInCommonMsg = healLoginNeeded.length > 1 ? `Data selection requires [${healLoginNeeded.join(', ')}] credentials to access. Please change selection to only need one set of credentials and log in using appropriate credentials`
+        : `This dataset is only accessible to users who have authenticated via ${healLoginNeeded}. Please log in using the ${healLoginNeeded} option.`;
+      return (
+        <Popover
+          className='discovery-detail-popover'
+          arrowPointAtCenter
+          overlayInnerStyle={{ maxWidth: '300px' }}
+          content={(
+            <React.Fragment>
+              {onlyInCommonMsg}
+            </React.Fragment>
+          )}
+        >
+          {children}
+        </Popover>
+      );
+    }
+    return children;
+  };
 
+  const isHEALLoginNeeded = Boolean(healLoginNeeded.length);
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
-      <Row className='row'>
+      <Row className='row' justify='space-between'>
         {showDownloadVariableMetadataButton && (
-          <Col flex='1 0 auto'>
+          <Col>
             <Button
               className='discovery-action-bar-button'
               disabled={Boolean(
@@ -113,7 +137,7 @@ const ActionButtons = ({
           </Col>
         )}
         {showDownloadStudyLevelMetadataButton && (
-          <Col flex='1 0 auto'>
+          <Col>
             <ConditionalPopover>
               <Button
                 className='discovery-action-bar-button'
@@ -131,8 +155,8 @@ const ActionButtons = ({
           </Col>
         )}
         {showDownloadFileManifestButtons && (
-          <Col flex='1 0 auto'>
-            {isUserLoggedIn && !healLoginNeeded && (
+          <Col>
+            {isUserLoggedIn && !isHEALLoginNeeded && (
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
@@ -149,27 +173,25 @@ const ActionButtons = ({
                 </Button>
               </ConditionalPopover>
             )}
-            {(!isUserLoggedIn || healLoginNeeded) && (
-              <Button
-                className='discovery-action-bar-button'
-                disabled={Boolean(noData || downloadStatus.inProgress)}
-                onClick={() => {
-                  HandleRedirectToLoginClick(
-                    resourceInfo,
-                    discoveryConfig,
-                    'manifest',
-                  );
-                }}
-              >
+            {(!isUserLoggedIn || isHEALLoginNeeded) && (
+              <ConditionalPopover>
+                <Button
+                  className='discovery-action-bar-button'
+                  disabled={Boolean(noData || downloadStatus.inProgress)}
+                  onClick={() => {
+                    HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
+                  }}
+                >
                 Login to
-                <br /> Download Manifest
-              </Button>
+                  <br /> Download Manifest
+                </Button>
+              </ConditionalPopover>
             )}
           </Col>
         )}
         {showDownloadAllFilesButtons && (
-          <Col flex='1 0 auto'>
-            {isUserLoggedIn && !healLoginNeeded && (
+          <Col>
+            {isUserLoggedIn && !isHEALLoginNeeded && (
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
@@ -189,21 +211,19 @@ const ActionButtons = ({
                 </Button>
               </ConditionalPopover>
             )}
-            {(!isUserLoggedIn || healLoginNeeded) && (
-              <Button
-                className='discovery-action-bar-button'
-                disabled={Boolean(noData || downloadStatus.inProgress)}
-                onClick={() => {
-                  HandleRedirectToLoginClick(
-                    resourceInfo,
-                    discoveryConfig,
-                    'download',
-                  );
-                }}
-              >
+            {(!isUserLoggedIn || isHEALLoginNeeded) && (
+              <ConditionalPopover>
+                <Button
+                  className='discovery-action-bar-button'
+                  disabled={Boolean(noData || downloadStatus.inProgress)}
+                  onClick={() => {
+                    HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
+                  }}
+                >
                 Login to
-                <br /> Download All Files
-              </Button>
+                  <br /> Download All Files
+                </Button>
+              </ConditionalPopover>
             )}
           </Col>
         )}

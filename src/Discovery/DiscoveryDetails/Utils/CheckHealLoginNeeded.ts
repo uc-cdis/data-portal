@@ -3,9 +3,9 @@ import { bundle } from '../../../localconf';
 const CheckHealLoginNeeded = (
   selectedResources: any[],
   fenceIdentityProvider: string | undefined,
-): boolean => {
+): string[] => {
+  const requiredIdentityProvider: string[] = [];
   if (bundle === 'heal' && Array.isArray(selectedResources) && Object.keys(selectedResources[0]).length > 0) {
-    const requiredIdentityProvider: string[] = [];
     selectedResources.forEach((resource) => resource?.tags.forEach((tag: { name: string; category: string }) => {
       if (tag?.category === 'RequiredIDP' && tag?.name) {
         // If any resources RequiredIDP check if logged in
@@ -26,9 +26,7 @@ const CheckHealLoginNeeded = (
       }
     }),
     );
-    // return requiredIdentityProvider;
-    return Boolean(requiredIdentityProvider.length);
   }
-  return false;
+  return requiredIdentityProvider;
 };
 export default CheckHealLoginNeeded;
