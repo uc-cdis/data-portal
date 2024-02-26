@@ -116,7 +116,11 @@ const ActionButtons = ({
   const isHEALLoginNeeded = Boolean(healLoginNeeded.length);
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
-      <Row className='row' justify='space-between'>
+      <Row
+        className='row'
+        justify='space-between'
+        gutter={[8, 8]}
+      >
         {showDownloadVariableMetadataButton && (
           <Col>
             <Button
