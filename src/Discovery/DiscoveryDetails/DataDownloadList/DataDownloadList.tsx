@@ -53,7 +53,7 @@ const DataDownloadList = ({
     if (!isUserLoggedIn || healLoginNeeded.length) {
       return (
         <Button
-          className='discovery-modal__download-button'
+          className='discovery-action-bar-button'
           disabled={Boolean(noData || downloadStatus.inProgress)}
           onClick={() => {
             HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
