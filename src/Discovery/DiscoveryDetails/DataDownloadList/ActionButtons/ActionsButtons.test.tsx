@@ -18,6 +18,9 @@ describe('ActionButtons', () => {
         enableDownloadZip: true,
       },
     },
+    minimalFieldMapping: {
+      uid: 'study_id',
+    },
   };
 
   const mockResourceInfo = {
