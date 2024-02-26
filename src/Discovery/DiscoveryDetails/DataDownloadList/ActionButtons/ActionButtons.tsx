@@ -70,7 +70,10 @@ const ActionButtons = ({
     dataDictionaries: {} as DataDictionaries,
   });
 
-  const uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
+  let uid = '';
+  if (resourceInfo) {
+    uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
+  }
 
   useEffect(() => {
     DownloadDataDictionaryInfo(

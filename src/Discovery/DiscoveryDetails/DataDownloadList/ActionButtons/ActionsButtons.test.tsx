@@ -32,14 +32,24 @@ describe('ActionButtons', () => {
     /* mock data */
   };
 
+  const mockDownloadStatus = {
+    inProgress: '',
+    message: {},
+  };
+
   /* Helper Functions */
   const checkResourceInfoConditional = (buttonText: string) => {
     const { queryByText } = render(
       <ActionButtons
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={null}
-        data={mockData}
+        resourceInfo={{}}
+        healLoginNeeded={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -55,7 +65,12 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        healLoginNeeded={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     const targetButton = getByText(buttonText);
@@ -68,7 +83,12 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        healLoginNeeded={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -82,7 +102,12 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        healLoginNeeded={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
@@ -94,7 +119,12 @@ describe('ActionButtons', () => {
         isUserLoggedIn={false}
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        healLoginNeeded={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     const loginText = screen.getAllByText(/Login to/i);

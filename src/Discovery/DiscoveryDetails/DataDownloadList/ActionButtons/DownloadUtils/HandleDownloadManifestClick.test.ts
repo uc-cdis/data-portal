@@ -6,7 +6,7 @@ import { DiscoveryConfig } from '../../../../DiscoveryConfig';
 jest.mock('./DownloadJsonFile');
 
 describe('HandleDownloadManifestClick', () => {
-  it('should not call DownloadJsonFile when healIDPLoginNeeded is true', () => {
+  it('should not call DownloadJsonFile when healIDPLoginNeeded has IDP names', () => {
     // Mock data
     const config = {
       features: {
@@ -16,7 +16,7 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healIDPLoginNeeded = true;
+    const healIDPLoginNeeded = ['InCommon'];
 
     // Call the function
     HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded);
@@ -33,7 +33,7 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healIDPLoginNeeded = false;
+    const healIDPLoginNeeded = [];
 
     // Assertions
     expect(() => HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded),
@@ -41,7 +41,7 @@ describe('HandleDownloadManifestClick', () => {
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   });
-  it('should call DownloadJsonFile with the correct arguments when healICPSRLoginNeeded is false', () => {
+  it('should call DownloadJsonFile with the correct arguments when healIDPLoginNeeded is empty', () => {
     // Mock data
     const config = {
       features: {
@@ -51,7 +51,7 @@ describe('HandleDownloadManifestClick', () => {
       },
     } as DiscoveryConfig;
     const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
-    const healIDPLoginNeeded = false;
+    const healIDPLoginNeeded = [];
 
     // Call the function
     HandleDownloadManifestClick(config, selectedResources, healIDPLoginNeeded);

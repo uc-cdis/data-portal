@@ -17,6 +17,9 @@ const testDiscoveryConfig = {
       enableDownloadVariableMetadata: true,
     },
   },
+  minimalFieldMapping: {
+    uid: 'study_id',
+  },
 };
 
 const testResourceInfo = { _hdp_uid: 'test_hdp_uid' };
