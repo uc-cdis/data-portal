@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import AtlasDataDictionaryButton from './AtlasDataDictionaryButton';
@@ -9,18 +9,18 @@ describe('AtlasDataDictionaryButton', () => {
     const { getByTestId } = render(
       <BrowserRouter>
         <AtlasDataDictionaryButton />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     const expectedPath = '/analysis/AtlasDataDictionary';
     expect(getByTestId('atlas-data-dictionary-button')).toBeInTheDocument();
     expect(getByTestId('atlas-data-dictionary-link')).toHaveAttribute(
       'href',
-      expectedPath
+      expectedPath,
     );
     expect(getByTestId('atlas-data-dictionary-link')).toHaveAttribute(
       'target',
-      '_blank'
+      '_blank',
     );
   });
 });
