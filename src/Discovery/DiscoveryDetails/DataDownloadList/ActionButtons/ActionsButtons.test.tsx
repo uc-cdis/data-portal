@@ -141,9 +141,9 @@ describe('ActionButtons', () => {
     checkExportToWorkspaceConditional(buttonText, 'studyMetadataFieldName');
     checkResourceInfoConditional(buttonText);
   });
-  test('renders Download File Manifest button based on conditionals', () => {
+  test('renders Download Manifest button based on conditionals', () => {
     checkExportToWorkspaceConditional(
-      'Download File Manifest',
+      'Download Manifest',
       'enableDownloadManifest',
     );
   });
