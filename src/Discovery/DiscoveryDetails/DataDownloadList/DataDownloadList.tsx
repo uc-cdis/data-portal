@@ -23,7 +23,7 @@ interface DataDownloadListProps {
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
   sourceFieldData: any[];
-  healLoginNeeded: string[];
+  missingRequiredIdentityProviders: string[];
 }
 
 const DataDownloadList = ({
@@ -32,7 +32,7 @@ const DataDownloadList = ({
   discoveryConfig,
   resourceInfo,
   sourceFieldData,
-  healLoginNeeded,
+  missingRequiredIdentityProviders,
 }: DataDownloadListProps) => {
   const [downloadStatus, setDownloadStatus] = useState(INITIAL_DOWNLOAD_STATUS);
   const history = useHistory();
@@ -51,7 +51,7 @@ const DataDownloadList = ({
       return null;
     }
     // Ask user to login before downloading
-    if (!isUserLoggedIn || healLoginNeeded.length) {
+    if (!isUserLoggedIn || missingRequiredIdentityProviders.length) {
       return (
         <Button
           className='discovery-action-bar-button'
@@ -88,7 +88,7 @@ const DataDownloadList = ({
             setDownloadStatus,
             history,
             location,
-            healLoginNeeded,
+            missingRequiredIdentityProviders,
             verifyExternalLoginsNeeded,
             selectedFileManifest,
           )}
@@ -123,7 +123,7 @@ const DataDownloadList = ({
         isUserLoggedIn={isUserLoggedIn}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
-        healLoginNeeded={healLoginNeeded}
+        missingRequiredIdentityProviders={missingRequiredIdentityProviders}
         noData={noData}
         downloadStatus={downloadStatus}
         setDownloadStatus={setDownloadStatus}

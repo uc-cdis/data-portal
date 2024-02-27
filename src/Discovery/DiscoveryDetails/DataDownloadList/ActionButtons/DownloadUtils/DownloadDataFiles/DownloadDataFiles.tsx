@@ -12,7 +12,7 @@ const DownloadDataFiles = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
-  healLoginNeeded: string[],
+  missingRequiredIdentityProviders: string[],
   verifyExternalLoginsNeeded: boolean | undefined,
   fileManifest: any[],
 ) => {
@@ -27,7 +27,7 @@ const DownloadDataFiles = async (
       return;
     }
   }
-  if (healLoginNeeded.length) {
+  if (missingRequiredIdentityProviders.length) {
     return;
   }
   fetchWithCreds({

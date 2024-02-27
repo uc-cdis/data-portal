@@ -1,10 +1,10 @@
 import { bundle } from '../../../localconf';
 
-const CheckHealLoginNeeded = (
+const GetMissingRequiredIdentityProviders = (
   selectedResources: any[],
   fenceIdentityProvider: string | undefined,
 ): string[] => {
-  const requiredIdentityProvider: string[] = [];
+  const missingRequiredIdentityProvider: string[] = [];
   if (bundle === 'heal' && Array.isArray(selectedResources) && Object.keys(selectedResources[0]).length > 0) {
     selectedResources.forEach((resource) => resource?.tags.forEach((tag: { name: string; category: string }) => {
       if (tag?.category === 'RequiredIDP' && tag?.name) {
@@ -22,11 +22,11 @@ const CheckHealLoginNeeded = (
           );
           return; // do not add tag to list
         }
-        requiredIdentityProvider.push(tag.name);
+        missingRequiredIdentityProvider.push(tag.name);
       }
     }),
     );
   }
-  return requiredIdentityProvider;
+  return missingRequiredIdentityProvider;
 };
-export default CheckHealLoginNeeded;
+export default GetMissingRequiredIdentityProviders;

@@ -5,7 +5,7 @@ import DownloadJsonFile from './DownloadJsonFile';
 const HandleDownloadManifestClick = (
   config: DiscoveryConfig,
   selectedResources: any[],
-  healIDPLoginNeeded: string[],
+  missingRequiredIdentityProviders: string[],
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
@@ -13,7 +13,7 @@ const HandleDownloadManifestClick = (
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
-  if (healIDPLoginNeeded.length) {
+  if (missingRequiredIdentityProviders.length) {
     return;
   }
   // combine manifests from all selected studies

@@ -34,7 +34,7 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import CheckHealLoginNeeded from './Utils/CheckHealLoginNeeded';
+import GetMissingRequiredIdentityProviders from './Utils/GetMissingRequiredIdentityProviders';
 import GetPermaLink from './Utils/GetPermaLink';
 
 const { Panel } = Collapse;
@@ -267,7 +267,6 @@ const tabField = (
     && resourceFieldValue[0].length !== 0;
 
   if (fieldConfig.type === 'dataDownloadList') {
-    console.log(user);
     return (
       <DataDownloadList
         resourceFieldValueIsValid={resourceFieldValueIsValid}
@@ -275,7 +274,7 @@ const tabField = (
         discoveryConfig={discoveryConfig}
         resourceInfo={resource}
         sourceFieldData={resourceFieldValue}
-        healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
+        missingRequiredIdentityProviders={GetMissingRequiredIdentityProviders([resource], user.fence_idp)}
       />
     );
   }

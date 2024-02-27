@@ -46,7 +46,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as unknown as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -77,7 +77,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         sourceFieldData={sourceFieldData}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -106,7 +106,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -133,7 +133,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the list does not render but the buttons do

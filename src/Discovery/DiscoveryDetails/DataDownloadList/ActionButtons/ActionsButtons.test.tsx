@@ -44,7 +44,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={{}}
-        healLoginNeeded={[]}
+        healLoginNmissingRequiredIdentityProviderseeded={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
@@ -65,7 +65,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
@@ -83,7 +83,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
@@ -102,7 +102,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
@@ -119,7 +119,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn={false}
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        healLoginNeeded={[]}
+        missingRequiredIdentityProviders={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}

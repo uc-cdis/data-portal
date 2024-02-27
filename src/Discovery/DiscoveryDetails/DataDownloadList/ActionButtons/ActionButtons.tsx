@@ -19,7 +19,7 @@ interface ActionButtonsProps {
   isUserLoggedIn: boolean;
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
-  healLoginNeeded: string[];
+  missingRequiredIdentityProviders: string[];
   noData: boolean;
   downloadStatus: DownloadStatus;
   setDownloadStatus: React.Dispatch<React.SetStateAction<DownloadStatus>>;
@@ -31,7 +31,7 @@ const ActionButtons = ({
   isUserLoggedIn,
   discoveryConfig,
   resourceInfo,
-  healLoginNeeded,
+  missingRequiredIdentityProviders,
   noData,
   downloadStatus,
   setDownloadStatus,
@@ -92,9 +92,9 @@ const ActionButtons = ({
         </Popover>
       );
     }
-    if (healLoginNeeded.length) {
-      const onlyInCommonMsg = healLoginNeeded.length > 1 ? `Data selection requires [${healLoginNeeded.join(', ')}] credentials to access. Please change selection to only need one set of credentials and log in using appropriate credentials`
-        : `This dataset is only accessible to users who have authenticated via ${healLoginNeeded}. Please log in using the ${healLoginNeeded} option.`;
+    if (missingRequiredIdentityProviders.length) {
+      const onlyInCommonMsg = missingRequiredIdentityProviders.length > 1 ? `Data selection requires [${missingRequiredIdentityProviders.join(', ')}] credentials to access. Please change selection to only need one set of credentials and log in using appropriate credentials`
+        : `This dataset is only accessible to users who have authenticated via ${missingRequiredIdentityProviders}. Please log in using the ${missingRequiredIdentityProviders} option.`;
       return (
         <Popover
           className='discovery-detail-popover'
@@ -113,7 +113,7 @@ const ActionButtons = ({
     return children;
   };
 
-  const isHEALLoginNeeded = Boolean(healLoginNeeded.length);
+  const isHEALLoginNeeded = Boolean(missingRequiredIdentityProviders.length);
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <Row
@@ -172,7 +172,7 @@ const ActionButtons = ({
                     HandleDownloadManifestClick(
                       discoveryConfig,
                       [resourceInfo],
-                      healLoginNeeded,
+                      missingRequiredIdentityProviders,
                     );
                   }}
                 >
@@ -209,7 +209,7 @@ const ActionButtons = ({
                     setDownloadStatus,
                     history,
                     location,
-                    healLoginNeeded,
+                    missingRequiredIdentityProviders,
                     verifyExternalLoginsNeeded,
                     fileManifest,
                   )}
