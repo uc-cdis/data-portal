@@ -44,7 +44,7 @@ describe('ActionButtons', () => {
         isUserLoggedIn
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={{}}
-        healLoginNmissingRequiredIdentityProviderseeded={[]}
+        missingRequiredIdentityProviders={[]}
         noData={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
