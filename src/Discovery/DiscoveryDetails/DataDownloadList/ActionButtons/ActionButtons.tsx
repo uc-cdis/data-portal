@@ -176,7 +176,7 @@ const ActionButtons = ({
                     );
                   }}
                 >
-                  Download File Manifest
+                  {discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest'}
                 </Button>
               </ConditionalPopover>
             )}
@@ -190,7 +190,7 @@ const ActionButtons = ({
                   }}
                 >
                 Login to
-                  <br /> Download Manifest
+                  <br /> {discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest'}
                 </Button>
               </ConditionalPopover>
             )}
