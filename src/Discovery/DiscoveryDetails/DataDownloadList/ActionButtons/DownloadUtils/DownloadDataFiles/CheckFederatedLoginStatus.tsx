@@ -36,18 +36,18 @@ const CheckFederatedLoginStatus = async (
     const guidsForHostnameResolution: any = [];
     const guidPrefixes: any = [];
 
-    fileManifest.forEach((fileMetadata) => {
-      if (fileMetadata.object_id) {
+    fileManifest.forEach((fileManifestItem) => {
+      if (fileManifestItem.object_id) {
         const guidDomainPrefix = (
-          fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
+          fileManifestItem.object_id.match(GUID_PREFIX_PATTERN) || []
         ).shift();
         if (guidDomainPrefix) {
           if (!guidPrefixes.includes(guidDomainPrefix)) {
             guidPrefixes.push(guidDomainPrefix);
-            guidsForHostnameResolution.push(fileMetadata.object_id);
+            guidsForHostnameResolution.push(fileManifestItem.object_id);
           }
         } else {
-          guidsForHostnameResolution.push(fileMetadata.object_id);
+          guidsForHostnameResolution.push(fileManifestItem.object_id);
         }
       }
     });
