@@ -26,7 +26,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails attritionTableData={attritionTableJSON} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('loading-error-message')).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails attritionTableData={attritionTableJSON} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
@@ -54,11 +54,10 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails attritionTableData={attritionTableJSON} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
-    await waitFor(() =>
-      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
     );
   });
 
@@ -70,7 +69,7 @@ describe('Job Details', () => {
     render(
       <SharedContext.Provider value={{ selectedRowData }}>
         <JobDetails attritionTableData={attritionTableJSON} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     await waitFor(() => {
@@ -81,7 +80,7 @@ describe('Job Details', () => {
       expect(screen.getByText('Imputation Score Cutoff')).toBeInTheDocument();
       expect(screen.getByText('Cohort')).toBeInTheDocument();
       expect(
-        screen.getByText(attritionTableJSON[0].rows[0].name)
+        screen.getByText(attritionTableJSON[0].rows[0].name),
       ).toBeInTheDocument();
       expect(screen.getByText('Control Size')).toBeInTheDocument();
       expect(screen.getByText('Case Size')).toBeInTheDocument();
