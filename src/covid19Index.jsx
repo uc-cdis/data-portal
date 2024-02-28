@@ -410,11 +410,11 @@ async function init() {
                   {isEnabled('discovery') && (
                     <Route
                       exact
-                      path='/discovery/:studyUID'
+                      path='/discovery/:studyUID*'
                       component={
                         (props) => (
                           <ProtectedContent
-                            public
+                            public={discoveryConfig.public !== false}
                             component={Discovery}
                             {...props}
                           />
