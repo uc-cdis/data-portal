@@ -55,7 +55,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData
         isUserLoggedIn={false}
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -72,7 +72,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn={false}
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -91,7 +91,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -108,7 +108,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -127,7 +127,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -144,7 +144,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -162,7 +162,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
-        doesUerHasAccessToDownload={false}
+        userHasAccessToDownload={false}
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}

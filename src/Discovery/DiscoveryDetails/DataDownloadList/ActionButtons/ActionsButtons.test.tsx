@@ -45,7 +45,7 @@ describe('ActionButtons', () => {
     const { queryByText } = render(
       <ActionButtons
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={{}}
         missingRequiredIdentityProviders={[]}
@@ -67,7 +67,7 @@ describe('ActionButtons', () => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -86,7 +86,7 @@ describe('ActionButtons', () => {
     rerender(
       <ActionButtons
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -106,7 +106,7 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -124,7 +124,7 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn={false}
-        doesUerHasAccessToDownload
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}

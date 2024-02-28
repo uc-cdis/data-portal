@@ -38,16 +38,16 @@ const DataDownloadList = ({
     : [];
   const noData = data.length === 0;
 
-  let doesUerHasAccessToDownload = true;
+  let userHasAccessToDownload = true;
   // if auth is enabled, check if user have access to this study
   if (discoveryConfig.features?.authorization?.enabled) {
-    doesUerHasAccessToDownload = resourceInfo[accessibleFieldName] === AccessLevel.ACCESSIBLE;
+    userHasAccessToDownload = resourceInfo[accessibleFieldName] === AccessLevel.ACCESSIBLE;
   }
   // disable user's access if there's no manifest found for this study
   const exportToWorkspaceConfig = discoveryConfig.features.exportToWorkspace;
   const { manifestFieldName } = exportToWorkspaceConfig;
   if (!resourceInfo[manifestFieldName] || resourceInfo[manifestFieldName].length === 0) {
-    doesUerHasAccessToDownload = false;
+    userHasAccessToDownload = false;
   }
 
   return (
@@ -58,7 +58,7 @@ const DataDownloadList = ({
       />
       <ActionButtons
         isUserLoggedIn={isUserLoggedIn}
-        doesUerHasAccessToDownload={doesUerHasAccessToDownload}
+        userHasAccessToDownload={userHasAccessToDownload}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
         missingRequiredIdentityProviders={missingRequiredIdentityProviders}
@@ -81,7 +81,7 @@ const DataDownloadList = ({
                   resourceInfo={resourceInfo}
                   noData={noData}
                   isUserLoggedIn={isUserLoggedIn}
-                  doesUerHasAccessToDownload={doesUerHasAccessToDownload}
+                  userHasAccessToDownload={userHasAccessToDownload}
                   downloadStatus={downloadStatus}
                   setDownloadStatus={setDownloadStatus}
                   missingRequiredIdentityProviders={missingRequiredIdentityProviders}
