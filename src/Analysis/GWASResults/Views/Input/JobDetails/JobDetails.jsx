@@ -14,6 +14,7 @@ const JobDetails = ({ attritionTableData }) => {
   const { name, uid } = selectedRowData;
   const endpoint = `${gwasWorkflowPath}status/${name}?uid=${uid}`;
   const minimumRecommendedCohortSize = 1000;
+  const cohortNameValue = attritionTableData[0].rows[0].name;
 
   const fetchData = async () => {
     const res = await fetch(endpoint);
@@ -189,9 +190,7 @@ const JobDetails = ({ attritionTableData }) => {
           <hr />
           <div className='GWASResults-flex-row'>
             <div>Cohort</div>
-            <div className='job-details-cohort-name'>
-              {attritionTableData[0].rows[0].name}
-            </div>
+            <div className='job-details-cohort-name'>{cohortNameValue}</div>
           </div>
           <div className='GWASResults-flex-row'>
             <div>Outcome Phenotype</div>
