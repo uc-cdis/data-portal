@@ -17,6 +17,7 @@ import DownloadStatus from '../Interfaces/DownloadStatus';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
+  doesUerHasAccessToDownload: boolean;
   discoveryConfig: DiscoveryConfig;
   resourceInfo: DiscoveryResource;
   missingRequiredIdentityProviders: string[];
@@ -29,6 +30,7 @@ interface ActionButtonsProps {
 
 const ActionButtons = ({
   isUserLoggedIn,
+  doesUerHasAccessToDownload,
   discoveryConfig,
   resourceInfo,
   missingRequiredIdentityProviders,
@@ -87,7 +89,14 @@ const ActionButtons = ({
   const ConditionalPopover = ({ children }) => {
     if (noData) {
       return (
-        <Popover title={'This file is not available for the selected study'}>
+        <Popover content={'This file is not available for the selected study'}>
+          {children}
+        </Popover>
+      );
+    }
+    if (!doesUerHasAccessToDownload) {
+      return (
+        <Popover content={'You don\'t have access to this data'}>
           {children}
         </Popover>
       );
@@ -167,7 +176,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={Boolean(noData || downloadStatus.inProgress)}
+                  disabled={Boolean(noData || downloadStatus.inProgress || !doesUerHasAccessToDownload)}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
@@ -202,7 +211,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
-                  disabled={Boolean(noData || downloadStatus.inProgress)}
+                  disabled={Boolean(noData || downloadStatus.inProgress || !doesUerHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
                     downloadStatus,

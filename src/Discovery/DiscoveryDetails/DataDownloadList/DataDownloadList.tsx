@@ -6,7 +6,7 @@ import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
-import { DiscoveryResource } from '../../Discovery';
+import { AccessLevel, DiscoveryResource, accessibleFieldName } from '../../Discovery';
 
 import { INITIAL_DOWNLOAD_STATUS } from './ActionButtons/DownloadUtils/Constants';
 import DownloadModal from './ActionButtons/DownloadModal/DownloadModal';
@@ -38,6 +38,18 @@ const DataDownloadList = ({
     : [];
   const noData = data.length === 0;
 
+  let doesUerHasAccessToDownload = true;
+  // if auth is enabled, check if user have access to this study
+  if (discoveryConfig.features?.authorization?.enabled) {
+    doesUerHasAccessToDownload = resourceInfo[accessibleFieldName] === AccessLevel.ACCESSIBLE;
+  }
+  // disable user's access if there's no manifest found for this study
+  const exportToWorkspaceConfig = discoveryConfig.features.exportToWorkspace;
+  const { manifestFieldName } = exportToWorkspaceConfig;
+  if (!resourceInfo[manifestFieldName] || resourceInfo[manifestFieldName].length === 0) {
+    doesUerHasAccessToDownload = false;
+  }
+
   return (
     <div className='discovery-modal__data-download-list'>
       <DownloadModal
@@ -46,6 +58,7 @@ const DataDownloadList = ({
       />
       <ActionButtons
         isUserLoggedIn={isUserLoggedIn}
+        doesUerHasAccessToDownload={doesUerHasAccessToDownload}
         discoveryConfig={discoveryConfig}
         resourceInfo={resourceInfo}
         missingRequiredIdentityProviders={missingRequiredIdentityProviders}
@@ -68,6 +81,7 @@ const DataDownloadList = ({
                   resourceInfo={resourceInfo}
                   noData={noData}
                   isUserLoggedIn={isUserLoggedIn}
+                  doesUerHasAccessToDownload={doesUerHasAccessToDownload}
                   downloadStatus={downloadStatus}
                   setDownloadStatus={setDownloadStatus}
                   missingRequiredIdentityProviders={missingRequiredIdentityProviders}

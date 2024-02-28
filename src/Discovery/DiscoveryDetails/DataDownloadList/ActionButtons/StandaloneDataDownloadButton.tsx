@@ -18,6 +18,7 @@ interface StandaloneDataDownloadButtonProps {
     resourceInfo: DiscoveryResource;
     noData: boolean;
     isUserLoggedIn: boolean;
+    doesUerHasAccessToDownload: boolean;
     downloadStatus: DownloadStatus;
     setDownloadStatus: React.Dispatch<React.SetStateAction<DownloadStatus>>;
     missingRequiredIdentityProviders: string[];
@@ -29,6 +30,7 @@ const StandaloneDataDownloadButton = ({
   resourceInfo,
   noData,
   isUserLoggedIn,
+  doesUerHasAccessToDownload,
   downloadStatus,
   setDownloadStatus,
   missingRequiredIdentityProviders,
@@ -75,7 +77,7 @@ const StandaloneDataDownloadButton = ({
       <Button
         data-testid='standaloneDataDownloadButton-ecosystem-batch-export'
         className='discovery-action-bar-button'
-        disabled={Boolean(noData || downloadStatus.inProgress)}
+        disabled={Boolean(noData || downloadStatus.inProgress || !doesUerHasAccessToDownload)}
         loading={downloadStatus.inProgress === 'DownloadDataFiles'}
         onClick={() => DownloadDataFiles(
           downloadStatus,
@@ -99,8 +101,8 @@ const StandaloneDataDownloadButton = ({
       href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
       target='_blank'
       type='text'
-      // disable button if data has no GUID
-      disabled={!item.guid}
+      // disable button if data has no GUID or user don't have access
+      disabled={!item.guid || !doesUerHasAccessToDownload}
       icon={<DownloadOutlined />}
     >
         Download File
