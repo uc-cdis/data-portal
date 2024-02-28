@@ -11,6 +11,9 @@ jest.mock('react-router-dom', () => ({
 describe('ActionButtons', () => {
   const mockDiscoveryConfig = {
     features: {
+      authorization: {
+        enabled: true,
+      },
       exportToWorkspace: {
         studyMetadataFieldName: 'study_metadata',
         enableDownloadStudyMetadata: true,
@@ -42,6 +45,7 @@ describe('ActionButtons', () => {
     const { queryByText } = render(
       <ActionButtons
         isUserLoggedIn
+        doesUerHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={{}}
         missingRequiredIdentityProviders={[]}
@@ -63,6 +67,7 @@ describe('ActionButtons', () => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
         isUserLoggedIn
+        doesUerHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -81,6 +86,7 @@ describe('ActionButtons', () => {
     rerender(
       <ActionButtons
         isUserLoggedIn
+        doesUerHasAccessToDownload
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -100,6 +106,7 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn
+        doesUerHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}
@@ -117,6 +124,7 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn={false}
+        doesUerHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
         missingRequiredIdentityProviders={[]}

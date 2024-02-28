@@ -20,6 +20,9 @@ afterEach(() => {
 describe('StandaloneDataDownloadButton', () => {
   const mockDiscoveryConfig = {
     features: {
+      authorization: {
+        enabled: true,
+      },
       exportToWorkspace: {
         manifestFieldName: '__manifest',
         enableDownloadZip: false,
@@ -52,6 +55,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData
         isUserLoggedIn={false}
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -68,6 +72,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn={false}
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -86,6 +91,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -102,6 +108,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -120,6 +127,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -136,6 +144,7 @@ describe('StandaloneDataDownloadButton', () => {
         resourceInfo={mockResourceInfo}
         noData={false}
         isUserLoggedIn
+        doesUerHasAccessToDownload
         downloadStatus={mockDownloadStatus}
         setDownloadStatus={() => {}}
         missingRequiredIdentityProviders={[]}
@@ -143,5 +152,23 @@ describe('StandaloneDataDownloadButton', () => {
       />,
     );
     expect(screen.queryByTestId('standaloneDataDownloadButton-ecosystem-batch-export')).toBeInTheDocument();
+  });
+
+  test('StandaloneDataDownloadButton is disabled if user doesn\'t have access to download', () => {
+    // regular download button for Gen3 commons, base case
+    render(
+      <StandaloneDataDownloadButton
+        discoveryConfig={mockDiscoveryConfig}
+        resourceInfo={mockResourceInfo}
+        noData={false}
+        isUserLoggedIn
+        doesUerHasAccessToDownload={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        missingRequiredIdentityProviders={[]}
+        item={mockDataDownloadListItem}
+      />,
+    );
+    expect(screen.queryByTestId('standaloneDataDownloadButton-commons-regular-download')).toHaveClass('ant-btn-disabled');
   });
 });
