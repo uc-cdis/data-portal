@@ -73,7 +73,6 @@ describe('Job Details', () => {
     );
 
     await waitFor(() => {
-      screen.debug();
       expect(screen.getByText('Number of PCs')).toBeInTheDocument();
       expect(screen.getByText('MAF Cutoff')).toBeInTheDocument();
       expect(screen.getByText('HARE Ancestry')).toBeInTheDocument();
