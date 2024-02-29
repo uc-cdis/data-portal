@@ -17,13 +17,16 @@ const testDiscoveryConfig = {
       enableDownloadVariableMetadata: true,
     },
   },
+  minimalFieldMapping: {
+    uid: 'study_id',
+  },
 };
 
 const testResourceInfo = { _hdp_uid: 'test_hdp_uid' };
 
 describe('DataDownloadList', () => {
   it(`renders the component with titles and descriptions and action buttons container
-  when sourceFieledData has titles and descriptions`, () => {
+  when sourceFieldData has titles and descriptions`, () => {
     const sourceFieldData = [
       [
         {
@@ -43,7 +46,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as unknown as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={false}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -74,7 +77,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         sourceFieldData={sourceFieldData}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
-        healLoginNeeded={false}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -103,7 +106,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={false}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -130,7 +133,7 @@ describe('DataDownloadList', () => {
         discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
         resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
-        healLoginNeeded={false}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the list does not render but the buttons do

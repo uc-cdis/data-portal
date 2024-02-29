@@ -8,6 +8,7 @@ const ProcessData = (sourceFieldData:any) => {
   const processedDataForDataDownloadList = dataWithOnlyTitlesOrFileNames.map((obj:any) => ({
     title: obj.title || obj.file_name,
     description: obj.description,
+    guid: obj.object_id,
   }));
   return processedDataForDataDownloadList;
 };

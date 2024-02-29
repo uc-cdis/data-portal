@@ -21,7 +21,6 @@ import jsonpath from 'jsonpath';
 import { useHistory } from 'react-router-dom';
 import {
   hostname,
-  basename,
   fenceDownloadPath,
   studyRegistrationConfig,
 } from '../../localconf';
@@ -34,7 +33,8 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import CheckHealLoginNeeded from './Utils/CheckHealLoginNeeded';
+import GetMissingRequiredIdentityProviders from './Utils/GetMissingRequiredIdentityProviders';
+import GetPermaLink from './Utils/GetPermaLink';
 
 const { Panel } = Collapse;
 
@@ -273,7 +273,7 @@ const tabField = (
         discoveryConfig={discoveryConfig}
         resourceInfo={resource}
         sourceFieldData={resourceFieldValue}
-        healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
+        missingRequiredIdentityProviders={GetMissingRequiredIdentityProviders([resource], user.fence_idp)}
       />
     );
   }
@@ -343,10 +343,7 @@ const DiscoveryDetails = (props: Props) => {
   const [tabActiveKey, setTabActiveKey] = useState('0');
 
   const history = useHistory();
-  const pagePath = `/discovery/${encodeURIComponent(
-    props.modalData[props.config.minimalFieldMapping.uid],
-  )}/`;
-  const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
+  const permalink = GetPermaLink(props.modalData[props.config.minimalFieldMapping.uid]);
 
   const handleRedirectClick = (
     redirectURL: string = '/',
@@ -366,7 +363,7 @@ const DiscoveryDetails = (props: Props) => {
   };
 
   const handleRedirectToLoginClick = () => {
-    history.push('/login', { from: pagePath });
+    history.push('/login', { from: permalink });
   };
 
   const headerField = props.config.detailView?.headerField
@@ -584,6 +581,7 @@ const DiscoveryDetails = (props: Props) => {
         </Space>
       </div>
       {props.config.detailView?.tabs ? (
+        // Here is the tabbed version of discovery details page
         <div className='discovery-modal-content'>
           {header}
           <Tabs
@@ -611,6 +609,7 @@ const DiscoveryDetails = (props: Props) => {
           />
         </div>
       ) : (
+        // Non-tabbed version discovery details page begins here
         <React.Fragment>
           <div className='discovery-modal-content'>
             {header}
