@@ -123,6 +123,7 @@ const ActionButtons = ({
   };
 
   const isHEALLoginNeeded = Boolean(missingRequiredIdentityProviders.length);
+  const downloadManifestButtonText = discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest';
   return (
     <div className='discovery-modal_buttons-row' data-testid='actionButtons'>
       <Row
@@ -185,7 +186,7 @@ const ActionButtons = ({
                     );
                   }}
                 >
-                  {discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest'}
+                  {downloadManifestButtonText}
                 </Button>
               </ConditionalPopover>
             )}
@@ -199,7 +200,7 @@ const ActionButtons = ({
                   }}
                 >
                 Login to
-                  <br /> {discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest'}
+                  <br /> {downloadManifestButtonText}
                 </Button>
               </ConditionalPopover>
             )}

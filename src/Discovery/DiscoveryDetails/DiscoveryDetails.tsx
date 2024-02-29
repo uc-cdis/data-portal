@@ -21,7 +21,6 @@ import jsonpath from 'jsonpath';
 import { useHistory } from 'react-router-dom';
 import {
   hostname,
-  basename,
   fenceDownloadPath,
   studyRegistrationConfig,
 } from '../../localconf';
@@ -364,7 +363,7 @@ const DiscoveryDetails = (props: Props) => {
   };
 
   const handleRedirectToLoginClick = () => {
-    history.push('/login', { from: pagePath });
+    history.push('/login', { from: permalink });
   };
 
   const headerField = props.config.detailView?.headerField

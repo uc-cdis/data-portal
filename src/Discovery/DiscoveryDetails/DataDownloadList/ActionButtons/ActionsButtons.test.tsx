@@ -31,10 +31,6 @@ describe('ActionButtons', () => {
     study_metadata: true,
   };
 
-  const mockData = {
-    /* mock data */
-  };
-
   const mockDownloadStatus = {
     inProgress: '',
     message: {},

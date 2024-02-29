@@ -7,7 +7,6 @@ import ProcessData from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, accessibleFieldName } from '../../Discovery';
-
 import { INITIAL_DOWNLOAD_STATUS } from './ActionButtons/DownloadUtils/Constants';
 import DownloadModal from './ActionButtons/DownloadModal/DownloadModal';
 import StandaloneDataDownloadButton from './ActionButtons/StandaloneDataDownloadButton';
