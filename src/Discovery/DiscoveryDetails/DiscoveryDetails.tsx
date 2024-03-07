@@ -223,6 +223,7 @@ type TabFieldConfig = TabFieldGroup['fields'][0];
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const formatResourceValuesWhenNestedArray = (
+  isTargetAListField: boolean = false,
   resourceFieldValue: string | any[],
 ) => {
   if (Array.isArray(resourceFieldValue)) {
@@ -231,6 +232,9 @@ const formatResourceValuesWhenNestedArray = (
       && resourceFieldValue[0].every((val) => typeof val === 'string')
     ) {
       return resourceFieldValue[0].join(', ');
+    }
+    if (isTargetAListField) {
+      return resourceFieldValue;
     }
     return resourceFieldValue[0];
   }
@@ -281,7 +285,11 @@ const tabField = (
   // Here begins some normal fields (texts, links, etc...)
   if (resourceFieldValueIsValid) {
     // Format resourceFieldValue for all other field types
-    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
+    let isTargetAListField = false;
+    if (fieldConfig.type === 'textList' || fieldConfig.type === 'linkList') {
+      isTargetAListField = true;
+    }
+    resourceFieldValue = formatResourceValuesWhenNestedArray(isTargetAListField, resourceFieldValue);
 
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
