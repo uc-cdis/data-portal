@@ -234,7 +234,8 @@ const formatResourceValuesWhenNestedArray = (
       return resourceFieldValue[0].join(', ');
     }
     if (isTargetAListField) {
-      return resourceFieldValue;
+      // to make sure the return value is a single-level array
+      return resourceFieldValue.flat(Infinity);
     }
     return resourceFieldValue[0];
   }
