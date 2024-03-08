@@ -375,6 +375,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='PubMed Central'>PubMed Central</Option>
               <Option value='Qualitative Data Repository at Syracuse University'>Qualitative Data Repository at Syracuse University</Option>
               <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
+              <Option value='SPARC'>SPARC</Option>
               <Option value='Vivli'>Vivli</Option>
               <Option value='The Zebrafish Model Organism Database (ZFIN)'>The Zebrafish Model Organism Database (ZFIN)</Option>
               <Option value='Zenodo'>Zenodo</Option>
