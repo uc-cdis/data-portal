@@ -11,6 +11,8 @@ export interface DiscoveryConfig {
             verifyExternalLogins?: boolean
             studyMetadataFieldName?: string
             enableDownloadStudyMetadata?: boolean
+            variableMetadataFieldName?: string
+            enableDownloadVariableMetadata?: boolean
         },
         // explorationIntegration: {
         //     enabled: boolean // not supported

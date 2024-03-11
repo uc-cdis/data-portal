@@ -11,12 +11,18 @@ jest.mock('react-router-dom', () => ({
 describe('ActionButtons', () => {
   const mockDiscoveryConfig = {
     features: {
+      authorization: {
+        enabled: true,
+      },
       exportToWorkspace: {
         studyMetadataFieldName: 'study_metadata',
         enableDownloadStudyMetadata: true,
         enableDownloadManifest: true,
         enableDownloadZip: true,
       },
+    },
+    minimalFieldMapping: {
+      uid: 'study_id',
     },
   };
 
@@ -25,8 +31,9 @@ describe('ActionButtons', () => {
     study_metadata: true,
   };
 
-  const mockData = {
-    /* mock data */
+  const mockDownloadStatus = {
+    inProgress: '',
+    message: {},
   };
 
   /* Helper Functions */
@@ -34,9 +41,15 @@ describe('ActionButtons', () => {
     const { queryByText } = render(
       <ActionButtons
         isUserLoggedIn
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={null}
-        data={mockData}
+        resourceInfo={{}}
+        missingRequiredIdentityProviders={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -50,9 +63,15 @@ describe('ActionButtons', () => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
         isUserLoggedIn
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        missingRequiredIdentityProviders={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     const targetButton = getByText(buttonText);
@@ -63,9 +82,15 @@ describe('ActionButtons', () => {
     rerender(
       <ActionButtons
         isUserLoggedIn
+        userHasAccessToDownload
         discoveryConfig={changedConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        missingRequiredIdentityProviders={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -77,9 +102,15 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        missingRequiredIdentityProviders={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
@@ -89,9 +120,15 @@ describe('ActionButtons', () => {
     render(
       <ActionButtons
         isUserLoggedIn={false}
+        userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
-        data={mockData}
+        missingRequiredIdentityProviders={[]}
+        noData={false}
+        downloadStatus={mockDownloadStatus}
+        setDownloadStatus={() => {}}
+        history={{}}
+        location={{}}
       />,
     );
     const loginText = screen.getAllByText(/Login to/i);
@@ -108,9 +145,9 @@ describe('ActionButtons', () => {
     checkExportToWorkspaceConditional(buttonText, 'studyMetadataFieldName');
     checkResourceInfoConditional(buttonText);
   });
-  test('renders Download File Manifest button based on conditionals', () => {
+  test('renders Download Manifest button based on conditionals', () => {
     checkExportToWorkspaceConditional(
-      'Download File Manifest',
+      'Download Manifest',
       'enableDownloadManifest',
     );
   });

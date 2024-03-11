@@ -17,8 +17,7 @@ interface Iprovider {
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//;
 const CheckFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
-  selectedResource: {},
-  manifestFieldName: string,
+  fileManifest: any[],
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
 ) => fetchWithCreds({
@@ -37,18 +36,18 @@ const CheckFederatedLoginStatus = async (
     const guidsForHostnameResolution: any = [];
     const guidPrefixes: any = [];
 
-    (selectedResource[manifestFieldName] || []).forEach((fileMetadata) => {
-      if (fileMetadata.object_id) {
+    fileManifest.forEach((fileManifestItem) => {
+      if (fileManifestItem.object_id) {
         const guidDomainPrefix = (
-          fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []
+          fileManifestItem.object_id.match(GUID_PREFIX_PATTERN) || []
         ).shift();
         if (guidDomainPrefix) {
           if (!guidPrefixes.includes(guidDomainPrefix)) {
             guidPrefixes.push(guidDomainPrefix);
-            guidsForHostnameResolution.push(fileMetadata.object_id);
+            guidsForHostnameResolution.push(fileManifestItem.object_id);
           }
         } else {
-          guidsForHostnameResolution.push(fileMetadata.object_id);
+          guidsForHostnameResolution.push(fileManifestItem.object_id);
         }
       }
     });
@@ -73,7 +72,7 @@ const CheckFederatedLoginStatus = async (
     );
     if (providersToAuthenticate.length) {
       setDownloadStatus({
-        inProgress: false,
+        inProgress: '',
         message: {
           title: 'Authorization Required',
           active: true,

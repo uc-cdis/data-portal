@@ -7,7 +7,7 @@ interface DownloadAllModalPropsInterface {
   setDownloadStatus: (arg0: DownloadStatus) => void;
 }
 
-const DownloadAllModal = ({
+const DownloadModal = ({
   downloadStatus,
   setDownloadStatus,
 }: DownloadAllModalPropsInterface): JSX.Element => (
@@ -33,4 +33,4 @@ const DownloadAllModal = ({
     {downloadStatus.message.content}
   </Modal>
 );
-export default DownloadAllModal;
+export default DownloadModal;

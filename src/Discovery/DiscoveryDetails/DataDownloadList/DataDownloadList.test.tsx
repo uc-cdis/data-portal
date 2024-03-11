@@ -2,15 +2,31 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
+import { DiscoveryConfig } from '../../DiscoveryConfig';
+import { DiscoveryResource } from '../../Discovery';
 
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn().mockReturnValue(0),
   useLocation: jest.fn().mockReturnValue(0),
 }));
 
+const testDiscoveryConfig = {
+  features: {
+    exportToWorkspace: {
+      variableMetadataFieldName: 'variableMetadataFieldName',
+      enableDownloadVariableMetadata: true,
+    },
+  },
+  minimalFieldMapping: {
+    uid: 'study_id',
+  },
+};
+
+const testResourceInfo = { _hdp_uid: 'test_hdp_uid' };
+
 describe('DataDownloadList', () => {
   it(`renders the component with titles and descriptions and action buttons container
-  when sourceFieledData has titles and descriptions`, () => {
+  when sourceFieldData has titles and descriptions`, () => {
     const sourceFieldData = [
       [
         {
@@ -25,9 +41,12 @@ describe('DataDownloadList', () => {
     ];
     const { getByText } = render(
       <DataDownloadList
-        discoveryConfig={null}
-        resourceInfo={null}
+        resourceFieldValueIsValid
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as unknown as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
         sourceFieldData={sourceFieldData}
+        missingRequiredIdentityProviders={[]}
       />,
     );
     // Verify that the component renders successfully
@@ -52,7 +71,14 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList
+        resourceFieldValueIsValid
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        sourceFieldData={sourceFieldData}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
+        missingRequiredIdentityProviders={[]}
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -74,7 +100,14 @@ describe('DataDownloadList', () => {
       ],
     ];
     const { getByText } = render(
-      <DataDownloadList sourceFieldData={sourceFieldData} />,
+      <DataDownloadList
+        resourceFieldValueIsValid
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
+        sourceFieldData={sourceFieldData}
+        missingRequiredIdentityProviders={[]}
+      />,
     );
     // Verify that the component renders successfully
     sourceFieldData[0].forEach((obj) => {
@@ -82,17 +115,27 @@ describe('DataDownloadList', () => {
     });
   });
 
-  it('does not render the file list but does render the action buttons when data is missing title and file_name', () => {
+  it(`does not render the file list but does render the action buttons
+    when isResourceFieldValueValid is false`, () => {
     const sourceFieldData = [
       [
         {
-          NotTheTitle: undefined, // No title
+          NotTheTitle: 'some title',
           NotTheFileName: '',
           description: 'Some description',
         },
       ],
     ];
-    render(<DataDownloadList sourceFieldData={sourceFieldData} />);
+    render(
+      <DataDownloadList
+        resourceFieldValueIsValid={false}
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
+        sourceFieldData={sourceFieldData}
+        missingRequiredIdentityProviders={[]}
+      />,
+    );
     // Verify that the list does not render but the buttons do
     expect(
       screen.queryByTestId('dataDownloadFileList'),

@@ -7,21 +7,19 @@ import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
 
-const DownloadAllFiles = async (
-  resourceInfo: object,
+const DownloadDataFiles = async (
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: RouteComponentProps['history'],
   location: RouteComponentProps['location'],
-  healLoginNeeded: boolean,
+  missingRequiredIdentityProviders: string[],
   verifyExternalLoginsNeeded: boolean | undefined,
-  manifestFieldName: string,
+  fileManifest: any[],
 ) => {
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
       setDownloadStatus,
-      resourceInfo,
-      manifestFieldName,
+      fileManifest,
       history,
       location,
     );
@@ -29,23 +27,22 @@ const DownloadAllFiles = async (
       return;
     }
   }
-  if (healLoginNeeded) {
+  if (missingRequiredIdentityProviders.length) {
     return;
   }
-  const studyIDs = [resourceInfo._hdp_uid];
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { study_ids: studyIDs },
+      input: { file_manifest: fileManifest || [] },
     }),
   })
     .then((dispatchResponse) => {
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadStatus({
-          inProgress: false,
+          inProgress: '',
           message: {
             title: 'Download failed',
             content: (
@@ -61,7 +58,7 @@ const DownloadAllFiles = async (
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else {
         setDownloadStatus({
-          inProgress: true,
+          inProgress: 'DownloadDataFiles',
           message: {
             title: 'Your download is being prepared',
             content: (
@@ -86,4 +83,4 @@ const DownloadAllFiles = async (
     .catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
 };
 
-export default DownloadAllFiles;
+export default DownloadDataFiles;

@@ -21,7 +21,6 @@ import jsonpath from 'jsonpath';
 import { useHistory } from 'react-router-dom';
 import {
   hostname,
-  basename,
   fenceDownloadPath,
   studyRegistrationConfig,
 } from '../../localconf';
@@ -34,7 +33,8 @@ import {
   DiscoveryResource,
 } from '../Discovery';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
-import CheckHealLoginNeeded from './Utils/CheckHealLoginNeeded';
+import GetMissingRequiredIdentityProviders from './Utils/GetMissingRequiredIdentityProviders';
+import GetPermaLink from './Utils/GetPermaLink';
 
 const { Panel } = Collapse;
 
@@ -223,6 +223,7 @@ type TabFieldConfig = TabFieldGroup['fields'][0];
 type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const formatResourceValuesWhenNestedArray = (
+  isTargetAListField: boolean = false,
   resourceFieldValue: string | any[],
 ) => {
   if (Array.isArray(resourceFieldValue)) {
@@ -231,6 +232,10 @@ const formatResourceValuesWhenNestedArray = (
       && resourceFieldValue[0].every((val) => typeof val === 'string')
     ) {
       return resourceFieldValue[0].join(', ');
+    }
+    if (isTargetAListField) {
+      // to make sure the return value is a single-level array
+      return resourceFieldValue.flat(Infinity);
     }
     return resourceFieldValue[0];
   }
@@ -258,28 +263,34 @@ const tabField = (
       </div>
     );
   }
-  // Here begins some normal fields (texts, links, etc...)
   let resourceFieldValue = fieldConfig.sourceField
     && jsonpath.query(resource, `$.${fieldConfig.sourceField}`);
-  if (
-    resourceFieldValue
+  const resourceFieldValueIsValid: boolean = resourceFieldValue
     && resourceFieldValue.length > 0
     && resourceFieldValue[0]
-    && resourceFieldValue[0].length !== 0
-  ) {
-    if (fieldConfig.type === 'dataDownloadList') {
-      return (
-        <DataDownloadList
-          isUserLoggedIn={Boolean(user.username)}
-          discoveryConfig={discoveryConfig}
-          resourceInfo={resource}
-          sourceFieldData={resourceFieldValue}
-          healLoginNeeded={CheckHealLoginNeeded([resource], user.fence_idp)}
-        />
-      );
-    }
+    && resourceFieldValue[0].length !== 0;
+
+  if (fieldConfig.type === 'dataDownloadList') {
+    return (
+      <DataDownloadList
+        resourceFieldValueIsValid={resourceFieldValueIsValid}
+        isUserLoggedIn={Boolean(user.username)}
+        discoveryConfig={discoveryConfig}
+        resourceInfo={resource}
+        sourceFieldData={resourceFieldValue}
+        missingRequiredIdentityProviders={GetMissingRequiredIdentityProviders([resource], user.fence_idp)}
+      />
+    );
+  }
+
+  // Here begins some normal fields (texts, links, etc...)
+  if (resourceFieldValueIsValid) {
     // Format resourceFieldValue for all other field types
-    resourceFieldValue = formatResourceValuesWhenNestedArray(resourceFieldValue);
+    let isTargetAListField = false;
+    if (fieldConfig.type === 'textList' || fieldConfig.type === 'linkList') {
+      isTargetAListField = true;
+    }
+    resourceFieldValue = formatResourceValuesWhenNestedArray(isTargetAListField, resourceFieldValue);
 
     if (fieldConfig.type === 'text') {
       return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
@@ -341,10 +352,7 @@ const DiscoveryDetails = (props: Props) => {
   const [tabActiveKey, setTabActiveKey] = useState('0');
 
   const history = useHistory();
-  const pagePath = `/discovery/${encodeURIComponent(
-    props.modalData[props.config.minimalFieldMapping.uid],
-  )}/`;
-  const permalink = `${basename === '/' ? '' : basename}${pagePath}`;
+  const permalink = GetPermaLink(props.modalData[props.config.minimalFieldMapping.uid]);
 
   const handleRedirectClick = (
     redirectURL: string = '/',
@@ -364,7 +372,7 @@ const DiscoveryDetails = (props: Props) => {
   };
 
   const handleRedirectToLoginClick = () => {
-    history.push('/login', { from: pagePath });
+    history.push('/login', { from: permalink });
   };
 
   const headerField = props.config.detailView?.headerField
@@ -582,6 +590,7 @@ const DiscoveryDetails = (props: Props) => {
         </Space>
       </div>
       {props.config.detailView?.tabs ? (
+        // Here is the tabbed version of discovery details page
         <div className='discovery-modal-content'>
           {header}
           <Tabs
@@ -609,6 +618,7 @@ const DiscoveryDetails = (props: Props) => {
           />
         </div>
       ) : (
+        // Non-tabbed version discovery details page begins here
         <React.Fragment>
           <div className='discovery-modal-content'>
             {header}
