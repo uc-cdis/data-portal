@@ -25,6 +25,13 @@ const filterTableData = (data, homeTableState) => {
       homeTableState.nameSearchTerm,
     );
   }
+  if (homeTableState.userNameSearchTerm.length > 0) {
+    filteredDataResult = filterBySearchTerm(
+      filteredDataResult,
+      'userName',
+      homeTableState.userNameSearchTerm,
+    );
+  }
   if (homeTableState.wfNameSearchTerm.length > 0) {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,

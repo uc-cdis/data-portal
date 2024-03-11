@@ -1,5 +1,6 @@
 const DefaultColumnManagement = {
   showRunId: true,
+  showUserName: true,
   showWorkflowName: true,
   showDateSubmitted: true,
   showJobStatus: true,

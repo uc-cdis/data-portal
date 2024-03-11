@@ -4,6 +4,7 @@ import DetermineInitialColumnManagement from './DetermineInitialColumnManagement
 const InitialHomeTableState = {
   nameSearchTerm: '',
   wfNameSearchTerm: '',
+  userNameSearchTerm: '',
   submittedAtSelections: [],
   finishedAtSelections: [],
   jobStatusSelections: [],
