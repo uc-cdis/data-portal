@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@mantine/core';
-import { IValueSummary, IRowData } from '../Interfaces/Interfaces';
+import { IValueSummary, IRowData } from '../../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
 import {
@@ -36,7 +36,7 @@ const TableRow = ({
               variant='subtle'
               size='xs'
               compact
-              onClick={() => handleTableChange('openDropdown', rowObject.rowID,)}
+              onClick={() => handleTableChange('openDropdown', rowObject.rowID)}
             >
               <ExpandIcon />
             </Button>

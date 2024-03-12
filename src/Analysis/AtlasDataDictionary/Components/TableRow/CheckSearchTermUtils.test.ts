@@ -4,7 +4,7 @@ import {
   checkIfDetailTableContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
 } from './CheckSearchTermUtils';
-import TableData from '../TestData/TableData';
+import TableData from '../../TestData/TableData';
 
 const rowObject: any = TableData.data[0];
 const impossibleSearchInputValue = 'ThisStringIsTooLongTooHaveBeenGeneratedByTheTestDataGenerator';

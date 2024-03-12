@@ -1,8 +1,8 @@
 import React from 'react';
 import TableRowDropdown from './TableRowDropdown';
-import TableData from '../../TestData/TableData';
-import PreprocessTableData from '../../Utils/PreprocessTableData';
-import { IRowData } from '../../Interfaces/Interfaces';
+import TableData from '../../../TestData/TableData';
+import PreprocessTableData from '../../../Utils/PreprocessTableData';
+import { IRowData } from '../../../Interfaces/Interfaces';
 
 export default {
   title: 'Tests2/AtlasDataDictionary/Components/TableRowDropdown',

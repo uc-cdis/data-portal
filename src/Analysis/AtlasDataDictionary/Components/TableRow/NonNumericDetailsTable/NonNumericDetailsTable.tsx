@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from '@mantine/core';
-import { IValueSummary } from '../../Interfaces/Interfaces';
+import { IValueSummary } from '../../../Interfaces/Interfaces';
 import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
 
 const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (

@@ -12,8 +12,7 @@ const EntriesHeader = ({
   total,
   colspan,
 }: IEntriesHeaderProps) => {
-  const stopLimitedToTotal =
-    stop > total ? total.toLocaleString() : stop.toLocaleString();
+  const stopLimitedToTotal = stop > total ? total.toLocaleString() : stop.toLocaleString();
   return (
     <caption
       colSpan={colspan}
