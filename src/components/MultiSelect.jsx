@@ -68,7 +68,10 @@ export default function MultiSelect({ items, onChange }) {
                 type="button"
                 className="clear-button"
                 aria-label="Clear"
-                onPress={() => setSelectedKeys(new Set([]))}
+                onPress={() => {
+                    onChange([]);
+                    setSelectedKeys(new Set([]))
+                }}
             >
                 ✕
             </Button>

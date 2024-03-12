@@ -102,7 +102,7 @@ function TableHead({ cols, setFilters, data }) {
                               filters[i] = options.map((opt) => opt.text);
                               setFilters([...filters]);
                           }}
-                          items={uniqueValues.map((value, index) => ({ id: index, text: value}))} 
+                          items={uniqueValues.map((value, index) => ({ id: index, text: value }))} 
                         />
                       </Flex>
                     </Form>
