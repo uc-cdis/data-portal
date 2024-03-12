@@ -35,11 +35,6 @@ const PaginationControls = ({
         </div>
 
         <div className='pagination-container'>
-          {`totalEntriesAvailable: ${totalEntriesAvailable}`}
-          <br />
-          {`entriesShown: ${entriesShown}`}
-          <br />
-          {`total: ${Math.ceil(totalEntriesAvailable / entriesShown)}`}
           <Pagination
             align='right'
             total={totalButtonsShown}
