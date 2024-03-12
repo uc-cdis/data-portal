@@ -11,16 +11,20 @@ const EntriesHeader = ({
   stop,
   total,
   colspan,
-}: IEntriesHeaderProps) => (
-  <caption
-    colSpan={colspan}
-    className='entries-header'
-    data-testid='entries-header'
-  >
-    Showing <strong>{start.toLocaleString()}</strong> to
-    <strong> {stop.toLocaleString()}</strong> of
-    <strong> {total.toLocaleString()}</strong> entries
-  </caption>
-);
+}: IEntriesHeaderProps) => {
+  const stopLimitedToTotal =
+    stop > total ? total.toLocaleString() : stop.toLocaleString();
+  return (
+    <caption
+      colSpan={colspan}
+      className='entries-header'
+      data-testid='entries-header'
+    >
+      Showing <strong>{start.toLocaleString()}</strong> to
+      <strong> {stopLimitedToTotal}</strong> of
+      <strong> {total.toLocaleString()}</strong> entries
+    </caption>
+  );
+};
 
 export default EntriesHeader;

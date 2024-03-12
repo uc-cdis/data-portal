@@ -3,7 +3,7 @@ import { Table } from '@mantine/core';
 import { IValueSummary } from '../../Interfaces/Interfaces';
 import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
 
-const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
+const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (
   <Table data-testid='non-numeric-details-table' striped>
     <thead>
       <tr>
@@ -20,7 +20,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.valueAsString,
-                searchInputValue,
+                searchTerm,
               )}
             >
               {valueSummaryObj.valueAsString}
@@ -28,7 +28,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.valueAsConceptID,
-                searchInputValue,
+                searchTerm,
               )}
             >
               {valueSummaryObj.valueAsConceptID}
@@ -36,7 +36,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.name,
-                searchInputValue,
+                searchTerm,
               )}
             >
               {valueSummaryObj.name}
@@ -44,7 +44,7 @@ const NonNumericDetailsTable = ({ rowObject, searchInputValue }) => (
             <td
               className={checkIfCellContainsSearchTerm(
                 valueSummaryObj.personCount,
-                searchInputValue,
+                searchTerm,
               )}
             >
               {valueSummaryObj.personCount}

@@ -95,4 +95,4 @@ const ValueSummaryChart = ({
   );
 };
 
-export default ValueSummaryChart;
+export default React.memo(ValueSummaryChart);
