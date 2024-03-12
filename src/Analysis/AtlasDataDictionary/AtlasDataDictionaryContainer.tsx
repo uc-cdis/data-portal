@@ -1,39 +1,40 @@
 import React, { useState } from 'react';
 import { Table } from '@mantine/core';
 import TableData from './TestData/TableData';
-import ColumnHeaders from './ColumnHeaders/ColumnHeaders';
-import EntriesHeader from './EntriesHeader/EntriesHeader';
-import SearchBar from './SearchBar/SearchBar';
-import TableRow from './TableRow/TableRow';
-import PaginationControls from './PaginationControls/PaginationControls';
+import ColumnHeaders from './Components/ColumnHeaders/ColumnHeaders';
+import EntriesHeader from './Components/EntriesHeader/EntriesHeader';
+import SearchBar from './Components/SearchBar/SearchBar';
+import TableRow from './Components/TableRow/TableRow';
+import PaginationControls from './Components/PaginationControls/PaginationControls';
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
+import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
 import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
   const [data, setData] = useState(preprocessedTableData);
 
-  const DetermineInitialColumnManagement = () => null;
-  const InitialDataDictionaryTableState = {
-    openDropdowns: [] as number[],
-    searchTerm: '',
-    sortConfig: {
-      sortKey: null,
-      direction: 'off',
-    },
-    currentPage: 1,
-    entriesShown: 10,
-    columnsShown: 11,
-    columnManagement: DetermineInitialColumnManagement(),
-  };
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
-  );  const entriesHeaderStart = dataDictionaryTableState.entriesShown
-  * dataDictionaryTableState.currentPage
-  - dataDictionaryTableState.entriesShown + 1;
-const entriesHeaderStop = dataDictionaryTableState.entriesShown
-  * dataDictionaryTableState.currentPage;
+  );
+  const {
+    openDropdowns,
+    searchTerm,
+    sortConfig,
+    currentPage,
+    entriesShown,
+    columnsShown,
+    columnManagement,
+  } = dataDictionaryTableState;
+
+  const entriesHeaderStart = dataDictionaryTableState.entriesShown
+      * dataDictionaryTableState.currentPage
+    - dataDictionaryTableState.entriesShown
+    + 1;
+
+  const entriesHeaderStop = dataDictionaryTableState.entriesShown
+    * dataDictionaryTableState.currentPage;
 
   const handleTableChange = (
     event:
@@ -49,12 +50,14 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
     if (event === 'openDropdown') {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
-        openDropdowns: [...dataDictionaryTableState.openDropdowns, eventData],
+        openDropdowns: [...openDropdowns, eventData],
       });
     } else if (event === 'closeDropdown') {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
-        openDropdowns: dataDictionaryTableState.openDropdowns.filter((dropdownNumber: number) => dropdownNumber !== eventData),
+        openDropdowns: openDropdowns.filter(
+          (dropdownNumber: number) => dropdownNumber !== eventData,
+        ),
       });
     } else if (event === 'currentPage') {
       setDataDictionaryTableState({
@@ -73,26 +76,29 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
         searchTerm: eventData,
         currentPage: 1,
       });
+    } else if (event === 'sortConfig') {
+      setDataDictionaryTableState({
+        ...dataDictionaryTableState,
+        sortConfig: eventData,
+        currentPage: 1,
+      });
     } else {
-      throw new Error(`handleTableChange called with invalid parameters: event:${event}, eventData:${eventData}`);
+      throw new Error(
+        `handleTableChange called with invalid parameters: event:${event}, eventData:${eventData}`,
+      );
     }
   };
 
-  const [sortConfig, setSortConfig] = useState<ISortConfig>({
-    sortKey: null,
-    direction: 'off',
-  });
-
   /* Pagination */
   const paginatedData = data.slice(
-    dataDictionaryTableState.entriesShown
-      * dataDictionaryTableState.currentPage
-      - dataDictionaryTableState.entriesShown,
-    dataDictionaryTableState.entriesShown * dataDictionaryTableState.currentPage,
+    entriesShown * currentPage - entriesShown,
+    entriesShown * currentPage,
   );
 
   const handleSort = (sortKey) => {
     let direction: ISortConfig['direction'] = 'ascending';
+
+    // TODO: put this into a function that takes sortkey and sortConfig as a parameter
     if (sortConfig.sortKey === sortKey) {
       if (sortConfig.direction === 'ascending') {
         direction = 'descending';
@@ -102,7 +108,6 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
         direction = 'ascending';
       }
     }
-    setSortConfig({ sortKey, direction });
 
     const sortedData = [...data].sort((a, b) => {
       if (direction === 'ascending') {
@@ -120,8 +125,7 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
       // Otherwise set with sortedData
       setData(sortedData);
     }
-    // reset pagination
-    handleTableChange('currentPage', 1);
+    handleTableChange('sortConfig', { sortKey, direction });
   };
 
   const rows = paginatedData.map((rowObject, i) => (
@@ -129,9 +133,9 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
       key={i}
       rowObject={rowObject}
       handleTableChange={handleTableChange}
-      openDropdowns={dataDictionaryTableState.openDropdowns}
-      columnsShown={dataDictionaryTableState.columnsShown}
-      searchTerm={dataDictionaryTableState.searchTerm}
+      openDropdowns={openDropdowns}
+      columnsShown={columnsShown}
+      searchTerm={searchTerm}
     />
   ));
 
@@ -142,18 +146,21 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
     >
       <Table>
         <SearchBar
-          columnsShown={dataDictionaryTableState.columnsShown}
+          columnsShown={columnsShown}
           TableData={preprocessedTableData}
           setData={setData}
-          searchInputValue={dataDictionaryTableState.searchTerm}
+          searchInputValue={searchTerm}
           handleTableChange={handleTableChange}
         />
-        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} />
+        <ColumnHeaders
+          handleSort={handleSort}
+          sortConfig={sortConfig as ISortConfig}
+        />
         <tbody>
           {rows}
           {!data.length && (
             <tr className='no-data-found'>
-              <td colSpan={dataDictionaryTableState.columnsShown}>
+              <td colSpan={columnsShown}>
                 <h2>No Data Found</h2>
               </td>
             </tr>
@@ -163,13 +170,13 @@ const entriesHeaderStop = dataDictionaryTableState.entriesShown
           start={entriesHeaderStart}
           stop={entriesHeaderStop}
           total={data.length}
-          colspan={dataDictionaryTableState.columnsShown}
+          colspan={columnsShown}
         />
       </Table>
       <PaginationControls
-        entriesShown={dataDictionaryTableState.entriesShown}
+        entriesShown={entriesShown}
         handleTableChange={handleTableChange}
-        currentPage={dataDictionaryTableState.currentPage}
+        currentPage={currentPage}
         totalEntriesAvailable={data.length}
       />
     </div>

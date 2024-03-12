@@ -1,13 +1,13 @@
-import { IRowData } from '../Interfaces/Interfaces';
+import { IRowData } from '../../Interfaces/Interfaces';
 
 export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
   if (
-    searchInputValue
-    && cellText
-    && cellText
+    searchInputValue &&
+    cellText &&
+    cellText
       .toString()
       .toLowerCase()
       .includes(searchInputValue.toString().toLowerCase().trim())
@@ -19,7 +19,7 @@ export const checkIfCellContainsSearchTerm = (
 
 export const checkIfChartContainsSearchTerm = (
   rowObject: IRowData,
-  searchInputValue,
+  searchInputValue
 ) => {
   let searchTermFound = false;
   rowObject.valueSummary.forEach((arrObj: Object) => {
@@ -37,7 +37,7 @@ export const checkIfChartContainsSearchTerm = (
 
 export const checkIfDetailTableContainsSearchTerm = (
   rowObject: IRowData,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
   let searchTermFound = false;
   const hiddenKeys = ['minValue', 'maxValue', 'meanValue', 'standardDeviation'];
@@ -52,9 +52,11 @@ export const checkIfDetailTableContainsSearchTerm = (
 
 export const checkIfHiddenCellsContainSearchTerm = (
   rowObject: IRowData,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
-  if (checkIfDetailTableContainsSearchTerm(rowObject, searchInputValue)) return 'search-highlight';
-  if (checkIfChartContainsSearchTerm(rowObject, searchInputValue)) return 'search-highlight';
+  if (checkIfDetailTableContainsSearchTerm(rowObject, searchInputValue))
+    return 'search-highlight';
+  if (checkIfChartContainsSearchTerm(rowObject, searchInputValue))
+    return 'search-highlight';
   return '';
 };
