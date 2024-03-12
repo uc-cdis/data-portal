@@ -25,7 +25,6 @@ const AtlasDataDictionaryContainer = () => {
     currentPage,
     entriesShown,
     columnsShown,
-    columnManagement,
   } = dataDictionaryTableState;
 
   const entriesHeaderStart = dataDictionaryTableState.entriesShown

@@ -2,9 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRowDropdown from './TableRowDropdown';
-import TableData from '../../TestData/TableData';
-import PreprocessTableData from '../../Utils/PreprocessTableData';
-import { IRowData } from '../../Interfaces/Interfaces';
+import TableData from '../../../TestData/TableData';
+import PreprocessTableData from '../../../Utils/PreprocessTableData';
+import { IRowData } from '../../../Interfaces/Interfaces';
 
 const processedTableData = PreprocessTableData(TableData);
 const firstNumericRow = processedTableData.find(

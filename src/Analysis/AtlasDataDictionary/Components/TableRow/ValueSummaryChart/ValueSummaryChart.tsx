@@ -16,7 +16,7 @@ import {
   X_AXIS_CHARACTER_CUT_OFF,
   GRID_OPACITY,
 } from './ValueSummaryChartConstants';
-import { IValueSummary } from '../../Interfaces/Interfaces';
+import { IValueSummary } from '../../../Interfaces/Interfaces';
 
 interface IValueSummaryChartProps {
   chartData: IValueSummary[];

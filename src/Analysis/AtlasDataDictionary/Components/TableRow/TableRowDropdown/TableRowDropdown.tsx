@@ -4,7 +4,7 @@ import NonNumericDetailsTable from '../NonNumericDetailsTable/NonNumericDetailsT
 import NumericDetailsTable from '../NumericDetailsTable/NumericDetailsTable';
 import { checkIfChartContainsSearchTerm } from '../CheckSearchTermUtils';
 import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
-import { IRowData } from '../../Interfaces/Interfaces';
+import { IRowData } from '../../../Interfaces/Interfaces';
 
 interface ITableRowDropdownProps {
   dropdownIsOpen: boolean;

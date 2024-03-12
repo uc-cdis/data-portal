@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Input } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
-import { IRowData } from '../Interfaces/Interfaces';
+import { IRowData } from '../../Interfaces/Interfaces';
 
 interface ISearchBarProps {
   columnsShown: number;
