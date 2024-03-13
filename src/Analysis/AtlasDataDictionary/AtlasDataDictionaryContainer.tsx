@@ -9,6 +9,7 @@ import PaginationControls from './Components/PaginationControls/PaginationContro
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
 import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
+import {DetermineSortDirection, SortDataWithDirection } from './Utils/SortUtils';
 import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = () => {
@@ -34,6 +35,11 @@ const AtlasDataDictionaryContainer = () => {
 
   const entriesHeaderStop = dataDictionaryTableState.entriesShown
     * dataDictionaryTableState.currentPage;
+
+  const paginatedData = data.slice(
+    entriesShown * currentPage - entriesShown,
+    entriesShown * currentPage,
+  );
 
   const handleTableChange = (
     event:
@@ -88,35 +94,9 @@ const AtlasDataDictionaryContainer = () => {
     }
   };
 
-  /* Pagination */
-  const paginatedData = data.slice(
-    entriesShown * currentPage - entriesShown,
-    entriesShown * currentPage,
-  );
-
-  const handleSort = (sortKey) => {
-    let direction: ISortConfig['direction'] = 'ascending';
-
-    // TODO: put this into a function that takes sortkey and sortConfig as a parameter
-    if (sortConfig.sortKey === sortKey) {
-      if (sortConfig.direction === 'ascending') {
-        direction = 'descending';
-      } else if (sortConfig.direction === 'descending') {
-        direction = 'off';
-      } else if (sortConfig.direction === 'off') {
-        direction = 'ascending';
-      }
-    }
-
-    const sortedData = [...data].sort((a, b) => {
-      if (direction === 'ascending') {
-        return a[sortKey].toString().localeCompare(b[sortKey].toString());
-      }
-      if (direction === 'descending') {
-        return b[sortKey].toString().localeCompare(a[sortKey].toString());
-      }
-      return 0;
-    });
+  const handleSort = (sortKey: ISortConfig['direction']) => {
+    const direction: ISortConfig['direction'] = DetermineSortDirection(sortConfig as ISortConfig, sortKey);
+    const sortedData = SortDataWithDirection(data, direction, sortKey);
     // if column is set to off reset to initial sort
     if (direction === 'off') {
       setData(preprocessedTableData);
