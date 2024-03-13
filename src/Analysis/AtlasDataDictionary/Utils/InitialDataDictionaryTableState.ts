@@ -12,4 +12,5 @@ const InitialDataDictionaryTableState = {
   columnsShown: 11,
   columnManagement: DetermineInitialColumnManagement(),
 };
+
 export default InitialDataDictionaryTableState;
