@@ -155,6 +155,7 @@ const TableRow = ({
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
         <td
+          aria-label='value summary preview chart'
           className={`preview-chart
           ${checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}`}
         >
