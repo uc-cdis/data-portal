@@ -22,9 +22,9 @@ const TableRowDropdown = ({
   const gridColSpanForTable = 5;
   const gridColSpanForChart = 7;
   return (
-    <tr className={`expandable ${dropdownIsOpen ? 'expanded' : ''}`}>
+    <tr className={`expandable ${dropdownIsOpen && 'expanded'}`}>
       <td colSpan={columnsShown}>
-        <div className={`expandable ${dropdownIsOpen ? 'expanded' : ''}`}>
+        <div className={`expandable ${dropdownIsOpen && 'expanded'}`}>
           <Grid>
             <Grid.Col span={gridColSpanForTable}>
               <div className={'expanded-container'}>

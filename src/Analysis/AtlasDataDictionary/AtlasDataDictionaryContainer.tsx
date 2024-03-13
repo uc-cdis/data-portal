@@ -9,7 +9,7 @@ import PaginationControls from './Components/PaginationControls/PaginationContro
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
 import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
-import {DetermineSortDirection, SortDataWithDirection } from './Utils/SortUtils';
+import { DetermineNextSortDirection, SortDataWithDirection } from './Utils/SortUtils';
 import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = () => {
@@ -95,16 +95,16 @@ const AtlasDataDictionaryContainer = () => {
   };
 
   const handleSort = (sortKey: ISortConfig['direction']) => {
-    const direction: ISortConfig['direction'] = DetermineSortDirection(sortConfig as ISortConfig, sortKey);
-    const sortedData = SortDataWithDirection(data, direction, sortKey);
+    const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(sortConfig as ISortConfig, sortKey);
+    const sortedData = SortDataWithDirection(data, newDirection, sortKey);
     // if column is set to off reset to initial sort
-    if (direction === 'off') {
+    if (newDirection === 'off') {
       setData(preprocessedTableData);
     } else {
       // Otherwise set with sortedData
       setData(sortedData);
     }
-    handleTableChange('sortConfig', { sortKey, direction });
+    handleTableChange('sortConfig', { sortKey, direction: newDirection });
   };
 
   const rows = paginatedData.map((rowObject, i) => (

@@ -17,7 +17,6 @@ const SearchBar = ({
   setData,
   searchInputValue,
   handleTableChange,
-  // setSearchInputValue,
 }: ISearchBarProps) => {
   useEffect(() => {
     const filteredData = TableData.filter((item) => {
@@ -49,14 +48,13 @@ const SearchBar = ({
   }, [searchInputValue]);
 
   const handleInputChange = (event) => {
-    // setSearchInputValue(event.target.value);
     handleTableChange('searchTerm', event.target.value);
   };
 
   return (
     <thead className={'search-bar'} data-testid='search-bar'>
       <tr>
-        <th colSpan={columnsShown}>
+        <th aria-label='search bar' colSpan={columnsShown}>
           <div className='search-bar-container'>
             <Input
               rightSection={
