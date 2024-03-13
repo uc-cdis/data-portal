@@ -36,7 +36,7 @@ describe('SortUtils', () => {
     const data = [
       { name: 'John Doe', exampleKey: 'A' },
       { name: 'Jane Doe', exampleKey: 'B' },
-      { name: 'Mike Doe', exampleKey: 'C' }
+      { name: 'Mike Doe', exampleKey: 'C' },
     ];
     const sortKey = 'exampleKey';
     const direction = 'descending';
