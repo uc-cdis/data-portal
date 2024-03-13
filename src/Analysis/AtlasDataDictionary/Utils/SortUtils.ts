@@ -1,6 +1,6 @@
 import { ISortConfig } from '../Interfaces/Interfaces';
 
-const DetermineNextSortDirection = (sortConfig: ISortConfig, sortKey: ISortConfig['direction']) => {
+const DetermineNextSortDirection = (sortConfig: ISortConfig, sortKey: string|null) => {
   let direction:ISortConfig['direction'] = 'ascending';
   if (sortConfig.sortKey === sortKey) {
     if (sortConfig.direction === 'ascending') {
@@ -14,7 +14,7 @@ const DetermineNextSortDirection = (sortConfig: ISortConfig, sortKey: ISortConfi
   return direction;
 };
 
-const SortDataWithDirection = (data, direction, sortKey) => [...data].sort((a, b) => {
+const SortDataWithDirection = (data:any, direction:ISortConfig['direction'], sortKey: string) => [...data].sort((a, b) => {
   if (direction === 'ascending') {
     return a[sortKey].toString().localeCompare(b[sortKey].toString());
   }
