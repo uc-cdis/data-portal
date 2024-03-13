@@ -72,8 +72,8 @@ const AtlasDataDictionaryContainer = () => {
     } else if (event === 'entriesShown') {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
-        currentPage: 1,
         entriesShown: eventData,
+        currentPage: 1,
       });
     } else if (event === 'searchTerm') {
       setDataDictionaryTableState({
@@ -89,12 +89,12 @@ const AtlasDataDictionaryContainer = () => {
       });
     } else {
       throw new Error(
-        `handleTableChange called with invalid parameters: event:${event}, eventData:${eventData}`,
+        `handleTableChange called with invalid parameters: event: ${event}, eventData: ${eventData}`,
       );
     }
   };
 
-  const handleSort = (sortKey: ISortConfig['direction']) => {
+  const handleSort = (sortKey: string) => {
     const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(sortConfig as ISortConfig, sortKey);
     const sortedData = SortDataWithDirection(data, newDirection, sortKey);
     // if column is set to off reset to initial sort

@@ -54,7 +54,7 @@ describe('TableRow test', () => {
             handleTableChange={() => null}
             openDropdowns={[2]}
             columnsShown={11}
-            searchTerm={''}
+            searchTerm=''
           />
         </tbody>
       </table>,
@@ -74,7 +74,7 @@ describe('TableRow test', () => {
             handleTableChange={() => null}
             openDropdowns={[0]}
             columnsShown={11}
-            searchTerm={''}
+            searchTerm=''
           />
         </tbody>
       </table>,
