@@ -128,7 +128,7 @@ const AtlasDataDictionaryContainer = () => {
           columnsShown={columnsShown}
           TableData={preprocessedTableData}
           setData={setData}
-          searchInputValue={searchTerm}
+          searchTerm={searchTerm}
           handleTableChange={handleTableChange}
         />
         <ColumnHeaders

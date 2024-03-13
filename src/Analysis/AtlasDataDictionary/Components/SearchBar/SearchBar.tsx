@@ -7,7 +7,7 @@ interface ISearchBarProps {
   columnsShown: number;
   TableData: IRowData[];
   setData: Function;
-  searchInputValue: string;
+  searchTerm: string;
   handleTableChange: Function;
 }
 
@@ -15,12 +15,12 @@ const SearchBar = ({
   columnsShown,
   TableData,
   setData,
-  searchInputValue,
+  searchTerm,
   handleTableChange,
 }: ISearchBarProps) => {
   useEffect(() => {
     const filteredData = TableData.filter((item) => {
-      const searchQuery = searchInputValue.toLowerCase().trim();
+      const searchQuery = searchTerm.toLowerCase().trim();
       return Object.values(item).some((value) => {
         if (typeof value === 'string' || typeof value === 'number') {
           return value.toString().toLowerCase().includes(searchQuery);
@@ -45,7 +45,7 @@ const SearchBar = ({
       });
     });
     setData(filteredData);
-  }, [searchInputValue]);
+  }, [searchTerm]);
 
   const handleInputChange = (event) => {
     handleTableChange('searchTerm', event.target.value);
@@ -58,7 +58,7 @@ const SearchBar = ({
           <div className='search-bar-container'>
             <Input
               rightSection={
-                searchInputValue ? (
+                searchTerm ? (
                   <button
                     type='button'
                     className='search-bar-input-control'
@@ -76,7 +76,7 @@ const SearchBar = ({
                 )
               }
               placeholder='Search'
-              value={searchInputValue}
+              value={searchTerm}
               onChange={(e) => handleInputChange(e)}
             />
           </div>
