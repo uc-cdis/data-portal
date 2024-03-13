@@ -78,7 +78,15 @@ function DataRequestCreate({ isCreatePending }) {
     undefined;
   let isAdmin = is_admin || !!serviceAccessMethod;
   let savedFilterSets = useAppSelector((state) => state.explorer.savedFilterSets.data);
-  let userList = admin_user_list ?? [];
+  let userList = 
+    [...admin_user_list].sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (b.name < a.name) {
+        return 1;
+      }
+      return 0;
+    }) ?? [];
 
 	let navigate = useNavigate();
 	let goBack = () => {
