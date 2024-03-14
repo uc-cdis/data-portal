@@ -1,6 +1,6 @@
 .base-table {
-  min-height: 300px;
-  overflow-x: auto;
+  transform: rotateX(180deg);
+  overflow-x: scroll;
 }
 
 .base-table__filter-field {
@@ -9,7 +9,8 @@
 
 .base-table__body {
   border-collapse: collapse;
-  overflow: scroll;
+  overflow-x: scroll;
+  transform: rotateX(180deg);
   margin: 1em 0;
   text-align: left;
   width: 100%;
