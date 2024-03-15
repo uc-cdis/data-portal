@@ -2,8 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
-import { DiscoveryConfig } from '../../DiscoveryConfig';
-import { DiscoveryResource } from '../../Discovery';
+import { DiscoveryConfig } from '../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../Discovery';
 
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn().mockReturnValue(0),

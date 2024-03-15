@@ -5,13 +5,13 @@ import React from 'react';
 import {
   fenceDownloadPath,
   bundle,
-} from '../../../../localconf';
+} from '../../../../../../../localconf';
 import DataDownloadListItem from '../Interfaces/DataDownloadListItem';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
-import { DiscoveryConfig } from '../../../DiscoveryConfig';
+import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import DownloadStatus from '../Interfaces/DownloadStatus';
-import { DiscoveryResource } from '../../../Discovery';
+import { DiscoveryResource } from '../../../../../../Discovery';
 
 interface StandaloneDataDownloadButtonProps {
     discoveryConfig: DiscoveryConfig;
