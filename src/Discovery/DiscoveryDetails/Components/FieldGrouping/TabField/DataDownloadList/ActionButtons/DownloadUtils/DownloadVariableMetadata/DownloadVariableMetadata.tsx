@@ -1,11 +1,11 @@
 import React from 'react';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import { fetchWithCreds } from '../../../../../../actions';
-import { mdsURL } from '../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../../actions';
+import { mdsURL } from '../../../../../../../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
-import { DiscoveryResource } from '../../../../../Discovery';
+import { DiscoveryResource } from '../../../../../../../../Discovery';
 import DataDictionaries from '../../../Interfaces/DataDictionaries';
 
 const DownloadVariableMetadata = async (

@@ -1,9 +1,9 @@
 import { act } from 'react-dom/test-utils';
 import DownloadDataDictionaryInfo from './DownloadDataDictionaryInfo';
-import { DiscoveryConfig } from '../../../../DiscoveryConfig';
-import { DiscoveryResource } from '../../../../Discovery';
-import { mdsURL } from '../../../../../localconf';
-import { fetchWithCreds } from '../../../../../actions';
+import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../../../Discovery';
+import { mdsURL } from '../../../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../actions';
 
 const mockDataDictionaries = {
   'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
@@ -18,7 +18,7 @@ const discoveryConfig = {
 const resourceInfo = { _hdp_uid: 'testUID' };
 const showDownloadVariableMetadataButton = true;
 
-jest.mock('../../../../../actions', () => ({
+jest.mock('../../../../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
 const mockSetDownloadStatus = jest.fn();

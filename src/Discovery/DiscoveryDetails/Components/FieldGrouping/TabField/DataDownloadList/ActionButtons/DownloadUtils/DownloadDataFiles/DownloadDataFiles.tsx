@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { fetchWithCreds } from '../../../../../../actions';
-import { jobAPIPath } from '../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../../actions';
+import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
