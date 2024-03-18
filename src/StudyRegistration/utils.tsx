@@ -35,13 +35,24 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
 
     // add all repository_study_ids as separate objects
+    var tempStudyIDObj = [{}]
     if (updatedValues.repository_study_ids?.length > 0) {
-      const tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
+      tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
         repository_name: updatedValues.repository,
         repository_study_ID: studyId,
       }));
-      metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
+    } else {
+      if (updatedValues.repository) {
+        tempStudyIDObj = [{
+          repository_name: updatedValues.repository,
+          repository_study_ID: "",
+          repository_study_link: "",
+          repository_persistent_ID: ""
+        }]
+      }
     }
+    metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
+
     metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.clinical_trials_study_ID = updatedValues.clinical_trials_id;
     if (updatedValues.clinical_trials_id) {
       metadataToUpdate.clinicaltrials_gov = updatedValues.clinicaltrials_gov;
