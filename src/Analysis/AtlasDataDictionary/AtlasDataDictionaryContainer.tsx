@@ -69,22 +69,10 @@ const AtlasDataDictionaryContainer = () => {
         ...dataDictionaryTableState,
         currentPage: eventData,
       });
-    } else if (event === 'entriesShown') {
+    } else if (event === 'entriesShown' || event === 'searchTerm' || event === 'sortConfig') {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
-        entriesShown: eventData,
-        currentPage: 1,
-      });
-    } else if (event === 'searchTerm') {
-      setDataDictionaryTableState({
-        ...dataDictionaryTableState,
-        searchTerm: eventData,
-        currentPage: 1,
-      });
-    } else if (event === 'sortConfig') {
-      setDataDictionaryTableState({
-        ...dataDictionaryTableState,
-        sortConfig: eventData,
+        [event]: eventData,
         currentPage: 1,
       });
     } else {
