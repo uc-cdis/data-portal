@@ -1,12 +1,12 @@
 import JSZip from 'jszip';
 import { act } from 'react-dom/test-utils';
 import DownloadVariableMetadata from './DownloadVariableMetadata';
-import { fetchWithCreds } from '../../../../../../actions';
+import { fetchWithCreds } from '../../../../../../../../../actions';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
-import { DiscoveryResource } from '../../../../../Discovery';
+import { DiscoveryResource } from '../../../../../../../../Discovery';
 
 /* eslint global-require: 0 */ // --> OFF
-jest.mock('../../../../../../actions', () => ({
+jest.mock('../../../../../../../../../actions', () => ({
   fetchWithCreds: jest.fn(),
 }));
 jest.mock('file-saver', () => ({

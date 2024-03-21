@@ -1,6 +1,6 @@
 import React from 'react';
-import { fetchWithCreds } from '../../../../../../actions';
-import { jobAPIPath } from '../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../../actions';
+import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import {
   DOWNLOAD_FAIL_STATUS,
