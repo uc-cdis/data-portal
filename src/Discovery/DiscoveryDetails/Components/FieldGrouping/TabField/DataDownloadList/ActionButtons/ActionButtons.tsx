@@ -155,20 +155,18 @@ const ActionButtons = ({
         )}
         {showDownloadStudyLevelMetadataButton && (
           <Col>
-            <ConditionalPopover>
-              <Button
-                className='discovery-action-bar-button'
-                disabled={Boolean(noData || downloadStatus.inProgress)}
-                onClick={() => DownloadJsonFile(
-                  'study-level-metadata',
-                  studyMetadataFieldNameReference
+            <Button
+              className='discovery-action-bar-button'
+              disabled={Boolean(noData || downloadStatus.inProgress)}
+              onClick={() => DownloadJsonFile(
+                'study-level-metadata',
+                studyMetadataFieldNameReference
                       && resourceInfo[studyMetadataFieldNameReference],
-                )}
-              >
+              )}
+            >
                 Download <br />
                 Study-Level Metadata
-              </Button>
-            </ConditionalPopover>
+            </Button>
           </Col>
         )}
         {showDownloadFileManifestButtons && (
