@@ -136,6 +136,7 @@ describe('ActionButtons', () => {
       <ActionButtons
         {...testProps}
         missingRequiredIdentityProviders={['InCommon']}
+        userHasAccessToDownload={false}
       />,
     );
     const popoverText = 'You don\'t have access to this data';
