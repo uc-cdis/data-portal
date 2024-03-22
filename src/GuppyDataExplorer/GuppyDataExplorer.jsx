@@ -21,6 +21,7 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
     let initialFilter = {};
+    let defaultFilters = {};
 
     if (isEnabled('explorerStoreFilterInURL')) {
       const stateFromURL = getQueryParameter('filters');
@@ -38,10 +39,32 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
+    if (this.props.filterConfig.tabs.length > 0) {
+      const defaultFilterArr = this.props.filterConfig.tabs.reduce((accumulator, currentValue) => {
+        const df = currentValue.defaultFilters;
+        if (df && df.length > 0) {
+          return [...accumulator, ...df];
+        }
+        return accumulator;
+      }, []);
+
+      defaultFilters = defaultFilterArr.reduce((tabAccumulator, tabDefaultFilter) => {
+        if (tabDefaultFilter.field && tabDefaultFilter.values.length > 0) {
+          // if it already exists add values to it
+          if (tabAccumulator[tabDefaultFilter.field]) {
+            tabAccumulator[tabDefaultFilter.field].selectedValues.push(...tabDefaultFilter.values);
+            return tabAccumulator;
+          }
+          return { ...tabAccumulator, [tabDefaultFilter.field]: { selectedValues: tabDefaultFilter.values } };
+        }
+        return tabAccumulator;
+      }, {});
+    }
+
     this.state = {
       aggsData: {},
       filter: {},
-      initialFilterFromURL: initialFilter,
+      initialFilterFromURL: { ...defaultFilters, ...initialFilter },
       encodableExplorerStateForURL: { filter: initialFilter },
     };
   }
