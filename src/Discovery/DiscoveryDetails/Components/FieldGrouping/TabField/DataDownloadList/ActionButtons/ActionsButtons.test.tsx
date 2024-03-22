@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  render, screen, fireEvent, waitFor,
-} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ActionButtons from './ActionButtons';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
@@ -59,10 +57,7 @@ describe('ActionButtons', () => {
   /* Helper Functions */
   const checkResourceInfoConditional = (buttonText: string) => {
     const { queryByText } = render(
-      <ActionButtons
-        {...testProps}
-        resourceInfo={{} as DiscoveryResource}
-      />,
+      <ActionButtons {...testProps} resourceInfo={{} as DiscoveryResource} />
     );
     // Check that the button is no longer rendered
     expect(queryByText(buttonText)).toBeNull();
@@ -70,12 +65,10 @@ describe('ActionButtons', () => {
 
   const checkExportToWorkspaceConditional = (
     buttonText: string,
-    condition: string,
+    condition: string
   ) => {
     const { getByText, queryByText, rerender } = render(
-      <ActionButtons
-        {...testProps}
-      />,
+      <ActionButtons {...testProps} />
     );
     const targetButton = getByText(buttonText);
     expect(targetButton).toBeInTheDocument();
@@ -86,14 +79,17 @@ describe('ActionButtons', () => {
       <ActionButtons
         {...testProps}
         discoveryConfig={changedConfig as DiscoveryConfig}
-      />,
+      />
     );
     // Check that the button is no longer rendered
     expect(queryByText(buttonText)).toBeNull();
   };
 
-  const hoverOverButtonAndCheckText = async (button: HTMLElement, popoverText:string,
-    popoverShouldRender:boolean) => {
+  const hoverOverButtonAndCheckText = async (
+    button: HTMLElement,
+    popoverText: string,
+    popoverShouldRender: boolean
+  ) => {
     fireEvent.mouseEnter(button);
     const popoverTextNode = screen.queryByText(popoverText);
     if (popoverShouldRender) {
@@ -105,56 +101,58 @@ describe('ActionButtons', () => {
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string,
-    popoverShouldRender:boolean) => {
-    render(
-      <ActionButtons
-        {...testProps}
-        missingRequiredIdentityProviders={['InCommon']}
-      />,
-    );
-    const popoverText = `This dataset is only accessible to users who have
+  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon =
+    async (buttonTestID: string, popoverShouldRender: boolean) => {
+      render(
+        <ActionButtons
+          {...testProps}
+          missingRequiredIdentityProviders={['InCommon']}
+        />
+      );
+      const popoverText = `This dataset is only accessible to users who have
     authenticated via InCommon. Please log in using the InCommon option.`;
-    const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
-  };
+      const button = screen.getByTestId(buttonTestID);
+      hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
+    };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple = async (buttonTestID: string, popoverShouldRender:boolean) => {
-    const missingRequiredIdentityProviders = ['InCommon', 'Google'];
-    render(
-      <ActionButtons
-        {...testProps}
-        missingRequiredIdentityProviders={missingRequiredIdentityProviders}
-      />,
-    );
-    const popoverText = `Data selection requires [${missingRequiredIdentityProviders.join(', ')}]
+  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple =
+    async (buttonTestID: string, popoverShouldRender: boolean) => {
+      const missingRequiredIdentityProviders = ['InCommon', 'Google'];
+      render(
+        <ActionButtons
+          {...testProps}
+          missingRequiredIdentityProviders={missingRequiredIdentityProviders}
+        />
+      );
+      const popoverText = `Data selection requires [${missingRequiredIdentityProviders.join(
+        ', '
+      )}]
     credentials to access. Please change selection to only need one set of credentials
     and log in using appropriate credentials`;
-    const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
-  };
+      const button = screen.getByTestId(buttonTestID);
+      hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
+    };
 
-  const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID: string,
-    popoverShouldRender:boolean) => {
+  const checkConditionalPopoverUserDoesNotHaveAccess = async (
+    buttonTestID: string,
+    popoverShouldRender: boolean
+  ) => {
     render(
       <ActionButtons
         {...testProps}
         missingRequiredIdentityProviders={['InCommon']}
         userHasAccessToDownload={false}
-      />,
+      />
     );
-    const popoverText = 'You don\'t have access to this data';
+    const popoverText = "You don't have access to this data";
     const button = screen.getByTestId(buttonTestID);
     hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
-  const checkConditionalPopoverNoData = async (buttonTestID: string, popoverShouldRender: boolean) => {
-    render(
-      <ActionButtons
-        {...testProps}
-        isUserLoggedIn={false}
-        noData
-      />,
-    );
+  const checkConditionalPopoverNoData = async (
+    buttonTestID: string,
+    popoverShouldRender: boolean
+  ) => {
+    render(<ActionButtons {...testProps} isUserLoggedIn={false} noData />);
     const popoverText = 'This file is not available for the selected study';
     const button = screen.getByTestId(buttonTestID);
     hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
@@ -162,20 +160,11 @@ describe('ActionButtons', () => {
 
   /* Tests */
   test('Renders test id for ActionButtons', () => {
-    render(
-      <ActionButtons
-        {...testProps}
-      />,
-    );
+    render(<ActionButtons {...testProps} />);
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
   test('ActionButtons should have "Login to" text when not logged in', () => {
-    render(
-      <ActionButtons
-        {...testProps}
-        isUserLoggedIn={false}
-      />,
-    );
+    render(<ActionButtons {...testProps} isUserLoggedIn={false} />);
     const loginText = screen.getAllByText(/Login to/i);
     expect(loginText[0]).toBeInTheDocument();
     expect(loginText[1]).toBeInTheDocument();
@@ -185,7 +174,7 @@ describe('ActionButtons', () => {
     const buttonText = 'Study-Level Metadata';
     checkExportToWorkspaceConditional(
       buttonText,
-      'enableDownloadStudyMetadata',
+      'enableDownloadStudyMetadata'
     );
     checkExportToWorkspaceConditional(buttonText, 'studyMetadataFieldName');
     checkResourceInfoConditional(buttonText);
@@ -193,13 +182,13 @@ describe('ActionButtons', () => {
   test('renders Download Manifest button based on conditionals', () => {
     checkExportToWorkspaceConditional(
       'Download Manifest',
-      'enableDownloadManifest',
+      'enableDownloadManifest'
     );
   });
   test('renders Download All Files button based on conditionals', () => {
     checkExportToWorkspaceConditional(
       'Download All Files',
-      'enableDownloadZip',
+      'enableDownloadZip'
     );
   });
 
@@ -224,26 +213,41 @@ describe('ActionButtons', () => {
   ];
 
   buttonIDsAndShowsPopover.forEach((button) => {
-    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-      ${button.id} button when missing required identity providers is InCommon`, async () => {
+    test(`Popover ${
+      button.showsPopover ? 'renders' : 'does not render'
+    } when hovered over
+      ${
+        button.id
+      } button when missing required identity providers is InCommon`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(
         button.id,
-        button.showsPopover,
+        button.showsPopover
       );
     });
-    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-      ${button.id} button when missing required identity providers is multiple`, async () => {
+    test(`Popover ${
+      button.showsPopover ? 'renders' : 'does not render'
+    } when hovered over
+      ${
+        button.id
+      } button when missing required identity providers is multiple`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(
         button.id,
-        button.showsPopover,
+        button.showsPopover
       );
     });
-    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+    test(`Popover ${
+      button.showsPopover ? 'renders' : 'does not render'
+    } when hovered over
       ${button.id} button when user does not have access`, async () => {
-      checkConditionalPopoverUserDoesNotHaveAccess(button.id, button.showsPopover);
+      checkConditionalPopoverUserDoesNotHaveAccess(
+        button.id,
+        button.showsPopover
+      );
     });
 
-    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+    test(`Popover ${
+      button.showsPopover ? 'renders' : 'does not render'
+    } when hovered over
       ${button.id} button when study has no data`, async () => {
       checkConditionalPopoverNoData(button.id, button.showsPopover);
     });
