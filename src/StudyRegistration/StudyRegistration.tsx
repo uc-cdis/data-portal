@@ -353,6 +353,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
               <Option value='Figshare'>Figshare</Option>
+              <Option value='Figshare+'>Figshare+</Option>
               <Option value='GitHub'>GitHub</Option>
               <Option value='ICPSR'>ICPSR</Option>
               <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
