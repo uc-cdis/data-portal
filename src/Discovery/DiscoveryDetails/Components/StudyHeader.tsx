@@ -17,9 +17,9 @@ const StudyHeader = ({ props }) => {
         </h3>
       )}
       {(subHeaderField) && (
-        <h4 className='discovery-modal__subheader-text'>
+        <div className='discovery-modal__subheader-text'>
           {jsonpath.query(props.modalData, `$.${subHeaderField}`)}
-        </h4>
+        </div>
       )}
     </div>
   );
