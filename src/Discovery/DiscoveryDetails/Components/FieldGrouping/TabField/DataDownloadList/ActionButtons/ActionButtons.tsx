@@ -135,6 +135,7 @@ const ActionButtons = ({
           <Col>
             <Button
               className='discovery-action-bar-button'
+              data-testid='download-variable-level-metadata'
               disabled={Boolean(
                 downloadStatus.inProgress
                   || dataDictionaryInfo.noVariableLevelMetadata,
@@ -157,6 +158,7 @@ const ActionButtons = ({
           <Col>
             <Button
               className='discovery-action-bar-button'
+              data-testid='download-study-level-metadata'
               disabled={Boolean(noData || downloadStatus.inProgress)}
               onClick={() => DownloadJsonFile(
                 'study-level-metadata',
@@ -175,6 +177,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='download-manifest'
                   disabled={Boolean(noData || downloadStatus.inProgress || !userHasAccessToDownload)}
                   onClick={() => {
                     HandleDownloadManifestClick(
@@ -192,6 +195,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='login-to-download-manifest'
                   disabled={Boolean(noData || downloadStatus.inProgress)}
                   onClick={() => {
                     HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
@@ -210,6 +214,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='download-all-files'
                   disabled={Boolean(noData || downloadStatus.inProgress || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
@@ -230,6 +235,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='login-to-download-all-files'
                   disabled={Boolean(noData || downloadStatus.inProgress)}
                   onClick={() => {
                     HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
