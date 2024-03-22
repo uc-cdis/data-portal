@@ -8,8 +8,8 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn().mockReturnValue(0),
 }));
 
-const LocalConfMock = jest.requireMock('../../../../localconf');
-jest.mock('../../../../localconf', () => ({
+const LocalConfMock = jest.requireMock('../../../../../../../localconf');
+jest.mock('../../../../../../../localconf', () => ({
   bundle: 'commons',
 }));
 
