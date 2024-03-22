@@ -104,19 +104,19 @@ describe('ActionButtons', () => {
 
   const hoverOverButtonAndCheckText = async (button, popOverText, popOverShouldRender) => {
     fireEvent.mouseEnter(button);
+    const popOverTextNode = screen.queryByText(popOverText);
     if (popOverShouldRender) {
       await waitFor(() => {
-        const popOverTextNode = screen.getByText(popOverText);
         expect(popOverTextNode).toBeInTheDocument();
       });
     } else {
-      const popOverTextNode = screen.queryByText(popOverText);
       expect(popOverTextNode).toBeNull();
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID, popOverShouldRender) => {
-    const { getByText } = render(
+  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon =
+  async (buttonTestID:string, popOverShouldRender:boolean) => {
+    render(
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
@@ -135,7 +135,7 @@ describe('ActionButtons', () => {
     hoverOverButtonAndCheckText(button, popOverText, popOverShouldRender);
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple = async (buttonTestID, popOverShouldRender) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple = async (buttonTestID: string, popOverShouldRender:boolean) => {
     const missingRequiredIdentityProviders = ['InCommon', 'Google'];
     render(
       <ActionButtons

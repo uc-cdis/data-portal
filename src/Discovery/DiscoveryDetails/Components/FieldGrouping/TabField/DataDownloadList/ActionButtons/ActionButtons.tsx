@@ -41,6 +41,7 @@ const ActionButtons = ({
   location,
 }: ActionButtonsProps): JSX.Element => {
   const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClick();
+
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
   let fileManifest: any[] = [];
