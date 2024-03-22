@@ -92,7 +92,8 @@ describe('ActionButtons', () => {
     expect(queryByText(buttonText)).toBeNull();
   };
 
-  const hoverOverButtonAndCheckText = async (button: HTMLElement, popoverText:string, popoverShouldRender:boolean) => {
+  const hoverOverButtonAndCheckText = async (button: HTMLElement, popoverText:string,
+    popoverShouldRender:boolean) => {
     fireEvent.mouseEnter(button);
     const popoverTextNode = screen.queryByText(popoverText);
     if (popoverShouldRender) {
@@ -104,14 +105,16 @@ describe('ActionButtons', () => {
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string, popoverShouldRender:boolean) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string,
+    popoverShouldRender:boolean) => {
     render(
       <ActionButtons
         {...testProps}
         missingRequiredIdentityProviders={['InCommon']}
       />,
     );
-    const popoverText = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
+    const popoverText = `This dataset is only accessible to users who have
+    authenticated via InCommon. Please log in using the InCommon option.`;
     const button = screen.getByTestId(buttonTestID);
     hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
@@ -131,7 +134,8 @@ describe('ActionButtons', () => {
     hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
 
-  const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID: string, popoverShouldRender:boolean) => {
+  const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID: string,
+    popoverShouldRender:boolean) => {
     render(
       <ActionButtons
         {...testProps}
@@ -232,7 +236,7 @@ describe('ActionButtons', () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(
         button.id,
         button.showsPopover,
-        );
+      );
     });
     test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when user does not have access`, async () => {
