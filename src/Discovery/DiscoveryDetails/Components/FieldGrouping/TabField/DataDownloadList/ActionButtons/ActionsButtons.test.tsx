@@ -44,20 +44,25 @@ describe('ActionButtons', () => {
     message: { content: <React.Fragment />, active: true, title: '' },
   };
 
+  const testProps = {
+    isUserLoggedIn: true,
+    userHasAccessToDownload: true,
+    discoveryConfig: mockDiscoveryConfig as DiscoveryConfig,
+    resourceInfo: mockResourceInfo as unknown as DiscoveryResource,
+    missingRequiredIdentityProviders: [],
+    noData: false,
+    downloadStatus: mockDownloadStatus as DownloadStatus,
+    setDownloadStatus: () => {},
+    history: {},
+    location: {},
+  };
+
   /* Helper Functions */
   const checkResourceInfoConditional = (buttonText: string) => {
     const { queryByText } = render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        {...testProps}
         resourceInfo={{} as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -70,16 +75,7 @@ describe('ActionButtons', () => {
   ) => {
     const { getByText, queryByText, rerender } = render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
+        {...testProps}
       />,
     );
     const targetButton = getByText(buttonText);
@@ -89,16 +85,8 @@ describe('ActionButtons', () => {
     changedConfig.features.exportToWorkspace[condition] = false;
     rerender(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
+        {...testProps}
         discoveryConfig={changedConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     // Check that the button is no longer rendered
@@ -120,16 +108,8 @@ describe('ActionButtons', () => {
   const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string, popoverShouldRender:boolean) => {
     render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
+        {...testProps}
         missingRequiredIdentityProviders={['InCommon']}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     const popoverText = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
@@ -141,16 +121,8 @@ describe('ActionButtons', () => {
     const missingRequiredIdentityProviders = ['InCommon', 'Google'];
     render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
+        {...testProps}
         missingRequiredIdentityProviders={missingRequiredIdentityProviders}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     const popoverText = `Data selection requires [${missingRequiredIdentityProviders.join(', ')}]
@@ -163,16 +135,8 @@ describe('ActionButtons', () => {
   const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID: string, popoverShouldRender:boolean) => {
     render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload={false}
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
+        {...testProps}
         missingRequiredIdentityProviders={['InCommon']}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     const popoverText = 'You don\'t have access to this data';
@@ -182,16 +146,9 @@ describe('ActionButtons', () => {
   const checkConditionalPopoverNoData = async (buttonTestID: string, popoverShouldRender: boolean) => {
     render(
       <ActionButtons
+        {...testProps}
         isUserLoggedIn={false}
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
         noData
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     const popoverText = 'This file is not available for the selected study';
@@ -217,19 +174,6 @@ describe('ActionButtons', () => {
     );
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
-
-  const ActionButtonsTestProps = {
-    isUserLoggedIn: false,
-    userHasAccessToDownload: true,
-    discoveryConfig: mockDiscoveryConfig as DiscoveryConfig,
-    resourceInfo: mockResourceInfo as unknown as DiscoveryResource,
-    missingRequiredIdentityProviders: [],
-    noData: false,
-    downloadStatus: mockDownloadStatus as DownloadStatus,
-    setDownloadStatus: () => {},
-    history: {},
-    location: {},
-  };
   test('ActionButtons should have "Login to" text when not logged in', () => {
     render(
       <ActionButtons
