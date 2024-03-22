@@ -180,7 +180,7 @@ describe('ActionButtons', () => {
   const checkConditionalPopoverNoData = async (buttonTestID, popOverShouldRender) => {
     render(
       <ActionButtons
-        isUserLoggedIn
+        isUserLoggedIn={false}
         userHasAccessToDownload
         discoveryConfig={mockDiscoveryConfig}
         resourceInfo={mockResourceInfo}
@@ -198,7 +198,6 @@ describe('ActionButtons', () => {
   };
 
   /* Tests */
-
   test('Renders test id for ActionButtons', () => {
     render(
       <ActionButtons
@@ -291,11 +290,10 @@ describe('ActionButtons', () => {
     ${button.id} button when User Does Not Have Access`, async () => {
       checkConditionalPopoverUserDoesNotHaveAccess(button.id, button.showsPopover);
     });
-    /*
+
     test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
     ${button.id} button when study has no data`, async () => {
       checkConditionalPopoverNoData(button.id, button.showsPopover);
     });
-    */
   });
 });
