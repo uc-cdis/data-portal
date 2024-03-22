@@ -220,20 +220,20 @@ describe('ActionButtons', () => {
   ];
 
   buttonIDsAndShowsPopover.forEach((button) => {
-    test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when missing required identity providers is InCommon`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(button.id, button.showsPopover);
     });
-    test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when missing required identity providers is multiple`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(button.id, button.showsPopover);
     });
-    test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-      ${button.id} button when User Does Not Have Access`, async () => {
+    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+      ${button.id} button when user does not have access`, async () => {
       checkConditionalPopoverUserDoesNotHaveAccess(button.id, button.showsPopover);
     });
 
-    test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
+    test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when study has no data`, async () => {
       checkConditionalPopoverNoData(button.id, button.showsPopover);
     });
