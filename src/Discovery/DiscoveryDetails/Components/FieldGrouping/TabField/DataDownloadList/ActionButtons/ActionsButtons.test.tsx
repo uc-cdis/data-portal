@@ -5,6 +5,9 @@ import {
 import '@testing-library/jest-dom';
 import { TestScheduler } from 'jest';
 import ActionButtons from './ActionButtons';
+import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../../Discovery';
+import DownloadStatus from '../Interfaces/DownloadStatus';
 
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn().mockReturnValue(0),
@@ -22,7 +25,7 @@ describe('ActionButtons', () => {
         enableDownloadStudyMetadata: true,
         enableDownloadManifest: true,
         enableDownloadZip: true,
-        variableMetadataFieldName: true,
+        variableMetadataFieldName: 'test',
         enableDownloadVariableMetadata: true,
       },
     },
@@ -47,11 +50,11 @@ describe('ActionButtons', () => {
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={{}}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={{} as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
@@ -69,11 +72,11 @@ describe('ActionButtons', () => {
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
@@ -88,11 +91,11 @@ describe('ActionButtons', () => {
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={changedConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={changedConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
@@ -102,98 +105,98 @@ describe('ActionButtons', () => {
     expect(queryByText(buttonText)).toBeNull();
   };
 
-  const hoverOverButtonAndCheckText = async (button, popOverText, popOverShouldRender) => {
+  const hoverOverButtonAndCheckText = async (button: HTMLElement, popoverText:string, popoverShouldRender:boolean) => {
     fireEvent.mouseEnter(button);
-    const popOverTextNode = screen.queryByText(popOverText);
-    if (popOverShouldRender) {
+    const popoverTextNode = screen.queryByText(popoverText);
+    if (popoverShouldRender) {
       await waitFor(() => {
-        expect(popOverTextNode).toBeInTheDocument();
+        expect(popoverTextNode).toBeInTheDocument();
       });
     } else {
-      expect(popOverTextNode).toBeNull();
+      expect(popoverTextNode).toBeNull();
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string, popOverShouldRender:boolean) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string, popoverShouldRender:boolean) => {
     render(
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={['InCommon']}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
       />,
     );
-    const popOverText = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
+    const popoverText = 'This dataset is only accessible to users who have authenticated via InCommon. Please log in using the InCommon option.';
     const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popOverText, popOverShouldRender);
+    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple = async (buttonTestID: string, popOverShouldRender:boolean) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersMultiple = async (buttonTestID: string, popoverShouldRender:boolean) => {
     const missingRequiredIdentityProviders = ['InCommon', 'Google'];
     render(
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={missingRequiredIdentityProviders}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
       />,
     );
-    const popOverText = `Data selection requires [${missingRequiredIdentityProviders.join(', ')}]
+    const popoverText = `Data selection requires [${missingRequiredIdentityProviders.join(', ')}]
     credentials to access. Please change selection to only need one set of credentials
     and log in using appropriate credentials`;
     const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popOverText, popOverShouldRender);
+    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
 
-  const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID, popOverShouldRender) => {
+  const checkConditionalPopoverUserDoesNotHaveAccess = async (buttonTestID: string, popoverShouldRender:boolean) => {
     render(
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload={false}
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={['InCommon']}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
       />,
     );
-    const popOverText = 'You don\'t have access to this data';
+    const popoverText = 'You don\'t have access to this data';
     const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popOverText, popOverShouldRender);
+    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
-  const checkConditionalPopoverNoData = async (buttonTestID, popOverShouldRender) => {
+  const checkConditionalPopoverNoData = async (buttonTestID: string, popoverShouldRender: boolean) => {
     render(
       <ActionButtons
         isUserLoggedIn={false}
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
       />,
     );
-    const popOverText = 'This file is not available for the selected study';
+    const popoverText = 'This file is not available for the selected study';
     const button = screen.getByTestId(buttonTestID);
-    hoverOverButtonAndCheckText(button, popOverText, popOverShouldRender);
+    hoverOverButtonAndCheckText(button, popoverText, popoverShouldRender);
   };
 
   /* Tests */
@@ -202,11 +205,11 @@ describe('ActionButtons', () => {
       <ActionButtons
         isUserLoggedIn
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
@@ -215,16 +218,28 @@ describe('ActionButtons', () => {
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
 
+  const ActionButtonsTestProps = {
+    isUserLoggedIn: false,
+    userHasAccessToDownload: true,
+    discoveryConfig: mockDiscoveryConfig as DiscoveryConfig,
+    resourceInfo: mockResourceInfo as unknown as DiscoveryResource,
+    missingRequiredIdentityProviders: [],
+    noData: false,
+    downloadStatus: mockDownloadStatus as DownloadStatus,
+    setDownloadStatus: () => {},
+    history: {},
+    location: {},
+  };
   test('ActionButtons should have "Login to" text when not logged in', () => {
     render(
       <ActionButtons
         isUserLoggedIn={false}
         userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig}
-        resourceInfo={mockResourceInfo}
+        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
+        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
         missingRequiredIdentityProviders={[]}
         noData={false}
-        downloadStatus={mockDownloadStatus}
+        downloadStatus={mockDownloadStatus as DownloadStatus}
         setDownloadStatus={() => {}}
         history={{}}
         location={{}}
