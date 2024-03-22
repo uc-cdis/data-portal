@@ -114,8 +114,7 @@ describe('ActionButtons', () => {
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon =
-  async (buttonTestID:string, popOverShouldRender:boolean) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID:string, popOverShouldRender:boolean) => {
     render(
       <ActionButtons
         isUserLoggedIn
@@ -257,6 +256,7 @@ describe('ActionButtons', () => {
       'enableDownloadZip',
     );
   });
+
   /* Testing Conditional popover */
   const buttonIDsAndShowsPopover = [
     {
@@ -279,20 +279,20 @@ describe('ActionButtons', () => {
 
   buttonIDsAndShowsPopover.forEach((button) => {
     test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-    ${button.id} button when missing required identity providers is InCommon`, async () => {
+      ${button.id} button when missing required identity providers is InCommon`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(button.id, button.showsPopover);
     });
     test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-    ${button.id} button when missing required identity providers is multiple`, async () => {
+      ${button.id} button when missing required identity providers is multiple`, async () => {
       checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(button.id, button.showsPopover);
     });
     test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-    ${button.id} button when User Does Not Have Access`, async () => {
+      ${button.id} button when User Does Not Have Access`, async () => {
       checkConditionalPopoverUserDoesNotHaveAccess(button.id, button.showsPopover);
     });
 
     test(`Pop over ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
-    ${button.id} button when study has no data`, async () => {
+      ${button.id} button when study has no data`, async () => {
       checkConditionalPopoverNoData(button.id, button.showsPopover);
     });
   });
