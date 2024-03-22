@@ -1,5 +1,4 @@
 import React from 'react';
-import { Space } from 'antd';
 import jsonpath from 'jsonpath';
 
 const StudyHeader = ({ props }) => {
