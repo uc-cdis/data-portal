@@ -222,11 +222,17 @@ describe('ActionButtons', () => {
   buttonIDsAndShowsPopover.forEach((button) => {
     test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when missing required identity providers is InCommon`, async () => {
-      checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(button.id, button.showsPopover);
+      checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(
+        button.id,
+        button.showsPopover,
+      );
     });
     test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when missing required identity providers is multiple`, async () => {
-      checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(button.id, button.showsPopover);
+      checkConditionalPopoverMissingRequiredIdentityProvidersMultiple(
+        button.id,
+        button.showsPopover,
+        );
     });
     test(`Popover ${button.showsPopover ? 'renders' : 'does not render'} when hovered over
       ${button.id} button when user does not have access`, async () => {
