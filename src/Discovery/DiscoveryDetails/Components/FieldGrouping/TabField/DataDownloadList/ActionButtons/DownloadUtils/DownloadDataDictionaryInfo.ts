@@ -1,7 +1,7 @@
-import { DiscoveryConfig } from '../../../../DiscoveryConfig';
-import { DiscoveryResource } from '../../../../Discovery';
-import { mdsURL } from '../../../../../localconf';
-import { fetchWithCreds } from '../../../../../actions';
+import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../../../Discovery';
+import { mdsURL } from '../../../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../actions';
 
 const DownloadDataDictionaryInfo = (
   discoveryConfig: DiscoveryConfig,

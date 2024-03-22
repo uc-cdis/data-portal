@@ -3,8 +3,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
   Col, Row, Button, Popover,
 } from 'antd';
-import { DiscoveryConfig } from '../../../DiscoveryConfig';
-import { DiscoveryResource } from '../../../Discovery';
+import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../../Discovery';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';

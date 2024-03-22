@@ -1,6 +1,6 @@
 import HandleDownloadManifestClick from './HandleDownloadManifestClick';
 import DownloadJsonFile from './DownloadJsonFile';
-import { DiscoveryConfig } from '../../../../DiscoveryConfig';
+import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
 
 // Mock the DownloadJsonFile module
 jest.mock('./DownloadJsonFile');

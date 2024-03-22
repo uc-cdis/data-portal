@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import GetPermaLink from '../../../Utils/GetPermaLink';
+import GetPermaLink from '../../../../../../Utils/GetPermaLink';
 
 const UseHandleRedirectToLoginClick = () => {
   const history = useHistory();
