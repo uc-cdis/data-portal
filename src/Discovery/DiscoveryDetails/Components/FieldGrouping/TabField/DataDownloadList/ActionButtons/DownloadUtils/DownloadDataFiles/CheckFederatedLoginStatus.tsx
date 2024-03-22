@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Table } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router-dom';
-import { fetchWithCreds } from '../../../../../../actions';
-import { externalLoginOptionsUrl } from '../../../../../../localconf';
+import { fetchWithCreds } from '../../../../../../../../../actions';
+import { externalLoginOptionsUrl } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 
 /* eslint-disable camelcase */
