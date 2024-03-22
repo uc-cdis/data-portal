@@ -3,7 +3,6 @@ import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TestScheduler } from 'jest';
 import ActionButtons from './ActionButtons';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../../../Discovery';
@@ -160,16 +159,7 @@ describe('ActionButtons', () => {
   test('Renders test id for ActionButtons', () => {
     render(
       <ActionButtons
-        isUserLoggedIn
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
+        {...testProps}
       />,
     );
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
@@ -177,16 +167,8 @@ describe('ActionButtons', () => {
   test('ActionButtons should have "Login to" text when not logged in', () => {
     render(
       <ActionButtons
+        {...testProps}
         isUserLoggedIn={false}
-        userHasAccessToDownload
-        discoveryConfig={mockDiscoveryConfig as DiscoveryConfig}
-        resourceInfo={mockResourceInfo as unknown as DiscoveryResource}
-        missingRequiredIdentityProviders={[]}
-        noData={false}
-        downloadStatus={mockDownloadStatus as DownloadStatus}
-        setDownloadStatus={() => {}}
-        history={{}}
-        location={{}}
       />,
     );
     const loginText = screen.getAllByText(/Login to/i);
