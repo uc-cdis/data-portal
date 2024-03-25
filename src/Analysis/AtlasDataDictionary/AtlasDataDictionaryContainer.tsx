@@ -11,6 +11,7 @@ import PreprocessTableData from './Utils/PreprocessTableData';
 import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
 import { DetermineNextSortDirection, SortDataWithDirection } from './Utils/SortUtils';
 import './AtlasDataDictionary.css';
+import ManageColumns from './Components/ManageColumns/ManageColumns';
 
 const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
@@ -111,6 +112,7 @@ const AtlasDataDictionaryContainer = () => {
       className='atlas-data-dictionary-container'
       data-testid='atlas-data-dictionary-container'
     >
+      <ManageColumns />
       <Table>
         <SearchBar
           columnsShown={columnsShown}
