@@ -47,8 +47,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
-        props.config.features.exportToWorkspace
-              && props.config.features.exportToWorkspace.enabled
+        (props.config.features.exportToWorkspace
+              && props.config.features.exportToWorkspace.enabled) || ((props.config.features.exportToWorkspace?.enableFillRequestForm
+                && props.config.features.exportToWorkspace.enableFillRequestForm === true))
       ) && {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
@@ -70,6 +71,11 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
             disabled = record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE;
+          }
+          // if enableFillRequestForm is true, we allow users to check the checkbox without login
+          if (props.config.features.exportToWorkspace?.enableFillRequestForm
+            && props.config.features.exportToWorkspace.enableFillRequestForm === true) {
+            disabled = false;
           }
           // disable checkbox if there's no manifest found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;

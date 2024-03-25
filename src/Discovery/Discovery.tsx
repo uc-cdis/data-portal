@@ -96,6 +96,7 @@ const accessibleDataFilterToggle = () => {
   if (filterPopup) {
     filterPopup.click();
     const antdCheckboxes = document.querySelectorAll('.ant-table-filter-dropdown .ant-checkbox-input');
+    console.log(antdCheckboxes);
     for (let i = 0; i < antdCheckboxes.length; i += 1) {
       antdCheckboxes[i].tabIndex = '0';
       antdCheckboxes[i].id = `accessibility-checkbox-${i}`;
