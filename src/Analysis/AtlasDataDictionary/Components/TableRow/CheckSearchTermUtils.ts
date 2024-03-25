@@ -1,4 +1,4 @@
-import { IRowData } from '../Interfaces/Interfaces';
+import { IRowData } from '../../Interfaces/Interfaces';
 
 export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,

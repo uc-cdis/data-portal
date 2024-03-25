@@ -27,6 +27,7 @@ describe('PreprocessTableData', () => {
         numberOfPeopleWithVariablePercent: 50,
         numberOfPeopleWhereValueIsFilledPercent: 30,
         numberOfPeopleWhereValueIsNullPercent: 20,
+        rowID: 0,
       },
       {
         numberOfPeopleWithVariable: 8,
@@ -35,6 +36,7 @@ describe('PreprocessTableData', () => {
         numberOfPeopleWithVariablePercent: 80,
         numberOfPeopleWhereValueIsFilledPercent: 70,
         numberOfPeopleWhereValueIsNullPercent: 10,
+        rowID: 1,
       },
     ];
 

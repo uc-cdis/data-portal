@@ -6,9 +6,8 @@ import PaginationControls from './PaginationControls';
 describe('PaginationControls', () => {
   const defaultProps = {
     entriesShown: 10,
-    setEntriesShown: jest.fn(),
-    activePage: 1,
-    setActivePage: jest.fn(),
+    handleTableChange: jest.fn(),
+    currentPage: 1,
     totalEntriesAvailable: 30,
   };
 
@@ -25,13 +24,13 @@ describe('PaginationControls', () => {
     const { getByTestId } = render(<PaginationControls {...defaultProps} />);
     const entriesSelect = getByTestId('entries-select');
     fireEvent.change(entriesSelect, { target: { value: '20' } });
-    expect(defaultProps.setEntriesShown).toHaveBeenCalledWith(20);
+    expect(defaultProps.handleTableChange).toHaveBeenCalledWith('entriesShown', 20);
   });
 
   it('should call setActivePage when pagination button is clicked', () => {
     const { getAllByRole } = render(<PaginationControls {...defaultProps} />);
     const twoButton = getAllByRole('button', { name: /2/i })[0];
     fireEvent.click(twoButton);
-    expect(defaultProps.setActivePage).toHaveBeenCalledWith(2);
+    expect(defaultProps.handleTableChange).toHaveBeenCalledWith('currentPage', 2);
   });
 });
