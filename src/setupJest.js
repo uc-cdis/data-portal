@@ -31,3 +31,5 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+global.userAgent = jest.spyOn(navigator, 'userAgent', 'get');

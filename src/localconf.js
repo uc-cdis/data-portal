@@ -1,3 +1,5 @@
+import crawlers from 'crawler-user-agents';
+
 /* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
@@ -160,6 +162,8 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
+  const ddKnownBotPattern = crawlers.map((c) => c.pattern).join('|');
+  const ddKnownBotRegex = new RegExp(ddKnownBotPattern, 'i');
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -289,6 +293,11 @@ function buildConfig(opts) {
   let explorerFilterValuesToHide = [];
   if (config.featureFlags && config.featureFlags.explorerFilterValuesToHide) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
+  }
+
+  let forceSingleLoginDropdownOptions = [];
+  if (config.featureFlags && config.featureFlags.forceSingleLoginDropdownOptions) {
+    forceSingleLoginDropdownOptions = config.featureFlags.forceSingleLoginDropdownOptions;
   }
 
   const enableResourceBrowser = !!config.resourceBrowser;
@@ -441,23 +450,11 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASUIApp':
-          analysisApps.GWASUIApp = {
-            title: 'Gen3 GWAS',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
-        case 'GWASResults':
-          analysisApps.GWASResults = {
-            title: 'GWAS Results',
-            description: 'Use this App to view status & results of submitted workflows',
-            image: '/src/img/analysis-icons/gwasResults.svg',
-          };
-          break;
         default:
           break;
         }
+      } else if (at.appId) {
+        analysisApps[at.appId] = at;
       } else if (at.title) {
         analysisApps[at.title] = at;
       }
@@ -485,6 +482,8 @@ function buildConfig(opts) {
     'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
 
   };
+
+  const topNavLogin = !components?.login?.hideNavLink;
 
   return {
     app,
@@ -559,6 +558,7 @@ function buildConfig(opts) {
     explorerPublic,
     explorerHideEmptyFilterSection,
     explorerFilterValuesToHide,
+    forceSingleLoginDropdownOptions,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
@@ -593,10 +593,12 @@ function buildConfig(opts) {
     ddEnv,
     ddUrl,
     ddSampleRate,
+    ddKnownBotRegex,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,
     bundle,
+    topNavLogin,
   };
 }
 

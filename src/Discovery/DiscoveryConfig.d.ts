@@ -9,6 +9,10 @@ export interface DiscoveryConfig {
             enableDownloadZip: boolean
             downloadZipButtonText?: string
             verifyExternalLogins?: boolean
+            studyMetadataFieldName?: string
+            enableDownloadStudyMetadata?: boolean
+            variableMetadataFieldName?: string
+            enableDownloadVariableMetadata?: boolean
             enableFillRequestForm?: boolean
             openFillRequestForm?: string
             fillRequestFormURL?: string

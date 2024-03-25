@@ -7,11 +7,11 @@ import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useFetch } from '../../Utils/formHooks';
 import { useSourceContext } from '../../Utils/Source';
 
-const SelectCohortDropDown = ({ handleCohortSelect }) => {
+const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
   const { source } = useSourceContext();
   const cohorts = useQuery(
-    ['cohortdefinitions', source],
-    () => fetchCohortDefinitions(source),
+    ['cohortdefinitions', source, selectedTeamProject],
+    () => fetchCohortDefinitions(source, selectedTeamProject),
     queryConfig,
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
@@ -53,6 +53,7 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
 
 SelectCohortDropDown.propTypes = {
   handleCohortSelect: PropTypes.any.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 export default SelectCohortDropDown;

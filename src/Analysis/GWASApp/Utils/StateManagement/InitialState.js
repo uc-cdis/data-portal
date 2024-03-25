@@ -11,7 +11,7 @@ const initialState = {
   finalPopulationSizes: [],
   selectionMode: '',
   messages: [],
-  selectedTeamProject: 'temporary-test-teamproject01', // TODO - remove and leave '' when teamproject selection is ready
+  selectedTeamProject: localStorage.getItem('teamProject'),
 };
 
 export default initialState;

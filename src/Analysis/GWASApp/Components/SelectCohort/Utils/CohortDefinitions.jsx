@@ -11,11 +11,12 @@ const CohortDefinitions = ({
   selectedCohort = undefined,
   handleCohortSelect,
   searchTerm,
+  selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
   const cohorts = useQuery(
-    ['cohortdefinitions', source],
-    () => fetchCohortDefinitions(source),
+    ['cohortdefinitions', source, selectedTeamProject],
+    () => fetchCohortDefinitions(source, selectedTeamProject),
     queryConfig,
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
@@ -43,6 +44,7 @@ const CohortDefinitions = ({
       key: 'size',
     },
   ];
+  if (cohorts?.status === 'error') return <React.Fragment>Error getting data for table</React.Fragment>;
 
   return cohorts?.status === 'success' ? (
     <Table
@@ -76,6 +78,7 @@ CohortDefinitions.propTypes = {
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.any.isRequired,
   searchTerm: PropTypes.string.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 CohortDefinitions.defaultProps = {

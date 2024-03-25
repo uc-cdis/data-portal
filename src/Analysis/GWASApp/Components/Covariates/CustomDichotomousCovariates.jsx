@@ -13,6 +13,7 @@ const CustomDichotomousCovariates = ({
   covariates,
   outcome,
   submitButtonLabel,
+  selectedTeamProject,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
@@ -86,12 +87,16 @@ const CustomDichotomousCovariates = ({
               </div>
               <div>
                 <h3>Get Value 0</h3>
-                <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
+                <SelectCohortDropDown
+                  handleCohortSelect={setFirstPopulation}
+                  selectedTeamProject={selectedTeamProject}
+                />
               </div>
               <div>
                 <h3>Get Value 1</h3>
                 <SelectCohortDropDown
                   handleCohortSelect={setSecondPopulation}
+                  selectedTeamProject={selectedTeamProject}
                 />
               </div>
             </div>
@@ -128,6 +133,7 @@ CustomDichotomousCovariates.propTypes = {
   outcome: PropTypes.object,
   submitButtonLabel: PropTypes.string,
   handleClose: PropTypes.func.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 CustomDichotomousCovariates.defaultProps = {

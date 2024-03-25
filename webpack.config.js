@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const basename = process.env.BASENAME || '/';
+const basenameWithTrailingSlash = basename.endsWith('/') ? basename : `${basename}/`;
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
 
@@ -20,8 +21,8 @@ if (DAPTrackingURL) {
 }
 if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
   scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
-  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com']);
-  imgSrcURLs.push('https://www.google-analytics.com');
+  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net']);
+  imgSrcURLs.push('https://www.google-analytics.com', 'https://*.g.doubleclick.net', 'https://*.google.com');
 } else {
   console.log('Unknown GA tag, skipping GA setup...');
 }
@@ -249,7 +250,7 @@ module.exports = {
   output: {
     path: __dirname,
     filename: '[name].js',
-    publicPath: basename,
+    publicPath: basenameWithTrailingSlash,
   },
   optimization,
   devtool,

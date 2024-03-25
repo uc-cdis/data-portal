@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import CohortSelect from '../../Components/SelectCohort/SelectCohort';
 
-const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
+const SelectStudyPopulation = ({ selectedCohort, dispatch, selectedTeamProject }) => {
   const handleStudyPopulationSelect = (selectedRow) => {
     dispatch({
       type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
@@ -16,6 +16,7 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
       <CohortSelect
         selectedCohort={selectedCohort}
         handleCohortSelect={handleStudyPopulationSelect}
+        selectedTeamProject={selectedTeamProject}
       />
     </div>
   );
@@ -24,6 +25,7 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
 SelectStudyPopulation.propTypes = {
   dispatch: PropTypes.func.isRequired,
   selectedCohort: PropTypes.object,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 SelectStudyPopulation.defaultProps = { selectedCohort: null };
 export default SelectStudyPopulation;

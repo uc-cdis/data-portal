@@ -115,7 +115,7 @@ describe('Configuration', () => {
       // access info in modal should be present/hidden
       // Open modal to a study by clicking on the first row
       wrapper.find('.discovery-table__row').first().simulate('click');
-      expect(wrapper.exists('.discovery-modal__access-alert')).toBe(enabled);
+      expect(wrapper.exists('.discovery-modal__access-alert')).toBe(true);
 
       wrapper.unmount();
     });

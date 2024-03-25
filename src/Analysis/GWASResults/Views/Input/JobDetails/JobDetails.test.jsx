@@ -78,6 +78,9 @@ describe('Job Details', () => {
       expect(screen.getByText('HARE Ancestry')).toBeInTheDocument();
       expect(screen.getByText('Imputation Score Cutoff')).toBeInTheDocument();
       expect(screen.getByText('Cohort')).toBeInTheDocument();
+      expect(
+        screen.getByText(attritionTableJSON[0].rows[0].name),
+      ).toBeInTheDocument();
       expect(screen.getByText('Control Size')).toBeInTheDocument();
       expect(screen.getByText('Case Size')).toBeInTheDocument();
       expect(screen.getByText('Total Size')).toBeInTheDocument();

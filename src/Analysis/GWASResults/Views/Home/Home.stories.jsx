@@ -144,7 +144,14 @@ export const MockedError = MockTemplate.bind({});
 MockedError.parameters = {
   msw: {
     handlers: [
-      rest.post('', (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          console.log(argowrapperpath);
+          return res(ctx.delay(1000), ctx.status(500), ctx.json({"test":123}));
+        }
+      ),
     ],
   },
 };

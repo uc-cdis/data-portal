@@ -73,7 +73,7 @@ MockedSuccess.parameters = {
     handlers: [
       ///cohort-middleware/cohortdefinition-stats/by-source-id/1
       rest.get(
-        'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
+        'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid/by-team-project?team-project=:selectedTeamProject',
         (req, res, ctx) => {
           const { cohortmiddlewarepath } = req.params;
           const { sourceid } = req.params;
@@ -247,7 +247,7 @@ MockedError.parameters = {
   msw: {
     handlers: [
       rest.get(
-        'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
+        'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid/by-team-project?team-project=:selectedTeamProject',
         (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
       ),
     ],

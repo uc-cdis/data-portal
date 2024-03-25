@@ -57,7 +57,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, ddKnownBotRegex,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -96,6 +96,7 @@ async function init() {
     // eslint-disable-next-line no-console
     console.warn('Datadog clientToken is set, but applicationId is missing');
   } else if (ddApplicationId && ddClientToken) {
+    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
     datadogRum.init({
       applicationId: ddApplicationId,
       clientToken: ddClientToken,
@@ -103,7 +104,7 @@ async function init() {
       service: 'portal',
       env: ddEnv,
       version: portalVersion,
-      sampleRate: ddSampleRate,
+      sampleRate: conditionalSampleRate,
       trackInteractions: true,
     });
   }
@@ -488,11 +489,11 @@ async function init() {
                   {isEnabled('discovery') && (
                     <Route
                       exact
-                      path='/discovery/:studyUID'
+                      path='/discovery/:studyUID*'
                       component={
                         (props) => (
                           <ProtectedContent
-                            public
+                            public={discoveryConfig.public !== false}
                             component={Discovery}
                             {...props}
                           />

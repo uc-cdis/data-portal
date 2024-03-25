@@ -152,6 +152,7 @@ class ExplorerFilter extends React.Component {
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       hideEmptyFilterSection: explorerHideEmptyFilterSection,
       filterValuesToHide: explorerFilterValuesToHide,
+      csrfToken: this.props.csrfToken,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -215,6 +216,7 @@ ExplorerFilter.propTypes = {
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
+  csrfToken: PropTypes.string, // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
   userFilterFromURL: PropTypes.object,
@@ -234,6 +236,7 @@ ExplorerFilter.defaultProps = {
   unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
   accessibleFieldCheckList: [],
+  csrfToken: '',
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
   userFilterFromURL: {},
