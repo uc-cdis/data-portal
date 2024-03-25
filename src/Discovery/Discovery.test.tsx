@@ -127,11 +127,13 @@ describe('Modal', () => {
     const modalDataIndex = 2;
     const headerField = testConfig.minimalFieldMapping.uid;
     testConfig.studyPageFields.header = { field: headerField };
+    const subHeaderField = testConfig.studyPageFields.subHeader?.field;
     const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
     wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(modalData[headerField]);
+    expect(modal.find('.discovery-modal__subheader-text').first().text()).toBe(modalData[subHeaderField]);
 
     wrapper.unmount();
   });
