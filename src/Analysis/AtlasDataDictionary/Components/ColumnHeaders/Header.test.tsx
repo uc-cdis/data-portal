@@ -2,7 +2,7 @@ import React from 'react';
 import {
   render, fireEvent, screen, cleanup,
 } from '@testing-library/react';
-import { ISortConfig } from '../Interfaces/Interfaces';
+import { ISortConfig } from '../../Interfaces/Interfaces';
 import Header from './Header'; // adjust the import path if necessary
 import '@testing-library/jest-dom/extend-expect';
 
