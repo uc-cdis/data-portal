@@ -35,7 +35,7 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
 
     // add all repository_study_ids as separate objects
-    let tempStudyIDObj = [{}];
+    let tempStudyIDObj:any = [];
     if (updatedValues.repository_study_ids?.length > 0) {
       tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
         repository_name: updatedValues.repository,
