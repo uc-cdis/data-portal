@@ -3,8 +3,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
   Col, Row, Button, Popover,
 } from 'antd';
-import { DiscoveryConfig } from '../../../DiscoveryConfig';
-import { DiscoveryResource } from '../../../Discovery';
+import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
+import { DiscoveryResource } from '../../../../../../Discovery';
 import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
@@ -135,6 +135,7 @@ const ActionButtons = ({
           <Col>
             <Button
               className='discovery-action-bar-button'
+              data-testid='download-variable-level-metadata'
               disabled={Boolean(
                 downloadStatus.inProgress
                   || dataDictionaryInfo.noVariableLevelMetadata,
@@ -155,20 +156,19 @@ const ActionButtons = ({
         )}
         {showDownloadStudyLevelMetadataButton && (
           <Col>
-            <ConditionalPopover>
-              <Button
-                className='discovery-action-bar-button'
-                disabled={Boolean(noData || downloadStatus.inProgress)}
-                onClick={() => DownloadJsonFile(
-                  'study-level-metadata',
-                  studyMetadataFieldNameReference
+            <Button
+              className='discovery-action-bar-button'
+              data-testid='download-study-level-metadata'
+              disabled={Boolean(noData || downloadStatus.inProgress)}
+              onClick={() => DownloadJsonFile(
+                'study-level-metadata',
+                studyMetadataFieldNameReference
                       && resourceInfo[studyMetadataFieldNameReference],
-                )}
-              >
+              )}
+            >
                 Download <br />
                 Study-Level Metadata
-              </Button>
-            </ConditionalPopover>
+            </Button>
           </Col>
         )}
         {showDownloadFileManifestButtons && (
@@ -177,6 +177,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='download-manifest'
                   disabled={Boolean(noData || downloadStatus.inProgress || !userHasAccessToDownload)}
                   onClick={() => {
                     HandleDownloadManifestClick(
@@ -194,6 +195,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='login-to-download-manifest'
                   disabled={Boolean(noData || downloadStatus.inProgress)}
                   onClick={() => {
                     HandleRedirectFromDiscoveryDetailsToLoginClick(uid);
@@ -212,6 +214,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='download-all-files'
                   disabled={Boolean(noData || downloadStatus.inProgress || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
@@ -232,6 +235,7 @@ const ActionButtons = ({
               <ConditionalPopover>
                 <Button
                   className='discovery-action-bar-button'
+                  data-testid='login-to-download-all-files'
                   disabled={Boolean(noData || downloadStatus.inProgress)}
                   onClick={() => {
                     HandleRedirectFromDiscoveryDetailsToLoginClick(uid);

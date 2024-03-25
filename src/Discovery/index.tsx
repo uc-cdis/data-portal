@@ -110,7 +110,11 @@ const DiscoveryWithMDSBackend: React.FC<{
           } else {
             let authMapping;
             if (isEnabled('discoveryUseAggWTS')) {
-              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)] || {};
+              let commonsURL = study.commons_url;
+              if (commonsURL && commonsURL.startsWith('http')) {
+                commonsURL = new URL(commonsURL).hostname;
+              }
+              authMapping = props.userAggregateAuthMappings[(commonsURL || hostnameWithSubdomain)] || {};
             } else {
               authMapping = props.userAuthMapping;
             }

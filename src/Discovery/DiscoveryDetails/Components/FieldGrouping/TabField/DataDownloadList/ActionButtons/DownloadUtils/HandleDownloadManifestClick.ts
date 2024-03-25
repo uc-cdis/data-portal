@@ -1,5 +1,5 @@
-import { hostname } from '../../../../../localconf';
-import { DiscoveryConfig } from '../../../../DiscoveryConfig';
+import { hostname } from '../../../../../../../../localconf';
+import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
 import DownloadJsonFile from './DownloadJsonFile';
 
 const HandleDownloadManifestClick = (
