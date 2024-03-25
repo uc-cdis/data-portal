@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
+import './Banner.less';
 
 class Banner extends React.Component {
   /**
@@ -30,6 +31,7 @@ class Banner extends React.Component {
     };
     return (
       <Alert
+        className='global-banner'
         message={this.props.message}
         type={this.props.type}
         showIcon
