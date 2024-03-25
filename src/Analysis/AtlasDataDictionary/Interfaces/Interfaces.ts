@@ -1,6 +1,6 @@
 interface IValueSummary {
   valueAsString?: string;
-  valueAsConceptID?: string;
+  valueAsConceptID?: number;
   name?: string;
   personCount?: number;
   start?: number;
@@ -8,6 +8,7 @@ interface IValueSummary {
 }
 
 interface IRowData {
+  rowID: number,
   vocabularyID: string;
   conceptID: number;
   conceptCode: string;

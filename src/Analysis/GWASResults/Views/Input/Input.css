@@ -29,6 +29,11 @@
   margin: 2px 0;
 }
 
+.job-details-cohort-name {
+  text-align: right;
+  width: 135px;
+}
+
 .job-details .GWASResults-flex-row div:first-child {
   font-weight: bold;
 }
