@@ -4,40 +4,40 @@ import NonNumericDetailsTable from '../NonNumericDetailsTable/NonNumericDetailsT
 import NumericDetailsTable from '../NumericDetailsTable/NumericDetailsTable';
 import { checkIfChartContainsSearchTerm } from '../CheckSearchTermUtils';
 import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
-import { IRowData } from '../../Interfaces/Interfaces';
+import { IRowData } from '../../../Interfaces/Interfaces';
 
 interface ITableRowDropdownProps {
-  showDetails: boolean;
+  dropdownIsOpen: boolean;
   columnsShown: number;
   rowObject: IRowData;
-  searchInputValue: string;
+  searchTerm: string;
 }
 
 const TableRowDropdown = ({
-  showDetails,
+  dropdownIsOpen,
   columnsShown,
   rowObject,
-  searchInputValue,
+  searchTerm,
 }: ITableRowDropdownProps) => {
   const gridColSpanForTable = 5;
   const gridColSpanForChart = 7;
   return (
-    <tr className={`expandable ${showDetails ? 'expanded' : ''}`}>
+    <tr className={`expandable ${dropdownIsOpen && 'expanded'}`}>
       <td colSpan={columnsShown}>
-        <div className={`expandable ${showDetails ? 'expanded' : ''}`}>
+        <div className={`expandable ${dropdownIsOpen && 'expanded'}`}>
           <Grid>
             <Grid.Col span={gridColSpanForTable}>
               <div className={'expanded-container'}>
                 {rowObject.valueStoredAs !== 'Number' && (
                   <NonNumericDetailsTable
                     rowObject={rowObject}
-                    searchInputValue={searchInputValue}
+                    searchTerm={searchTerm}
                   />
                 )}
                 {rowObject.valueStoredAs === 'Number' && (
                   <NumericDetailsTable
                     rowObject={rowObject}
-                    searchInputValue={searchInputValue}
+                    searchTerm={searchTerm}
                   />
                 )}
               </div>
@@ -45,7 +45,7 @@ const TableRowDropdown = ({
             <Grid.Col span={gridColSpanForChart}>
               <div
                 className={`expanded-container chart-details-wrapper
-                ${checkIfChartContainsSearchTerm(rowObject, searchInputValue)}`}
+                ${checkIfChartContainsSearchTerm(rowObject, searchTerm)}`}
               >
                 <ValueSummaryChart
                   chartData={rowObject.valueSummary}

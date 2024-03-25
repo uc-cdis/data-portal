@@ -8,6 +8,7 @@ interface IValueSummary {
 }
 
 interface IRowData {
+  rowID: number,
   vocabularyID: string;
   conceptID: number;
   conceptCode: string;
