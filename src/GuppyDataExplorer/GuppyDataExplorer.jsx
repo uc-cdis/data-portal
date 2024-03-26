@@ -22,6 +22,7 @@ class GuppyDataExplorer extends React.Component {
     super(props);
     let initialFilter = {};
     let defaultFilters = {};
+    let hasInitialFilter = false;
 
     if (isEnabled('explorerStoreFilterInURL')) {
       const stateFromURL = getQueryParameter('filters');
@@ -31,6 +32,7 @@ class GuppyDataExplorer extends React.Component {
           const isValidJSON = IsValidJSONString(decodedFilter);
           if (isValidJSON) {
             initialFilter = JSON.parse(decodedFilter).filter;
+            hasInitialFilter = true;
           }
         } catch (err) {
           // eslint-disable-next-line no-console
@@ -39,7 +41,7 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    if (this.props.filterConfig.tabs.length > 0) {
+    if (!hasInitialFilter && this.props.filterConfig.tabs.length > 0) {
       const defaultFilterArr = this.props.filterConfig.tabs.reduce((accumulator, currentValue) => {
         const df = currentValue.defaultFilters;
         if (df && df.length > 0) {
@@ -64,7 +66,7 @@ class GuppyDataExplorer extends React.Component {
     this.state = {
       aggsData: {},
       filter: {},
-      initialFilterFromURL: { ...defaultFilters, ...initialFilter },
+      initialFilterFromURL: hasInitialFilter ? initialFilter : defaultFilters,
       encodableExplorerStateForURL: { filter: initialFilter },
     };
   }
