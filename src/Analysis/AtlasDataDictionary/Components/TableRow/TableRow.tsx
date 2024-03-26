@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@mantine/core';
-import { IValueSummary, IRowData } from '../Interfaces/Interfaces';
+import { IValueSummary, IRowData } from '../../Interfaces/Interfaces';
 import ExpandIcon from '../Icons/ExpandIcon';
 import CollapseIcon from '../Icons/CollapseIcon';
 import {
@@ -12,37 +12,41 @@ import TableRowDropdown from './TableRowDropdown/TableRowDropdown';
 
 interface ITableRowProps {
   rowObject: IRowData;
+  handleTableChange: Function;
+  openDropdowns: number[];
   columnsShown: number;
-  searchInputValue: string;
+  searchTerm: string;
 }
 
 const TableRow = ({
   rowObject,
+  handleTableChange,
+  openDropdowns,
   columnsShown,
-  searchInputValue,
+  searchTerm,
 }: ITableRowProps) => {
-  const [showDetails, setShowDetails] = useState(false);
-
+  // const [showDetails, setShowDetails] = useState(false);
+  const currentDropdownShouldBeOpen = openDropdowns.includes(rowObject.rowID);
   return (
-    <React.Fragment key={rowObject.vocabularyID}>
+    <React.Fragment key={rowObject.rowID}>
       <tr data-testid='table-row'>
         <td>
-          {!showDetails && (
+          {!currentDropdownShouldBeOpen && (
             <Button
               variant='subtle'
               size='xs'
               compact
-              onClick={() => setShowDetails(true)}
+              onClick={() => handleTableChange('openDropdown', rowObject.rowID)}
             >
               <ExpandIcon />
             </Button>
           )}
-          {showDetails && (
+          {currentDropdownShouldBeOpen && (
             <Button
               variant='subtle'
               size='xs'
               compact
-              onClick={() => setShowDetails(false)}
+              onClick={() => handleTableChange('closeDropdown', rowObject.rowID)}
             >
               <CollapseIcon />
             </Button>
@@ -51,7 +55,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.vocabularyID,
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container '}>{rowObject.vocabularyID}</div>
@@ -59,7 +63,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptID.toString(),
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptID}</div>
@@ -67,7 +71,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptCode.toString(),
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptCode}</div>
@@ -75,7 +79,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptName.toString(),
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptName}</div>
@@ -83,7 +87,7 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.conceptClassID.toString(),
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -92,11 +96,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariable,
-              searchInputValue,
+              searchTerm,
             )
             || checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWithVariablePercent,
-              searchInputValue,
+              searchTerm,
             )
           }
         >
@@ -110,11 +114,11 @@ const TableRow = ({
           className={`${
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilled,
-              searchInputValue,
+              searchTerm,
             )
             || checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsFilledPercent,
-              searchInputValue,
+              searchTerm,
             )
           } `}
         >
@@ -128,11 +132,11 @@ const TableRow = ({
           className={
             checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNull,
-              searchInputValue,
+              searchTerm,
             )
             || checkIfCellContainsSearchTerm(
               rowObject.numberOfPeopleWhereValueIsNullPercent,
-              searchInputValue,
+              searchTerm,
             )
           }
         >
@@ -145,14 +149,15 @@ const TableRow = ({
         <td
           className={checkIfCellContainsSearchTerm(
             rowObject.valueStoredAs,
-            searchInputValue,
+            searchTerm,
           )}
         >
           <div className={'td-container'}>{rowObject.valueStoredAs}</div>
         </td>
         <td
+          aria-label='value summary preview chart'
           className={`preview-chart
-          ${checkIfHiddenCellsContainSearchTerm(rowObject, searchInputValue)}`}
+          ${checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}`}
         >
           <div className={'td-container '}>
             <ValueSummaryChart
@@ -164,10 +169,10 @@ const TableRow = ({
         </td>
       </tr>
       <TableRowDropdown
-        showDetails={showDetails}
+        dropdownIsOpen={currentDropdownShouldBeOpen}
         columnsShown={columnsShown}
         rowObject={rowObject}
-        searchInputValue={searchInputValue}
+        searchTerm={searchTerm}
       />
     </React.Fragment>
   );

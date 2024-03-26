@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import { ISortConfig } from '../Interfaces/Interfaces';
+import { ISortConfig } from '../../Interfaces/Interfaces';
 
 interface ITableHeadersProps {
   handleSort: Function;

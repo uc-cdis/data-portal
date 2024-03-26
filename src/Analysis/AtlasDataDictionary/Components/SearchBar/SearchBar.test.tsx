@@ -12,7 +12,7 @@ describe('SearchBar', () => {
     ];
     const setData = jest.fn();
     const searchInputValue = 'Do';
-    const setSearchInputValue = jest.fn();
+    const handleTableChange = jest.fn();
 
     render(
       <table>
@@ -20,8 +20,8 @@ describe('SearchBar', () => {
           columnsShown={columnsShown}
           TableData={TableData}
           setData={setData}
-          searchInputValue={searchInputValue}
-          setSearchInputValue={setSearchInputValue}
+          searchTerm={searchInputValue}
+          handleTableChange={handleTableChange}
         />
       </table>,
     );
@@ -30,16 +30,17 @@ describe('SearchBar', () => {
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Doe' } });
 
-    expect(setSearchInputValue).toHaveBeenCalledTimes(1);
-    expect(setSearchInputValue).toHaveBeenLastCalledWith('Doe');
-
     // Simulate key press event (Enter) to trigger search
     fireEvent.keyPress(input, { key: 'Enter' });
 
+    // Expect set data to be filtered by search term
     expect(setData).toHaveBeenCalledTimes(1);
-    const filteredData = TableData.filter((item) => Object.values(item).some((value) => value?.toString()?.toLowerCase()?.includes('do'),
-    ),
-    );
+    const filteredData = TableData.filter((item) => Object.values(item).some((value) => {
+      const valueToString = value?.toString()?.toLowerCase();
+      return valueToString && valueToString.includes('doe');
+    }));
     expect(setData).toHaveBeenLastCalledWith(filteredData);
+    // Expect handleTableChange to be called to update search term
+    expect(handleTableChange).toHaveBeenLastCalledWith('searchTerm', 'Doe');
   });
 });

@@ -449,8 +449,19 @@
   width: unset;
 }
 
+.discovery-modal__headers {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0 6px 0
+}
+
 .discovery-modal__header-text {
-  margin: 6px;
+  margin: 0 6px 0 0;
+}
+
+.discovery-modal__subheader-text {
+  margin: 0 6px 0 0;
+  color: #818a91;
 }
 
 .discovery-modal__header-buttons {

@@ -1,26 +1,26 @@
 import React, { useEffect } from 'react';
 import { Input } from '@mantine/core';
 import SearchIcon from '../Icons/SearchIcon';
-import { IRowData } from '../Interfaces/Interfaces';
+import { IRowData } from '../../Interfaces/Interfaces';
 
 interface ISearchBarProps {
   columnsShown: number;
   TableData: IRowData[];
   setData: Function;
-  searchInputValue: string;
-  setSearchInputValue: Function;
+  searchTerm: string;
+  handleTableChange: Function;
 }
 
 const SearchBar = ({
   columnsShown,
   TableData,
   setData,
-  searchInputValue,
-  setSearchInputValue,
+  searchTerm,
+  handleTableChange,
 }: ISearchBarProps) => {
   useEffect(() => {
     const filteredData = TableData.filter((item) => {
-      const searchQuery = searchInputValue.toLowerCase().trim();
+      const searchQuery = searchTerm.toLowerCase().trim();
       return Object.values(item).some((value) => {
         if (typeof value === 'string' || typeof value === 'number') {
           return value.toString().toLowerCase().includes(searchQuery);
@@ -45,27 +45,27 @@ const SearchBar = ({
       });
     });
     setData(filteredData);
-  }, [searchInputValue]);
+  }, [searchTerm]);
 
   const handleInputChange = (event) => {
-    setSearchInputValue(event.target.value);
+    handleTableChange('searchTerm', event.target.value);
   };
 
   return (
     <thead className={'search-bar'} data-testid='search-bar'>
       <tr>
-        <th colSpan={columnsShown}>
+        <th aria-label='search bar' colSpan={columnsShown}>
           <div className='search-bar-container'>
             <Input
               rightSection={
-                searchInputValue ? (
+                searchTerm ? (
                   <button
                     type='button'
                     className='search-bar-input-control'
-                    onClick={() => setSearchInputValue('')}
+                    onClick={() => handleTableChange('searchTerm', '')}
                     onKeyPress={(event) => {
                       if (event.key === 'Enter') {
-                        setSearchInputValue('');
+                        handleTableChange('searchTerm', '');
                       }
                     }}
                   >
@@ -76,7 +76,7 @@ const SearchBar = ({
                 )
               }
               placeholder='Search'
-              value={searchInputValue}
+              value={searchTerm}
               onChange={(e) => handleInputChange(e)}
             />
           </div>

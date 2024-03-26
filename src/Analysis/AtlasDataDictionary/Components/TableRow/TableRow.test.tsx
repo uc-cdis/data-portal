@@ -2,10 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRow from './TableRow';
-import { IRowData } from '../Interfaces/Interfaces';
+import { IRowData } from '../../Interfaces/Interfaces';
 
 describe('TableRow test', () => {
   const rowData: IRowData = {
+    rowID: 0,
     vocabularyID: 'histogram_nonqualitative_hotdog_gp01ADjyWo',
     conceptID: 10,
     conceptCode: '6GPzNFCLMN',
@@ -50,8 +51,10 @@ describe('TableRow test', () => {
         <tbody>
           <TableRow
             rowObject={rowData}
+            handleTableChange={() => null}
+            openDropdowns={[2]}
             columnsShown={11}
-            searchInputValue={''}
+            searchTerm=''
           />
         </tbody>
       </table>,
@@ -68,8 +71,10 @@ describe('TableRow test', () => {
         <tbody>
           <TableRow
             rowObject={rowData}
+            handleTableChange={() => null}
+            openDropdowns={[0]}
             columnsShown={11}
-            searchInputValue={''}
+            searchTerm=''
           />
         </tbody>
       </table>,
