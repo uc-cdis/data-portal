@@ -19,7 +19,6 @@ const tableHeader = [
   'Research Title',
   'Researcher',
   'Submitted Date',
-  'Completed Date',
   'Status',
   'Consortia'
 ];
@@ -68,7 +67,6 @@ function parseTableData({ projects, showApprovedOnly, userId, rowAction, isAdmin
           : parseResearcherInfo(project.researcher)
         ],
         new Date(project.submitted_at),
-        new Date(project.completed_at),
         <span
           className={`data-requests__status-${project.status
             .toLowerCase()

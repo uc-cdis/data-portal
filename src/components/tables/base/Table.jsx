@@ -60,7 +60,7 @@ function Table({ title, header, data, footer }) {
 
   return (
     <div className='base-table'>
-      <h2>{title}</h2>
+      {title ? <h2>{title}</h2> : null}
       <table className='base-table__body'>
         <TableHead cols={header} data={data} setFilters={setFilters} />
         {footer.length > 0 && <TableFoot cols={footer} />}
