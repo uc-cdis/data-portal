@@ -6,8 +6,8 @@
 
 const fs = require('fs');
 
-const numberOfEntries = 60;
-const maxValueSummarySize = 25;
+const numberOfEntries = 30;
+const maxValueSummarySize = 45;
 const fileName = 'TableData.ts';
 
 function randomString() {
@@ -56,11 +56,14 @@ const GenerateEntry = (type, i) => {
       maxValue: randomNum(),
       meanValue: randomNum(),
       standardDeviation: randomNum(),
-      valueSummary: Array.from({ length: maxValueSummarySize }, () => ({
-        start: randomNum(),
-        end: randomNum(),
-        personCount: randomNum(),
-      })),
+      valueSummary: Array.from(
+        { length: Math.floor(Math.random() * maxValueSummarySize) + 1 },
+        () => ({
+          start: randomNum(),
+          end: randomNum(),
+          personCount: randomNum(),
+        }),
+      ),
     };
   }
   // barchart, qualitative

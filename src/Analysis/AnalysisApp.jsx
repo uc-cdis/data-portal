@@ -16,6 +16,7 @@ import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import './AnalysisApp.css';
+import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 
 const queryClient = new QueryClient();
 
@@ -164,6 +165,9 @@ class AnalysisApp extends React.Component {
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
+            {this.state.app.title === 'OHDSI Atlas' && (
+              <AtlasDataDictionaryButton />
+            )}
             <iframe
               className='analysis-app__iframe'
               title='Analysis App'
