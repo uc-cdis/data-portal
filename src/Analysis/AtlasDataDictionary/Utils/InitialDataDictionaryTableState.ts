@@ -1,4 +1,4 @@
-const DetermineInitialColumnManagement = () => null;
+import DetermineInitialColumnManagement from './DetermineInitialColumnManagement';
 
 const InitialDataDictionaryTableState = {
   openDropdowns: [] as number[],

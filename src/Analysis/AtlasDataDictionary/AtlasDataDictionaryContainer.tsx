@@ -9,7 +9,10 @@ import PaginationControls from './Components/PaginationControls/PaginationContro
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
 import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
-import { DetermineNextSortDirection, SortDataWithDirection } from './Utils/SortUtils';
+import {
+  DetermineNextSortDirection,
+  SortDataWithDirection,
+} from './Utils/SortUtils';
 import './AtlasDataDictionary.css';
 import ManageColumns from './Components/ManageColumns/ManageColumns';
 
@@ -18,7 +21,7 @@ const AtlasDataDictionaryContainer = () => {
   const [data, setData] = useState(preprocessedTableData);
 
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
-    InitialDataDictionaryTableState,
+    InitialDataDictionaryTableState
   );
   const {
     openDropdowns,
@@ -29,17 +32,19 @@ const AtlasDataDictionaryContainer = () => {
     columnsShown,
   } = dataDictionaryTableState;
 
-  const entriesHeaderStart = dataDictionaryTableState.entriesShown
-      * dataDictionaryTableState.currentPage
-    - dataDictionaryTableState.entriesShown
-    + 1;
+  const entriesHeaderStart =
+    dataDictionaryTableState.entriesShown *
+      dataDictionaryTableState.currentPage -
+    dataDictionaryTableState.entriesShown +
+    1;
 
-  const entriesHeaderStop = dataDictionaryTableState.entriesShown
-    * dataDictionaryTableState.currentPage;
+  const entriesHeaderStop =
+    dataDictionaryTableState.entriesShown *
+    dataDictionaryTableState.currentPage;
 
   const paginatedData = data.slice(
     entriesShown * currentPage - entriesShown,
-    entriesShown * currentPage,
+    entriesShown * currentPage
   );
 
   const handleTableChange = (
@@ -51,7 +56,7 @@ const AtlasDataDictionaryContainer = () => {
       | 'searchTerm'
       | 'sortConfig'
       | 'columnManagement',
-    eventData: any,
+    eventData: any
   ) => {
     if (event === 'openDropdown') {
       setDataDictionaryTableState({
@@ -62,7 +67,7 @@ const AtlasDataDictionaryContainer = () => {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
         openDropdowns: openDropdowns.filter(
-          (dropdownNumber: number) => dropdownNumber !== eventData,
+          (dropdownNumber: number) => dropdownNumber !== eventData
         ),
       });
     } else if (event === 'currentPage') {
@@ -70,7 +75,20 @@ const AtlasDataDictionaryContainer = () => {
         ...dataDictionaryTableState,
         currentPage: eventData,
       });
-    } else if (event === 'entriesShown' || event === 'searchTerm' || event === 'sortConfig') {
+    } else if (event === 'columnManagement') {
+      console.log(dataDictionaryTableState);
+      setDataDictionaryTableState({
+        ...dataDictionaryTableState,
+        columnManagement: {
+          ...dataDictionaryTableState.columnManagement,
+          [eventData]: !dataDictionaryTableState.columnManagement[eventData],
+        },
+      });
+    } else if (
+      event === 'entriesShown' ||
+      event === 'searchTerm' ||
+      event === 'sortConfig'
+    ) {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
         [event]: eventData,
@@ -78,13 +96,16 @@ const AtlasDataDictionaryContainer = () => {
       });
     } else {
       throw new Error(
-        `handleTableChange called with invalid parameters: event: ${event}, eventData: ${eventData}`,
+        `handleTableChange called with invalid parameters: event: ${event}, eventData: ${eventData}`
       );
     }
   };
 
   const handleSort = (sortKey: string) => {
-    const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(sortConfig as ISortConfig, sortKey);
+    const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(
+      sortConfig as ISortConfig,
+      sortKey
+    );
     const sortedData = SortDataWithDirection(data, newDirection, sortKey);
     // if column is set to off reset to initial sort
     if (newDirection === 'off') {
@@ -112,7 +133,10 @@ const AtlasDataDictionaryContainer = () => {
       className='atlas-data-dictionary-container'
       data-testid='atlas-data-dictionary-container'
     >
-      <ManageColumns />
+      <ManageColumns
+        handleTableChange={handleTableChange}
+        columnManagement={dataDictionaryTableState.columnManagement}
+      />
       <Table>
         <SearchBar
           columnsShown={columnsShown}
