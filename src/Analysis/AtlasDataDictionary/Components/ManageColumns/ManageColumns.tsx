@@ -97,6 +97,8 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
             <div
               className='column-control-button'
               role='button'
+              tabIndex={0}
+              onKeyPress={() => handleTableChange('columnManagement', item.id)}
               onClick={() => {
                 handleTableChange('columnManagement', item.id);
               }}
@@ -109,7 +111,7 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
                   {item.label}
                 </Grid.Col>
                 <Grid.Col span={3}>
-                  <Switch checked={columnManagement[item.id]} />
+                  <Switch tabIndex={-1} checked={columnManagement[item.id]} />
                 </Grid.Col>
               </Grid>
             </div>
