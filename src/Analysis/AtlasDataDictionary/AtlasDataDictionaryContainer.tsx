@@ -21,7 +21,7 @@ const AtlasDataDictionaryContainer = () => {
   const [data, setData] = useState(preprocessedTableData);
 
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
-    InitialDataDictionaryTableState
+    InitialDataDictionaryTableState,
   );
   const {
     openDropdowns,
@@ -32,19 +32,17 @@ const AtlasDataDictionaryContainer = () => {
     columnsShown,
   } = dataDictionaryTableState;
 
-  const entriesHeaderStart =
-    dataDictionaryTableState.entriesShown *
-      dataDictionaryTableState.currentPage -
-    dataDictionaryTableState.entriesShown +
-    1;
+  const entriesHeaderStart = dataDictionaryTableState.entriesShown
+      * dataDictionaryTableState.currentPage
+    - dataDictionaryTableState.entriesShown
+    + 1;
 
-  const entriesHeaderStop =
-    dataDictionaryTableState.entriesShown *
-    dataDictionaryTableState.currentPage;
+  const entriesHeaderStop = dataDictionaryTableState.entriesShown
+    * dataDictionaryTableState.currentPage;
 
   const paginatedData = data.slice(
     entriesShown * currentPage - entriesShown,
-    entriesShown * currentPage
+    entriesShown * currentPage,
   );
 
   const handleTableChange = (
@@ -56,7 +54,7 @@ const AtlasDataDictionaryContainer = () => {
       | 'searchTerm'
       | 'sortConfig'
       | 'columnManagement',
-    eventData: any
+    eventData: any,
   ) => {
     if (event === 'openDropdown') {
       setDataDictionaryTableState({
@@ -67,7 +65,7 @@ const AtlasDataDictionaryContainer = () => {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
         openDropdowns: openDropdowns.filter(
-          (dropdownNumber: number) => dropdownNumber !== eventData
+          (dropdownNumber: number) => dropdownNumber !== eventData,
         ),
       });
     } else if (event === 'currentPage') {
@@ -85,9 +83,9 @@ const AtlasDataDictionaryContainer = () => {
         },
       });
     } else if (
-      event === 'entriesShown' ||
-      event === 'searchTerm' ||
-      event === 'sortConfig'
+      event === 'entriesShown'
+      || event === 'searchTerm'
+      || event === 'sortConfig'
     ) {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
@@ -96,7 +94,7 @@ const AtlasDataDictionaryContainer = () => {
       });
     } else {
       throw new Error(
-        `handleTableChange called with invalid parameters: event: ${event}, eventData: ${eventData}`
+        `handleTableChange called with invalid parameters: event: ${event}, eventData: ${eventData}`,
       );
     }
   };
@@ -104,7 +102,7 @@ const AtlasDataDictionaryContainer = () => {
   const handleSort = (sortKey: string) => {
     const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(
       sortConfig as ISortConfig,
-      sortKey
+      sortKey,
     );
     const sortedData = SortDataWithDirection(data, newDirection, sortKey);
     // if column is set to off reset to initial sort

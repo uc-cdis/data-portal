@@ -14,7 +14,6 @@ import './ManageColumns.css';
 
 const ManageColumns = ({ handleTableChange, columnManagement }) => {
   const [opened, setOpened] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const notificationDisplayTimeInMilliseconds = 3000;
   useEffect(() => {
@@ -25,6 +24,45 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
       }, notificationDisplayTimeInMilliseconds);
     }
   }, [showNotification]);
+
+  const columnControls = [
+    {
+      label: 'Vocabulary ID',
+      id: 'vocabularyID',
+    },
+    {
+      label: 'Concept ID',
+      id: 'conceptID',
+    },
+    {
+      label: 'Concept Code',
+      id: 'conceptCode',
+    },
+    {
+      label: 'Concept Name',
+      id: 'conceptName',
+    },
+    {
+      label: 'Concept Class ID',
+      id: 'conceptClassID',
+    },
+    {
+      label: '# / % of People with Variable',
+      id: 'numberPercentagePeopleWithVariable',
+    },
+    {
+      label: '# / % of People Where Variable is Filled',
+      id: 'numberPercentageOfPeopleWhereValueIsFilled',
+    },
+    {
+      label: '# / % of People Where Variable is Null',
+      id: 'numberPercentageOfPeopleWhereValueIsNull',
+    },
+    {
+      label: 'Value Summary',
+      id: 'valueSummary',
+    },
+  ];
 
   return (
     <div className='manage-columns-wrapper'>
@@ -43,6 +81,7 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
         </Popover.Target>
         <Popover.Dropdown>
           <Button
+            className='column-management-reset-button'
             variant='subtle'
             size='xs'
             compact
@@ -53,30 +92,28 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
           </Button>
           <hr />
           <Space h='md' />
-          <Grid>
-            <Grid.Col span={9}>
-              <HolderIcon />
-              Vocabularly ID
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Switch
-                checked={columnManagement.vocabularyID}
-                onChange={(event) => {
-                  handleTableChange('columnManagement', 'vocabularyID');
-                  setChecked(event.currentTarget.checked);
-                }}
-              />
-            </Grid.Col>
-          </Grid>
-          <Grid>
-            <Grid.Col span={9}>
-              <HolderIcon />
-              Some other thing
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Switch checked={true} onChange={() => console.log(0)} />
-            </Grid.Col>
-          </Grid>
+
+          {columnControls.map((item) => (
+            <div
+              className='column-control-button'
+              role='button'
+              onClick={() => {
+                handleTableChange('columnManagement', item.id);
+              }}
+            >
+              <Grid align='flex-start'>
+                <Grid.Col span={1}>
+                  <HolderIcon />
+                </Grid.Col>
+                <Grid.Col className={'column-label'} span={8}>
+                  {item.label}
+                </Grid.Col>
+                <Grid.Col span={3}>
+                  <Switch checked={columnManagement[item.id]} />
+                </Grid.Col>
+              </Grid>
+            </div>
+          ))}
         </Popover.Dropdown>
       </Popover>
       {showNotification && (

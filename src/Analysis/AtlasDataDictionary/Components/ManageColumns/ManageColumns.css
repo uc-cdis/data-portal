@@ -35,3 +35,19 @@
 .manage-columns-wrapper .mantine-Grid-root .mantine-Grid-col svg {
   margin-right: 10px;
 }
+.manage-columns-wrapper .column-label {
+  margin: -2px 10px 0 -10px;
+}
+.manage-columns-wrapper .column-management-reset-button {
+  margin: 0 1em 0.5em 1em;
+}
+.manage-columns-wrapper .mantine-Popover-dropdown {
+  padding: 0.75em 0;
+}
+.manage-columns-wrapper .column-control-button {
+  padding: 0 1em;
+}
+.manage-columns-wrapper .column-control-button:hover {
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
