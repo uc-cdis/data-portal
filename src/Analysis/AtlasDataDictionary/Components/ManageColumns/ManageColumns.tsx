@@ -7,17 +7,25 @@ import {
   Grid,
   Space,
 } from '@mantine/core';
-import ManageColumnsIcon from '../../../GWASResults/Views/Home/ManageColumns/ManageColumnsIcons/ManageColumnsIcon';
-import RestoreIcon from '../../../GWASResults/Views/Home/ManageColumns/ManageColumnsIcons/RestoreIcon';
-import HolderIcon from '../../../GWASResults/Views/Home/ManageColumns/ManageColumnsIcons/HolderIcon';
+import ManageColumnsIcon from '../Icons/ManageColumnsIcon';
+import RestoreIcon from '../Icons/RestoreIcon';
+import HolderIcon from '../Icons/HolderIcon';
+import { IColumnManagementData } from '../../Interfaces/Interfaces';
 import './ManageColumns.css';
 
-const ManageColumns = ({ handleTableChange, columnManagement }) => {
+interface IManageColumns {
+  handleTableChange: Function;
+  columnManagementData: IColumnManagementData;
+}
+const ManageColumns = ({
+  handleTableChange,
+  columnManagementData,
+}: IManageColumns) => {
   const [opened, setOpened] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const notificationDisplayTimeInMilliseconds = 3000;
+
   useEffect(() => {
-    // when the component is mounted, the alert is displayed for 3 seconds
     if (showNotification) {
       setTimeout(() => {
         setShowNotification(false);
@@ -48,15 +56,19 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
     },
     {
       label: '# / % of People with Variable',
-      id: 'numberPercentagePeopleWithVariable',
+      id: 'numberPercentPeopleWithVariable',
     },
     {
       label: '# / % of People Where Variable is Filled',
-      id: 'numberPercentageOfPeopleWhereValueIsFilled',
+      id: 'numberPercentOfPeopleWhereValueIsFilled',
     },
     {
       label: '# / % of People Where Variable is Null',
-      id: 'numberPercentageOfPeopleWhereValueIsNull',
+      id: 'numberPercentOfPeopleWhereValueIsNull',
+    },
+    {
+      label: 'Value Stored As',
+      id: 'valueStoredAs',
     },
     {
       label: 'Value Summary',
@@ -85,10 +97,7 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
             role='button'
             tabIndex={0}
             onKeyPress={() => {
-              handleTableChange(
-                'columnManagementReset',
-                'columnManagementReset'
-              );
+              handleTableChange('columnManagementReset', '');
               setShowNotification(true);
             }}
             onClick={() => {
@@ -132,7 +141,10 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
                   {item.label}
                 </Grid.Col>
                 <Grid.Col span={3}>
-                  <Switch tabIndex={-1} checked={columnManagement[item.id]} />
+                  <Switch
+                    tabIndex={-1}
+                    checked={columnManagementData[item.id]}
+                  />
                 </Grid.Col>
               </Grid>
             </div>
