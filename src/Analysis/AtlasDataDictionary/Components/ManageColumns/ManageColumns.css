@@ -51,3 +51,13 @@
   cursor: pointer;
   background-color: #f5f5f5;
 }
+.manage-columns-wrapper .mantine-Switch-root {
+  pointer-events: none;
+}
+.manage-columns-wrapper
+  .mantine-Switch-body
+  input:checked
+  + .mantine-Switch-track {
+  background-color: #ef8523;
+  border-color: #ef8523;
+}
