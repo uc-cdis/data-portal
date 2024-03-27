@@ -61,3 +61,6 @@
   background-color: #ef8523;
   border-color: #ef8523;
 }
+.manage-columns-wrapper .restore-defaults {
+  height: 3em;
+}

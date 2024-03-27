@@ -80,12 +80,17 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
           </Button>
         </Popover.Target>
         <Popover.Dropdown>
-          <Button
-            className='column-management-reset-button'
-            variant='subtle'
-            size='xs'
-            compact
-            leftIcon={<RestoreIcon />}
+          <div
+            className='column-control-button restore-defaults'
+            role='button'
+            tabIndex={0}
+            onKeyPress={() => {
+              handleTableChange(
+                'columnManagementReset',
+                'columnManagementReset'
+              );
+              setShowNotification(true);
+            }}
             onClick={() => {
               handleTableChange(
                 'columnManagementReset',
@@ -94,8 +99,15 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
               setShowNotification(true);
             }}
           >
-            Restore Defaults
-          </Button>
+            <Grid align='flex-start'>
+              <Grid.Col span={1}>
+                <RestoreIcon />
+              </Grid.Col>
+              <Grid.Col span={11} className={'column-label'}>
+                Restore Defaults
+              </Grid.Col>
+            </Grid>
+          </div>
           <hr />
           <Space h='md' />
 
