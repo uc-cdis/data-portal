@@ -395,6 +395,12 @@ Below is an example, with inline comments describing what each JSON block config
           ],
           "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
             "consortium_id"
+          ],
+          "defaultFilters": [ // optional; select default filters on page load
+            {
+              "field": "redacted", // field name
+              "values": ["No"] // selected values on page load
+            }
           ]
         }
       ]

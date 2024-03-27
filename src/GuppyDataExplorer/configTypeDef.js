@@ -23,6 +23,10 @@ export const FilterConfigType = PropTypes.shape({
   tabs: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
     fields: PropTypes.arrayOf(PropTypes.string),
+    defaultFilters: PropTypes.arrayOf(PropTypes.shape({
+      field: PropTypes.string,
+      values: PropTypes.arrayOf(PropTypes.string),
+    })),
   })),
 });
 

@@ -21,6 +21,8 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
     let initialFilter = {};
+    let defaultFilters = {};
+    let hasInitialFilter = false;
 
     if (isEnabled('explorerStoreFilterInURL')) {
       const stateFromURL = getQueryParameter('filters');
@@ -30,6 +32,7 @@ class GuppyDataExplorer extends React.Component {
           const isValidJSON = IsValidJSONString(decodedFilter);
           if (isValidJSON) {
             initialFilter = JSON.parse(decodedFilter).filter;
+            hasInitialFilter = true;
           }
         } catch (err) {
           // eslint-disable-next-line no-console
@@ -38,10 +41,32 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
+    if (!hasInitialFilter && this.props.filterConfig.tabs.length > 0) {
+      const defaultFilterArr = this.props.filterConfig.tabs.reduce((accumulator, currentValue) => {
+        const df = currentValue.defaultFilters;
+        if (df && df.length > 0) {
+          return [...accumulator, ...df];
+        }
+        return accumulator;
+      }, []);
+
+      defaultFilters = defaultFilterArr.reduce((tabAccumulator, tabDefaultFilter) => {
+        if (tabDefaultFilter.field && tabDefaultFilter.values.length > 0) {
+          // if it already exists add values to it
+          if (tabAccumulator[tabDefaultFilter.field]) {
+            tabAccumulator[tabDefaultFilter.field].selectedValues.push(...tabDefaultFilter.values);
+            return tabAccumulator;
+          }
+          return { ...tabAccumulator, [tabDefaultFilter.field]: { selectedValues: tabDefaultFilter.values } };
+        }
+        return tabAccumulator;
+      }, {});
+    }
+
     this.state = {
       aggsData: {},
       filter: {},
-      initialFilterFromURL: initialFilter,
+      initialFilterFromURL: hasInitialFilter ? initialFilter : defaultFilters,
       encodableExplorerStateForURL: { filter: initialFilter },
     };
   }
