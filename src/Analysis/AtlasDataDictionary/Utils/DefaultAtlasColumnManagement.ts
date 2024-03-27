@@ -1,4 +1,4 @@
-const DefaultColumnManagement = {
+const DefaultAtlasColumnManagement = {
   vocabularyID: true,
   conceptID: true,
   conceptCode: true,
@@ -10,4 +10,4 @@ const DefaultColumnManagement = {
   valueSummary: true,
 };
 
-export default DefaultColumnManagement;
+export default DefaultAtlasColumnManagement;

@@ -1,4 +1,4 @@
-import DetermineInitialColumnManagement from './DetermineInitialColumnManagement';
+import DetermineInitialAtlasColumnManagement from './DetermineInitialAtlasColumnManagement';
 
 const InitialDataDictionaryTableState = {
   openDropdowns: [] as number[],
@@ -10,7 +10,7 @@ const InitialDataDictionaryTableState = {
   currentPage: 1,
   entriesShown: 10,
   columnsShown: 11,
-  columnManagement: DetermineInitialColumnManagement(),
+  columnManagement: DetermineInitialAtlasColumnManagement(),
 };
 
 export default InitialDataDictionaryTableState;

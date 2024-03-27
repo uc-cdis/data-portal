@@ -86,21 +86,30 @@ const ManageColumns = ({ handleTableChange, columnManagement }) => {
             size='xs'
             compact
             leftIcon={<RestoreIcon />}
-            onClick={() => setShowNotification(true)}
+            onClick={() => {
+              handleTableChange(
+                'columnManagementReset',
+                'columnManagementReset'
+              );
+              setShowNotification(true);
+            }}
           >
             Restore Defaults
           </Button>
           <hr />
           <Space h='md' />
 
-          {columnControls.map((item) => (
+          {columnControls.map((item, i) => (
             <div
+              key={i}
               className='column-control-button'
               role='button'
               tabIndex={0}
-              onKeyPress={() => handleTableChange('columnManagement', item.id)}
+              onKeyPress={() =>
+                handleTableChange('columnManagementUpdateOne', item.id)
+              }
               onClick={() => {
-                handleTableChange('columnManagement', item.id);
+                handleTableChange('columnManagementUpdateOne', item.id);
               }}
             >
               <Grid align='flex-start'>
