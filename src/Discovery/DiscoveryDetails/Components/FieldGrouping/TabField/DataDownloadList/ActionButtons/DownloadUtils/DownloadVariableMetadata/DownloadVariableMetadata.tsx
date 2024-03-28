@@ -42,10 +42,7 @@ const DownloadVariableMetadata = async (
           setDownloadStatus(createUniqueDownloadErrorMsg(key));
           reject(new Error(`Issue with ${key}: ${value}`));
         } else {
-          console.log('key line 45', key);
           const sanitizedFileName = SanitizeFileName(key);
-          console.log('sanitizedFileName', sanitizedFileName);
-          console.log('key', key);
           zip.file(sanitizedFileName, JSON.stringify(data));
           resolve(`Data resolved for ${key}: ${value}`);
         }

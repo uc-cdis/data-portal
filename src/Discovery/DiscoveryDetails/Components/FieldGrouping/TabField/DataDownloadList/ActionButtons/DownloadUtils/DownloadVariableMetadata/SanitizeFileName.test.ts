@@ -11,7 +11,7 @@ describe('SanitizeFileName', () => {
 
   it(`should sanitize file name with invalid characters and return the
       sanitized name`, () => {
-    const unSanitizedFileName = 'My !:;@#$$%^&*F:il!e.exe';
+    const unSanitizedFileName = 'My !:;@#༺$$صباح﷽ㅏ€҉܏܏܏܏܏܏Ɯ܏܏␀😨😧😦😱😫😩🐔🐓ㅑㅕㅛㅠㅡㅣㄷㅍㅎ%^&*F:il!e‮.exe';
     const expectedSanitizedFileName = 'My File.json';
     expect(SanitizeFileName(unSanitizedFileName)).toBe(
       expectedSanitizedFileName,
