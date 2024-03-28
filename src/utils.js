@@ -286,4 +286,4 @@ export const createKayakoTicket = async (
   }
 };
 
-export const validFileNameCharactersRegex = /[^a-zA-Z0-9\[\]()_-]+/g;
+export const validFileNameCharactersRegex = /[^a-zA-Z0-9\[\]() ._-]+/g;
