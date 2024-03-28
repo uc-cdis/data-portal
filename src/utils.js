@@ -7,7 +7,7 @@ export const humanFileSize = (size) => {
     return '';
   }
   const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
+  const sizeStr = (size / 1024 ** i).toFixed(2) * 1;
   const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
   return `${sizeStr} ${suffix}`;
 };
@@ -60,17 +60,15 @@ export const predictFileType = (dirtyData, fileType) => {
  */
 export async function asyncSetInterval(lambda, timeoutMs) {
   let isRunningGuard = false;
-  return setInterval(
-    () => {
-      if (!isRunningGuard) {
-        isRunningGuard = true;
+  return setInterval(() => {
+    if (!isRunningGuard) {
+      isRunningGuard = true;
 
-        lambda().then(
-          () => { isRunningGuard = false; },
-        );
-      }
-    }, timeoutMs,
-  );
+      lambda().then(() => {
+        isRunningGuard = false;
+      });
+    }
+  }, timeoutMs);
 }
 
 export function legendCreator(legendGroup, nodes, legendWidth) {
@@ -86,18 +84,20 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     const b = bIn.toLowerCase();
     if (a < b) {
       return -1;
-    } if (a > b) {
+    }
+    if (a > b) {
       return 1;
     }
     return 0;
-  },
-  );
+  });
 
   const legendFontSize = '0.9em';
   // Make Legend
-  legendGroup.selectAll('text')
+  legendGroup
+    .selectAll('text')
     .data(uniqueCategoriesList)
-    .enter().append('text')
+    .enter()
+    .append('text')
     .attr('x', legendWidth / 2)
     .attr('y', (d, i) => `${1.5 * (2.5 + i)}em`)
     .attr('text-anchor', 'middle')
@@ -105,7 +105,8 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .style('font-size', legendFontSize)
     .text((d) => d);
 
-  legendGroup.append('text')
+  legendGroup
+    .append('text')
     .attr('x', legendWidth / 2)
     .attr('y', `${2}em`)
     .attr('text-anchor', 'middle')
@@ -115,7 +116,8 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
 }
 
 export function addArrows(graphSvg) {
-  graphSvg.append('svg:defs')
+  graphSvg
+    .append('svg:defs')
     .append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
@@ -130,7 +132,8 @@ export function addArrows(graphSvg) {
 }
 
 export function addLinks(graphSvg, edges) {
-  return graphSvg.append('g')
+  return graphSvg
+    .append('g')
     .selectAll('path')
     .data(edges)
     .enter()
@@ -169,7 +172,9 @@ export function calculatePosition(nodes, graphWidth, graphHeight) {
  * @param {*} b
  */
 export function sortCompare(a, b) {
-  if (a === b) { return 0; }
+  if (a === b) {
+    return 0;
+  }
   return a < b ? -1 : 1;
 }
 
@@ -183,7 +188,10 @@ export function computeLastPageSizes(filesMap, pageSize) {
 
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_|\./gi, ' ');
-  return res.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  return res.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
 }
 
 /**
@@ -194,46 +202,64 @@ export function capitalizeFirstLetter(str) {
  * @return list of intersecting elements
  */
 export function intersection(aList, bList) {
-  const key2Count = aList.concat(bList).reduce(
-    (db, it) => {
-      const res = db;
-      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
-      return res;
-    }, {},
-  );
+  const key2Count = aList.concat(bList).reduce((db, it) => {
+    const res = db;
+    if (res[it]) {
+      res[it] += 1;
+    } else {
+      res[it] = 1;
+    }
+    return res;
+  }, {});
   return Object.entries(key2Count)
     .filter((kv) => kv[1] > 1)
     .map(([k]) => k);
 }
 
 export function minus(aList, bList) {
-  const key2Count = aList.concat(bList).concat(aList).reduce(
-    (db, it) => {
+  const key2Count = aList
+    .concat(bList)
+    .concat(aList)
+    .reduce((db, it) => {
       const res = db;
-      if (res[it]) { res[it] += 1; } else { res[it] = 1; }
+      if (res[it]) {
+        res[it] += 1;
+      } else {
+        res[it] = 1;
+      }
       return res;
-    }, {},
-  );
+    }, {});
   return Object.entries(key2Count)
     .filter((kv) => kv[1] === 2)
     .map(([k]) => k);
 }
 
-export const parseParamWidth = (width) => ((typeof width === 'number') ? `${width}px` : width);
+export const parseParamWidth = (width) =>
+  typeof width === 'number' ? `${width}px` : width;
 
-export const isPageFullScreen = (pathname) => (!!((pathname
-  && (pathname.toLowerCase() === '/dd'
-  || pathname.toLowerCase().startsWith('/dd/')
-  || pathname.toLowerCase() === '/cohort-tools'
-  || pathname.toLowerCase().startsWith('/cohort-tools/')
-  ))));
+export const isPageFullScreen = (pathname) =>
+  !!(
+    pathname &&
+    (pathname.toLowerCase() === '/dd' ||
+      pathname.toLowerCase().startsWith('/dd/') ||
+      pathname.toLowerCase() === '/cohort-tools' ||
+      pathname.toLowerCase().startsWith('/cohort-tools/'))
+  );
 
-export const isFooterHidden = (pathname) => (!!((pathname
-  && (pathname.toLowerCase() === '/dd'
-  || pathname.toLowerCase().startsWith('/dd/')
-  ))));
+export const isFooterHidden = (pathname) =>
+  !!(
+    pathname &&
+    (pathname.toLowerCase() === '/dd' ||
+      pathname.toLowerCase().startsWith('/dd/'))
+  );
 
-export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
+export const createKayakoTicket = async (
+  subject,
+  fullName,
+  email,
+  contents,
+  departmentID
+) => {
   try {
     const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
     await fetchWithCreds({
@@ -241,11 +267,17 @@ export const createKayakoTicket = async (subject, fullName, email, contents, dep
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        subject, fullname: fullName, email, contents, departmentid: departmentID,
+        subject,
+        fullname: fullName,
+        email,
+        contents,
+        departmentid: departmentID,
       }),
     }).then((response) => {
       if (response.status !== 201) {
-        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
+        throw new Error(
+          `Request for create Kayako ticket failed with status ${response.status}`
+        );
       }
       return response;
     });
@@ -253,3 +285,5 @@ export const createKayakoTicket = async (subject, fullName, email, contents, dep
     throw new Error(`Request for create Kayako ticket failed: ${err}`);
   }
 };
+
+export const validFileNameCharactersRegex = /[^a-zA-Z0-9\[\]()_-]+/g;
