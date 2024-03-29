@@ -9,7 +9,8 @@ describe('SanitizeFileName', () => {
     expect(SanitizeFileName(unSanitizedValidFileName)).toBe(expectedSanitizedFileName);
   });
 
-  it('should sanitize a file name with a single invalid character and return a sanitized name', () => {
+  it(`should sanitize a file name with a single invalid character and
+    return a sanitized name`, () => {
     const unSanitizedFileName = 'Staff participants: Baseline measures';
     const expectedSanitizedFileName = 'Staff participants Baseline measures.json';
     expect(SanitizeFileName(unSanitizedFileName)).toBe(
