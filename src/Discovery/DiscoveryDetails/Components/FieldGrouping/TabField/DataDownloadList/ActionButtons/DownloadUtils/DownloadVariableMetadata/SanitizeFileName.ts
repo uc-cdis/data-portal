@@ -1,15 +1,19 @@
-import { fileNameCharacterCheckRegex } from '../../../../../../../../../utils';
+import { fileNameCharactersCheckRegex, invalidWindowsFileNames } from '../../../../../../../../../utils';
 
 const SanitizeFileName = (unSanitizedfileName: string) => {
   let fileName = unSanitizedfileName;
   const maximumAllowedFileNameLength = 250;
   const fileExtension = '.json';
   // Replace all invalid file name characters
-  fileName = fileName.replace(fileNameCharacterCheckRegex, '');
+  fileName = fileName.replace(fileNameCharactersCheckRegex, '');
   // Trim excessive filename characters
   fileName = fileName.substring(0, maximumAllowedFileNameLength - fileExtension.length);
-  // remove existing file extension and return with correct file extension
-  fileName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+  // Ensure file name is not an invalid windows file name
+  invalidWindowsFileNames.forEach((invalidName) => {
+    if (invalidName === fileName) {
+      fileName += '_';
+    }
+  });
   return `${fileName}${fileExtension}`;
 };
 
