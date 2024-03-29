@@ -1,3 +1,4 @@
+import { invalid } from 'moment';
 import SanitizeFileName from './SanitizeFileName';
 import { invalidWindowsFileNames } from '../../../../../../../../../utils';
 
@@ -29,10 +30,15 @@ describe('SanitizeFileName', () => {
 
   it(`should sanitize invalid Window's file names and return a
       sanitized name with a underscore appended before the file extension`, () => {
-    invalidWindowsFileNames.forEach((invalidName) => {
-      const expectedSanitizedFileName = `${invalidName}_.json`;
+    const expectedSanitizedFileNames = ['CON_.json', 'PRN_.json', 'AUX_.json', 'NUL_.json',
+      'COM0_.json', 'COM1_.json', 'COM2_.json', 'COM3_.json', 'COM4_.json', 'COM5_.json',
+      'COM6_.json', 'COM7_.json', 'COM8_.json', 'COM9_.json', 'COM.json', 'COM.json',
+      'COM.json', 'LPT0_.json', 'LPT1_.json', 'LPT2_.json', 'LPT3_.json', 'LPT4_.json',
+      'LPT5_.json', 'LPT6_.json', 'LPT7_.json', 'LPT8_.json', 'LPT9_.json', 'LPT.json',
+      'LPT.json', 'LPT.json'];
+    invalidWindowsFileNames.forEach((invalidName:string, i) => {
       expect(SanitizeFileName(invalidName)).toBe(
-        expectedSanitizedFileName,
+        expectedSanitizedFileNames[i],
       );
     });
   });
