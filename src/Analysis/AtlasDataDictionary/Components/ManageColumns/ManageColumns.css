@@ -64,3 +64,18 @@
 .manage-columns-wrapper .restore-defaults {
   height: 3em;
 }
+
+.manage-columns-notification {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 100;
+  animation: 3s ease 0s normal forwards 1 fadeOut;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1;}
+  80% {opacity: 1;}
+  100% { opacity: 0;}
+}

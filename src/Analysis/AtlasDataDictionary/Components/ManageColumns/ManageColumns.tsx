@@ -36,9 +36,9 @@ const ManageColumns = ({
   useEffect(() => {
     // Update the local storage when columnManagementData changes and
     // on component unmount
-    alert(`updated via localStorage.setItem(
+   /*  alert(`updated via localStorage.setItem(
       atlasDataDictionaryColumnManagement in ManageColumns: ${JSON.stringify(columnManagementData)}`);
-    localStorage.setItem(
+    */ localStorage.setItem(
       'atlasDataDictionaryColumnManagement',
       JSON.stringify(columnManagementData),
     );
@@ -161,13 +161,7 @@ const ManageColumns = ({
       </Popover>
       {showNotification && (
         <div
-          style={{
-            position: 'fixed',
-            top: 50,
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-            zIndex: 100,
-          }}
+          className='manage-columns-notification'
         >
           <Notification
             icon={<React.Fragment>&#x2713;</React.Fragment>}
