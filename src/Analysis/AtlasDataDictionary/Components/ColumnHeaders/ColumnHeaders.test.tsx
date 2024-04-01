@@ -12,7 +12,7 @@ describe('ColumnHeaders', () => {
 
     render(
       <table>
-        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} columnManagementData={DefaultAtlasColumnManagement}/>
+        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} columnManagementData={DefaultAtlasColumnManagement} />
       </table>,
     );
     expect(screen.getByTestId('column-headers')).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe('ColumnHeaders', () => {
     const handleSort = jest.fn();
     render(
       <table>
-        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} columnManagementData={DefaultAtlasColumnManagement}/>
+        <ColumnHeaders handleSort={handleSort} sortConfig={sortConfig} columnManagementData={DefaultAtlasColumnManagement} />
       </table>,
     );
     fireEvent.click(

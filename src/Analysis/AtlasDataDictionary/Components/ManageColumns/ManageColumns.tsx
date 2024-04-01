@@ -42,7 +42,6 @@ const ManageColumns = ({
       'atlasDataDictionaryColumnManagement',
       JSON.stringify(columnManagementData),
     );
-
   }, [columnManagementData]);
 
   const columnControls = [
@@ -93,7 +92,6 @@ const ManageColumns = ({
       <Popover opened={opened} onChange={setOpened}>
         <Popover.Target>
           <Button
-            className='manage-columns-button'
             leftIcon={<ManageColumnsIcon />}
             onClick={() => setOpened(!opened)}
             variant='white'

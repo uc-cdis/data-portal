@@ -52,9 +52,7 @@ const TableRow = ({
               variant='subtle'
               size='xs'
               compact
-              onClick={() =>
-                handleTableChange('closeDropdown', rowObject.rowID)
-              }
+              onClick={() => handleTableChange('closeDropdown', rowObject.rowID)}
             >
               <CollapseIcon />
             </Button>
@@ -64,7 +62,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.vocabularyID,
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container '}>{rowObject.vocabularyID}</div>
@@ -74,7 +72,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.conceptID.toString(),
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container '}>{rowObject.conceptID}</div>
@@ -84,7 +82,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.conceptCode.toString(),
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container '}>{rowObject.conceptCode}</div>
@@ -94,7 +92,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.conceptName.toString(),
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container '}>{rowObject.conceptName}</div>
@@ -104,7 +102,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.conceptClassID.toString(),
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container '}>{rowObject.conceptClassID}</div>
@@ -115,11 +113,11 @@ const TableRow = ({
             className={
               checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWithVariable,
-                searchTerm
-              ) ||
-              checkIfCellContainsSearchTerm(
+                searchTerm,
+              )
+              || checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWithVariablePercent,
-                searchTerm
+                searchTerm,
               )
             }
           >
@@ -135,11 +133,11 @@ const TableRow = ({
             className={`${
               checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWhereValueIsFilled,
-                searchTerm
-              ) ||
-              checkIfCellContainsSearchTerm(
+                searchTerm,
+              )
+              || checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWhereValueIsFilledPercent,
-                searchTerm
+                searchTerm,
               )
             } `}
           >
@@ -155,11 +153,11 @@ const TableRow = ({
             className={
               checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWhereValueIsNull,
-                searchTerm
-              ) ||
-              checkIfCellContainsSearchTerm(
+                searchTerm,
+              )
+              || checkIfCellContainsSearchTerm(
                 rowObject.numberOfPeopleWhereValueIsNullPercent,
-                searchTerm
+                searchTerm,
               )
             }
           >
@@ -174,7 +172,7 @@ const TableRow = ({
           <td
             className={checkIfCellContainsSearchTerm(
               rowObject.valueStoredAs,
-              searchTerm
+              searchTerm,
             )}
           >
             <div className={'td-container'}>{rowObject.valueStoredAs}</div>
