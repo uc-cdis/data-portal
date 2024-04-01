@@ -22,16 +22,15 @@
 .manage-columns-wrapper .mantine-Popover-dropdown {
   min-width: 238px;
   min-height: 290px;
-  box-shadow: 0px 3px 3px #00000029;
+  box-shadow: 0 3px 3px #00000029;
   border: 1px solid #c4c4c4;
   border-radius: 4px;
   top: 0;
   margin-top: -7px;
   margin-left: -20px;
+  padding: 0.75em 0;
 }
-.manage-columns-wrapper .mantine-Switch-root {
-  float: right;
-}
+
 .manage-columns-wrapper .mantine-Grid-root .mantine-Grid-col svg {
   margin-right: 10px;
 }
@@ -41,9 +40,7 @@
 .manage-columns-wrapper .column-management-reset-button {
   margin: 0 1em 0.5em 1em;
 }
-.manage-columns-wrapper .mantine-Popover-dropdown {
-  padding: 0.75em 0;
-}
+
 .manage-columns-wrapper .column-control-button {
   padding: 0 1em;
 }
@@ -53,11 +50,12 @@
 }
 .manage-columns-wrapper .mantine-Switch-root {
   pointer-events: none;
+  float: right;
 }
 .manage-columns-wrapper
-  .mantine-Switch-body
-  input:checked
-  + .mantine-Switch-track {
+.mantine-Switch-body
+input:checked
++ .mantine-Switch-track {
   background-color: #ef8523;
   border-color: #ef8523;
 }
@@ -75,7 +73,10 @@
 }
 
 @keyframes fadeOut {
-  0% { opacity: 1;}
-  80% {opacity: 1;}
-  100% { opacity: 0;}
+  0% {
+    opacity: 1;}
+  80% {
+    opacity: 1;}
+  100% {
+    opacity: 0;}
 }
