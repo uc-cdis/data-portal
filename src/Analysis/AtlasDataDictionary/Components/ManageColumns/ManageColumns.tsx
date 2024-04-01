@@ -34,11 +34,7 @@ const ManageColumns = ({
   }, [showNotification]);
 
   useEffect(() => {
-    // Update the local storage when columnManagementData changes and
-    // on component unmount
-   /*  alert(`updated via localStorage.setItem(
-      atlasDataDictionaryColumnManagement in ManageColumns: ${JSON.stringify(columnManagementData)}`);
-    */ localStorage.setItem(
+    localStorage.setItem(
       'atlasDataDictionaryColumnManagement',
       JSON.stringify(columnManagementData),
     );

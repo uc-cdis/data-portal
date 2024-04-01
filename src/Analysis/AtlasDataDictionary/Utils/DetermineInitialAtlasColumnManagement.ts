@@ -1,3 +1,4 @@
+import { IColumnManagementData } from '../Interfaces/Interfaces';
 import DefaultAtlasColumnManagement from './DefaultAtlasColumnManagement';
 
 const hasSameKeys = (a, b) => {
@@ -7,10 +8,10 @@ const hasSameKeys = (a, b) => {
   return JSON.stringify(aKeys) === JSON.stringify(bKeys);
 };
 
-const hasOnlyBoolValues = (obj) => Object.values(obj).every(Boolean);
+const hasOnlyBoolValues = (obj:any) => Object.values(obj).every(Boolean);
 
 const columnManagementLocalStorageIsValid = () => {
-  const retrievedObject: any = localStorage.getItem('atlasDataDictionaryColumnManagement');
+  const retrievedObject: IColumnManagementData | any = localStorage.getItem('atlasDataDictionaryColumnManagement');
   const parsedRetrievedObject = JSON.parse(retrievedObject);
   return (
     hasSameKeys(parsedRetrievedObject, DefaultAtlasColumnManagement)
@@ -25,7 +26,7 @@ const DetermineInitialColumnManagement = () => {
   ) {
     // atlasDataDictionaryColumnManagement is already set & valid,
     // we can return the user's saved settings
-    const retrievedObject: any = localStorage.getItem('atlasDataDictionaryColumnManagement');
+    const retrievedObject: IColumnManagementData | any = localStorage.getItem('atlasDataDictionaryColumnManagement');
     return JSON.parse(retrievedObject);
   }
   // we have local storage available,

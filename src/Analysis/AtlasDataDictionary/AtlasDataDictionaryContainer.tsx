@@ -20,10 +20,10 @@ import DefaultAtlasColumnManagement from './Utils/DefaultAtlasColumnManagement';
 const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
   const [data, setData] = useState(preprocessedTableData);
-
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
   );
+
   const {
     openDropdowns,
     searchTerm,
