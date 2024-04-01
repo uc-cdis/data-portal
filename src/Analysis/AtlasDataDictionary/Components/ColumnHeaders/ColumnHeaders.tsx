@@ -132,10 +132,9 @@ const ColumnHeaders = ({
     <thead className={'column-headers'} data-testid='column-headers'>
       <tr>
         {headerItems.map((item) => (
-          <React.Fragment>
+          <React.Fragment key={item.headerKey}>
             {item.show && (
               <Header
-                key={item.headerKey}
                 handleSort={handleSort}
                 headerJSX={item.jsx}
                 headerKey={item.headerKey}
