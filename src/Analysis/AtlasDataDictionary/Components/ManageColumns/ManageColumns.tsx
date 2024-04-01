@@ -33,6 +33,14 @@ const ManageColumns = ({
     }
   }, [showNotification]);
 
+  useEffect(() => {
+    // Update the local storage when columnManagementData changes
+    localStorage.setItem(
+      'atlasDataDictionaryColumnManagement',
+      JSON.stringify(columnManagementData),
+    );
+  }, [columnManagementData]);
+
   const columnControls = [
     {
       label: 'Vocabulary ID',
@@ -81,7 +89,7 @@ const ManageColumns = ({
       <Popover opened={opened} onChange={setOpened}>
         <Popover.Target>
           <Button
-            classNames='manage-columns-button'
+            className='manage-columns-button'
             leftIcon={<ManageColumnsIcon />}
             onClick={() => setOpened(!opened)}
             variant='white'
@@ -103,7 +111,7 @@ const ManageColumns = ({
             onClick={() => {
               handleTableChange(
                 'columnManagementReset',
-                'columnManagementReset'
+                'columnManagementReset',
               );
               setShowNotification(true);
             }}
@@ -126,9 +134,7 @@ const ManageColumns = ({
               className='column-control-button'
               role='button'
               tabIndex={0}
-              onKeyPress={() =>
-                handleTableChange('columnManagementUpdateOne', item.id)
-              }
+              onKeyPress={() => handleTableChange('columnManagementUpdateOne', item.id)}
               onClick={() => {
                 handleTableChange('columnManagementUpdateOne', item.id);
               }}
