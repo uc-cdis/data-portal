@@ -2,9 +2,11 @@
   float: right;
   margin: 15px 0;
 }
+
 .manage-columns-wrapper button {
   border: 1px solid #2e77b8;
 }
+
 .manage-columns-wrapper .mantine-Popover-dropdown button {
   border: unset;
 }
@@ -12,13 +14,16 @@
 .manage-columns-wrapper .mantine-Button-label {
   font-weight: 400;
 }
+
 .manage-columns-wrapper button.opened {
   color: #fff;
   background-color: #2e77b8;
 }
+
 .manage-columns-wrapper button.opened svg path {
   fill: #fff;
 }
+
 .manage-columns-wrapper .mantine-Popover-dropdown {
   min-width: 238px;
   min-height: 290px;
@@ -34,9 +39,11 @@
 .manage-columns-wrapper .mantine-Grid-root .mantine-Grid-col svg {
   margin-right: 10px;
 }
+
 .manage-columns-wrapper .column-label {
   margin: -2px 10px 0 -10px;
 }
+
 .manage-columns-wrapper .column-management-reset-button {
   margin: 0 1em 0.5em 1em;
 }
@@ -44,14 +51,17 @@
 .manage-columns-wrapper .column-control-button {
   padding: 0 1em;
 }
+
 .manage-columns-wrapper .column-control-button:hover {
   cursor: pointer;
   background-color: #f5f5f5;
 }
+
 .manage-columns-wrapper .mantine-Switch-root {
   pointer-events: none;
   float: right;
 }
+
 .manage-columns-wrapper
 .mantine-Switch-body
 input:checked
@@ -59,6 +69,7 @@ input:checked
   background-color: #ef8523;
   border-color: #ef8523;
 }
+
 .manage-columns-wrapper .restore-defaults {
   height: 3em;
 }
@@ -69,7 +80,7 @@ input:checked
   left: 50%;
   transform: translate(-50%,-50%);
   z-index: 100;
-  animation: 3s ease 0s normal forwards 1 fadeOut;
+  animation: fadeOut 3s ease forwards;
 }
 
 @keyframes fadeOut {
