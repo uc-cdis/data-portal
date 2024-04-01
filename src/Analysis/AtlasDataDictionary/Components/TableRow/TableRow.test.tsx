@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRow from './TableRow';
 import { IRowData } from '../../Interfaces/Interfaces';
+import DefaultAtlasColumnManagement from '../../Utils/DefaultAtlasColumnManagement';
 
 describe('TableRow test', () => {
   const rowData: IRowData = {
@@ -55,6 +56,7 @@ describe('TableRow test', () => {
             openDropdowns={[2]}
             columnsShown={11}
             searchTerm=''
+            columnManagementData={DefaultAtlasColumnManagement}
           />
         </tbody>
       </table>,
@@ -75,6 +77,7 @@ describe('TableRow test', () => {
             openDropdowns={[0]}
             columnsShown={11}
             searchTerm=''
+            columnManagementData={DefaultAtlasColumnManagement}
           />
         </tbody>
       </table>,
