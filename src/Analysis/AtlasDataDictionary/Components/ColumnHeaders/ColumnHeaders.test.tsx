@@ -29,4 +29,32 @@ describe('ColumnHeaders', () => {
     );
     expect(handleSort).toHaveBeenCalledTimes(1);
   });
+  it('Renders column headers based on columnManagementData', () => {
+    const handleSort = jest.fn();
+    const columnManagementDataMock = {
+      vocabularyID: true,
+      conceptID: false,
+      valueSummary: true,
+      // Add more mock data as needed
+    };
+
+    render(
+      <table>
+        <ColumnHeaders
+          handleSort={handleSort}
+          sortConfig={sortConfig}
+          columnManagementData={columnManagementDataMock}
+        />
+      </table>,
+    );
+
+    expect(screen.getByTestId('column-headers')).toBeInTheDocument();
+
+    // Check for headers that should be visible
+    expect(screen.queryByText(/Vocabulary/)).toBeInTheDocument();
+    expect(screen.queryByText(/Concept/)).not.toBeInTheDocument(); // Should not be visible
+    expect(screen.queryByText(/Value/)).toBeInTheDocument();
+
+
+  });
 });
