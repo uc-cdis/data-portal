@@ -28,7 +28,7 @@ describe('TableRow test', () => {
         personCount: 20,
       },
     ],
-    numberOfPeopleWithVariablePercent: 13,
+    numberOfPeopleWithVariablePercent: 10,
     numberOfPeopleWhereValueIsFilledPercent: 6,
     numberOfPeopleWhereValueIsNullPercent: 2,
   };
@@ -94,7 +94,6 @@ describe('TableRow test', () => {
       vocabularyID: true,
       conceptID: false,
       valueSummary: true,
-      // Add more mock data as needed
     };
     render(
       <table>
@@ -114,7 +113,6 @@ describe('TableRow test', () => {
     expect(screen.getAllByText(rowData.vocabularyID, { exact: false })[0]).toBeInTheDocument();
     expect(screen.getAllByText(rowData.valueStoredAs, { exact: false })[0]).toBeInTheDocument();
     // Check for data that should not be visible
-    // screen.debug();
     const conceptIDValue = screen.queryByText(rowData.conceptID);
     expect(conceptIDValue).toBeNull();
   });

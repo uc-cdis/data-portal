@@ -75,7 +75,7 @@ const TableRow = ({
               searchTerm,
             )}
           >
-            <div className={'td-container '}>{rowObject.conceptID}</div>
+            <div className='td-container'>{rowObject.conceptID}</div>
           </td>
         )}
         {columnManagementData.conceptCode && (
@@ -85,7 +85,7 @@ const TableRow = ({
               searchTerm,
             )}
           >
-            <div className={'td-container '}>{rowObject.conceptCode}</div>
+            <div className='td-container'>{rowObject.conceptCode}</div>
           </td>
         )}
         {columnManagementData.conceptName && (
@@ -95,7 +95,7 @@ const TableRow = ({
               searchTerm,
             )}
           >
-            <div className={'td-container '}>{rowObject.conceptName}</div>
+            <div className='td-container'>{rowObject.conceptName}</div>
           </td>
         )}
         {columnManagementData.conceptClassID && (
@@ -105,7 +105,7 @@ const TableRow = ({
               searchTerm,
             )}
           >
-            <div className={'td-container '}>{rowObject.conceptClassID}</div>
+            <div className='td-container'>{rowObject.conceptClassID}</div>
           </td>
         )}
         {columnManagementData.numberPercentPeopleWithVariable && (
@@ -121,7 +121,7 @@ const TableRow = ({
               )
             }
           >
-            <div className={'td-container'}>
+            <div className='td-container'>
               {rowObject.numberOfPeopleWithVariable}
               <br />
               {rowObject.numberOfPeopleWithVariablePercent}%
@@ -141,7 +141,7 @@ const TableRow = ({
               )
             } `}
           >
-            <div className={'td-container'}>
+            <div className='td-container'>
               {rowObject.numberOfPeopleWhereValueIsFilled}
               <br />
               {rowObject.numberOfPeopleWhereValueIsFilledPercent}%
@@ -161,7 +161,7 @@ const TableRow = ({
               )
             }
           >
-            <div className={'td-container '}>
+            <div className='td-container'>
               {rowObject.numberOfPeopleWhereValueIsNull}
               <br />
               {rowObject.numberOfPeopleWhereValueIsNullPercent}%
@@ -175,7 +175,7 @@ const TableRow = ({
               searchTerm,
             )}
           >
-            <div className={'td-container'}>{rowObject.valueStoredAs}</div>
+            <div className='td-container'>{rowObject.valueStoredAs}</div>
           </td>
         )}
         {columnManagementData.valueSummary && (
@@ -184,7 +184,7 @@ const TableRow = ({
             className={`preview-chart
           ${checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}`}
           >
-            <div className={'td-container '}>
+            <div className='td-container'>
               <ValueSummaryChart
                 chartType={rowObject.valueStoredAs}
                 chartData={rowObject.valueSummary as IValueSummary[]}
