@@ -52,9 +52,8 @@ describe('ColumnHeaders', () => {
 
     // Check for headers that should be visible
     expect(screen.queryByText(/Vocabulary/)).toBeInTheDocument();
-    expect(screen.queryByText(/Concept/)).not.toBeInTheDocument(); // Should not be visible
     expect(screen.queryByText(/Value/)).toBeInTheDocument();
-
-
+        // Check for headers that should not be visible
+    expect(screen.queryByText(/Concept/)).not.toBeInTheDocument();
   });
 });

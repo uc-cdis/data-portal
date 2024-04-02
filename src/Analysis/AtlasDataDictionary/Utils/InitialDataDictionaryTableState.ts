@@ -1,5 +1,7 @@
 import DetermineInitialAtlasColumnManagement from './DetermineInitialAtlasColumnManagement';
+import DefaultAtlasColumnManagement from './DefaultAtlasColumnManagement';
 
+const columnsShownThatAreNotManaged = 1;
 const InitialDataDictionaryTableState = {
   openDropdowns: [] as number[],
   searchTerm: '',
@@ -9,7 +11,7 @@ const InitialDataDictionaryTableState = {
   },
   currentPage: 1,
   entriesShown: 10,
-  columnsShown: 11,
+  columnsShown: Object.keys(DefaultAtlasColumnManagement).length + columnsShownThatAreNotManaged,
   columnManagement: DetermineInitialAtlasColumnManagement(),
 };
 
