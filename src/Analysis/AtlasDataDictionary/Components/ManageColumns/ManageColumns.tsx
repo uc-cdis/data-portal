@@ -24,6 +24,10 @@ const ManageColumns = ({
   const [opened, setOpened] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const notificationDisplayTimeInMilliseconds = 3000;
+  const iconSpanSize = 1;
+  const columnManagementResetButtonSpanSize = 11;
+  const columnLabelSpanSize = 8;
+  const switchSpanSize = 3;
 
   useEffect(() => {
     if (showNotification) {
@@ -114,10 +118,10 @@ const ManageColumns = ({
             onClick={() => columnManagementReset()}
           >
             <Grid align='flex-start'>
-              <Grid.Col span={1}>
+              <Grid.Col span={iconSpanSize}>
                 <RestoreIcon />
               </Grid.Col>
-              <Grid.Col span={11} className={'column-label'}>
+              <Grid.Col span={columnManagementResetButtonSpanSize} className={'column-label'}>
                 Restore Defaults
               </Grid.Col>
             </Grid>
@@ -137,13 +141,13 @@ const ManageColumns = ({
               }}
             >
               <Grid align='flex-start'>
-                <Grid.Col span={1}>
+                <Grid.Col span={iconSpanSize}>
                   <HolderIcon />
                 </Grid.Col>
-                <Grid.Col className={'column-label'} span={8}>
+                <Grid.Col className={'column-label'} span={columnLabelSpanSize}>
                   {item.label}
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={switchSpanSize}>
                   <Switch
                     tabIndex={-1}
                     checked={columnManagementData[item.id]}
