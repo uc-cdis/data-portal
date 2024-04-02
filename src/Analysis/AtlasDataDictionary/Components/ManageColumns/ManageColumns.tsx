@@ -40,6 +40,14 @@ const ManageColumns = ({
     );
   }, [columnManagementData]);
 
+  const columnManagementReset = () => {
+    handleTableChange(
+      'columnManagementReset',
+      'columnManagementReset',
+    );
+    setShowNotification(true);
+  };
+
   const columnControls = [
     {
       label: 'Vocabulary ID',
@@ -102,17 +110,8 @@ const ManageColumns = ({
             className='column-control-button restore-defaults'
             role='button'
             tabIndex={0}
-            onKeyPress={() => {
-              handleTableChange('columnManagementReset', '');
-              setShowNotification(true);
-            }}
-            onClick={() => {
-              handleTableChange(
-                'columnManagementReset',
-                'columnManagementReset',
-              );
-              setShowNotification(true);
-            }}
+            onKeyPress={() => columnManagementReset()}
+            onClick={() => columnManagementReset()}
           >
             <Grid align='flex-start'>
               <Grid.Col span={1}>
