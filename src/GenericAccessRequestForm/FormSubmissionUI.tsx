@@ -27,7 +27,7 @@ const FormSubmissionUI = ({
       ) : (
         <Result
           status={formSubmissionStatus.status}
-          title='A problem has occurred during submitting the request!'
+          title='A problem has occurred while submitting the request!'
           subTitle={formSubmissionStatus.text}
           extra={[
             <Button
