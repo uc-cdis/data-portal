@@ -169,7 +169,20 @@ describe('ActionButtons', () => {
     expect(loginText[0]).toBeInTheDocument();
     expect(loginText[1]).toBeInTheDocument();
   });
-
+  test(`Study Level metadata button should not render when the resourceInfo does not include
+    the study metadata field name reference from the discovery config`, () => {
+    const resourceInfoWithoutStudyMetadataKey = {
+      study_id: 'mockStudyId',
+      // study_metadata: true, <-- deliberately commented out for testing
+    };
+    render(
+    <ActionButtons
+      {...testProps}
+      resourceInfo={resourceInfoWithoutStudyMetadataKey as unknown as DiscoveryResource}
+    />
+    );
+    expect(screen.queryByTestId('download-study-level-metadata')).toBeNull();
+  });
   test('renders Download Study-Level Metadata button based on conditionals', () => {
     const buttonText = 'Study-Level Metadata';
     checkExportToWorkspaceConditional(
