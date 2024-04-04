@@ -9,8 +9,9 @@ const StudyRegistrationAccessRequest = {
   resultTitle: 'Your access request has been submitted!',
   resultSubtitle:
   <React.Fragment> Thank you for your submission. Requests take up to 1 business day to complete.
-     You will be notified when approved.<br />If you do not receive notification within 1 business day of your request,
-      please reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
+    {' '}You will be notified when approved.<br />If you do not receive notification within 1 business day
+    {' '}of your request,please reach out to
+    {' '}<a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
   </React.Fragment>,
   showStudyName: true,
   showGrantNumber: false,
@@ -20,9 +21,9 @@ const StudyRegistrationAccessRequest = {
   successRedirectText: 'Go to Discovery Page',
   pendingRequestText:
   <React.Fragment> There is already a pending request for this user to access this
-     study. We are processing your request. You will be notified when approved.<br />
-     If you do not receive notification within 1 business day of your initial request,
-     please reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
+    {' '}study. We are processing your request. You will be notified when approved.<br />
+    If you do not receive notification within 1 business day of your initial request,
+    {' '}please reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
   </React.Fragment>,
 };
 const DataDictionarySubmissionRequest = {
