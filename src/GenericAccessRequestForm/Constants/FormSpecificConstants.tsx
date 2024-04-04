@@ -1,3 +1,4 @@
+import React from 'react';
 import { workspaceRegistrationConfig } from '../../localconf';
 
 const StudyRegistrationAccessRequest = {
@@ -7,14 +8,22 @@ const StudyRegistrationAccessRequest = {
     'Please fill out this form to request and be approved for access to register your study with the HEAL Platform.',
   resultTitle: 'Your access request has been submitted!',
   resultSubtitle:
-    'Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.',
+  <React.Fragment> Thank you for your submission. Requests take up to 1 business day to complete.
+     You will be notified when approved.<br />If you do not receive notification within 1 business day of your request,
+      please reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
+  </React.Fragment>,
   showStudyName: true,
   showGrantNumber: false,
   showDisclaimer: true,
   subjectLine: 'Study registration access request for',
   successRedirectLink: '/discovery',
   successRedirectText: 'Go to Discovery Page',
-  pendingRequestText: 'There is already a pending request for this study/user combination, please wait while we are processing your request.',
+  pendingRequestText:
+  <React.Fragment> There is already a pending request for this study/user combination; we are
+    processing your request. You will be notified when approved.<br />If you do not
+    receive notification within 1 business day of your initial request, please
+    reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
+  </React.Fragment>,
 };
 const DataDictionarySubmissionRequest = {
   name: 'DataDictionarySubmissionRequest',
