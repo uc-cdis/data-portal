@@ -169,10 +169,8 @@ describe('ActionButtons', () => {
     expect(loginText[0]).toBeInTheDocument();
     expect(loginText[1]).toBeInTheDocument();
   });
-
-  test(`Study Level metadata button should not render when
-   the resourceInfo does not includes the study metadata field name
-   reference from the discovery config`, () => {
+  test(`Study Level metadata button should not render when the resourceInfo does not include
+    the study metadata field name reference from the discovery config`, () => {
     const resourceInfoWithoutStudyMetadataKey = {
       study_id: 'mockStudyId',
       // study_metadata: true, <-- deliberately commented out for testing
