@@ -5,7 +5,6 @@ import TableFoot from './TableFoot';
 import TableHead from './TableHead';
 import innerText from 'react-innertext';
 import './Table.css';
-import { filter } from 'jszip';
 
 export function cellValueToText(value) {
   let text = '';
@@ -14,9 +13,9 @@ export function cellValueToText(value) {
   } else if (Array.isArray(value)) {
     text = value.reduce((acc, value, index, array) => {
       if (index < array.length-1) {
-        return acc + value + ', '
+        return acc + cellValueToText(value) + ', '
       } else {
-        return acc + value;
+        return acc + cellValueToText(value);
       }
     }, '');
   } else if (typeof value === 'object') {
