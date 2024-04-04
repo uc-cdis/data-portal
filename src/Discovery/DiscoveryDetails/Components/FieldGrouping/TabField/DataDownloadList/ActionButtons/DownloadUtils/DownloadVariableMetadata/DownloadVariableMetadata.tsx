@@ -7,6 +7,7 @@ import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../../../Discovery';
 import DataDictionaries from '../../../Interfaces/DataDictionaries';
+import SanitizeFileName from './SanitizeFileName';
 
 const DownloadVariableMetadata = async (
   dataDictionaries: DataDictionaries,
@@ -24,7 +25,7 @@ const DownloadVariableMetadata = async (
         <React.Fragment>
           <p>
               Study with name <strong>{resourceInfo.project_title}</strong>
-              cannot download data dictionary with name <strong>{key}</strong>.
+              &nbsp;cannot download data dictionary with name <strong>{key}</strong>.
           </p>
           <p>Please try again later and contact support.</p>
         </React.Fragment>
@@ -39,7 +40,8 @@ const DownloadVariableMetadata = async (
         setDownloadStatus(createUniqueDownloadErrorMsg(key));
         reject(new Error(`Issue with ${key}: ${value}`));
       } else {
-        zip.file(key, JSON.stringify(data));
+        const sanitizedFileName = SanitizeFileName(key);
+        zip.file(sanitizedFileName, JSON.stringify(data));
         resolve(`Data resolved for ${key}: ${value}`);
       }
     });
