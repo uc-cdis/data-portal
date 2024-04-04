@@ -19,10 +19,10 @@ const StudyRegistrationAccessRequest = {
   successRedirectLink: '/discovery',
   successRedirectText: 'Go to Discovery Page',
   pendingRequestText:
-  <React.Fragment> There is already a pending request for this study/user combination; we are
-    processing your request. You will be notified when approved.<br />If you do not
-    receive notification within 1 business day of your initial request, please
-    reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
+  <React.Fragment> There is already a pending request for this user to access this
+     study. We are processing your request. You will be notified when approved.<br />
+     If you do not receive notification within 1 business day of your initial request,
+     please reach out to <a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
   </React.Fragment>,
 };
 const DataDictionarySubmissionRequest = {
