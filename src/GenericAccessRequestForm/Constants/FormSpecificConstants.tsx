@@ -9,7 +9,8 @@ const StudyRegistrationAccessRequest = {
   resultTitle: 'Your access request has been submitted!',
   resultSubtitle:
   <React.Fragment> Thank you for your submission. Requests take up to 1 business day to complete.
-    {' '}You will be notified when approved.<br />If you do not receive notification within 1 business day
+    {' '}You will be notified when approved.<br />
+    If you do not receive notification within 1 business day
     {' '}of your request,please reach out to
     {' '}<a href='mailto:heal-support@datacommons.io'>heal-support@datacommons.io</a>.
   </React.Fragment>,
