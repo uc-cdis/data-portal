@@ -175,7 +175,12 @@ describe('ActionButtons', () => {
       study_id: 'mockStudyId',
       // study_metadata: true, <-- deliberately commented out for testing
     };
-    render(<ActionButtons {...testProps} resourceInfo={resourceInfoWithoutStudyMetadataKey as unknown as DiscoveryResource} />);
+    render(
+    <ActionButtons
+      {...testProps}
+      resourceInfo={resourceInfoWithoutStudyMetadataKey as unknown as DiscoveryResource}
+    />
+    );
     expect(screen.queryByTestId('download-study-level-metadata')).toBeNull();
   });
   test('renders Download Study-Level Metadata button based on conditionals', () => {
