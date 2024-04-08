@@ -97,6 +97,9 @@
     "header": {
       "field": "name"
     },
+    "subHeader": {
+      "field": "study_id"
+    },
     "fieldsToShow": [
       {
         "groupName": "Study Identifiers",

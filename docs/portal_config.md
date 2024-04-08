@@ -395,6 +395,12 @@ Below is an example, with inline comments describing what each JSON block config
           ],
           "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
             "consortium_id"
+          ],
+          "defaultFilters": [ // optional; select default filters on page load
+            {
+              "field": "redacted", // field name
+              "values": ["No"] // selected values on page load
+            }
           ]
         }
       ]
@@ -568,7 +574,10 @@ Below is an example, with inline comments describing what each JSON block config
     // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
-        "field": "name"
+        "field": "title"
+      },
+      "subHeader": { // if present, shows a subheader field below the header.
+        "field": "subtitle"
       },
       "fieldsToShow": [ // fields on the study page are grouped in order to separate logically distinct groups of fields
         {
@@ -627,6 +636,7 @@ Below is an example, with inline comments describing what each JSON block config
     // takes precedence over "studyPageFields"
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
+      "subHeaderField": "project_subtitle", // optional, if present, display a subheader under header using the field configured
       "tabs": [
         {
           "tabName": "Study",
