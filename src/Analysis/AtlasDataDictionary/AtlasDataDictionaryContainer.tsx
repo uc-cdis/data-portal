@@ -9,16 +9,21 @@ import PaginationControls from './Components/PaginationControls/PaginationContro
 import { ISortConfig } from './Interfaces/Interfaces';
 import PreprocessTableData from './Utils/PreprocessTableData';
 import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
-import { DetermineNextSortDirection, SortDataWithDirection } from './Utils/SortUtils';
+import {
+  DetermineNextSortDirection,
+  SortDataWithDirection,
+} from './Utils/SortUtils';
 import './AtlasDataDictionary.css';
+import ManageColumns from './Components/ManageColumns/ManageColumns';
+import DefaultAtlasColumnManagement from './Utils/DefaultAtlasColumnManagement';
 
 const AtlasDataDictionaryContainer = () => {
   const preprocessedTableData = PreprocessTableData(TableData);
   const [data, setData] = useState(preprocessedTableData);
-
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
   );
+
   const {
     openDropdowns,
     searchTerm,
@@ -26,6 +31,7 @@ const AtlasDataDictionaryContainer = () => {
     currentPage,
     entriesShown,
     columnsShown,
+    columnManagement,
   } = dataDictionaryTableState;
 
   const entriesHeaderStart = dataDictionaryTableState.entriesShown
@@ -49,7 +55,8 @@ const AtlasDataDictionaryContainer = () => {
       | 'entriesShown'
       | 'searchTerm'
       | 'sortConfig'
-      | 'columnManagement',
+      | 'columnManagementUpdateOne'
+      | 'columnManagementReset',
     eventData: any,
   ) => {
     if (event === 'openDropdown') {
@@ -69,7 +76,24 @@ const AtlasDataDictionaryContainer = () => {
         ...dataDictionaryTableState,
         currentPage: eventData,
       });
-    } else if (event === 'entriesShown' || event === 'searchTerm' || event === 'sortConfig') {
+    } else if (event === 'columnManagementUpdateOne') {
+      setDataDictionaryTableState({
+        ...dataDictionaryTableState,
+        columnManagement: {
+          ...dataDictionaryTableState.columnManagement,
+          [eventData]: !dataDictionaryTableState.columnManagement[eventData],
+        },
+      });
+    } else if (event === 'columnManagementReset') {
+      setDataDictionaryTableState({
+        ...dataDictionaryTableState,
+        columnManagement: DefaultAtlasColumnManagement,
+      });
+    } else if (
+      event === 'entriesShown'
+      || event === 'searchTerm'
+      || event === 'sortConfig'
+    ) {
       setDataDictionaryTableState({
         ...dataDictionaryTableState,
         [event]: eventData,
@@ -83,7 +107,10 @@ const AtlasDataDictionaryContainer = () => {
   };
 
   const handleSort = (sortKey: string) => {
-    const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(sortConfig as ISortConfig, sortKey);
+    const newDirection: ISortConfig['direction'] = DetermineNextSortDirection(
+      sortConfig as ISortConfig,
+      sortKey,
+    );
     const sortedData = SortDataWithDirection(data, newDirection, sortKey);
     // if column is set to off reset to initial sort
     if (newDirection === 'off') {
@@ -103,6 +130,7 @@ const AtlasDataDictionaryContainer = () => {
       openDropdowns={openDropdowns}
       columnsShown={columnsShown}
       searchTerm={searchTerm}
+      columnManagementData={columnManagement}
     />
   ));
 
@@ -111,6 +139,10 @@ const AtlasDataDictionaryContainer = () => {
       className='atlas-data-dictionary-container'
       data-testid='atlas-data-dictionary-container'
     >
+      <ManageColumns
+        handleTableChange={handleTableChange}
+        columnManagementData={columnManagement}
+      />
       <Table>
         <SearchBar
           columnsShown={columnsShown}
@@ -121,6 +153,7 @@ const AtlasDataDictionaryContainer = () => {
         />
         <ColumnHeaders
           handleSort={handleSort}
+          columnManagementData={columnManagement}
           sortConfig={sortConfig as ISortConfig}
         />
         <tbody>

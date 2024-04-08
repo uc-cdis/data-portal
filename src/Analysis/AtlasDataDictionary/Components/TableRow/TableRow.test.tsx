@@ -2,13 +2,14 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import TableRow from './TableRow';
-import { IRowData } from '../../Interfaces/Interfaces';
+import { IColumnManagementData, IRowData } from '../../Interfaces/Interfaces';
+import DefaultAtlasColumnManagement from '../../Utils/DefaultAtlasColumnManagement';
 
 describe('TableRow test', () => {
   const rowData: IRowData = {
     rowID: 0,
     vocabularyID: 'histogram_nonqualitative_hotdog_gp01ADjyWo',
-    conceptID: 10,
+    conceptID: 123123,
     conceptCode: '6GPzNFCLMN',
     conceptName: 'snorkel_1e7hcdgXyQ',
     conceptClassID: 'sjJsjR91xS',
@@ -55,6 +56,7 @@ describe('TableRow test', () => {
             openDropdowns={[2]}
             columnsShown={11}
             searchTerm=''
+            columnManagementData={DefaultAtlasColumnManagement}
           />
         </tbody>
       </table>,
@@ -75,6 +77,7 @@ describe('TableRow test', () => {
             openDropdowns={[0]}
             columnsShown={11}
             searchTerm=''
+            columnManagementData={DefaultAtlasColumnManagement}
           />
         </tbody>
       </table>,
@@ -84,5 +87,33 @@ describe('TableRow test', () => {
         screen.getAllByText(rowData[key], { exact: false })[0],
       ).toBeInTheDocument();
     });
+  });
+
+  it('Renders table data based on columnManagementData', () => {
+    const columnManagementDataMock = {
+      vocabularyID: true,
+      conceptID: false,
+      valueSummary: true,
+    };
+    render(
+      <table>
+        <tbody>
+          <TableRow
+            rowObject={rowData}
+            handleTableChange={() => null}
+            openDropdowns={[0]}
+            columnsShown={3}
+            searchTerm=''
+            columnManagementData={columnManagementDataMock as IColumnManagementData}
+          />
+        </tbody>
+      </table>,
+    );
+    // Check for data that should be visible
+    expect(screen.getAllByText(rowData.vocabularyID, { exact: false })[0]).toBeInTheDocument();
+    expect(screen.getAllByText(rowData.valueStoredAs, { exact: false })[0]).toBeInTheDocument();
+    // Check for data that should not be visible
+    const conceptIDValue = screen.queryByText(rowData.conceptID);
+    expect(conceptIDValue).toBeNull();
   });
 });

@@ -8,7 +8,7 @@ interface IValueSummary {
 }
 
 interface IRowData {
-  rowID: number,
+  rowID: number;
   vocabularyID: string;
   conceptID: number;
   conceptCode: string;
@@ -38,6 +38,23 @@ interface ISortConfig {
   direction: 'ascending' | 'descending' | 'off';
 }
 
+interface IColumnManagementData {
+  vocabularyID: boolean;
+  conceptID: boolean;
+  conceptCode: boolean;
+  conceptName: boolean;
+  conceptClassID: boolean;
+  numberOfPeopleWithVariable: boolean;
+  numberOfPeopleWhereValueIsFilled: boolean;
+  numberOfPeopleWhereValueIsNull: boolean;
+  valueStoredAs: boolean;
+  valueSummary: boolean;
+}
+
 export {
-  IRowData, IValueSummary, ITableData, ISortConfig,
+  IRowData,
+  IValueSummary,
+  ITableData,
+  ISortConfig,
+  IColumnManagementData,
 };
