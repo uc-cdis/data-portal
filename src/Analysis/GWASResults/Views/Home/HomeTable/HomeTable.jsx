@@ -55,6 +55,13 @@ const HomeTable = ({ data }) => {
         nameSearchTerm: event.target.value,
       });
     }
+    if (searchTermKey === 'userName') {
+      setHomeTableState({
+        ...homeTableState,
+        currentPage: 1,
+        userNameSearchTerm: event.target.value,
+      });
+    }
     if (searchTermKey === 'wf_name') {
       setHomeTableState({
         ...homeTableState,
@@ -133,6 +140,29 @@ const HomeTable = ({ data }) => {
             />
           ),
           dataIndex: 'name',
+        },
+      ],
+    },
+    {
+      title: 'User Name',
+      dataIndex: 'userName',
+      key: 'userName',
+      show: homeTableState.columnManagement.showUserName,
+      sorter: (a, b) => a.userName.localeCompare(b.userName),
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'userName'
+        && homeTableState.sortInfo.order,
+      children: [
+        {
+          title: (
+            <Input
+              placeholder='Search by User Name'
+              value={homeTableState.userNameSearchTerm}
+              onChange={(event) => handleSearchTermChange(event, 'userName')}
+              suffix={<SearchOutlined />}
+            />
+          ),
+          dataIndex: 'userName',
         },
       ],
     },
