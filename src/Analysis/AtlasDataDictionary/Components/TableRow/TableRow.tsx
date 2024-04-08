@@ -31,7 +31,6 @@ const TableRow = ({
   searchTerm,
   columnManagementData,
 }: ITableRowProps) => {
-  // const [showDetails, setShowDetails] = useState(false);
   const currentDropdownShouldBeOpen = openDropdowns.includes(rowObject.rowID);
   return (
     <React.Fragment key={rowObject.rowID}>
@@ -108,7 +107,7 @@ const TableRow = ({
             <div className='td-container'>{rowObject.conceptClassID}</div>
           </td>
         )}
-        {columnManagementData.numberPercentPeopleWithVariable && (
+        {columnManagementData.numberOfPeopleWithVariable && (
           <td
             className={
               checkIfCellContainsSearchTerm(
@@ -128,7 +127,7 @@ const TableRow = ({
             </div>
           </td>
         )}
-        {columnManagementData.numberPercentOfPeopleWhereValueIsFilled && (
+        {columnManagementData.numberOfPeopleWhereValueIsFilled && (
           <td
             className={`${
               checkIfCellContainsSearchTerm(
@@ -148,7 +147,7 @@ const TableRow = ({
             </div>
           </td>
         )}
-        {columnManagementData.numberPercentOfPeopleWhereValueIsNull && (
+        {columnManagementData.numberOfPeopleWhereValueIsNull && (
           <td
             className={
               checkIfCellContainsSearchTerm(

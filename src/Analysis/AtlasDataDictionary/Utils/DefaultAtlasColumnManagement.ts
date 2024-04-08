@@ -4,9 +4,9 @@ const DefaultAtlasColumnManagement = {
   conceptCode: true,
   conceptName: true,
   conceptClassID: true,
-  numberPercentPeopleWithVariable: true,
-  numberPercentOfPeopleWhereValueIsFilled: true,
-  numberPercentOfPeopleWhereValueIsNull: true,
+  numberOfPeopleWithVariable: true,
+  numberOfPeopleWhereValueIsFilled: true,
+  numberOfPeopleWhereValueIsNull: true,
   valueStoredAs: true,
   valueSummary: true,
 };

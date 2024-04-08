@@ -75,15 +75,15 @@ const ManageColumns = ({
     },
     {
       label: '# / % of People with Variable',
-      id: 'numberPercentPeopleWithVariable',
+      id: 'numberOfPeopleWithVariable',
     },
     {
       label: '# / % of People Where Variable is Filled',
-      id: 'numberPercentOfPeopleWhereValueIsFilled',
+      id: 'numberOfPeopleWhereValueIsFilled',
     },
     {
       label: '# / % of People Where Variable is Null',
-      id: 'numberPercentOfPeopleWhereValueIsNull',
+      id: 'numberOfPeopleWhereValueIsNull',
     },
     {
       label: 'Value Stored As',

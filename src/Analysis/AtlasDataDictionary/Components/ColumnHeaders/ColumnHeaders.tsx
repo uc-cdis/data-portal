@@ -79,7 +79,7 @@ const ColumnHeaders = ({
     },
     {
       headerKey: 'numberOfPeopleWithVariable',
-      show: columnManagementData.numberPercentPeopleWithVariable,
+      show: columnManagementData.numberOfPeopleWithVariable,
       jsx: (
         <span>
           #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
@@ -90,7 +90,7 @@ const ColumnHeaders = ({
     },
     {
       headerKey: 'numberOfPeopleWhereValueIsFilled',
-      show: columnManagementData.numberPercentOfPeopleWhereValueIsFilled,
+      show: columnManagementData.numberOfPeopleWhereValueIsFilled,
       jsx: (
         <span>
           #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
@@ -101,7 +101,7 @@ const ColumnHeaders = ({
     },
     {
       headerKey: 'numberOfPeopleWhereValueIsNull',
-      show: columnManagementData.numberPercentOfPeopleWhereValueIsNull,
+      show: columnManagementData.numberOfPeopleWhereValueIsNull,
       jsx: (
         <span>
           #&nbsp;/&nbsp;%&nbsp;of&nbsp;People

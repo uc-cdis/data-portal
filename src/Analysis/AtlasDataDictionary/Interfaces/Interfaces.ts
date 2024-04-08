@@ -44,9 +44,9 @@ interface IColumnManagementData {
   conceptCode: boolean;
   conceptName: boolean;
   conceptClassID: boolean;
-  numberPercentPeopleWithVariable: boolean;
-  numberPercentOfPeopleWhereValueIsFilled: boolean;
-  numberPercentOfPeopleWhereValueIsNull: boolean;
+  numberOfPeopleWithVariable: boolean;
+  numberOfPeopleWhereValueIsFilled: boolean;
+  numberOfPeopleWhereValueIsNull: boolean;
   valueStoredAs: boolean;
   valueSummary: boolean;
 }
