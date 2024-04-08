@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderItems from '../../Utils/HeaderItems';
+import ColumnsItems from '../../Utils/ColumnItems';
 import Header from './Header';
 import {
   ISortConfig,
@@ -27,7 +27,7 @@ const ColumnHeaders = ({
         sortConfig={sortConfig}
         sortable={false}
       />
-      {HeaderItems.map((item) => (
+      {ColumnsItems.map((item) => (
         <React.Fragment key={item.headerKey}>
           {columnManagementData[item.headerKey] && (
             <Header

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderItems = [
+const ColumnsItems = [
   {
     headerKey: 'vocabularyID',
     jsx: (
@@ -97,4 +97,4 @@ const HeaderItems = [
   },
 ];
 
-export default HeaderItems;
+export default ColumnsItems;
