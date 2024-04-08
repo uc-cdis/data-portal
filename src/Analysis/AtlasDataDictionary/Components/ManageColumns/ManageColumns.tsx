@@ -55,9 +55,9 @@ const ManageColumns = ({
   };
 
   const formatJSX = (jsx) => {
-    const renderedHTML = ReactDOMServer.renderToStaticMarkup(jsx);
-    const jsxWithoutTags = renderedHTML.replace(/<[^>]*>?/g, ' ').trim();
-    return <React.Fragment>{jsxWithoutTags}</React.Fragment>;
+    const renderedHTMLString = ReactDOMServer.renderToStaticMarkup(jsx);
+    const HTMLStringWithoutTags = renderedHTMLString.replace(/<[^>]*>?/g, ' ').trim();
+    return <React.Fragment>{HTMLStringWithoutTags}</React.Fragment>;
   };
 
   return (
