@@ -28,8 +28,8 @@ const ManageColumns = ({
   const notificationDisplayTimeInMilliseconds = 3000;
   const iconSpanSize = 1;
   const columnManagementResetButtonSpanSize = 11;
-  const columnLabelSpanSize = 8;
-  const switchSpanSize = 3;
+  const columnLabelSpanSize = 9;
+  const switchSpanSize = 2;
 
   useEffect(() => {
     if (showNotification) {
@@ -54,12 +54,10 @@ const ManageColumns = ({
     setShowNotification(true);
   };
 
-  // const formatJSX = (jsx) => jsx.toString().replace(/<br\s*\\?>/g, '');
-
-  const formatToRemoveHTMLElements = (jsx) => {
+  const formatJSX = (jsx) => {
     const renderedHTML = ReactDOMServer.renderToStaticMarkup(jsx);
-    const jsxWithoutTags = renderedHTML.replace(/<[^>]*>?/gm, '');
-    return <span>{jsxWithoutTags}</span>;
+    const jsxWithoutTags = renderedHTML.replace(/<[^>]*>?/g, ' ').trim();
+    return <React.Fragment>{jsxWithoutTags}</React.Fragment>;
   };
 
   return (
@@ -112,7 +110,7 @@ const ManageColumns = ({
                   <HolderIcon />
                 </Grid.Col>
                 <Grid.Col className={'column-label'} span={columnLabelSpanSize}>
-                  {formatToRemoveHTMLElements(item.jsx)}
+                  {formatJSX(item.jsx)}
                 </Grid.Col>
                 <Grid.Col span={switchSpanSize}>
                   <Switch
