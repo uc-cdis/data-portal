@@ -31,6 +31,7 @@ const AtlasDataDictionaryContainer = () => {
     currentPage,
     entriesShown,
     columnsShown,
+    columnManagement,
   } = dataDictionaryTableState;
 
   const entriesHeaderStart = dataDictionaryTableState.entriesShown
@@ -129,7 +130,7 @@ const AtlasDataDictionaryContainer = () => {
       openDropdowns={openDropdowns}
       columnsShown={columnsShown}
       searchTerm={searchTerm}
-      columnManagementData={dataDictionaryTableState.columnManagement}
+      columnManagementData={columnManagement}
     />
   ));
 
@@ -140,7 +141,7 @@ const AtlasDataDictionaryContainer = () => {
     >
       <ManageColumns
         handleTableChange={handleTableChange}
-        columnManagementData={dataDictionaryTableState.columnManagement}
+        columnManagementData={columnManagement}
       />
       <Table>
         <SearchBar
@@ -152,7 +153,7 @@ const AtlasDataDictionaryContainer = () => {
         />
         <ColumnHeaders
           handleSort={handleSort}
-          columnManagementData={dataDictionaryTableState.columnManagement}
+          columnManagementData={columnManagement}
           sortConfig={sortConfig as ISortConfig}
         />
         <tbody>

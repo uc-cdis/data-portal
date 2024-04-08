@@ -93,7 +93,6 @@ const ManageColumns = ({
           </div>
           <hr />
           <Space h='md' />
-
           {ColumnsItems.map((item, i) => (
             <div
               key={i}
@@ -101,9 +100,7 @@ const ManageColumns = ({
               role='button'
               tabIndex={0}
               onKeyPress={() => handleTableChange('columnManagementUpdateOne', item.headerKey)}
-              onClick={() => {
-                handleTableChange('columnManagementUpdateOne', item.headerKey);
-              }}
+              onClick={() => handleTableChange('columnManagementUpdateOne', item.headerKey)}
             >
               <Grid align='flex-start'>
                 <Grid.Col span={iconSpanSize}>

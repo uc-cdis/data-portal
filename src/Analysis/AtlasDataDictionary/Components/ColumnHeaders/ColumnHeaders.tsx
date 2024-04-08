@@ -27,6 +27,7 @@ const ColumnHeaders = ({
         sortConfig={sortConfig}
         sortable={false}
       />
+      {/* All other headers */}
       {ColumnsItems.map((item) => (
         <React.Fragment key={item.headerKey}>
           {columnManagementData[item.headerKey] && (
@@ -35,9 +36,7 @@ const ColumnHeaders = ({
               headerJSX={item.jsx}
               headerKey={item.headerKey}
               sortConfig={sortConfig}
-              sortable={
-                item.headerKey !== 'valueSummary'
-              }
+              sortable={item.headerKey !== 'valueSummary'}
             />
           )}
         </React.Fragment>
