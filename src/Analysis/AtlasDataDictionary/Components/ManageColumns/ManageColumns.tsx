@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {
   Button,
   Popover,
@@ -12,6 +13,7 @@ import RestoreIcon from '../Icons/RestoreIcon';
 import HolderIcon from '../Icons/HolderIcon';
 import { IColumnManagementData } from '../../Interfaces/Interfaces';
 import './ManageColumns.css';
+import ColumnsItems from '../../Utils/ColumnItems';
 
 interface IManageColumns {
   handleTableChange: Function;
@@ -52,48 +54,13 @@ const ManageColumns = ({
     setShowNotification(true);
   };
 
-  const columnControls = [
-    {
-      label: 'Vocabulary ID',
-      id: 'vocabularyID',
-    },
-    {
-      label: 'Concept ID',
-      id: 'conceptID',
-    },
-    {
-      label: 'Concept Code',
-      id: 'conceptCode',
-    },
-    {
-      label: 'Concept Name',
-      id: 'conceptName',
-    },
-    {
-      label: 'Concept Class ID',
-      id: 'conceptClassID',
-    },
-    {
-      label: '# / % of People with Variable',
-      id: 'numberOfPeopleWithVariable',
-    },
-    {
-      label: '# / % of People Where Variable is Filled',
-      id: 'numberOfPeopleWhereValueIsFilled',
-    },
-    {
-      label: '# / % of People Where Variable is Null',
-      id: 'numberOfPeopleWhereValueIsNull',
-    },
-    {
-      label: 'Value Stored As',
-      id: 'valueStoredAs',
-    },
-    {
-      label: 'Value Summary',
-      id: 'valueSummary',
-    },
-  ];
+  // const formatJSX = (jsx) => jsx.toString().replace(/<br\s*\\?>/g, '');
+
+  const formatToRemoveHTMLElements = (jsx) => {
+    const renderedHTML = ReactDOMServer.renderToStaticMarkup(jsx);
+    const jsxWithoutTags = renderedHTML.replace(/<[^>]*>?/gm, '');
+    return <span>{jsxWithoutTags}</span>;
+  };
 
   return (
     <div className='manage-columns-wrapper'>
@@ -129,15 +96,15 @@ const ManageColumns = ({
           <hr />
           <Space h='md' />
 
-          {columnControls.map((item, i) => (
+          {ColumnsItems.map((item, i) => (
             <div
               key={i}
               className='column-control-button'
               role='button'
               tabIndex={0}
-              onKeyPress={() => handleTableChange('columnManagementUpdateOne', item.id)}
+              onKeyPress={() => handleTableChange('columnManagementUpdateOne', item.headerKey)}
               onClick={() => {
-                handleTableChange('columnManagementUpdateOne', item.id);
+                handleTableChange('columnManagementUpdateOne', item.headerKey);
               }}
             >
               <Grid align='flex-start'>
@@ -145,12 +112,12 @@ const ManageColumns = ({
                   <HolderIcon />
                 </Grid.Col>
                 <Grid.Col className={'column-label'} span={columnLabelSpanSize}>
-                  {item.label}
+                  {formatToRemoveHTMLElements(item.jsx)}
                 </Grid.Col>
                 <Grid.Col span={switchSpanSize}>
                   <Switch
                     tabIndex={-1}
-                    checked={columnManagementData[item.id]}
+                    checked={columnManagementData[item.headerKey]}
                   />
                 </Grid.Col>
               </Grid>

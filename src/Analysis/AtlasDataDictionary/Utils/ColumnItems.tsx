@@ -3,6 +3,7 @@ import React from 'react';
 const ColumnsItems = [
   {
     headerKey: 'vocabularyID',
+    label: 'Vocabulary ID',
     jsx: (
       <span>
           Vocabulary
@@ -13,6 +14,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptID',
+    label: 'Concept ID',
     jsx: (
       <span>
           Concept
@@ -23,6 +25,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptCode',
+    label: 'Concept Code',
     jsx: (
       <span>
           Concept
@@ -33,6 +36,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptName',
+    label: 'Concept Name',
     jsx: (
       <span>
           Concept
@@ -43,6 +47,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptClassID',
+    label: 'Concept Class ID',
     jsx: (
       <span>
           Concept
