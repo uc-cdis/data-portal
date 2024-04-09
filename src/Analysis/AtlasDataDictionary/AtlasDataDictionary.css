@@ -4,8 +4,11 @@
   overflow-x: auto;
   height: auto;
   overflow-y: hidden;
+  font-size: 13.5px !important;
 }
-
+.atlas-data-dictionary-container .loading-container {
+  text-align: center;
+}
 .atlas-data-dictionary-container .no-data-found {
   text-align: center;
 }
@@ -124,7 +127,7 @@
 }
 
 .atlas-data-dictionary-container
-.chart-details-wrapper.expanded-container.search-highlight {
+  .chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }

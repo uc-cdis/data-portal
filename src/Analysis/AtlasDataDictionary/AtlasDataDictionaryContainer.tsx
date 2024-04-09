@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
+import { Loader } from '@mantine/core';
 import AtlasDataDictionaryTable from './AtlasDataDictionaryTable';
 import ProtectedContent from '../../Login/ProtectedContent';
+import './AtlasDataDictionary.css';
 
 export const UserLoggedInContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [TableData, setTableData] = useState([{}]);
   const endpoint =
     'https://qa-mickey.planx-pla.net/cohort-middleware/data-dictionary/Retrieve';
-
   useEffect(() => {
     setIsLoading(true);
     fetch(endpoint)
@@ -19,14 +20,14 @@ export const UserLoggedInContent = () => {
         setIsLoading(false);
       });
   }, []);
-
   const TableDataIsValid = 'total' in TableData && 'data' in TableData;
   return (
-    <div>
+    <div className='atlas-data-dictionary-container'>
       {isLoading && (
-        <div>
-          <h1>Loading...</h1>
-          <p>Please remember to login to access the application</p>
+        <div className='loading-container'>
+          <Loader />
+          <br />
+          Loading...
         </div>
       )}
       {!isLoading && TableDataIsValid && (
