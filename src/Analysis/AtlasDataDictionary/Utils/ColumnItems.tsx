@@ -5,29 +5,23 @@ const ColumnsItems = [
     headerKey: 'vocabularyID',
     jsx: (
       <span>
-          Vocabulary
+        Vocabulary
         <br />
-          ID
+        ID
       </span>
     ),
   },
   {
     headerKey: 'conceptID',
-    jsx: (
-      <span>
-          Concept
-        <br />
-          ID
-      </span>
-    ),
+    jsx: <span>Concept ID</span>,
   },
   {
     headerKey: 'conceptCode',
     jsx: (
       <span>
-          Concept
+        Concept
         <br />
-          Code
+        Code
       </span>
     ),
   },
@@ -35,9 +29,9 @@ const ColumnsItems = [
     headerKey: 'conceptName',
     jsx: (
       <span>
-          Concept
+        Concept
         <br />
-          Name
+        Name
       </span>
     ),
   },
@@ -45,9 +39,9 @@ const ColumnsItems = [
     headerKey: 'conceptClassID',
     jsx: (
       <span>
-          Concept
+        Concept
         <br />
-          Class&nbsp;ID
+        Class&nbsp;ID
       </span>
     ),
   },
@@ -55,9 +49,9 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWithVariable',
     jsx: (
       <span>
-          #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
+        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
         <br />
-          with&nbsp;Variable
+        with&nbsp;Variable
       </span>
     ),
   },
@@ -65,9 +59,9 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWhereValueIsFilled',
     jsx: (
       <span>
-          #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
+        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
         <br />
-          where&nbsp;Value&nbsp;is&nbsp;Filled
+        where&nbsp;Value&nbsp;is&nbsp;Filled
       </span>
     ),
   },
@@ -75,9 +69,9 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWhereValueIsNull',
     jsx: (
       <span>
-          #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
+        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
         <br />
-          where&nbsp;Value&nbsp;is&nbsp;Null
+        where&nbsp;Value&nbsp;is&nbsp;Null
       </span>
     ),
   },
@@ -85,9 +79,9 @@ const ColumnsItems = [
     headerKey: 'valueStoredAs',
     jsx: (
       <span>
-          Value
+        Value
         <br />
-          Stored&nbsp;As
+        Stored&nbsp;As
       </span>
     ),
   },
