@@ -28,7 +28,7 @@ const filterTableData = (data, homeTableState) => {
   if (homeTableState.userNameSearchTerm.length > 0) {
     filteredDataResult = filterBySearchTerm(
       filteredDataResult,
-      'userName',
+      'gen3username',
       homeTableState.userNameSearchTerm,
     );
   }

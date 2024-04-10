@@ -55,7 +55,7 @@ const HomeTable = ({ data }) => {
         nameSearchTerm: event.target.value,
       });
     }
-    if (searchTermKey === 'userName') {
+    if (searchTermKey === 'gen3username') {
       setHomeTableState({
         ...homeTableState,
         currentPage: 1,
@@ -145,12 +145,12 @@ const HomeTable = ({ data }) => {
     },
     {
       title: 'User Name',
-      dataIndex: 'userName',
-      key: 'userName',
+      dataIndex: 'gen3username',
+      key: 'gen3username',
       show: homeTableState.columnManagement.showUserName,
-      sorter: (a, b) => a.userName.localeCompare(b.userName),
+      sorter: (a, b) => a.gen3username.localeCompare(b.gen3username),
       sortOrder:
-        homeTableState.sortInfo?.columnKey === 'userName'
+        homeTableState.sortInfo?.columnKey === 'gen3username'
         && homeTableState.sortInfo.order,
       children: [
         {
@@ -158,11 +158,11 @@ const HomeTable = ({ data }) => {
             <Input
               placeholder='Search by User Name'
               value={homeTableState.userNameSearchTerm}
-              onChange={(event) => handleSearchTermChange(event, 'userName')}
+              onChange={(event) => handleSearchTermChange(event, 'gen3username')}
               suffix={<SearchOutlined />}
             />
           ),
-          dataIndex: 'userName',
+          dataIndex: 'gen3username',
         },
       ],
     },
