@@ -3,6 +3,7 @@ import DetermineInitialColumnManagement from './DetermineInitialColumnManagement
 
 const InitialHomeTableState = {
   nameSearchTerm: '',
+  userNameSearchTerm: '',
   wfNameSearchTerm: '',
   submittedAtSelections: [],
   finishedAtSelections: [],

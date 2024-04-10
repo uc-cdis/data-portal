@@ -73,6 +73,7 @@ const getMockWorkflowList = () => {
   if (requestCount % 2 == 0) {
     workflowList.splice(0, 0, {
       name: 'argo-wrapper-workflow-' + createWorkflowNum(),
+      gen3username: `${(requestCount*Math.E).toString(36).substr(2, 5)}@aol.com`,
       wf_name: 'User Added WF Name ' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount/2),
