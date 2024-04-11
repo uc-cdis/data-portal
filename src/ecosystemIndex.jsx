@@ -356,8 +356,6 @@ async function init() {
                           path='/workspace/request-access'
                           component={(props) => (
                             <ProtectedContent
-                              public
-                              filter={() => store.dispatch(fetchLogin())}
                               component={ReduxGenericAccessRequestForm}
                               {...props}
                             />

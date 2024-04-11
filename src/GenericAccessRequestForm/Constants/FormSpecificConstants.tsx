@@ -6,7 +6,6 @@ const defaultEmail = 'heal-support@datacommons.io';
 const StudyRegistrationAccessRequest = {
   name: 'StudyRegistration',
   title: 'Study Registration Access Request',
-  defaultEmail: 'heal-support@datacommons.io',
   description:
     'Please fill out this form to request and be approved for access to register your study with the HEAL Platform.',
   resultTitle: 'Your access request has been submitted!',
