@@ -1,7 +1,7 @@
 import React from 'react';
 import { workspaceRegistrationConfig } from '../../localconf';
 
-const defaultEmail = 'heal-support@datacommons.io';
+const defaultEmail = 'support@datacommons.io';
 
 const StudyRegistrationAccessRequest = {
   name: 'StudyRegistration',
