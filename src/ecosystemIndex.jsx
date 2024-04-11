@@ -354,12 +354,14 @@ async function init() {
                         <Route
                           exact
                           path='/workspace/request-access'
-                          component={(props) => (
-                            <ProtectedContent
-                              component={ReduxGenericAccessRequestForm}
-                              {...props}
-                            />
-                          )}
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxGenericAccessRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
                         />
                       )
                       : null
