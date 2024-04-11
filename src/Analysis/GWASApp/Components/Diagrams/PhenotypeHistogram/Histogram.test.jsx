@@ -8,17 +8,17 @@ const args = {
     {
       start: 0,
       end: 13.499253780913016,
-      nr_persons: 1483,
+      personCount: 1483,
     },
     {
       start: 472.47388233195556,
       end: 485.9731361128686,
-      nr_persons: 1331,
+      personCount: 1331,
     },
     {
       start: 485.9731361128686,
       end: 499.4723898937816,
-      nr_persons: 1488,
+      personCount: 1488,
     },
   ],
   xAxisDataKey: 'key',
