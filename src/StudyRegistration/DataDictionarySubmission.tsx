@@ -342,12 +342,13 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             name='Data Dictionary Name'
             label='Data Dictionary Name'
-            rules={[{ required: true },
+            initialValue=''
+            rules={[
               {
                 validator: handleDataDictionaryNameValidation,
-                validateTrigger: 'onChange',
-              }]}
-            extra={'Supported file types: CSV, TSV, JSON; Maximum file size: 10MB'}
+              },
+              { required: true },
+            ]}
           >
             <Input />
           </Form.Item>
