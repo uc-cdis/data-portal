@@ -1,8 +1,13 @@
-import { fileNameCharactersCheckRegex, invalidWindowsFileNames } from '../../../../../../../../../utils';
+import { validFileNameChecks } from '../../../../../../../../../utils';
+
+const {
+  fileNameCharactersCheckRegex,
+  invalidWindowsFileNames,
+  maximumAllowedFileNameLength,
+} = validFileNameChecks;
 
 const SanitizeFileName = (unSanitizedfileName: string) => {
   let fileName = unSanitizedfileName;
-  const maximumAllowedFileNameLength = 250;
   const fileExtension = '.json';
   // Replace all invalid file name characters
   fileName = fileName.replace(fileNameCharactersCheckRegex, '');

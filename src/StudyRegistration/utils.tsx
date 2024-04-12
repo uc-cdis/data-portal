@@ -2,6 +2,7 @@ import {
   studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL, userAPIPath, requestorPath,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
+import { validFileNameChecks } from '../utils';
 
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
@@ -42,12 +43,12 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
         repository_study_ID: studyId,
       }));
     } else if (updatedValues.repository) {
-        tempStudyIDObj = [{
-          repository_name: updatedValues.repository,
-          repository_study_ID: '',
-          repository_study_link: '',
-          repository_persistent_ID: '',
-      }]
+      tempStudyIDObj = [{
+        repository_name: updatedValues.repository,
+        repository_study_ID: '',
+        repository_study_link: '',
+        repository_persistent_ID: '',
+      }];
     }
     metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
 
@@ -171,4 +172,25 @@ export const doesUserHaveRequestPending = async (
     throw new Error(`Encountered error while checking for existing request: ${JSON.stringify(res)}`);
   }
   return !!res.data?.length;
+};
+
+
+
+export const handleDataDictionaryNameValidation = (_:object, userInput:string): Promise<boolean|void> => {
+  // console.log('here:', userInput);
+  const {
+    fileNameCharactersCheckRegex,
+    invalidWindowsFileNames,
+    maximumAllowedFileNameLength,
+  } = validFileNameChecks;
+  if (userInput.length > maximumAllowedFileNameLength) {
+    return Promise.reject(`File name length is greater than ${maximumAllowedFileNameLength} characters`);
+  }
+  if (invalidWindowsFileNames.includes(userInput)) {
+    return Promise.reject('Data Dictionary name is a reserved file name, please pick a different name.');
+  }
+  if (userInput.includes('@')) {
+    return Promise.reject('Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
+  }
+  return Promise.resolve(true);
 };
