@@ -7,6 +7,15 @@ describe('Tests for handleDataDictionaryNameValidation', () => {
     const validFileName = 'myFile-with_valid_characters123[]()_ .';
     await expect(handleDataDictionaryNameValidation({}, validFileName)).resolves.toBe(true);
   });
+  it('should reject a file name with invalid characters', async () => {
+    const badCharacters = '/:\\*?"<>|:;@#༺$$صباح﷽ㅏ€҉܏܏܏܏܏܏Ɯ܏܏␀😨😧😦😱😫😩🐔🐓ㅑㅕㅛㅠㅡㅣㄷㅍㅎ%^&*:!‮'.split('');
+    for (let i = 0; i < validFileNameChecks.invalidWindowsFileNames.length; i += 1) {
+      const randomAlphaNumericString = Math.random().toString(36).slice(2);
+      const invalidFileName = randomAlphaNumericString + badCharacters[i];
+      await expect(handleDataDictionaryNameValidation({}, invalidFileName)).rejects.toBe(
+        'Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
+    }
+  });
   it('should reject file names that use a reserved filename', async () => {
     for (let i = 0; i < validFileNameChecks.invalidWindowsFileNames.length; i += 1) {
       const invalidFileName = validFileNameChecks.invalidWindowsFileNames[i];
@@ -17,7 +26,7 @@ describe('Tests for handleDataDictionaryNameValidation', () => {
   it('should reject a file name with greater than the allowed number of characters', async () => {
     const invalidFileName = 'a'.repeat(251);
     await expect(handleDataDictionaryNameValidation({}, invalidFileName)).rejects.toBe(
-      'File name length is greater than 250 characters');
+      'Data Dictionary name length is greater than 250 characters');
   });
 
   /*

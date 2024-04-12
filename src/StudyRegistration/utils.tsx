@@ -180,12 +180,8 @@ export const handleDataDictionaryNameValidation = (_:object, userInput:string): 
     invalidWindowsFileNames,
     maximumAllowedFileNameLength,
   } = validFileNameChecks;
-  console.log('userInput', userInput);
   if (userInput.length > maximumAllowedFileNameLength) {
-    return Promise.reject('File name contains invalid characters');
-  }
-  if (userInput.length > maximumAllowedFileNameLength) {
-    return Promise.reject(`File name length is greater than ${maximumAllowedFileNameLength} characters`);
+    return Promise.reject(`Data Dictionary name length is greater than ${maximumAllowedFileNameLength} characters`);
   }
   if (invalidWindowsFileNames.includes(userInput)) {
     return Promise.reject('Data Dictionary name is a reserved file name, please pick a different name.');
