@@ -174,23 +174,26 @@ export const doesUserHaveRequestPending = async (
   return !!res.data?.length;
 };
 
-
-
 export const handleDataDictionaryNameValidation = (_:object, userInput:string): Promise<boolean|void> => {
   // console.log('here:', userInput);
   const {
-    fileNameCharactersCheckRegex,
     invalidWindowsFileNames,
     maximumAllowedFileNameLength,
   } = validFileNameChecks;
+  console.log('userInput', userInput);
+  if (userInput.length > maximumAllowedFileNameLength) {
+    return Promise.reject('File name contains invalid characters');
+  }
   if (userInput.length > maximumAllowedFileNameLength) {
     return Promise.reject(`File name length is greater than ${maximumAllowedFileNameLength} characters`);
   }
   if (invalidWindowsFileNames.includes(userInput)) {
     return Promise.reject('Data Dictionary name is a reserved file name, please pick a different name.');
   }
-  if (userInput.includes('@')) {
+  if (userInput.match(validFileNameChecks.fileNameCharactersCheckRegex)) {
+    console.log('trigged rejection');
     return Promise.reject('Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
   }
+
   return Promise.resolve(true);
 };
