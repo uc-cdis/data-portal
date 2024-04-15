@@ -13,5 +13,22 @@ export const fetchDataVersion = createAsyncThunk(
 
     if (status !== 200) throw Error();
     return data;
-  }
+  },
+);
+
+export const fetchSurvivalCurveVersion = createAsyncThunk(
+  'versionInfo/fetchSurvivalCurveVersion',
+  async () => {
+    const { data, status } = await fetchWithCreds({
+      path: '/analysis/_version',
+      method: 'GET',
+      useCache: true,
+    });
+
+    if (status !== 200) {
+      throw new Error();
+    }
+
+    return data;
+  },
 );
