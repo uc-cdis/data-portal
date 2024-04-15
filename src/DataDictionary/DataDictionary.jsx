@@ -18,6 +18,7 @@ import './DataDictionary.css';
  * @param {boolean} props.layoutInitialized
  * @param {(isGraphView: boolean) => void} props.onSetGraphView
  * @param {string} props.portalVersion
+ * @param {string} props.survivalCurveVersion
  */
 function DataDictionary({
   dataVersion,
@@ -25,6 +26,7 @@ function DataDictionary({
   layoutInitialized,
   onSetGraphView,
   portalVersion,
+  survivalCurveVersion,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isInitialRenderRef = useRef(true);
@@ -114,6 +116,11 @@ function DataDictionary({
                 <span>Portal Version:</span> {portalVersion}
               </div>
             )}
+            {portalVersion && (
+              <div className='data-dictionary__version-info'>
+                <span>Survival Curve Version:</span> {survivalCurveVersion}
+              </div>
+            )}
             <div className='data-dictionary__version-info'>
               <span>Help:</span>{' '}
               <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
@@ -152,6 +159,7 @@ DataDictionary.propTypes = {
   layoutInitialized: PropTypes.bool,
   onSetGraphView: PropTypes.func,
   portalVersion: PropTypes.string,
+  survivalCurveVersion: PropTypes.string,
 };
 
 DataDictionary.defaultProps = {

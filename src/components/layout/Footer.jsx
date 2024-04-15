@@ -10,8 +10,17 @@ import './Footer.css';
  * @param {string} [props.portalVersion]
  * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
-function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
-  let dictionaryVersionMatch = dictionaryUrl.match(/.*\/[^\d]*(?<version>\d+)\.json/i);
+function Footer({
+  dataVersion,
+  links,
+  logos,
+  portalVersion,
+  privacyPolicy,
+  survivalCurveVersion,
+}) {
+  let dictionaryVersionMatch = dictionaryUrl.match(
+    /.*\/[^\d]*(?<version>\d+)\.json/i,
+  );
   let dictionaryVersion = dictionaryVersionMatch?.groups?.version ?? '';
   return (
     <footer>
@@ -30,6 +39,11 @@ function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
           {dictionaryVersion !== '' && (
             <div className='footer__version-info'>
               <span>Dictionary Version:</span> {dictionaryVersion}
+            </div>
+          )}
+          {survivalCurveVersion && (
+            <div className='footer__version-info'>
+              <span>Survival Curve Version:</span> {survivalCurveVersion}
             </div>
           )}
           <div className='footer__version-info'>
@@ -92,7 +106,7 @@ Footer.propTypes = {
     PropTypes.exact({
       href: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
-    })
+    }),
   ),
   logos: PropTypes.arrayOf(
     PropTypes.exact({
@@ -100,7 +114,7 @@ Footer.propTypes = {
       height: PropTypes.number,
       href: PropTypes.string.isRequired,
       src: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   portalVersion: PropTypes.string,
   privacyPolicy: PropTypes.exact({
