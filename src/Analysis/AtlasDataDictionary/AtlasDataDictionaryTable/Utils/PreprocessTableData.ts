@@ -1,4 +1,4 @@
-import { IRowData } from '../../Interfaces/Interfaces';
+import { IRowData } from '../Interfaces/Interfaces';
 
 const PreprocessTableData = (TableData: any): IRowData[] => {
   const UnprocessedTableData = TableData.data;

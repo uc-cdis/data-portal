@@ -1,4 +1,4 @@
-import { IColumnManagementData } from '../../Interfaces/Interfaces';
+import { IColumnManagementData } from '../Interfaces/Interfaces';
 import DefaultAtlasColumnManagement from './DefaultAtlasColumnManagement';
 
 const hasSameKeys = (a, b) => {

@@ -1,4 +1,4 @@
-import { ISortConfig } from '../../Interfaces/Interfaces';
+import { ISortConfig } from '../Interfaces/Interfaces';
 
 const DetermineNextSortDirection = (sortConfig: ISortConfig, sortKey: string|null) => {
   let direction:ISortConfig['direction'] = 'ascending';
