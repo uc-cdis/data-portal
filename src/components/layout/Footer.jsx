@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { contactEmail, dictionaryUrl } from '../../localconf';
+import { contactEmail } from '../../localconf';
 import './Footer.css';
+import { getDictionaryVersion } from '../../DataDictionary/utils';
 
 /**
  * @param {Object} props
@@ -18,25 +19,22 @@ function Footer({
   privacyPolicy,
   survivalCurveVersion,
 }) {
-  let dictionaryVersionMatch = dictionaryUrl.match(
-    /.*\/[^\d]*(?<version>\d+)\.json/i,
-  );
-  let dictionaryVersion = dictionaryVersionMatch?.groups?.version ?? '';
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
         <div className='footer__version-info-area'>
-          {dataVersion !== '' && (
+          {dataVersion && (
             <div className='footer__version-info'>
               <span>Data Release Version:</span> {dataVersion}
             </div>
           )}
-          {portalVersion !== '' && (
+          {portalVersion && (
             <div className='footer__version-info'>
               <span>Portal Version:</span> {portalVersion}
             </div>
           )}
-          {dictionaryVersion !== '' && (
+          {dictionaryVersion && (
             <div className='footer__version-info'>
               <span>Dictionary Version:</span> {dictionaryVersion}
             </div>
@@ -102,6 +100,7 @@ function Footer({
 
 Footer.propTypes = {
   dataVersion: PropTypes.string,
+  survivalCurveVersion: PropTypes.string,
   links: PropTypes.arrayOf(
     PropTypes.exact({
       href: PropTypes.string.isRequired,
