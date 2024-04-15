@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import { Loader } from '@mantine/core';
-import AtlasDataDictionaryTable from './AtlasDataDictionaryTable';
+import AtlasDataDictionaryTable from './AtlasDataDictionaryTable/AtlasDataDictionaryTable';
 import ProtectedContent from '../../Login/ProtectedContent';
+import { cohortMiddlewarePath } from '../../localconf';
 import './AtlasDataDictionary.css';
 
 export const UserLoggedInContent = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [TableData, setTableData] = useState([{}]);
-  const endpoint =
-    'https://qa-mickey.planx-pla.net/cohort-middleware/data-dictionary/Retrieve';
+  const endpoint = `${cohortMiddlewarePath}/data-dictionary/Retrieve`;
+
+  async function safeParseJSON(response:any) {
+    const body = await response.text();
+    try {
+      return JSON.parse(body);
+    } catch (err) {
+      return { status: response.status, response: JSON.stringify(response), error: err.message };
+    }
+  }
+
   useEffect(() => {
     setIsLoading(true);
     fetch(endpoint)
-      .then((response) => response.json())
+      .then((response) => safeParseJSON(response))
       .then((data) => {
         setTableData(data);
-        console.log(data);
         setIsLoading(false);
       });
-  }, []);
+  }, [endpoint]);
+
   const TableDataIsValid = 'total' in TableData && 'data' in TableData;
+  if (!isLoading && !TableDataIsValid) {
+    // eslint-disable-next-line
+    console.error(TableData);
+    return (<h3 className='data-not-available'>Data Not Available</h3>);
+  }
   return (
-    <div className='atlas-data-dictionary-container'>
+    <React.Fragment>
       {isLoading && (
         <div className='loading-container'>
           <Loader />
@@ -31,34 +46,26 @@ export const UserLoggedInContent = () => {
         </div>
       )}
       {!isLoading && TableDataIsValid && (
-        /*  <ProtectedContent
-            public
-            match={true}
-            location={location}
-            history={history}
-            component={() => <AtlasDataDictionaryTable TableData={TableData} />}
-          />
-          /* https://qa-mickey.planx-pla.net/dev.html/analysis/AtlasDataDictionary */
         <AtlasDataDictionaryTable TableData={TableData} />
       )}
-      {!isLoading && !TableDataIsValid && (
-        <h1>Recieved Table Data is Invalid</h1>
-      )}
-    </div>
+    </React.Fragment>
   );
 };
 
 const AtlasDataDictionaryContainer = () => {
   const location = useLocation();
   const history = useHistory();
-
+  const match = useRouteMatch();
   return (
-    <ProtectedContent
-      public
-      location={location}
-      history={history}
-      component={() => <UserLoggedInContent />}
-    />
+    <div className='atlas-data-dictionary-container'>
+      <ProtectedContent
+        public
+        location={location}
+        history={history}
+        match={match}
+        component={() => <UserLoggedInContent />}
+      />
+    </div>
   );
 };
 

@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Table } from '@mantine/core';
-import ColumnHeaders from './Components/ColumnHeaders/ColumnHeaders';
-import EntriesHeader from './Components/EntriesHeader/EntriesHeader';
-import SearchBar from './Components/SearchBar/SearchBar';
-import TableRow from './Components/TableRow/TableRow';
-import PaginationControls from './Components/PaginationControls/PaginationControls';
-import { ISortConfig } from './Interfaces/Interfaces';
-import PreprocessTableData from './Utils/PreprocessTableData';
-import InitialDataDictionaryTableState from './Utils/InitialDataDictionaryTableState';
+import ColumnHeaders from '../Components/ColumnHeaders/ColumnHeaders';
+import EntriesHeader from '../Components/EntriesHeader/EntriesHeader';
+import SearchBar from '../Components/SearchBar/SearchBar';
+import TableRow from '../Components/TableRow/TableRow';
+import PaginationControls from '../Components/PaginationControls/PaginationControls';
+import { ISortConfig } from '../Interfaces/Interfaces';
+import PreprocessTableData from '../Utils/PreprocessTableData';
+import InitialDataDictionaryTableState from '../Utils/InitialDataDictionaryTableState';
 import {
   DetermineNextSortDirection,
   SortDataWithDirection,
-} from './Utils/SortUtils';
-import ManageColumns from './Components/ManageColumns/ManageColumns';
-import DefaultAtlasColumnManagement from './Utils/DefaultAtlasColumnManagement';
+} from '../Utils/SortUtils';
+import ManageColumns from '../Components/ManageColumns/ManageColumns';
+import DefaultAtlasColumnManagement from '../Utils/DefaultAtlasColumnManagement';
 
 const AtlasDataDictionaryTable = ({ TableData }) => {
   const preprocessedTableData = PreprocessTableData(TableData);

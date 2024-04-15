@@ -4,12 +4,13 @@
   overflow-x: auto;
   height: auto;
   overflow-y: hidden;
-  font-size: 13.5px !important;
 }
+
 .atlas-data-dictionary-container .loading-container {
   text-align: center;
 }
-.atlas-data-dictionary-container .no-data-found {
+
+.atlas-data-dictionary-container .data-not-available {
   text-align: center;
 }
 

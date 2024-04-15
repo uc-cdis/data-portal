@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import AtlasDataDictionaryTable from './AtlasDataDictionaryTable';
-import TableData from './TestData/TableData';
+import TableData from '../TestData/TableData';
 
 const atlasDataDictionaryUITestIds = [
   'atlas-data-dictionary-table',
