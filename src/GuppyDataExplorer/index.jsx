@@ -14,6 +14,7 @@ import ExplorerFilter, { DisabledExplorerFilter } from './ExplorerFilter';
 import './Explorer.css';
 import { FILTER_TYPE } from './ExplorerFilterSetWorkspace/utils';
 import { useStore } from 'react-redux';
+import { getDictionaryVersion } from '../DataDictionary/utils';
 
 /** @typedef {import("../redux/types").RootState} RootState */
 /** @typedef {import("./types").OptionFilter} OptionFilter */
@@ -95,6 +96,7 @@ function ExplorerDashboard() {
     }
   }
 
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <GuppyWrapper
       key={explorerId}
@@ -129,14 +131,19 @@ function ExplorerDashboard() {
                 )}
               </div>
               <div className='explorer__version-info-area'>
-                {dataVersion !== '' && (
+                {dataVersion && (
                   <div className='explorer__version-info'>
                     <span>Data Release Version:</span> {dataVersion}
                   </div>
                 )}
-                {portalVersion !== '' && (
+                {portalVersion && (
                   <div className='explorer__version-info'>
                     <span>Portal Version:</span> {portalVersion}
+                  </div>
+                )}
+                {dictionaryVersion && (
+                  <div className='footer__version-info'>
+                    <span>Dictionary Version:</span> {dictionaryVersion}
                   </div>
                 )}
                 {survivalCurveVersion && (

@@ -9,6 +9,7 @@ import DataDictionaryGraph from './graph/DataDictionaryGraph';
 import ReduxGraphCalculator from './graph/GraphCalculator';
 import ReduxDictionarySearcher from './search/DictionarySearcher';
 import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
+import { getDictionaryVersion } from './utils';
 import './DataDictionary.css';
 
 /**
@@ -54,6 +55,7 @@ function DataDictionary({
     dictionarySearcherRef.current.launchClearSearchFromOutside();
   }
 
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <Dashboard>
       <Dashboard.Sidebar className='data-dictionary__sidebar'>
@@ -106,17 +108,22 @@ function DataDictionary({
         </div>
         <div className='data-dictionary__version-info-area'>
           <div className='data-dictionary__version-info-list'>
-            {dataVersion !== '' && (
+            {dataVersion && (
               <div className='data-dictionary__version-info'>
                 <span>Data Release Version:</span> {dataVersion}
               </div>
             )}
-            {portalVersion !== '' && (
+            {portalVersion && (
               <div className='data-dictionary__version-info'>
                 <span>Portal Version:</span> {portalVersion}
               </div>
             )}
-            {portalVersion && (
+            {dictionaryVersion && (
+              <div className='footer__version-info'>
+                <span>Dictionary Version:</span> {dictionaryVersion}
+              </div>
+            )}
+            {survivalCurveVersion && (
               <div className='data-dictionary__version-info'>
                 <span>Survival Curve Version:</span> {survivalCurveVersion}
               </div>
