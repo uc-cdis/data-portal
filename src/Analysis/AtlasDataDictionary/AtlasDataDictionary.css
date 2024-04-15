@@ -6,11 +6,9 @@
   overflow-y: hidden;
 }
 
+.atlas-data-dictionary-container .data-not-available,
+.atlas-data-dictionary-container .no-data-found,
 .atlas-data-dictionary-container .loading-container {
-  text-align: center;
-}
-
-.atlas-data-dictionary-container .data-not-available {
   text-align: center;
 }
 
@@ -128,7 +126,7 @@
 }
 
 .atlas-data-dictionary-container
-  .chart-details-wrapper.expanded-container.search-highlight {
+.chart-details-wrapper.expanded-container.search-highlight {
   background: #fff;
   border: 2px solid #ef8523;
 }
