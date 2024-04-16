@@ -1,5 +1,6 @@
 import React from 'react';
-import AtlasDataDictionaryContainer from './AtlasDataDictionaryContainer';
+import AtlasDataDictionaryTable from './AtlasDataDictionaryTable';
+import TableData from './TestData/TableData';
 
 export default {
   title: 'Tests2/AtlasDataDictionary/Components/AtlasDataDictionaryContainer',
@@ -8,7 +9,7 @@ export default {
 
 const MockTemplate = () => (
   <React.Fragment>
-    <AtlasDataDictionaryContainer />
+    <AtlasDataDictionaryTable TableData={TableData} />
   </React.Fragment>
 );
 

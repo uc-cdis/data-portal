@@ -27,16 +27,15 @@ describe('AtlasDataDictionaryLoading component', () => {
       text: () => Promise.resolve(JSON.stringify(TableData)),
     });
     render(<AtlasDataDictionaryLoading />);
-    /* await waitFor(() => expect(getByText(TableData.data[0].conceptName)).toBeInTheDocument());
-    await waitFor(() => expect(getByText(TableData.data[0].conceptCode)).toBeInTheDocument());
-    await waitFor(() => expect(getByText(TableData.data[0].vocabularyID)).toBeInTheDocument()); */
     await waitFor(() => expect(screen.getByText(TableData.data[0].conceptName)).toBeInTheDocument());
+    // After the first one has been found, test all others:
     const values = Object.values(TableData.data[0]);
     for (let i = 0; i < values.length; i += 1) {
       // if there is a value and it is a number or string, check that it is in the document
-      if(values[i] && (values[i].toFixed || values[i].substring)) {
-        const subTitle = screen.getAllByText(values[i], { exact: false });
-        await waitFor(() => expect(subTitle[0]).toBeInTheDocument());
+      if (values[i] && (values[i].toFixed || values[i].substring)) {
+        const textMatches = screen.getAllByText(values[i], { exact: false });
+        // eslint-disable-next-line no-await-in-loop
+        await waitFor(() => expect(textMatches[0]).toBeInTheDocument());
       }
     }
   });
