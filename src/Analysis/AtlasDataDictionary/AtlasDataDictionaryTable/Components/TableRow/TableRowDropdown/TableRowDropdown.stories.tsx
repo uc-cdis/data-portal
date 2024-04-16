@@ -3,7 +3,7 @@ import TableRowDropdown from './TableRowDropdown';
 import TableData from '../../../TestData/TableData';
 import PreprocessTableData from '../../../Utils/PreprocessTableData';
 import { IRowData } from '../../../Interfaces/Interfaces';
-import '../../../../AtlasDataDictionary.css'
+import '../../../../AtlasDataDictionary.css';
 
 export default {
   title: 'Tests2/AtlasDataDictionary/Components/TableRowDropdown',
@@ -34,9 +34,9 @@ const NonNumericTemplate = () => (
 const NumericTemplate = () => (
   <div className='atlas-data-dictionary-container'>
     <table>
-    <TableRowDropdown
-      {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
-    />
+      <TableRowDropdown
+        {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
+      />
     </table>
   </div>
 );

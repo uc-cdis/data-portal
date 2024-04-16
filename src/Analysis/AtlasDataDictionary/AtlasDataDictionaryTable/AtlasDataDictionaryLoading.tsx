@@ -30,7 +30,10 @@ const AtlasDataDictionaryLoading = () => {
       });
   }, [endpoint]);
 
-  const TableDataIsValid = 'total' in TableData && 'data' in TableData;
+  const TableDataIsValid = typeof TableData === 'object'
+   && 'total' in TableData
+   && 'data' in TableData;
+
   if (!isLoading && !TableDataIsValid) {
     // eslint-disable-next-line
       console.error(TableData);

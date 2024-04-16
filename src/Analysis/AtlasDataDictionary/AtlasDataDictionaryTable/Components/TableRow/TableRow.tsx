@@ -63,10 +63,6 @@ const TableRow = ({
               rowObject.vocabularyID,
               searchTerm,
             )}
-            aria-description={checkIfCellContainsSearchTerm(
-              rowObject.vocabularyID,
-              searchTerm,
-            ) && 'highlighted search result'}
           >
             <div className={'td-container '}>{rowObject.vocabularyID}</div>
           </td>
@@ -77,10 +73,6 @@ const TableRow = ({
               rowObject.conceptID.toString(),
               searchTerm,
             )}
-            aria-description={checkIfCellContainsSearchTerm(
-              rowObject.vocabularyID,
-              searchTerm,
-            ) && 'highlighted search result'}
           >
             <div className='td-container'>{rowObject.conceptID}</div>
           </td>
