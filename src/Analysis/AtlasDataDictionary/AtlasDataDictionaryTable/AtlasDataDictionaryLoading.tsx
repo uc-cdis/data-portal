@@ -36,8 +36,12 @@ const AtlasDataDictionaryLoading = () => {
 
   if (!isLoading && !TableDataIsValid) {
     // eslint-disable-next-line
-      console.error(TableData);
-    return (<h3 className='data-not-available' data-testid='data-not-available'>Data Not Available</h3>);
+    console.error(TableData);
+    return (
+      <h3 className='data-not-available' data-testid='data-not-available'>
+        Data Not Available
+      </h3>
+    );
   }
   return (
     <React.Fragment>
