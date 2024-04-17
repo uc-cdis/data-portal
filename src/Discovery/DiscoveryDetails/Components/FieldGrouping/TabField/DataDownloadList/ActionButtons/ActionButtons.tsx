@@ -48,6 +48,9 @@ const ActionButtons = ({
   if (manifestFieldName) {
     fileManifest = resourceInfo?.[manifestFieldName] || [];
   }
+
+  // Study level metabutton should show only if the downloading study level metadata value is enabled
+  // and resourceInfo includes the study metadata field name reference from the discovery config
   const showDownloadStudyLevelMetadataButton = Boolean(
     discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
       && studyMetadataFieldNameReference
@@ -159,7 +162,7 @@ const ActionButtons = ({
             <Button
               className='discovery-action-bar-button'
               data-testid='download-study-level-metadata'
-              disabled={Boolean(noData || downloadStatus.inProgress)}
+              disabled={Boolean(downloadStatus.inProgress)}
               onClick={() => DownloadJsonFile(
                 'study-level-metadata',
                 studyMetadataFieldNameReference

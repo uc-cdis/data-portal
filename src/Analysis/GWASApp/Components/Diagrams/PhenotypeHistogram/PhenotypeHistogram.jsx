@@ -65,7 +65,7 @@ const PhenotypeHistogram = ({
   const histogramArgs = {
     data: data.bins,
     xAxisDataKey: 'start',
-    barDataKey: 'nr_persons',
+    barDataKey: 'personCount',
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
