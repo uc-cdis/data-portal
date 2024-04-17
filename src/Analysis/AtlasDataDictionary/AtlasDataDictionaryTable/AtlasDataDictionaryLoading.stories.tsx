@@ -35,7 +35,7 @@ Mocked403Response.parameters = {
   msw: {
     handlers: {
       auth: rest.get(endpoint, (req, res, ctx) => res(ctx.status(403),
-        ctx.json({ errorMessage: 'Error' }))),
+        ctx.json({ errorMessage: 'Error 403' }))),
     },
   },
 };
