@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { rest } from 'msw';
 import AtlasDataDictionaryLoading from './AtlasDataDictionaryLoading';
@@ -44,7 +45,8 @@ export const Mocked504Response = MockTemplate.bind({});
 Mocked504Response.parameters = {
   msw: {
     handlers: {
-      auth: rest.get(endpoint, (req, res, ctx) => res(ctx.delay(3000), ctx.status(504), ctx.json('server timeout'))),
+      auth: rest.get(endpoint, (req, res, ctx) => res(ctx.delay(3000),
+        ctx.status(504), ctx.json('server timeout'))),
     },
   },
 };
