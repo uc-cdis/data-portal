@@ -32,6 +32,10 @@
   transition: 0.3s;
 }
 
+.atlas-data-dictionary-container table thead.column-headers .extra-wide-header {
+  padding-right: 1em;
+}
+
 .atlas-data-dictionary-container table caption.entries-header th {
   cursor: default;
   font-weight: normal;

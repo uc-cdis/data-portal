@@ -13,7 +13,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptID',
-    jsx: <span>Concept ID</span>,
+    jsx: <span className='extra-wide-header'>Concept ID</span>,
   },
   {
     headerKey: 'conceptCode',
