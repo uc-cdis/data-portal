@@ -10,12 +10,13 @@ import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
 import sessionMonitor from '../SessionMonitor';
-import DataDictionaryContainer from './DataDictionary/DataDictionaryContainer';
+import AtlasDataDictionaryContainer from './AtlasDataDictionary/AtlasDataDictionaryContainer';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import './AnalysisApp.css';
+import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 
 const queryClient = new QueryClient();
 
@@ -134,12 +135,13 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
-    case 'DataDictionary':
+    case 'AtlasDataDictionary': {
       return (
         <div className='analysis-app_flex_row'>
-          <DataDictionaryContainer />
+          <AtlasDataDictionaryContainer />
         </div>
       );
+    }
     case 'GWASUIApp': {
       return (
         <TourProvider
@@ -163,6 +165,9 @@ class AnalysisApp extends React.Component {
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
+            {this.state.app.title === 'OHDSI Atlas' && (
+              <AtlasDataDictionaryButton />
+            )}
             <iframe
               className='analysis-app__iframe'
               title='Analysis App'

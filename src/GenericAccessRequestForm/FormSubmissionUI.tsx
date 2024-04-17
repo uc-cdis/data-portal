@@ -7,6 +7,7 @@ const FormSubmissionUI = ({
   formSubmissionStatus,
   setFormSubmissionStatus,
   setReqAccessRequestPending,
+  supportEmail,
 }) => (
   <div className='generic-access-container'>
     <div className='generic-access-form-container'>
@@ -14,7 +15,7 @@ const FormSubmissionUI = ({
         <Result
           status={formSubmissionStatus.status}
           title={specificFormInfo.resultTitle}
-          subTitle={specificFormInfo.resultSubtitle}
+          subTitle={specificFormInfo.resultSubtitle(supportEmail)}
           extra={[
             <Link
               key={specificFormInfo.successRedirectLink}
@@ -27,7 +28,7 @@ const FormSubmissionUI = ({
       ) : (
         <Result
           status={formSubmissionStatus.status}
-          title='A problem has occurred during submitting the request!'
+          title='A problem has occurred while submitting the request!'
           subTitle={formSubmissionStatus.text}
           extra={[
             <Button

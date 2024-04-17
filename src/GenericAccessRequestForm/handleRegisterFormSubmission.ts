@@ -18,6 +18,7 @@ const handleRegisterFormSubmission = async (
   studyNumber,
   studyName,
   setReqAccessRequestPending,
+  supportEmail: string,
 ) => {
   const determineSubjectLine = () => {
     if (specificFormInfo.name === 'WorkspaceAccessRequest') {
@@ -42,7 +43,7 @@ const handleRegisterFormSubmission = async (
       setFormSubmissionButtonDisabled(true);
       setFormSubmissionStatus({
         status: 'info',
-        text: specificFormInfo.pendingRequestText,
+        text: specificFormInfo.pendingRequestText(supportEmail),
       });
       return;
     }

@@ -149,6 +149,7 @@ Below is an example, with inline comments describing what each JSON block config
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
+      "hideNavLink": false// optional default false; hide login link in main naviagion
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
@@ -192,6 +193,7 @@ Below is an example, with inline comments describing what each JSON block config
     // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "forceSingleLoginDropdownOptions": [], // optional, Values set in array will be used to force single login option dropdown for a list of IdPs. For example, if a single InCommon login needs to be shown as dropdown, this option will contain `["InCommon Login"]` and will be displayed as such.
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
@@ -393,6 +395,12 @@ Below is an example, with inline comments describing what each JSON block config
           ],
           "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
             "consortium_id"
+          ],
+          "defaultFilters": [ // optional; select default filters on page load
+            {
+              "field": "redacted", // field name
+              "values": ["No"] // selected values on page load
+            }
           ]
         }
       ]
@@ -566,7 +574,10 @@ Below is an example, with inline comments describing what each JSON block config
     // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
-        "field": "name"
+        "field": "title"
+      },
+      "subHeader": { // if present, shows a subheader field below the header.
+        "field": "subtitle"
       },
       "fieldsToShow": [ // fields on the study page are grouped in order to separate logically distinct groups of fields
         {
@@ -625,6 +636,7 @@ Below is an example, with inline comments describing what each JSON block config
     // takes precedence over "studyPageFields"
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
+      "subHeaderField": "project_subtitle", // optional, if present, display a subheader under header using the field configured
       "tabs": [
         {
           "tabName": "Study",

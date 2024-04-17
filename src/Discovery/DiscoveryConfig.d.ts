@@ -9,6 +9,10 @@ export interface DiscoveryConfig {
             enableDownloadZip: boolean
             downloadZipButtonText?: string
             verifyExternalLogins?: boolean
+            studyMetadataFieldName?: string
+            enableDownloadStudyMetadata?: boolean
+            variableMetadataFieldName?: string
+            enableDownloadVariableMetadata?: boolean
         },
         // explorationIntegration: {
         //     enabled: boolean // not supported
@@ -102,6 +106,9 @@ export interface DiscoveryConfig {
         header?: {
             field: string
         },
+        subHeader?: {
+            field: string
+        },
         downloadLinks?: {
             field: string
             name?: string
@@ -122,6 +129,7 @@ export interface DiscoveryConfig {
     },
     detailView: {
         headerField: string
+        subHeaderField?: string
         tabs: {
             tabName: string
             groups: {

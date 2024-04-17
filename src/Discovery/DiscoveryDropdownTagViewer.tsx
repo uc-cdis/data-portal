@@ -62,6 +62,9 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
             [tag]: props.selectedTags[tag] ? undefined : true,
           });
         }}
+        onClear={() => {
+          props.setSelectedTags({});
+        }}
       >
         { tagArray.map((tag) => (
           <Option
