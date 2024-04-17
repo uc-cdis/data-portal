@@ -6,7 +6,9 @@
   overflow-y: hidden;
 }
 
-.atlas-data-dictionary-container .no-data-found {
+.atlas-data-dictionary-container .data-not-available,
+.atlas-data-dictionary-container .no-data-found,
+.atlas-data-dictionary-container .loading-container {
   text-align: center;
 }
 
@@ -28,6 +30,10 @@
   cursor: pointer;
   user-select: none;
   transition: 0.3s;
+}
+
+.atlas-data-dictionary-container table thead.column-headers .extra-wide-header {
+  padding-right: 1em;
 }
 
 .atlas-data-dictionary-container table caption.entries-header th {
