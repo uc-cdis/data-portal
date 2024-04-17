@@ -3,6 +3,7 @@ import TableRowDropdown from './TableRowDropdown';
 import TableData from '../../../TestData/TableData';
 import PreprocessTableData from '../../../Utils/PreprocessTableData';
 import { IRowData } from '../../../Interfaces/Interfaces';
+import '../../../../AtlasDataDictionary.css';
 
 export default {
   title: 'Tests2/AtlasDataDictionary/Components/TableRowDropdown',
@@ -21,7 +22,8 @@ const defaultArgs = {
   showDetails: true,
   columnsShown: 11,
   rowObject: firstNonNumericRow as IRowData,
-  searchInputValue: (firstNonNumericRow as IRowData).conceptName,
+  searchTerm: (firstNonNumericRow as IRowData).conceptName,
+  dropdownIsOpen: true,
 };
 
 const NonNumericTemplate = () => (
@@ -31,9 +33,11 @@ const NonNumericTemplate = () => (
 );
 const NumericTemplate = () => (
   <div className='atlas-data-dictionary-container'>
-    <TableRowDropdown
-      {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
-    />
+    <table>
+      <TableRowDropdown
+        {...{ ...defaultArgs, rowObject: firstNumericRow as IRowData }}
+      />
+    </table>
   </div>
 );
 
