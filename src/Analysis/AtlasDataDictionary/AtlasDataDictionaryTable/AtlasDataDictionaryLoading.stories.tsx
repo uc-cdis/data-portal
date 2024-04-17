@@ -40,8 +40,8 @@ Mocked403Response.parameters = {
   },
 };
 
-export const Mocked503Response = MockTemplate.bind({});
-Mocked503Response.parameters = {
+export const Mocked504Response = MockTemplate.bind({});
+Mocked504Response.parameters = {
   msw: {
     handlers: {
       auth: rest.get(endpoint, (req, res, ctx) => res(ctx.delay(3000), ctx.status(504), ctx.json('server timeout'))),
