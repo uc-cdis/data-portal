@@ -177,7 +177,7 @@ export const doesUserHaveRequestPending = async (
 export const handleDataDictionaryNameValidation = (_:object, userInput:string): Promise<boolean|void> => {
   if (userInput.length > validFileNameChecks.maximumAllowedFileNameLength) {
     return Promise.reject(
-      `Data Dictionary name length is greater than ${validFileNameChecks.maximumAllowedFileNameLength} characters`
+      `Data Dictionary name length is greater than ${validFileNameChecks.maximumAllowedFileNameLength} characters`,
     );
   }
   if (validFileNameChecks.invalidWindowsFileNames.includes(userInput)) {
