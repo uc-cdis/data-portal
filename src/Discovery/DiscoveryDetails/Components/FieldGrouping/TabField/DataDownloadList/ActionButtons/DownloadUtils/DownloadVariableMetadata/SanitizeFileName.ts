@@ -1,6 +1,5 @@
 import { validFileNameChecks } from '../../../../../../../../../utils';
 
-
 const SanitizeFileName = (unSanitizedfileName: string) => {
   let fileName = unSanitizedfileName;
   const fileExtension = '.json';

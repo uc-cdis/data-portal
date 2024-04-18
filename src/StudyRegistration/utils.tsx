@@ -175,7 +175,6 @@ export const doesUserHaveRequestPending = async (
 };
 
 export const handleDataDictionaryNameValidation = (_:object, userInput:string): Promise<boolean|void> => {
-  // console.log('here:', userInput);
   const {
     invalidWindowsFileNames,
     maximumAllowedFileNameLength,
@@ -187,9 +186,7 @@ export const handleDataDictionaryNameValidation = (_:object, userInput:string): 
     return Promise.reject('Data Dictionary name is a reserved file name, please pick a different name.');
   }
   if (userInput.match(validFileNameChecks.fileNameCharactersCheckRegex)) {
-    console.log('trigged rejection');
     return Promise.reject('Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
   }
-
   return Promise.resolve(true);
 };

@@ -1,9 +1,7 @@
 import SanitizeFileName from './SanitizeFileName';
 import { validFileNameChecks } from '../../../../../../../../../utils';
 
-const {
-  invalidWindowsFileNames,
-} = validFileNameChecks;
+const { invalidWindowsFileNames } = validFileNameChecks;
 
 describe('SanitizeFileName', () => {
   it(`should sanitize a file name with valid characters and return the
