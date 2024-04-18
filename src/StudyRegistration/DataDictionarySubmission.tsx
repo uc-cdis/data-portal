@@ -342,7 +342,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             name='Data Dictionary Name'
             label='Data Dictionary Name'
-            initialValue=''
             rules={[
               {
                 validator: handleDataDictionaryNameValidation,
