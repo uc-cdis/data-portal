@@ -11,12 +11,11 @@ describe('Tests for handleDataDictionaryNameValidation', () => {
     const numberOfFileNameTests = 500;
     for (let i = 0; i < numberOfFileNameTests; i += 1) {
       const randomAlphaNumericString = Math.random().toString(36).slice(2);
-      const otherAllowedCharacters = '_-()[]'.split('');
+      const otherAllowedCharacters = '_-()[].'.split('');
       const randomAllowedCharter = otherAllowedCharacters[
         Math.floor(Math.random() * (otherAllowedCharacters.length))
       ];
       const testFileName = randomAlphaNumericString + randomAllowedCharter;
-      console.log(testFileName)
       await expect(handleDataDictionaryNameValidation({}, testFileName)).resolves.toBe(true);
     }
   });
