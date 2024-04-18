@@ -12,6 +12,7 @@ Below is an example, with inline comments describing what each JSON block config
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
+  "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
@@ -48,6 +49,13 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "metaDescription": "", // optional; meta description used by search engines
+    "banner": [ // optional; banner displayed accross top of all of data portal
+      {
+        "type": "info", // Type of Alert styles, options: success, info, warning, error
+        "message": "I'm a banner", // message to be displayed
+        "resetMsgDays": 365// optional; set to number of days until displaying banner again, defaults to 365
+      }
+    ],
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
@@ -141,6 +149,7 @@ Below is an example, with inline comments describing what each JSON block config
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
+      "hideNavLink": false// optional default false; hide login link in main naviagion
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
@@ -184,6 +193,7 @@ Below is an example, with inline comments describing what each JSON block config
     // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "forceSingleLoginDropdownOptions": [], // optional, Values set in array will be used to force single login option dropdown for a list of IdPs. For example, if a single InCommon login needs to be shown as dropdown, this option will contain `["InCommon Login"]` and will be displayed as such.
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
@@ -250,6 +260,8 @@ Below is an example, with inline comments describing what each JSON block config
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
       ],
+      "dicomServerURL": "", // optional; field to specify the sub-path to DICOM Server. It uses `dicom-server` as a default for backward compatibility if undefined
+      "dicomViewerUrl": "", // optional; field to specify the sub-path to DICOM Viewer. It uses `dicom-viewer` as a default for backward compatibility if undefined
       "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
@@ -380,6 +392,15 @@ Below is an example, with inline comments describing what each JSON block config
             "project_id",
             "data_type",
             "data_format"
+          ],
+          "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
+            "consortium_id"
+          ],
+          "defaultFilters": [ // optional; select default filters on page load
+            {
+              "field": "redacted", // field name
+              "values": ["No"] // selected values on page load
+            }
           ]
         }
       ]
@@ -553,7 +574,10 @@ Below is an example, with inline comments describing what each JSON block config
     // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
-        "field": "name"
+        "field": "title"
+      },
+      "subHeader": { // if present, shows a subheader field below the header.
+        "field": "subtitle"
       },
       "fieldsToShow": [ // fields on the study page are grouped in order to separate logically distinct groups of fields
         {
@@ -612,6 +636,7 @@ Below is an example, with inline comments describing what each JSON block config
     // takes precedence over "studyPageFields"
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
+      "subHeaderField": "project_subtitle", // optional, if present, display a subheader under header using the field configured
       "tabs": [
         {
           "tabName": "Study",
@@ -694,6 +719,21 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
+  ],
+  "analysisTools": [ // analysis apps to be diplayed at the /analysis/ page.
+    {
+      "appId": "myAppId", // Optional. Can be used to ensure the app path after the /analysis/ subpath is fixed, e.g. URL https://SERVER-DOMAIN/analysis/myAppId. If not set, then "title" (below) is used.
+      "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
+      "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
+      "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
+      "needsTeamProject": true // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
+    },
+    {
+      "title": "My other app",
+      "description": "etc",
+      "image": "/src/img/analysis-icons/etc.svg",
+    },
+    ...
   ],
   "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
   "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration

@@ -76,7 +76,13 @@ class ExplorerTable extends React.Component {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
           if (_.isArray(row.value)) {
-            valueStr = row.value.map((x) => _.get(x, nestedChildFieldName)).join(', ');
+            valueStr = row.value.map((x) => {
+              let val = _.get(x, nestedChildFieldName);
+              // replace empty, null and undefined nested values with explicit "null" strings
+              // so that we can still display 1 value per nested row
+              if (val == null || val === '') val = 'null';
+              return val;
+            }).join(', ');
           } else {
             valueStr = _.get(row.value, nestedChildFieldName);
           }
@@ -113,7 +119,11 @@ class ExplorerTable extends React.Component {
 
         // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
-          let dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
+          let dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`; // default: v2 ohif viewer url format
+          if (this.props.tableConfig.dicomViewerUrl) {
+            // v3 ohif viewer url format
+            dicomViewerLink = `${hostname}${this.props.tableConfig.dicomViewerUrl}/viewer?StudyInstanceUIDs=${valueStr}`;
+          }
           if (row.original.has_dicom_images !== undefined && !row.original.has_dicom_images) {
             dicomViewerLink = undefined;
           }
@@ -243,8 +253,14 @@ class ExplorerTable extends React.Component {
     if (haveField.length === this.props.rawData.length) {
       this.setState({ loading: true });
       // eslint-disable-next-line array-callback-return
+
+      let dicomServerURL = "dicom-server";
+      if (this.props.tableConfig.dicomServerURL) {
+        dicomServerURL = this.props.tableConfig.dicomServerURL;
+      }
+
       Promise.all(this.props.rawData.map((x) => {
-        const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
+        const dicomServerLink = `${hostname}${dicomServerURL}/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
         return fetch(dicomServerLink, {
           method: 'GET',
         })

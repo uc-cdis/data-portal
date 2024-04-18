@@ -110,11 +110,18 @@ const DiscoveryWithMDSBackend: React.FC<{
           } else {
             let authMapping;
             if (isEnabled('discoveryUseAggWTS')) {
-              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)] || {};
+              let commonsURL = study.commons_url;
+              if (commonsURL && commonsURL.startsWith('http')) {
+                commonsURL = new URL(commonsURL).hostname;
+              }
+              authMapping = props.userAggregateAuthMappings[(commonsURL || hostnameWithSubdomain)] || {};
             } else {
               authMapping = props.userAuthMapping;
             }
-            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping)
+              || userHasMethodForServiceOnResource('read', 'peregrine', study[authzField], authMapping)
+              || userHasMethodForServiceOnResource('read', 'guppy', study[authzField], authMapping)
+              || userHasMethodForServiceOnResource('read-storage', 'fence', study[authzField], authMapping);
             if (supportedValues?.accessible?.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
             } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {

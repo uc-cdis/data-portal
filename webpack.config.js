@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const basename = process.env.BASENAME || '/';
+const basenameWithTrailingSlash = basename.endsWith('/') ? basename : `${basename}/`;
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
 
@@ -20,8 +21,8 @@ if (DAPTrackingURL) {
 }
 if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
   scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
-  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com']);
-  imgSrcURLs.push('https://www.google-analytics.com');
+  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net']);
+  imgSrcURLs.push('https://www.google-analytics.com', 'https://*.g.doubleclick.net', 'https://*.google.com');
 } else {
   console.log('Unknown GA tag, skipping GA setup...');
 }
@@ -36,10 +37,11 @@ if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
   connectSrcURLs.push('https://dataguids.org');
 }
 if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
-  connectSrcURLs.push('https://clinicaltrials.gov');
+  connectSrcURLs.push('https://classic.clinicaltrials.gov');
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
+  connectSrcURLs.push('https://*.browser-intake-ddog-gov.com');
 }
 if (process.env.MAPBOX_API_TOKEN) {
   connectSrcURLs.push('https://*.tiles.mapbox.com');
@@ -87,6 +89,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
   new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
   new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
+  new webpack.EnvironmentPlugin(['GEN3_BUNDLE']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -247,7 +250,7 @@ module.exports = {
   output: {
     path: __dirname,
     filename: '[name].js',
-    publicPath: basename,
+    publicPath: basenameWithTrailingSlash,
   },
   optimization,
   devtool,

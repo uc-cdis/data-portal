@@ -101,6 +101,7 @@ const GenericAccessRequestForm: React.FunctionComponent<StudyRegistrationProps> 
       studyNumber,
       studyName,
       setReqAccessRequestPending,
+      props.supportEmail,
     );
   };
 
@@ -119,6 +120,7 @@ const GenericAccessRequestForm: React.FunctionComponent<StudyRegistrationProps> 
         formSubmissionStatus={formSubmissionStatus}
         setFormSubmissionStatus={setFormSubmissionStatus}
         setReqAccessRequestPending={setReqAccessRequestPending}
+        supportEmail={props.supportEmail}
       />
     );
   }

@@ -73,7 +73,7 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
+  const resp = await fetch(`https://classic.clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
   if (!resp || resp.status !== 200) {
     return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
@@ -100,7 +100,7 @@ const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
     const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
     offset += limit;
     promiseList.push(
-      fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
+      fetch(`https://classic.clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
         .then(
           (resp) => {
             if (!resp || resp.status !== 200) {
@@ -207,10 +207,8 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       repository: formValues.repository || '',
       repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
+      clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
-    if (ctgovID) {
-      valuesToUpdate['clinicaltrials.gov'] = await getClinicalTrialMetadata(ctgovID);
-    }
     preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
@@ -355,22 +353,30 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
               <Option value='Figshare'>Figshare</Option>
+              <Option value='GitHub'>GitHub</Option>
               <Option value='ICPSR'>ICPSR</Option>
               <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
+              <Option value='openICPSR'>openICPSR</Option>
               <Option value='JCOIN'>JCOIN</Option>
+              <Option value='MassIVE'>MassIVE</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
               <Option value='Metabolomics Workbench'>Metabolomics Workbench</Option>
               <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
               <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
+              <Option value='National Sleep Research Resource (NSRR)'>National Sleep Research Resource (NSRR)</Option>
               <Option value='NICHD DASH'>NICHD DASH</Option>
               <Option value='NIDA Data Share'>NIDA Data Share</Option>
-              <Option value='NIDDK Central'>NIDDK Central</Option>
+              <Option value='NIDDK Central Repository'>NIDDK Central Repository</Option>
               <Option value='NIMH Data Archive'>NIMH Data Archive</Option>
               <Option value='NINDS Data Share'>NINDS Data Share</Option>
               <Option value='OpenNEURO'>OpenNEURO</Option>
-              <Option value='OpenScience Framework'>OpenScience Framework</Option>
-              <Option value='Syracuse Qualitative'>Syracuse Qualitative</Option>
+              <Option value='Open Science Framework'>Open Science Framework</Option>
+              <Option value='Pennsieve'>Pennsieve</Option>
+              <Option value='Protocols.io'>Protocols.io</Option>
+              <Option value='PubMed Central'>PubMed Central</Option>
+              <Option value='Qualitative Data Repository at Syracuse University'>Qualitative Data Repository at Syracuse University</Option>
               <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
+              <Option value='SPARC'>SPARC</Option>
               <Option value='Vivli'>Vivli</Option>
               <Option value='The Zebrafish Model Organism Database (ZFIN)'>The Zebrafish Model Organism Database (ZFIN)</Option>
               <Option value='Zenodo'>Zenodo</Option>

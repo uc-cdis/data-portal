@@ -153,8 +153,8 @@ export const fetchCovariateStats = async (
   return response.json();
 };
 
-export const fetchCohortDefinitions = async (sourceId) => {
-  const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
+export const fetchCohortDefinitions = async (sourceId, selectedTeamProject) => {
+  const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}/by-team-project?team-project=${selectedTeamProject}`;
   const response = await fetch(cohortEndPoint);
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`;
@@ -197,21 +197,20 @@ export const useSourceFetch = () => {
   const [sourceId, setSourceId] = useState(undefined);
   const getSources = () => { // fetch sources on initialization
     fetchSources().then((data) => {
-      setSourceId(data.sources[0].source_id);
-      setLoading(false);
+      if (Array.isArray(data?.sources) && data.sources.length === 1) {
+        setSourceId(data.sources[0].source_id);
+        setLoading(false);
+      } else {
+        const message = `Data source recieved in an invalid format:
+        ${JSON.stringify(data?.sources)}`;
+        throw new Error(message);
+      }
     });
   };
   useEffect(() => {
     getSources();
   }, []);
   return { loading, sourceId };
-};
-
-export const queryConfig = {
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-  retry: false,
 };
 
 export const getAllHareItems = (

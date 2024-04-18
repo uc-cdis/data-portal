@@ -327,7 +327,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         setModalVisible(true);
       } else {
         // eslint-disable-next-line no-console
-        console.error(`Could not find study with UID ${studyID}.`);
+        console.error(`Could not find data with UID ${studyID}.`);
       }
     }
   }, [props.params.studyUID, props.studies]);
@@ -599,10 +599,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You have access to this study.'}
+              title={'You have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
@@ -622,10 +622,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You do not have access to this study.'}
+              title={'You do not have access to this data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
                   <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
@@ -711,7 +711,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               </Collapse>
             </Space>
           </div>
-        ) : (
+        ) : (config.tagCategories && config.tagCategories.length > 0) && (
           <DiscoveryTagViewer
             config={config}
             studies={props.studies}

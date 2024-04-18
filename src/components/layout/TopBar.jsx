@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
-import { discoveryConfig } from '../../localconf';
+import { discoveryConfig, topNavLogin } from '../../localconf';
 import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
+import Banner from '../Banner';
 
 const isEmailAddress = (input) => {
   // regexp for checking if a string is possibly an email address, got from https://www.w3resource.com/javascript/form/email-validation.php
@@ -18,6 +19,18 @@ const isEmailAddress = (input) => {
  * NavBar renders row of nav-items of form { name, icon, link }
  */
 class TopBar extends Component {
+  componentDidMount() {
+    // clear global store of expired banners
+    if (this.props.closedBanners) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [key, value] of Object.entries(this.props.closedBanners)) {
+        if (Date.now() > value) {
+          this.props.onResetBanner({ id: key });
+        }
+      }
+    }
+  }
+
   isActive = (id) => this.props.activeTab === id;
 
   render() {
@@ -135,6 +148,7 @@ class TopBar extends Component {
               )
             }
             {
+              topNavLogin &&
               typeof this.props.user.username === 'undefined'
               && (
                 <React.Fragment>
@@ -174,6 +188,18 @@ class TopBar extends Component {
               )
             }
           </nav>
+          {this.props.banners
+            && this.props.banners.length > 0
+            && this.props.banners.map((banner) => (
+              <Banner
+                id={banner.id}
+                type={banner.type}
+                message={banner.message}
+                resetDate={banner.resetDate}
+                onClose={this.props.onCloseBanner}
+                key={banner.id}
+              />
+            ))}
         </header>
       </div>
     );
@@ -189,12 +215,18 @@ TopBar.propTypes = {
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,
   discovery: PropTypes.shape({ selectedResources: PropTypes.array }).isRequired,
+  banners: PropTypes.array,
+  closedBanners: PropTypes.array,
+  onCloseBanner: PropTypes.func.isRequired,
+  onResetBanner: PropTypes.func.isRequired,
 };
 
 TopBar.defaultProps = {
   useProfileDropdown: false,
   activeTab: '',
   onActiveTab: () => {},
+  banners: [],
+  closedBanners: [],
 };
 
 export default withRouter(TopBar);

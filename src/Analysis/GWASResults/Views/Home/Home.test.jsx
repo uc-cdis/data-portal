@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import TableData from '../../TestData/TableData';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
-import InitialHomeTableState from '../../Utils/InitialHomeTableState';
+import InitialHomeTableState from './HomeTableState/InitialHomeTableState';
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +46,7 @@ describe('Home component', () => {
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValueOnce(TableData),
     });
     render(testJSX());

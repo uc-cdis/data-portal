@@ -5,8 +5,9 @@ interface User {
 }
 
 export interface StudyRegistrationProps {
-    user: User,
-    userAuthMapping: any
+    user: User;
+    userAuthMapping: any;
+    supportEmail: string;
 }
 export interface FormSubmissionState {
     status?: ResultStatusType;

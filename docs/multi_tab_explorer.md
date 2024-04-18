@@ -28,6 +28,15 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
             "fields": [
               "project_id",
               ...
+            ],
+            "asTextAggFields": [
+              "consortium_id",
+              ...
+            ],
+            "defaultFilters": [
+              {
+                "field": "redacted", "values": ["No"]
+              }
             ]
           }
         ]

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
-import { Spin } from 'antd';
+import { Spin, Row, Col } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { TourProvider } from '@reactour/tour';
@@ -9,10 +9,14 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import { analysisApps } from '../localconf';
-import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
+import AtlasDataDictionaryContainer from './AtlasDataDictionary/AtlasDataDictionaryContainer';
 import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
+import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
+import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
+import './AnalysisApp.css';
+import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 
 const queryClient = new QueryClient();
 
@@ -47,6 +51,18 @@ class AnalysisApp extends React.Component {
 
   componentWillUnmount() {
     this.props.resetJobState();
+  }
+
+  getAtlasURLWithTeamProject() {
+    const TeamProject = localStorage.getItem('teamProject');
+    const regexp = /^\/\w[\w/]*$/gi;
+    const isValidTeamProject = new RegExp(regexp).test(TeamProject);
+    if (TeamProject && !isValidTeamProject) {
+      throw new Error(
+        `Found illegal "teamProject" parameter value: ${TeamProject}`,
+      );
+    }
+    return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
   }
 
   onSubmitJob = (e) => {
@@ -119,6 +135,13 @@ class AnalysisApp extends React.Component {
           <GWASResultsContainer />
         </div>
       );
+    case 'AtlasDataDictionary': {
+      return (
+        <div className='analysis-app_flex_row'>
+          <AtlasDataDictionaryContainer />
+        </div>
+      );
+    }
     case 'GWASUIApp': {
       return (
         <TourProvider
@@ -142,11 +165,19 @@ class AnalysisApp extends React.Component {
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
+            {this.state.app.title === 'OHDSI Atlas' && (
+              <AtlasDataDictionaryButton />
+            )}
             <iframe
               className='analysis-app__iframe'
               title='Analysis App'
               frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
+              src={
+                this.state.app.title === 'OHDSI Atlas'
+                  && this.state.app.needsTeamProject
+                  ? this.getAtlasURLWithTeamProject()
+                  : `${this.state.app.applicationUrl}`
+              }
               onLoad={this.handleIframeApp}
             />
           </div>
@@ -227,7 +258,22 @@ class AnalysisApp extends React.Component {
         <BackLink url='/analysis' label='Back to Apps' />
         {loaded ? (
           <div className='analysis-app'>
-            <h2 className='analysis-app__title'>{app.title}</h2>
+            <Row>
+              <Col flex='1 0 auto'>
+                <h2>{app.title}</h2>
+              </Col>
+              {CheckForTeamProjectApplication(analysisApps) && (
+                <Col flex='1 0 auto'>
+                  <QueryClientProvider
+                    client={new QueryClient()}
+                    contextSharing
+                  >
+                    <TeamProjectHeader isEditable={false} />
+                  </QueryClientProvider>
+                </Col>
+              )}
+            </Row>
+
             <p className='analysis-app__description'>{app.description}</p>
             <div
               className={`${
