@@ -16,6 +16,7 @@ describe('Tests for handleDataDictionaryNameValidation', () => {
         Math.floor(Math.random() * (otherAllowedCharacters.length))
       ];
       const testFileName = randomAlphaNumericString + randomAllowedCharter;
+      console.log(testFileName)
       await expect(handleDataDictionaryNameValidation({}, testFileName)).resolves.toBe(true);
     }
   });
