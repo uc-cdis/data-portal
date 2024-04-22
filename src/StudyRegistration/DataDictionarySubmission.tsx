@@ -26,7 +26,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   hostname, kayakoConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
-import { cleanUpFileRecord, generatePresignedURL } from './utils';
+import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from './utils';
 import { createKayakoTicket } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { StudyRegistrationProps } from './StudyRegistration';
@@ -342,7 +342,12 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             name='Data Dictionary Name'
             label='Data Dictionary Name'
-            rules={[{ required: true }]}
+            rules={[
+              {
+                validator: handleDataDictionaryNameValidation,
+              },
+              { required: true },
+            ]}
           >
             <Input />
           </Form.Item>
