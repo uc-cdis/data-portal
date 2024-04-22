@@ -19,7 +19,7 @@ describe('SortUtils', () => {
   const data = [
     { conceptID: 1, vocabularyID: 'A' },
     { conceptID: 2, vocabularyID: 'B' },
-    { conceptID: 3, vocabularyID: 'C' },
+    { conceptID: 11, vocabularyID: 'C' },
   ];
 
   it('tests that SortDataWithDirection function with invalid sortKey throws expected error', () => {
@@ -55,11 +55,11 @@ describe('SortUtils', () => {
     let sortedData = SortDataWithDirection(data, direction, sortKeyForString);
     expect(sortedData[0].conceptID).toBe(1);
     expect(sortedData[1].conceptID).toBe(2);
-    expect(sortedData[2].conceptID).toBe(3);
+    expect(sortedData[2].conceptID).toBe(11);
 
     direction = 'descending';
     sortedData = SortDataWithDirection(data, direction, sortKeyForString);
-    expect(sortedData[0].conceptID).toBe(3);
+    expect(sortedData[0].conceptID).toBe(11);
     expect(sortedData[1].conceptID).toBe(2);
     expect(sortedData[2].conceptID).toBe(1);
   });
