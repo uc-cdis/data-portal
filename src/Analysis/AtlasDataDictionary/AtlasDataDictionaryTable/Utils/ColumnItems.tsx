@@ -1,8 +1,16 @@
 import React from 'react';
 
-const ColumnsItems = [
+type sortType = 'string' | 'number' | 'notAvailable';
+interface IColumnsItems {
+  headerKey: string;
+  sortType: sortType;
+  jsx: React.ReactNode;
+}
+
+const ColumnsItems: IColumnsItems[] = [
   {
     headerKey: 'vocabularyID',
+    sortType: 'string',
     jsx: (
       <span>
         Vocabulary
@@ -13,10 +21,12 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptID',
+    sortType: 'number',
     jsx: <span className='extra-wide-header'>Concept ID</span>,
   },
   {
     headerKey: 'conceptCode',
+    sortType: 'string',
     jsx: (
       <span>
         Concept
@@ -27,6 +37,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptName',
+    sortType: 'string',
     jsx: (
       <span>
         Concept
@@ -37,6 +48,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'conceptClassID',
+    sortType: 'string',
     jsx: (
       <span>
         Concept
@@ -47,6 +59,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'numberOfPeopleWithVariable',
+    sortType: 'number',
     jsx: (
       <span>
         #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
@@ -57,6 +70,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'numberOfPeopleWhereValueIsFilled',
+    sortType: 'number',
     jsx: (
       <span>
         #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
@@ -67,6 +81,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'numberOfPeopleWhereValueIsNull',
+    sortType: 'number',
     jsx: (
       <span>
         #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
@@ -77,6 +92,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'valueStoredAs',
+    sortType: 'string',
     jsx: (
       <span>
         Value
@@ -87,6 +103,7 @@ const ColumnsItems = [
   },
   {
     headerKey: 'valueSummary',
+    sortType: 'notAvailable',
     jsx: <span>Value&nbsp;Summary</span>,
   },
 ];
