@@ -52,15 +52,15 @@ describe('SortUtils', () => {
   });
   it(`tests SortDataWithDirection function
     with ascending and descending directions for number`, () => {
-    const sortKeyForString = 'conceptID';
+    const sortKeyForNumber = 'conceptID';
     let direction: ISortConfig['direction'] = 'ascending';
-    let sortedData = SortDataWithDirection(data, direction, sortKeyForString);
+    let sortedData = SortDataWithDirection(data, direction, sortKeyForNumber);
     expect(sortedData[0].conceptID).toBe(1);
     expect(sortedData[1].conceptID).toBe(2);
     expect(sortedData[2].conceptID).toBe(11);
 
     direction = 'descending';
-    sortedData = SortDataWithDirection(data, direction, sortKeyForString);
+    sortedData = SortDataWithDirection(data, direction, sortKeyForNumber);
     expect(sortedData[0].conceptID).toBe(11);
     expect(sortedData[1].conceptID).toBe(2);
     expect(sortedData[2].conceptID).toBe(1);
