@@ -26,7 +26,7 @@ const SortDataWithDirection = (
   const sortType = determineSortType(data, sortKey);
   if (sortType !== 'number' && sortType !== 'string') {
     throw new Error(
-      'Invalid sortType parameter used with SortDataWithDirection',
+      'Invalid sortType found in SortDataWithDirection',
     );
   }
   return [...data].sort((a, b) => {
