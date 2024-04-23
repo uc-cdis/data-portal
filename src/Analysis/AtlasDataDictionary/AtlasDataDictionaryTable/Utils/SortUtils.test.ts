@@ -31,7 +31,7 @@ describe('SortUtils', () => {
     } catch (e) {
       actualErrorMsg = e.message;
     }
-    const expectedErrorMsg = 'Invalid sortType parameter used with SortDataWithDirection';
+    const expectedErrorMsg = 'Invalid sortType found in SortDataWithDirection';
     expect(actualErrorMsg).toEqual(expectedErrorMsg);
   });
 

@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface IColumnsItems {
-  headerKey: string;
-  jsx: React.ReactNode;
-}
-
-const ColumnsItems: IColumnsItems[] = [
+const ColumnsItems = [
   {
     headerKey: 'vocabularyID',
     jsx: (
