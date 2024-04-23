@@ -49,7 +49,8 @@ describe('SortUtils', () => {
     expect(sortedData[1].vocabularyID).toBe('B');
     expect(sortedData[2].vocabularyID).toBe('A');
   });
-  it('tests SortDataWithDirection function with ascending and descending directions for number', () => {
+  it(`tests SortDataWithDirection function
+    with ascending and descending directions for number`, () => {
     const sortKeyForString = 'conceptID';
     let direction: ISortConfig['direction'] = 'ascending';
     let sortedData = SortDataWithDirection(data, direction, sortKeyForString);
