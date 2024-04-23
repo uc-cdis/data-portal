@@ -1,5 +1,4 @@
-import { ISortConfig } from '../Interfaces/Interfaces';
-import ColumnsItems from './ColumnItems';
+import { ISortConfig, IRowData } from '../Interfaces/Interfaces';
 
 const DetermineNextSortDirection = (
   sortConfig: ISortConfig,
@@ -18,18 +17,13 @@ const DetermineNextSortDirection = (
   return direction;
 };
 
-const determineSortType = (sortKey: string) => {
-  const objectWithSortKey = ColumnsItems.find(
-    (object) => object.headerKey === sortKey,
-  );
-  return objectWithSortKey?.sortType;
-};
+const determineSortType = (data: IRowData[], sortKey: string) => typeof data[0][sortKey];
 const SortDataWithDirection = (
   data: any,
   direction: ISortConfig['direction'],
   sortKey: string,
 ) => {
-  const sortType = determineSortType(sortKey);
+  const sortType = determineSortType(data, sortKey);
   if (sortType !== 'number' && sortType !== 'string') {
     throw new Error(
       'Invalid sortType parameter used with SortDataWithDirection',
