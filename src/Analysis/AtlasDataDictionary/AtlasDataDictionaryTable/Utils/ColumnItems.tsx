@@ -32,7 +32,6 @@ const ColumnsItems: IColumnsItems[] = [
   },
   {
     headerKey: 'conceptName',
-    sortType: 'string',
     jsx: (
       <span>
         Concept
@@ -43,7 +42,6 @@ const ColumnsItems: IColumnsItems[] = [
   },
   {
     headerKey: 'conceptClassID',
-    sortType: 'string',
     jsx: (
       <span>
         Concept
