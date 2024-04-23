@@ -17,13 +17,12 @@ const DetermineNextSortDirection = (
   return direction;
 };
 
-const determineSortType = (data: IRowData[], sortKey: string) => typeof data[0][sortKey];
 const SortDataWithDirection = (
-  data: any,
+  data: IRowData[],
   direction: ISortConfig['direction'],
   sortKey: string,
 ) => {
-  const sortType = determineSortType(data, sortKey);
+  const sortType = typeof data[0][sortKey];
   if (sortType !== 'number' && sortType !== 'string') {
     throw new Error(
       'Invalid sortType found in SortDataWithDirection',
