@@ -1,5 +1,5 @@
 import { DetermineNextSortDirection, SortDataWithDirection } from './SortUtils';
-import { ISortConfig } from '../Interfaces/Interfaces';
+import { IRowData, ISortConfig } from '../Interfaces/Interfaces';
 
 describe('SortUtils', () => {
   it('tests DetermineNextSortDirection function with valid sortKey and direction', () => {
@@ -20,7 +20,7 @@ describe('SortUtils', () => {
     { conceptID: 1, vocabularyID: 'A' },
     { conceptID: 2, vocabularyID: 'B' },
     { conceptID: 11, vocabularyID: 'C' },
-  ];
+  ] as IRowData[];
 
   it('tests that SortDataWithDirection function with invalid sortKey throws expected error', () => {
     const sortKey = 'thisIsNotAValidKey';
