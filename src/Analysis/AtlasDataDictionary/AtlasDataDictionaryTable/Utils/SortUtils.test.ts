@@ -35,7 +35,8 @@ describe('SortUtils', () => {
     expect(actualErrorMsg).toEqual(expectedErrorMsg);
   });
 
-  it('tests SortDataWithDirection function with ascending and descending directions for string', () => {
+  it(`tests SortDataWithDirection function with ascending and descending
+    directions for string`, () => {
     const sortKeyForString = 'vocabularyID';
     let direction: ISortConfig['direction'] = 'ascending';
     let sortedData = SortDataWithDirection(data, direction, sortKeyForString);
