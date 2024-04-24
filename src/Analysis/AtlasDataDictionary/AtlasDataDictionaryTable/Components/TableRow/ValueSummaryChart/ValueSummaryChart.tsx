@@ -35,8 +35,6 @@ const ValueSummaryChart = ({
   preview,
   chartType,
 }: IValueSummaryChartProps) => {
-  console.log(chartData);
-  console.log(chartType);
   let chartWidth = PREVIEW_CHART_WIDTH;
   let chartHeight = PREVIEW_CHART_HEIGHT;
   if (!preview) {
@@ -45,9 +43,19 @@ const ValueSummaryChart = ({
   }
   const xAxisHeight = chartType === 'Number' ? 15 : 60;
   const xAxisDataKey = chartType === 'Number' ? 'start' : 'name';
+  const xAxisInterval = chartType === 'Number' ? 2 : 0;
 
+  const processNumericChartData = (unProcessedChartData:IValueSummary[]) => {
+    let processedNumericData = unProcessedChartData.sort(
+      (a: IValueSummary | any, b: IValueSummary| any) => a.start - b.start
+    );
+    processedNumericData = processedNumericData.map((obj:IValueSummary | any) => (
+      { start: obj.start.toFixed(2), personCount: obj.personCount }
+    ));
+    return processedNumericData;
+  };
   const processedChartData = chartType === 'Number'
-    ? chartData.sort((a: any, b: any) => a.start - b.start)
+    ? processNumericChartData(chartData)
     : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
@@ -80,6 +88,7 @@ const ValueSummaryChart = ({
               dataKey={xAxisDataKey}
               angle={X_AXIS_LABEL_ANGLE}
               textAnchor='end'
+              interval={xAxisInterval}
               fontSize={X_AXIS_FONT_SIZE}
               tickFormatter={(tick) => formatXAxisWithEllipsisIfTooLong(tick)}
               tickLine
@@ -87,7 +96,7 @@ const ValueSummaryChart = ({
             <YAxis tickLine={false} axisLine={false} />
           </React.Fragment>
         )}
-        <Bar dataKey='personCount' fill={CHART_FILL_COLOR} />
+        <Bar barSize={18} dataKey='personCount' fill={CHART_FILL_COLOR} />
       </BarChart>
       {!preview && chartType === 'Number' && (
         <strong className='value-summary-chart-title'>VALUE AS NUMBER</strong>
