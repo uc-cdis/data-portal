@@ -15,6 +15,7 @@ import {
   MAX_X_AXIS_LABEL_LENGTH,
   X_AXIS_CHARACTER_CUT_OFF,
   GRID_OPACITY,
+  X_AXIS_LABEL_ANGLE,
 } from './ValueSummaryChartConstants';
 import { IValueSummary } from '../../../Interfaces/Interfaces';
 
@@ -34,6 +35,8 @@ const ValueSummaryChart = ({
   preview,
   chartType,
 }: IValueSummaryChartProps) => {
+  console.log(chartData);
+  console.log(chartType);
   let chartWidth = PREVIEW_CHART_WIDTH;
   let chartHeight = PREVIEW_CHART_HEIGHT;
   if (!preview) {
@@ -42,8 +45,6 @@ const ValueSummaryChart = ({
   }
   const xAxisHeight = chartType === 'Number' ? 15 : 60;
   const xAxisDataKey = chartType === 'Number' ? 'start' : 'name';
-  const xAxisAngle = chartType === 'Number' ? 0 : -25;
-  const xAxisTextAnchor = chartType === 'Number' ? 'middle' : 'end';
 
   const processedChartData = chartType === 'Number'
     ? chartData.sort((a: any, b: any) => a.start - b.start)
@@ -77,8 +78,8 @@ const ValueSummaryChart = ({
             <XAxis
               height={xAxisHeight}
               dataKey={xAxisDataKey}
-              angle={xAxisAngle}
-              textAnchor={xAxisTextAnchor}
+              angle={X_AXIS_LABEL_ANGLE}
+              textAnchor='end'
               fontSize={X_AXIS_FONT_SIZE}
               tickFormatter={(tick) => formatXAxisWithEllipsisIfTooLong(tick)}
               tickLine
