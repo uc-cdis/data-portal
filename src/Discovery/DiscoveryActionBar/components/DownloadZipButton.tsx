@@ -4,12 +4,10 @@ import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
 import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
 
-
 const DownloadZipButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,
-}) => {
-  const downloadZipButton = props.config.features.exportToWorkspace
-    ?.enableDownloadZip && (
+}) => (
+  props.config.features.exportToWorkspace?.enableDownloadZip && (
     <React.Fragment>
       <Popover
         className='discovery-popover'
@@ -88,8 +86,6 @@ const DownloadZipButton = ({
         {downloadStatus.message.content}
       </Modal>
     </React.Fragment>
-  );
-  return downloadZipButton;
-};
+  ));
 
 export default DownloadZipButton;
