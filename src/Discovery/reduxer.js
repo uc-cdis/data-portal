@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import DiscoveryActionBar from './DiscoveryActionBar';
+import DiscoveryActionBar from './DiscoveryActionBar/DiscoveryActionBar';
 import DiscoveryDetails from './DiscoveryDetails/DiscoveryDetails';
 
 export const ReduxDiscoveryActionBar = (() => {
