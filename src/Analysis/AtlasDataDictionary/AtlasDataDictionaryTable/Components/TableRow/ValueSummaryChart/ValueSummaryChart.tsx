@@ -43,14 +43,14 @@ const ValueSummaryChart = ({
   }
   const xAxisHeight = chartType === 'Number' ? 15 : 60;
   const xAxisDataKey = chartType === 'Number' ? 'start' : 'name';
-  const xAxisInterval = chartType === 'Number' ? 2 : 0;
+  const xAxisInterval = chartType === 'Number' ? 1 : 0;
 
   const processNumericChartData = (unProcessedChartData:IValueSummary[]) => {
     let processedNumericData = unProcessedChartData.sort(
-      (a: IValueSummary | any, b: IValueSummary| any) => a.start - b.start
+      (a: IValueSummary | any, b: IValueSummary| any) => a.start - b.start,
     );
     processedNumericData = processedNumericData.map((obj:IValueSummary | any) => (
-      { start: obj.start.toFixed(2), personCount: obj.personCount }
+      { start: obj.start.toFixed(1).replace('.0', ''), personCount: obj.personCount }
     ));
     return processedNumericData;
   };
