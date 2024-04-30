@@ -10,6 +10,7 @@ describe('ValueSummaryChart', () => {
       { name: 'John Doe', start: 1, personCount: 5 },
       { name: 'Jane Doe', start: 3, personCount: 7 },
     ];
+    const firstTick = NumericChartData[0].start?.toString();
     render(
       <ValueSummaryChart
         chartData={NumericChartData}
@@ -19,17 +20,19 @@ describe('ValueSummaryChart', () => {
     );
     expect(screen.getByTestId('value-summary-chart')).toBeInTheDocument();
     expect(screen.getByText('VALUE AS NUMBER')).toBeInTheDocument();
+    expect(screen.getByText(firstTick as string)).toBeInTheDocument();
   });
 
   it('renders the component for non numeric data', () => {
     const NonNumericChartData: IValueSummary[] = [
       {
-        name: 'someName',
+        name: 'someLongLongName',
         valueAsString: 'someString',
         valueAsConceptID: 33,
         personCount: 55,
       },
     ];
+    const firstTickWithExpectedTruncation = 'someLongLongNam...';
     render(
       <ValueSummaryChart
         chartData={NonNumericChartData}
@@ -39,5 +42,6 @@ describe('ValueSummaryChart', () => {
     );
     expect(screen.getByTestId('value-summary-chart')).toBeInTheDocument();
     expect(screen.queryByText('VALUE AS NUMBER')).toBeNull();
+    expect(screen.getByText(firstTickWithExpectedTruncation)).toBeInTheDocument();
   });
 });
