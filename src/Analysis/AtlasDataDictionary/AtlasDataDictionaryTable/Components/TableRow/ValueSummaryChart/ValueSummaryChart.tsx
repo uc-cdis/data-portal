@@ -54,6 +54,7 @@ const ValueSummaryChart = ({
     ));
     return processedNumericData;
   };
+
   const processedChartData = chartType === 'Number'
     ? processNumericChartData(chartData)
     : chartData;
@@ -81,7 +82,7 @@ const ValueSummaryChart = ({
       >
         {!preview && (
           <React.Fragment>
-            <Tooltip />
+            <Tooltip formatter={(value) => value && value.toLocaleString()} separator=': ' />
             <CartesianGrid opacity={GRID_OPACITY} />
             <XAxis
               height={xAxisHeight}
