@@ -10,7 +10,7 @@ describe('ValueSummaryChart', () => {
       { name: 'John Doe', start: 1.1111111111, personCount: 5 },
       { name: 'Jane Doe', start: 3, personCount: 7 },
     ];
-    const firstTickWithExpectedTruncation = '1.1';
+    const firstTickWithExpectedRounding = '1.1';
     render(
       <ValueSummaryChart
         chartData={NumericChartData}
@@ -20,7 +20,7 @@ describe('ValueSummaryChart', () => {
     );
     expect(screen.getByTestId('value-summary-chart')).toBeInTheDocument();
     expect(screen.getByText('VALUE AS NUMBER')).toBeInTheDocument();
-    expect(screen.getByText(firstTickWithExpectedTruncation)).toBeInTheDocument();
+    expect(screen.getByText(firstTickWithExpectedRounding)).toBeInTheDocument();
   });
 
   it('renders the component for non numeric data', () => {
