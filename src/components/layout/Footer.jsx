@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { contactEmail, dictionaryUrl } from '../../localconf';
+import { contactEmail } from '../../localconf';
 import './Footer.css';
+import { getDictionaryVersion } from '../../DataDictionary/utils';
 
 /**
  * @param {Object} props
@@ -10,26 +11,37 @@ import './Footer.css';
  * @param {string} [props.portalVersion]
  * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
-function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
-  let dictionaryVersionMatch = dictionaryUrl.match(/.*\/[^\d]*(?<version>\d+)\.json/i);
-  let dictionaryVersion = dictionaryVersionMatch?.groups?.version ?? '';
+function Footer({
+  dataVersion,
+  links,
+  logos,
+  portalVersion,
+  privacyPolicy,
+  survivalCurveVersion,
+}) {
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
         <div className='footer__version-info-area'>
-          {dataVersion !== '' && (
+          {dataVersion && (
             <div className='footer__version-info'>
               <span>Data Release Version:</span> {dataVersion}
             </div>
           )}
-          {portalVersion !== '' && (
+          {portalVersion && (
             <div className='footer__version-info'>
               <span>Portal Version:</span> {portalVersion}
             </div>
           )}
-          {dictionaryVersion !== '' && (
+          {dictionaryVersion && (
             <div className='footer__version-info'>
               <span>Dictionary Version:</span> {dictionaryVersion}
+            </div>
+          )}
+          {survivalCurveVersion && (
+            <div className='footer__version-info'>
+              <span>Survival Curve Version:</span> {survivalCurveVersion}
             </div>
           )}
           <div className='footer__version-info'>
@@ -88,11 +100,12 @@ function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
 
 Footer.propTypes = {
   dataVersion: PropTypes.string,
+  survivalCurveVersion: PropTypes.string,
   links: PropTypes.arrayOf(
     PropTypes.exact({
       href: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
-    })
+    }),
   ),
   logos: PropTypes.arrayOf(
     PropTypes.exact({
@@ -100,7 +113,7 @@ Footer.propTypes = {
       height: PropTypes.number,
       href: PropTypes.string.isRequired,
       src: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   portalVersion: PropTypes.string,
   privacyPolicy: PropTypes.exact({

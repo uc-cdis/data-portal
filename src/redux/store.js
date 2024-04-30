@@ -27,6 +27,7 @@ const preloadedState = {
     dataVersion: '',
     dictionaryVersion: '',
     portalVersion: process.env.PORTAL_VERSION,
+    survivalCurveVersion: '',
   },
 };
 

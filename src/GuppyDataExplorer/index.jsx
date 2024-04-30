@@ -14,22 +14,25 @@ import ExplorerFilter, { DisabledExplorerFilter } from './ExplorerFilter';
 import './Explorer.css';
 import { FILTER_TYPE } from './ExplorerFilterSetWorkspace/utils';
 import { useStore } from 'react-redux';
+import { getDictionaryVersion } from '../DataDictionary/utils';
 
-/** @typedef {import('../redux/types').RootState} RootState */
-/** @typedef {import('./types').OptionFilter} OptionFilter */
-/** @typedef {import('../redux/types').RootStore} RootStore */
+/** @typedef {import("../redux/types").RootState} RootState */
+/** @typedef {import("./types").OptionFilter} OptionFilter */
+/** @typedef {import("../redux/types").RootStore} RootStore */
 
 /** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
 function ExplorerDashboard() {
-    /** @type {RootStore} */
+  /** @type {RootStore} */
   const reduxStore = useStore();
   const dispatch = useAppDispatch();
-  /** @param {RootState['explorer']['explorerFilter']} filter */
+
+  /** @param {RootState["explorer"]["explorerFilter"]} filter */
   function handleFilterChange(filter) {
     dispatch(updateExplorerFilter(filter));
   }
+
   const {
     config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
@@ -48,8 +51,8 @@ function ExplorerDashboard() {
     dispatch(fetchFilterSets()).unwrap().catch(console.error);
   }, [explorerId]);
 
-  const { dataVersion, portalVersion } = useAppSelector(
-    (state) => state.versionInfo
+  const { dataVersion, portalVersion, survivalCurveVersion } = useAppSelector(
+    (state) => state.versionInfo,
   );
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -70,6 +73,7 @@ function ExplorerDashboard() {
       if (explorerIds.includes(searchParamId.current))
         dispatch(useExplorerById(searchParamId.current));
     }
+
     window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
     return () =>
       window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
@@ -80,7 +84,11 @@ function ExplorerDashboard() {
 
   const dictionaryEntries = [];
   for (let [sectionKey, sectionValue] of dictSections) {
-    if (sectionKey && !sectionKey.startsWith('_') && sectionValue?.hasOwnProperty('properties')) {
+    if (
+      sectionKey &&
+      !sectionKey.startsWith('_') &&
+      sectionValue?.hasOwnProperty('properties')
+    ) {
       const dictEntries = Object.entries(sectionValue.properties);
       for (let [entryKey, entryValue] of dictEntries) {
         dictionaryEntries.push({ sectionKey, entryKey, entryValue });
@@ -88,6 +96,7 @@ function ExplorerDashboard() {
     }
   }
 
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <GuppyWrapper
       key={explorerId}
@@ -101,62 +110,76 @@ function ExplorerDashboard() {
       patientIds={patientIds}
     >
       {(data) => {
-        return <Dashboard>
-          <Dashboard.Sidebar className='explorer__sidebar'>
-            <div>
-              <ExplorerSelect />
-              {data.filter.__type === FILTER_TYPE.COMPOSED ? (
-                <DisabledExplorerFilter className='explorer__filter' />
-              ) : (
-                <ExplorerFilter
-                  anchorValue={data.anchorValue}
-                  className='explorer__filter'
-                  filter={data.filter}
-                  initialTabsOptions={data.initialTabsOptions}
-                  onAnchorValueChange={data.onAnchorValueChange}
-                  onFilterChange={data.onFilterChange}
-                  tabsOptions={data.tabsOptions}
-                  dictionaryEntries={dictionaryEntries}
-                />
-              )}
-            </div>
-            <div className='explorer__version-info-area'>
-              {dataVersion !== '' && (
-                <div className='explorer__version-info'>
-                  <span>Data Release Version:</span> {dataVersion}
-                </div>
-              )}
-              {portalVersion !== '' && (
-                <div className='explorer__version-info'>
-                  <span>Portal Version:</span> {portalVersion}
-                </div>
-              )}
-              <div className='explorer__version-info'>
-                <span>Help:</span>{' '}
-                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        return (
+          <Dashboard>
+            <Dashboard.Sidebar className='explorer__sidebar'>
+              <div>
+                <ExplorerSelect />
+                {data.filter.__type === FILTER_TYPE.COMPOSED ? (
+                  <DisabledExplorerFilter className='explorer__filter' />
+                ) : (
+                  <ExplorerFilter
+                    anchorValue={data.anchorValue}
+                    className='explorer__filter'
+                    filter={data.filter}
+                    initialTabsOptions={data.initialTabsOptions}
+                    onAnchorValueChange={data.onAnchorValueChange}
+                    onFilterChange={data.onFilterChange}
+                    tabsOptions={data.tabsOptions}
+                    dictionaryEntries={dictionaryEntries}
+                  />
+                )}
               </div>
-            </div>
-          </Dashboard.Sidebar>
-          <Dashboard.Main className='explorer__main'>
-            <ExplorerVisualization
-              accessibleCount={data.accessibleCount}
-              aggsChartData={data.aggsChartData}
-              allFields={data.allFields}
-              filter={data.filter}
-              isLoadingAggsData={data.isLoadingAggsData}
-              isLoadingRawData={data.isLoadingRawData}
-              rawData={data.rawData}
-              totalCount={data.totalCount}
-              downloadRawData={data.downloadRawData}
-              downloadRawDataByFields={data.downloadRawDataByFields}
-              downloadRawDataByTypeAndFilter={
-                data.downloadRawDataByTypeAndFilter
-              }
-              fetchAndUpdateRawData={data.fetchAndUpdateRawData}
-              getTotalCountsByTypeAndFilter={data.getTotalCountsByTypeAndFilter}
-            />
-          </Dashboard.Main>
-        </Dashboard>
+              <div className='explorer__version-info-area'>
+                {dataVersion && (
+                  <div className='explorer__version-info'>
+                    <span>Data Release Version:</span> {dataVersion}
+                  </div>
+                )}
+                {portalVersion && (
+                  <div className='explorer__version-info'>
+                    <span>Portal Version:</span> {portalVersion}
+                  </div>
+                )}
+                {dictionaryVersion && (
+                  <div className='footer__version-info'>
+                    <span>Dictionary Version:</span> {dictionaryVersion}
+                  </div>
+                )}
+                {survivalCurveVersion && (
+                  <div className='explorer__version-info'>
+                    <span>Survival Curve Version:</span> {survivalCurveVersion}
+                  </div>
+                )}
+                <div className='explorer__version-info'>
+                  <span>Help:</span>{' '}
+                  <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+                </div>
+              </div>
+            </Dashboard.Sidebar>
+            <Dashboard.Main className='explorer__main'>
+              <ExplorerVisualization
+                accessibleCount={data.accessibleCount}
+                aggsChartData={data.aggsChartData}
+                allFields={data.allFields}
+                filter={data.filter}
+                isLoadingAggsData={data.isLoadingAggsData}
+                isLoadingRawData={data.isLoadingRawData}
+                rawData={data.rawData}
+                totalCount={data.totalCount}
+                downloadRawData={data.downloadRawData}
+                downloadRawDataByFields={data.downloadRawDataByFields}
+                downloadRawDataByTypeAndFilter={
+                  data.downloadRawDataByTypeAndFilter
+                }
+                fetchAndUpdateRawData={data.fetchAndUpdateRawData}
+                getTotalCountsByTypeAndFilter={
+                  data.getTotalCountsByTypeAndFilter
+                }
+              />
+            </Dashboard.Main>
+          </Dashboard>
+        );
       }}
     </GuppyWrapper>
   );

@@ -1,9 +1,13 @@
 import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
 import JSZip from 'jszip';
-import { dataDictionaryTemplatePath, appname } from '../localconf';
+import {
+  dataDictionaryTemplatePath,
+  appname,
+  dictionaryUrl,
+} from '../localconf';
 
-/** @typedef {import('./types').SearchHistoryItem} SearchHistoryItem */
+/** @typedef {import("./types").SearchHistoryItem} SearchHistoryItem */
 
 const concatTwoWords = (w1, w2) => {
   if (w1.length === 0) return w2;
@@ -14,7 +18,7 @@ const concatTwoWords = (w1, w2) => {
 export const truncateLines = (
   str,
   maxCharInRow = 10,
-  breakwordMinLength = 12
+  breakwordMinLength = 12,
 ) => {
   const wordsList = str.split(' ');
   const res = [];
@@ -27,7 +31,7 @@ export const truncateLines = (
         let breakPos = maxCharInRow - currentLine.length - 1;
         if (currentLine.length > 0) breakPos -= 1; // 1 more for space
         res.push(
-          `${concatTwoWords(currentLine, wordsList[i].substring(0, breakPos))}-`
+          `${concatTwoWords(currentLine, wordsList[i].substring(0, breakPos))}-`,
         );
 
         // break the rest of the new word if it's still too long
@@ -113,7 +117,7 @@ export const downloadMultiTemplate = (
   nodesToDownload,
   allRoutes,
   clickingNodeName,
-  dictionaryVersion
+  dictionaryVersion,
 ) => {
   if (format !== 'tsv' && format !== 'json') {
     return;
@@ -136,7 +140,7 @@ export const downloadMultiTemplate = (
         .catch(() => {
           throw new Error(`cannot download template for node "${nodeID}"`);
         });
-    })
+    }),
   ).then(() => {
     const time = new Date();
     const startingNodeName = 'Project';
@@ -145,9 +149,9 @@ export const downloadMultiTemplate = (
       allRoutes
         .map(
           (nodeIDsInRoute, routeIndex) =>
-            `${routeIndex + 1}. ${nodeIDsInRoute.join(',')}`
+            `${routeIndex + 1}. ${nodeIDsInRoute.join(',')}`,
         )
-        .join('\n')
+        .join('\n'),
     );
     zip.file('README.txt', readmeContent);
     zip.generateAsync({ type: 'blob' }).then((content) => {
@@ -178,10 +182,9 @@ export const getPropertyDescription = (property) => {
   }
   if ('term' in property && property.term !== 'undefined') {
     if (!Array.isArray(property.term)) {
-      return property.term?.["description"]
-    }
-    else {
-      description = property.term.map(x => x["description"]).join('; ');
+      return property.term?.['description'];
+    } else {
+      description = property.term.map((x) => x['description']).join('; ');
     }
   }
   return description;
@@ -207,7 +210,7 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
   const { keywordStr } = searchHistoryItem;
   if (!keywordStr || keywordStr.length === 0) return getSearchHistoryItems();
   const prevHistory = JSON.parse(
-    localStorage.getItem(searchHistoryLocalStorageKey)
+    localStorage.getItem(searchHistoryLocalStorageKey),
   );
   let newHistory = [];
   if (prevHistory) newHistory = prevHistory.slice(0); // clone array
@@ -218,7 +221,7 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
     prevHistory.find((item) => item.keywordStr === keywordStr)
   ) {
     const index = prevHistory.findIndex(
-      (item) => item.keywordStr === keywordStr
+      (item) => item.keywordStr === keywordStr,
     );
     newHistory = prevHistory.slice(0);
     newHistory.splice(index, 1); // remove item
@@ -226,7 +229,7 @@ export const addSearchHistoryItems = (searchHistoryItem) => {
   newHistory.unshift(searchHistoryItem); // add to the beginning
   localStorage.setItem(
     searchHistoryLocalStorageKey,
-    JSON.stringify(newHistory)
+    JSON.stringify(newHistory),
   );
   return newHistory;
 };
@@ -239,13 +242,13 @@ export const clearSearchHistoryItems = () => {
   const newHistory = [];
   localStorage.setItem(
     searchHistoryLocalStorageKey,
-    JSON.stringify(newHistory)
+    JSON.stringify(newHistory),
   );
   return newHistory;
 };
 
 export const MatchedIndicesShape = PropTypes.arrayOf(
-  PropTypes.arrayOf(PropTypes.number)
+  PropTypes.arrayOf(PropTypes.number),
 );
 
 export const MatchedItemShape = PropTypes.exact({
@@ -275,3 +278,10 @@ export const SearchResultItemShape = PropTypes.exact({
   item: SearchItemShape,
   matches: PropTypes.arrayOf(MatchedItemShape),
 });
+
+export const getDictionaryVersion = () => {
+  const dictionaryVersionMatch = dictionaryUrl.match(
+    /.*\/[^\d]*(?<version>\d+)\.json/i,
+  );
+  return dictionaryVersionMatch?.groups?.version ?? '';
+};

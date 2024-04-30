@@ -9,6 +9,7 @@ import DataDictionaryGraph from './graph/DataDictionaryGraph';
 import ReduxGraphCalculator from './graph/GraphCalculator';
 import ReduxDictionarySearcher from './search/DictionarySearcher';
 import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
+import { getDictionaryVersion } from './utils';
 import './DataDictionary.css';
 
 /**
@@ -18,6 +19,7 @@ import './DataDictionary.css';
  * @param {boolean} props.layoutInitialized
  * @param {(isGraphView: boolean) => void} props.onSetGraphView
  * @param {string} props.portalVersion
+ * @param {string} props.survivalCurveVersion
  */
 function DataDictionary({
   dataVersion,
@@ -25,6 +27,7 @@ function DataDictionary({
   layoutInitialized,
   onSetGraphView,
   portalVersion,
+  survivalCurveVersion,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isInitialRenderRef = useRef(true);
@@ -52,6 +55,7 @@ function DataDictionary({
     dictionarySearcherRef.current.launchClearSearchFromOutside();
   }
 
+  const dictionaryVersion = getDictionaryVersion();
   return (
     <Dashboard>
       <Dashboard.Sidebar className='data-dictionary__sidebar'>
@@ -104,14 +108,24 @@ function DataDictionary({
         </div>
         <div className='data-dictionary__version-info-area'>
           <div className='data-dictionary__version-info-list'>
-            {dataVersion !== '' && (
+            {dataVersion && (
               <div className='data-dictionary__version-info'>
                 <span>Data Release Version:</span> {dataVersion}
               </div>
             )}
-            {portalVersion !== '' && (
+            {portalVersion && (
               <div className='data-dictionary__version-info'>
                 <span>Portal Version:</span> {portalVersion}
+              </div>
+            )}
+            {dictionaryVersion && (
+              <div className='footer__version-info'>
+                <span>Dictionary Version:</span> {dictionaryVersion}
+              </div>
+            )}
+            {survivalCurveVersion && (
+              <div className='data-dictionary__version-info'>
+                <span>Survival Curve Version:</span> {survivalCurveVersion}
               </div>
             )}
             <div className='data-dictionary__version-info'>
@@ -152,6 +166,7 @@ DataDictionary.propTypes = {
   layoutInitialized: PropTypes.bool,
   onSetGraphView: PropTypes.func,
   portalVersion: PropTypes.string,
+  survivalCurveVersion: PropTypes.string,
 };
 
 DataDictionary.defaultProps = {

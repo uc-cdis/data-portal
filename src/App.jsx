@@ -22,7 +22,10 @@ import {
 import { getProjectsList, getTransactionList } from './Submission/relayer';
 import { STARTING_DID } from './Submission/utils';
 import useSessionMonitor from './hooks/useSessionMonitor';
-import { fetchDataVersion } from './redux/versionInfo/asyncThunks';
+import {
+  fetchDataVersion,
+  fetchSurvivalCurveVersion,
+} from './redux/versionInfo/asyncThunks';
 import { fetchIndexPageCounts } from './redux/index/asyncThunks';
 import {
   fetchDictionary,
@@ -74,6 +77,7 @@ function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchDataVersion());
+    dispatch(fetchSurvivalCurveVersion());
     useGoogleAnalytics();
   }, []);
 
