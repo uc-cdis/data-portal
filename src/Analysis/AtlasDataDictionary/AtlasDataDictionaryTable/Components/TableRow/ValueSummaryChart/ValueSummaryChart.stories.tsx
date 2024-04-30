@@ -2,9 +2,9 @@ import React from 'react';
 import ValueSummaryChart from './ValueSummaryChart';
 import TableData from '../../../TestData/TableData';
 import PreprocessTableData from '../../../Utils/PreprocessTableData';
-import '../../../../AtlasDataDictionary.css';
 import NumericValueSummaryChartData from '../../../TestData/NumericValueSummaryChartData';
 import { IValueSummary } from '../../../Interfaces/Interfaces';
+import '../../../../AtlasDataDictionary.css';
 
 export default {
   title: 'Tests2/AtlasDataDictionary/Components/ValueSummaryChart',
@@ -15,11 +15,9 @@ const processedTableData = PreprocessTableData(TableData);
 const firstNumericValueSummaryData = processedTableData.find(
   (obj) => obj.valueStoredAs === 'Number',
 )?.valueSummary;
-
 const firstNonNumericValueSummaryData = processedTableData.find(
   (obj) => obj.valueStoredAs !== 'Number',
 )?.valueSummary;
-
 const PreviewArgs = {
   chartData: firstNumericValueSummaryData as IValueSummary[],
   preview: true,
