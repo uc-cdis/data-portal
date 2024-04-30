@@ -97,7 +97,7 @@ const ValueSummaryChart = ({
             <YAxis tickLine={false} axisLine={false} />
           </React.Fragment>
         )}
-        <Bar barSize={18} dataKey='personCount' fill={CHART_FILL_COLOR} />
+        <Bar dataKey='personCount' fill={CHART_FILL_COLOR} />
       </BarChart>
       {!preview && chartType === 'Number' && (
         <strong className='value-summary-chart-title'>VALUE AS NUMBER</strong>
