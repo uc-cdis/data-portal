@@ -35,13 +35,11 @@ const NumericArgs = {
   preview: false,
   chartType: 'Number',
 };
-
 const NumericDifferentDataArgs = {
   chartData: NumericValueSummaryChartData as IValueSummary[],
   preview: false,
   chartType: 'Number',
 };
-
 const PreviewTemplate = () => (
   <div className='atlas-data-dictionary-container'>
     <ValueSummaryChart {...PreviewArgs} />
@@ -61,7 +59,6 @@ const NumericTemplate = () => (
     />
   </div>
 );
-
 const NumericValueSummaryDifferentDataTemplate = () => (
   <div className='atlas-data-dictionary-container'>
     <ValueSummaryChart
