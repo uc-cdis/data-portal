@@ -1,24 +1,55 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
 import { datadogRum } from '@datadog/browser-rum';
 import { manifestServiceApiPath, hostname } from '../../../localconf';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { fetchWithCreds } from '../../../actions';
+import { DownloadStatus } from '../DiscoveryActionBarInterfaces';
 import checkFederatedLoginStatus from './checkFederatedStatus';
+
+function removeKeys(obj: object, keysToRemove: Array<string>) {
+  keysToRemove.forEach((key) => {
+    if (key.includes('.')) {
+      const [firstKey, ...nestedKeys] = key.split('.');
+      const nestedObj = _.get(obj, firstKey);
+      _.unset(nestedObj, nestedKeys.join('.'));
+    } else {
+      _.unset(obj, key);
+    }
+  });
+  return obj;
+}
+const assembleAndExportMetadata = (keysToRemove:Array<string>, selectedResources:Array<object>) => {
+  console.log('hello world');
+  console.log('keysToRemove', keysToRemove);
+  console.log('selectedResources', selectedResources);
+  const filteredData = selectedResources.map((obj) => {
+    const newObj = _.cloneDeep(obj);
+    return removeKeys(newObj, keysToRemove);
+  });
+  console.log('filteredData', filteredData);
+};
 
 const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
-  setExportingToWorkspace: (boolean) => void,
+  setExportingToWorkspace: (arg0: boolean) => void,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
   location: any,
   healIDPLoginNeeded: boolean,
 ) => {
-  console.log(' selectedResources', selectedResources);
+  // console.log('config', config);
+  // console.log(' selectedResources', selectedResources);
+  const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
+  if (enableExportFullMetadata) {
+    const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
+    assembleAndExportMetadata(keysToRemove, selectedResources);
+  }
+
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
-      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`'
+      'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
 
@@ -51,7 +82,7 @@ const handleExportToWorkspaceClick = async (
           ...study[manifestFieldName].map((x) => ({
             ...x,
             commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          }))
+          })),
         );
       } else {
         manifest.push(...study[manifestFieldName]);
@@ -76,7 +107,7 @@ const handleExportToWorkspaceClick = async (
   });
   if (res.status !== 200) {
     throw new Error(
-      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`
+      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
     );
   }
   setExportingToWorkspace(false);
