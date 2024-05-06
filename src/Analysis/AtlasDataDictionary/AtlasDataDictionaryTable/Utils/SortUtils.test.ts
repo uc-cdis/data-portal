@@ -1,5 +1,5 @@
 import { DetermineNextSortDirection, SortDataWithDirection } from './SortUtils';
-import { ISortConfig } from '../Interfaces/Interfaces';
+import { IRowData, ISortConfig } from '../Interfaces/Interfaces';
 
 describe('SortUtils', () => {
   it('tests DetermineNextSortDirection function with valid sortKey and direction', () => {
@@ -16,35 +16,53 @@ describe('SortUtils', () => {
     expect(newDirection).toBe('ascending');
   });
 
-  it('tests SortDataWithDirection function with ascending direction and valid sortKey', () => {
-    const data = [
-      { name: 'John Doe', exampleKey: 'A' },
-      { name: 'Jane Doe', exampleKey: 'B' },
-      { name: 'Mike Doe', exampleKey: 'C' },
-    ];
-    const sortKey = 'exampleKey';
+  const data = [
+    { conceptID: 1, vocabularyID: 'A' },
+    { conceptID: 2, vocabularyID: 'B' },
+    { conceptID: 11, vocabularyID: 'C' },
+  ] as IRowData[];
+
+  it('tests that SortDataWithDirection function with invalid sortKey throws expected error', () => {
+    const sortKey = 'thisIsNotAValidKey';
     const direction = 'ascending';
-
-    const sortedData = SortDataWithDirection(data, direction, sortKey);
-
-    expect(sortedData[0].name).toBe('John Doe');
-    expect(sortedData[1].name).toBe('Jane Doe');
-    expect(sortedData[2].name).toBe('Mike Doe');
+    let actualErrorMsg = null;
+    try {
+      SortDataWithDirection(data, direction, sortKey);
+    } catch (e) {
+      actualErrorMsg = e.message;
+    }
+    const expectedErrorMsg = 'Invalid sortType found in SortDataWithDirection';
+    expect(actualErrorMsg).toEqual(expectedErrorMsg);
   });
 
-  it('tests SortDataWithDirection function with descending direction and valid sortKey', () => {
-    const data = [
-      { name: 'John Doe', exampleKey: 'A' },
-      { name: 'Jane Doe', exampleKey: 'B' },
-      { name: 'Mike Doe', exampleKey: 'C' },
-    ];
-    const sortKey = 'exampleKey';
-    const direction = 'descending';
+  it(`tests SortDataWithDirection function with ascending and descending
+    directions for string`, () => {
+    const sortKeyForString = 'vocabularyID';
+    let direction: ISortConfig['direction'] = 'ascending';
+    let sortedData = SortDataWithDirection(data, direction, sortKeyForString);
+    expect(sortedData[0].vocabularyID).toBe('A');
+    expect(sortedData[1].vocabularyID).toBe('B');
+    expect(sortedData[2].vocabularyID).toBe('C');
 
-    const sortedData = SortDataWithDirection(data, direction, sortKey);
+    direction = 'descending';
+    sortedData = SortDataWithDirection(data, direction, sortKeyForString);
+    expect(sortedData[0].vocabularyID).toBe('C');
+    expect(sortedData[1].vocabularyID).toBe('B');
+    expect(sortedData[2].vocabularyID).toBe('A');
+  });
+  it(`tests SortDataWithDirection function
+    with ascending and descending directions for number`, () => {
+    const sortKeyForNumber = 'conceptID';
+    let direction: ISortConfig['direction'] = 'ascending';
+    let sortedData = SortDataWithDirection(data, direction, sortKeyForNumber);
+    expect(sortedData[0].conceptID).toBe(1);
+    expect(sortedData[1].conceptID).toBe(2);
+    expect(sortedData[2].conceptID).toBe(11);
 
-    expect(sortedData[0].name).toBe('Mike Doe');
-    expect(sortedData[1].name).toBe('Jane Doe');
-    expect(sortedData[2].name).toBe('John Doe');
+    direction = 'descending';
+    sortedData = SortDataWithDirection(data, direction, sortKeyForNumber);
+    expect(sortedData[0].conceptID).toBe(11);
+    expect(sortedData[1].conceptID).toBe(2);
+    expect(sortedData[2].conceptID).toBe(1);
   });
 });
