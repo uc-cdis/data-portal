@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { get, unset } from 'lodash';
 import { datadogRum } from '@datadog/browser-rum';
 import { manifestServiceApiPath, hostname } from '../../../localconf';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
@@ -10,10 +10,10 @@ function removeKeys(obj: object, keysToRemove: Array<string>) {
   keysToRemove.forEach((key) => {
     if (key.includes('.')) {
       const [firstKey, ...nestedKeys] = key.split('.');
-      const nestedObj = _.get(obj, firstKey);
-      _.unset(nestedObj, nestedKeys.join('.'));
+      const nestedObj = get(obj, firstKey);
+      unset(nestedObj, nestedKeys.join('.'));
     } else {
-      _.unset(obj, key);
+      unset(obj, key);
     }
   });
   return obj;
