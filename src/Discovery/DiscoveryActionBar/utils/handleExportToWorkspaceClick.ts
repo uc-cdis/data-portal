@@ -1,4 +1,4 @@
-import { get, unset } from 'lodash';
+import { get, unset, cloneDeep } from 'lodash';
 import { datadogRum } from '@datadog/browser-rum';
 import { manifestServiceApiPath, hostname } from '../../../localconf';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
@@ -23,7 +23,7 @@ const assembleAndExportMetadata = (keysToRemove:Array<string>, selectedResources
   console.log('keysToRemove', keysToRemove);
   console.log('selectedResources', selectedResources);
   const filteredData = selectedResources.map((obj) => {
-    const newObj = _.cloneDeep(obj);
+    const newObj = cloneDeep(obj);
     return removeKeys(newObj, keysToRemove);
   });
   console.log('filteredData', filteredData);
@@ -43,7 +43,7 @@ const handleExportToWorkspaceClick = async (
   const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
   if (enableExportFullMetadata) {
     const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
-    assembleAndExportMetadata(keysToRemove, selectedResources);
+    if (keysToRemove) assembleAndExportMetadata(keysToRemove, selectedResources);
   }
 
   const { manifestFieldName } = config.features.exportToWorkspace;
