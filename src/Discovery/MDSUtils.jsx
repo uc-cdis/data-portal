@@ -27,6 +27,10 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
         if (studyRegistrationConfig?.dataDictionaryField && entry[studyRegistrationConfig.dataDictionaryField]) {
           study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
         }
+        // copy CDE info if exists
+        if (studyRegistrationConfig?.cdeField && entry[studyRegistrationConfig.cdeField]) {
+          study[studyRegistrationConfig.cdeField] = entry[studyRegistrationConfig.cdeField];
+        }
         return study;
       });
       allStudies = allStudies.concat(studies);

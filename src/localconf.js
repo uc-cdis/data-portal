@@ -330,6 +330,9 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.dataDictionaryField) {
     studyRegistrationConfig.dataDictionaryField = '';
   }
+  if (!studyRegistrationConfig.cdeField) {
+    studyRegistrationConfig.cdeField = '';
+  }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)

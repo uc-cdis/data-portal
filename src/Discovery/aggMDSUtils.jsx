@@ -59,6 +59,10 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       if (studyRegistrationConfig?.dataDictionaryField && entry[studyId][studyRegistrationConfig.dataDictionaryField]) {
         entryUnpacked[studyRegistrationConfig.dataDictionaryField] = entry[studyId][studyRegistrationConfig.dataDictionaryField];
       }
+      // copy CDE info if exists
+      if (studyRegistrationConfig?.cdeField && entry[studyRegistrationConfig.cdeField]) {
+        entryUnpacked[studyRegistrationConfig.cdeField] = entry[studyRegistrationConfig.cdeField];
+      }
       return entryUnpacked;
     });
 
