@@ -47,7 +47,7 @@ const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (
                 searchTerm,
               )}
             >
-              {valueSummaryObj.personCount}
+              {valueSummaryObj.personCount.toLocaleString()}
             </td>
           </tr>
         ),
