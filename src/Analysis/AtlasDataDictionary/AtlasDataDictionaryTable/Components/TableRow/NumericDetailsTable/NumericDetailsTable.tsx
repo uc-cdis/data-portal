@@ -20,7 +20,7 @@ const NumericDetailsTable = ({ rowObject, searchTerm }) => (
             searchTerm,
           )}
         >
-          <div className={'td-container'}>{rowObject.minValue}</div>
+          <div className={'td-container'}>{rowObject.minValue.toLocaleString()}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
@@ -28,7 +28,7 @@ const NumericDetailsTable = ({ rowObject, searchTerm }) => (
             searchTerm,
           )}
         >
-          <div className={'td-container'}>{rowObject.maxValue}</div>
+          <div className={'td-container'}>{rowObject.maxValue.toLocaleString()}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
@@ -36,7 +36,7 @@ const NumericDetailsTable = ({ rowObject, searchTerm }) => (
             searchTerm,
           )}
         >
-          <div className={'td-container'}>{rowObject.meanValue}</div>
+          <div className={'td-container'}>{rowObject.meanValue.toLocaleString()}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
@@ -44,7 +44,7 @@ const NumericDetailsTable = ({ rowObject, searchTerm }) => (
             searchTerm,
           )}
         >
-          <div className={'td-container'}>{rowObject.standardDeviation}</div>
+          <div className={'td-container'}>{rowObject.standardDeviation.toLocaleString()}</div>
         </td>
       </tr>
     </tbody>
