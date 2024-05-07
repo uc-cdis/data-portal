@@ -57,7 +57,7 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWhereValueIsFilled',
     jsx: (
       <span>
-        People with <br />Variable where <br />Value is Filled
+        People with <br />Variable where <br />Value&nbsp;is&nbsp;Filled
       </span>
     ),
   },

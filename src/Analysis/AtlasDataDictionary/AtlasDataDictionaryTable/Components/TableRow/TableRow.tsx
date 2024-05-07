@@ -123,7 +123,7 @@ const TableRow = ({
             <div className='td-container'>
               {rowObject.numberOfPeopleWithVariable.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWithVariablePercent}%
+              {rowObject.numberOfPeopleWithVariablePercent.toLocaleString()}%
             </div>
           </td>
         )}
@@ -143,7 +143,7 @@ const TableRow = ({
             <div className='td-container'>
               {rowObject.numberOfPeopleWhereValueIsFilled.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWhereValueIsFilledPercent}%
+              {rowObject.numberOfPeopleWhereValueIsFilledPercent.toLocaleString()}%
             </div>
           </td>
         )}
@@ -163,7 +163,7 @@ const TableRow = ({
             <div className='td-container'>
               {rowObject.numberOfPeopleWhereValueIsNull.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWhereValueIsNullPercent}%
+              {rowObject.numberOfPeopleWhereValueIsNullPercent.toLocaleString()}%
             </div>
           </td>
         )}

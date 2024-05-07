@@ -36,7 +36,7 @@ const NumericDetailsTable = ({ rowObject, searchTerm }) => (
             searchTerm,
           )}
         >
-          <div className={'td-container'}>{rowObject.meanValue}</div>
+          <div className={'td-container'}>{rowObject.meanValue.toLocaleString()}</div>
         </td>
         <td
           className={checkIfCellContainsSearchTerm(
