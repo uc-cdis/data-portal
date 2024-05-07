@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Input } from '@mantine/core';
+import { debounce } from 'lodash';
 import SearchIcon from '../Icons/SearchIcon';
 import { IRowData } from '../../Interfaces/Interfaces';
 
@@ -18,7 +19,7 @@ const SearchBar = ({
   searchTerm,
   handleTableChange,
 }: ISearchBarProps) => {
-  useEffect(() => {
+  const filterTableData = () => {
     const filteredData = TableData.filter((item) => {
       const searchQuery = searchTerm.toLowerCase().trim();
       return Object.values(item).some((value) => {
@@ -45,6 +46,13 @@ const SearchBar = ({
       });
     });
     setData(filteredData);
+  };
+  const debounceDelayInMilliseconds = 500;
+  useEffect(() => {
+    const debouncedFilter = debounce(() => {
+      filterTableData();
+    }, debounceDelayInMilliseconds);
+    debouncedFilter();
   }, [searchTerm]);
 
   const handleInputChange = (event) => {

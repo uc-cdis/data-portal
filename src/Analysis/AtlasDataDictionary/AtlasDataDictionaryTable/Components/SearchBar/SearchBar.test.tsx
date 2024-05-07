@@ -1,9 +1,11 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import {
+  render, fireEvent, screen, waitFor,
+} from '@testing-library/react';
 import SearchBar from './SearchBar';
 
 describe('SearchBar', () => {
-  it('should update data based on input value', () => {
+  it('should update data based on input value', async () => {
     const columnsShown = 5;
     const TableData: any = [
       { id: 1, name: 'John Doe', age: 28 },
@@ -33,8 +35,9 @@ describe('SearchBar', () => {
     // Simulate key press event (Enter) to trigger search
     fireEvent.keyPress(input, { key: 'Enter' });
 
-    // Expect set data to be filtered by search term
-    expect(setData).toHaveBeenCalledTimes(1);
+    // Expect set data to be filtered by search term after debouncing
+    await waitFor(() => expect(setData).toHaveBeenCalledTimes(1));
+
     const filteredData = TableData.filter((item) => Object.values(item).some((value) => {
       const valueToString = value?.toString()?.toLowerCase();
       return valueToString && valueToString.includes('doe');
