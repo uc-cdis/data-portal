@@ -49,9 +49,7 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWithVariable',
     jsx: (
       <span>
-        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
-        <br />
-        with&nbsp;Variable
+        People with<br />Variable
       </span>
     ),
   },
@@ -59,9 +57,7 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWhereValueIsFilled',
     jsx: (
       <span>
-        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
-        <br />
-        where&nbsp;Value&nbsp;is&nbsp;Filled
+        People with <br />Variable where <br />Value is Filled
       </span>
     ),
   },
@@ -69,9 +65,7 @@ const ColumnsItems = [
     headerKey: 'numberOfPeopleWhereValueIsNull',
     jsx: (
       <span>
-        #&nbsp;/&nbsp;%&nbsp;of&nbsp;People
-        <br />
-        where&nbsp;Value&nbsp;is&nbsp;Null
+        People with <br />Variable where <br />Value&nbsp;is&nbsp;Null
       </span>
     ),
   },
