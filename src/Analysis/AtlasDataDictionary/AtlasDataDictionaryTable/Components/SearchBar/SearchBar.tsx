@@ -49,7 +49,9 @@ const SearchBar = ({
   };
   const debounceDelayInMilliseconds = 500;
   useEffect(() => {
-    const debouncedFilter = debounce(() => { filterTableData(); }, debounceDelayInMilliseconds);
+    const debouncedFilter = debounce(() => {
+      filterTableData();
+    }, debounceDelayInMilliseconds);
     debouncedFilter();
   }, [searchTerm]);
 
