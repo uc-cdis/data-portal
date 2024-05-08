@@ -33,4 +33,9 @@ const Home = ({ selectedTeamProject }) => {
     </React.Fragment>
   );
 };
+
+Home.propTypes = {
+  selectedTeamProject: PropTypes.string.isRequired,
+};
+
 export default Home;
