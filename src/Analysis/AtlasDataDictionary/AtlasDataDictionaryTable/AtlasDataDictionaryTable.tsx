@@ -14,10 +14,12 @@ import {
 } from './Utils/SortUtils';
 import ManageColumns from './Components/ManageColumns/ManageColumns';
 import DefaultAtlasColumnManagement from './Utils/DefaultAtlasColumnManagement';
+import ManageColumnsNotification from './Components/ManageColumnsNotification/ManageColumnsNotification';
 
 const AtlasDataDictionaryTable = ({ TableData }) => {
   const preprocessedTableData = PreprocessTableData(TableData);
   const [data, setData] = useState(preprocessedTableData);
+  const [showNotification, setShowNotification] = useState(false);
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
   );
@@ -44,7 +46,6 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
     entriesShown * currentPage - entriesShown,
     entriesShown * currentPage,
   );
-
   const handleTableChange = (
     event:
       | 'openDropdown'
@@ -120,6 +121,14 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
     handleTableChange('sortConfig', { sortKey, direction: newDirection });
   };
 
+  const columnManagementReset = () => {
+    handleTableChange(
+      'columnManagementReset',
+      'columnManagementReset',
+    );
+    setShowNotification(true);
+  };
+
   const rows = paginatedData.map((rowObject, i) => (
     <TableRow
       key={i}
@@ -134,9 +143,14 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
 
   return (
     <div data-testid='atlas-data-dictionary-table'>
+      <ManageColumnsNotification
+        showNotification={showNotification}
+        setShowNotification={setShowNotification}
+      />
       <ManageColumns
         handleTableChange={handleTableChange}
         columnManagementData={columnManagement}
+        columnManagementReset={columnManagementReset}
       />
       <Table>
         <SearchBar
@@ -145,6 +159,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
           setData={setData}
           searchTerm={searchTerm}
           handleTableChange={handleTableChange}
+          columnManagementReset={columnManagementReset}
         />
         <ColumnHeaders
           handleSort={handleSort}

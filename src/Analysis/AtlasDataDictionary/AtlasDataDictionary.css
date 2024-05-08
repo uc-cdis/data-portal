@@ -6,6 +6,20 @@
   overflow-y: hidden;
 }
 
+.atlas-data-dictionary-container .row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.atlas-data-dictionary-container  .column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
 .atlas-data-dictionary-container .data-not-available,
 .atlas-data-dictionary-container .no-data-found,
 .atlas-data-dictionary-container .loading-container {
@@ -187,6 +201,10 @@ table > tbody > tr > td.preview-chart {
   text-align: center;
   opacity: 70%;
   padding-bottom: 2px;
+}
+
+.atlas-data-dictionary-container .search-bar-message {
+  margin-left: 8px 0 0 16px;
 }
 
 /* Pagination */

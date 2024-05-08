@@ -3,6 +3,7 @@ import { Input } from '@mantine/core';
 import { debounce } from 'lodash';
 import SearchIcon from '../Icons/SearchIcon';
 import { IRowData } from '../../Interfaces/Interfaces';
+import SearchBarMessage from './SearchBarMessage/SearchBarMessage';
 
 interface ISearchBarProps {
   columnsShown: number;
@@ -10,6 +11,7 @@ interface ISearchBarProps {
   setData: Function;
   searchTerm: string;
   handleTableChange: Function;
+  columnManagementReset: Function
 }
 
 const SearchBar = ({
@@ -18,6 +20,7 @@ const SearchBar = ({
   setData,
   searchTerm,
   handleTableChange,
+  columnManagementReset,
 }: ISearchBarProps) => {
   const filterTableData = () => {
     const filteredData = TableData.filter((item) => {
@@ -63,30 +66,36 @@ const SearchBar = ({
     <thead className={'search-bar'} data-testid='search-bar'>
       <tr>
         <th aria-label='search bar' colSpan={columnsShown}>
-          <div className='search-bar-container'>
-            <Input
-              rightSection={
-                searchTerm ? (
-                  <button
-                    type='button'
-                    className='search-bar-input-control'
-                    onClick={() => handleTableChange('searchTerm', '')}
-                    onKeyPress={(event) => {
-                      if (event.key === 'Enter') {
-                        handleTableChange('searchTerm', '');
-                      }
-                    }}
-                  >
+          <div className='row'>
+            <div className='search-bar-container'>
+              <Input
+                rightSection={
+                  searchTerm ? (
+                    <button
+                      type='button'
+                      className='search-bar-input-control column'
+                      onClick={() => handleTableChange('searchTerm', '')}
+                      onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                          handleTableChange('searchTerm', '');
+                        }
+                      }}
+                    >
                     x
-                  </button>
-                ) : (
-                  <SearchIcon />
-                )
-              }
-              placeholder='Search'
-              value={searchTerm}
-              onChange={(e) => handleInputChange(e)}
-            />
+                    </button>
+                  ) : (
+                    <SearchIcon />
+                  )
+                }
+                placeholder='Search'
+                value={searchTerm}
+                onChange={(e) => handleInputChange(e)}
+              />
+            </div>
+            <div className='column'>
+              <SearchBarMessage columnManagementReset={columnManagementReset} />
+            </div>
+
           </div>
         </th>
       </tr>
