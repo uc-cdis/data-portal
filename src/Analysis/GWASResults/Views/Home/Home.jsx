@@ -5,6 +5,7 @@ import HomeTable from './HomeTable/HomeTable';
 import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import ManageColumns from './ManageColumns/ManageColumns';
 import { fetchGwasWorkflows } from '../../Utils/gwasWorkflowApi';
+import PropTypes from 'prop-types';
 
 const Home = ({ selectedTeamProject }) => {
   const refetchInterval = 5000;
