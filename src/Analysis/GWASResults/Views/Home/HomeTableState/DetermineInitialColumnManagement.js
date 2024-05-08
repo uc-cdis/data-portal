@@ -20,7 +20,6 @@ const columnManagementLocalStorageIsValid = () => {
 };
 
 const DetermineInitialColumnManagement = () => {
-  console.log('called DetermineInitialColumnManagement', new Date().toLocaleString())
   if (localStorageAvailable()) {
     if (
       localStorage.getItem('columnManagement')

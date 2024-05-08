@@ -6,10 +6,9 @@ import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/Loadin
 import ManageColumns from './ManageColumns/ManageColumns';
 import { fetchGwasWorkflows } from '../../Utils/gwasWorkflowApi';
 
-const Home = ({selectedTeamProject}) => {
+const Home = () => {
   const refetchInterval = 5000;
-  const { data, status } = useQuery(['workflows', selectedTeamProject],
-    fetchGwasWorkflows, {
+  const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
     refetchInterval,
   });
   if (status === 'loading') {

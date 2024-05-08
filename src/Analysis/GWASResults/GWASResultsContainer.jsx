@@ -12,9 +12,7 @@ import './GWASResultsContainer.css';
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
-  console.log("Called GWASResultsContainer at ",  new Date().toLocaleString())
-  const [homeTableState, setHomeTableState] = useState(InitialHomeTableState());
-  const [selectedTeamProject, setSelectedTeamProject] = useState(localStorage.getItem('teamProject'))
+  const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
 
   useEffect(() => {
     HideShowElementsCreatedByOuterAnalysisApp(currentView);
@@ -23,7 +21,7 @@ const GWASResultsContainer = () => {
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
-      return <Home selectedTeamProject={selectedTeamProject} />;
+      return <Home />;
     case VIEWS.results:
       return <Results />;
     case VIEWS.execution:

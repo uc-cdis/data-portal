@@ -1,7 +1,7 @@
 import localStorageAvailable from './localStorageAvailable';
 import DetermineInitialColumnManagement from './DetermineInitialColumnManagement';
 
-const InitialHomeTableState =() => ({
+const InitialHomeTableState = {
   nameSearchTerm: '',
   userNameSearchTerm: '',
   wfNameSearchTerm: '',
@@ -12,6 +12,6 @@ const InitialHomeTableState =() => ({
   currentPage: 1,
   columnManagement: DetermineInitialColumnManagement(),
   useLocalStorage: localStorageAvailable(),
-});
+};
 
 export default InitialHomeTableState;
