@@ -7,7 +7,7 @@ import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
 const DownloadZipButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,
 }) => (
-  props.config.features.exportToWorkspace?.enableDownloadZip && (
+  props.config.features.exportToWorkspace?.enableDownloadZip ? (
     <React.Fragment>
       <Popover
         className='discovery-popover'
@@ -86,6 +86,6 @@ const DownloadZipButton = ({
         {downloadStatus.message.content}
       </Modal>
     </React.Fragment>
-  ));
+  ) : null);
 
 export default DownloadZipButton;
