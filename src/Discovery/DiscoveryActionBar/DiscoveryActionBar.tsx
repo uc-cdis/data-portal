@@ -5,7 +5,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { DiscoveryConfig } from '../DiscoveryConfig';
 import { fetchWithCreds } from '../../actions';
 import { jobAPIPath, bundle } from '../../localconf';
-import handleExportToWorkspaceClick from './utils/handleExportToWorkspaceClick';
+import handleExportToWorkspaceClick from './utils/handleExportToWorkspaceClick/handleExportToWorkspaceClick';
 import handleDownloadZipClick from './utils/handleDownloadZipClick';
 import handleDownloadManifestClick from './utils/handleDownloadManifestClick';
 import checkDownloadStatus from './utils/checkDownloadStatus';

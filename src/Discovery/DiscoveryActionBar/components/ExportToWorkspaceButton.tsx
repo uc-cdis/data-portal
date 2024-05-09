@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Popover, Button } from 'antd';
-import handleExportToWorkspaceClick from '../utils/handleExportToWorkspaceClick';
+import handleExportToWorkspaceClick from '../utils/handleExportToWorkspaceClick/handleExportToWorkspaceClick';
 import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
 
 const ExportToWorkspaceButton = ({
