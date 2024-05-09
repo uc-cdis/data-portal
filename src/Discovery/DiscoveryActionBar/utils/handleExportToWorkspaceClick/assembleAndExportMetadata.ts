@@ -16,9 +16,6 @@ const removeKeys = (obj: object, keysToRemove: Array<string>) => {
 };
 
 const assembleMetadata = (keysToRemove:Array<string>, selectedResources:Array<object>) => {
-  console.log('hello world');
-  console.log('keysToRemove', keysToRemove);
-  console.log('selectedResources', selectedResources);
   const filteredData = selectedResources.map((obj) => {
     const clonedObj = cloneDeep(obj);
     // if there are keysToRemove, remove them
@@ -28,11 +25,10 @@ const assembleMetadata = (keysToRemove:Array<string>, selectedResources:Array<ob
     // Otherwise just return the cloned object
     return clonedObj;
   });
-  console.log('filteredData', filteredData);
+  // console.log('filteredData', filteredData);
   return filteredData;
 };
 const exportAssembledMetadata = async (filteredData:Array<object>) => {
-  console.log('manifestServiceApiPath', manifestServiceApiPath);
   const res = await fetchWithCreds({
     path: `${manifestServiceApiPath}/metadata`,
     // path: `${manifestServiceApiPath}`,
