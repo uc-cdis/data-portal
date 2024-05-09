@@ -330,8 +330,13 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.dataDictionaryField) {
     studyRegistrationConfig.dataDictionaryField = '';
   }
-  if (!studyRegistrationConfig.cdeField) {
-    studyRegistrationConfig.cdeField = '';
+  if (!studyRegistrationConfig.cdeMetadataGUIDType) {
+    studyRegistrationConfig.cdeMetadataGUIDType = '';
+  }
+  if (!studyRegistrationConfig.cdeMetadataField) {
+    studyRegistrationConfig.cdeMetadataField = '';
+  } else if (!studyRegistrationConfig.cdeMetadataInStudyMetadataField) {
+    studyRegistrationConfig.cdeMetadataInStudyMetadataField = studyRegistrationConfig.cdeMetadataField;
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;

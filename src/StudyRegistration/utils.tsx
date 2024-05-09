@@ -4,6 +4,7 @@ import {
 import { fetchWithCreds } from '../actions';
 import { validFileNameChecks } from '../utils';
 
+const LIMIT = 2000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
 export const preprocessStudyRegistrationMetadata = async (username, metadataID, updatedValues, GUIDType = 'discovery_metadata') => {
@@ -187,4 +188,47 @@ export const handleDataDictionaryNameValidation = (_:object, userInput:string): 
     return Promise.reject('Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
   }
   return Promise.resolve(true);
+};
+
+export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
+  try {
+    let allCDEInfo:any = [];
+    let offset = 0;
+    // request up to LIMIT studies from MDS at a time.
+    let shouldContinue = true;
+    while (shouldContinue) {
+      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
+      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
+      // using Promise.all() so that we can fire multiple requests at one.
+      // But we WANT to delay sending the next request to MDS until we know we need it.
+      // eslint-disable-next-line no-await-in-loop
+      const res = await fetch(url);
+      if (res.status !== 200) {
+        throw new Error(`Request for CDE metadata at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const jsonResponse = await res.json();
+      const cdeInfoList = Object.entries(jsonResponse).map(([k, v]) => {
+        const key:string = k;
+        const value:any = v;
+        const cdeInfo = {
+          drupalID: value.drupal_id,
+          fileName: value.file_name,
+          guid: key,
+          isCoreCDE: !!value.is_core_cde,
+        };
+        return cdeInfo;
+      });
+      allCDEInfo = allCDEInfo.concat(cdeInfoList);
+      const noMoreCDEToLoad = cdeInfoList.length < LIMIT;
+      if (noMoreCDEToLoad) {
+        shouldContinue = false;
+        return allCDEInfo;
+      }
+      offset += LIMIT;
+    }
+    return allCDEInfo;
+  } catch (err) {
+    throw new Error(`Request for CDE metadata failed: ${err}`);
+  }
 };

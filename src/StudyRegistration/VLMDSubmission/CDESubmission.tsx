@@ -14,6 +14,7 @@ import {
   Row,
   SelectProps,
   Select,
+  CheckboxOptionType,
 } from 'antd';
 import { parse } from 'jsonpath';
 import { useLocation, Link } from 'react-router-dom';
@@ -29,30 +30,56 @@ import {
 } from '../../localconf';
 import { createKayakoTicket } from '../../utils';
 import { FormSubmissionState } from '../StudyRegistration';
+import { loadCDEInfoFromMDS } from '../utils';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
 interface LocationState {
-    existingCDEName?: Array<string>;
+    selectedCDEs?: Array<string>;
 }
 
 const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMDSubmissionProps) => {
-  const [form] = Form.useForm();
+  const [cdeForm] = Form.useForm();
   const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
-  const [existingCDEName, setExistingCDEName] = useState<Array<string> | undefined>([]);
+  const [selectedCoreCDEs, setSelectedCoreCDEs] = useState<Array<string>>([]);
+  const [selectedNonCoreCDEs, setSelectedNonCoreCDEs] = useState<Array<string>>([]);
+  const [cdeList, setCDEList] = useState<Array<string>>([]);
+  const [coreCDEList, setCoreCDEList] = useState<Array<string>>([]);
   const [formSubmitting, setFormSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
-    const locationStateData = location.state as LocationState || {};
-    setExistingCDEName(locationStateData.existingCDEName);
-  }, [location.state]);
+    loadCDEInfoFromMDS().then((cdeInfoFromMDS) => {
+      const cdeOptions: string[] = [];
+      const coreCDEOptions: string[] = [];
+      cdeInfoFromMDS?.forEach((cdeInfo) => {
+        cdeOptions.push(`${cdeInfo.drupalID} ${cdeInfo.fileName}`);
+        if (cdeInfo.isCoreCDE) {
+          coreCDEOptions.push(`${cdeInfo.drupalID} ${cdeInfo.fileName}`);
+        }
+      });
+      setCDEList(cdeOptions);
+      setCoreCDEList(coreCDEOptions);
+    });
+  }, []);
 
-  useEffect(() => form.resetFields(), [props.studyNumber, props.studyName, form]);
+  useEffect(() => {
+    cdeForm.setFieldsValue({
+      coreCDEs: selectedCoreCDEs,
+      selectedCDEs: selectedCoreCDEs?.concat(selectedNonCoreCDEs),
+    });
+  }, [selectedCoreCDEs, selectedNonCoreCDEs]);
 
-  const handleUpload = (formValues) => {
+  //   useEffect(() => {
+  //     const locationStateData = location.state as LocationState || {};
+  //     setSelectedCDEs(locationStateData.selectedCDEs);
+  //   }, [location.state]);
+
+  useEffect(() => cdeForm.resetFields(), [props.studyNumber, props.studyName, cdeForm]);
+
+  const handleCDEFormSubmission = (formValues) => {
     setFormSubmissionStatus({ status: 'info', text: 'Preparing for upload' });
     const fileInfo = formValues.fileList_doNotInclude[0];
     if (!fileInfo?.name || !fileInfo?.originFileObj) {
@@ -88,11 +115,11 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
 
   const onSubmitButtonClick = () => {
     setFormSubmitting(true);
-    form.submit();
+    cdeForm.submit();
   };
 
   const onFinish = (values) => {
-    handleUpload(values);
+    handleCDEFormSubmission(values);
   };
 
   if (formSubmissionStatus) {
@@ -149,18 +176,37 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     }
   }
 
-  const options: SelectProps['options'] = [];
-  for (let i = 10; i < 36; i += 1) {
-    options.push({
-      label: i.toString(36) + i,
-      value: i.toString(36) + i,
-    });
-  }
-
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...FORM_LAYOUT} form={form} name='cde-sub-form' onFinish={onFinish} validateMessages={VALIDATE_MESSAGE}>
+        <Form
+          className='study-reg-form'
+          {...FORM_LAYOUT}
+          form={cdeForm}
+          name='cde-sub-form'
+          onFinish={onFinish}
+          validateMessages={VALIDATE_MESSAGE}
+          onValuesChange={(changedValues) => {
+            if (Object.keys(changedValues).includes('coreCDEs')) {
+              const changedCoreCDECheckboxValues = changedValues.coreCDEs;
+              setSelectedCoreCDEs(changedCoreCDECheckboxValues);
+            }
+            if (Object.keys(changedValues).includes('selectedCDEs')) {
+              const changedCDESelectValues = changedValues.selectedCDEs;
+              const updatedCoreCDESelectValues: any[] = [];
+              const updatedNonCoreCDEselectValues: any[] = [];
+              changedCDESelectValues.forEach((element) => {
+                if (coreCDEList.includes(element)) {
+                  updatedCoreCDESelectValues.push(element);
+                } else {
+                  updatedNonCoreCDEselectValues.push(element);
+                }
+              });
+              setSelectedCoreCDEs(updatedCoreCDESelectValues);
+              setSelectedNonCoreCDEs(updatedNonCoreCDEselectValues);
+            }
+          }}
+        >
           <Divider plain>HEAL CDEs</Divider>
           <Typography style={{ textAlign: 'center' }}>
           Use this form to indicate which HEAL Common Data Elements (CDEs) are utilized in this study (select all that apply). View the HEAL CDE Repository <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
@@ -180,62 +226,21 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
             <TextArea disabled autoSize />
           </Form.Item>
           <Form.Item
-            name='Core CDEs'
+            name='coreCDEs'
             label='Core CDEs'
-            rules={[
-              { required: true },
-            ]}
           >
-            <Checkbox.Group>
-              <Row>
-                <Col span={8}>
-                  <Checkbox value='A' style={{ lineHeight: '32px' }}>
-                A
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='B' style={{ lineHeight: '32px' }} disabled>
-                B
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='C' style={{ lineHeight: '32px' }}>
-                C
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='D' style={{ lineHeight: '32px' }}>
-                D
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='E' style={{ lineHeight: '32px' }}>
-                E
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox value='F' style={{ lineHeight: '32px' }}>
-                F
-                  </Checkbox>
-                </Col>
-              </Row>
-            </Checkbox.Group>
+            <Checkbox.Group options={coreCDEList.map((entry) => ({ label: entry, value: entry }))} />
           </Form.Item>
           <Form.Item
-            name='Selected CDEs'
+            name='selectedCDEs'
             label='Selected CDEs'
             extra='Search and select from all CDEs'
-            rules={[
-              { required: true },
-            ]}
           >
             <Select
               mode='multiple'
               allowClear
               style={{ width: '100%' }}
-              placeholder='Please select'
-              defaultValue={['a10', 'c12']}
-              options={options}
+              options={cdeList.map((entry) => ({ label: entry, value: entry }))}
             />
           </Form.Item>
           <Divider plain>Administration
