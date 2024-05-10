@@ -1,4 +1,6 @@
-import { removeKeys, assembleMetadata, exportAssembledMetadata, assembleAndExportMetadata } from './assembleAndExportMetadata';
+import {
+  removeKeys, assembleMetadata, exportAssembledMetadata, assembleAndExportMetadata,
+} from './assembleAndExportMetadata';
 import { fetchWithCreds } from '../../../../actions';
 
 jest.mock('../../../../actions', () => ({
@@ -33,6 +35,68 @@ describe('assembleMetadata', () => {
       { x: 10, y: { z: 20 } },
     ]);
   });
+  it('should return an array of objects with specified keys removed and remove their children', () => {
+    const keysToRemove = ['b.c'];
+    const selectedResources = [
+      {
+        a: 1,
+        b: {
+          c: { d: { e: { f: 'test' } } }, g: 3,
+        },
+      },
+      { x: 10, y: { z: 20 } },
+    ];
+    const result = assembleMetadata(keysToRemove, selectedResources);
+    expect(result).toEqual([
+      { a: 1, b: { g: 3 } },
+      { x: 10, y: { z: 20 } },
+    ]);
+  });
+  it('should return an array of objects with no specified keys removed when keysToRemove is empty', () => {
+    const keysToRemove = [];
+    const selectedResources = [
+      { a: 1, b: { c: 2, d: 3 } },
+      { x: 10, y: { z: 20 } },
+    ];
+    const result = assembleMetadata(keysToRemove, selectedResources);
+    expect(result).toEqual(selectedResources);
+  });
+  it('should return an array of objects with specified keys removed when there are multiple nestings', () => {
+    const keysToRemove = ['b.c.d.e.f', 'x', 'y.z'];
+    const selectedResources = [
+      {
+        a: 1,
+        b:
+        {
+          c:
+          {
+            d: {
+              e:
+              {
+                f: 'test',
+              },
+            },
+          },
+        },
+      }, { x: 10, y: { z: 20 } },
+    ];
+    const result = assembleMetadata(keysToRemove, selectedResources);
+    expect(result).toEqual([
+      {
+        a: 1,
+        b: {
+          c: {
+            d: {
+              e: {},
+            },
+          },
+        },
+      },
+      {
+        y: {},
+      },
+    ]);
+  });
 });
 
 describe('exportAssembledMetadata', () => {
@@ -44,7 +108,7 @@ describe('exportAssembledMetadata', () => {
     await exportAssembledMetadata(filteredData);
 
     expect(fetchWithCreds).toHaveBeenCalledWith({
-      path: expect.any(String), // You may want to specify the exact path
+      path: expect.any(String),
       body: JSON.stringify(filteredData),
       method: 'POST',
     });
@@ -62,23 +126,18 @@ describe('exportAssembledMetadata', () => {
 });
 
 describe('assembleAndExportMetadata', () => {
-  it('should call assembleMetadata and exportAssembledMetadata', () => {
-    const keysToRemove = ['b.c'];
-    const selectedResources = [{ a: 1 }];
-    const filteredData = [{ a: 1 }];
-    const mockExportFn = jest.fn();
-    const originalAssembleMetadata = jest.spyOn(global, 'assembleMetadata');
-    originalAssembleMetadata.mockReturnValue(filteredData);
-    const originalExportMetadata = jest.spyOn(global, 'exportAssembledMetadata');
-    originalExportMetadata.mockImplementation(mockExportFn);
-
-    assembleAndExportMetadata(keysToRemove, selectedResources);
-
-    expect(originalAssembleMetadata).toHaveBeenCalledWith(keysToRemove, selectedResources);
-    expect(originalExportMetadata).toHaveBeenCalledWith(filteredData);
-    expect(mockExportFn).toHaveBeenCalled();
-
-    originalAssembleMetadata.mockRestore();
-    originalExportMetadata.mockRestore();
+  it(`should call fetchWithCreds with the correct parameters after calling
+      assembleMetadata and exportAssembledMetadata`, async () => {
+    const unfilteredData = [{ a: 1 }, { b: 2 }];
+    const filteredData = [{}, { b: 2 }];
+    const selectedResources = ['a'];
+    const mockResponse = { status: 200 };
+    fetchWithCreds.mockResolvedValue(mockResponse);
+    await assembleAndExportMetadata(selectedResources, unfilteredData);
+    expect(fetchWithCreds).toHaveBeenCalledWith({
+      path: expect.any(String),
+      body: JSON.stringify(filteredData),
+      method: 'POST',
+    });
   });
 });
