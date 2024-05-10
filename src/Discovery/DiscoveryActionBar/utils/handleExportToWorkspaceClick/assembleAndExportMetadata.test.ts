@@ -118,7 +118,6 @@ describe('exportAssembledMetadata', () => {
     const filteredData = [{ a: 1 }, { b: 2 }];
     const mockResponse = { status: 500 };
     fetchWithCreds.mockResolvedValue(mockResponse);
-
     await expect(exportAssembledMetadata(filteredData)).rejects.toThrow(
       `Encountered error while exporting assembled metadata: ${JSON.stringify(mockResponse)}`,
     );
