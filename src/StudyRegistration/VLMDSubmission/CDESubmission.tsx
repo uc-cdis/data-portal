@@ -32,7 +32,7 @@ const { Text } = Typography;
 const { TextArea } = Input;
 
 interface LocationState {
-    selectedCDEs?: Array<string>;
+    existingCDEName?: Array<string>;
 }
 
 const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMDSubmissionProps) => {
@@ -40,6 +40,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
+  const [existingCDEName, setExistingCDEName] = useState<Array<string> | undefined>([]);
   const [selectedCoreCDEs, setSelectedCoreCDEs] = useState<Array<string>>([]);
   const [selectedNonCoreCDEs, setSelectedNonCoreCDEs] = useState<Array<string>>([]);
   const [cdeInfoFromMDS, setCDEInfoFromMDS] = useState<Array<any>>([]);
@@ -58,10 +59,10 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     });
   }, [selectedCoreCDEs, selectedNonCoreCDEs]);
 
-  //   useEffect(() => {
-  //     const locationStateData = location.state as LocationState || {};
-  //     setSelectedCDEs(locationStateData.selectedCDEs);
-  //   }, [location.state]);
+  useEffect(() => {
+    const locationStateData = location.state as LocationState || {};
+    setExistingCDEName(locationStateData.existingCDEName);
+  }, [location.state]);
 
   useEffect(() => cdeForm.resetFields(), [props.studyNumber, props.studyName, cdeForm]);
 
@@ -71,7 +72,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     }
 
     const selectedCDEInfo = cdeInfoFromMDS.filter((entry) => formValues.selectedCDEs.includes(entry.option));
-    updateCDEMetadataInMDS('HDP01076', selectedCDEInfo).then(() => {
+    updateCDEMetadataInMDS(props.studyUID, selectedCDEInfo).then(() => {
       let subject = `CDE submission for ${props.studyNumber} ${props.studyName}`;
       if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
         subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
@@ -196,7 +197,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
           </Form.Item>
           <Form.Item
             name='selectedCDEs'
-            label='Selected CDEs'
+            label='All CDEs'
             extra='Search and select from all CDEs'
           >
             <Select

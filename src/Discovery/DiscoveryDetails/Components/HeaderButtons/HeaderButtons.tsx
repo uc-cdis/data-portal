@@ -20,6 +20,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
     studyNumber: string | null = null,
     studyUID: string | number | null = null,
     existingDataDictionaryName: Array<string> = [],
+    existingCDEName: Array<string> = [],
   ) => {
     history.push(redirectURL, {
       studyName,
@@ -27,6 +28,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       studyRegistrationAuthZ,
       studyUID,
       existingDataDictionaryName,
+      existingCDEName,
     });
   };
   const permalink = GetPermaLink(
@@ -76,6 +78,8 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       ],
       props.userAuthMapping,
     );
+
+    console.log(props.modalData);
 
   const showLoginButton = props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
     && !props.user.username;
@@ -163,6 +167,12 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
               Object.keys(
                 props.modalData[
                   studyRegistrationConfig.dataDictionaryField
+                ] || {},
+              ),
+              // get existing CDE names
+              Object.keys(
+                props.modalData[
+                  studyRegistrationConfig.cdeMetadataInStudyMetadataField
                 ] || {},
               ),
             )}
