@@ -1,46 +1,84 @@
-import {
-  assembleAndExportMetadata, assembleMetadata, exportAssembledMetadata, removeKeys,
-} from './assembleAndExportMetadata';
+import { removeKeys, assembleMetadata, exportAssembledMetadata, assembleAndExportMetadata } from './assembleAndExportMetadata';
+import { fetchWithCreds } from '../../../../actions';
+
+jest.mock('../../../../actions', () => ({
+  fetchWithCreds: jest.fn(),
+}));
+
+describe('removeKeys', () => {
+  it('should remove specified keys from the object', () => {
+    const obj = {
+      a: 1,
+      b: {
+        c: 2,
+        d: 3,
+      },
+    };
+    const keysToRemove = ['b.c'];
+    removeKeys(obj, keysToRemove);
+    expect(obj).toEqual({ a: 1, b: { d: 3 } });
+  });
+});
+
+describe('assembleMetadata', () => {
+  it('should return an array of objects with specified keys removed', () => {
+    const keysToRemove = ['b.c'];
+    const selectedResources = [
+      { a: 1, b: { c: 2, d: 3 } },
+      { x: 10, y: { z: 20 } },
+    ];
+    const result = assembleMetadata(keysToRemove, selectedResources);
+    expect(result).toEqual([
+      { a: 1, b: { d: 3 } },
+      { x: 10, y: { z: 20 } },
+    ]);
+  });
+});
+
+describe('exportAssembledMetadata', () => {
+  it('should call fetchWithCreds with the correct parameters', async () => {
+    const filteredData = [{ a: 1 }, { b: 2 }];
+    const mockResponse = { status: 200 };
+    fetchWithCreds.mockResolvedValue(mockResponse);
+
+    await exportAssembledMetadata(filteredData);
+
+    expect(fetchWithCreds).toHaveBeenCalledWith({
+      path: expect.any(String), // You may want to specify the exact path
+      body: JSON.stringify(filteredData),
+      method: 'POST',
+    });
+  });
+
+  it('should throw an error if response status is not 200', async () => {
+    const filteredData = [{ a: 1 }, { b: 2 }];
+    const mockResponse = { status: 500 };
+    fetchWithCreds.mockResolvedValue(mockResponse);
+
+    await expect(exportAssembledMetadata(filteredData)).rejects.toThrow(
+      `Encountered error while exporting assembled metadata: ${JSON.stringify(mockResponse)}`,
+    );
+  });
+});
 
 describe('assembleAndExportMetadata', () => {
-  it(`should call assembleMetadata function correctly after calling assembleAndExportMetadata`, async () => {
-    const keysToRemove: Array<string> = ['key1', 'key2'];
-    const selectedResources: Array<object> = [
-      { key1: 'value1', key2: 'value2' },
-      { key3: 'value3' },
-    ];
-    const mockFunctionA = jest.fn();
-    jest.mock(assembleAndExportMetadata, () => ({
-      ...jest.requireActual(assembleAndExportMetadata),
-      assembleMetadata: mockFunctionA,
-    }));
+  it('should call assembleMetadata and exportAssembledMetadata', () => {
+    const keysToRemove = ['b.c'];
+    const selectedResources = [{ a: 1 }];
+    const filteredData = [{ a: 1 }];
+    const mockExportFn = jest.fn();
+    const originalAssembleMetadata = jest.spyOn(global, 'assembleMetadata');
+    originalAssembleMetadata.mockReturnValue(filteredData);
+    const originalExportMetadata = jest.spyOn(global, 'exportAssembledMetadata');
+    originalExportMetadata.mockImplementation(mockExportFn);
 
-    await assembleAndExportMetadata(keysToRemove, selectedResources);
-    expect(assembleMetadata).toHaveBeenCalledWith(keysToRemove, selectedResources);
-    expect(exportAssembledMetadata).toHaveBeenCalledTimes(1);
-    expect(exportAssembledMetadata).toHaveBeenCalledWith([{}, { key3: 'value3' }]);
+    assembleAndExportMetadata(keysToRemove, selectedResources);
+
+    expect(originalAssembleMetadata).toHaveBeenCalledWith(keysToRemove, selectedResources);
+    expect(originalExportMetadata).toHaveBeenCalledWith(filteredData);
+    expect(mockExportFn).toHaveBeenCalled();
+
+    originalAssembleMetadata.mockRestore();
+    originalExportMetadata.mockRestore();
   });
-  /*
-  it('should remove keys from cloned objects when keysToRemove are provided', () => {
-    const obj1 = { key1: 'value1' };
-    const obj2 = { key2: 'value2' };
-    const keysToRemove = ['key1'];
-
-    const assembleMetadataResult = assembleMetadata(keysToRemove, [obj1, obj2]);
-
-    expect(assembleMetadataResult[0].key1).toBeUndefined();
-    expect(assembleMetadataResult[1].key1).toBeDefined();
-  });
-
-  it('should not remove keys when keysToRemove are not provided', () => {
-    const obj1 = { key1: 'value1' };
-    const obj2 = { key2: 'value2' };
-    const keysToRemove: Array<string> | undefined = undefined;
-
-    const assembleMetadataResult = assembleMetadata(keysToRemove, [obj1, obj2]);
-
-    expect(assembleMetadataResult[0].key1).toEqual('value1');
-    expect(assembleMetadataResult[1].key2).toEqual('value2');
-  });
-*/
 });
