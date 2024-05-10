@@ -91,13 +91,13 @@ export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = { 
   return updatedMetadataToRegister;
 };
 
-export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) => {
+export const updateStudyInMDS = async (metadataID, metadataToUpdate = {}) => {
   const updateURL = `${mdsURL}/${metadataID}?overwrite=true`;
   await fetchWithCreds({
     path: updateURL,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(metadataToRegister),
+    body: JSON.stringify(metadataToUpdate),
   }).then((response) => {
     if (response.status !== 200) {
       throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
@@ -230,5 +230,31 @@ export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
     return allCDEInfo;
   } catch (err) {
     throw new Error(`Request for CDE metadata failed: ${err}`);
+  }
+};
+
+export const updateCDEMetadataInMDS = async (metadataID, updatedCDEInfo) => {
+  try {
+    const queryURL = `${mdsURL}/${metadataID}`;
+    const queryRes = await fetch(queryURL);
+    if (queryRes.status !== 200) {
+      throw new Error(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
+    }
+    const studyMetadata = await queryRes.json();
+    const cdeMetadataInStudyMetadataField = studyRegistrationConfig?.cdeMetadataInStudyMetadataField;
+    const metadataToUpdate = { ...studyMetadata };
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, cdeMetadataInStudyMetadataField)) {
+      // create CDE metadata section in metadata if doesn't exist yet
+      metadataToUpdate[cdeMetadataInStudyMetadataField] = {};
+    }
+    const cdeMetadataToUpdate = updatedCDEInfo.reduce((acc, entry) => {
+      const { option, guid } = entry;
+
+      return { ...acc, [option]: guid };
+    }, {});
+    metadataToUpdate[cdeMetadataInStudyMetadataField] = cdeMetadataToUpdate;
+    await updateStudyInMDS(metadataID, metadataToUpdate);
+  } catch (err) {
+    throw new Error(`Request for query MDS failed: ${err}`);
   }
 };

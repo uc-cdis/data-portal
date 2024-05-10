@@ -23,7 +23,7 @@ import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
 import loadStudiesFromMDS from '../Discovery/MDSUtils';
-import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import { updateStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -213,7 +213,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
           .then(
-            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+            (updatedMetadataToRegister) => updateStudyInMDS(studyID, updatedMetadataToRegister)
               .then(
                 () => setFormSubmissionStatus({ status: 'success' }),
               ),

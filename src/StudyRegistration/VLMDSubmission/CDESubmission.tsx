@@ -9,12 +9,8 @@ import {
   Input,
   Space,
   Tooltip,
-  Col,
   Checkbox,
-  Row,
-  SelectProps,
   Select,
-  CheckboxOptionType,
 } from 'antd';
 import { parse } from 'jsonpath';
 import { useLocation, Link } from 'react-router-dom';
@@ -30,7 +26,7 @@ import {
 } from '../../localconf';
 import { createKayakoTicket } from '../../utils';
 import { FormSubmissionState } from '../StudyRegistration';
-import { loadCDEInfoFromMDS } from '../utils';
+import { loadCDEInfoFromMDS, updateCDEMetadataInMDS } from '../utils';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -46,22 +42,12 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
   const [selectedCoreCDEs, setSelectedCoreCDEs] = useState<Array<string>>([]);
   const [selectedNonCoreCDEs, setSelectedNonCoreCDEs] = useState<Array<string>>([]);
-  const [cdeList, setCDEList] = useState<Array<string>>([]);
-  const [coreCDEList, setCoreCDEList] = useState<Array<string>>([]);
-  const [formSubmitting, setFormSubmitting] = useState<boolean>(false);
+  const [cdeInfoFromMDS, setCDEInfoFromMDS] = useState<Array<any>>([]);
 
   useEffect(() => {
-    loadCDEInfoFromMDS().then((cdeInfoFromMDS) => {
-      const cdeOptions: string[] = [];
-      const coreCDEOptions: string[] = [];
-      cdeInfoFromMDS?.forEach((cdeInfo) => {
-        cdeOptions.push(`${cdeInfo.drupalID} ${cdeInfo.fileName}`);
-        if (cdeInfo.isCoreCDE) {
-          coreCDEOptions.push(`${cdeInfo.drupalID} ${cdeInfo.fileName}`);
-        }
-      });
-      setCDEList(cdeOptions);
-      setCoreCDEList(coreCDEOptions);
+    loadCDEInfoFromMDS().then((cdeInfo) => {
+      const updatedCDEInfo = cdeInfo?.map((entry) => ({ ...entry, option: `${entry.drupalID} ${entry.fileName}` }));
+      setCDEInfoFromMDS(updatedCDEInfo);
     });
   }, []);
 
@@ -80,41 +66,29 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   useEffect(() => cdeForm.resetFields(), [props.studyNumber, props.studyName, cdeForm]);
 
   const handleCDEFormSubmission = (formValues) => {
-    setFormSubmissionStatus({ status: 'info', text: 'Preparing for upload' });
-    const fileInfo = formValues.fileList_doNotInclude[0];
-    if (!fileInfo?.name || !fileInfo?.originFileObj) {
-      setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
-      return;
-    }
     if (!props.studyRegistrationAuthZ) {
       setFormSubmissionStatus({ status: 'error', text: 'Invalid authz info received' });
     }
 
-    //     setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-    //     let subject = `Data dictionary submission for ${props.studyNumber} ${props.studyName}`;
-    //     if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-    //       subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-    //     }
-    //     const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
-    //     const email = formValues['E-mail Address'];
-    //     let contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nData Dictionary GUID: ${guid}`;
-    //     Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
-    //       const [key, value] = entry;
-    //       contents = contents.concat(`\n${key}: ${value}`);
-    //     });
-    //     // This is the CLI command to kick off the argo wf from AdminVM
-    //     const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
-    //     contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-    //     createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
-    //       (err) => {
-    //         cleanUpFileRecord(guid);
-    //         setFormSubmissionStatus({ status: 'error', text: err.message });
-    //       });
-    //   }
+    const selectedCDEInfo = cdeInfoFromMDS.filter((entry) => formValues.selectedCDEs.includes(entry.option));
+    updateCDEMetadataInMDS('HDP01076', selectedCDEInfo).then(() => {
+      let subject = `CDE submission for ${props.studyNumber} ${props.studyName}`;
+      if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
+        subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
+      }
+      const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
+      const email = formValues['E-mail Address'];
+      const contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nSelected CDEs: ${formValues.selectedCDEs}\n`;
+      createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+        (err) => {
+          setFormSubmissionStatus({ status: 'error', text: err.message });
+        });
+    }, (err) => {
+      setFormSubmissionStatus({ status: 'error', text: err.message });
+    });
   };
 
   const onSubmitButtonClick = () => {
-    setFormSubmitting(true);
     cdeForm.submit();
   };
 
@@ -131,25 +105,12 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
             <Result
               status={formSubmissionStatus.status}
               title='Your CDE has been submitted!'
-              // TODO: no time commitment for file processing ATM, until we have a fully automated flow...
               subTitle='Thank you for your submission!'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
                 </Link>,
               ]}
-            />
-          </div>
-        </div>
-      );
-    case 'info':
-      return (
-        <div className='study-reg-container'>
-          <div className='study-reg-form-container'>
-            <Result
-              status={formSubmissionStatus.status}
-              title='Submitting CDE, please do not close this page or navigate away'
-              subTitle={formSubmissionStatus.text}
             />
           </div>
         </div>
@@ -163,7 +124,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
               title='A problem has occurred during submission!'
               subTitle={formSubmissionStatus.text}
               extra={[
-                <Button type='primary' key='close' onClick={() => { setFormSubmitting(false); setFormSubmissionStatus(null); }}>
+                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
                     Close
                 </Button>,
               ]}
@@ -196,7 +157,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
               const updatedCoreCDESelectValues: any[] = [];
               const updatedNonCoreCDEselectValues: any[] = [];
               changedCDESelectValues.forEach((element) => {
-                if (coreCDEList.includes(element)) {
+                if (cdeInfoFromMDS.findIndex((entry) => (entry.option === element && entry.isCoreCDE)) !== -1) {
                   updatedCoreCDESelectValues.push(element);
                 } else {
                   updatedNonCoreCDEselectValues.push(element);
@@ -229,7 +190,9 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
             name='coreCDEs'
             label='Core CDEs'
           >
-            <Checkbox.Group options={coreCDEList.map((entry) => ({ label: entry, value: entry }))} />
+            <Checkbox.Group options={cdeInfoFromMDS.filter((entry) => entry.isCoreCDE)
+              .map((entry) => ({ label: entry.option, value: entry.option }))}
+            />
           </Form.Item>
           <Form.Item
             name='selectedCDEs'
@@ -240,7 +203,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
               mode='multiple'
               allowClear
               style={{ width: '100%' }}
-              options={cdeList.map((entry) => ({ label: entry, value: entry }))}
+              options={cdeInfoFromMDS.map((entry) => ({ label: entry.option, value: entry.option }))}
             />
           </Form.Item>
           <Divider plain>Administration
@@ -294,7 +257,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' onClick={onSubmitButtonClick} disabled={formSubmitting} loading={formSubmitting}>
+                <Button type='primary' onClick={onSubmitButtonClick}>
                   Submit CDEs
                 </Button>
               )}
