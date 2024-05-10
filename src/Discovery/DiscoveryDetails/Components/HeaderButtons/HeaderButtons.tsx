@@ -79,8 +79,6 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       props.userAuthMapping,
     );
 
-    console.log(props.modalData);
-
   const showLoginButton = props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
     && !props.user.username;
   return (

@@ -249,10 +249,33 @@ export const updateCDEMetadataInMDS = async (metadataID, updatedCDEInfo) => {
     }
     const cdeMetadataToUpdate = updatedCDEInfo.reduce((acc, entry) => {
       const { option, guid } = entry;
-
       return { ...acc, [option]: guid };
     }, {});
     metadataToUpdate[cdeMetadataInStudyMetadataField] = cdeMetadataToUpdate;
+    // update tags
+    const tagField = discoveryConfig?.minimalFieldMapping?.tagsListFieldName;
+    if (tagField) {
+      if (!metadataToUpdate[STUDY_DATA_FIELD][tagField]) {
+        metadataToUpdate[STUDY_DATA_FIELD][tagField] = [];
+      }
+      // remove any existing CDE tags first
+      const updatedTags = metadataToUpdate[STUDY_DATA_FIELD][tagField].filter((entry) => entry.category !== 'Common Data Elements');
+      Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedTags.push({ name: cdeKey, category: 'Common Data Elements' }));
+      metadataToUpdate[STUDY_DATA_FIELD][tagField] = updatedTags;
+    }
+
+    // update filters
+    const filterField = discoveryConfig?.features?.advSearchFilters?.field;
+    if (filterField) {
+      if (!metadataToUpdate[STUDY_DATA_FIELD][filterField]) {
+        metadataToUpdate[STUDY_DATA_FIELD][filterField] = [];
+      }
+      // remove any existing CDE filters first
+      const updatedFilters = metadataToUpdate[STUDY_DATA_FIELD][filterField].filter((entry) => entry.key !== 'Common Data Elements');
+      Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedFilters.push({ value: cdeKey, key: 'Common Data Elements' }));
+      metadataToUpdate[STUDY_DATA_FIELD][filterField] = updatedFilters;
+    }
+    console.log(metadataToUpdate);
     await updateStudyInMDS(metadataID, metadataToUpdate);
   } catch (err) {
     throw new Error(`Request for query MDS failed: ${err}`);
