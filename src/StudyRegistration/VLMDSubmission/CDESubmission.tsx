@@ -101,7 +101,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     switch (formSubmissionStatus.status) {
     case 'success':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -118,7 +118,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
       );
     case 'error':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -139,7 +139,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   }
 
   return (
-    <div className='study-reg-container'>
+    <div className='vlmd-sub-container'>
       <div className='study-reg-form-container'>
         <Form
           className='study-reg-form'

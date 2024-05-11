@@ -191,7 +191,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
     switch (formSubmissionStatus.status) {
     case 'success':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -209,7 +209,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
       );
     case 'info':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -222,7 +222,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
       );
     case 'error':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -243,7 +243,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
   }
 
   return (
-    <div className='study-reg-container'>
+    <div className='vlmd-sub-container'>
       <Modal
         title='Confirm Overwrite'
         open={overwriteConfirmModalVisible}

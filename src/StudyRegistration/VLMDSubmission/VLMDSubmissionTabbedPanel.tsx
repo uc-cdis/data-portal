@@ -80,7 +80,9 @@ const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: Stud
 
   return (
     <Tabs
-      type='card'
+      className='vlmd-sub-tab-panel'
+      //   type='card'
+      centered
       items={[
         {
           label: 'VLMD Submission',
