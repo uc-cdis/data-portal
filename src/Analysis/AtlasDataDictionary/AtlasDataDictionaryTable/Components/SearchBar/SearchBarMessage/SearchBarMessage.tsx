@@ -11,8 +11,7 @@ const SearchBarMessage = ({ columnManagementReset }) => {
             Matches found in hidden columns.
       <Button
         leftIcon={<EyeIcon />}
-        variant='outlined'
-
+        variant='outline'
         onClick={() => columnManagementReset()}
       >Show all
       </Button>
