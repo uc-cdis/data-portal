@@ -43,29 +43,31 @@ const SearchBar = ({
         <th aria-label='search bar' colSpan={columnsShown}>
           <div className='row'>
             <div className='search-bar-container'>
-              <Input
-                rightSection={
-                  searchTerm ? (
-                    <button
-                      type='button'
-                      className='search-bar-input-control column'
-                      onClick={() => handleTableChange('searchTerm', '')}
-                      onKeyPress={(event) => {
-                        if (event.key === 'Enter') {
-                          handleTableChange('searchTerm', '');
-                        }
-                      }}
-                    >
+              <div className='column'>
+                <Input
+                  rightSection={
+                    searchTerm ? (
+                      <button
+                        type='button'
+                        className='search-bar-input-control '
+                        onClick={() => handleTableChange('searchTerm', '')}
+                        onKeyPress={(event) => {
+                          if (event.key === 'Enter') {
+                            handleTableChange('searchTerm', '');
+                          }
+                        }}
+                      >
                     x
-                    </button>
-                  ) : (
-                    <SearchIcon />
-                  )
-                }
-                placeholder='Search'
-                value={searchTerm}
-                onChange={(e) => handleInputChange(e)}
-              />
+                      </button>
+                    ) : (
+                      <SearchIcon />
+                    )
+                  }
+                  placeholder='Search'
+                  value={searchTerm}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </div>
             </div>
             {showSearchBarMessage && (
               <div className='column'>
