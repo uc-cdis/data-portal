@@ -44,6 +44,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   const [selectedCoreCDEs, setSelectedCoreCDEs] = useState<Array<string>>([]);
   const [selectedNonCoreCDEs, setSelectedNonCoreCDEs] = useState<Array<string>>([]);
   const [cdeInfoFromMDS, setCDEInfoFromMDS] = useState<Array<any>>([]);
+  const [cdeFormSubmitting, setCDEFormSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     loadCDEInfoFromMDS().then((cdeInfo) => {
@@ -94,6 +95,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   };
 
   const onFinish = (values) => {
+    setCDEFormSubmitting(true);
     handleCDEFormSubmission(values);
   };
 
@@ -125,7 +127,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
               title='A problem has occurred during submission!'
               subTitle={formSubmissionStatus.text}
               extra={[
-                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
+                <Button type='primary' key='close' onClick={() => { setCDEFormSubmitting(false); setFormSubmissionStatus(null); }}>
                     Close
                 </Button>,
               ]}
@@ -147,6 +149,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
           form={cdeForm}
           name='cde-sub-form'
           onFinish={onFinish}
+          onFinishFailed={() => { setCDEFormSubmitting(false); }}
           validateMessages={VALIDATE_MESSAGE}
           onValuesChange={(changedValues) => {
             if (Object.keys(changedValues).includes('coreCDEs')) {
@@ -258,7 +261,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' onClick={onSubmitButtonClick}>
+                <Button type='primary' onClick={onSubmitButtonClick} disabled={cdeFormSubmitting} loading={cdeFormSubmitting}>
                   Submit CDEs
                 </Button>
               )}
