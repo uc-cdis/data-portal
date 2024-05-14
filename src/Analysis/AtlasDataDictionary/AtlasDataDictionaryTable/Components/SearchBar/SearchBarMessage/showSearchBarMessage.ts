@@ -8,17 +8,12 @@ const showSearchBarMessage = (
 ) => {
   let foundSearchTermInHiddenColumn = false;
   const hiddenColumns: Array<string> = Object.keys(columnManagementData).filter((key) => columnManagementData[key] === false);
-  const hiddenCellKeys = ['minValue', 'maxValue', 'meanValue', 'standardDeviation', 'valueSummary'];
-  const hiddenColumnsContainHiddenCellKeys = hiddenCellKeys.some((key) => hiddenColumns.includes(key));
+
   if (searchTerm && hiddenColumns.length > 0) {
     paginatedData.forEach((rowObject: IRowData) => {
       hiddenColumns.forEach((hiddenKey) => {
-        console.log('searchTerm', searchTerm);
-        console.log('hiddenKey', hiddenKey);
-        console.log('rowObject[hiddenKey]', rowObject[hiddenKey]);
-
         if (checkIfCellContainsSearchTerm(rowObject[hiddenKey], searchTerm)
-              || (hiddenColumnsContainHiddenCellKeys
+              || (hiddenColumns.includes('valueSummary')
                  && checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm))) {
           foundSearchTermInHiddenColumn = true;
         }
