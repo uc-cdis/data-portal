@@ -3,6 +3,7 @@ import {
   render, fireEvent, screen, waitFor,
 } from '@testing-library/react';
 import SearchBar from './SearchBar';
+import DefaultAtlasColumnManagement from '../../Utils/DefaultAtlasColumnManagement';
 
 describe('SearchBar', () => {
   it('should update data based on input value', async () => {
@@ -12,18 +13,22 @@ describe('SearchBar', () => {
       { id: 2, name: 'Jane Doe', age: 30 },
       { id: 3, name: 'Bob Smith', ages: [25, 31] },
     ];
-    const setData = jest.fn();
+    const setDisplayedData = jest.fn();
     const searchInputValue = 'Do';
     const handleTableChange = jest.fn();
+    const columnManagementReset = jest.fn();
 
     render(
       <table>
         <SearchBar
           columnsShown={columnsShown}
           TableData={TableData}
-          setData={setData}
+          paginatedData={TableData}
+          setDisplayedData={setDisplayedData}
           searchTerm={searchInputValue}
           handleTableChange={handleTableChange}
+          columnManagementReset={columnManagementReset}
+          columnManagementData={DefaultAtlasColumnManagement}
         />
       </table>,
     );
@@ -36,13 +41,13 @@ describe('SearchBar', () => {
     fireEvent.keyPress(input, { key: 'Enter' });
 
     // Expect set data to be filtered by search term after debouncing
-    await waitFor(() => expect(setData).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(setDisplayedData).toHaveBeenCalledTimes(1));
 
     const filteredData = TableData.filter((item) => Object.values(item).some((value) => {
       const valueToString = value?.toString()?.toLowerCase();
       return valueToString && valueToString.includes('doe');
     }));
-    expect(setData).toHaveBeenLastCalledWith(filteredData);
+    expect(setDisplayedData).toHaveBeenLastCalledWith(filteredData);
     // Expect handleTableChange to be called to update search term
     expect(handleTableChange).toHaveBeenLastCalledWith('searchTerm', 'Doe');
   });
