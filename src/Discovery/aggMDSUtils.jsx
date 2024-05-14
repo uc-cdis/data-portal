@@ -56,12 +56,8 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       entryUnpacked.tags = [...getUniqueTags(entryUnpacked.tags).entries()].map((e) => (e[1]));
 
       // copy VLMD info if exists
-      if (studyRegistrationConfig?.dataDictionaryField && entry[studyId][studyRegistrationConfig.dataDictionaryField]) {
-        entryUnpacked[studyRegistrationConfig.dataDictionaryField] = entry[studyId][studyRegistrationConfig.dataDictionaryField];
-      }
-      // copy CDE info if exists
-      if (studyRegistrationConfig?.cdeField && entry[studyRegistrationConfig.cdeField]) {
-        entryUnpacked[studyRegistrationConfig.cdeField] = entry[studyRegistrationConfig.cdeField];
+      if (studyRegistrationConfig?.variableMetadataField && entry[studyId][studyRegistrationConfig.variableMetadataField]) {
+        entryUnpacked[studyRegistrationConfig.variableMetadataField] = entry[studyId][studyRegistrationConfig.variableMetadataField];
       }
       return entryUnpacked;
     });

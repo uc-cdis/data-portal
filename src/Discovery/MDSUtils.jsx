@@ -24,12 +24,8 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
       const studies = Object.values(jsonResponse).map((entry) => {
         const study = { ...entry[STUDY_DATA_FIELD] };
         // copy VLMD info if exists
-        if (studyRegistrationConfig?.dataDictionaryField && entry[studyRegistrationConfig.dataDictionaryField]) {
-          study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
-        }
-        // copy CDE info if exists
-        if (studyRegistrationConfig?.cdeField && entry[studyRegistrationConfig.cdeField]) {
-          study[studyRegistrationConfig.cdeField] = entry[studyRegistrationConfig.cdeField];
+        if (studyRegistrationConfig?.variableMetadataField && entry[studyRegistrationConfig.variableMetadataField]) {
+          study[studyRegistrationConfig.variableMetadataField] = entry[studyRegistrationConfig.variableMetadataField];
         }
         return study;
       });

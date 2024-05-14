@@ -241,17 +241,21 @@ export const updateCDEMetadataInMDS = async (metadataID, updatedCDEInfo) => {
       throw new Error(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
     }
     const studyMetadata = await queryRes.json();
-    const cdeMetadataInStudyMetadataField = studyRegistrationConfig?.cdeMetadataInStudyMetadataField;
+    const variableMetadataField = studyRegistrationConfig?.variableMetadataField;
     const metadataToUpdate = { ...studyMetadata };
-    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, cdeMetadataInStudyMetadataField)) {
-      // create CDE metadata section in metadata if doesn't exist yet
-      metadataToUpdate[cdeMetadataInStudyMetadataField] = {};
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, variableMetadataField)) {
+      // create VLMD metadata section in metadata if doesn't exist yet
+      metadataToUpdate[variableMetadataField] = {};
+    }
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate[variableMetadataField], 'common_data_elements')) {
+      // create CDE metadata section inside VLMD metadata section if doesn't exist yet
+      metadataToUpdate[variableMetadataField].common_data_elements = {};
     }
     const cdeMetadataToUpdate = updatedCDEInfo.reduce((acc, entry) => {
       const { option, guid } = entry;
       return { ...acc, [option]: guid };
     }, {});
-    metadataToUpdate[cdeMetadataInStudyMetadataField] = cdeMetadataToUpdate;
+    metadataToUpdate[variableMetadataField].common_data_elements = cdeMetadataToUpdate;
     // update tags
     const tagField = discoveryConfig?.minimalFieldMapping?.tagsListFieldName;
     if (tagField) {

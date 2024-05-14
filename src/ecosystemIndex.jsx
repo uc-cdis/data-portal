@@ -548,7 +548,7 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/data-dictionary-submission'
+                          path='/vlmd-submission'
                           component={
                             (props) => (
                               <ProtectedContent
@@ -566,7 +566,7 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/data-dictionary-submission/request-access'
+                          path='/vlmd-submission/request-access'
                           component={
                             (props) => (
                               <ProtectedContent

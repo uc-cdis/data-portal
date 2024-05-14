@@ -745,9 +745,10 @@ Below is an example, with inline comments describing what each JSON block config
           "studyRegistrationUIDField": "_hdp_uid", // optional, if omitted, value defaults the same as the "minimalFieldMapping.uid" value. In metadata, values from this field MUST be the same as their GUIDs for each metadata record
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
           "clinicalTrialFields": [], // optional, list of fields to fetch from ClinicalTrials.gov
-          "dataDictionaryField": "data_dictionaries", // optional, specify the field name in metadata for variable-level metadata, default to ""
-          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for VLMD submission. Default to the data upload bucket from fence config if omitted
-          "dataDictionarySubmissionDisclaimerField": "some disclaimer text" // optional, the disclaimer text that appears under the submit button on the VLMD submission page. Defaults to undefined
+          "variableMetadataField": "variable_level_metadata", // optional, specify the field name in metadata for variable-level metadata, default to ""
+          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for data dictionary submission. Default to the data upload bucket from fence config if omitted
+          "dataDictionarySubmissionDisclaimerField": "some disclaimer text", // optional, the disclaimer text that appears under the submit button on the data dictionary submission page. Defaults to undefined
+          "cdeSubmissionDisclaimerField": "some disclaimer text"  // optional, the disclaimer text that appears under the submit button on the CDE submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'

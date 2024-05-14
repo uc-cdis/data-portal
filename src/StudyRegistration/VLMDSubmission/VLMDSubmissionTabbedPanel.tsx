@@ -81,16 +81,15 @@ const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: Stud
   return (
     <Tabs
       className='vlmd-sub-tab-panel'
-      //   type='card'
       centered
       items={[
         {
-          label: 'VLMD Submission',
-          key: 'vlmd-sub',
+          label: 'Submit DD',
+          key: 'dd-sub',
           children: DataDictionarySubmission(vlmdSubmissionProps),
         },
         {
-          label: 'CDE Submission',
+          label: 'Submit CDE',
           key: 'cde-sub',
           children: CDESubmission(vlmdSubmissionProps),
         },
