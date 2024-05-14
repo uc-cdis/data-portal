@@ -18,7 +18,7 @@ import ManageColumnsNotification from './Components/ManageColumnsNotification/Ma
 
 const AtlasDataDictionaryTable = ({ TableData }) => {
   const preprocessedTableData = PreprocessTableData(TableData);
-  const [data, setData] = useState(preprocessedTableData);
+  const [displayedData, setDisplayedData] = useState(preprocessedTableData);
   const [showNotification, setShowNotification] = useState(false);
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
@@ -42,7 +42,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
   const entriesHeaderStop = dataDictionaryTableState.entriesShown
     * dataDictionaryTableState.currentPage;
 
-  const paginatedData = data.slice(
+  const paginatedData = displayedData.slice(
     entriesShown * currentPage - entriesShown,
     entriesShown * currentPage,
   );
@@ -110,13 +110,13 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
       sortConfig as ISortConfig,
       sortKey,
     );
-    const sortedData = SortDataWithDirection(data, newDirection, sortKey);
+    const sortedData = SortDataWithDirection(displayedData, newDirection, sortKey);
     // if column is set to off reset to initial sort
     if (newDirection === 'off') {
-      setData(preprocessedTableData);
+      setDisplayedData(preprocessedTableData);
     } else {
       // Otherwise set with sortedData
-      setData(sortedData);
+      setDisplayedData(sortedData);
     }
     handleTableChange('sortConfig', { sortKey, direction: newDirection });
   };
@@ -156,7 +156,9 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         <SearchBar
           columnsShown={columnsShown}
           TableData={preprocessedTableData}
-          setData={setData}
+          columnManagementData={columnManagement}
+          paginatedData={paginatedData}
+          setDisplayedData={setDisplayedData}
           searchTerm={searchTerm}
           handleTableChange={handleTableChange}
           columnManagementReset={columnManagementReset}
@@ -168,7 +170,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         />
         <tbody>
           {rows}
-          {!data.length && (
+          {!displayedData.length && (
             <tr className='no-data-found'>
               <td colSpan={columnsShown}>
                 <h2>No Data Found</h2>
@@ -179,7 +181,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         <EntriesHeader
           start={entriesHeaderStart}
           stop={entriesHeaderStop}
-          total={data.length}
+          total={displayedData.length}
           colspan={columnsShown}
         />
       </Table>
@@ -187,7 +189,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         entriesShown={entriesShown}
         handleTableChange={handleTableChange}
         currentPage={currentPage}
-        totalEntriesAvailable={data.length}
+        totalEntriesAvailable={displayedData.length}
       />
     </div>
   );

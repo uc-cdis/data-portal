@@ -2,14 +2,17 @@ import React, { useEffect } from 'react';
 import { Input } from '@mantine/core';
 import { debounce } from 'lodash';
 import SearchIcon from '../Icons/SearchIcon';
-import { IRowData } from '../../Interfaces/Interfaces';
+import { IColumnManagementData, IRowData } from '../../Interfaces/Interfaces';
 import SearchBarMessage from './SearchBarMessage/SearchBarMessage';
 import filterTableData from './filterTableData';
+import { checkIfCellContainsSearchTerm, checkIfHiddenCellsContainSearchTerm } from '../../Utils/CheckSearchTermUtils';
 
 interface ISearchBarProps {
   columnsShown: number;
   TableData: IRowData[];
-  setData: Function;
+  paginatedData: IRowData[];
+  setDisplayedData: Function;
+  columnManagementData: IColumnManagementData ;
   searchTerm: string;
   handleTableChange: Function;
   columnManagementReset: Function
@@ -18,7 +21,9 @@ interface ISearchBarProps {
 const SearchBar = ({
   columnsShown,
   TableData,
-  setData,
+  paginatedData,
+  setDisplayedData,
+  columnManagementData,
   searchTerm,
   handleTableChange,
   columnManagementReset,
@@ -26,7 +31,7 @@ const SearchBar = ({
   const debounceDelayInMilliseconds = 500;
   useEffect(() => {
     const debouncedFilter = debounce(() => {
-      filterTableData(TableData, searchTerm, setData);
+      filterTableData(TableData, searchTerm, setDisplayedData);
     }, debounceDelayInMilliseconds);
     debouncedFilter();
   }, [searchTerm]);
@@ -34,8 +39,6 @@ const SearchBar = ({
   const handleInputChange = (event) => {
     handleTableChange('searchTerm', event.target.value);
   };
-
-  const showSearchBarMessage = true;
 
   return (
     <thead className={'search-bar'} data-testid='search-bar'>
@@ -69,11 +72,14 @@ const SearchBar = ({
                 />
               </div>
             </div>
-            {showSearchBarMessage && (
-              <div className='column'>
-                <SearchBarMessage columnManagementReset={columnManagementReset} />
-              </div>
-            )}
+            <div className='column'>
+              <SearchBarMessage
+                columnManagementReset={columnManagementReset}
+                searchTerm={searchTerm}
+                paginatedData={paginatedData}
+                columnManagementData={columnManagementData}
+              />
+            </div>
           </div>
         </th>
       </tr>

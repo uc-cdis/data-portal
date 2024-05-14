@@ -10,7 +10,7 @@ import CollapseIcon from '../Icons/CollapseIcon';
 import {
   checkIfCellContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
-} from './CheckSearchTermUtils';
+} from '../../Utils/CheckSearchTermUtils';
 import ValueSummaryChart from './ValueSummaryChart/ValueSummaryChart';
 import TableRowDropdown from './TableRowDropdown/TableRowDropdown';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from '@mantine/core';
-import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
+import { checkIfCellContainsSearchTerm } from '../../../Utils/CheckSearchTermUtils';
 
 const NumericDetailsTable = ({ rowObject, searchTerm }) => (
   <Table data-testid='numeric-details-table' striped>

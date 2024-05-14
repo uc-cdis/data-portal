@@ -1,6 +1,6 @@
 import { IRowData } from '../../Interfaces/Interfaces';
 
-const filterTableData = (TableData:IRowData[], searchTerm:string, setData:Function) => {
+const filterTableData = (TableData:IRowData[], searchTerm:string, setDisplayedData:Function) => {
   const filteredData = TableData.filter((item) => {
     const searchQuery = searchTerm.toLowerCase().trim();
     return Object.values(item).some((value) => {
@@ -26,7 +26,7 @@ const filterTableData = (TableData:IRowData[], searchTerm:string, setData:Functi
       return null;
     });
   });
-  setData(filteredData);
+  setDisplayedData(filteredData);
 };
 
 export default filterTableData;
