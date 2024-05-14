@@ -1,5 +1,7 @@
 import { IRowData } from '../Interfaces/Interfaces';
 
+export const formatSearchQuery = (searchTerm: string | number) => searchTerm.toString().toLowerCase().trim().replace(/[,%]/g, '');
+
 export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,
   searchInputValue: string,
@@ -10,7 +12,7 @@ export const checkIfCellContainsSearchTerm = (
     && cellText
       .toString()
       .toLowerCase()
-      .includes(searchInputValue.toString().toLowerCase().trim())
+      .includes(formatSearchQuery(searchInputValue))
   ) {
     return 'search-highlight';
   }
