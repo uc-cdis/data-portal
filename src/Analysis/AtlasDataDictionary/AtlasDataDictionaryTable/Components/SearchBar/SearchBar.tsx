@@ -5,7 +5,6 @@ import SearchIcon from '../Icons/SearchIcon';
 import { IColumnManagementData, IRowData } from '../../Interfaces/Interfaces';
 import SearchBarMessage from './SearchBarMessage/SearchBarMessage';
 import filterTableData from './filterTableData';
-import { checkIfCellContainsSearchTerm, checkIfHiddenCellsContainSearchTerm } from '../../Utils/CheckSearchTermUtils';
 
 interface ISearchBarProps {
   columnsShown: number;
