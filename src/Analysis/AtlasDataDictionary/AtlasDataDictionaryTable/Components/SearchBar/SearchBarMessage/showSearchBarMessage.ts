@@ -26,7 +26,7 @@ const showSearchBarMessage = (
             || hiddenColumns.includes('numberOfPeopleWhereValueIsFilled')
             || hiddenColumns.includes('numberOfPeopleWhereValueIsNull')) {
           console.log('we hit the edge case!');
-          if (checkIfCellContainsSearchTerm(rowObject[hiddenKey+'Percent'], searchTerm)) {
+          if (checkIfCellContainsSearchTerm(rowObject[`${hiddenKey}Percent`], searchTerm)) {
             foundSearchTermInHiddenColumn = true;
           }
         }
