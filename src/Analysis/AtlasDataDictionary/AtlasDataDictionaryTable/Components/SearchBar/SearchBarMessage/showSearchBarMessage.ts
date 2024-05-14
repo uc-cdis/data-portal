@@ -12,10 +12,23 @@ const showSearchBarMessage = (
   if (searchTerm && hiddenColumns.length > 0) {
     paginatedData.forEach((rowObject: IRowData) => {
       hiddenColumns.forEach((hiddenKey) => {
-        if (checkIfCellContainsSearchTerm(rowObject[hiddenKey], searchTerm)
-              || (hiddenColumns.includes('valueSummary')
-                 && checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm))) {
+        // If cell contains search term associated with hidden column key, show message
+        if (checkIfCellContainsSearchTerm(rowObject[hiddenKey], searchTerm)) {
           foundSearchTermInHiddenColumn = true;
+
+          // if hidden column is value summary, check the hidden the values for the cells in dropdown, if true show message
+        } else if (hiddenColumns.includes('valueSummary')
+            && checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)) {
+          foundSearchTermInHiddenColumn = true;
+
+          // if hidden key is a key associated with secondary percentages, check for those as well
+        } else if (hiddenColumns.includes('numberOfPeopleWithVariable')
+            || hiddenColumns.includes('numberOfPeopleWhereValueIsFilled')
+            || hiddenColumns.includes('numberOfPeopleWhereValueIsNull')) {
+          console.log('we hit the edge case!');
+          if (checkIfCellContainsSearchTerm(rowObject[hiddenKey+'Percent'], searchTerm)) {
+            foundSearchTermInHiddenColumn = true;
+          }
         }
       });
     });

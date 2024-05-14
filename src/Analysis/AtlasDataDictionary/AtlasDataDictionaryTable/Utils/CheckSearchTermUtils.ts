@@ -6,14 +6,17 @@ export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,
   searchInputValue: string,
 ) => {
+  const cellTextString = cellText?.toString() || '';
+  console.log('searchInputValue', searchInputValue);
+  console.log('cellText', cellText);
+  console.log(searchInputValue
+    && cellTextString
+    && formatSearchQuery(cellTextString).includes(formatSearchQuery(searchInputValue)));
+
   if (
     searchInputValue
-    && cellText
-    && cellText
-      .toString()
-      .toLowerCase()
-      .includes(formatSearchQuery(searchInputValue))
-  ) {
+    && cellTextString
+    && formatSearchQuery(cellTextString).includes(formatSearchQuery(searchInputValue))) {
     return 'search-highlight';
   }
   return '';
