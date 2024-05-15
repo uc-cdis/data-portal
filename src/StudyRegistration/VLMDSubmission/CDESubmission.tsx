@@ -40,7 +40,6 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
   const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
-  const [existingCDEName, setExistingCDEName] = useState<Array<string> | undefined>([]);
   const [selectedCoreCDEs, setSelectedCoreCDEs] = useState<Array<string>>([]);
   const [selectedNonCoreCDEs, setSelectedNonCoreCDEs] = useState<Array<string>>([]);
   const [cdeInfoFromMDS, setCDEInfoFromMDS] = useState<Array<any>>([]);
@@ -62,8 +61,14 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
-    setExistingCDEName(locationStateData.existingCDEName);
-  }, [location.state]);
+    const existingCDENames = locationStateData.existingCDEName || [];
+    if (existingCDENames) {
+      setSelectedCoreCDEs(cdeInfoFromMDS?.filter((element) => (existingCDENames?.includes(element.option)) && element.isCoreCDE)
+        .map((element) => element.option));
+      setSelectedNonCoreCDEs(cdeInfoFromMDS?.filter((element) => (existingCDENames?.includes(element.option)) && !element.isCoreCDE)
+        .map((element) => element.option));
+    }
+  }, [cdeInfoFromMDS, location.state]);
 
   useEffect(() => cdeForm.resetFields(), [props.studyNumber, props.studyName, cdeForm]);
 
