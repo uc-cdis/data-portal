@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { Notification } from '@mantine/core';
 
-const ManageColumnsNotification = ({ showNotification, setShowNotification }) => {
+interface IManageColumnsNotification {
+  showNotification: boolean;
+  setShowNotification: Function;
+}
+
+const ManageColumnsNotification = ({ showNotification, setShowNotification }:
+  IManageColumnsNotification) => {
   const notificationDisplayTimeInMilliseconds = 3000;
   useEffect(() => {
     if (showNotification) {

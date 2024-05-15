@@ -1,22 +1,21 @@
 import { IRowData } from '../Interfaces/Interfaces';
 
-export const formatSearchQuery = (searchTerm: string | number) => searchTerm.toString().toLowerCase().trim().replace(/[,%]/g, '');
+export const formatForSearchComparison = (searchTerm: string | number) => (
+  searchTerm.toString().toLowerCase().trim().replace(/[,%]/g, '')
+);
 
 export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,
   searchInputValue: string,
 ) => {
   const cellTextString = cellText?.toString() || '';
-  console.log('searchInputValue', searchInputValue);
-  console.log('cellText', cellText);
-  console.log(searchInputValue
-    && cellTextString
-    && formatSearchQuery(cellTextString).includes(formatSearchQuery(searchInputValue)));
-
   if (
     searchInputValue
     && cellTextString
-    && formatSearchQuery(cellTextString).includes(formatSearchQuery(searchInputValue))) {
+    && formatForSearchComparison(cellTextString).includes(
+      formatForSearchComparison(searchInputValue),
+    )
+  ) {
     return 'search-highlight';
   }
   return '';
@@ -59,7 +58,11 @@ export const checkIfHiddenCellsContainSearchTerm = (
   rowObject: IRowData,
   searchInputValue: string,
 ) => {
-  if (checkIfDetailTableContainsSearchTerm(rowObject, searchInputValue)) return 'search-highlight';
-  if (checkIfChartContainsSearchTerm(rowObject, searchInputValue)) return 'search-highlight';
+  if (checkIfDetailTableContainsSearchTerm(rowObject, searchInputValue)) {
+    return 'search-highlight';
+  }
+  if (checkIfChartContainsSearchTerm(rowObject, searchInputValue)) {
+    return 'search-highlight';
+  }
   return '';
 };
