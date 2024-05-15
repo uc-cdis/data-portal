@@ -35,7 +35,7 @@ const DownloadVariableMetadata = async (
 
   const fetchData = async (key: string, value: string, type: string) => new Promise((resolve, reject) => {
     fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
-      const { data } = statusResponse;
+      let { data } = statusResponse;
       if (statusResponse.status !== 200 || !data) {
         setDownloadStatus(createUniqueDownloadErrorMsg(key));
         reject(new Error(`Issue with ${key}: ${value}`));
@@ -44,8 +44,10 @@ const DownloadVariableMetadata = async (
         let subDirectoryName = '';
         if (type === 'cde') {
           subDirectoryName = 'common_data_elements/';
+          data = data.cde_metadata;
         } else if (type === 'dd') {
           subDirectoryName = 'data_dictionaries/';
+          data = data.data_dictionary;
         }
         zip.file(`${subDirectoryName}${sanitizedFileName}`, JSON.stringify(data));
         resolve(`Data resolved for ${key}: ${value}, with type ${type}`);
@@ -62,7 +64,7 @@ const DownloadVariableMetadata = async (
       await Promise.all(
         [...Object.entries(variableLevelMetadataRecords.dataDictionaries || []).map(([key, value]) => fetchData(key, value, 'dd'),
         ),
-        ...Object.entries(variableLevelMetadataRecords.cde || []).map(([key, value]) => fetchData(key, value, 'cde'),
+        ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, 'cde'),
         )],
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {

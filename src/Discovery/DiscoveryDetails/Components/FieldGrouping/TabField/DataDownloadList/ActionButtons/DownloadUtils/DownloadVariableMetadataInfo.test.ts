@@ -12,7 +12,7 @@ const mockVariableLevelMetadata = {
 
 const mockVariableLevelMetadataRecords = {
   dataDictionaries: { 'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa' },
-  cde: { '5131 Pediatric Demographics': 'HDPCDE5131' },
+  cdeMetadata: { '5131 Pediatric Demographics': 'HDPCDE5131' },
 };
 
 const discoveryConfig = {

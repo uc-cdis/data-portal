@@ -26,7 +26,7 @@ const DownloadVariableMetadataInfo = (
           variableLevelMetadataRecords.dataDictionaries = data[vlmdFieldReference as string].data_dictionaries;
         }
         if (data[vlmdFieldReference as string].common_data_elements) {
-          variableLevelMetadataRecords.cde = data[vlmdFieldReference as string].common_data_elements;
+          variableLevelMetadataRecords.cdeMetadata = data[vlmdFieldReference as string].common_data_elements;
         }
         setVariableMetadataInfo({
           noVariableLevelMetadata: false,

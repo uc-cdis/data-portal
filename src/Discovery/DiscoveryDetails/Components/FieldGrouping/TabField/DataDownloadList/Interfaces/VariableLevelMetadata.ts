@@ -2,7 +2,7 @@ interface VariableLevelMetadata {
   dataDictionaries?: {
     [key: string]: string;
   },
-  cde?: {
+  cdeMetadata?: {
     [key: string]: string;
   },
 }
