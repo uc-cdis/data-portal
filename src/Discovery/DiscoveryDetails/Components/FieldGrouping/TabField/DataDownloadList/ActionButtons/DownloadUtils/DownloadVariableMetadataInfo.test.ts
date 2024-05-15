@@ -1,17 +1,23 @@
 import { act } from 'react-dom/test-utils';
-import DownloadDataDictionaryInfo from './DownloadDataDictionaryInfo';
+import DownloadVariableMetadataInfo from './DownloadVariableMetadataInfo';
 import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../../../../Discovery';
 import { mdsURL } from '../../../../../../../../localconf';
 import { fetchWithCreds } from '../../../../../../../../actions';
 
-const mockDataDictionaries = {
-  'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa',
+const mockVariableLevelMetadata = {
+  data_dictionaries: { 'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa' },
+  common_data_elements: { '5131 Pediatric Demographics': 'HDPCDE5131' },
+};
+
+const mockVariableLevelMetadataRecords = {
+  dataDictionaries: { 'QA_minimal_json_20230817.json': 'f79114a6-93bd-4970-b096-7b47aa6c16fa' },
+  cde: { '5131 Pediatric Demographics': 'HDPCDE5131' },
 };
 
 const discoveryConfig = {
   features: {
-    exportToWorkspace: { variableMetadataFieldName: 'data_dictionaries' },
+    exportToWorkspace: { variableMetadataFieldName: 'variable_level_metadata' },
   },
 } as DiscoveryConfig;
 
@@ -26,17 +32,17 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe('DownloadDataDictionaryInfo', () => {
+describe('DownloadVariableMetadataInfo', () => {
   it('should not set download data dictionary info when called with invalid status number', async () => {
     const mockStatusResponse = {
       status: 500,
       data: {
-        data_dictionaries: mockDataDictionaries,
+        variable_level_metadata: mockVariableLevelMetadata,
       },
     };
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
-      DownloadDataDictionaryInfo(
+      DownloadVariableMetadataInfo(
         discoveryConfig,
         resourceInfo as unknown as DiscoveryResource,
         showDownloadVariableMetadataButton,
@@ -53,12 +59,12 @@ describe('DownloadDataDictionaryInfo', () => {
     const mockStatusResponse = {
       status: 200,
       data: {
-        data_dictionaries: {},
+        variable_level_metadata: {},
       },
     };
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
-      DownloadDataDictionaryInfo(
+      DownloadVariableMetadataInfo(
         discoveryConfig,
         resourceInfo as unknown as DiscoveryResource,
         showDownloadVariableMetadataButton,
@@ -76,12 +82,12 @@ describe('DownloadDataDictionaryInfo', () => {
     const mockStatusResponse = {
       status: 200,
       data: {
-        data_dictionaries: mockDataDictionaries,
+        variable_level_metadata: mockVariableLevelMetadata,
       },
     };
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
-      DownloadDataDictionaryInfo(
+      DownloadVariableMetadataInfo(
         discoveryConfig,
         resourceInfo as unknown as DiscoveryResource,
         false, // showDownloadVariableMetadataButton
@@ -96,12 +102,12 @@ describe('DownloadDataDictionaryInfo', () => {
     const mockStatusResponse = {
       status: 200,
       data: {
-        data_dictionaries: mockDataDictionaries,
+        variable_level_metadata: mockVariableLevelMetadata,
       },
     };
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
-      DownloadDataDictionaryInfo(
+      DownloadVariableMetadataInfo(
         discoveryConfig,
         resourceInfo as unknown as DiscoveryResource,
         showDownloadVariableMetadataButton,
@@ -113,7 +119,7 @@ describe('DownloadDataDictionaryInfo', () => {
     });
     expect(mockSetDownloadStatus).toHaveBeenCalledWith({
       noVariableLevelMetadata: false,
-      dataDictionaries: mockDataDictionaries,
+      variableLevelMetadataRecords: mockVariableLevelMetadataRecords,
     });
   });
 });

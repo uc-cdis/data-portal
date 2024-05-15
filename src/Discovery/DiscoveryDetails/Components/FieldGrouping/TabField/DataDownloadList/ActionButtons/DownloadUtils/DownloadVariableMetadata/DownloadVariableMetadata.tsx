@@ -6,11 +6,11 @@ import { mdsURL } from '../../../../../../../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../../../Discovery';
-import DataDictionaries from '../../../Interfaces/DataDictionaries';
+import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
 
 const DownloadVariableMetadata = async (
-  dataDictionaries: DataDictionaries,
+  variableLevelMetadataRecords: VariableLevelMetadata,
   resourceInfo: DiscoveryResource,
   setDownloadStatus: Function,
 ) => {
@@ -33,7 +33,7 @@ const DownloadVariableMetadata = async (
     },
   } as DownloadStatus);
 
-  const fetchData = async (key: string, value: string) => new Promise((resolve, reject) => {
+  const fetchData = async (key: string, value: string, type: string) => new Promise((resolve, reject) => {
     fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
       const { data } = statusResponse;
       if (statusResponse.status !== 200 || !data) {
@@ -41,8 +41,14 @@ const DownloadVariableMetadata = async (
         reject(new Error(`Issue with ${key}: ${value}`));
       } else {
         const sanitizedFileName = SanitizeFileName(key);
-        zip.file(sanitizedFileName, JSON.stringify(data));
-        resolve(`Data resolved for ${key}: ${value}`);
+        let subDirectoryName = '';
+        if (type === 'cde') {
+          subDirectoryName = 'common_data_elements/';
+        } else if (type === 'dd') {
+          subDirectoryName = 'data_dictionaries/';
+        }
+        zip.file(`${subDirectoryName}${sanitizedFileName}`, JSON.stringify(data));
+        resolve(`Data resolved for ${key}: ${value}, with type ${type}`);
       }
     });
   });
@@ -54,11 +60,13 @@ const DownloadVariableMetadata = async (
         inProgress: 'DownloadVariableMetadata',
       });
       await Promise.all(
-        Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
+        [...Object.entries(variableLevelMetadataRecords.dataDictionaries || []).map(([key, value]) => fetchData(key, value, 'dd'),
         ),
+        ...Object.entries(variableLevelMetadataRecords.cde || []).map(([key, value]) => fetchData(key, value, 'cde'),
+        )],
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
-          FileSaver.saveAs(content, 'variable-metadata.zip');
+          FileSaver.saveAs(content, 'variable-level-metadata.zip');
         });
         setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       });
