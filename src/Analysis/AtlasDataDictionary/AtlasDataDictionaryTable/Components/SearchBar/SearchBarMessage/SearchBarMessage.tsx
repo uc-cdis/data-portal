@@ -16,6 +16,7 @@ const SearchBarMessage = ({
   columnManagementReset, searchTerm, paginatedData, columnManagementData,
 }: ISearchBarMessageProps) => {
   if (showSearchBarMessage(searchTerm, paginatedData, columnManagementData)) {
+    console.log(searchTerm, paginatedData, columnManagementData);
     return (
       <div className='search-bar-message'>
         <span><InfoIcon /></span>
