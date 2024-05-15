@@ -456,12 +456,19 @@ Below is an example, with inline comments describing what each JSON block config
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": true,
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": true, // text to be displayed on the download manifest button
+          "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enableDownloadZip": true,  // enables a button which allows user to download all the files as a zip file (with pre-set size limits)
+          "downloadZipButtonText": "Download Zip", // text to be displayed on the download zip file button
+          "enableDownloadVariableMetadata": true,  // enables a button (on discovery details page) which allows user to download variable-level metadata
+          "variableMetadataFieldName": "variable_level_metadata", // field name in metadata record to reference variable-level metadata
+          "enableDownloadStudyMetadata": true, // enables a button (on discovery details page) which allows user to download study-level metadata
+          "studyMetadataFieldName": "study_metadata", // field name in metadata record to reference study-level metadata
           "documentationLinks": {
               "gen3Client": "https://gen3-client", // link to documentation about the gen3 client. Used for button tooltips
               "gen3Workspaces": "https://gen3-workspace-docs", // link to documentation about gen3 workspaces. Used for button tooltips.
-          }
+          },
+          "verifyExternalLogins": true // enables verification if the user has access to all the data files selected, by using WTS (a Gen3 ecosystem feature)
       },
       "pageTitle": {
         "enabled": true,
