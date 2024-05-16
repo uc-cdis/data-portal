@@ -15,6 +15,7 @@ import {
   MAX_X_AXIS_LABEL_LENGTH,
   X_AXIS_CHARACTER_CUT_OFF,
   GRID_OPACITY,
+  X_AXIS_LABEL_ANGLE,
 } from './ValueSummaryChartConstants';
 import { IValueSummary } from '../../../Interfaces/Interfaces';
 
@@ -42,11 +43,20 @@ const ValueSummaryChart = ({
   }
   const xAxisHeight = chartType === 'Number' ? 15 : 60;
   const xAxisDataKey = chartType === 'Number' ? 'start' : 'name';
-  const xAxisAngle = chartType === 'Number' ? 0 : -25;
-  const xAxisTextAnchor = chartType === 'Number' ? 'middle' : 'end';
+  const xAxisInterval = chartType === 'Number' ? 1 : 0;
+
+  const processNumericChartData = (unProcessedChartData:IValueSummary[]) => {
+    let processedNumericData = unProcessedChartData.sort(
+      (a: IValueSummary | any, b: IValueSummary| any) => a.start - b.start,
+    );
+    processedNumericData = processedNumericData.map((obj:IValueSummary | any) => (
+      { start: obj.start.toFixed(1).replace('.0', ''), personCount: obj.personCount }
+    ));
+    return processedNumericData;
+  };
 
   const processedChartData = chartType === 'Number'
-    ? chartData.sort((a: any, b: any) => a.start - b.start)
+    ? processNumericChartData(chartData)
     : chartData;
 
   const formatXAxisWithEllipsisIfTooLong = (tick: string) => {
@@ -72,13 +82,14 @@ const ValueSummaryChart = ({
       >
         {!preview && (
           <React.Fragment>
-            <Tooltip />
+            <Tooltip formatter={(value) => value && value.toLocaleString()} separator=': ' />
             <CartesianGrid opacity={GRID_OPACITY} />
             <XAxis
               height={xAxisHeight}
               dataKey={xAxisDataKey}
-              angle={xAxisAngle}
-              textAnchor={xAxisTextAnchor}
+              angle={X_AXIS_LABEL_ANGLE}
+              textAnchor='end'
+              interval={xAxisInterval}
               fontSize={X_AXIS_FONT_SIZE}
               tickFormatter={(tick) => formatXAxisWithEllipsisIfTooLong(tick)}
               tickLine
