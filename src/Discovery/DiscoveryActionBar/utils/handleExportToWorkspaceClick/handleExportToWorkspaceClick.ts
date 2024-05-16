@@ -81,7 +81,6 @@ const handleExportToWorkspaceClick = async (
     body: JSON.stringify(manifest),
     method: 'POST',
   });
-  console.log('res ln 127', res);
   if (res.status !== 200) {
     throw new Error(
       `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,

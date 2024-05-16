@@ -25,17 +25,14 @@ const assembleMetadata = (keysToRemove:Array<string>, selectedResources:Array<ob
     // Otherwise just return the cloned object
     return clonedObj;
   });
-  // console.log('filteredData', filteredData);
   return filteredData;
 };
 const exportAssembledMetadata = async (filteredData:Array<object>) => {
   const res = await fetchWithCreds({
     path: `${manifestServiceApiPath}/metadata`,
-    // path: `${manifestServiceApiPath}`,
     body: JSON.stringify(filteredData),
     method: 'POST',
   });
-  console.log('res ln 42 in assembleAndExportMetadata', res);
   if (res.status !== 200) {
     throw new Error(
       `Encountered error while exporting assembled metadata: ${JSON.stringify(res)}`,
