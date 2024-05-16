@@ -17,5 +17,5 @@ interface User {
   }
 
 export {
-  User, JobStatus, DownloadStatus
+  User, JobStatus, DownloadStatus,
 };

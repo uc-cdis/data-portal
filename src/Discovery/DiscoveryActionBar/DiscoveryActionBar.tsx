@@ -15,6 +15,7 @@ import DownloadZipButton from './components/DownloadZipButton';
 import ExportToWorkspaceButton from './components/ExportToWorkspaceButton';
 import DownloadManifestButton from './components/DownloadManifestButton';
 
+/* eslint react/prop-types: 0 */
 interface Props {
   config: DiscoveryConfig;
   exportingToWorkspace: boolean;

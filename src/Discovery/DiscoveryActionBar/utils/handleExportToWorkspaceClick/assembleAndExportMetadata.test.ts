@@ -1,5 +1,8 @@
 import {
-  removeKeys, assembleMetadata, exportAssembledMetadata, assembleAndExportMetadata,
+  removeKeys,
+  assembleMetadata,
+  exportAssembledMetadata,
+  assembleAndExportMetadata,
 } from './assembleAndExportMetadata';
 import { fetchWithCreds } from '../../../../actions';
 
@@ -53,7 +56,8 @@ describe('assembleMetadata', () => {
       {
         a: 1,
         b: {
-          c: { d: { e: { f: 'test' } } }, g: 3,
+          c: { d: { e: { f: 'test' } } },
+          g: 3,
         },
       },
       { x: 10, y: { z: 20 } },
@@ -78,19 +82,17 @@ describe('assembleMetadata', () => {
     const selectedResources = [
       {
         a: 1,
-        b:
-        {
-          c:
-          {
+        b: {
+          c: {
             d: {
-              e:
-              {
+              e: {
                 f: 'test',
               },
             },
           },
         },
-      }, { x: 10, y: { z: 20 } },
+      },
+      { x: 10, y: { z: 20 } },
     ];
     const result = assembleMetadata(keysToRemove, selectedResources);
     expect(result).toEqual([
@@ -131,7 +133,9 @@ describe('exportAssembledMetadata', () => {
     const mockResponse = { status: 500 };
     fetchWithCreds.mockResolvedValue(mockResponse);
     await expect(exportAssembledMetadata(filteredData)).rejects.toThrow(
-      `Encountered error while exporting assembled metadata: ${JSON.stringify(mockResponse)}`,
+      `Encountered error while exporting assembled metadata: ${JSON.stringify(
+        mockResponse,
+      )}`,
     );
   });
 });

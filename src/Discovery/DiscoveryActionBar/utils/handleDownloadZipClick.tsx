@@ -3,7 +3,10 @@ import { DiscoveryConfig } from '../../DiscoveryConfig';
 import { DownloadStatus } from '../DiscoveryActionBarInterfaces';
 import checkDownloadStatus from './checkDownloadStatus';
 import { jobAPIPath } from '../../../localconf';
-import { JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS } from '../DiscoveryActionBarConstants';
+import {
+  JOB_POLLING_INTERVAL,
+  DOWNLOAD_FAIL_STATUS,
+} from '../DiscoveryActionBarConstants';
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
 

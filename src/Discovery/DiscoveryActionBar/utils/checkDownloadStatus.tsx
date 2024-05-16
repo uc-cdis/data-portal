@@ -1,7 +1,7 @@
 import React from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
-  JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS, DOWNLOAD_SUCCEEDED_MESSAGE
+  JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS, DOWNLOAD_SUCCEEDED_MESSAGE,
 } from '../DiscoveryActionBarConstants';
 import { jobAPIPath } from '../../../localconf';
 import { DownloadStatus } from '../DiscoveryActionBarInterfaces';
