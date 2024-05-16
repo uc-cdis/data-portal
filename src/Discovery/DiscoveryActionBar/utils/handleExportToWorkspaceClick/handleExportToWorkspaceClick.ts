@@ -6,51 +6,7 @@ import { fetchWithCreds } from '../../../../actions';
 import { DownloadStatus } from '../../DiscoveryActionBarInterfaces';
 import checkFederatedLoginStatus from '../checkFederatedStatus';
 import { assembleAndExportMetadata } from './assembleAndExportMetadata';
-/*
-function removeKeys(obj: object, keysToRemove: Array<string>) {
-  keysToRemove.forEach((key) => {
-    if (key.includes('.')) {
-      const [firstKey, ...nestedKeys] = key.split('.');
-      const nestedObj = get(obj, firstKey);
-      unset(nestedObj, nestedKeys.join('.'));
-    } else {
-      unset(obj, key);
-    }
-  });
-  return obj;
-}
-const assembleMetadata = (keysToRemove:Array<string>, selectedResources:Array<object>) => {
-  console.log('hello world');
-  console.log('keysToRemove', keysToRemove);
-  console.log('selectedResources', selectedResources);
-  const filteredData = selectedResources.map((obj) => {
-    const clonedObj = cloneDeep(obj);
-    // if there are keysToRemove, remove them
-    if (keysToRemove) {
-      return removeKeys(clonedObj, keysToRemove);
-    }
-    // Otherwise just return the cloned object
-    return clonedObj;
-  });
-  console.log('filteredData', filteredData);
-  return filteredData;
-};
-const exportAssembledMetadata = async (filteredData:Array<object>) => {
-  console.log('manifestServiceApiPath', manifestServiceApiPath);
-  const res = await fetchWithCreds({
-    // path: `${manifestServiceApiPath}/metadata`,
-    path: `${manifestServiceApiPath}`,
-    body: JSON.stringify(filteredData),
-    method: 'POST',
-  });
-  console.log('res ln 45', res);
-  if (res.status !== 200) {
-    throw new Error(
-      `Encountered error while exporting assembled metadata: ${JSON.stringify(res)}`,
-    );
-  }
-};
- */
+
 const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
