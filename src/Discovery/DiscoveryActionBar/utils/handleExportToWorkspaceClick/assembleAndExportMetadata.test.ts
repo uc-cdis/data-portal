@@ -20,6 +20,18 @@ describe('removeKeys', () => {
     removeKeys(obj, keysToRemove);
     expect(obj).toEqual({ a: 1, b: { d: 3 } });
   });
+  it('should return the same object if the specified keys do not exist', () => {
+    const obj = {
+      a: 1,
+      b: {
+        c: 2,
+        d: 3,
+      },
+    };
+    const keysToRemove = ['b.c.f'];
+    removeKeys(obj, keysToRemove);
+    expect(obj).toEqual(obj);
+  });
 });
 
 describe('assembleMetadata', () => {
