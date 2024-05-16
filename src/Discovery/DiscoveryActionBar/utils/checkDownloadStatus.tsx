@@ -80,7 +80,7 @@ const checkDownloadStatus = (
                   datasetDownloadRepositoryName: repositoryName,
                 });
               } catch {
-                // job output is not a url -> is an error message
+                // job output is not a url -> then it is an error message
                 setDownloadStatus({
                   inProgress: false,
                   message: {
