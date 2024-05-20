@@ -14,6 +14,10 @@ const paginatedData = TableData.data as IRowData[];
 const columnManagementData = { DefaultAtlasColumnManagement };
 
 describe('SearchBarMessage', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders message when showSearchBarMessage returns true', () => {
     // Mock showSearchBarMessage to return true to force component to show
     showSearchBarMessage.mockReturnValue(true);
