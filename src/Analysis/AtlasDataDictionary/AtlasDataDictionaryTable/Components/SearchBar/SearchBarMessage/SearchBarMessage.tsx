@@ -16,13 +16,13 @@ const SearchBarMessage = ({
   columnManagementReset, searchTerm, paginatedData, columnManagementData,
 }: ISearchBarMessageProps) => {
   if (showSearchBarMessage(searchTerm, paginatedData, columnManagementData)) {
-    console.log(searchTerm, paginatedData, columnManagementData);
     return (
       <div className='search-bar-message'>
         <span><InfoIcon /></span>
             Matches found in hidden columns.
         <Button
           leftIcon={<EyeIcon />}
+          data-testid='show-all-button'
           variant='outline'
           onClick={() => columnManagementReset()}
         >Show all

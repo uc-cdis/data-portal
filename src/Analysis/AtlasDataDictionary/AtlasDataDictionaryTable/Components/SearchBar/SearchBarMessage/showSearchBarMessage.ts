@@ -6,7 +6,6 @@ const showSearchBarMessage = (
   paginatedData:IRowData[],
   columnManagementData:IColumnManagementData,
 ) => {
-  console.log('Heeeeeeeeere')
   let foundSearchTermInHiddenColumn = false;
   const hiddenColumns: Array<string> = Object.keys(columnManagementData).filter((key) => columnManagementData[key] === false);
 
@@ -33,7 +32,6 @@ const showSearchBarMessage = (
       });
     });
   }
-  console.log('-------------->', foundSearchTermInHiddenColumn);
   return foundSearchTermInHiddenColumn;
 };
 

@@ -1,4 +1,6 @@
-const DefaultAtlasColumnManagement = {
+import { IColumnManagementData } from '../Interfaces/Interfaces';
+
+const DefaultAtlasColumnManagement:IColumnManagementData = {
   vocabularyID: true,
   conceptID: true,
   conceptCode: true,

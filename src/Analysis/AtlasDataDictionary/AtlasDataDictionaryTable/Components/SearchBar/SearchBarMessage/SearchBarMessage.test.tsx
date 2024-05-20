@@ -1,59 +1,49 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import { render, fireEvent, screen } from '@testing-library/react';
-import { Tab } from '@mantine/core/lib/Tabs/Tab/Tab';
 import SearchBarMessage from './SearchBarMessage';
-import { IColumnManagementData } from '../../../Interfaces/Interfaces';
-import TableData from '../../../TestData/TableData';
+import showSearchBarMessage from './showSearchBarMessage';
 import DefaultAtlasColumnManagement from '../../../Utils/DefaultAtlasColumnManagement';
+import TableData from '../../../TestData/TableData';
+import { IColumnManagementData, IRowData } from '../../../Interfaces/Interfaces';
 
-// Mocking showSearchBarMessage function
-jest.mock('./showSearchBarMessage', () => jest.fn());
+jest.mock('./showSearchBarMessage');
+const columnManagementResetMock = jest.fn();
+const searchTerm = 'search term';
+const paginatedData = TableData.data as IRowData[];
+const columnManagementData = { DefaultAtlasColumnManagement };
 
-const paginatedData = [{
-  ...TableData.data[0],
-  ...{
-    rowID: 1,
-    numberOfPeopleWithVariablePercent: 33,
-    numberOfPeopleWhereValueIsFilledPercent: 33,
-    numberOfPeopleWhereValueIsNullPercent: 0,
-  },
-}];
+describe('SearchBarMessage', () => {
+  it('renders message when showSearchBarMessage returns true', () => {
+    // Mock showSearchBarMessage to return true to force component to show
+    showSearchBarMessage.mockReturnValue(true);
 
-describe('SearchBarMessage component', () => {
-  const columnManagementResetMock = jest.fn();
+    render(
+      <SearchBarMessage
+        columnManagementReset={columnManagementResetMock}
+        searchTerm={searchTerm}
+        paginatedData={paginatedData}
+        columnManagementData={columnManagementData as unknown as IColumnManagementData}
+      />,
+    );
 
-  afterEach(() => {
-    jest.clearAllMocks();
+    expect(screen.getByText('Matches found in hidden columns.')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('show-all-button'));
+    expect(columnManagementResetMock).toHaveBeenCalled();
   });
 
-  it('should render null if showSearchBarMessage returns false', () => {
-    // Mocking showSearchBarMessage to return false
-    // require('./showSearchBarMessage').default.mockReturnValue(false);
+  it('does not render message when showSearchBarMessage returns false', () => {
+    // Mock showSearchBarMessage to return false
+    showSearchBarMessage.mockReturnValue(false);
 
     const { container } = render(
       <SearchBarMessage
         columnManagementReset={columnManagementResetMock}
-        searchTerm=''
-        paginatedData={TableData.data}
-        columnManagementData={{} as IColumnManagementData}
-      />,
-    );
-
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('should render message and button if searchTerm value is excluded by columnManagementData', () => {
-    render(
-      <SearchBarMessage
-        columnManagementReset={columnManagementResetMock}
-        searchTerm={'Person'}
+        searchTerm={searchTerm}
         paginatedData={paginatedData}
-        columnManagementData={{ ...DefaultAtlasColumnManagement, vocabularyID: false }}
+        columnManagementData={columnManagementData as unknown as IColumnManagementData}
       />,
     );
-    expect(screen.getByText(/Matches found in hidden columns./i)).toBeInTheDocument();
-    expect(screen.getByTestId('eye-icon')).toBeInTheDocument();
-    fireEvent.click(screen.getByText(/Show all/i));
-    expect(columnManagementResetMock).toHaveBeenCalled();
+    expect(container).toBeEmptyDOMElement();
   });
 });
