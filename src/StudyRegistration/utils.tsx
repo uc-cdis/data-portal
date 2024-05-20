@@ -279,7 +279,6 @@ export const updateCDEMetadataInMDS = async (metadataID, updatedCDEInfo) => {
       Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedFilters.push({ value: cdeKey, key: 'Common Data Elements' }));
       metadataToUpdate[STUDY_DATA_FIELD][filterField] = updatedFilters;
     }
-    console.log(metadataToUpdate);
     await updateStudyInMDS(metadataID, metadataToUpdate);
   } catch (err) {
     throw new Error(`Request for query MDS failed: ${err}`);
