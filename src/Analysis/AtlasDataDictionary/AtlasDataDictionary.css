@@ -205,7 +205,6 @@ table > tbody > tr > td.preview-chart {
   text-align: center;
 }
 
-
 /* Search Bar */
 .atlas-data-dictionary-container .search-bar {
   background: #cfdbe6;
@@ -252,7 +251,6 @@ table > tbody > tr > td.preview-chart {
 .atlas-data-dictionary-container .search-bar-message svg {
   margin: 0 4px -2px 0;
 }
-
 
 /* Charts */
 .atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
