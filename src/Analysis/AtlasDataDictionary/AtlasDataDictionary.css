@@ -177,6 +177,35 @@ table > tbody > tr > td.preview-chart {
   min-width: 145px;
 }
 
+/* Pagination */
+.atlas-data-dictionary-container .pagination-wrapper button {
+  width: unset;
+  transform: scale(0.9);
+  padding: 0;
+}
+
+.atlas-data-dictionary-container .pagination-container {
+  width: 450px;
+  margin-left: auto;
+}
+
+.atlas-data-dictionary-container .pagination-container div {
+  float: right;
+  color: #333333;
+  font-size: 12px;
+}
+
+.atlas-data-dictionary-container .entries-quantity-select select {
+  margin: 0 8px 0 5px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+  width: 44px;
+  text-align: center;
+}
+
+
 /* Search Bar */
 .atlas-data-dictionary-container .search-bar {
   background: #cfdbe6;
@@ -224,33 +253,6 @@ table > tbody > tr > td.preview-chart {
   margin: 0 4px -2px 0;
 }
 
-/* Pagination */
-.atlas-data-dictionary-container .pagination-wrapper button {
-  width: unset;
-  transform: scale(0.9);
-  padding: 0;
-}
-
-.atlas-data-dictionary-container .pagination-container {
-  width: 450px;
-  margin-left: auto;
-}
-
-.atlas-data-dictionary-container .pagination-container div {
-  float: right;
-  color: #333333;
-  font-size: 12px;
-}
-
-.atlas-data-dictionary-container .entries-quantity-select select {
-  margin: 0 8px 0 5px;
-  background-color: #fff;
-  border: none;
-  outline: none;
-  scroll-behavior: smooth;
-  width: 44px;
-  text-align: center;
-}
 
 /* Charts */
 .atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
