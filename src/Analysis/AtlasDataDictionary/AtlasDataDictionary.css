@@ -236,10 +236,14 @@ table > tbody > tr > td.preview-chart {
 }
 
 .atlas-data-dictionary-container .value-summary-chart.Number .recharts-wrapper {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .atlas-data-dictionary-container .value-summary-chart-title {
   font-size: 10px;
   padding-left: 65px;
+}
+
+.atlas-data-dictionary-container .value-summary-chart .recharts-text.recharts-cartesian-axis-tick-value {
+  font-size: 10px;
 }
