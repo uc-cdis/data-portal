@@ -345,12 +345,15 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             name='repository'
             label='Study Data Repository'
             hasFeedback
-            help='Leave this section blank if your data is not yet available'
-          >
+             help={(
+               <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
+                 If you have deposited your data and you have a unique Study ID for the data at the repository, enter it below; otherwise, leave blank.
+               </React.Fragment>
+             )}
+            >
             <Select placeholder='Select a data repository' showSearch allowClear>
               <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
-              <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
               <Option value='Figshare'>Figshare</Option>
               <Option value='GitHub'>GitHub</Option>
