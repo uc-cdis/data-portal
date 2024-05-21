@@ -5,62 +5,9 @@ import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
-const defaultHareGroups =  ['Non-Hispanic Black','Non-Hispanic Asian','Non-Hispanic White','Hispanic']
+const defaultHareGroups = ['Non-Hispanic Black', 'Non-Hispanic Asian', 'Non-Hispanic White', 'Hispanic'];
 
 const AttritionTable = ({ tableData, title }) => {
-  const getHareGroups = (conceptBreakdownArray) => {
-    let groupNames = conceptBreakdownArray.map(item => {
-      return { concept_value_name: item.concept_value_name };
-    });
-    return groupNames;
-  };
-
-  const displayHareGroupHeaders = (hareGroupNames) => {
-    let i = 0;
-    let buffer = [];
-
-    while (i < hareGroupNames.length)
-    {
-      let groupName = hareGroupNames[i]['concept_value_name'];
-      groupName = groupName.charAt(0).toUpperCase() + groupName.slice(1);
-
-      if(i == 0)
-      {
-        buffer.push(<th className='attrition-table--w15 attrition-table--leftpad'>{groupName}</th>);
-      }
-      else
-      {
-        buffer.push(<th className='attrition-table--w15'>{groupName}</th>);
-      }
-      i++;
-    }
-
-    return buffer;
-  }
-
-  const displayGroupBreakDowns = (hareGroupNames, row) => {
-    let i = 0;
-    let buffer = [];
-
-    while (i < hareGroupNames.length)
-    {
-      let groupName = hareGroupNames[i]["concept_value_name"];
-      let count = getBreakDownForGroup(groupName, row?.concept_breakdown)
-      buffer.push(<td>{count}</td>);
-      i++;
-    }
-
-    return buffer;
-  }
-
-  const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
-    const matchingObject = conceptBreakdownArray.find(
-      (obj) => obj.concept_value_name === groupName,
-    );
-
-    return displayNumberOrX(matchingObject?.persons_in_cohort_with_value);
-  };
-
   const displayRowType = (rowType) => {
     if (rowType) {
       return rowType === 'outcome' ? 'Outcome Phenotype' : rowType;
@@ -69,20 +16,62 @@ const AttritionTable = ({ tableData, title }) => {
   };
 
   const displayNumberOrX = (data) => {
-    if(data || data == 0)
-    {
+    if (data || data === 0) {
       return data;
     }
     return <h3>❌</h3>;
-  }
+  };
+
+  const getHareGroups = (conceptBreakdownArray) => {
+    const groupNames = conceptBreakdownArray.map((item) => ({ concept_value_name: item.concept_value_name }));
+    return groupNames;
+  };
+
+  const displayHareGroupHeaders = (hareGroupNames) => {
+    let i = 0;
+    const hareGroupNamesJSX = [];
+
+    while (i < hareGroupNames.length) {
+      let groupName = hareGroupNames[i].concept_value_name;
+      groupName = groupName.charAt(0).toUpperCase() + groupName.slice(1);
+
+      if (i === 0) {
+        hareGroupNamesJSX.push(<th className='attrition-table--w15 attrition-table--leftpad'>{groupName}</th>);
+      } else {
+        hareGroupNamesJSX.push(<th className='attrition-table--w15'>{groupName}</th>);
+      }
+      i += 1;
+    }
+
+    return hareGroupNamesJSX;
+  };
+
+  const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
+    let matchingObject;
+    if (conceptBreakdownArray) {
+      matchingObject = conceptBreakdownArray.find(
+        (obj) => obj.concept_value_name === groupName,
+      );
+    }
+
+    return displayNumberOrX(matchingObject?.persons_in_cohort_with_value);
+  };
+
+  const displayGroupBreakDowns = (hareGroupNames, row) => {
+    const hareGroupCountsJSX = [];
+
+    hareGroupNames.forEach((hareGroupName) => {
+      const count = getBreakDownForGroup(hareGroupName.concept_value_name, row?.concept_breakdown);
+      hareGroupCountsJSX.push(<td>{count}</td>);
+    });
+
+    return hareGroupCountsJSX;
+  };
 
   let hareGroupNames = defaultHareGroups;
 
-  if(tableData.rows)
-  {
-    console.log('start to get hare group names')
-    console.log(tableData.rows[0])
-    hareGroupNames = getHareGroups(tableData.rows[0]['concept_breakdown']);
+  if (tableData.rows) {
+    hareGroupNames = getHareGroups(tableData.rows[0].concept_breakdown);
   }
 
   return (
