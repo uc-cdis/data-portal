@@ -21,7 +21,7 @@ const AttritionTableJSON = [
           },
           {
             concept_value_name: 'Hispanic',
-            persons_in_cohort_with_value: 39683,
+            persons_in_cohort_with_value: 0,
           },
         ],
       },
