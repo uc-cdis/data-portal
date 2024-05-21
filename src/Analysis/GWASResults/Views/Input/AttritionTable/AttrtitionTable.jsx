@@ -4,12 +4,61 @@ import PropTypes from 'prop-types';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
+
+const defaultHareGroups =  ['Non-Hispanic Black','Non-Hispanic Asian','Non-Hispanic White','Hispanic']
+
 const AttritionTable = ({ tableData, title }) => {
+  const getHareGroups = (conceptBreakdownArray) => {
+    let groupNames = conceptBreakdownArray.map(item => {
+      return { concept_value_name: item.concept_value_name };
+    });
+    return groupNames;
+  };
+
+  const displayHareGroupHeaders = (hareGroupNames) => {
+    let i = 0;
+    let buffer = [];
+
+    while (i < hareGroupNames.length)
+    {
+      let groupName = hareGroupNames[i]['concept_value_name'];
+      groupName = groupName.charAt(0).toUpperCase() + groupName.slice(1);
+
+      if(i == 0)
+      {
+        buffer.push(<th className='attrition-table--w15 attrition-table--leftpad'>{groupName}</th>);
+      }
+      else
+      {
+        buffer.push(<th className='attrition-table--w15'>{groupName}</th>);
+      }
+      i++;
+    }
+
+    return buffer;
+  }
+
+  const displayGroupBreakDowns = (hareGroupNames, row) => {
+    let i = 0;
+    let buffer = [];
+
+    while (i < hareGroupNames.length)
+    {
+      let groupName = hareGroupNames[i]["concept_value_name"];
+      let count = getBreakDownForGroup(groupName, row?.concept_breakdown)
+      buffer.push(<td>{count}</td>);
+      i++;
+    }
+
+    return buffer;
+  }
+
   const getBreakDownForGroup = (groupName, conceptBreakdownArray) => {
     const matchingObject = conceptBreakdownArray.find(
       (obj) => obj.concept_value_name === groupName,
     );
-    return matchingObject?.persons_in_cohort_with_value || <h3>❌</h3>;
+
+    return displayNumberOrX(matchingObject?.persons_in_cohort_with_value);
   };
 
   const displayRowType = (rowType) => {
@@ -18,6 +67,23 @@ const AttritionTable = ({ tableData, title }) => {
     }
     return <h3>❌</h3>;
   };
+
+  const displayNumberOrX = (data) => {
+    if(data || data == 0)
+    {
+      return data;
+    }
+    return <h3>❌</h3>;
+  }
+
+  let hareGroupNames = defaultHareGroups;
+
+  if(tableData.rows)
+  {
+    console.log('start to get hare group names')
+    console.log(tableData.rows[0])
+    hareGroupNames = getHareGroups(tableData.rows[0]['concept_breakdown']);
+  }
 
   return (
     <section data-testid='attrition-table' className='attrition-table'>
@@ -37,12 +103,7 @@ const AttritionTable = ({ tableData, title }) => {
                   <th className='attrition-table--rightborder attrition-table--w5'>
                     Size
                   </th>
-                  <th className='attrition-table--w15 attrition-table--leftpad'>
-                    Non-Hispanic Black
-                  </th>
-                  <th className='attrition-table--w15'>Non-Hispanic Asian</th>
-                  <th className='attrition-table--w15'>Non-Hispanic White</th>
-                  <th className='attrition-table--w15'>Hispanic</th>
+                  {displayHareGroupHeaders(hareGroupNames)}
                 </tr>
               </thead>
               <tbody>
@@ -51,29 +112,9 @@ const AttritionTable = ({ tableData, title }) => {
                     <td className='row-type'>{displayRowType(row?.type)}</td>
                     <td>{row?.name || <h3>❌</h3>}</td>
                     <td className='attrition-table--rightborder'>
-                      {row?.size || <h3>❌</h3>}
+                      {displayNumberOrX(row?.size)}
                     </td>
-                    <td>
-                      {getBreakDownForGroup(
-                        'non-Hispanic Black',
-                        row?.concept_breakdown,
-                      )}
-                    </td>
-                    <td>
-                      {getBreakDownForGroup(
-                        'non-Hispanic Asian',
-                        row?.concept_breakdown,
-                      )}
-                    </td>
-                    <td>
-                      {getBreakDownForGroup(
-                        'non-Hispanic White',
-                        row?.concept_breakdown,
-                      )}
-                    </td>
-                    <td>
-                      {getBreakDownForGroup('Hispanic', row?.concept_breakdown)}
-                    </td>
+                    {displayGroupBreakDowns(hareGroupNames, row)}
                   </tr>
                 ))}
               </tbody>
@@ -84,6 +125,7 @@ const AttritionTable = ({ tableData, title }) => {
     </section>
   );
 };
+
 AttritionTable.propTypes = {
   tableData: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
