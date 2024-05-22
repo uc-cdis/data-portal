@@ -23,7 +23,7 @@ describe('NonNumericDetailsTable', () => {
       'Person Count',
     ];
     const { getByText } = render(
-      <NonNumericDetailsTable rowObject={rowObject} searchInputValue={''} />,
+      <NonNumericDetailsTable rowObject={rowObject} searchTerm='' />,
     );
     headers.forEach((header) => {
       expect(getByText(header)).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('NonNumericDetailsTable', () => {
 
   it('renders the NumericDetailsTable correctly with rowObject props', () => {
     const { getByText } = render(
-      <NonNumericDetailsTable rowObject={rowObject} searchInputValue={''} />,
+      <NonNumericDetailsTable rowObject={rowObject} searchTerm='' />,
     );
 
     Object.values(rowObject.valueSummary[0]).forEach((value) => {
