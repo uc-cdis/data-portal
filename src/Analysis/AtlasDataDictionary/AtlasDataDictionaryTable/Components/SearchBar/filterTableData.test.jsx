@@ -1,6 +1,4 @@
 import filterTableData from './filterTableData';
-import { formatForSearchComparison } from '../../Utils/CheckSearchTermUtils';
-import TableData from '../../TestData/TableData';
 
 describe('filterTableData function', () => {
   const mockData = [
@@ -54,7 +52,7 @@ describe('filterTableData function', () => {
     expect(mockSetDisplayedData).toHaveBeenCalledWith(expectedFilteredData);
   });
   it('filters data from nested arrays with two search results', () => {
-    // searchTerm here is shared with both objects
+    // searchTerm here exists in both objects
     const searchTerm = mockData[0].standardDeviation;
     const expectedFilteredData = [mockData[0], mockData[1]];
     filterTableData(mockData, searchTerm, mockSetDisplayedData);

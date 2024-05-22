@@ -1,19 +1,18 @@
 import { IRowData } from '../Interfaces/Interfaces';
 
-export const formatForSearchComparison = (searchTerm: string | number) => (
-  searchTerm.toString().toLowerCase().trim().replace(/[,%]/g, '')
-);
+export const formatForSearchComparison = (searchTerm: string | number) =>
+  searchTerm.toString().toLowerCase().trim().replace(/[ ,%]/g, '');
 
 export const checkIfCellContainsSearchTerm = (
   cellText: string | number | null | undefined,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
   const cellTextString = cellText?.toString() || '';
   if (
-    searchInputValue
-    && cellTextString
-    && formatForSearchComparison(cellTextString).includes(
-      formatForSearchComparison(searchInputValue),
+    searchInputValue &&
+    cellTextString &&
+    formatForSearchComparison(cellTextString).includes(
+      formatForSearchComparison(searchInputValue)
     )
   ) {
     return 'search-highlight';
@@ -23,7 +22,7 @@ export const checkIfCellContainsSearchTerm = (
 
 export const checkIfChartContainsSearchTerm = (
   rowObject: IRowData,
-  searchInputValue,
+  searchInputValue
 ) => {
   let searchTermFound = false;
   rowObject.valueSummary.forEach((arrObj: Object) => {
@@ -41,7 +40,7 @@ export const checkIfChartContainsSearchTerm = (
 
 export const checkIfDetailTableContainsSearchTerm = (
   rowObject: IRowData,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
   let searchTermFound = false;
   const hiddenKeys = ['minValue', 'maxValue', 'meanValue', 'standardDeviation'];
@@ -56,7 +55,7 @@ export const checkIfDetailTableContainsSearchTerm = (
 
 export const checkIfHiddenCellsContainSearchTerm = (
   rowObject: IRowData,
-  searchInputValue: string,
+  searchInputValue: string
 ) => {
   if (checkIfDetailTableContainsSearchTerm(rowObject, searchInputValue)) {
     return 'search-highlight';
