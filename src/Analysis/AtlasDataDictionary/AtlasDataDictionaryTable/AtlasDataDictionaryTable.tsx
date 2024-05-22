@@ -14,10 +14,12 @@ import {
 } from './Utils/SortUtils';
 import ManageColumns from './Components/ManageColumns/ManageColumns';
 import DefaultAtlasColumnManagement from './Utils/DefaultAtlasColumnManagement';
+import ManageColumnsNotification from './Components/ManageColumnsNotification/ManageColumnsNotification';
 
 const AtlasDataDictionaryTable = ({ TableData }) => {
   const preprocessedTableData = PreprocessTableData(TableData);
-  const [data, setData] = useState(preprocessedTableData);
+  const [displayedData, setDisplayedData] = useState(preprocessedTableData);
+  const [showNotification, setShowNotification] = useState(false);
   const [dataDictionaryTableState, setDataDictionaryTableState] = useState(
     InitialDataDictionaryTableState,
   );
@@ -40,11 +42,10 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
   const entriesHeaderStop = dataDictionaryTableState.entriesShown
     * dataDictionaryTableState.currentPage;
 
-  const paginatedData = data.slice(
+  const paginatedData = displayedData.slice(
     entriesShown * currentPage - entriesShown,
     entriesShown * currentPage,
   );
-
   const handleTableChange = (
     event:
       | 'openDropdown'
@@ -109,15 +110,23 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
       sortConfig as ISortConfig,
       sortKey,
     );
-    const sortedData = SortDataWithDirection(data, newDirection, sortKey);
+    const sortedData = SortDataWithDirection(displayedData, newDirection, sortKey);
     // if column is set to off reset to initial sort
     if (newDirection === 'off') {
-      setData(preprocessedTableData);
+      setDisplayedData(preprocessedTableData);
     } else {
       // Otherwise set with sortedData
-      setData(sortedData);
+      setDisplayedData(sortedData);
     }
     handleTableChange('sortConfig', { sortKey, direction: newDirection });
+  };
+
+  const columnManagementReset = () => {
+    handleTableChange(
+      'columnManagementReset',
+      'columnManagementReset',
+    );
+    setShowNotification(true);
   };
 
   const rows = paginatedData.map((rowObject, i) => (
@@ -134,17 +143,25 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
 
   return (
     <div data-testid='atlas-data-dictionary-table'>
+      <ManageColumnsNotification
+        showNotification={showNotification}
+        setShowNotification={setShowNotification}
+      />
       <ManageColumns
         handleTableChange={handleTableChange}
         columnManagementData={columnManagement}
+        columnManagementReset={columnManagementReset}
       />
       <Table>
         <SearchBar
           columnsShown={columnsShown}
           TableData={preprocessedTableData}
-          setData={setData}
+          columnManagementData={columnManagement}
+          paginatedData={paginatedData}
+          setDisplayedData={setDisplayedData}
           searchTerm={searchTerm}
           handleTableChange={handleTableChange}
+          columnManagementReset={columnManagementReset}
         />
         <ColumnHeaders
           handleSort={handleSort}
@@ -153,7 +170,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         />
         <tbody>
           {rows}
-          {!data.length && (
+          {!displayedData.length && (
             <tr className='no-data-found'>
               <td colSpan={columnsShown}>
                 <h2>No Data Found</h2>
@@ -164,7 +181,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         <EntriesHeader
           start={entriesHeaderStart}
           stop={entriesHeaderStop}
-          total={data.length}
+          total={displayedData.length}
           colspan={columnsShown}
         />
       </Table>
@@ -172,7 +189,7 @@ const AtlasDataDictionaryTable = ({ TableData }) => {
         entriesShown={entriesShown}
         handleTableChange={handleTableChange}
         currentPage={currentPage}
-        totalEntriesAvailable={data.length}
+        totalEntriesAvailable={displayedData.length}
       />
     </div>
   );
