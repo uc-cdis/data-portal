@@ -345,22 +345,25 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             name='repository'
             label='Study Data Repository'
             hasFeedback
-            help='Leave this section blank if your data is not yet available'
-          >
+             help={(
+               <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
+                 If you have deposited your data and you have a unique Study ID for the data at the repository, enter it below; otherwise, leave blank.
+               </React.Fragment>
+             )}
+            >
             <Select placeholder='Select a data repository' showSearch allowClear>
               <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
-              <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
               <Option value='Figshare'>Figshare</Option>
               <Option value='GitHub'>GitHub</Option>
+              <Option value='Harvard Dataverse'>Harvard Dataverse</Option>
               <Option value='ICPSR'>ICPSR</Option>
               <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
               <Option value='openICPSR'>openICPSR</Option>
               <Option value='JCOIN'>JCOIN</Option>
               <Option value='MassIVE'>MassIVE</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
-              <Option value='Metabolomics Workbench'>Metabolomics Workbench</Option>
               <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
               <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
               <Option value='National Sleep Research Resource (NSRR)'>National Sleep Research Resource (NSRR)</Option>
@@ -368,7 +371,6 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='NIDA Data Share'>NIDA Data Share</Option>
               <Option value='NIDDK Central Repository'>NIDDK Central Repository</Option>
               <Option value='NIMH Data Archive'>NIMH Data Archive</Option>
-              <Option value='NINDS Data Share'>NINDS Data Share</Option>
               <Option value='OpenNEURO'>OpenNEURO</Option>
               <Option value='Open Science Framework'>Open Science Framework</Option>
               <Option value='Pennsieve'>Pennsieve</Option>
@@ -376,6 +378,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='PubMed Central'>PubMed Central</Option>
               <Option value='Qualitative Data Repository at Syracuse University'>Qualitative Data Repository at Syracuse University</Option>
               <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
+              <Option value='Sequence Read Archive (SRA)'>Sequence Read Archive (SRA)</Option>
               <Option value='SPARC'>SPARC</Option>
               <Option value='Vivli'>Vivli</Option>
               <Option value='The Zebrafish Model Organism Database (ZFIN)'>The Zebrafish Model Organism Database (ZFIN)</Option>
