@@ -18,7 +18,6 @@ import {
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation } from 'react-router-dom';
-
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
@@ -80,7 +79,6 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   }
   try {
     const respJson = await resp.json();
-    // if (respJson.FieldValuesResponse?.FieldValues?.length === 1 && respJson.FieldValuesResponse.FieldValues[0].FieldValue === ctID) {
     if (respJson.protocolSection.identificationModule.nctId === ctID) {
       return Promise.resolve(true);
     }
@@ -92,55 +90,19 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
 
 const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
   const errMsg = 'Unable to fetch study metadata from ClinicalTrials.gov';
-
-  // get metadata from the clinicaltrials.gov API
-  const promiseList: Promise<any>[] = [];
-  const limit = 20; // the API has a limit of 20 fields
-  let offset = 0;
   const clinicalTrialFieldsToFetch = studyRegistrationConfig.clinicalTrialFields || [];
-  while (offset < clinicalTrialFieldsToFetch.length) {
-    const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
-    offset += limit;
-    promiseList.push(
-      fetch(`https://classic.clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
-        .then(
-          (resp) => {
-            if (!resp || resp.status !== 200) {
-              return Promise.reject(errMsg);
-            }
-            return resp.json();
-          },
-        ),
-    );
+  const resp = await fetch(`https://clinicaltrials.gov/api/v2/studies/${ctID}?fields=${clinicalTrialFieldsToFetch.join('|')}`);
+  if (!resp || resp.status !== 200) {
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
-  const responsesJson = await Promise.all(promiseList);
-
-  // add the metadata returned by each call to a single `metadata` object
-  let metadata = {};
-  responsesJson.forEach((respJson) => {
-    // it should return data for a single study
-    if (respJson.StudyFieldsResponse?.StudyFields?.length !== 1) {
-      // eslint-disable-next-line no-console
-      console.error(`${errMsg}; received response:`, respJson);
-      throw new Error(errMsg);
-    }
-    // `respData` looks like this:
-    // {Rank: value to discard, FieldWithData: [value], FieldWithoutData: []}
-    const respData = respJson.StudyFieldsResponse.StudyFields[0];
-    // `partialMetadata` looks like this: (remove Rank and fields without data)
-    // {FieldWithData: value}
-    delete respData.Rank;
-    const partialMetadata = Object.keys(respData).reduce((res, key) => {
-      if (respData[key].length > 0) {
-        res[key] = respData[key][0];
-      }
-      return res;
-    }, {});
-    // add the new key:value pairs to the ones we already have
-    metadata = { ...metadata, ...partialMetadata };
-  });
-
-  return Promise.resolve(metadata);
+  // get metadata from the clinicaltrials.gov API
+  try {
+    const respJson = await resp.json();
+    return respJson;
+    // }
+  } catch {
+    throw errMsg;
+  }
 };
 
 const isUUID = (input: string) => {
@@ -211,6 +173,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       clinical_trials_id: ctgovID || '',
       clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
+
     preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
@@ -347,12 +310,12 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             name='repository'
             label='Study Data Repository'
             hasFeedback
-             help={(
-               <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
+            help={(
+              <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
                  If you have deposited your data and you have a unique Study ID for the data at the repository, enter it below; otherwise, leave blank.
-               </React.Fragment>
-             )}
-            >
+              </React.Fragment>
+            )}
+          >
             <Select placeholder='Select a data repository' showSearch allowClear>
               <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
