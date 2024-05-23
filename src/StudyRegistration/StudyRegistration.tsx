@@ -99,7 +99,6 @@ const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
   try {
     const respJson = await resp.json();
     return respJson;
-    // }
   } catch {
     throw errMsg;
   }
@@ -312,7 +311,8 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             hasFeedback
             help={(
               <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
-                 If you have deposited your data and you have a unique Study ID for the data at the repository, enter it below; otherwise, leave blank.
+                 If you have deposited your data and you have a unique Study ID for the data at the repository,
+                  enter it below; otherwise, leave blank.
               </React.Fragment>
             )}
           >
