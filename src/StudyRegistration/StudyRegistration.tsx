@@ -23,6 +23,7 @@ import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
 import loadStudiesFromMDS from '../Discovery/MDSUtils';
 import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import Spinner from '../components/Spinner';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -234,7 +235,9 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       </div>
     );
   }
-
+  if (!studies) {
+    return <Spinner />;
+  }
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
