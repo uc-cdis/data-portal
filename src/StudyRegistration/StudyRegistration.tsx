@@ -311,9 +311,10 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             label='Study Data Repository'
             hasFeedback
             help={(
-              <React.Fragment> If you have already selected a data repository, indicate it here; otherwise, leave empty.<br />
-                 If you have deposited your data and you have a unique Study ID for the data at the repository,
-                  enter it below; otherwise, leave blank.
+              <React.Fragment> If you have already selected a data repository, indicate it here;
+                 otherwise, leave empty.<br />
+                 If you have deposited your data and you have a unique Study ID for the data at
+                  the repository, enter it below; otherwise, leave blank.
               </React.Fragment>
             )}
           >
