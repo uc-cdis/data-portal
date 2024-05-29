@@ -236,7 +236,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     );
   }
   if (!studies) {
-    return <Spinner />;
+    return <Spinner text={'Loading study registration form, please wait...'} />;
   }
   return (
     <div className='study-reg-container'>
@@ -257,7 +257,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                   key={study[studyRegistrationConfig.studyRegistrationUIDField]}
                   value={study[studyRegistrationConfig.studyRegistrationUIDField]}
                 >
-                  {`${study.project_number} : ${study.project_title} : ${study.appl_id}`}
+                  {`${study.project_number || 'N/A'} : ${study.study_metadata?.minimal_info?.study_name || 'N/A'} : ${study.study_metadata?.metadata_location?.nih_application_id || 'N/A'}`}
                 </Option>
               ))}
             </Select>
