@@ -73,13 +73,13 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://clinicaltrials.gov/api/v2/studies/${ctID}`);
+  const resp = await fetch(`https://clinicaltrials.gov/api/v2/studies/${ctID}?fields=NCTId`);
   if (!resp || resp.status !== 200) {
     return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
   try {
     const respJson = await resp.json();
-    if (respJson.protocolSection.identificationModule.nctId === ctID) {
+    if (respJson.protocolSection?.identificationModule?.nctId === ctID) {
       return Promise.resolve(true);
     }
     return Promise.reject('Invalid ClinicalTrials.gov ID');
