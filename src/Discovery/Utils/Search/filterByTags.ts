@@ -6,7 +6,12 @@ const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig
     return studies;
   }
   const tagField = config.minimalFieldMapping.tagsListFieldName;
-  return studies.filter((study) => study[tagField]?.some((tag) => selectedTags[tag.name]));
+  return studies.filter((study) => {
+    if (!study[tagField]) {
+      return false;
+    }
+    return study[tagField].some((tag) => selectedTags[tag.name]);
+  });
 };
 
 export default filterByTags;
