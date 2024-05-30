@@ -10,20 +10,20 @@ import { fetchUserAccess } from '../redux/userAccess/asyncThunks';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
 
-/** @typedef {import('../redux/types').RootState} RootState */
-/** @typedef {import('../redux/types').RootStore} RootStore */
+/** @typedef {import("../redux/types").RootState} RootState */
+/** @typedef {import("../redux/types").RootStore} RootStore */
 
 /**
  * @typedef {Object} ProtectedContentState
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
  * @property {string} redirectTo
- * @property {RootState['user']} user
+ * @property {RootState["user"]} user
  */
 
 /**
  * @typedef {Object} PreloadArgs
- * @property {import('react-router').Location} [location]
+ * @property {import("react-router").Location} [location]
  * @property {RootState} [state]
  */
 
@@ -100,7 +100,7 @@ function ProtectedContent({
       Object.keys(currentState.user.authz).length > 0;
     const hasDocsToReview =
       currentState.user.docs_to_be_reviewed?.filter(
-        ({ type }) => type !== 'survival-user-agreement'
+        ({ type }) => type !== 'survival-user-agreement',
       ).length > 0;
     const hasAccess = isUserRegistered && !hasDocsToReview;
 
@@ -127,10 +127,11 @@ function ProtectedContent({
     const newState = { ...currentState, dataLoaded: true };
     setState(newState);
   }
+
   useEffect(() => {
     window.scrollTo(
       0,
-      /** @type {{ scrollY?: number }} */ (location?.state)?.scrollY ?? 0
+      /** @type {{ scrollY?: number }} */ (location?.state)?.scrollY ?? 0,
     );
 
     reduxStore.dispatch(clearCounts()); // clear some counters
@@ -156,17 +157,21 @@ function ProtectedContent({
             newState.redirectTo && newState.redirectTo !== location.pathname;
 
           if (!shouldPreload || shouldRedirect) updateState(newState);
-          else
+          else {
+            setState({ ...state, dataLoaded: false });
             preload({ location, state: reduxStore.getState() }).finally(() =>
-              updateState(newState)
+              updateState(newState),
             );
+          }
         });
   }, [location.pathname]);
 
   if (state.redirectTo && state.redirectTo !== location.pathname)
     return <Navigate to={state.redirectTo} replace />;
   if (isLoginPage && state.dataLoaded) return children;
-  if (state.authenticated)
+  const needPreload = typeof preload === 'function';
+  const preloadDone = !needPreload || (needPreload && state.dataLoaded);
+  if (state.authenticated && preloadDone)
     return (
       <>
         <AuthPopup />
