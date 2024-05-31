@@ -181,21 +181,18 @@ const TableRow = ({
         >
           {rowObject.valueStoredAs}
         </TdDataCell>
-        {rowObject.valueSummary
-        && (
-          <TdDataCell
-            aria-label='value summary preview chart'
-            className='preview-chart'
-            columnEnabled={columnManagementData.valueSummary}
-            containsSearchTerm={checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}
-          >
-            <ValueSummaryChart
-              chartType={rowObject.valueStoredAs}
-              chartData={rowObject.valueSummary as IValueSummary[]}
-              preview
-            />
-          </TdDataCell>
-        )}
+        <TdDataCell
+          aria-label='value summary preview chart'
+          className='preview-chart'
+          columnEnabled={columnManagementData.valueSummary}
+          containsSearchTerm={checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}
+        >
+          <ValueSummaryChart
+            chartType={rowObject.valueStoredAs}
+            chartData={rowObject.valueSummary as IValueSummary[]}
+            preview
+          />
+        </TdDataCell>
       </tr>
       <TableRowDropdown
         dropdownIsOpen={currentDropdownShouldBeOpen}
