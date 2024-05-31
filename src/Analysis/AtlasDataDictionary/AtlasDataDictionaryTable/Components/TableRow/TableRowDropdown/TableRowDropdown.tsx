@@ -47,11 +47,14 @@ const TableRowDropdown = ({
                 className={`expanded-container chart-details-wrapper
                 ${checkIfChartContainsSearchTerm(rowObject, searchTerm)}`}
               >
-                <ValueSummaryChart
-                  chartData={rowObject.valueSummary}
-                  preview={false}
-                  chartType={rowObject.valueStoredAs}
-                />
+                {rowObject.valueSummary
+                  && (
+                    <ValueSummaryChart
+                      chartData={rowObject.valueSummary}
+                      preview={false}
+                      chartType={rowObject.valueStoredAs}
+                    />
+                  )}
               </div>
             </Grid.Col>
           </Grid>

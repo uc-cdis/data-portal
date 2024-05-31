@@ -14,7 +14,7 @@ const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (
       </tr>
     </thead>
     <tbody>
-      {rowObject.valueSummary.map(
+      {rowObject.valueSummary && rowObject.valueSummary.map(
         (valueSummaryObj: IValueSummary, i: number) => (
           <tr key={i}>
             <td

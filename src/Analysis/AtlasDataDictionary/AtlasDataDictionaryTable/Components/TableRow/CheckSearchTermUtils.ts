@@ -21,6 +21,9 @@ export const checkIfChartContainsSearchTerm = (
   rowObject: IRowData,
   searchInputValue,
 ) => {
+  if (!rowObject.valueSummary) {
+    return '';
+  }
   let searchTermFound = false;
   rowObject.valueSummary.forEach((arrObj: Object) => {
     Object.values(arrObj).forEach((arrObjVal: string | number) => {
