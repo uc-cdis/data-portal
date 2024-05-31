@@ -173,7 +173,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               { config.features.tagsInDescription?.enabled
                 ? (
                   <div className='discovery-table__row-horizontal-content'>
-                    {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+                    {(record[config.minimalFieldMapping.tagsListFieldName] || []).map(({ name, category }) => {
                       const isSelected = !!props.selectedTags[name];
                       const color = getTagColor(category, config);
                       if (typeof name !== 'string') {
