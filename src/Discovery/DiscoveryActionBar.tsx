@@ -473,7 +473,9 @@ const DiscoveryActionBar = (props: Props) => {
             console.log(`RequiredIDP does not expect: ${tag?.name}`);
             return; // do not add tag to list
           }
-          requiredIDP.push(tag.name);
+          if (!requiredIDP.includes(tag.name)) {
+            requiredIDP.push(tag.name);
+          }
         }
       }));
       return requiredIDP;
