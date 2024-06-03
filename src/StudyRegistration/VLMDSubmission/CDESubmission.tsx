@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import parse from 'html-react-parser';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Form,
@@ -12,7 +13,6 @@ import {
   Checkbox,
   Select,
 } from 'antd';
-import { parse } from 'jsonpath';
 import { useLocation, Link } from 'react-router-dom';
 import {
   FORM_LAYOUT,
