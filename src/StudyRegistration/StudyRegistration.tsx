@@ -375,7 +375,6 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='Open Science Framework'>Open Science Framework</Option>
               <Option value='Pennsieve'>Pennsieve</Option>
               <Option value='Protocols.io'>Protocols.io</Option>
-              <Option value='PubMed Central'>PubMed Central</Option>
               <Option value='Qualitative Data Repository at Syracuse University'>Qualitative Data Repository at Syracuse University</Option>
               <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
               <Option value='Sequence Read Archive (SRA)'>Sequence Read Archive (SRA)</Option>
