@@ -22,7 +22,9 @@ const GetMissingRequiredIdentityProviders = (
               console.log(`Required Identity Provider does not expect: ${tag.name}`);
               return; // do not add tag to list
             }
-            missingRequiredIdentityProvider.push(tag.name);
+            if (!missingRequiredIdentityProvider.includes(tag.name)) {
+              missingRequiredIdentityProvider.push(tag.name);
+            }
           }
         });
       }
