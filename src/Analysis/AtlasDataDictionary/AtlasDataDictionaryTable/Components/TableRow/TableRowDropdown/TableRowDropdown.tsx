@@ -7,7 +7,6 @@ import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
 import { IRowData } from '../../../Interfaces/Interfaces';
 import LoadingErrorMessage from '../../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 
-
 interface ITableRowDropdownProps {
   dropdownIsOpen: boolean;
   columnsShown: number;
@@ -56,10 +55,9 @@ const TableRowDropdown = ({
                       preview={false}
                       chartType={rowObject.valueStoredAs}
                     />
-                  ): (
-                    <LoadingErrorMessage message={`Error loading data: valueSummary is ${rowObject.valueSummary ? 'empty': 'null'}`} />
-                  )
-                }
+                  ) : (
+                    <LoadingErrorMessage message={`Error loading data: valueSummary is ${rowObject.valueSummary ? 'empty' : 'null'}`} />
+                  )}
               </div>
             </Grid.Col>
           </Grid>
