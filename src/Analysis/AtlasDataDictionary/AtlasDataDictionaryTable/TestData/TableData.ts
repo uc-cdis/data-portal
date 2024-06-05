@@ -2,7 +2,7 @@ const TableData = {
   total: 250,
   data: [
     {
-      vocabularyID: 'barchart_qualitative_robot_r8HSzexz7I',
+      vocabularyID: 'valueSummary empty',
       conceptID: 1,
       conceptCode: 'TdCN8KJZdq',
       conceptName: 'squirrel_Z1G3RkZbJF',
@@ -15,103 +15,10 @@ const TableData = {
       maxValue: null,
       meanValue: null,
       standardDeviation: null,
-      valueSummary: [{
-        name: 'valueSummaryNameGSZiOl3yUW', valueAsString: '4WliGmUOGr', valueAsConceptID: 44, personCount: 8,
-      }, {
-        name: 'valueSummaryNameeRNr8bUS5P', valueAsString: 'c4Sc88c0oj', valueAsConceptID: 87, personCount: 96,
-      }, {
-        name: 'valueSummaryNameGozVh7SvCf', valueAsString: 'yA4gQDSZtX', valueAsConceptID: 59, personCount: 13,
-      }, {
-        name: 'valueSummaryNameixjXetLvJC', valueAsString: '0RYGKQLS2g', valueAsConceptID: 27, personCount: 10,
-      }, {
-        name: 'valueSummaryNamel6gkImdgoJ', valueAsString: 'XdOfTAlby7', valueAsConceptID: 5, personCount: 23,
-      }, {
-        name: 'valueSummaryNameRUqO7bDsvw', valueAsString: 'OflxUT5sEe', valueAsConceptID: 82, personCount: 50,
-      }, {
-        name: 'valueSummaryNamemCAfbmTrwX', valueAsString: 'EuEJJXzocS', valueAsConceptID: 77, personCount: 67,
-      }, {
-        name: 'valueSummaryNameRhSRoDBi7c', valueAsString: '9dnccQM3TK', valueAsConceptID: 99, personCount: 93,
-      }, {
-        name: 'valueSummaryNameS6BM7Coomw', valueAsString: 'coayHOHNTF', valueAsConceptID: 78, personCount: 11,
-      }, {
-        name: 'valueSummaryNameo18g7NhOgU', valueAsString: 'rOXwlkc9Vx', valueAsConceptID: 56, personCount: 85,
-      }, {
-        name: 'valueSummaryName0T5Ni7p7Zt', valueAsString: 'RDArbm4fsA', valueAsConceptID: 50, personCount: 34,
-      }, {
-        name: 'valueSummaryNameQJ2NXKd7rN', valueAsString: '9w55ESduum', valueAsConceptID: 14, personCount: 96,
-      }, {
-        name: 'valueSummaryNameuiYt4pk4bS', valueAsString: 'KDgHk7LQuh', valueAsConceptID: 94, personCount: 9,
-      }, {
-        name: 'valueSummaryNamesyXCKCDMNF', valueAsString: 'fge463DvYF', valueAsConceptID: 36, personCount: 90,
-      }, {
-        name: 'valueSummaryNameAf68LXj0BF', valueAsString: 'DJZntkHGrC', valueAsConceptID: 3, personCount: 78,
-      }, {
-        name: 'valueSummaryName57LKL23CT1', valueAsString: 'eLqgYj31Xv', valueAsConceptID: 46, personCount: 98,
-      }, {
-        name: 'valueSummaryNamefD8kdgZyn0', valueAsString: 'XysGAxdEsW', valueAsConceptID: 22, personCount: 3,
-      }, {
-        name: 'valueSummaryNameVcEYoVd2hK', valueAsString: 'eNk3Q2q17H', valueAsConceptID: 12, personCount: 91,
-      }, {
-        name: 'valueSummaryNamehLN5xLTSyt', valueAsString: 'M77gvujaWb', valueAsConceptID: 1, personCount: 61,
-      }, {
-        name: 'valueSummaryNamed8YbPe3ygM', valueAsString: 'P30PL29r2u', valueAsConceptID: 18, personCount: 66,
-      }, {
-        name: 'valueSummaryNamevg5ew4svLf', valueAsString: 'qrOhDY2FT9', valueAsConceptID: 91, personCount: 71,
-      }, {
-        name: 'valueSummaryNamem3o4lRs7q0', valueAsString: 'ocYE2cBXlb', valueAsConceptID: 43, personCount: 95,
-      }, {
-        name: 'valueSummaryNameakYCGv0LL6', valueAsString: 'pYVOAkT09p', valueAsConceptID: 51, personCount: 87,
-      }, {
-        name: 'valueSummaryNameoa8VxzqG42', valueAsString: 'qwgDc8LP44', valueAsConceptID: 75, personCount: 100,
-      }, {
-        name: 'valueSummaryNamedcGRsRWn1n', valueAsString: '3c5GDr9SpL', valueAsConceptID: 2, personCount: 86,
-      }, {
-        name: 'valueSummaryNamefmNlCkjHbf', valueAsString: '7dnWVGrnGd', valueAsConceptID: 69, personCount: 80,
-      }, {
-        name: 'valueSummaryNamexeqQoEhOx9', valueAsString: '0GyaRdugif', valueAsConceptID: 66, personCount: 43,
-      }, {
-        name: 'valueSummaryNamebKdnAjCUmh', valueAsString: 'q2J8zhxC3j', valueAsConceptID: 90, personCount: 40,
-      }, {
-        name: 'valueSummaryNamek43CKIBVmW', valueAsString: 'IoQOFFYJ0T', valueAsConceptID: 44, personCount: 12,
-      }, {
-        name: 'valueSummaryNametinl7ajJBg', valueAsString: 'QICpgPeIEp', valueAsConceptID: 54, personCount: 80,
-      }, {
-        name: 'valueSummaryNamen556vnUidv', valueAsString: '0dk7NgJXzP', valueAsConceptID: 48, personCount: 62,
-      }, {
-        name: 'valueSummaryNamelrsrMUlVs4', valueAsString: 'et03VSZaId', valueAsConceptID: 13, personCount: 71,
-      }, {
-        name: 'valueSummaryNamerdogsl5pIX', valueAsString: '4kov49FWSD', valueAsConceptID: 25, personCount: 92,
-      }, {
-        name: 'valueSummaryNameEJQ722Jdhr', valueAsString: 'tUN7wCCh5J', valueAsConceptID: 65, personCount: 82,
-      }, {
-        name: 'valueSummaryName5OWIyU6XPt', valueAsString: '7MkyL89jpS', valueAsConceptID: 64, personCount: 62,
-      }, {
-        name: 'valueSummaryName2mOFyEvTgE', valueAsString: 'VZxQ1uuTwV', valueAsConceptID: 6, personCount: 52,
-      }, {
-        name: 'valueSummaryNamemHZ9xnRFkY', valueAsString: '0PkshpqbaQ', valueAsConceptID: 86, personCount: 1,
-      }, {
-        name: 'valueSummaryNameLCYvguXj10', valueAsString: 'YVWzljfMWh', valueAsConceptID: 22, personCount: 92,
-      }, {
-        name: 'valueSummaryNamepgemxTPIJc', valueAsString: 'ax6EoThU4v', valueAsConceptID: 55, personCount: 9,
-      }, {
-        name: 'valueSummaryNamerqpVYZiSPl', valueAsString: 'chgdfjgck8', valueAsConceptID: 2, personCount: 54,
-      }, {
-        name: 'valueSummaryNameol5szSWwI3', valueAsString: 'zFmpysIM33', valueAsConceptID: 96, personCount: 57,
-      }, {
-        name: 'valueSummaryNamerS4q0JVQG8', valueAsString: 'hX86nlyJln', valueAsConceptID: 87, personCount: 14,
-      }, {
-        name: 'valueSummaryNameqzMitUQrJV', valueAsString: 'ElI5B8FVsH', valueAsConceptID: 71, personCount: 20,
-      }, {
-        name: 'valueSummaryNameA7dMoMtJLs', valueAsString: 'MD7K7tpNp2', valueAsConceptID: 78, personCount: 21,
-      }, {
-        name: 'valueSummaryNameHyBlu7VIRJ', valueAsString: 'agM4BhI3Xf', valueAsConceptID: 19, personCount: 15,
-      }],
+      valueSummary: [],
     },
     {
-      vocabularyID: 'histogram_nonqualitative_cheese_h9jnvgzQqr', conceptID: 2, conceptCode: '6D3KULDE6o', conceptName: 'robot_UQedy4gOVD', conceptClassID: 'ShzFWFCS0k', numberOfPeopleWithVariable: 58, numberOfPeopleWhereValueIsFilled: 58, numberOfPeopleWhereValueIsNull: 12, valueStoredAs: 'Number', minValue: 75, maxValue: 83, meanValue: 10, standardDeviation: 3, valueSummary: [{ start: 89, end: 10, personCount: 16 }, { start: 16, end: 98, personCount: 17 }, { start: 82, end: 23, personCount: 14 }, { start: 40, end: 17, personCount: 36 }, { start: 29, end: 4, personCount: 78 }, { start: 87, end: 29, personCount: 50 }, { start: 85, end: 88, personCount: 45 }, { start: 86, end: 65, personCount: 17 }, { start: 31, end: 69, personCount: 99 }, { start: 81, end: 74, personCount: 3 }, { start: 55, end: 65, personCount: 44 }, { start: 8, end: 87, personCount: 4 }, { start: 81, end: 5, personCount: 80 }, { start: 33, end: 57, personCount: 67 }, { start: 6, end: 100, personCount: 99 }, { start: 45, end: 48, personCount: 85 }, { start: 78, end: 17, personCount: 64 }, { start: 45, end: 2, personCount: 66 }, { start: 21, end: 85, personCount: 95 }],
-    },
-    {
-      vocabularyID: 'barchart_qualitative_squirrel_RT3a7rxydx',
+      vocabularyID: 'valueSummary null',
       conceptID: 3,
       conceptCode: 'LBY9pbqngP',
       conceptName: 'cheese_AO8jbvtSl5',
@@ -124,97 +31,10 @@ const TableData = {
       maxValue: null,
       meanValue: null,
       standardDeviation: null,
-      valueSummary: [{
-        name: 'valueSummaryNameinfedlWnIV', valueAsString: 'YVsg34gNte', valueAsConceptID: 7, personCount: 69,
-      }, {
-        name: 'valueSummaryNameaUY5pDLiDx', valueAsString: 'grPaxn3B8V', valueAsConceptID: 82, personCount: 4,
-      }, {
-        name: 'valueSummaryNameOn863XRNtI', valueAsString: 'OfDmwmw995', valueAsConceptID: 98, personCount: 53,
-      }, {
-        name: 'valueSummaryNameE7nz1NSnYa', valueAsString: '8ikQHY1G5Z', valueAsConceptID: 66, personCount: 68,
-      }, {
-        name: 'valueSummaryNamesKDkVx3B9X', valueAsString: '6trl2BnOcI', valueAsConceptID: 94, personCount: 20,
-      }, {
-        name: 'valueSummaryNamecWWja21eaX', valueAsString: 'emfQ2Y1yUx', valueAsConceptID: 32, personCount: 5,
-      }, {
-        name: 'valueSummaryNameRKiA0WymP2', valueAsString: '8Oxfmp4p7h', valueAsConceptID: 90, personCount: 37,
-      }, {
-        name: 'valueSummaryNameWx7pnpchBo', valueAsString: 'AKctXXd5dl', valueAsConceptID: 6, personCount: 11,
-      }, {
-        name: 'valueSummaryNameYOIojwF79Q', valueAsString: 'XVqCNRqbsN', valueAsConceptID: 68, personCount: 66,
-      }, {
-        name: 'valueSummaryNamerdPZb04Muh', valueAsString: 'f2kkmCMog0', valueAsConceptID: 97, personCount: 77,
-      }, {
-        name: 'valueSummaryNamenc6hZfI3VJ', valueAsString: 'Xgv4UbLKt1', valueAsConceptID: 44, personCount: 34,
-      }, {
-        name: 'valueSummaryName79Lu1t2zBn', valueAsString: '8nueAQH651', valueAsConceptID: 88, personCount: 34,
-      }, {
-        name: 'valueSummaryNameqZgr9KbHHE', valueAsString: 'FadL1s8caX', valueAsConceptID: 53, personCount: 49,
-      }, {
-        name: 'valueSummaryNameL13Ih1vhiY', valueAsString: 'vt61q5SiQH', valueAsConceptID: 43, personCount: 35,
-      }, {
-        name: 'valueSummaryName48B1az2Hoh', valueAsString: 'mFLUGe29XA', valueAsConceptID: 55, personCount: 60,
-      }, {
-        name: 'valueSummaryNametqEqXyzy9c', valueAsString: 'ClTxOhUHO7', valueAsConceptID: 48, personCount: 29,
-      }, {
-        name: 'valueSummaryNameBeHnovjcxl', valueAsString: 'KoWC5UZKEt', valueAsConceptID: 32, personCount: 100,
-      }, {
-        name: 'valueSummaryNamevmeiPB4Hak', valueAsString: 'HmeAKWrwsm', valueAsConceptID: 98, personCount: 75,
-      }, {
-        name: 'valueSummaryName27JGRsZrSf', valueAsString: 'ZIgsaONste', valueAsConceptID: 72, personCount: 10,
-      }, {
-        name: 'valueSummaryName9PrS8xuaPc', valueAsString: 'KHKaYOA7Ux', valueAsConceptID: 38, personCount: 7,
-      }, {
-        name: 'valueSummaryNameTdEbhmPTgq', valueAsString: 'C39YJNhT28', valueAsConceptID: 6, personCount: 21,
-      }, {
-        name: 'valueSummaryNameYpvCaY1DsX', valueAsString: 'N8r5uQ55L9', valueAsConceptID: 31, personCount: 13,
-      }, {
-        name: 'valueSummaryNamenhn45Su7LC', valueAsString: 'JpINYW7QLc', valueAsConceptID: 71, personCount: 64,
-      }, {
-        name: 'valueSummaryNamepFgQnNmLhq', valueAsString: 'aYNsExoCu5', valueAsConceptID: 4, personCount: 66,
-      }, {
-        name: 'valueSummaryNamenw3kvXXa80', valueAsString: 'fdZEkDBUlr', valueAsConceptID: 93, personCount: 45,
-      }, {
-        name: 'valueSummaryNameqbAKJ1suLw', valueAsString: 'pbRgT34SEl', valueAsConceptID: 6, personCount: 48,
-      }, {
-        name: 'valueSummaryNameQw8Od9ETNm', valueAsString: 'SHq0dwV97W', valueAsConceptID: 73, personCount: 14,
-      }, {
-        name: 'valueSummaryNameVnQ9nBIroa', valueAsString: '4BYaSqbekk', valueAsConceptID: 20, personCount: 33,
-      }, {
-        name: 'valueSummaryNameLuxalTy0OK', valueAsString: 'KWTyvZds2v', valueAsConceptID: 5, personCount: 95,
-      }, {
-        name: 'valueSummaryNameImgEcmnp7l', valueAsString: 'KFqGBZQnv0', valueAsConceptID: 46, personCount: 47,
-      }, {
-        name: 'valueSummaryNamedhgw1bnHMc', valueAsString: 'u95mj3NJZH', valueAsConceptID: 65, personCount: 42,
-      }, {
-        name: 'valueSummaryNameA2TsBJDHN6', valueAsString: 'cqvM8EIRhe', valueAsConceptID: 8, personCount: 59,
-      }, {
-        name: 'valueSummaryNameifqeHLZZre', valueAsString: 'ir4ViGlmPk', valueAsConceptID: 10, personCount: 63,
-      }, {
-        name: 'valueSummaryNameavhIJz24k8', valueAsString: 'RXscpDS2qP', valueAsConceptID: 100, personCount: 2,
-      }, {
-        name: 'valueSummaryNameX8uQT2tMLv', valueAsString: 'UCERaXSXFt', valueAsConceptID: 5, personCount: 88,
-      }, {
-        name: 'valueSummaryNamebAKfiyxeEX', valueAsString: 'TEPqH8pdS2', valueAsConceptID: 42, personCount: 91,
-      }, {
-        name: 'valueSummaryNameaOLq6uEDb4', valueAsString: 'ejMJhV3FRx', valueAsConceptID: 95, personCount: 3,
-      }, {
-        name: 'valueSummaryNamegGviUAh0nE', valueAsString: 'pa6yq8yWnq', valueAsConceptID: 57, personCount: 97,
-      }, {
-        name: 'valueSummaryNamer4SuAUzmuP', valueAsString: 'Tfv20g08VA', valueAsConceptID: 40, personCount: 50,
-      }, {
-        name: 'valueSummaryNamezyMqaMSRKR', valueAsString: 'mS4RkdTWwP', valueAsConceptID: 97, personCount: 36,
-      }, {
-        name: 'valueSummaryNamevU75xAlxOA', valueAsString: 'WYSJIF26TK', valueAsConceptID: 23, personCount: 52,
-      }, {
-        name: 'valueSummaryNameFM37FBF54M', valueAsString: 'j8P1ibXOqX', valueAsConceptID: 38, personCount: 58,
-      }, {
-        name: 'valueSummaryNameLWjZiyKXXE', valueAsString: 'Hs9OB2mS1u', valueAsConceptID: 31, personCount: 7,
-      }, {
-        name: 'valueSummaryNamezyzn7soABv', valueAsString: 'isP3OXDctv', valueAsConceptID: 89, personCount: 100,
-      }, {
-        name: 'valueSummaryNameI7iqPgp2yL', valueAsString: 'XX5MIVklNa', valueAsConceptID: 25, personCount: 39,
-      }],
+      valueSummary: null,
+    },
+    {
+      vocabularyID: 'histogram_nonqualitative_cheese_h9jnvgzQqr', conceptID: 2, conceptCode: '6D3KULDE6o', conceptName: 'robot_UQedy4gOVD', conceptClassID: 'ShzFWFCS0k', numberOfPeopleWithVariable: 58, numberOfPeopleWhereValueIsFilled: 58, numberOfPeopleWhereValueIsNull: 12, valueStoredAs: 'Number', minValue: 75, maxValue: 83, meanValue: 10, standardDeviation: 3, valueSummary: [{ start: 89, end: 10, personCount: 16 }, { start: 16, end: 98, personCount: 17 }, { start: 82, end: 23, personCount: 14 }, { start: 40, end: 17, personCount: 36 }, { start: 29, end: 4, personCount: 78 }, { start: 87, end: 29, personCount: 50 }, { start: 85, end: 88, personCount: 45 }, { start: 86, end: 65, personCount: 17 }, { start: 31, end: 69, personCount: 99 }, { start: 81, end: 74, personCount: 3 }, { start: 55, end: 65, personCount: 44 }, { start: 8, end: 87, personCount: 4 }, { start: 81, end: 5, personCount: 80 }, { start: 33, end: 57, personCount: 67 }, { start: 6, end: 100, personCount: 99 }, { start: 45, end: 48, personCount: 85 }, { start: 78, end: 17, personCount: 64 }, { start: 45, end: 2, personCount: 66 }, { start: 21, end: 85, personCount: 95 }],
     },
     {
       vocabularyID: 'histogram_nonqualitative_squirrel_7S0Zi3Poor', conceptID: 4, conceptCode: 'B7LEg4BFFd', conceptName: 'hotdog_ePPGDOVzEH', conceptClassID: 'CXChuCxW5R', numberOfPeopleWithVariable: 19, numberOfPeopleWhereValueIsFilled: 12, numberOfPeopleWhereValueIsNull: 63, valueStoredAs: 'Number', minValue: 16, maxValue: 63, meanValue: 88, standardDeviation: 72, valueSummary: [{ start: 100, end: 71, personCount: 95 }, { start: 32, end: 34, personCount: 62 }, { start: 42, end: 31, personCount: 22 }, { start: 83, end: 70, personCount: 40 }, { start: 41, end: 65, personCount: 84 }, { start: 67, end: 91, personCount: 86 }, { start: 55, end: 10, personCount: 43 }, { start: 48, end: 18, personCount: 63 }, { start: 22, end: 67, personCount: 44 }, { start: 93, end: 100, personCount: 16 }, { start: 85, end: 92, personCount: 58 }, { start: 74, end: 79, personCount: 80 }, { start: 56, end: 41, personCount: 3 }, { start: 57, end: 51, personCount: 87 }, { start: 6, end: 2, personCount: 2 }, { start: 4, end: 92, personCount: 16 }, { start: 79, end: 30, personCount: 25 }],

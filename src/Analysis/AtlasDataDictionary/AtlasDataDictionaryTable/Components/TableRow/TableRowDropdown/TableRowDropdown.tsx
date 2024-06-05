@@ -5,6 +5,8 @@ import NumericDetailsTable from '../NumericDetailsTable/NumericDetailsTable';
 import { checkIfChartContainsSearchTerm } from '../CheckSearchTermUtils';
 import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
 import { IRowData } from '../../../Interfaces/Interfaces';
+import LoadingErrorMessage from '../../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
+
 
 interface ITableRowDropdownProps {
   dropdownIsOpen: boolean;
@@ -47,14 +49,17 @@ const TableRowDropdown = ({
                 className={`expanded-container chart-details-wrapper
                 ${checkIfChartContainsSearchTerm(rowObject, searchTerm)}`}
               >
-                {rowObject.valueSummary
-                  && (
+                {rowObject.valueSummary && rowObject.valueSummary.length > 0
+                  ? (
                     <ValueSummaryChart
                       chartData={rowObject.valueSummary}
                       preview={false}
                       chartType={rowObject.valueStoredAs}
                     />
-                  )}
+                  ): (
+                    <LoadingErrorMessage message={`Error loading data: valueSummary is ${rowObject.valueSummary ? 'empty': 'null'}`} />
+                  )
+                }
               </div>
             </Grid.Col>
           </Grid>
