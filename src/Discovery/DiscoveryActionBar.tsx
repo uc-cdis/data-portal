@@ -250,6 +250,26 @@ const checkDownloadStatus = (
   );
 };
 
+const assembleFileManifest = (manifestFieldName: string, selectedResources: any[]) => {
+  // combine manifests from all selected studies
+  const manifest:any = [];
+  selectedResources.forEach((study) => {
+    if (study[manifestFieldName]) {
+      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
+        // like FUSE
+        manifest.push(...study[manifestFieldName].map((x) => ({
+          ...x,
+          commons_url: ('commons_url' in x)
+            ? x.commons_url : study.commons_url,
+        })));
+      } else {
+        manifest.push(...study[manifestFieldName]);
+      }
+    }
+  });
+  return manifest;
+};
+
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
@@ -259,8 +279,8 @@ const handleDownloadZipClick = async (
   location,
   healIDPLoginNeeded,
 ) => {
+  const { manifestFieldName } = config.features.exportToWorkspace;
   if (config.features.exportToWorkspace.verifyExternalLogins) {
-    const { manifestFieldName } = config.features.exportToWorkspace;
     const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
@@ -271,11 +291,12 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
+  // const studyIDs = selectedResources.map((study) => study[config.minimalFieldMapping.uid]);
+  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
-    body: JSON.stringify({ action: 'batch-export', input: { study_ids: studyIDs } }),
+    body: JSON.stringify({ action: 'batch-export', input: { file_manifest: manifest } }),
   }).then(
     (dispatchResponse) => {
       const { uid } = dispatchResponse.data;
@@ -314,22 +335,8 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   if (healIDPLoginNeeded) {
     return;
   }
-  // combine manifests from all selected studies
-  const manifest:any = [];
-  selectedResources.forEach((study) => {
-    if (study[manifestFieldName]) {
-      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
-        // like FUSE
-        manifest.push(...study[manifestFieldName].map((x) => ({
-          ...x,
-          commons_url: ('commons_url' in x)
-            ? x.commons_url : study.commons_url,
-        })));
-      } else {
-        manifest.push(...study[manifestFieldName]);
-      }
-    }
-  });
+
+  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
   const repositoryName = selectedResources.map((study) => study.commons);
@@ -466,7 +473,9 @@ const DiscoveryActionBar = (props: Props) => {
             console.log(`RequiredIDP does not expect: ${tag?.name}`);
             return; // do not add tag to list
           }
-          requiredIDP.push(tag.name);
+          if (!requiredIDP.includes(tag.name)) {
+            requiredIDP.push(tag.name);
+          }
         }
       }));
       return requiredIDP;

@@ -103,7 +103,7 @@ describe('ActionButtons', () => {
     }
   };
 
-  const checkConditionalPopoverMissingRequiredIdentityProvidersInCommon = async (buttonTestID: string, popoverShouldRender: boolean) => {
+  const checkConditionalPopoverMissingRequiredIdentityProvidersSingle = async (buttonTestID: string, popoverShouldRender: boolean) => {
     render(
       <ActionButtons
         {...testProps}
@@ -232,7 +232,7 @@ describe('ActionButtons', () => {
       ${
   button.id
 } button when missing required identity providers is InCommon`, async () => {
-      checkConditionalPopoverMissingRequiredIdentityProvidersInCommon(
+      checkConditionalPopoverMissingRequiredIdentityProvidersSingle(
         button.id,
         button.showsPopover,
       );
