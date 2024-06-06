@@ -21,7 +21,7 @@ describe('NumericDetailsTable', () => {
     const { getByText } = render(
       <NumericDetailsTable
         rowObject={rowObject}
-        checkIfCellContainsSearchTerm={() => {}}
+        searchTerm=''
       />,
     );
 
@@ -34,7 +34,7 @@ describe('NumericDetailsTable', () => {
     const { getByText } = render(
       <NumericDetailsTable
         rowObject={rowObject}
-        checkIfCellContainsSearchTerm={() => {}}
+        searchTerm=''
       />,
     );
 

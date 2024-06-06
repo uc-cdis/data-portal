@@ -39,16 +39,7 @@ interface ISortConfig {
 }
 
 interface IColumnManagementData {
-  vocabularyID: boolean;
-  conceptID: boolean;
-  conceptCode: boolean;
-  conceptName: boolean;
-  conceptClassID: boolean;
-  numberOfPeopleWithVariable: boolean;
-  numberOfPeopleWhereValueIsFilled: boolean;
-  numberOfPeopleWhereValueIsNull: boolean;
-  valueStoredAs: boolean;
-  valueSummary: boolean;
+  [key: string]: boolean;
 }
 
 export {

@@ -10,7 +10,7 @@ import CollapseIcon from '../Icons/CollapseIcon';
 import {
   checkIfCellContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
-} from './CheckSearchTermUtils';
+} from '../../Utils/CheckSearchTermUtils';
 import ValueSummaryChart from './ValueSummaryChart/ValueSummaryChart';
 import TableRowDropdown from './TableRowDropdown/TableRowDropdown';
 
@@ -136,9 +136,9 @@ const TableRow = ({
             )
           }
         >
-          {rowObject.numberOfPeopleWithVariable}
+          {rowObject.numberOfPeopleWithVariable.toLocaleString()}
           <br />
-          {rowObject.numberOfPeopleWithVariablePercent}%
+          {rowObject.numberOfPeopleWithVariablePercent.toLocaleString()}%
         </TdDataCell>
         <TdDataCell
           columnEnabled={columnManagementData.numberOfPeopleWhereValueIsFilled}
@@ -153,9 +153,9 @@ const TableRow = ({
             )
           }
         >
-          {rowObject.numberOfPeopleWhereValueIsFilled}
+          {rowObject.numberOfPeopleWhereValueIsFilled.toLocaleString()}
           <br />
-          {rowObject.numberOfPeopleWhereValueIsFilledPercent}%
+          {rowObject.numberOfPeopleWhereValueIsFilledPercent.toLocaleString()}%
         </TdDataCell>
         <TdDataCell
           columnEnabled={columnManagementData.numberOfPeopleWhereValueIsNull}
@@ -168,9 +168,9 @@ const TableRow = ({
             searchTerm,
           )}
         >
-          {rowObject.numberOfPeopleWhereValueIsNull}
+          {rowObject.numberOfPeopleWhereValueIsNull.toLocaleString()}
           <br />
-          {rowObject.numberOfPeopleWhereValueIsNullPercent}%
+          {rowObject.numberOfPeopleWhereValueIsNullPercent.toLocaleString()}%
         </TdDataCell>
         <TdDataCell
           columnEnabled={columnManagementData.valueStoredAs}

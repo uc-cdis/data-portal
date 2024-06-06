@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@mantine/core';
 import NonNumericDetailsTable from '../NonNumericDetailsTable/NonNumericDetailsTable';
 import NumericDetailsTable from '../NumericDetailsTable/NumericDetailsTable';
-import { checkIfChartContainsSearchTerm } from '../CheckSearchTermUtils';
+import { checkIfChartContainsSearchTerm } from '../../../Utils/CheckSearchTermUtils';
 import ValueSummaryChart from '../ValueSummaryChart/ValueSummaryChart';
 import { IRowData } from '../../../Interfaces/Interfaces';
 import LoadingErrorMessage from '../../../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
