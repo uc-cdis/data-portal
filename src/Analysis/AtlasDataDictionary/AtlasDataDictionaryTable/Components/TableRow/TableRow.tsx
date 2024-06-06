@@ -10,7 +10,7 @@ import CollapseIcon from '../Icons/CollapseIcon';
 import {
   checkIfCellContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
-} from './CheckSearchTermUtils';
+} from '../../Utils/CheckSearchTermUtils';
 import ValueSummaryChart from './ValueSummaryChart/ValueSummaryChart';
 import TableRowDropdown from './TableRowDropdown/TableRowDropdown';
 
@@ -121,9 +121,9 @@ const TableRow = ({
             }
           >
             <div className='td-container'>
-              {rowObject.numberOfPeopleWithVariable}
+              {rowObject.numberOfPeopleWithVariable.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWithVariablePercent}%
+              {rowObject.numberOfPeopleWithVariablePercent.toLocaleString()}%
             </div>
           </td>
         )}
@@ -141,9 +141,9 @@ const TableRow = ({
             } `}
           >
             <div className='td-container'>
-              {rowObject.numberOfPeopleWhereValueIsFilled}
+              {rowObject.numberOfPeopleWhereValueIsFilled.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWhereValueIsFilledPercent}%
+              {rowObject.numberOfPeopleWhereValueIsFilledPercent.toLocaleString()}%
             </div>
           </td>
         )}
@@ -161,9 +161,9 @@ const TableRow = ({
             }
           >
             <div className='td-container'>
-              {rowObject.numberOfPeopleWhereValueIsNull}
+              {rowObject.numberOfPeopleWhereValueIsNull.toLocaleString()}
               <br />
-              {rowObject.numberOfPeopleWhereValueIsNullPercent}%
+              {rowObject.numberOfPeopleWhereValueIsNullPercent.toLocaleString()}%
             </div>
           </td>
         )}

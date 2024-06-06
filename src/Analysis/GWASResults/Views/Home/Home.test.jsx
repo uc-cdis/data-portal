@@ -24,7 +24,7 @@ const testJSX = () => (
         setHomeTableState: jest.fn(),
       }}
     >
-      <Home />
+      <Home selectedTeamProject='test' />
     </SharedContext.Provider>
   </QueryClientProvider>
 );

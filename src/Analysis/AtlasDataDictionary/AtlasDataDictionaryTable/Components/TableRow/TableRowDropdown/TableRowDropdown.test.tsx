@@ -19,10 +19,10 @@ describe('TableRowDropdown', () => {
   it('renders non-numeric details table when valueStoredAs is not Number', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails
+        dropdownIsOpen
         columnsShown={columnsShown}
         rowObject={firstNonNumericRow as IRowData}
-        searchInputValue=''
+        searchTerm=''
       />,
     );
     expect(getByTestId('non-numeric-details-table')).toBeInTheDocument();
@@ -31,10 +31,10 @@ describe('TableRowDropdown', () => {
   it('renders numeric details table when valueStoredAs is Number', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails
+        dropdownIsOpen
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
-        searchInputValue=''
+        searchTerm=''
       />,
     );
     expect(getByTestId('numeric-details-table')).toBeInTheDocument();
@@ -43,10 +43,10 @@ describe('TableRowDropdown', () => {
   it('renders value summary chart ', () => {
     const { getByTestId } = render(
       <TableRowDropdown
-        showDetails
+        dropdownIsOpen
         columnsShown={columnsShown}
         rowObject={firstNumericRow as IRowData}
-        searchInputValue={''}
+        searchTerm=''
       />,
     );
     expect(getByTestId('value-summary-chart')).toBeInTheDocument();
