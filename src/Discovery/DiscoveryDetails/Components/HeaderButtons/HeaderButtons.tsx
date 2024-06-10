@@ -118,7 +118,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
                       props.modalData[
                         studyRegistrationConfig.studyRegistrationAccessCheckField
                       ],
-                      props.modalData.project_title,
+                      props.modalData.study_metadata?.minimal_info?.study_name,
                       props.modalData.project_number,
                       props.modalData[
                         studyRegistrationConfig.studyRegistrationUIDField
@@ -130,7 +130,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
                     props.modalData[
                       studyRegistrationConfig.studyRegistrationAccessCheckField
                     ],
-                    props.modalData.project_title,
+                    props.modalData.study_metadata?.minimal_info?.study_name,
                     props.modalData.project_number,
                     props.modalData[
                       studyRegistrationConfig.studyRegistrationUIDField
@@ -156,7 +156,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
               props.modalData[
                 studyRegistrationConfig.studyRegistrationAccessCheckField
               ],
-              props.modalData.project_title,
+              props.modalData.study_metadata?.minimal_info?.study_name,
               props.modalData.project_number,
               props.modalData[
                 studyRegistrationConfig.studyRegistrationUIDField
@@ -188,7 +188,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
               props.modalData[
                 studyRegistrationConfig.studyRegistrationAccessCheckField
               ],
-              props.modalData.project_title,
+              props.modalData.study_metadata?.minimal_info?.study_name,
               props.modalData.project_number,
               props.modalData[
                 studyRegistrationConfig.studyRegistrationUIDField

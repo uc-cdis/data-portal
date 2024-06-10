@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from '@mantine/core';
 import { IValueSummary } from '../../../Interfaces/Interfaces';
-import { checkIfCellContainsSearchTerm } from '../CheckSearchTermUtils';
+import { checkIfCellContainsSearchTerm } from '../../../Utils/CheckSearchTermUtils';
 
 const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (
   <Table data-testid='non-numeric-details-table' striped>
@@ -47,7 +47,7 @@ const NonNumericDetailsTable = ({ rowObject, searchTerm }) => (
                 searchTerm,
               )}
             >
-              {valueSummaryObj.personCount}
+              {valueSummaryObj.personCount.toLocaleString()}
             </td>
           </tr>
         ),
