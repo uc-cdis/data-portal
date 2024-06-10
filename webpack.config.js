@@ -37,7 +37,7 @@ if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
   connectSrcURLs.push('https://dataguids.org');
 }
 if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
-  connectSrcURLs.push('https://classic.clinicaltrials.gov');
+  connectSrcURLs.push('https://clinicaltrials.gov');
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
