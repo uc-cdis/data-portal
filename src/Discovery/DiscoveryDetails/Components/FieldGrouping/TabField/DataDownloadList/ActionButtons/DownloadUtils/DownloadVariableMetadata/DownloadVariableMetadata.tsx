@@ -24,7 +24,7 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-              Study with name <strong>{resourceInfo.project_title}</strong>
+              Study with name <strong>{resourceInfo.study_metadata?.minimal_info?.study_name || 'N/A'}</strong>
               &nbsp;cannot download data dictionary with name <strong>{key}</strong>.
           </p>
           <p>Please try again later and contact support.</p>

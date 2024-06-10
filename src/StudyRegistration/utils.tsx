@@ -73,9 +73,15 @@ export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = { 
     body: JSON.stringify({
       cedar_user_uuid: cedarUserUUID,
       metadata: {
-        appl_id: metadataToRegister[STUDY_DATA_FIELD].study_metadata.metadata_location.nih_application_id,
-        project_title: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_name,
-        study_description_summary: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_description,
+        study_metadata: {
+          metadata_location: {
+            nih_application_id: metadataToRegister[STUDY_DATA_FIELD].study_metadata.metadata_location.nih_application_id,
+          },
+          minimal_info: {
+            study_name: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_name,
+            study_description: metadataToRegister[STUDY_DATA_FIELD].study_metadata.minimal_info.study_description,
+          },
+        },
         clinicaltrials_gov: metadataToRegister.clinicaltrials_gov,
       },
     }),

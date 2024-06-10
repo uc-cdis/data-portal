@@ -6,12 +6,13 @@ This guide describes how to test data-portal code changes or configuration chang
 
 1. Your Data Commons should be running and accessible, with a running `data-portal` pod.
 2. Clone the `data-portal` repo and `cd` to it.
-3. Run `npm ci`.
-4. Create a `config.json` file at `data/config`. Write your data-portal configuration in it (what would be in your `gitops.json` file for deployment).
-5. Run `HOSTNAME=<URL to your Data Commons portal, without the protocol> APP=config NODE_ENV=dev bash ./runWebpack.sh`.
-6. Go to `<URL to your Data Commons>/dev.html`.
-7. If the page does not load, go to https://localhost:9443/bundle.js and accept the warning about certificates.
-8. That's it! Local file changes are reflected automatically. Configuration file changes require reruning the command on step #5.
+3. Make sure you are running the correct version of node and npm by running `nvm use`
+4. Run `npm ci`.
+5. Create a `config.json` file at `data/config`. Write your data-portal configuration in it (what would be in your `gitops.json` file for deployment).
+6. Run `HOSTNAME=<URL to your Data Commons portal, without the protocol> APP=config NODE_ENV=dev bash ./runWebpack.sh`.
+7. Go to `<URL to your Data Commons>/dev.html`.
+8. If the page does not load, go to https://localhost:9443/bundle.js and accept the warning about certificates.
+9. That's it! Local file changes are reflected automatically. Configuration file changes require reruning the command on step #5.
 
 ## Detailed instructions for internal use
 
