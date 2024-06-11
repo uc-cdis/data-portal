@@ -156,6 +156,9 @@
 .atlas-data-dictionary-container .td-container {
   width: 80%;
   word-wrap: break-word;
+  display: block;
+  padding: 0;
+  background: none;
 }
 
 .atlas-data-dictionary-container .search-highlight,
