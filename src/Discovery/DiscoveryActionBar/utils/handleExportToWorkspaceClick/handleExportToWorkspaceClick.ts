@@ -1,4 +1,3 @@
-import { get, unset, cloneDeep } from 'lodash';
 import { datadogRum } from '@datadog/browser-rum';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
