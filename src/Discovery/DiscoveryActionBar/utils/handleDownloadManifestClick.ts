@@ -1,7 +1,7 @@
 import { datadogRum } from '@datadog/browser-rum';
 import FileSaver from 'file-saver';
-import { hostname } from '../../../localconf';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
+import assembleFileManifest from './assembleFileManifest';
 
 const handleDownloadManifestClick = (
   config: DiscoveryConfig,
@@ -19,23 +19,7 @@ const handleDownloadManifestClick = (
     return;
   }
   // combine manifests from all selected studies
-  const manifest: any = [];
-  selectedResources.forEach((study) => {
-    if (study[manifestFieldName]) {
-      if ('commons_url' in study && !hostname.includes(study.commons_url)) {
-        // PlanX addition to allow hostname based DRS in manifest download clients
-        // like FUSE
-        manifest.push(
-          ...study[manifestFieldName].map((x) => ({
-            ...x,
-            commons_url: 'commons_url' in x ? x.commons_url : study.commons_url,
-          })),
-        );
-      } else {
-        manifest.push(...study[manifestFieldName]);
-      }
-    }
-  });
+  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
   const repositoryName = selectedResources.map((study) => study.commons);

@@ -18,7 +18,8 @@ import DownloadManifestButton from './components/DownloadManifestButton';
 /* eslint react/prop-types: 0 */
 interface Props {
   config: DiscoveryConfig;
-  exportingToWorkspace: boolean;
+  // eslint-disable-next-line react/no-unused-prop-types
+  exportingToWorkspace: boolean; // this prop is being used by a child component
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
@@ -28,7 +29,8 @@ interface Props {
     actionToResume: 'download' | 'export' | 'manifest';
     selectedResources: any[];
   };
-  systemPopupActivated: boolean;
+  // eslint-disable-next-line react/no-unused-prop-types
+  systemPopupActivated: boolean; // this prop is being used by a child component
   onActionResumed: () => any;
 }
 
@@ -87,7 +89,9 @@ const DiscoveryActionBar = (props: Props) => {
             console.log(`RequiredIDP does not expect: ${tag?.name}`);
             return; // do not add tag to list
           }
-          requiredIDP.push(tag.name);
+          if (!requiredIDP.includes(tag.name)) {
+            requiredIDP.push(tag.name);
+          }
         }
       }),
       );

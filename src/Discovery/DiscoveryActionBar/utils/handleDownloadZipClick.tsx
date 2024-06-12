@@ -9,6 +9,7 @@ import {
 } from '../DiscoveryActionBarConstants';
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
+import assembleFileManifest from './assembleFileManifest';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
@@ -23,8 +24,8 @@ const handleDownloadZipClick = async (
   const DOWNLOAD_STARTED_MESSAGE = 'Please remain on this page until your download completes. When your download is ready, '
     + 'it will begin automatically. You can close this window.';
 
+  const { manifestFieldName } = config.features.exportToWorkspace;
   if (config.features.exportToWorkspace.verifyExternalLogins) {
-    const { manifestFieldName } = config.features.exportToWorkspace;
     const isLinked = await checkFederatedLoginStatus(
       setDownloadStatus,
       selectedResources,
@@ -41,15 +42,13 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const studyIDs = selectedResources.map(
-    (study) => study[config.minimalFieldMapping.uid],
-  );
+  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { study_ids: studyIDs },
+      input: { file_manifest: manifest },
     }),
   })
     .then((dispatchResponse) => {
