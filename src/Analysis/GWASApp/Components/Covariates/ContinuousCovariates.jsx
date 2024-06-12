@@ -28,7 +28,7 @@ const ContinuousCovariates = ({
           <Covariates
             selected={selected}
             handleSelect={setSelected}
-            selectedCovariates={outcome?.concept_id ? [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] : []}
+            submittedCovariateIds={outcome?.concept_id ? [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] : []}
           />
         </div>
         <div className='phenotype-histogram'>

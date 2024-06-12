@@ -8,7 +8,7 @@ import { useFetch, useFilter } from '../../Utils/formHooks';
 import { useSourceContext } from '../../Utils/Source';
 import SearchBar from '../SearchBar/SearchBar';
 
-const Covariates = ({ selected, handleSelect, selectedCovariates }) => {
+const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const { source } = useSourceContext();
 
   const covariates = useQuery(
@@ -30,7 +30,7 @@ const Covariates = ({ selected, handleSelect, selectedCovariates }) => {
   );
 
   // remove already selected Covariates from list
-  const displayedCovariates = filteredCovariates.filter((x) => !selectedCovariates.includes(x.concept_id));
+  const displayedCovariates = filteredCovariates.filter((x) => !submittedCovariateIds.includes(x.concept_id));
 
   const covariateSelection = () => ({
     type: 'radio',
