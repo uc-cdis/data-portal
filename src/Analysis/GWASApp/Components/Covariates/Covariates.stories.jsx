@@ -22,6 +22,7 @@ const Template = () => {
         <Covariates
           selected={selectedCovariate}
           handleSelect={setSelectedCovariate}
+          submittedCovariateIds={[]}
         />
       </SourceContextProvider>
     </QueryClientProvider>

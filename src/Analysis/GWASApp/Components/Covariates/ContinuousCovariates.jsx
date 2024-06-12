@@ -25,7 +25,11 @@ const ContinuousCovariates = ({
     <React.Fragment>
       <div className='GWASUI-flexRow continuous-covariates'>
         <div className='continous-covariates-table'>
-          <Covariates selected={selected} handleSelect={setSelected} />
+          <Covariates
+            selected={selected}
+            handleSelect={setSelected}
+            submittedCovariateIds={outcome?.concept_id ? [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] : []}
+          />
         </div>
         <div className='phenotype-histogram'>
           <div data-tour='submit-cancel-buttons' className='continuous-covariates-button-container'>
