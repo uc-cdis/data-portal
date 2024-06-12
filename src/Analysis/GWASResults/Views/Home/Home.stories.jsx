@@ -36,7 +36,7 @@ const MockTemplate = () => {
           setHomeTableState,
         }}
       >
-        <Home />
+        <Home selectedTeamProject='test' />
       </SharedContext.Provider>
     </QueryClientProvider>
   );
