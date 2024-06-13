@@ -71,11 +71,13 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           if (props.config.features.authorization.enabled) {
             disabled = record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE;
           }
-          // disable checkbox if there's no manifest found for this study
+          // disable checkbox if there's no manifest or external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
-          const { manifestFieldName } = exportToWorkspaceConfig;
+          const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
-            disabled = true;
+            if (enableExportFullMetadata && (!record.external_file_metadata || record.external_file_metadata.length === 0)) {
+              disabled = true;
+            }
           }
           return { disabled };
         },
