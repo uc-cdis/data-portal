@@ -75,6 +75,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
           const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+            // put some hard-coded field names here, so that only checkboxes in proper table rows will be enabled
+            // TODO: this can be addressed by the cart feature
             if (enableExportFullMetadata && (!record.external_file_metadata || record.external_file_metadata.length === 0)) {
               disabled = true;
             }
