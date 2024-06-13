@@ -4,6 +4,8 @@ export interface DiscoveryConfig {
         exportToWorkspace: {
             enabled: boolean
             enableDownloadManifest: boolean
+            enableExportFullMetadata?: boolean
+            excludedMetadataFields?: Array<string>
             downloadManifestButtonText?: string
             manifestFieldName: string
             enableDownloadZip: boolean

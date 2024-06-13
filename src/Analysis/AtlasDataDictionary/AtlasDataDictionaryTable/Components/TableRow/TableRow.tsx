@@ -32,6 +32,27 @@ const TableRow = ({
   columnManagementData,
 }: ITableRowProps) => {
   const currentDropdownShouldBeOpen = openDropdowns.includes(rowObject.rowID);
+
+  const TdDataCell = ({
+    children, columnEnabled, containsSearchTerm, className = '', ...options
+  }) => {
+    if (!columnEnabled) {
+      return (<React.Fragment />);
+    }
+    if (containsSearchTerm) {
+      return (
+        <td className={`${className} search-highlight`} {...options}>
+          <mark className='td-container'>{children}</mark>
+        </td>
+      );
+    }
+
+    return (
+      <td className={className} {...options}>
+        <div className='td-container'>{children}</div>
+      </td>
+    );
+  };
   return (
     <React.Fragment key={rowObject.rowID}>
       <tr data-testid='table-row'>
@@ -57,141 +78,121 @@ const TableRow = ({
             </Button>
           )}
         </td>
-        {columnManagementData.vocabularyID && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.vocabularyID,
+        <TdDataCell
+          columnEnabled={columnManagementData.vocabularyID}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.vocabularyID,
+            searchTerm,
+          )}
+        >
+          {rowObject.vocabularyID}
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.conceptID}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.conceptID.toString(),
+            searchTerm,
+          )}
+        >
+          {rowObject.conceptID}
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.conceptCode}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.conceptCode.toString(),
+            searchTerm,
+          )}
+        >
+          {rowObject.conceptCode}
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.conceptName}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.conceptName.toString(),
+            searchTerm,
+          )}
+        >
+          {rowObject.conceptName}
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.conceptClassID}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.conceptClassID.toString(),
+            searchTerm,
+          )}
+        >
+          {rowObject.conceptClassID}
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.numberOfPeopleWithVariable}
+          containsSearchTerm={
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWithVariable,
               searchTerm,
-            )}
-          >
-            <div className={'td-container '}>{rowObject.vocabularyID}</div>
-          </td>
-        )}
-        {columnManagementData.conceptID && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.conceptID.toString(),
+            )
+            || checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWithVariablePercent,
               searchTerm,
-            )}
-          >
-            <div className='td-container'>{rowObject.conceptID}</div>
-          </td>
-        )}
-        {columnManagementData.conceptCode && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.conceptCode.toString(),
+            )
+          }
+        >
+          {rowObject.numberOfPeopleWithVariable.toLocaleString()}
+          <br />
+          {rowObject.numberOfPeopleWithVariablePercent.toLocaleString()}%
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.numberOfPeopleWhereValueIsFilled}
+          containsSearchTerm={
+            checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsFilled,
               searchTerm,
-            )}
-          >
-            <div className='td-container'>{rowObject.conceptCode}</div>
-          </td>
-        )}
-        {columnManagementData.conceptName && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.conceptName.toString(),
+            )
+            || checkIfCellContainsSearchTerm(
+              rowObject.numberOfPeopleWhereValueIsFilledPercent,
               searchTerm,
-            )}
-          >
-            <div className='td-container'>{rowObject.conceptName}</div>
-          </td>
-        )}
-        {columnManagementData.conceptClassID && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.conceptClassID.toString(),
-              searchTerm,
-            )}
-          >
-            <div className='td-container'>{rowObject.conceptClassID}</div>
-          </td>
-        )}
-        {columnManagementData.numberOfPeopleWithVariable && (
-          <td
-            className={
-              checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWithVariable,
-                searchTerm,
-              )
-              || checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWithVariablePercent,
-                searchTerm,
-              )
-            }
-          >
-            <div className='td-container'>
-              {rowObject.numberOfPeopleWithVariable.toLocaleString()}
-              <br />
-              {rowObject.numberOfPeopleWithVariablePercent.toLocaleString()}%
-            </div>
-          </td>
-        )}
-        {columnManagementData.numberOfPeopleWhereValueIsFilled && (
-          <td
-            className={`${
-              checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWhereValueIsFilled,
-                searchTerm,
-              )
-              || checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWhereValueIsFilledPercent,
-                searchTerm,
-              )
-            } `}
-          >
-            <div className='td-container'>
-              {rowObject.numberOfPeopleWhereValueIsFilled.toLocaleString()}
-              <br />
-              {rowObject.numberOfPeopleWhereValueIsFilledPercent.toLocaleString()}%
-            </div>
-          </td>
-        )}
-        {columnManagementData.numberOfPeopleWhereValueIsNull && (
-          <td
-            className={
-              checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWhereValueIsNull,
-                searchTerm,
-              )
-              || checkIfCellContainsSearchTerm(
-                rowObject.numberOfPeopleWhereValueIsNullPercent,
-                searchTerm,
-              )
-            }
-          >
-            <div className='td-container'>
-              {rowObject.numberOfPeopleWhereValueIsNull.toLocaleString()}
-              <br />
-              {rowObject.numberOfPeopleWhereValueIsNullPercent.toLocaleString()}%
-            </div>
-          </td>
-        )}
-        {columnManagementData.valueStoredAs && (
-          <td
-            className={checkIfCellContainsSearchTerm(
-              rowObject.valueStoredAs,
-              searchTerm,
-            )}
-          >
-            <div className='td-container'>{rowObject.valueStoredAs}</div>
-          </td>
-        )}
-        {columnManagementData.valueSummary && (
-          <td
-            aria-label='value summary preview chart'
-            className={`preview-chart
-          ${checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}`}
-          >
-            <div className='td-container'>
-              <ValueSummaryChart
-                chartType={rowObject.valueStoredAs}
-                chartData={rowObject.valueSummary as IValueSummary[]}
-                preview
-              />
-            </div>
-          </td>
-        )}
+            )
+          }
+        >
+          {rowObject.numberOfPeopleWhereValueIsFilled.toLocaleString()}
+          <br />
+          {rowObject.numberOfPeopleWhereValueIsFilledPercent.toLocaleString()}%
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.numberOfPeopleWhereValueIsNull}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.numberOfPeopleWhereValueIsNull,
+            searchTerm,
+          )
+          || checkIfCellContainsSearchTerm(
+            rowObject.numberOfPeopleWhereValueIsNullPercent,
+            searchTerm,
+          )}
+        >
+          {rowObject.numberOfPeopleWhereValueIsNull.toLocaleString()}
+          <br />
+          {rowObject.numberOfPeopleWhereValueIsNullPercent.toLocaleString()}%
+        </TdDataCell>
+        <TdDataCell
+          columnEnabled={columnManagementData.valueStoredAs}
+          containsSearchTerm={checkIfCellContainsSearchTerm(
+            rowObject.valueStoredAs,
+            searchTerm,
+          )}
+        >
+          {rowObject.valueStoredAs}
+        </TdDataCell>
+        <TdDataCell
+          aria-label='value summary preview chart'
+          className='preview-chart'
+          columnEnabled={columnManagementData.valueSummary}
+          containsSearchTerm={checkIfHiddenCellsContainSearchTerm(rowObject, searchTerm)}
+        >
+          <ValueSummaryChart
+            chartType={rowObject.valueStoredAs}
+            chartData={rowObject.valueSummary as IValueSummary[]}
+            preview
+          />
+        </TdDataCell>
       </tr>
       <TableRowDropdown
         dropdownIsOpen={currentDropdownShouldBeOpen}

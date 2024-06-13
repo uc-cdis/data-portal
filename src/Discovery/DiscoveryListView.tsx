@@ -71,11 +71,15 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           if (props.config.features.authorization.enabled) {
             disabled = record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE;
           }
-          // disable checkbox if there's no manifest found for this study
+          // disable checkbox if there's no manifest or external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
-          const { manifestFieldName } = exportToWorkspaceConfig;
+          const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
-            disabled = true;
+            // put some hard-coded field names here, so that only checkboxes in proper table rows will be enabled
+            // TODO: this can be addressed by the cart feature
+            if (enableExportFullMetadata && (!record.external_file_metadata || record.external_file_metadata.length === 0)) {
+              disabled = true;
+            }
           }
           return { disabled };
         },
