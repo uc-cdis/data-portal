@@ -457,6 +457,9 @@ Below is an example, with inline comments describing what each JSON block config
           "enable": true,
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
           "downloadManifestButtonText": true, // text to be displayed on the download manifest button
+          "enableFillRequestForm" : true, // enables a button which opens a new form to request access to a resoruce
+          "openFillRequestForm": "Request Access", // text to be displayed on fill the request form
+          "fillRequestFormURL" : "https://URL/form", // URL to the new form which would be used to fill the form
           "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
               "gen3Client": "https://gen3-client", // link to documentation about the gen3 client. Used for button tooltips
