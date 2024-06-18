@@ -318,7 +318,7 @@ class ExplorerTable extends React.Component {
         const columnIsEmpty = this.props.rawData.every((colItem) => {
           const colData = colItem[tempColumnConfig.id];
           // if normal id it should have data, additional check for empty arrays
-          if (colData && (typeof colData === 'number' || colData.length > 0)) {
+          if (typeof colData === 'number' || (colData && colData.length > 0)) {
             return false;
           }
           // check if special id with period
