@@ -40,3 +40,6 @@ MockedLoading.args = { ...successArgs, status: 'loading', data: null };
 
 export const MockedError = Template.bind({});
 MockedError.args = { ...successArgs, status: 'error', data: null };
+
+export const MockedNoTeams = Template.bind({});
+MockedNoTeams.args = { ...successArgs, data: {teams: []} };
