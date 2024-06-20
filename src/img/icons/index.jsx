@@ -43,8 +43,16 @@ import IcoAcctPlanning from './acct-icons/acct-planning.svg';
 import IcoAcctAccess from './acct-icons/acct-access.svg';
 import IcoAcctExplore from './acct-icons/acct-explore.svg';
 import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
+import GWASBarChart from './gwas-icons/barChart.svg';
+import GWASEulerDiagram from './gwas-icons/eulerDiagram.svg';
 
 const dictIcons = {
+  'gwas-barChart': (height, customedStyles) => (
+    <GWASBarChart height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-eulerDiagram': (height, customedStyles) => (
+    <GWASEulerDiagram height={height} style={{ ...customedStyles }} />
+  ),
   analysis: (height, customedStyles) => (
     <IcoAnalysis
       height={height}

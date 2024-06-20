@@ -1,7 +1,4 @@
-import React from 'react';
-
-const BarChart = () => (
-  <svg
+<svg
     className='bar-chart-icon'
     role='img'
     aria-labelledby='barChartDesc'
@@ -34,6 +31,4 @@ const BarChart = () => (
       />
     </g>
   </svg>
-);
-
-export default BarChart;
+  

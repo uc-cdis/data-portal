@@ -4,8 +4,8 @@ import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { fetchConceptStatsByHareSubset } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import BarChart from '../ChartIcons/BarChart';
-import EulerDiagram from '../ChartIcons/EulerDiagram';
+import IconComponent from '../../../../../components/Icon';
+import dictIcons from '../../../../../img/icons/index';
 import { useSourceContext } from '../../../Utils/Source';
 
 const AttritionTableRow = ({
@@ -87,10 +87,10 @@ const AttritionTableRow = ({
   const determineChartIcon = () => {
     if (rowType === 'Covariate' || rowType === 'Outcome') {
       if (rowObject.variable_type === 'concept') {
-        return <BarChart />;
+        return <IconComponent iconName='gwas-barChart' dictIcons={dictIcons} />;
       }
       if (rowObject.variable_type === 'custom_dichotomous') {
-        return <EulerDiagram />;
+        return <IconComponent iconName='gwas-eulerDiagram' dictIcons={dictIcons} />;
       }
       throw new Error(
         `Invalid Row Type: ${rowType} and rowObject.variable_type ${JSON.stringify(
