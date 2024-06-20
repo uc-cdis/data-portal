@@ -103,14 +103,26 @@
   margin-top: 4px;
 }
 
-.atlas-data-dictionary-container .table-column-sorter-down svg path,
-.atlas-data-dictionary-container .table-column-sorter-up svg path {
-  fill: #ccc;
+.atlas-data-dictionary-container .table-column-sorter-down,
+.atlas-data-dictionary-container .table-column-sorter-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
 }
 
-.atlas-data-dictionary-container .table-column-sorter-down.active svg path,
-.atlas-data-dictionary-container .table-column-sorter-up.active svg path {
-  fill: #1890ff;
+.atlas-data-dictionary-container .table-column-sorter-down {
+  border-top: 5px solid #ccc;
+}
+.atlas-data-dictionary-container .table-column-sorter-down.active {
+  border-top-color: #1890ff;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-up {
+  border-bottom: 5px solid #ccc;
+}
+.atlas-data-dictionary-container .table-column-sorter-up.active {
+  border-bottom-color: #1890ff;
 }
 
 /* Expandable rows */
