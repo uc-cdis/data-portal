@@ -173,6 +173,22 @@
   background: none;
 }
 
+.arrow-icon {
+  display: block;
+  width: 9px;
+  height: 9px;
+  margin: 5px;
+  border-top: 2px solid #2e77b8;
+  border-left: 2px solid #2e77b8;
+}
+
+.arrow-icon-right {
+  transform: rotate(135deg);
+}
+.arrow-icon-down {
+  transform: rotate(225deg);
+}
+
 .atlas-data-dictionary-container .search-highlight,
 table > tbody > tr > td.search-highlight:last-of-type {
   background: #fcefe4;
