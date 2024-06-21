@@ -5,8 +5,6 @@ import {
   IRowData,
   IColumnManagementData,
 } from '../../Interfaces/Interfaces';
-import ExpandIcon from '../Icons/ExpandIcon';
-import CollapseIcon from '../Icons/CollapseIcon';
 import {
   checkIfCellContainsSearchTerm,
   checkIfHiddenCellsContainSearchTerm,
@@ -63,8 +61,9 @@ const TableRow = ({
               size='xs'
               compact
               onClick={() => handleTableChange('openDropdown', rowObject.rowID)}
+              aria-label='expand'
             >
-              <ExpandIcon />
+              <span className='arrow-icon arrow-icon-right' />
             </Button>
           )}
           {currentDropdownShouldBeOpen && (
@@ -73,8 +72,9 @@ const TableRow = ({
               size='xs'
               compact
               onClick={() => handleTableChange('closeDropdown', rowObject.rowID)}
+              aria-label='collapse'
             >
-              <CollapseIcon />
+              <span className='arrow-icon arrow-icon-down' />
             </Button>
           )}
         </td>
