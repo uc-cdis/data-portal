@@ -54,6 +54,11 @@ const { Panel } = Collapse;
 const ARBORIST_READ_PRIV = 'read';
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
+  if (supportedValues?.waiting?.enabled === true) {
+    menuItemInfo.push(
+      [AccessLevel.WAITING, supportedValues.waiting.menuText, <ClockCircleOutlined />],
+    );
+  }
   if (supportedValues?.accessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.ACCESSIBLE, supportedValues.accessible.menuText, <UnlockOutlined />],
@@ -62,11 +67,6 @@ const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
   if (supportedValues?.unaccessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />],
-    );
-  }
-  if (supportedValues?.waiting?.enabled === true) {
-    menuItemInfo.push(
-      [AccessLevel.WAITING, supportedValues.waiting.menuText, <ClockCircleOutlined />],
     );
   }
   if (supportedValues?.notAvailable?.enabled === true) {
