@@ -40,7 +40,7 @@ export const accessibleFieldName = '__accessible';
 export enum AccessLevel {
   ACCESSIBLE = 1,
   UNACCESSIBLE = 2,
-  PENDING = 3,
+  WAITING = 3,
   NOT_AVAILABLE = 4,
   OTHER = 5,
 }
@@ -64,9 +64,9 @@ const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
       [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />],
     );
   }
-  if (supportedValues?.pending?.enabled === true) {
+  if (supportedValues?.waiting?.enabled === true) {
     menuItemInfo.push(
-      [AccessLevel.PENDING, supportedValues.pending.menuText, <ClockCircleOutlined />],
+      [AccessLevel.WAITING, supportedValues.waiting.menuText, <ClockCircleOutlined />],
     );
   }
   if (supportedValues?.notAvailable?.enabled === true) {
@@ -493,7 +493,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             onClick={() => props.onAccessFilterSet({
               [AccessLevel.ACCESSIBLE]: true,
               [AccessLevel.NOT_AVAILABLE]: true,
-              [AccessLevel.PENDING]: true,
+              [AccessLevel.WAITING]: true,
               [AccessLevel.UNACCESSIBLE]: true,
             },
             )}
@@ -561,7 +561,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       width: '200px',
       textWrap: 'word-break',
       render: (_, record) => {
-        if (record[accessibleFieldName] === AccessLevel.PENDING) {
+        if (record[accessibleFieldName] === AccessLevel.WAITING) {
           return (
             <Popover
               overlayClassName='discovery-popover'
@@ -569,7 +569,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               arrowPointAtCenter
               content={(
                 <div className='discovery-popover__text'>
-                  This study will have data soon
+                  Data are not yet available for this study
                 </div>
               )}
             >
@@ -585,7 +585,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               arrowPointAtCenter
               content={(
                 <div className='discovery-popover__text'>
-                  This study does not have any data yet.
+                  No data will be shared by this study
                 </div>
               )}
             >
@@ -626,7 +626,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               content={(
                 <div className='discovery-popover__text'>
                   <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>. </React.Fragment>
+                  <React.Fragment>Visit the repository to request access to these data</React.Fragment>
                 </div>
               )}
             >
