@@ -599,7 +599,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You have access to this data.'}
+              title={'You have access to these data.'}
               content={(
                 <div className='discovery-popover__text'>
                   <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
@@ -611,18 +611,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        /* Hiding the closed lock for the HEAL project.
-          This may be useful functionality for other commons.
-          Keeping the logic for now.
-           https://ctds-planx.atlassian.net/browse/HP-393
-        */
         if (record[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
           return (
             <Popover
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You do not have access to this data.'}
+              title={'You do not currently have access to these data.'}
               content={(
                 <div className='discovery-popover__text'>
                   <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
