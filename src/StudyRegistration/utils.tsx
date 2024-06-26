@@ -23,34 +23,47 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
       // it should already be there, but avoid errors if for some reason it's not
       metadataToUpdate.STUDY_DATA_FIELD = {};
     }
-    if (tagField && updatedValues.repository) {
-      if (!metadataToUpdate[STUDY_DATA_FIELD][tagField]) {
-        metadataToUpdate[STUDY_DATA_FIELD][tagField] = [];
-      }
-      metadataToUpdate[STUDY_DATA_FIELD][tagField].push({
-        name: updatedValues.repository,
-        category: 'Data Repository',
-      });
-    }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
 
-    // add all repository_study_ids as separate objects
-    let tempStudyIDObj:any = [];
-    if (updatedValues.repository_study_ids?.length > 0) {
-      tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
-        repository_name: updatedValues.repository,
-        repository_study_ID: studyId,
-      }));
-    } else if (updatedValues.repository) {
-      tempStudyIDObj = [{
-        repository_name: updatedValues.repository,
-        repository_study_ID: '',
-        repository_study_link: '',
-        repository_persistent_ID: '',
-      }];
+    // data_repositories related metadata setup
+    // check if data_repositories has already been altered before (non-empty)
+    if (metadataToUpdate[STUDY_DATA_FIELD]?.study_metadata?.metadata_location?.data_repositories
+      && Array.isArray(metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories)
+      && metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories.length === 0
+    ) {
+      // add all repository_study_ids as separate objects
+      let tempStudyIDObj:any = [];
+      if (updatedValues.repository_study_ids?.length > 0) {
+        tempStudyIDObj = updatedValues.repository_study_ids.map((studyId) => ({
+          repository_name: updatedValues.repository,
+          repository_study_ID: studyId,
+        }));
+      } else if (updatedValues.repository) {
+        tempStudyIDObj = [{
+          repository_name: updatedValues.repository,
+          repository_study_ID: '',
+          repository_study_link: '',
+          repository_persistent_ID: '',
+        }];
+      }
+      metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
+      if (tagField && updatedValues.repository) {
+        if (!metadataToUpdate[STUDY_DATA_FIELD][tagField]) {
+          metadataToUpdate[STUDY_DATA_FIELD][tagField] = [];
+        }
+        // don't push duplicated tags
+        if (!metadataToUpdate[STUDY_DATA_FIELD][tagField].includes({
+          name: updatedValues.repository,
+          category: 'Data Repository',
+        })) {
+          metadataToUpdate[STUDY_DATA_FIELD][tagField].push({
+            name: updatedValues.repository,
+            category: 'Data Repository',
+          });
+        }
+      }
     }
-    metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.data_repositories = tempStudyIDObj;
 
     metadataToUpdate[STUDY_DATA_FIELD].study_metadata.metadata_location.clinical_trials_study_ID = updatedValues.clinical_trials_id;
     if (updatedValues.clinical_trials_id) {
