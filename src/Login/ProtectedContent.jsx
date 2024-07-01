@@ -222,19 +222,20 @@ class ProtectedContent extends React.Component {
    * Display access contol message if userAccessToSite property set and user does not have sufficient privileges
    */
   checkSiteAccess = (initialState) => {
-    const newState = { ...initialState };
     // check for setup property
-    if (userAccessToSite?.enabled && newState.user.authz) {
+    if (userAccessToSite?.enabled && initialState.user.authz) {
       // check user authorization
-      if (!Object.keys(newState.user.authz).length > 0) {
-        // match to whitelist
+      if (!Object.keys(initialState.user.authz).length > 0) {
         const redirectPage = userAccessToSite.deniedPageURL || '/access-denied';
-        if (![redirectPage].includes(this.props.match.path)) {
-          newState.redirectTo = redirectPage;// redirect to homepage by default
+        // only allow user to see access denied page
+        if (redirectPage !== this.props.match.path) {
+          const newState = { ...initialState };
+          newState.redirectTo = redirectPage;// redirect to access-denied by default
+          return newState;
         }
       }
     }
-    return newState;
+    return initialState;
   };
 
   render() {
