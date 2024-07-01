@@ -229,7 +229,7 @@ class ProtectedContent extends React.Component {
       if (!Object.keys(newState.user.authz).length > 0) {
         // match to whitelist
         const redirectPage = userAccessToSite.deniedPageURL || '/access-denied';
-        if (![redirectPage, '/identity'].includes(this.props.match.path)) {
+        if (![redirectPage].includes(this.props.match.path)) {
           newState.redirectTo = redirectPage;// redirect to homepage by default
         }
       }
