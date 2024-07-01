@@ -224,7 +224,7 @@ class ProtectedContent extends React.Component {
   checkSiteAccess = (initialState) => {
     const newState = { ...initialState };
     // check for setup property
-    if (userAccessToSite?.authorization && newState.user.authz) {
+    if (userAccessToSite?.enabled && newState.user.authz) {
       // check user authorization
       if (!Object.keys(newState.user.authz).length > 0) {
         // match to whitelist

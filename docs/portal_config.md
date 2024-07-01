@@ -718,7 +718,7 @@ Below is an example, with inline comments describing what each JSON block config
     }
   },
   "userAccessToSite": { // optional: user must have access to a resorces to acess the site
-    "authorization": true,// optional: enable ristricted access
+    "enabled": true,// optional: enable ristricted access
     "noAccessMessage": "Access to this site requires special access.",// optional: defaults to this value
     "deniedPageURL": "/access-denied"//optional: defaults to this value
   },
