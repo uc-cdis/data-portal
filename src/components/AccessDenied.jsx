@@ -4,9 +4,18 @@ import { userAccessToSite } from '../configs';
 
 class AccessDenied extends React.Component {
   render() {
+    const convertEmailsToLink = (str) => {
+      // can only handle one email address
+      const emailAddressArr = str.match(/[\w\.]+@[\w\.]+/g);
+      if (emailAddressArr.length > 0) {
+        const splitStringOnEmail = str.split(emailAddressArr[0]);
+        return (<React.Fragment>{splitStringOnEmail[0]}<a href={`mailto:${emailAddressArr[0]}`}>{emailAddressArr[0]}</a>{splitStringOnEmail[1]}</React.Fragment>);
+      }
+      return (<React.Fragment>{str}</React.Fragment>);
+    };
     return (
       <div className='error-placeholder__error-msg'>
-        <h1>{userAccessToSite.noAccessMessage || 'Access to this site requires special access.'}</h1>
+        <h1>{userAccessToSite.noAccessMessage ? convertEmailsToLink(userAccessToSite.noAccessMessage) : 'Access to this site requires special access.'}</h1>
       </div>
     );
   }
