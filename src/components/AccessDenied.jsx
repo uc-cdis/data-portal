@@ -15,7 +15,7 @@ class AccessDenied extends React.Component {
     };
     return (
       <div className='error-placeholder__error-msg'>
-        <h1>{userAccessToSite.noAccessMessage ? convertEmailsToLink(userAccessToSite.noAccessMessage) : 'Access to this site requires special access.'}</h1>
+        <h1>{userAccessToSite.noAccessMessage ? convertEmailsToLink(userAccessToSite.noAccessMessage) : 'Access to this site requires special permission.'}</h1>
       </div>
     );
   }
