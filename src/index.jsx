@@ -510,7 +510,7 @@ async function init() {
                     path='/not-found'
                     component={NotFound}
                   />
-                  { userAccessToSite?.authorization && (
+                  { userAccessToSite?.enabled && (
                     <Route
                       path={userAccessToSite.deniedPageURL || '/access-denied'}
                       component={AccessDenied}
