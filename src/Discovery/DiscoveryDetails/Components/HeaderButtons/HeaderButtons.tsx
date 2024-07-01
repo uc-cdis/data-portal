@@ -20,6 +20,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
     studyNumber: string | null = null,
     studyUID: string | number | null = null,
     existingDataDictionaryName: Array<string> = [],
+    existingCDEName: Array<string> = [],
   ) => {
     history.push(redirectURL, {
       studyName,
@@ -27,6 +28,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       studyRegistrationAuthZ,
       studyUID,
       existingDataDictionaryName,
+      existingCDEName,
     });
   };
   const permalink = GetPermaLink(
@@ -66,7 +68,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       props.userAuthMapping,
     );
 
-  const showSubmitDataDictionaryButton = props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
+  const showSubmitVLMDButton = props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
     && props.user.username
     && userHasMethodForServiceOnResource(
       'access',
@@ -144,13 +146,13 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
               </React.Fragment>
             </Button>
           ) : null}
-        {showSubmitDataDictionaryButton ? (
+        {showSubmitVLMDButton ? (
           // user is authenticated, VLMD submission button should be visible only on registered studies that they have access to
           <Button
             type='text'
             className='discovery-modal__request-button'
             onClick={() => handleRedirectClick(
-              '/data-dictionary-submission',
+              '/vlmd-submission',
               props.modalData[
                 studyRegistrationConfig.studyRegistrationAccessCheckField
               ],
@@ -162,13 +164,19 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
               // get existing data dictionary names
               Object.keys(
                 props.modalData[
-                  studyRegistrationConfig.dataDictionaryField
-                ] || {},
+                  studyRegistrationConfig.variableMetadataField
+                ]?.data_dictionaries || {},
+              ),
+              // get existing CDE names
+              Object.keys(
+                props.modalData[
+                  studyRegistrationConfig.variableMetadataField
+                ]?.common_data_elements || {},
               ),
             )}
           >
             <AuditOutlined />
-            Submit a Data Dictionary
+            Submit Variable-level Metadata
           </Button>
         ) : null}
         {showRequestAccessButton ? (
@@ -176,7 +184,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
             type='text'
             className='discovery-modal__request-button'
             onClick={() => handleRedirectClick(
-              '/data-dictionary-submission/request-access',
+              '/vlmd-submission/request-access',
               props.modalData[
                 studyRegistrationConfig.studyRegistrationAccessCheckField
               ],
@@ -188,14 +196,14 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
             )}
           >
             <AuditOutlined />
-            Request Access to Submit a Data Dictionary
+            Request Access to Submit Variable-level Metadata
           </Button>
         ) : null}
 
         {showLoginButton ? ( // user is NOT authenticated, Login in to VLMD submission button should be visible only on registered studies
           <Button type='text' onClick={() => handleRedirectToLoginClick()}>
             <AuditOutlined />
-            Login to Submit a Data Dictionary
+            Login to Submit Variable-level Metadata
           </Button>
         ) : null}
         <Button

@@ -2,6 +2,14 @@
   padding: 30px 32px;
 }
 
+.vlmd-sub-tab-panel {
+  padding: 0 32px 0 32px;
+}
+
+.vlmd-sub-container {
+  padding: 0 0 30px 0;
+}
+
 .study-reg-form-container {
   border-radius: 8px;
   background-color: #fff;
