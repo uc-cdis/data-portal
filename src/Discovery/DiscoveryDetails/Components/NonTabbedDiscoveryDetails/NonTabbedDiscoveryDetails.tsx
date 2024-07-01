@@ -17,11 +17,11 @@ const { Panel } = Collapse;
 const NonTabbedDiscoveryDetails = ({ props }) => {
   const userHasAccess = props.config.features.authorization.enabled
     && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-    && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
+    && props.modalData[accessibleFieldName] !== AccessLevel.WAITING
     && props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE;
   const userDoesNotHaveAccess = props.config.features.authorization.enabled
     && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-    && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
+    && props.modalData[accessibleFieldName] !== AccessLevel.WAITING
     && props.modalData[accessibleFieldName] !== AccessLevel.ACCESSIBLE;
 
   const showDownloadPanel = props.config.studyPageFields.downloadLinks
