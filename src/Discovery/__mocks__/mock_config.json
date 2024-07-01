@@ -30,9 +30,9 @@
           "enabled": false,
           "menuText": "Not Accessible"
         },
-        "pending": {
+        "waiting": {
           "enabled": true,
-          "menuText": "Pending"
+          "menuText": "Waiting"
         },
         "notAvailable": {
           "enabled": true,

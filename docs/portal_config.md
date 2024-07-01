@@ -355,6 +355,7 @@ Below is an example, with inline comments describing what each JSON block config
       "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
       "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
       "nodeCountTitle": "Cases", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
+      "fileCountField": "file_count", // optional; By default for getting manifest entry counts, Guppy will issue a query with all the "referenceIdFieldInDataIndex" data attached as filter values. This may result in a ES query with huge amount of terms for aggregation. To circumvent this issue, we can pre-calculate the file counts during ETL, and then specify this pre-calculated ESa field as "fileCountField" in this config. In this way, portal will not need to issue that terms aggregation request with huge filters. See the manifest of an env that is using this feature for details
       "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
         { "field": "consent_codes", "name": "Data Use Restriction" },
         { "field": "bmi", "name": "BMI" }
@@ -498,7 +499,7 @@ Below is an example, with inline comments describing what each JSON block config
             "enabled": false,
             "menuText": "Not Accessible"
           },
-          "pending": {...},
+          "waiting": {...},
           "notAvailable": {...}
         }
       },
@@ -662,7 +663,7 @@ Below is an example, with inline comments describing what each JSON block config
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
-      "dataAvailabilityField": "data_availability", // optional, for checking if a study has data pending to be available
+      "dataAvailabilityField": "data_availability", // optional, for checking if no data will be made available for a study
       "uid": "study_id" // required; a unique identifier for each study. Can be any unique value and does not have to have any special meaning (eg does not need to be a GUID)
     },
     "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.

@@ -103,10 +103,10 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (supportedValues?.pending?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
-            accessible = AccessLevel.PENDING;
-          } else if (supportedValues?.notAvailable?.enabled && !study[authzField]) {
+          if (supportedValues?.notAvailable?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'not_available') {
             accessible = AccessLevel.NOT_AVAILABLE;
+          } else if (supportedValues?.waiting?.enabled && !study[authzField]) {
+            accessible = AccessLevel.WAITING;
           } else {
             let authMapping;
             if (isEnabled('discoveryUseAggWTS')) {
