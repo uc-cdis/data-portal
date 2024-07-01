@@ -40,7 +40,7 @@ export const accessibleFieldName = '__accessible';
 export enum AccessLevel {
   ACCESSIBLE = 1,
   UNACCESSIBLE = 2,
-  PENDING = 3,
+  WAITING = 3,
   NOT_AVAILABLE = 4,
   OTHER = 5,
 }
@@ -54,6 +54,11 @@ const { Panel } = Collapse;
 const ARBORIST_READ_PRIV = 'read';
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
+  if (supportedValues?.waiting?.enabled === true) {
+    menuItemInfo.push(
+      [AccessLevel.WAITING, supportedValues.waiting.menuText, <ClockCircleOutlined />],
+    );
+  }
   if (supportedValues?.accessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.ACCESSIBLE, supportedValues.accessible.menuText, <UnlockOutlined />],
@@ -62,11 +67,6 @@ const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
   if (supportedValues?.unaccessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />],
-    );
-  }
-  if (supportedValues?.pending?.enabled === true) {
-    menuItemInfo.push(
-      [AccessLevel.PENDING, supportedValues.pending.menuText, <ClockCircleOutlined />],
     );
   }
   if (supportedValues?.notAvailable?.enabled === true) {
@@ -493,7 +493,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             onClick={() => props.onAccessFilterSet({
               [AccessLevel.ACCESSIBLE]: true,
               [AccessLevel.NOT_AVAILABLE]: true,
-              [AccessLevel.PENDING]: true,
+              [AccessLevel.WAITING]: true,
               [AccessLevel.UNACCESSIBLE]: true,
             },
             )}
@@ -561,7 +561,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       width: '200px',
       textWrap: 'word-break',
       render: (_, record) => {
-        if (record[accessibleFieldName] === AccessLevel.PENDING) {
+        if (record[accessibleFieldName] === AccessLevel.WAITING) {
           return (
             <Popover
               overlayClassName='discovery-popover'
@@ -569,7 +569,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               arrowPointAtCenter
               content={(
                 <div className='discovery-popover__text'>
-                  This study will have data soon
+                  Data are not yet available for this study
                 </div>
               )}
             >
@@ -585,7 +585,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               arrowPointAtCenter
               content={(
                 <div className='discovery-popover__text'>
-                  This study does not have any data yet.
+                  No data will be shared by this study
                 </div>
               )}
             >
@@ -599,7 +599,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You have access to this data.'}
+              title={'You have access to these data.'}
               content={(
                 <div className='discovery-popover__text'>
                   <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
@@ -611,22 +611,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        /* Hiding the closed lock for the HEAL project.
-          This may be useful functionality for other commons.
-          Keeping the logic for now.
-           https://ctds-planx.atlassian.net/browse/HP-393
-        */
         if (record[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
           return (
             <Popover
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              title={'You do not have access to this data.'}
+              title={'You do not currently have access to these data.'}
               content={(
                 <div className='discovery-popover__text'>
                   <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>. </React.Fragment>
+                  <React.Fragment>Visit the repository to request access to these data</React.Fragment>
                 </div>
               )}
             >

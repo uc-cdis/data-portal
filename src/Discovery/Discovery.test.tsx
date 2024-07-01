@@ -21,7 +21,7 @@ const initStoreData = {
     accessFilters: {
       [AccessLevel.ACCESSIBLE]: true,
       [AccessLevel.UNACCESSIBLE]: true,
-      [AccessLevel.PENDING]: true,
+      [AccessLevel.WAITING]: true,
       [AccessLevel.NOT_AVAILABLE]: true,
     },
     selectedTags: {},
