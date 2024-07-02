@@ -8,7 +8,7 @@ import {
 } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts } from '../configs';
+import { requiredCerts, userAccessToSite } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import ReduxSystemUseWarningPopup from '../Popup/SystemUseWarningPopup';
 import { intersection, isPageFullScreen } from '../utils';
@@ -53,12 +53,15 @@ class ProtectedContent extends React.Component {
             store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
           ],
         )
+          .then(() => this.checkLoginStatus(store, this.state)
+            .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
+            .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))))
           .then(
-            () => this.checkLoginStatus(store, this.state)
-              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
-              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
-          ).then(
             (newState) => this.checkUseWarning(store, newState), // check for existence of cookie to popup Use Warning
+          )
+          .then(
+            // check for site access if property set
+            (newState) => this.checkSiteAccess(newState),
           )
           .then(
             (newState) => {
@@ -215,6 +218,37 @@ class ProtectedContent extends React.Component {
     return newState;
   };
 
+  /**
+   * Display access contol message if userAccessToSite property set and user does not have sufficient privileges
+   */
+  checkSiteAccess = (initialState) => {
+    // check for setup property
+    if (userAccessToSite?.enabled && initialState.user.resources) {
+      const checkIfUserHasPermission = (resources) => {
+        if (userAccessToSite?.userAccessIncludes?.length > 0) {
+          const permissionMatchs = userAccessToSite.userAccessIncludes.filter((path) => (
+            resources.includes(path)
+          ));
+          // check if any user permissions matched
+          return permissionMatchs.length === 0;
+        }
+        return false;
+      };
+      // check user authorization
+      if (initialState.user.resources.length === 0
+        || checkIfUserHasPermission(initialState.user.resources)) {
+        const redirectPage = userAccessToSite.deniedPageURL || '/access-denied';
+        // only allow user to see access denied page
+        if (redirectPage !== this.props.match.path) {
+          const newState = { ...initialState };
+          newState.redirectTo = redirectPage;// redirect to access-denied by default
+          return newState;
+        }
+      }
+    }
+    return initialState;
+  };
+
   render() {
     const Component = this.props.component;
     let params = {}; // router params
@@ -223,6 +257,7 @@ class ProtectedContent extends React.Component {
     }
     window.scrollTo(0, 0);
     const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
+
     if (this.state.redirectTo) {
       let fromURL = '/';
       if (this.state.from && this.state.from.pathname) {
@@ -242,7 +277,6 @@ class ProtectedContent extends React.Component {
 
     if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
-
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
