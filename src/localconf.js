@@ -485,6 +485,8 @@ function buildConfig(opts) {
 
   const topNavLogin = !components?.login?.hideNavLink;
 
+  const userAccessToSite = config.userAccessToSite;
+
   return {
     app,
     basename,
@@ -517,6 +519,7 @@ function buildConfig(opts) {
     logoutInactiveUsers,
     workspaceTimeoutInMinutes,
     requiredCerts,
+    userAccessToSite,
     lineLimit,
     certs: components.certs,
     workspaceUrl,
