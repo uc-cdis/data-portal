@@ -223,9 +223,20 @@ class ProtectedContent extends React.Component {
    */
   checkSiteAccess = (initialState) => {
     // check for setup property
-    if (userAccessToSite?.enabled && initialState.user.authz) {
+    if (userAccessToSite?.enabled && initialState.user.resources) {
+      const checkIfUserHasPermission = (resources) => {
+        if (userAccessToSite?.userAccessIncludes?.length > 0) {
+          const permissionMatchs = userAccessToSite.userAccessIncludes.filter((path) => (
+            resources.includes(path)
+          ));
+          // check if any user permissions matched
+          return permissionMatchs.length === 0;
+        }
+        return false;
+      };
       // check user authorization
-      if (!Object.keys(initialState.user.authz).length > 0) {
+      if (initialState.user.resources.length === 0
+        || checkIfUserHasPermission(initialState.user.resources)) {
         const redirectPage = userAccessToSite.deniedPageURL || '/access-denied';
         // only allow user to see access denied page
         if (redirectPage !== this.props.match.path) {
