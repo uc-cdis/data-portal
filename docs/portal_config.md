@@ -717,6 +717,12 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
+  "userAccessToSite": { // optional: user must have access to a resorces to acess the site
+    "enabled": true,// optional: enable ristricted access
+    "noAccessMessage": "Access to this site requires special permission.",// optional: defaults to this value, first email addresses will be turned into mailto link if used
+    "deniedPageURL": "/access-denied",//optional: defaults to this value
+    "userAccessIncludes": ["/argo", "/workspace"] //optional: defaults to any, otherwise must have access to one item in array
+  },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
