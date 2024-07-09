@@ -86,7 +86,8 @@ class ProtectedContent extends React.Component {
             },
           ),
       );
-    if (this.props.public) {
+    // if userAccessToSite is enabled do not load homepage until access is checked
+    if (this.props.public && !(this.props.match.path === '/' && userAccessToSite?.enabled)) {
       getReduxStore()
         .then(
           (store) => {
@@ -275,7 +276,7 @@ class ProtectedContent extends React.Component {
       );
     }
 
-    if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
+    if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function') && !userAccessToSite?.enabled) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
