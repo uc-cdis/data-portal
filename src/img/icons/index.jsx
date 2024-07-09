@@ -46,6 +46,7 @@ import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
 import GWASBarChart from './gwas-icons/barChart.svg';
 import GWASEulerDiagram from './gwas-icons/eulerDiagram.svg';
 import GWASEyeIcon from './gwas-icons/eyeIcon.svg';
+import InfoIcon from './gwas-icons/infoIcon.svg';
 
 const dictIcons = {
   'gwas-barChart': (height, customedStyles) => (
@@ -56,6 +57,9 @@ const dictIcons = {
   ),
   'gwas-eyeIcon': (height, customedStyles) => (
     <GWASEyeIcon height={height} style={{ ...customedStyles }} />
+  ),
+  info: (height, customedStyles) => (
+    <InfoIcon height={height} style={{ ...customedStyles }} />
   ),
   analysis: (height, customedStyles) => (
     <IcoAnalysis
