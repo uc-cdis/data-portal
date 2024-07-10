@@ -72,7 +72,7 @@ export const userHasMethodForServiceOnProject = (method, service, projectID, use
 
 export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'
-  const actionHasMethod = (x) => (x.method === method);
+  const actionHasMethod = (x) => (x.method === '*' || x.method === method);
   // actionArrays is array of arrays of { service: x, method: y }
   const actionArrays = Object.values(userAuthMapping);
   const hasMethod = actionArrays.some((x) => x.some(actionHasMethod));
@@ -80,4 +80,4 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
 };
 
 export const userHasCreateOrUpdateOnAnyProject = (userAuthMapping) => (userHasMethodOnAnyProject('create', userAuthMapping)
-      || userHasMethodOnAnyProject('update', userAuthMapping) || userHasMethodOnAnyProject('*', userAuthMapping));
+      || userHasMethodOnAnyProject('update', userAuthMapping));
