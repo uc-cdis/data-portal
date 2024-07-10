@@ -80,4 +80,4 @@ export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
 };
 
 export const userHasCreateOrUpdateOnAnyProject = (userAuthMapping) => (userHasMethodOnAnyProject('create', userAuthMapping)
-      || userHasMethodOnAnyProject('update', userAuthMapping));
+      || userHasMethodOnAnyProject('update', userAuthMapping) || userHasMethodOnAnyProject('*', userAuthMapping));
