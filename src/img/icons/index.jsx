@@ -47,6 +47,8 @@ import GWASBarChart from './gwas-icons/barChart.svg';
 import GWASEulerDiagram from './gwas-icons/eulerDiagram.svg';
 import GWASEyeIcon from './gwas-icons/eyeIcon.svg';
 import InfoIcon from './gwas-icons/infoIcon.svg';
+import HolderIcon from './gwas-icons/holderIcon.svg';
+import ManageColumnsIcon from './gwas-icons/manageColumnsIcon.svg';
 
 const dictIcons = {
   'gwas-barChart': (height, customedStyles) => (
@@ -60,6 +62,12 @@ const dictIcons = {
   ),
   info: (height, customedStyles) => (
     <InfoIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-holderIcon': (height, customedStyles) => (
+    <HolderIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-manageColumnsIcon': (height, customedStyles) => (
+    <ManageColumnsIcon height={height} style={{ ...customedStyles }} />
   ),
   analysis: (height, customedStyles) => (
     <IcoAnalysis

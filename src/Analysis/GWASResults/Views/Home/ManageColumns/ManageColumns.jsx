@@ -4,11 +4,11 @@ import {
 } from 'antd';
 import SharedContext from '../../../Utils/SharedContext';
 import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
-import HolderIcon from './ManageColumnsIcons/HolderIcon';
-import ManageColumnsIcon from './ManageColumnsIcons/ManageColumnsIcon';
 import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
 import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
 import './ManageColumns.css';
+import IconComponent from '../../../../../components/Icon';
+import dictIcons from '../../../../../img/icons/index';
 
 const ManageColumns = () => {
   const { homeTableState, setHomeTableState } = useContext(SharedContext);
@@ -62,7 +62,7 @@ const ManageColumns = () => {
         toggleColumn(columnBoolean);
       }}
     >
-      <HolderIcon /> {switchTitle}
+      <IconComponent iconName='gwas-holderIcon' dictIcons={dictIcons} height='1em'/> {switchTitle}
       <div className='manage-columns-switch'>
         <Switch
           size='small'
@@ -136,7 +136,7 @@ const ManageColumns = () => {
       trigger={['click']}
     >
       <Button className='manage-columns-button'>
-        <ManageColumnsIcon />
+        <IconComponent iconName='gwas-manageColumnsIcon' dictIcons={dictIcons} height='1em'/>
         Manage columns
       </Button>
     </Dropdown>
