@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../../../Discovery';
-import UseHandleRedirectToLoginClick from '../../../../../../Utils/HandleRedirectToLoginClick';
+import { UseHandleRedirectToLoginClickNonResumable } from '../../../../../../Utils/HandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
@@ -40,7 +40,7 @@ const ActionButtons = ({
   history,
   location,
 }: ActionButtonsProps): JSX.Element => {
-  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClick();
+  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClickNonResumable();
 
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
