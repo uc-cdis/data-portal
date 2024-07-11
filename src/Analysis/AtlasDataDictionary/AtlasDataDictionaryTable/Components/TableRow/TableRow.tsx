@@ -63,7 +63,7 @@ const TableRow = ({
               onClick={() => handleTableChange('openDropdown', rowObject.rowID)}
               aria-label='expand'
             >
-              <span className='arrow-icon arrow-icon-right' />
+              <span className='arrow-icon arrow-icon-right'     data-testid='expand-icon' />
             </Button>
           )}
           {currentDropdownShouldBeOpen && (
