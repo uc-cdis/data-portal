@@ -3,7 +3,6 @@ import {
   Button, Dropdown, Switch, message,
 } from 'antd';
 import SharedContext from '../../../Utils/SharedContext';
-import RestoreIcon from './ManageColumnsIcons/RestoreIcon';
 import DefaultColumnManagement from '../HomeTableState/DefaultColumnManagement';
 import UpdateColumnManagement from '../HomeTableState/UpdateColumnManagement';
 import './ManageColumns.css';
@@ -83,7 +82,7 @@ const ManageColumns = () => {
             restoreDefaults();
           }}
         >
-          <RestoreIcon /> Restore Defaults
+          <IconComponent iconName='gwas-restoreIcon' dictIcons={dictIcons} height='1em'/> Restore Defaults
         </button>
       ),
       key: '0',

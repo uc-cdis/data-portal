@@ -8,7 +8,6 @@ import {
   Grid,
   Space,
 } from '@mantine/core';
-import RestoreIcon from '../Icons/RestoreIcon';
 import { IColumnManagementData } from '../../Interfaces/Interfaces';
 import './ManageColumns.css';
 import ColumnsItems from '../../Utils/ColumnItems';
@@ -84,7 +83,7 @@ const ManageColumns = ({
           >
             <Grid align='flex-start'>
               <Grid.Col span={iconSpanSize}>
-                <RestoreIcon />
+                <IconComponent iconName='gwas-restoreIcon' dictIcons={dictIcons} height='1em'/>
               </Grid.Col>
               <Grid.Col span={columnManagementResetButtonSpanSize} className={'column-label'}>
                 Restore Defaults

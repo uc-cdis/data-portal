@@ -49,6 +49,8 @@ import GWASEyeIcon from './gwas-icons/eyeIcon.svg';
 import InfoIcon from './gwas-icons/infoIcon.svg';
 import HolderIcon from './gwas-icons/holderIcon.svg';
 import ManageColumnsIcon from './gwas-icons/manageColumnsIcon.svg';
+import RestoreIcon from './gwas-icons/restoreIcon.svg';
+import SearchIcon from './gwas-icons/searchIcon.svg';
 
 const dictIcons = {
   'gwas-barChart': (height, customedStyles) => (
@@ -68,6 +70,12 @@ const dictIcons = {
   ),
   'gwas-manageColumnsIcon': (height, customedStyles) => (
     <ManageColumnsIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-restoreIcon': (height, customedStyles) => (
+    <RestoreIcon height={height} style={{ ...customedStyles }} />
+  ),
+  search: (height, customedStyles) => (
+    <SearchIcon height={height} style={{ ...customedStyles }} />
   ),
   analysis: (height, customedStyles) => (
     <IcoAnalysis

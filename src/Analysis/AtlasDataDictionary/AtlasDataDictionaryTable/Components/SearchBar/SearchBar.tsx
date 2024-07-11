@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { Input } from '@mantine/core';
 import { debounce } from 'lodash';
-import SearchIcon from '../Icons/SearchIcon';
 import { IColumnManagementData, IRowData } from '../../Interfaces/Interfaces';
 import SearchBarMessage from './SearchBarMessage/SearchBarMessage';
 import filterTableData from './filterTableData';
+import IconComponent from '../../../../../components/Icon';
+import dictIcons from '../../../../../img/icons/index';
 
 interface ISearchBarProps {
   columnsShown: number;
@@ -62,7 +63,7 @@ const SearchBar = ({
                     x
                       </button>
                     ) : (
-                      <SearchIcon />
+                      <IconComponent iconName='search' dictIcons={dictIcons} height='1em'/>
                     )
                   }
                   placeholder='Search'
