@@ -2,7 +2,7 @@ import React from 'react';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
-import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
+import { handleRedirectToLoginClick } from '../../Utils/HandleRedirectToLoginClick';
 
 const DownloadZipButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,

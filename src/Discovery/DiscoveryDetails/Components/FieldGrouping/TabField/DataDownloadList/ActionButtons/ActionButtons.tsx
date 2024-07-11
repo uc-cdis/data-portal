@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../../../Discovery';
-import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
+import UseHandleRedirectToLoginClick from '../../../../../../Utils/HandleRedirectToLoginClick';
 import HandleDownloadManifestClick from './DownloadUtils/HandleDownloadManifestClick';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
