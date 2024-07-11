@@ -61,7 +61,7 @@ const ManageColumns = () => {
         toggleColumn(columnBoolean);
       }}
     >
-      <IconComponent iconName='gwas-holderIcon' dictIcons={dictIcons} height='1em'/> {switchTitle}
+      <IconComponent iconName='gwas-holderIcon' dictIcons={dictIcons} height='1em' /> {switchTitle}
       <div className='manage-columns-switch'>
         <Switch
           size='small'
@@ -82,7 +82,7 @@ const ManageColumns = () => {
             restoreDefaults();
           }}
         >
-          <IconComponent iconName='gwas-restoreIcon' dictIcons={dictIcons} height='1em'/> Restore Defaults
+          <IconComponent iconName='gwas-restoreIcon' dictIcons={dictIcons} height='1em' /> Restore Defaults
         </button>
       ),
       key: '0',
@@ -135,7 +135,7 @@ const ManageColumns = () => {
       trigger={['click']}
     >
       <Button className='manage-columns-button'>
-        <IconComponent iconName='gwas-manageColumnsIcon' dictIcons={dictIcons} height='1em'/>
+        <IconComponent iconName='gwas-manageColumnsIcon' dictIcons={dictIcons} height='1em' />
         Manage columns
       </Button>
     </Dropdown>

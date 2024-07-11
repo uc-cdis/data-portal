@@ -18,10 +18,10 @@ const SearchBarMessage = ({
   if (showSearchBarMessage(searchTerm, paginatedData, columnManagementData)) {
     return (
       <div className='search-bar-message'>
-        <span><IconComponent iconName='info' dictIcons={dictIcons} height='1em'/></span>
+        <span><IconComponent iconName='info' dictIcons={dictIcons} height='1em' /></span>
             Matches found in hidden columns.
         <Button
-          leftIcon={<IconComponent iconName='gwas-eyeIcon' dictIcons={dictIcons} height='1em'/>}
+          leftIcon={<IconComponent iconName='gwas-eyeIcon' dictIcons={dictIcons} height='1em' />}
           data-testid='show-all-button'
           variant='outline'
           onClick={() => columnManagementReset()}

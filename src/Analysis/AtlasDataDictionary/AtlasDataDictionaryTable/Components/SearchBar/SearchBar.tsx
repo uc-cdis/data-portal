@@ -63,7 +63,7 @@ const SearchBar = ({
                     x
                       </button>
                     ) : (
-                      <IconComponent iconName='search' dictIcons={dictIcons} height='1em'/>
+                      <IconComponent iconName='search' dictIcons={dictIcons} height='1em' />
                     )
                   }
                   placeholder='Search'
