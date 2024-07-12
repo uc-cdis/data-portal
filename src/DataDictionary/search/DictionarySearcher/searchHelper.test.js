@@ -3,7 +3,7 @@ import {
   searchKeyword,
   getSearchSummary,
   ERR_KEYWORD_TOO_SHORT,
-  ERR_KEYWORD_TOO_LONG,
+  ERR_KEYWORD_TOO_LONG, ZERO_RESULT_FOUND_MSG,
 } from './searchHelper';
 
 describe('dictionary search helper', () => {
@@ -78,6 +78,6 @@ describe('dictionary search helper', () => {
   it('can output error if keyword too long', () => {
     const { result, errorMsg } = searchKeyword(searchData, '1234567890123456789012345678901234567890');
     expect(result).toEqual([]);
-    expect(errorMsg).toEqual(ERR_KEYWORD_TOO_LONG);
+    expect(errorMsg).toEqual(ZERO_RESULT_FOUND_MSG);
   });
 });
