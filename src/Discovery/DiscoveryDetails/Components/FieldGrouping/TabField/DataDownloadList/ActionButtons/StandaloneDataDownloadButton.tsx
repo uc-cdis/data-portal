@@ -8,7 +8,7 @@ import {
 } from '../../../../../../../localconf';
 import DataDownloadListItem from '../Interfaces/DataDownloadListItem';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
-import UseHandleRedirectToLoginClickNonResumable from '../../../../../../Utils/HandleRedirectToLoginClick';
+import { UseHandleRedirectToLoginClickNonResumable } from '../../../../../../Utils/HandleRedirectToLoginClick';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../Discovery';
