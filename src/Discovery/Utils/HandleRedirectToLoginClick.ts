@@ -1,11 +1,11 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, RouteComponentProps } from 'react-router-dom';
 import GetPermaLink from './GetPermaLink';
 
-const handleRedirectToLoginClick = (
+const handleRedirectToLoginClickResumable = (
   action: 'download' | 'export' | 'manifest' | null = null,
-  props,
-  history,
-  location,
+  props: any,
+  history: RouteComponentProps['history'],
+  location: RouteComponentProps['location'],
 ) => {
   const serializableState = {
     ...props.discovery,
@@ -13,13 +13,14 @@ const handleRedirectToLoginClick = (
     // reduce the size of the redirect url by only storing resource id
     // resource id is remapped to its resource after redirect and resources load in index component
     selectedResourceIDs: props.discovery.selectedResources.map(
-      (resource) => resource[props.config.minimalFieldMapping.uid],
+      (resource:any) => resource[props.config.minimalFieldMapping.uid],
     ),
   };
   delete serializableState.selectedResources;
   const queryStr = `?state=${encodeURIComponent(
     JSON.stringify(serializableState),
   )}`;
+  // Resumes with previous action following redirect
   history.push('/login', { from: `${location.pathname}${queryStr}` });
 };
 
@@ -34,4 +35,4 @@ const UseHandleRedirectToLoginClickNonResumable = () => {
   return { HandleRedirectFromDiscoveryDetailsToLoginClick };
 };
 
-export { UseHandleRedirectToLoginClickNonResumable, handleRedirectToLoginClick };
+export { UseHandleRedirectToLoginClickNonResumable, handleRedirectToLoginClickResumable };
