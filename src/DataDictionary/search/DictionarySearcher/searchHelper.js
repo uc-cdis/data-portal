@@ -51,13 +51,6 @@ export const searchKeyword = (searchData, keyword) => {
       errorMsg: ERR_KEYWORD_TOO_SHORT,
     };
   }
-  // 32 is length limitation of Fuse search library
-  if (keyword.length > 32) {
-    return {
-      result: [],
-      errorMsg: ERR_KEYWORD_TOO_LONG,
-    };
-  }
   const halfLength = Math.round(keyword.length / 2);
   const minMatchCharLength = Math.min(Math.max(halfLength, 10), keyword.length);
   const options = {
