@@ -8,6 +8,7 @@ import VIEWS from './Utils/ViewsEnumeration';
 import HideShowElementsCreatedByOuterAnalysisApp from './Utils/HideShowElementsCreatedByOuterAnalysisApp';
 import InitialHomeTableState from './Views/Home/HomeTableState/InitialHomeTableState';
 import './GWASResultsContainer.css';
+import WorkflowLimitsDashboard from '../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsDashboard';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
@@ -35,7 +36,9 @@ const GWASResultsContainer = () => {
   };
 
   return (
+
     <div className='GWASResults'>
+      <WorkflowLimitsDashboard />
       <SharedContext.Provider
         value={{
           setCurrentView,

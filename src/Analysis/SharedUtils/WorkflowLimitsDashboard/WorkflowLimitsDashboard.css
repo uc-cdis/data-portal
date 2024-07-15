@@ -1,0 +1,32 @@
+.workflow-limits-dashboard {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 2px solid #e7e7e7;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+}
+.workflow-limits-dashboard h3 {
+  font-size: 16px;
+}
+.workflow-limits-dashboard.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.workflow-limits-dashboard .column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+.workflow-limits-dashboard .progress {
+  flex: 6;
+}
+.workflow-limits-dashboard .ant-progress {
+  margin-top: auto;
+}
+.workflow-limits-dashboard .error-message {
+  color: #830e0e;
+  text-align: right;
+}
