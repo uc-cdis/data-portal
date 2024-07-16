@@ -12,6 +12,8 @@ import {
   Tooltip,
   Checkbox,
   Select,
+  Row,
+  Col,
 } from 'antd';
 import { useLocation, Link } from 'react-router-dom';
 import {
@@ -199,9 +201,15 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
             name='coreCDEs'
             label='Core CDEs'
           >
-            <Checkbox.Group options={cdeInfoFromMDS.filter((entry) => entry.isCoreCDE)
-              .map((entry) => ({ label: entry.option, value: entry.option }))}
-            />
+            <Checkbox.Group style={{ width: '100%' }}>
+              <Row>
+                {(cdeInfoFromMDS.filter((entry) => entry.isCoreCDE).map((entry, i) => (
+                  <Col span={12} key={i}>
+                    <Checkbox value={entry.option}>{entry.option}</Checkbox>
+                  </Col>
+                )))}
+              </Row>
+            </Checkbox.Group>
           </Form.Item>
           <Form.Item
             name='selectedCDEs'
