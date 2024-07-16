@@ -5,28 +5,72 @@
   padding: 8px 16px;
   margin-bottom: 16px;
 }
+
 .workflow-limits-dashboard h3 {
   font-size: 16px;
+  line-height: normal;
+  margin-bottom: 0;
 }
+
 .workflow-limits-dashboard.row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
 }
+
 .workflow-limits-dashboard .column {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
   flex: 1;
+  margin-top: auto;
 }
+
 .workflow-limits-dashboard .progress {
   flex: 6;
 }
-.workflow-limits-dashboard .ant-progress {
-  margin-top: auto;
+
+.workflow-limits-dashboard .ant-progress-inner {
+  background-color: #dedede;
 }
+
+.workflow-limits-dashboard .ant-progress-bg {
+  /* only way to set a custom height on antd progress bar */
+  /* stylelint-disable declaration-no-important */
+  height: 16px !important;
+  /* stylelint-enable */
+}
+
 .workflow-limits-dashboard .error-message {
   color: #830e0e;
-  text-align: right;
+  float: right;
+  font-size: 14px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.workflow-limits-dashboard .error-message::before {
+  display: block;
+  position: absolute;
+  content: '!';
+  border-radius: 50%;
+  border: 1px solid #830e0e;
+  width: 13px;
+  height: 13px;
+  line-height: 11px;
+  text-align: center;
+  color: #830e0e;
+  font-weight: bold;
+  font-size: 10px;
+  top: 5px;
+  left: -18px;
+}
+
+.workflow-limits-dashboard .ant-progress-status-success .ant-progress-bg {
+  background-color: #54aa28;
+}
+
+.workflow-limits-dashboard .ant-progress-status-exception .ant-progress-bg {
+  background-color: #830e0e;
 }
