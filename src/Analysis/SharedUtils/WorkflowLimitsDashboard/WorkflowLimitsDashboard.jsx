@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { Spin } from 'antd';
-import { Progress } from 'antd';
+import { Spin, Progress } from 'antd';
 import { components } from '../../../params';
 import {
   fetchMonthlyWorkflowLimitInfo,
@@ -48,15 +47,15 @@ const WorkflowLimitsDashboard = React.memo(() => {
       </div>
     );
   }
-  const workflowRun = data['workflow_run'];
-  const workflowLimit = data['workflow_limit'];
+  const workflowRun = data.workflow_run;
+  const workflowLimit = data.workflow_limit;
 
   return (
     <React.Fragment>
       <div className='workflow-limits-dashboard row'>
         <div className='column'>
           <h3>Monthly Workflow Limit</h3>
-          <div>
+          <div data-testid='workflow-limits-message'>
             <strong>{workflowRun} used</strong> from {workflowLimit} Limit
           </div>
         </div>

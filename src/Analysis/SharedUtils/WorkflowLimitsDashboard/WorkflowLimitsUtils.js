@@ -18,7 +18,6 @@ export const workflowLimitsInvalidDataMessage =
   'Invalid server response for user workflow information.';
 
 export const workflowLimitInfoIsValid = (data) => {
-  console.log(data);
   // Check if data is an object
   if (typeof data !== 'object' || data === null) {
     return false;
