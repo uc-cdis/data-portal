@@ -1,12 +1,56 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { Spin } from 'antd';
 import { Progress } from 'antd';
 import { components } from '../../../params';
+import {
+  fetchMonthlyWorkflowLimitInfo,
+  workflowLimitsLoadingErrorMessage,
+  workflowLimitsInvalidDataMessage,
+  workflowLimitInfoIsValid,
+} from './WorkflowLimitsUtils';
+import LoadingErrorMessage from '../LoadingErrorMessage/LoadingErrorMessage';
 import './WorkflowLimitsDashboard.css';
 
-const WorkflowLimitsDashboard = () => {
-  const workflowRun = 10;
-  const workflowLimit = 50;
+const WorkflowLimitsDashboard = React.memo(() => {
   const supportEmail = components.login?.email || 'support@datacommons.io';
+  const refetchInterval = 5000;
+
+  const { data, status } = useQuery(
+    ['monthly-workflow-limit'],
+    fetchMonthlyWorkflowLimitInfo,
+    {
+      refetchInterval,
+    }
+  );
+  if (status === 'loading') {
+    return (
+      <div className='workflow-limits-dashboard row'>
+        <div className='spinner-container'>
+          <Spin /> Retrieving user workflow information.
+          <br />
+          Please wait...
+        </div>
+      </div>
+    );
+  }
+  if (status === 'error') {
+    return (
+      <div className='workflow-limits-dashboard row'>
+        <LoadingErrorMessage message={workflowLimitsLoadingErrorMessage} />
+      </div>
+    );
+  }
+  if (status === 'success' && !workflowLimitInfoIsValid(data)) {
+    return (
+      <div className='workflow-limits-dashboard row'>
+        <LoadingErrorMessage message={workflowLimitsInvalidDataMessage} />
+      </div>
+    );
+  }
+  const workflowRun = data['workflow_run'];
+  const workflowLimit = data['workflow_limit'];
+
   return (
     <React.Fragment>
       <div className='workflow-limits-dashboard row'>
@@ -21,7 +65,7 @@ const WorkflowLimitsDashboard = () => {
             <div>
               <div className='error-message'>
                 You have exceeded your monthly workflow limit. Please contact
-                support for assistance:
+                support for assistance:{' '}
                 <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
               </div>
             </div>
@@ -35,6 +79,6 @@ const WorkflowLimitsDashboard = () => {
       </div>
     </React.Fragment>
   );
-};
+});
 
 export default WorkflowLimitsDashboard;

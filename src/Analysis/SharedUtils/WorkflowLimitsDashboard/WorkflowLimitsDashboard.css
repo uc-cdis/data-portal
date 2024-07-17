@@ -2,14 +2,18 @@
   background: #ffffff 0% 0% no-repeat padding-box;
   border: 2px solid #e7e7e7;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 12px 16px;
   margin-bottom: 16px;
 }
 
 .workflow-limits-dashboard h3 {
   font-size: 16px;
   line-height: normal;
-  margin-bottom: 0;
+  margin-bottom: 5px;
+}
+
+.workflow-limits-dashboard div {
+  line-height: normal;
 }
 
 .workflow-limits-dashboard.row {
@@ -38,7 +42,7 @@
 .workflow-limits-dashboard .ant-progress-bg {
   /* only way to set a custom height on antd progress bar */
   /* stylelint-disable declaration-no-important */
-  height: 16px !important;
+  height: 14px !important;
   /* stylelint-enable */
 }
 
@@ -73,4 +77,18 @@
 
 .workflow-limits-dashboard .ant-progress-status-exception .ant-progress-bg {
   background-color: #830e0e;
+}
+
+.workflow-limits-dashboard .spinner-container {
+  margin-top: 0;
+  /* Delay showing spinner for one second to decrease flashing while loading page */
+  animation: make-visible 0s 1s forwards;
+  visibility: hidden;
+  height: inherit;
+}
+
+@keyframes make-visible {
+  to {
+    visibility: visible;
+  }
 }
