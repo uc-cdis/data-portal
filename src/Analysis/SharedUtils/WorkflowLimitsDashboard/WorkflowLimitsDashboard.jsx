@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import { Spin, Progress } from 'antd';
 import { components } from '../../../params';
@@ -20,7 +20,7 @@ const WorkflowLimitsDashboard = React.memo(() => {
     fetchMonthlyWorkflowLimitInfo,
     {
       refetchInterval,
-    }
+    },
   );
   if (status === 'loading') {
     return (
@@ -62,7 +62,10 @@ const WorkflowLimitsDashboard = React.memo(() => {
         <div className='column progress'>
           {workflowRun >= workflowLimit && (
             <div>
-              <div className='error-message'>
+              <div
+                className='error-message'
+                data-testid='workflow-exceeds-message'
+              >
                 You have exceeded your monthly workflow limit. Please contact
                 support for assistance:{' '}
                 <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.

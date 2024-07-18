@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import WorkflowLimitsDashboard from './WorkflowLimitsDashboard';
+import { components } from '../../../params';
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
@@ -14,6 +15,13 @@ const testData = {
   workflow_run: 6,
   workflow_limit: 50,
 };
+
+const testDataExceeds = {
+  workflow_run: 51,
+  workflow_limit: 50,
+};
+
+const supportEmail = components.login?.email || 'support@datacommons.io';
 
 const testJSX = () => (
   <QueryClientProvider client={mockedQueryClient}>
@@ -32,24 +40,47 @@ describe('Workflow Limits Dashboard', () => {
       .spyOn(window, 'fetch')
       .mockRejectedValueOnce(() => Promise.reject(new Error('error')));
     render(testJSX());
-    await waitFor(() =>
-      expect(screen.getByTestId('loading-error-message')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
     );
   });
 
-  it('should render the workflow limits dashboard component with data when test data is loaded', async () => {
+  it('should render the invalid data message when test data is invalid', async () => {
+    jest.spyOn(window, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: jest.fn().mockResolvedValueOnce({ invalidKey: 'invalidPair' }),
+    });
+    render(testJSX());
+    await waitFor(() => expect(screen.getByTestId('loading-error-message')).toBeInTheDocument(),
+    );
+  });
+
+  it(`should render the workflow limits dashboard component and progress bar
+     when test data is loaded`, async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
       ok: true,
       json: jest.fn().mockResolvedValueOnce(testData),
     });
     render(testJSX());
-    // await screen.findByText('50');
-    await waitFor(() =>
-      expect(screen.getByTestId('workflow-limits-message').textContent).toBe(
-        `${testData.workflow_run} used from ${testData.workflow_limit} Limit`
-      )
+    await waitFor(() => expect(screen.getByTestId('workflow-limits-message').textContent).toBe(
+      `${testData.workflow_run} used from ${testData.workflow_limit} Limit`,
+    ),
     );
-    // expect(screen.getByText(testData.workflow_limit)).toBeInTheDocument();
-    // expect(screen.getByText(testData.workflow_run)).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
+  it(`should render the a workflow limit exceeded message and progress bar
+    when workflow_run exceeds workflow_limit`, async () => {
+    jest.spyOn(window, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: jest.fn().mockResolvedValueOnce(testDataExceeds),
+    });
+    render(testJSX());
+    await waitFor(() => expect(screen.getByTestId('workflow-exceeds-message').textContent).toBe(
+      'You have exceeded your monthly workflow limit. '
+          + 'Please contact support for assistance: '
+          + `${supportEmail}.`,
+    ),
+    );
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 });
