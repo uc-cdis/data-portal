@@ -103,27 +103,6 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-
-          // console.log(supportedValues?.unaccessible?.enabled);
-          // console.log(dataAvailabilityField);
-          // console.log(study[dataAvailabilityField]);
-          // console.log('study:', study);
-          console.log('supportedValues',supportedValues)
-
-          /*
-          if (study[dataAvailabilityField] === 'not_available') {
-            console.log('this study should be not_available');
-            console.log(study[dataAvailabilityField]);
-            console.log('not available study:', study);
-          }
-          if (study._hdp_uid === 'HDP01065') {
-            console.log('this study should be unaccessible');
-            console.log(dataAvailabilityField);
-            console.log('study[dataAvailabilityField]', study[dataAvailabilityField]);
-            console.log('study:', study);
-          }
-          */
-          // TODO - FOR JULY 25th: LN 127-130 CONFIRM
           if (supportedValues?.unaccessible?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'unaccessible') {
             accessible = AccessLevel.UNACCESSIBLE;
           } else if (supportedValues?.notAvailable?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'not_available') {
