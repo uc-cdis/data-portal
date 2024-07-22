@@ -248,6 +248,7 @@
 .GWASApp .GWASUI-selectionUI button:first-child span:nth-child(2) {
   top: 30px;
   text-align: left;
+  line-height: normal;
 }
 
 .GWASApp .GWASUI-selectionUI button:hover span:nth-child(2) {
