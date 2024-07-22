@@ -245,6 +245,12 @@
   left: 60px;
 }
 
+.GWASApp .GWASUI-selectionUI button:first-child span:nth-child(2) {
+  top: 30px;
+  text-align: left;
+}
+
+
 .GWASApp .GWASUI-selectionUI button:hover span:nth-child(2) {
   color: #fff;
 }
