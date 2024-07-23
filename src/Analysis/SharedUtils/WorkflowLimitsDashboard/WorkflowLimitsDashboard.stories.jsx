@@ -9,6 +9,8 @@ export default {
 };
 const oneSecondInMilliseconds = 1000;
 const fifteenMinutesInMilliseconds = 900000;
+const exceedsWorkflowLimitObject = { workflow_run: 50, workflow_limit: 50 };
+const invalidWorkflowLimitObject = { invalidKey: 123 };
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false },
@@ -24,7 +26,7 @@ const MockTemplate = () => {
 };
 
 let requestCount = 0;
-const getMockWorkflowLimitsInfo = () => {
+const getValidMockWorkflowLimitsInfo = () => {
   requestCount++;
   return { workflow_run: requestCount, workflow_limit: 50 };
 };
@@ -38,7 +40,7 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(1000), ctx.json(getMockWorkflowLimitsInfo()));
+          return res(ctx.delay(oneSecondInMilliseconds), ctx.json(getValidMockWorkflowLimitsInfo()));
         }
       ),
     ],
@@ -56,7 +58,7 @@ MockedSuccessOverLimit.parameters = {
           console.log(argowrapperpath);
           return res(
             ctx.delay(oneSecondInMilliseconds * 2),
-            ctx.json({ workflow_run: 50, workflow_limit: 50 })
+            ctx.json(exceedsWorkflowLimitObject)
           );
         }
       ),
@@ -92,7 +94,7 @@ MockedError500.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(oneSecondInMilliseconds), ctx.status(500), ctx.json({ test: 123 }));
+          return res(ctx.delay(oneSecondInMilliseconds), ctx.status(500), ctx.json(invalidWorkflowLimitObject));
         }
       ),
     ],
@@ -107,7 +109,7 @@ MockedErrorInvalidData.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(oneSecondInMilliseconds), ctx.json({ test: 123 }));
+          return res(ctx.delay(oneSecondInMilliseconds), ctx.json(invalidWorkflowLimitObject));
         }
       ),
     ],
