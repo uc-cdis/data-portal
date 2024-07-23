@@ -69,8 +69,7 @@ describe('workflowLimitInfoIsValid function', () => {
   });
   test('returns true when keys are correct and numeric', async () => {
     expect(
-      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 })
-      ,
+      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 }),
     ).toEqual(true);
   });
 });
