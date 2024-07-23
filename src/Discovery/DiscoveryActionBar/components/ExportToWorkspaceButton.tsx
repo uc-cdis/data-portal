@@ -2,7 +2,7 @@ import React from 'react';
 import { ExportOutlined } from '@ant-design/icons';
 import { Popover, Button } from 'antd';
 import handleExportToWorkspaceClick from '../utils/handleExportToWorkspaceClick/handleExportToWorkspaceClick';
-import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
+import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
 
 const ExportToWorkspaceButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, setDownloadStatus, history, location,
@@ -52,7 +52,7 @@ const ExportToWorkspaceButton = ({
             );
           }
           : () => {
-            handleRedirectToLoginClick('export', props, history, location);
+            handleRedirectToLoginClickResumable('export', props, history, location);
           }
       }
     >
