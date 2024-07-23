@@ -7,6 +7,7 @@ export default {
   title: 'TESTS1/SharedUtils/WorkflowLimitsDashboard',
   component: 'WorkflowLimitsDashboard',
 };
+const oneSecondInMilliseconds = 1000;
 const fifteenMinutesInMilliseconds = 900000;
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
@@ -54,7 +55,7 @@ MockedSuccessOverLimit.parameters = {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
           return res(
-            ctx.delay(2000),
+            ctx.delay(oneSecondInMilliseconds * 2),
             ctx.json({ workflow_run: 50, workflow_limit: 50 })
           );
         }
@@ -91,7 +92,7 @@ MockedError500.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(1000), ctx.status(500), ctx.json({ test: 123 }));
+          return res(ctx.delay(oneSecondInMilliseconds), ctx.status(500), ctx.json({ test: 123 }));
         }
       ),
     ],
@@ -106,7 +107,7 @@ MockedErrorInvalidData.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(1000), ctx.json({ test: 123 }));
+          return res(ctx.delay(oneSecondInMilliseconds), ctx.json({ test: 123 }));
         }
       ),
     ],

@@ -36,7 +36,6 @@ const GWASResultsContainer = () => {
   };
 
   return (
-
     <div className='GWASResults'>
       <WorkflowLimitsDashboard />
       <SharedContext.Provider
