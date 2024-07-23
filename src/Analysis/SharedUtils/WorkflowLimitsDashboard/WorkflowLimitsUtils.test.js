@@ -49,9 +49,28 @@ describe('workflowLimitInfoIsValid function', () => {
       workflowLimitInfoIsValid({ workflow_run: 'string', workflow_limit: [] }),
     ).toEqual(false);
   });
+  test('returns false when workflow_limit is zero', async () => {
+    expect(
+      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 0 }),
+    ).toEqual(false);
+  });
+  test('returns false when workflow_limit is negative', async () => {
+    expect(
+      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: -1 }),
+    ).toEqual(false);
+  });
+  test('returns false when workflow_limit or workflow_run are missing', async () => {
+    expect(
+      workflowLimitInfoIsValid({ workflow_run: 1 }),
+    ).toEqual(false);
+    expect(
+      workflowLimitInfoIsValid({ workflow_limit: 1 }),
+    ).toEqual(false);
+  });
   test('returns true when keys are correct and numeric', async () => {
     expect(
-      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 }),
+      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 })
+      ,
     ).toEqual(true);
   });
 });

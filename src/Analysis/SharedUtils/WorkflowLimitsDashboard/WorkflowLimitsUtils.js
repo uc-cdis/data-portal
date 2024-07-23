@@ -21,9 +21,11 @@ export const workflowLimitInfoIsValid = (data) => {
     return false;
   }
   // validate data contains expected keys and they're numeric
+  // and workflow limit is greater than 0
   if (
     typeof data?.workflow_run !== 'number'
     || typeof data?.workflow_limit !== 'number'
+    || !(data.workflow_limit > 0)
   ) {
     return false;
   }
