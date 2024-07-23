@@ -8,7 +8,7 @@ import {
   AuditOutlined,
 } from '@ant-design/icons';
 import { hostname, studyRegistrationConfig } from '../../../../localconf';
-import GetPermaLink from '../../Utils/GetPermaLink';
+import GetPermaLink from '../../../Utils/GetPermaLink';
 import { userHasMethodForServiceOnResource } from '../../../../authMappingUtils';
 
 const HeaderButtons = ({ props, setTabActiveKey }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
-import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
+import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
 
 const DownloadZipButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,
@@ -33,7 +33,7 @@ const DownloadZipButton = ({
                 healIDPLoginNeeded.length > 0,
               );
             } else {
-              handleRedirectToLoginClick('download', props, history, location);
+              handleRedirectToLoginClickResumable('download', props, history, location);
             }
           }}
           type='default'

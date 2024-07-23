@@ -2,7 +2,7 @@ import React from 'react';
 import { FileTextOutlined } from '@ant-design/icons';
 import { Popover, Button } from 'antd';
 import handleDownloadManifestClick from '../utils/handleDownloadManifestClick';
-import handleRedirectToLoginClick from '../utils/handleRedirectToLoginClick';
+import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
 
 const DownloadManifestButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, history, location,
@@ -47,7 +47,7 @@ const DownloadManifestButton = ({
             );
           }
           : () => {
-            handleRedirectToLoginClick('manifest', props, history, location);
+            handleRedirectToLoginClickResumable('manifest', props, history, location);
           }
       }
       type='default'

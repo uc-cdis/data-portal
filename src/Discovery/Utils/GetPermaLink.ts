@@ -1,4 +1,4 @@
-import { basename } from '../../../localconf';
+import { basename } from '../../localconf';
 
 function GetPermaLink(uid: string) {
   const pagePath = `/discovery/${encodeURIComponent(uid)}/`;
