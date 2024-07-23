@@ -77,7 +77,7 @@ MockedLoading.parameters = {
           console.log(argowrapperpath);
           return res(
             ctx.delay(fifteenMinutesInMilliseconds),
-            ctx.json(getMockWorkflowLimitsInfo())
+            ctx.json(getValidMockWorkflowLimitsInfo())
           );
         }
       ),
