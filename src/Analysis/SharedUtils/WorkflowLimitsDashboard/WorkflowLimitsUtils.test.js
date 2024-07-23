@@ -31,7 +31,7 @@ describe('fetchMonthlyWorkflowLimitInfo function', () => {
     };
     global.fetch.mockResolvedValue(mockErrorResponse);
     await expect(fetchMonthlyWorkflowLimitInfo()).rejects.toThrow(
-      'An error has occurred: 404'
+      'An error has occurred: 404',
     );
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
@@ -46,12 +46,12 @@ describe('workflowLimitInfoIsValid function', () => {
   });
   test('returns false when keys are not numeric', async () => {
     expect(
-      workflowLimitInfoIsValid({ workflow_run: 'string', workflow_limit: [] })
+      workflowLimitInfoIsValid({ workflow_run: 'string', workflow_limit: [] }),
     ).toEqual(false);
   });
   test('returns true when keys are correct and numeric', async () => {
     expect(
-      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 })
+      workflowLimitInfoIsValid({ workflow_run: 1, workflow_limit: 2 }),
     ).toEqual(true);
   });
 });
