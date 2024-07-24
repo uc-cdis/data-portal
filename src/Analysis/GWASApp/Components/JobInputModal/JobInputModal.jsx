@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { Modal, Input } from 'antd';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import { useQuery } from 'react-query';
-import { fetchMonthlyWorkflowLimitInfo } from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
+import {
+  fetchMonthlyWorkflowLimitInfo,
+  workflowLimitsInvalidDataMessage,
+  workflowLimitsLoadingErrorMessage,
+  workflowLimitInfoIsValid,
+} from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
+import { LoadingErrorMessage } from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import './JobInputModal.css';
 
 const JobInputModal = ({
@@ -33,7 +39,11 @@ const JobInputModal = ({
       cancelText='Back'
       open={open}
       okButtonProps={{
-        disabled: jobName === '',
+        disabled:
+          jobName === '' ||
+          status === 'loading' ||
+          status === 'error' ||
+          !workflowLimitInfoIsValid(data),
         loading: status === 'loading' ? 'loading' : false,
       }}
       onOk={() => handleSubmit()}
@@ -99,6 +109,13 @@ const JobInputModal = ({
             ))}
           </div>
         </div>
+        {status === 'error' && <div>ERROR</div>}
+        {status === 'success' && !workflowLimitInfoIsValid(data) && (
+          <div>Invalid Data</div>
+        )}
+        {status === 'success' && workflowLimitInfoIsValid(data) && (
+          <div>Valid Data</div>
+        )}
       </div>
     </Modal>
   );
