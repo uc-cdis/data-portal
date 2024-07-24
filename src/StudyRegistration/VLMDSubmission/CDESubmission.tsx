@@ -155,6 +155,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
           {...FORM_LAYOUT}
           form={cdeForm}
           name='cde-sub-form'
+          disabled={props.disableCDESubmissionForm}
           onFinish={onFinish}
           onFinishFailed={() => { setCDEFormSubmitting(false); }}
           validateMessages={VALIDATE_MESSAGE}
@@ -180,9 +181,15 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
           }}
         >
           <Divider plain>HEAL CDEs</Divider>
-          <Typography style={{ textAlign: 'center' }}>
-          Use this form to indicate which HEAL Common Data Elements (CDEs) are utilized in this study (select all that apply). View the HEAL CDE Repository <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
-          </Typography>
+          {(props.disableCDESubmissionForm) ? (
+            <Typography style={{ textAlign: 'center' }}>
+              (PLACEHOLDER) This form has been disabled
+            </Typography>
+          ) : (
+            <Typography style={{ textAlign: 'center' }}>
+              Use this form to indicate which HEAL Common Data Elements (CDEs) are utilized in this study (select all that apply). View the HEAL CDE Repository <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
+            </Typography>
+          )}
           <Divider plain />
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
@@ -274,7 +281,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' onClick={onSubmitButtonClick} disabled={cdeFormSubmitting} loading={cdeFormSubmitting}>
+                <Button type='primary' onClick={onSubmitButtonClick} disabled={props.disableCDESubmissionForm || cdeFormSubmitting} loading={cdeFormSubmitting}>
                   Submit CDEs
                 </Button>
               )}

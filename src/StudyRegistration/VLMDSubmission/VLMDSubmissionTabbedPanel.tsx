@@ -12,6 +12,7 @@ interface LocationState {
     studyNumber?: string;
     studyName?: string;
     studyRegistrationAuthZ?: string;
+    disableCDESubmissionForm: boolean
 }
 
 export interface VLMDSubmissionProps {
@@ -19,7 +20,8 @@ export interface VLMDSubmissionProps {
     studyNumber?: string;
     studyName?: string;
     studyRegistrationAuthZ?: string;
-    userHasAccessToSubmit: boolean
+    userHasAccessToSubmit: boolean;
+    disableCDESubmissionForm: boolean;
 }
 
 export const KAYAKO_MAX_SUBJECT_LENGTH = 255;
@@ -53,6 +55,7 @@ const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: Stud
   const [studyName, setStudyName] = useState<string | undefined>(undefined);
   const [studyUID, setStudyUID] = useState<string | Number | undefined>(undefined);
   const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<string | undefined>(undefined);
+  const [disableCDESubmissionForm, setDisableCDESubmissionForm] = useState<boolean>(false);
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
@@ -60,6 +63,7 @@ const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: Stud
     setStudyNumber(locationStateData.studyNumber);
     setStudyName(locationStateData.studyName);
     setStudyRegistrationAuthZ(locationStateData.studyRegistrationAuthZ);
+    setDisableCDESubmissionForm(locationStateData.disableCDESubmissionForm);
   }, [location.state]);
 
   const userHasAccess = () => {
@@ -76,6 +80,7 @@ const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: Stud
     studyUID,
     studyRegistrationAuthZ,
     userHasAccessToSubmit: userHasAccess(),
+    disableCDESubmissionForm,
   };
 
   return (

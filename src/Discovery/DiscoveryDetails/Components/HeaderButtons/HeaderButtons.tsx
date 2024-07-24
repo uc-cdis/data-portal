@@ -21,6 +21,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
     studyUID: string | number | null = null,
     existingDataDictionaryName: Array<string> = [],
     existingCDEName: Array<string> = [],
+    disableCDESubmissionForm: boolean = false,
   ) => {
     history.push(redirectURL, {
       studyName,
@@ -29,6 +30,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
       studyUID,
       existingDataDictionaryName,
       existingCDEName,
+      disableCDESubmissionForm,
     });
   };
   const permalink = GetPermaLink(
@@ -173,6 +175,8 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
                   studyRegistrationConfig.variableMetadataField
                 ]?.common_data_elements || {},
               ),
+              // check if CDE form should be enabled (if CDEs are from REDCap, then disable CDE form)
+              !!props.modalData.use_cde_from_redcap,
             )}
           >
             <AuditOutlined />
