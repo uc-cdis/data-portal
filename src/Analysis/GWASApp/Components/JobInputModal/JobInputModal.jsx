@@ -32,6 +32,11 @@ const JobInputModal = ({
     ['monthly-workflow-limit-job-input-modal'],
     fetchMonthlyWorkflowLimitInfo
   );
+  const IsButtonDisabled =
+    jobName === '' ||
+    status === 'loading' ||
+    status === 'error' ||
+    !workflowLimitInfoIsValid(data);
 
   return (
     <Modal
@@ -39,11 +44,7 @@ const JobInputModal = ({
       cancelText='Back'
       open={open}
       okButtonProps={{
-        disabled:
-          jobName === '' ||
-          status === 'loading' ||
-          status === 'error' ||
-          !workflowLimitInfoIsValid(data),
+        disabled: IsButtonDisabled,
         loading: status === 'loading' ? 'loading' : false,
       }}
       onOk={() => handleSubmit()}
