@@ -88,7 +88,7 @@ const SelectOutcome = ({
           }}
         >
           <span>+</span>
-          <span>Add Continuous Outcome Phenotype</span>
+          <span>Add Continuous / Quasi-Continuous Outcome Phenotype</span>
         </button>
         <button
           data-tour='select-outcome-dichotomous'

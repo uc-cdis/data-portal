@@ -95,7 +95,7 @@ const SelectCovariates = ({
                 }}
               >
                 <span>+</span>
-                <span>Add Continuous Covariate</span>
+                <span>Add Continuous / Quasi-Continuous Covariate</span>
               </button>
 
               <button
