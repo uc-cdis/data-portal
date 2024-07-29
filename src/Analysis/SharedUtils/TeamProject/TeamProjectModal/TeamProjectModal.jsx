@@ -5,6 +5,7 @@ import {
 } from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import './TeamProjectModal.css';
+import { useHistory } from 'react-router-dom';
 
 const TeamProjectModal = ({
   isModalOpen,
@@ -15,32 +16,18 @@ const TeamProjectModal = ({
   selectedTeamProject,
   setSelectedTeamProject,
 }) => {
+  const history = useHistory();
   const closeAndUpdateTeamProject = () => {
     setIsModalOpen(false);
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
-
-  let modalContent = (
-    <Modal
-      open={isModalOpen}
-      className='team-project-modal'
-      title='Team Projects'
-      closable={false}
-      maskClosable={false}
-      keyboard={false}
-      footer={false}
-    >
-      <div className='spinner-container'>
-        <Spin /> Retrieving the list of team projects.
-        <br />
-        Please wait...
-      </div>
-    </Modal>
-  );
+  const redirectToHomepage = () => {
+    history.push('/');
+  };
 
   if (status === 'error') {
-    modalContent = (
+    return (
       <Modal
         open={isModalOpen}
         className='team-project-modal'
@@ -57,43 +44,84 @@ const TeamProjectModal = ({
     );
   }
   if (data) {
-    modalContent = (
+    if (data.teams.length > 0) {
+      return (
+        <Modal
+          className='team-project-modal'
+          title='Team Projects'
+          open={isModalOpen}
+          onCancel={() => setIsModalOpen(false)}
+          closable={localStorage.getItem('teamProject')}
+          maskClosable={localStorage.getItem('teamProject')}
+          keyboard={localStorage.getItem('teamProject')}
+          footer={[
+            <Button
+              key='submit'
+              type='primary'
+              disabled={!selectedTeamProject}
+              onClick={() => closeAndUpdateTeamProject()}
+            >
+              Submit
+            </Button>,
+          ]}
+        >
+          <div className='team-project-modal_modal-description'>
+              Please select your team.
+          </div>
+          <Select
+            id='input-selectTeamProjectDropDown'
+            labelInValue
+            defaultValue={selectedTeamProject}
+            onChange={(e) => setSelectedTeamProject(e.value)}
+            placeholder='-select one of the team projects below-'
+            fieldNames={{ label: 'teamName', value: 'teamName' }}
+            options={data.teams}
+            dropdownStyle={{ width: '100%' }}
+          />
+        </Modal>
+      );
+    }
+    return (
       <Modal
+        open={isModalOpen}
         className='team-project-modal'
         title='Team Projects'
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        closable={localStorage.getItem('teamProject')}
-        maskClosable={localStorage.getItem('teamProject')}
-        keyboard={localStorage.getItem('teamProject')}
+        closable={false}
+        maskClosable={false}
+        keyboard={false}
         footer={[
           <Button
             key='submit'
             type='primary'
-            disabled={!selectedTeamProject}
-            onClick={() => closeAndUpdateTeamProject()}
+            onClick={redirectToHomepage}
           >
-            Submit
+            Ok
           </Button>,
         ]}
       >
         <div className='team-project-modal_modal-description'>
-          Please select your team.
+      Please reach out to <a href='mailto:vadc@lists.uchicago.edu'>vadc@lists.uchicago.edu</a> to gain access to the system
         </div>
-        <Select
-          id='input-selectTeamProjectDropDown'
-          labelInValue
-          defaultValue={selectedTeamProject}
-          onChange={(e) => setSelectedTeamProject(e.value)}
-          placeholder='-select one of the team projects below-'
-          fieldNames={{ label: 'teamName', value: 'teamName' }}
-          options={data.teams}
-          dropdownStyle={{ width: '100%' }}
-        />
       </Modal>
     );
   }
-  return <React.Fragment>{modalContent}</React.Fragment>;
+  return (
+    <Modal
+      open={isModalOpen}
+      className='team-project-modal'
+      title='Team Projects'
+      closable={false}
+      maskClosable={false}
+      keyboard={false}
+      footer={false}
+    >
+      <div className='spinner-container'>
+        <Spin /> Retrieving the list of team projects.
+        <br />
+        Please wait...
+      </div>
+    </Modal>
+  );
 };
 
 TeamProjectModal.propTypes = {

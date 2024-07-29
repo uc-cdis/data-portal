@@ -8,7 +8,7 @@ import {
 } from '../../../../../../../localconf';
 import DataDownloadListItem from '../Interfaces/DataDownloadListItem';
 import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFiles';
-import UseHandleRedirectToLoginClick from './DownloadUtils/UseHandleRedirectToLoginClick';
+import { UseHandleRedirectToLoginClickNonResumable } from '../../../../../../Utils/HandleRedirectToLoginClick';
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../Discovery';
@@ -38,7 +38,7 @@ const StandaloneDataDownloadButton = ({
 }: StandaloneDataDownloadButtonProps) => {
   const history = useHistory();
   const location = useLocation();
-  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClick();
+  const { HandleRedirectFromDiscoveryDetailsToLoginClick } = UseHandleRedirectToLoginClickNonResumable();
   const manifestFieldName: string | undefined = discoveryConfig?.features?.exportToWorkspace?.manifestFieldName;
   const uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
 
