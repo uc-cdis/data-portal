@@ -5,12 +5,11 @@ import ACTIONS from '../../Utils/StateManagement/Actions';
 import { useQuery } from 'react-query';
 import {
   fetchMonthlyWorkflowLimitInfo,
-  workflowLimitsInvalidDataMessage,
-  workflowLimitsLoadingErrorMessage,
   workflowLimitInfoIsValid,
 } from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
-import { LoadingErrorMessage } from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
+
 import './JobInputModal.css';
+import WorkflowLimitsModalErrorMessage from './WorkflowLimitsModalErrorMessage/WorkflowLimitsModalErrorMessage';
 
 const JobInputModal = ({
   open,
@@ -32,11 +31,13 @@ const JobInputModal = ({
     ['monthly-workflow-limit-job-input-modal'],
     fetchMonthlyWorkflowLimitInfo
   );
+  const workFlowLimitExceeded = data?.workflow_limit <= data?.workflow_run;
   const IsButtonDisabled =
     jobName === '' ||
     status === 'loading' ||
     status === 'error' ||
-    !workflowLimitInfoIsValid(data);
+    !workflowLimitInfoIsValid(data) ||
+    workFlowLimitExceeded;
 
   return (
     <Modal
@@ -110,13 +111,11 @@ const JobInputModal = ({
             ))}
           </div>
         </div>
-        {status === 'error' && <div>ERROR</div>}
-        {status === 'success' && !workflowLimitInfoIsValid(data) && (
-          <div>Invalid Data</div>
-        )}
-        {status === 'success' && workflowLimitInfoIsValid(data) && (
-          <div>Valid Data</div>
-        )}
+        <WorkflowLimitsModalErrorMessage
+          status={status}
+          workflowLimitInfoIsValid={workflowLimitInfoIsValid(data)}
+          workFlowLimitExceeded={workFlowLimitExceeded}
+        />
       </div>
     </Modal>
   );

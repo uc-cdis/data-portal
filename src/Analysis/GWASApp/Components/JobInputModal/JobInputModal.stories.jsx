@@ -106,3 +106,22 @@ MockedSuccess.parameters = {
     ],
   },
 };
+
+export const MockedSuccessLimitExceeded = MockTemplate.bind({});
+MockedSuccessLimitExceeded.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          console.log(argowrapperpath);
+          return res(
+            ctx.delay(twoSecondsInMilliseconds / 2),
+            ctx.json({ workflow_run: 50, workflow_limit: 50 })
+          );
+        }
+      ),
+    ],
+  },
+};
