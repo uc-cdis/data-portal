@@ -1,10 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Modal, Input } from 'antd';
+import { QueryClient, QueryClientProvider } from 'react-query/';
 import JobInputModal from './JobInputModal';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import ValidState from '../../TestData/States/ValidState';
-import { QueryClient, QueryClientProvider } from 'react-query/';
+import { workflowLimitsInvalidDataMessage } from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 
 const open = true;
 const setOpen = () => null;
@@ -13,22 +14,6 @@ const handleEnterJobName = () => null;
 const mockHandleSubmit = jest.fn();
 const mockDispatch = jest.fn();
 
-// Mock the fetchMonthlyWorkflowLimitInfo function
-// and WorkflowLimitsUtils
-
-jest.mock(
-  '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils',
-  () => ({
-    fetchMonthlyWorkflowLimitInfo: jest.fn(),
-    workflowLimitInfoIsValid: () => true,
-  })
-);
-/*
-require('react-query').useQuery.mockReturnValue({
-  data: { workflow_limit: 10, workflow_run: 5 },
-  status: 'success',
-});
-*/
 const {
   covariates,
   imputationScore,
@@ -40,11 +25,17 @@ const {
   selectedStudyPopulationCohort,
 } = ValidState;
 
-describe('JobInputModal', () => {
-  jest.clearAllMocks();
-  const queryClient = new QueryClient();
+jest.mock(
+  '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils',
+  () => ({
+    fetchMonthlyWorkflowLimitInfo: jest.fn(),
+    workflowLimitInfoIsValid: () => true,
+  })
+);
 
-  let wrapper = mount(
+describe('JobInputModal outputs correct values', () => {
+  const queryClient = new QueryClient();
+  const wrapper = mount(
     <QueryClientProvider client={queryClient}>
       <JobInputModal
         open={open}

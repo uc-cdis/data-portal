@@ -19,14 +19,14 @@ const WorkflowLimitsModalErrorMessage = ({
     {status === 'success' && !workflowLimitInfoIsValid && (
       <div>{workflowLimitsInvalidDataMessage}</div>
     )}
-    {status === 'success' &&
-      workflowLimitInfoIsValid &&
-      workFlowLimitExceeded && (
-        <div className='long-message'>
+    {status === 'success'
+      && workflowLimitInfoIsValid
+      && workFlowLimitExceeded && (
+      <div className='long-message'>
           Workflow limit reached. Please contact support for assistance:{' '}
-          <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
-        </div>
-      )}
+        <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+      </div>
+    )}
   </div>
 );
 

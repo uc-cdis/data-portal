@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input } from 'antd';
-import ACTIONS from '../../Utils/StateManagement/Actions';
 import { useQuery } from 'react-query';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import {
   fetchMonthlyWorkflowLimitInfo,
   workflowLimitInfoIsValid,
@@ -29,15 +29,14 @@ const JobInputModal = ({
 }) => {
   const { data, status } = useQuery(
     ['monthly-workflow-limit-job-input-modal'],
-    fetchMonthlyWorkflowLimitInfo
+    fetchMonthlyWorkflowLimitInfo,
   );
   const workFlowLimitExceeded = data?.workflow_limit <= data?.workflow_run;
-  const IsButtonDisabled =
-    jobName === '' ||
-    status === 'loading' ||
-    status === 'error' ||
-    !workflowLimitInfoIsValid(data) ||
-    workFlowLimitExceeded;
+  const IsButtonDisabled = jobName === ''
+    || status === 'loading'
+    || status === 'error'
+    || !workflowLimitInfoIsValid(data)
+    || workFlowLimitExceeded;
 
   return (
     <Modal
@@ -56,11 +55,11 @@ const JobInputModal = ({
           payload: 3,
         });
       }}
-      title={
+      title={(
         <div className='flex-row'>
           <div>Review Details</div>
         </div>
-      }
+      )}
     >
       <Input
         className='gwas-job-name'
