@@ -4,6 +4,7 @@ import { Modal, Input } from 'antd';
 import JobInputModal from './JobInputModal';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import ValidState from '../../TestData/States/ValidState';
+import { QueryClient, QueryClientProvider } from 'react-query/';
 
 const open = true;
 const setOpen = () => null;
@@ -12,6 +13,22 @@ const handleEnterJobName = () => null;
 const mockHandleSubmit = jest.fn();
 const mockDispatch = jest.fn();
 
+// Mock the fetchMonthlyWorkflowLimitInfo function
+// and WorkflowLimitsUtils
+
+jest.mock(
+  '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils',
+  () => ({
+    fetchMonthlyWorkflowLimitInfo: jest.fn(),
+    workflowLimitInfoIsValid: () => true,
+  })
+);
+/*
+require('react-query').useQuery.mockReturnValue({
+  data: { workflow_limit: 10, workflow_run: 5 },
+  status: 'success',
+});
+*/
 const {
   covariates,
   imputationScore,
@@ -24,9 +41,11 @@ const {
 } = ValidState;
 
 describe('JobInputModal', () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = mount(
+  jest.clearAllMocks();
+  const queryClient = new QueryClient();
+
+  let wrapper = mount(
+    <QueryClientProvider client={queryClient}>
       <JobInputModal
         open={open}
         jobName={jobName}
@@ -42,9 +61,9 @@ describe('JobInputModal', () => {
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
-      />,
-    );
-  });
+      />
+    </QueryClientProvider>
+  );
 
   it('should render an AntD modal with an AntD input', () => {
     const modal = wrapper.find(Modal);
@@ -62,7 +81,7 @@ describe('JobInputModal', () => {
   it('should display correct hare ancestry string', () => {
     const hareAncestryContainer = wrapper.find('#modal-hare-ancestry');
     expect(hareAncestryContainer.text()).toMatch(
-      selectedHare.concept_value_name,
+      selectedHare.concept_value_name
     );
   });
   it('should display correct imputation score', () => {
@@ -72,13 +91,13 @@ describe('JobInputModal', () => {
   it('should display correct cohort', () => {
     const cohortContainer = wrapper.find('#modal-cohort');
     expect(cohortContainer.text()).toMatch(
-      selectedStudyPopulationCohort.cohort_name,
+      selectedStudyPopulationCohort.cohort_name
     );
   });
   it('should display correct outcome', () => {
     const outcomeContainer = wrapper.find('#modal-outcome');
     expect(outcomeContainer.text()).toMatch(
-      outcome?.concept_name ?? outcome?.provided_name,
+      outcome?.concept_name ?? outcome?.provided_name
     );
   });
   it('should display each population size', () => {
@@ -91,13 +110,13 @@ describe('JobInputModal', () => {
     const covariateContainer = wrapper.find('#modal-covariates');
     covariates.forEach((covariate) => {
       expect(covariateContainer.text()).toContain(
-        covariate?.concept_name ?? covariate.provided_name,
+        covariate?.concept_name ?? covariate.provided_name
       );
     });
   });
   it('calls the dispatch function with the correct action when the back button is clicked', () => {
     const backButton = wrapper.findWhere(
-      (node) => node.type() && node.name() && node.text() === 'Back',
+      (node) => node.type() && node.name() && node.text() === 'Back'
     );
     backButton.last().simulate('click');
     expect(mockDispatch).toHaveBeenCalledWith({
@@ -107,7 +126,7 @@ describe('JobInputModal', () => {
   });
   it('calls the handle submit function with no parameters when the submit button is clicked', () => {
     const backButton = wrapper.findWhere(
-      (node) => node.type() && node.name() && node.text() === 'Submit',
+      (node) => node.type() && node.name() && node.text() === 'Submit'
     );
     backButton.last().simulate('click');
     expect(mockHandleSubmit).toHaveBeenCalledWith();
