@@ -13,12 +13,14 @@ const twoSecondsInMilliseconds = 2000;
 const queryClient = new QueryClient();
 const MockTemplate = () => {
   const [open, setOpen] = useState(false);
-  const jobName = 'User Input Job Name 1234';
+  const [jobName, setJobName] = useState(false);
+  const handleEnterJobName = (e) => {
+    setJobName(e.target.value);
+  };
   const handleSubmit = () => {
     setOpen(false);
   };
   const dispatch = () => null;
-  const handleEnterJobName = () => null;
   const {
     covariates,
     imputationScore,

@@ -29,7 +29,7 @@ jest.mock(
   () => ({
     fetchMonthlyWorkflowLimitInfo: jest.fn(),
     workflowLimitInfoIsValid: () => true,
-  })
+  }),
 );
 
 describe('JobInputModal outputs correct values', () => {
@@ -52,7 +52,7 @@ describe('JobInputModal outputs correct values', () => {
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
       />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   it('should render an AntD modal with an AntD input', () => {
@@ -71,7 +71,7 @@ describe('JobInputModal outputs correct values', () => {
   it('should display correct hare ancestry string', () => {
     const hareAncestryContainer = wrapper.find('#modal-hare-ancestry');
     expect(hareAncestryContainer.text()).toMatch(
-      selectedHare.concept_value_name
+      selectedHare.concept_value_name,
     );
   });
   it('should display correct imputation score', () => {
@@ -81,13 +81,13 @@ describe('JobInputModal outputs correct values', () => {
   it('should display correct cohort', () => {
     const cohortContainer = wrapper.find('#modal-cohort');
     expect(cohortContainer.text()).toMatch(
-      selectedStudyPopulationCohort.cohort_name
+      selectedStudyPopulationCohort.cohort_name,
     );
   });
   it('should display correct outcome', () => {
     const outcomeContainer = wrapper.find('#modal-outcome');
     expect(outcomeContainer.text()).toMatch(
-      outcome?.concept_name ?? outcome?.provided_name
+      outcome?.concept_name ?? outcome?.provided_name,
     );
   });
   it('should display each population size', () => {
@@ -100,13 +100,13 @@ describe('JobInputModal outputs correct values', () => {
     const covariateContainer = wrapper.find('#modal-covariates');
     covariates.forEach((covariate) => {
       expect(covariateContainer.text()).toContain(
-        covariate?.concept_name ?? covariate.provided_name
+        covariate?.concept_name ?? covariate.provided_name,
       );
     });
   });
   it('calls the dispatch function with the correct action when the back button is clicked', () => {
     const backButton = wrapper.findWhere(
-      (node) => node.type() && node.name() && node.text() === 'Back'
+      (node) => node.type() && node.name() && node.text() === 'Back',
     );
     backButton.last().simulate('click');
     expect(mockDispatch).toHaveBeenCalledWith({
@@ -116,7 +116,7 @@ describe('JobInputModal outputs correct values', () => {
   });
   it('calls the handle submit function with no parameters when the submit button is clicked', () => {
     const backButton = wrapper.findWhere(
-      (node) => node.type() && node.name() && node.text() === 'Submit'
+      (node) => node.type() && node.name() && node.text() === 'Submit',
     );
     backButton.last().simulate('click');
     expect(mockHandleSubmit).toHaveBeenCalledWith();
