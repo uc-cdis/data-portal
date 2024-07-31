@@ -18,7 +18,7 @@ describe('WorkflowLimitsModalErrorMessage', () => {
   test('renders error message when status is "error"', () => {
     render(<WorkflowLimitsModalErrorMessage {...defaultProps} />);
     expect(
-      screen.getByText(workflowLimitsLoadingErrorMessage)
+      screen.getByText(workflowLimitsLoadingErrorMessage),
     ).toBeInTheDocument();
   });
 
@@ -28,10 +28,10 @@ describe('WorkflowLimitsModalErrorMessage', () => {
         {...defaultProps}
         status='success'
         workflowLimitInfoIsValid={false}
-      />
+      />,
     );
     expect(
-      screen.getByText(workflowLimitsInvalidDataMessage)
+      screen.getByText(workflowLimitsInvalidDataMessage),
     ).toBeInTheDocument();
   });
 
@@ -42,21 +42,21 @@ describe('WorkflowLimitsModalErrorMessage', () => {
       <WorkflowLimitsModalErrorMessage
         {...defaultProps}
         status='success'
-        workflowLimitInfoIsValid={true}
-        workFlowLimitExceeded={true}
-      />
+        workflowLimitInfoIsValid
+        workFlowLimitExceeded
+      />,
     );
 
     expect(
       await screen.findByText(
-        /Workflow limit reached\. Please contact support for assistance:/i
-      )
+        /Workflow limit reached\. Please contact support for assistance:/i,
+      ),
     ).toBeInTheDocument();
 
     expect(screen.getByText(supportEmail)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: supportEmail })).toHaveAttribute(
       'href',
-      `mailto:${supportEmail}`
+      `mailto:${supportEmail}`,
     );
   });
 
@@ -66,21 +66,21 @@ describe('WorkflowLimitsModalErrorMessage', () => {
       <WorkflowLimitsModalErrorMessage
         {...defaultProps}
         status='success'
-        workflowLimitInfoIsValid={true}
+        workflowLimitInfoIsValid
         workFlowLimitExceeded={false}
-      />
+      />,
     );
 
     expect(
-      screen.queryByText(workflowLimitsLoadingErrorMessage)
+      screen.queryByText(workflowLimitsLoadingErrorMessage),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText(workflowLimitsInvalidDataMessage)
+      screen.queryByText(workflowLimitsInvalidDataMessage),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByText(
-        'Workflow limit reached. Please contact support for assistance:'
-      )
+        'Workflow limit reached. Please contact support for assistance:',
+      ),
     ).not.toBeInTheDocument();
   });
 });

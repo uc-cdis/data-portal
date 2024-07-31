@@ -33,6 +33,7 @@ const WorkflowLimitsModalErrorMessage = ({
 WorkflowLimitsModalErrorMessage.propTypes = {
   status: PropTypes.string.isRequired,
   workflowLimitInfoIsValid: PropTypes.bool.isRequired,
+  workFlowLimitExceeded: PropTypes.bool.isRequired,
 };
 
 export default WorkflowLimitsModalErrorMessage;

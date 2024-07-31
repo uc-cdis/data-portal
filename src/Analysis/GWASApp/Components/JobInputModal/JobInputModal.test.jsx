@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from 'react-query/';
 import JobInputModal from './JobInputModal';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import ValidState from '../../TestData/States/ValidState';
-import { workflowLimitsInvalidDataMessage } from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 
 const open = true;
 const setOpen = () => null;
