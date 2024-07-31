@@ -13,7 +13,7 @@ const twoSecondsInMilliseconds = 2000;
 const queryClient = new QueryClient();
 const MockTemplate = () => {
   const [open, setOpen] = useState(false);
-  const [jobName, setJobName] = useState(false);
+  const [jobName, setJobName] = useState('');
   const handleEnterJobName = (e) => {
     setJobName(e.target.value);
   };
