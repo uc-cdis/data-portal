@@ -80,10 +80,11 @@ const slice = createSlice({
             },
             /** @type {'In Review'} */
             status: 'In Review',
-            submitted_at
+            submitted_at,
+            consortia: []
         };
 
-        state.projects.push(newProject);
+        state.projects = [newProject, ...state.projects];
     });
     builder.addCase(createProject.rejected, (state) => {  
         state.isCreatePending = false;
