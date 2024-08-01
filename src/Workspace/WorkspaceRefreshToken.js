@@ -16,11 +16,16 @@ export const initWorkspaceRefreshToken = (redirectLocation, connectedCallBack) =
       method: 'GET',
     })
       .then(
-        ({ status }) => {
-          if (status !== 200) {
+        (wtsResponse) => {
+          const { status } = wtsResponse;
+          if (status === 200) {
+            if (connectedCallBack) {
+              connectedCallBack();
+            }
+          } else if (status === 403) {
             window.location.href = `${wtsPath}/authorization_url?redirect=${redirectUrl}`;
-          } else if (connectedCallBack) {
-            connectedCallBack();
+          } else {
+            console.error(`Error when request to WTS ${wtsResponse}`);
           }
         },
       );
