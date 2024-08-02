@@ -43,7 +43,7 @@ export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   }
 };
 
-export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', numberOfStudies=5) => {
+export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', numberOfStudies = 10) => {
   try {
     let allStudies = [];
     // request up to LIMIT studies from MDS at a time.
