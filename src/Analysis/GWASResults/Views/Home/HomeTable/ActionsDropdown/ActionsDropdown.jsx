@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Space, Dropdown, Button, notification,
-} from 'antd';
+import { Space, Dropdown, Button, notification } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
+import { components } from '../../../../../../params';
+import {
+  fetchMonthlyWorkflowLimitInfo,
+  workflowLimitInfoIsValid,
+  workflowLimitsInvalidDataMessage,
+} from '../../../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 import {
   fetchPresignedUrlForWorkflowArtifact,
   retryWorkflow,
@@ -20,28 +24,79 @@ const ActionsDropdown = ({ record }) => {
     });
   };
 
-
-  const checkWorkflowLimit =()=> {
-    return true;
-  }
-  const checkThenRetryWorkflow =  () => {
-    const isUserUnderWorkflowLimit = checkWorkflowLimit();
-    if (isUserUnderWorkflowLimit) {
-      retryWorkflow(record.name, record.uid)
-      .then(() => {
-        openNotification('Workflow successfully restarted.');
-      })
-      .catch(() => {
-        openNotification('❌ Retry request failed.');
-      });
+  const supportEmail = components.login?.email || 'support@datacommons.io';
+  const checkWorkflowLimit = async () => {
+    try {
+      const data = await fetchMonthlyWorkflowLimitInfo(); // Await the function to get the JSON data
+      console.log('Received workflow data: ', data); // Log the received data
+      if (!workflowLimitInfoIsValid(data)) {
+        console.log('workflow limit info sent is invalid: ', data);
+        openNotification(
+          <>
+            <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
+            {workflowLimitsInvalidDataMessage}
+          </>
+        );
+        return false;
+      } else if (data['workflow_run'] >= data['workflow_limit']) {
+        console.log('HERE!!! HERE!! ');
+        openNotification(
+          <>
+            <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
+            limit reached. Please contact support for assistance:{' '}
+            <a href={supportEmail}>{supportEmail}</a>
+          </>
+        );
+        return false;
+      } else {
+        // workflow info is valid, return true to continue to Retry workflow
+        return true;
+      }
+    } catch (error) {
+      console.error('Error fetching workflow limit info: ', error); // Log errors if any
     }
-    else {
-      openNotification(<><h3 style={{color:'#2E77B8'}}>Monthly Workflow Limit</h3>Workflow limit reached. Please contact support for assistance: <a href='mailto:support@datacommons.io'>support@datacommons.io</a></>);
+    /*
+    const { data } = await fetchMonthlyWorkflowLimitInfo();
+    console.log('recieved workflow data: ', data);
+    if (!workflowLimitInfoIsValid(data)) {
+      openNotification(
+        <>
+          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
+          {workflowLimitsInvalidDataMessage}
+        </>
+      );
+      return false;
+    } else if (data.workflowRun >= data.workflowLimit) {
+      openNotification(
+        <>
+          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
+          limit reached. Please contact support for assistance:{' '}
+          <a href={supportEmail}>{supportEmail}</a>
+        </>
+      );
+      return false;
+    } else {
+      // workflow info is valid, return true to continue to Retry workflow
+      return true;
+    }
+      */
+  };
+
+  const checkWorkflowLimitThenRetryWorkflow = async () => {
+    const isUserUnderWorkflowLimit = await checkWorkflowLimit();
+    alert(isUserUnderWorkflowLimit);
+    if (isUserUnderWorkflowLimit === true) {
+      retryWorkflow(record.name, record.uid)
+        .then(() => {
+          openNotification('Workflow successfully restarted.');
+        })
+        .catch(() => {
+          openNotification('❌ Retry request failed.');
+        });
+    } else {
       return null;
     }
-
-  }
-
+  };
 
   const items = [
     {
@@ -54,7 +109,7 @@ const ActionsDropdown = ({ record }) => {
             fetchPresignedUrlForWorkflowArtifact(
               record.name,
               record.uid,
-              'gwas_archive_index',
+              'gwas_archive_index'
             )
               .then((res) => {
                 window.open(res, '_blank');
@@ -76,8 +131,8 @@ const ActionsDropdown = ({ record }) => {
           href=''
           onClick={(e) => {
             e.preventDefault();
-            checkThenRetryWorkflow(record.name, record.uid);
-/*             retryWorkflow(record.name, record.uid)
+            checkWorkflowLimitThenRetryWorkflow(record.name, record.uid);
+            /*             retryWorkflow(record.name, record.uid)
               .then(() => {
                 openNotification('Workflow successfully restarted.');
               })
