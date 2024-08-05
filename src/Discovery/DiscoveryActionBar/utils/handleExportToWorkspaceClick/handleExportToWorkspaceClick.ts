@@ -15,12 +15,6 @@ const handleExportToWorkspaceClick = async (
   location: any,
   healIDPLoginNeeded: boolean,
 ) => {
-  const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
-  if (enableExportFullMetadata) {
-    const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
-    assembleAndExportMetadata(keysToRemove as Array<string>, selectedResources);
-  }
-
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
@@ -46,6 +40,13 @@ const handleExportToWorkspaceClick = async (
   }
 
   setExportingToWorkspace(true);
+  // export metadata first, if enabled
+  const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
+  if (enableExportFullMetadata) {
+    const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
+    assembleAndExportMetadata(keysToRemove as Array<string>, selectedResources);
+  }
+
   // combine manifests from all selected studies
   const manifest: any = [];
   selectedResources.forEach((study) => {
@@ -74,16 +75,18 @@ const handleExportToWorkspaceClick = async (
     exportToWorkspaceRepositoryName: repositoryName,
   });
 
-  // post selected resources to manifestservice
-  const res = await fetchWithCreds({
-    path: `${manifestServiceApiPath}`,
-    body: JSON.stringify(manifest),
-    method: 'POST',
-  });
-  if (res.status !== 200) {
-    throw new Error(
-      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
-    );
+  // post exported manifest to manifestservice
+  if (manifest.length) {
+    const res = await fetchWithCreds({
+      path: `${manifestServiceApiPath}`,
+      body: JSON.stringify(manifest),
+      method: 'POST',
+    });
+    if (res.status !== 200) {
+      throw new Error(
+        `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
+      );
+    }
   }
   setExportingToWorkspace(false);
   // redirect to Workspaces page
