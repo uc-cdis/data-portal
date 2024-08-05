@@ -19,6 +19,30 @@ const ActionsDropdown = ({ record }) => {
       duration: 0,
     });
   };
+
+
+  const checkWorkflowLimit =()=> {
+    return true;
+  }
+  const checkThenRetryWorkflow =  () => {
+    const isUserUnderWorkflowLimit = checkWorkflowLimit();
+    if (isUserUnderWorkflowLimit) {
+      retryWorkflow(record.name, record.uid)
+      .then(() => {
+        openNotification('Workflow successfully restarted.');
+      })
+      .catch(() => {
+        openNotification('❌ Retry request failed.');
+      });
+    }
+    else {
+      openNotification(<><h3 style={{color:'#2E77B8'}}>Monthly Workflow Limit</h3>Workflow limit reached. Please contact support for assistance: <a href='mailto:support@datacommons.io'>support@datacommons.io</a></>);
+      return null;
+    }
+
+  }
+
+
   const items = [
     {
       key: '1',
@@ -52,13 +76,14 @@ const ActionsDropdown = ({ record }) => {
           href=''
           onClick={(e) => {
             e.preventDefault();
-            retryWorkflow(record.name, record.uid)
+            checkThenRetryWorkflow(record.name, record.uid);
+/*             retryWorkflow(record.name, record.uid)
               .then(() => {
                 openNotification('Workflow successfully restarted.');
               })
               .catch(() => {
                 openNotification('❌ Retry request failed.');
-              });
+              }); */
           }}
         >
           Retry
