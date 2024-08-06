@@ -48,11 +48,11 @@ let rowCount = 1;
 const getMockPhase = (requestCount) => {
   if (requestCount % 2 === 0) {
     return PHASES.Running;
-  } else if (requestCount % 5 === 0) {
+  } else if (requestCount % 3 === 0) {
     return PHASES.Error;
-  } else if (requestCount % 7 === 0) {
+  } else if (requestCount % 5 === 0) {
     return PHASES.Failed;
-  } else if (requestCount % 9 === 0) {
+  } else if (requestCount % 7 === 0) {
     return PHASES.Pending;
   } else {
     return PHASES.Succeeded;
@@ -166,8 +166,9 @@ MockedError.parameters = {
   },
 };
 
-export const MockedSuccessButExceededWorkflowLimit = MockTemplate.bind({});
-MockedSuccessButExceededWorkflowLimit.parameters = {
+export const MockedSuccessButExceededWorkflowLimitForRetries =
+  MockTemplate.bind({});
+MockedSuccessButExceededWorkflowLimitForRetries.parameters = {
   msw: {
     handlers: [
       rest.get(
@@ -187,6 +188,61 @@ MockedSuccessButExceededWorkflowLimit.parameters = {
             ctx.delay(1000),
             ctx.json({ workflow_run: 50, workflow_limit: 50 })
           );
+        }
+      ),
+    ],
+  },
+};
+
+export const MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries =
+  MockTemplate.bind({});
+MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          // console.log(argowrapperpath);
+          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          // console.log(argowrapperpath);
+          return res(
+            ctx.delay(3000),
+            ctx.json({
+              workflow_run: 'a string and an array?',
+              workflow_limit: [],
+            })
+          );
+        }
+      ),
+    ],
+  },
+};
+
+export const MockedSuccessButWorkflowLimitReturns500ForRetries =
+  MockTemplate.bind({});
+MockedSuccessButWorkflowLimitReturns500ForRetries.parameters = {
+  msw: {
+    handlers: [
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          // console.log(argowrapperpath);
+          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          return res(ctx.delay(3000), ctx.status(500), ctx.json('error'));
         }
       ),
     ],

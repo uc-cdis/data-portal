@@ -7,6 +7,7 @@ import {
   fetchMonthlyWorkflowLimitInfo,
   workflowLimitInfoIsValid,
   workflowLimitsInvalidDataMessage,
+  workflowLimitsLoadingErrorMessage,
 } from '../../../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 import {
   fetchPresignedUrlForWorkflowArtifact,
@@ -32,27 +33,33 @@ const ActionsDropdown = ({ record }) => {
       if (!workflowLimitInfoIsValid(data)) {
         console.log('workflow limit info sent is invalid: ', data);
         openNotification(
-          <>
+          <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
             {workflowLimitsInvalidDataMessage}
-          </>
+          </React.Fragment>
         );
         return false;
-      } else if (data['workflow_run'] >= data['workflow_limit']) {
+      }
+      if (data.workflow_run >= data.workflow_limit) {
         console.log('HERE!!! HERE!! ');
         openNotification(
-          <>
+          <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
             limit reached. Please contact support for assistance:{' '}
             <a href={supportEmail}>{supportEmail}</a>
-          </>
+          </React.Fragment>
         );
         return false;
-      } else {
-        // workflow info is valid, return true to continue to Retry workflow
-        return true;
       }
+      // workflow info is valid, return true to continue to Retry workflow
+      return true;
     } catch (error) {
+      openNotification(
+        <React.Fragment>
+          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
+          {workflowLimitsLoadingErrorMessage}
+        </React.Fragment>
+      );
       console.error('Error fetching workflow limit info: ', error); // Log errors if any
     }
     /*
