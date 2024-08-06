@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button, notification, Spin } from 'antd';
+import {
+  Space, Dropdown, Button, notification, Spin,
+} from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { components } from '../../../../../../params';
 import {
@@ -36,7 +38,7 @@ const ActionsDropdown = ({ record }) => {
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
             {workflowLimitsInvalidDataMessage}
           </React.Fragment>,
-          'retry'
+          'retry',
         );
         return false;
       }
@@ -47,7 +49,7 @@ const ActionsDropdown = ({ record }) => {
             limit reached. Please contact support for assistance:{' '}
             <a href={supportEmail}>{supportEmail}</a>
           </React.Fragment>,
-          'retry'
+          'retry',
         );
         return false;
       }
@@ -59,7 +61,7 @@ const ActionsDropdown = ({ record }) => {
           <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
           {workflowLimitsLoadingErrorMessage}
         </React.Fragment>,
-        'retry'
+        'retry',
       );
       console.error('Error fetching workflow limit info: ', error);
     }
@@ -92,7 +94,7 @@ const ActionsDropdown = ({ record }) => {
             fetchPresignedUrlForWorkflowArtifact(
               record.name,
               record.uid,
-              'gwas_archive_index'
+              'gwas_archive_index',
             )
               .then((res) => {
                 window.open(res, '_blank');
@@ -100,7 +102,7 @@ const ActionsDropdown = ({ record }) => {
               .catch((error) => {
                 displayNotification(
                   `❌ Could not download. \n\n${error}`,
-                  'download'
+                  'download',
                 );
               });
           }}

@@ -48,11 +48,11 @@ let rowCount = 1;
 const getMockPhase = (requestCount) => {
   if (requestCount % 2 === 0) {
     return PHASES.Running;
-  } else if (requestCount % 3 === 0) {
-    return PHASES.Error;
   } else if (requestCount % 5 === 0) {
-    return PHASES.Failed;
+    return PHASES.Error;
   } else if (requestCount % 7 === 0) {
+    return PHASES.Failed;
+  } else if (requestCount % 9 === 0) {
     return PHASES.Pending;
   } else {
     return PHASES.Succeeded;
@@ -89,7 +89,6 @@ const getMockWorkflowList = () => {
     workflowList[1].phase = PHASES.Succeeded;
     workflowList[2].phase = PHASES.Failed;
   }
-  // console.log('workflowList: ', workflowList);
   return workflowList;
 };
 
@@ -154,8 +153,6 @@ MockedSuccessButFailedRetry.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
         (req, res, ctx) => {
           const { argowrapperpath, workflow } = req.params;
-          // console.log(argowrapperpath);
-          // console.log(workflow);
           return res(
             ctx.delay(800),
             ctx.status(500),
@@ -192,7 +189,6 @@ MockedSuccessButExceededWorkflowLimitForRetries.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
         }
       ),
@@ -200,7 +196,6 @@ MockedSuccessButExceededWorkflowLimitForRetries.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(
             ctx.delay(1000),
             ctx.json({ workflow_run: 50, workflow_limit: 50 })
@@ -228,7 +223,6 @@ MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(
             ctx.delay(3000),
             ctx.json({

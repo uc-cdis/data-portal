@@ -6,7 +6,6 @@ import PHASES from '../../../../Utils/PhasesEnumeration';
 import * as WorkflowUtils from '../../../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 import * as gwasWorkflowApi from '../../../../Utils/gwasWorkflowApi';
 
-// Mock the imported functions and components
 jest.mock(
   '../../../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils',
   () => ({
@@ -36,7 +35,11 @@ const mockRecord = {
 };
 
 describe('ActionsDropdown', () => {
-  /*
+  beforeEach(() => {
+    // Mock console.error to suppress error messages
+    console.error = jest.fn();
+  });
+
   it('should open the dropdown menu when the button is clicked and Retry option should be disabled for the Phase "running"', () => {
     const record = { phase: PHASES.Running };
     const { getByRole, getByText } = render(
@@ -99,15 +102,14 @@ describe('ActionsDropdown', () => {
     );
   });
 
-  */
-  // NEW TESTS
+  // Tests for Retry Event
 
-  /*
   it('handles the Retry click event correctly when workflow limit is valid', async () => {
     mockFetchMonthlyWorkflowLimitInfo.mockResolvedValue({
       workflow_run: 0,
       workflow_limit: 50,
     });
+
     mockWorkflowLimitInfoIsValid.mockReturnValue(true);
     mockRetryWorkflow.mockResolvedValue();
 
@@ -133,7 +135,6 @@ describe('ActionsDropdown', () => {
     });
   });
 
-
   it('displays error notification when workflow limit fetch fails', async () => {
     mockFetchMonthlyWorkflowLimitInfo.mockRejectedValue(
       new Error('Fetch error')
@@ -156,7 +157,6 @@ describe('ActionsDropdown', () => {
     });
   });
 
-   */
   it('displays error notification when retry workflow fails', async () => {
     mockFetchMonthlyWorkflowLimitInfo.mockResolvedValue({
       workflow_run: 0,
