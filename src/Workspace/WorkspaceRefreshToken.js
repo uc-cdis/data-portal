@@ -25,7 +25,7 @@ export const initWorkspaceRefreshToken = (redirectLocation, connectedCallBack) =
           } else if (status === 403) {
             window.location.href = `${wtsPath}/authorization_url?redirect=${redirectUrl}`;
           } else {
-            console.error(`Error when request to WTS ${wtsResponse}`);
+            console.error(`Error with the request to WTS ${wtsResponse}`);
           }
         },
       );
