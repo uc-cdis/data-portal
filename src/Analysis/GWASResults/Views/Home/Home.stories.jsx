@@ -77,7 +77,7 @@ const getMockWorkflowList = () => {
         .toString(36)
         .substr(2, 5)}@aol.com`,
       wf_name: 'User Added WF Name ' + requestCount,
-      uid: 'uid-' + requestCount,
+      uid: 'uid-' + requestCount + Math.random(),
       phase: getMockPhase(requestCount / 2),
       finishedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
       submittedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
@@ -101,16 +101,24 @@ MockedSuccess.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          return res(
+            ctx.delay(1000),
+            ctx.json({ workflow_run: 5, workflow_limit: 50 })
+          );
         }
       ),
       rest.post(
         'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
         (req, res, ctx) => {
           const { argowrapperpath, workflow } = req.params;
-          // console.log(argowrapperpath);
-          // console.log(workflow);
+          console.log('workflow', workflow);
           return res(
             ctx.delay(800),
             ctx.text(`${workflow} retried sucessfully`)
@@ -129,8 +137,17 @@ MockedSuccessButFailedRetry.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        }
+      ),
+      rest.get(
+        'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
+        (req, res, ctx) => {
+          const { argowrapperpath } = req.params;
+          return res(
+            ctx.delay(1000),
+            ctx.json({ workflow_run: 5, workflow_limit: 50 })
+          );
         }
       ),
       rest.post(

@@ -19,7 +19,7 @@ const ActionsDropdown = ({ record }) => {
   const [api, contextHolder] = notification.useNotification();
   const displayNotification = (notificationMessage, key) => {
     api.open({
-      key: key,
+      key,
       message: notificationMessage,
       description: '',
       duration: 0,
@@ -39,7 +39,8 @@ const ActionsDropdown = ({ record }) => {
           'retry'
         );
         return false;
-      } else if (data.workflow_run >= data.workflow_limit) {
+      }
+      if (data.workflow_run >= data.workflow_limit) {
         displayNotification(
           <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
@@ -71,7 +72,8 @@ const ActionsDropdown = ({ record }) => {
         .then(() => {
           displayNotification('Workflow successfully restarted.', 'retry');
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error(error);
           displayNotification('❌ Retry request failed.', 'retry');
         });
     } else {
