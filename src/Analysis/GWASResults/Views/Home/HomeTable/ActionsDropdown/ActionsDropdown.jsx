@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Dropdown, Button, notification } from 'antd';
+import { Space, Dropdown, Button, notification, Spin } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { components } from '../../../../../../params';
 import {
@@ -17,8 +17,9 @@ import PHASES from '../../../../Utils/PhasesEnumeration';
 
 const ActionsDropdown = ({ record }) => {
   const [api, contextHolder] = notification.useNotification();
-  const openNotification = (notificationMessage) => {
+  const displayNotification = (notificationMessage, key) => {
     api.open({
+      key: key,
       message: notificationMessage,
       description: '',
       duration: 0,
@@ -29,76 +30,49 @@ const ActionsDropdown = ({ record }) => {
   const checkWorkflowLimit = async () => {
     try {
       const data = await fetchMonthlyWorkflowLimitInfo(); // Await the function to get the JSON data
-      console.log('Received workflow data: ', data); // Log the received data
       if (!workflowLimitInfoIsValid(data)) {
-        console.log('workflow limit info sent is invalid: ', data);
-        openNotification(
+        displayNotification(
           <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
             {workflowLimitsInvalidDataMessage}
-          </React.Fragment>
+          </React.Fragment>,
+          'retry'
         );
         return false;
-      }
-      if (data.workflow_run >= data.workflow_limit) {
-        console.log('HERE!!! HERE!! ');
-        openNotification(
+      } else if (data.workflow_run >= data.workflow_limit) {
+        displayNotification(
           <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
             limit reached. Please contact support for assistance:{' '}
             <a href={supportEmail}>{supportEmail}</a>
-          </React.Fragment>
+          </React.Fragment>,
+          'retry'
         );
         return false;
       }
       // workflow info is valid, return true to continue to Retry workflow
       return true;
     } catch (error) {
-      openNotification(
+      displayNotification(
         <React.Fragment>
           <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
           {workflowLimitsLoadingErrorMessage}
-        </React.Fragment>
+        </React.Fragment>,
+        'retry'
       );
-      console.error('Error fetching workflow limit info: ', error); // Log errors if any
+      console.error('Error fetching workflow limit info: ', error);
     }
-    /*
-    const { data } = await fetchMonthlyWorkflowLimitInfo();
-    console.log('recieved workflow data: ', data);
-    if (!workflowLimitInfoIsValid(data)) {
-      openNotification(
-        <>
-          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
-          {workflowLimitsInvalidDataMessage}
-        </>
-      );
-      return false;
-    } else if (data.workflowRun >= data.workflowLimit) {
-      openNotification(
-        <>
-          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
-          limit reached. Please contact support for assistance:{' '}
-          <a href={supportEmail}>{supportEmail}</a>
-        </>
-      );
-      return false;
-    } else {
-      // workflow info is valid, return true to continue to Retry workflow
-      return true;
-    }
-      */
   };
 
   const checkWorkflowLimitThenRetryWorkflow = async () => {
     const isUserUnderWorkflowLimit = await checkWorkflowLimit();
-    alert(isUserUnderWorkflowLimit);
     if (isUserUnderWorkflowLimit === true) {
       retryWorkflow(record.name, record.uid)
         .then(() => {
-          openNotification('Workflow successfully restarted.');
+          displayNotification('Workflow successfully restarted.', 'retry');
         })
         .catch(() => {
-          openNotification('❌ Retry request failed.');
+          displayNotification('❌ Retry request failed.', 'retry');
         });
     } else {
       return null;
@@ -122,7 +96,10 @@ const ActionsDropdown = ({ record }) => {
                 window.open(res, '_blank');
               })
               .catch((error) => {
-                openNotification(`❌ Could not download. \n\n${error}`);
+                displayNotification(
+                  `❌ Could not download. \n\n${error}`,
+                  'download'
+                );
               });
           }}
         >
@@ -138,14 +115,8 @@ const ActionsDropdown = ({ record }) => {
           href=''
           onClick={(e) => {
             e.preventDefault();
+            displayNotification(<Spin />, 'retry');
             checkWorkflowLimitThenRetryWorkflow(record.name, record.uid);
-            /*             retryWorkflow(record.name, record.uid)
-              .then(() => {
-                openNotification('Workflow successfully restarted.');
-              })
-              .catch(() => {
-                openNotification('❌ Retry request failed.');
-              }); */
           }}
         >
           Retry
