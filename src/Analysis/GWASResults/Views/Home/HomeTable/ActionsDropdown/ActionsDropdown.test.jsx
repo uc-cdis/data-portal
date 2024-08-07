@@ -13,7 +13,7 @@ jest.mock(
     workflowLimitInfoIsValid: jest.fn(),
     workflowLimitsInvalidDataMessage: 'Invalid data message',
     workflowLimitsLoadingErrorMessage: 'Loading error message',
-  }),
+  })
 );
 
 jest.mock('../../../../Utils/gwasWorkflowApi', () => ({
@@ -21,7 +21,8 @@ jest.mock('../../../../Utils/gwasWorkflowApi', () => ({
   retryWorkflow: jest.fn(),
 }));
 
-const mockFetchMonthlyWorkflowLimitInfo = WorkflowUtils.fetchMonthlyWorkflowLimitInfo;
+const mockFetchMonthlyWorkflowLimitInfo =
+  WorkflowUtils.fetchMonthlyWorkflowLimitInfo;
 const mockWorkflowLimitInfoIsValid = WorkflowUtils.workflowLimitInfoIsValid;
 const mockRetryWorkflow = gwasWorkflowApi.retryWorkflow;
 
@@ -40,7 +41,7 @@ describe('ActionsDropdown', () => {
   it('should open the dropdown menu when the button is clicked and Retry option should be disabled for the Phase "running"', () => {
     const record = { phase: PHASES.Running };
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={record} />,
+      <ActionsDropdown record={record} />
     );
     const dropdownButton = getByRole('button');
     waitFor(() => {
@@ -49,13 +50,13 @@ describe('ActionsDropdown', () => {
     expect(getByText('Download')).toBeInTheDocument();
     expect(getByText('Retry')).toBeInTheDocument();
     expect(getByText('Retry').parentElement.parentElement).toHaveClass(
-      'ant-dropdown-menu-item-disabled',
+      'ant-dropdown-menu-item-disabled'
     );
   });
   it('should open the dropdown menu when the button is clicked and Retry option should be enabled for the Phase "failed"', () => {
     const record = { phase: PHASES.Failed };
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={record} />,
+      <ActionsDropdown record={record} />
     );
     const dropdownButton = getByRole('button');
     waitFor(() => {
@@ -64,14 +65,14 @@ describe('ActionsDropdown', () => {
     expect(getByText('Download')).toBeInTheDocument();
     expect(getByText('Retry')).toBeInTheDocument();
     expect(getByText('Retry').parentElement.parentElement).not.toHaveClass(
-      'ant-dropdown-menu-item-disabled',
+      'ant-dropdown-menu-item-disabled'
     );
   });
 
   it('should disabled Download option for the Phase "failed"', () => {
     const record = { phase: PHASES.Failed };
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={record} />,
+      <ActionsDropdown record={record} />
     );
     const dropdownButton = getByRole('button');
     waitFor(() => {
@@ -80,13 +81,13 @@ describe('ActionsDropdown', () => {
     expect(getByText('Download')).toBeInTheDocument();
     expect(getByText('Retry')).toBeInTheDocument();
     expect(getByText('Download').parentElement.parentElement).toHaveClass(
-      'ant-dropdown-menu-item-disabled',
+      'ant-dropdown-menu-item-disabled'
     );
   });
   it('should enabled Download option for the Phase "Succeeded"', () => {
     const record = { phase: PHASES.Succeeded };
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={record} />,
+      <ActionsDropdown record={record} />
     );
     const dropdownButton = getByRole('button');
     waitFor(() => {
@@ -95,7 +96,7 @@ describe('ActionsDropdown', () => {
     expect(getByText('Download')).toBeInTheDocument();
     expect(getByText('Retry')).toBeInTheDocument();
     expect(getByText('Download').parentElement.parentElement).not.toHaveClass(
-      'ant-dropdown-menu-item-disabled',
+      'ant-dropdown-menu-item-disabled'
     );
   });
 
@@ -111,7 +112,7 @@ describe('ActionsDropdown', () => {
     mockRetryWorkflow.mockResolvedValue();
 
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={mockRecord} />,
+      <ActionsDropdown record={mockRecord} />
     );
 
     const dropdownButton = getByRole('button');
@@ -127,18 +128,18 @@ describe('ActionsDropdown', () => {
       expect(mockFetchMonthlyWorkflowLimitInfo).toHaveBeenCalled();
       expect(mockRetryWorkflow).toHaveBeenCalledWith(
         mockRecord.name,
-        mockRecord.uid,
+        mockRecord.uid
       );
     });
   });
 
   it('displays error notification when workflow limit fetch fails', async () => {
     mockFetchMonthlyWorkflowLimitInfo.mockRejectedValue(
-      new Error('Fetch error'),
+      new Error('Fetch error')
     );
 
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={mockRecord} />,
+      <ActionsDropdown record={mockRecord} />
     );
 
     const dropdownButton = getByRole('button');
@@ -163,11 +164,13 @@ describe('ActionsDropdown', () => {
     mockRetryWorkflow.mockRejectedValue(new Error('Retry error'));
 
     const { getByRole, getByText } = render(
-      <ActionsDropdown record={mockRecord} />,
+      <ActionsDropdown record={mockRecord} />
     );
 
-    const dropdownButton = getByRole('button', { name: /ellipsis/i });
-    fireEvent.click(dropdownButton);
+    const dropdownButton = getByRole('button');
+    waitFor(() => {
+      fireEvent.click(dropdownButton);
+    });
 
     const retryLink = getByText(/Retry/i);
     fireEvent.click(retryLink);

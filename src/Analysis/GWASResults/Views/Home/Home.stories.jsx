@@ -117,7 +117,6 @@ MockedSuccess.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
         (req, res, ctx) => {
           const { argowrapperpath, workflow } = req.params;
-          console.log('workflow', workflow);
           return res(
             ctx.delay(800),
             ctx.text(`${workflow} retried sucessfully`)
@@ -215,7 +214,6 @@ MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
         }
       ),
@@ -245,7 +243,6 @@ MockedSuccessButWorkflowLimitReturns500ForRetries.parameters = {
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
-          // console.log(argowrapperpath);
           return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
         }
       ),
