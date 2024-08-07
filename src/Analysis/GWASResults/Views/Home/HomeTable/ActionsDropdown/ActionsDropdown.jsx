@@ -31,7 +31,7 @@ const ActionsDropdown = ({ record }) => {
   const supportEmail = components.login?.email || 'support@datacommons.io';
   const checkWorkflowLimit = async () => {
     try {
-      const data = await fetchMonthlyWorkflowLimitInfo(); // Await the function to get the JSON data
+      const data = await fetchMonthlyWorkflowLimitInfo();
       if (!workflowLimitInfoIsValid(data)) {
         displayNotification(
           <React.Fragment>
@@ -41,8 +41,7 @@ const ActionsDropdown = ({ record }) => {
           'retry',
         );
         return false;
-      }
-      if (data.workflow_run >= data.workflow_limit) {
+      } if (data.workflow_run >= data.workflow_limit) {
         displayNotification(
           <React.Fragment>
             <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
@@ -65,6 +64,7 @@ const ActionsDropdown = ({ record }) => {
       );
       console.error('Error fetching workflow limit info: ', error);
     }
+    return false;
   };
 
   const checkWorkflowLimitThenRetryWorkflow = async () => {
@@ -78,9 +78,8 @@ const ActionsDropdown = ({ record }) => {
           console.error(error);
           displayNotification('❌ Retry request failed.', 'retry');
         });
-    } else {
-      return null;
     }
+    return null;
   };
 
   const items = [
