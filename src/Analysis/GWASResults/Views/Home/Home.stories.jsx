@@ -77,7 +77,7 @@ const getMockWorkflowList = () => {
         .toString(36)
         .substr(2, 5)}@aol.com`,
       wf_name: 'User Added WF Name ' + requestCount,
-      uid: 'uid-' + requestCount + Math.random(),
+      uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount / 2),
       finishedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
       submittedAt: new Date(new Date() - Math.random() * 1e12).toISOString(),
