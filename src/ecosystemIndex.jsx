@@ -583,6 +583,12 @@ async function init() {
                     path='/not-found'
                     component={NotFound}
                   />
+                  {userAccessToSite?.enabled && (
+                    <Route
+                      path={userAccessToSite.deniedPageURL || '/access-denied'}
+                      component={AccessDenied}
+                    />
+                  )}
                   <Route
                     exact
                     path={Error403Url}

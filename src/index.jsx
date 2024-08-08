@@ -13,7 +13,7 @@ import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchAndSetCsrfToken } from './configs';
+import { fetchAndSetCsrfToken, userAccessToSite } from './configs';
 import {
   fetchDictionary,
   fetchSchema,
@@ -64,6 +64,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
+import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
 import GenericAccessRequestForm from './GenericAccessRequestForm/GenericAccessRequestForm';
 
@@ -509,6 +510,12 @@ async function init() {
                     path='/not-found'
                     component={NotFound}
                   />
+                  {userAccessToSite?.enabled && (
+                    <Route
+                      path={userAccessToSite.deniedPageURL || '/access-denied'}
+                      component={AccessDenied}
+                    />
+                  )}
                   <Route
                     path={Error403Url}
                     component={ErrorPage403}
