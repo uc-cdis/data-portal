@@ -718,7 +718,7 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
-  "userAccessToSite": { // optional: user must have access to a resorces to acess the site
+  "userAccessToSite": { // optional: user must have access to a resorces to acess the site, including public pages
     "enabled": true,// optional: enable ristricted access
     "noAccessMessage": "Access to this site requires special permission.",// optional: defaults to this value, first email addresses will be turned into mailto link if used
     "deniedPageURL": "/access-denied",//optional: defaults to this value
