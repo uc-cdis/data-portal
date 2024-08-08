@@ -5,16 +5,15 @@ interface DiscoveryLoadingProps {
   allBatchesAreLoaded: boolean;
 }
 
-const DiscoveryLoadingProgress = ({
+const DiscoveryLoadingProgressMini = ({
   allBatchesAreLoaded,
 }: DiscoveryLoadingProps) => {
-  const showBigProgress = window.location.toString().includes('showBig');
   const [percent, setPercent] = useState(0);
 
   useEffect(() => {
     if (percent >= 96) return;
     const interval = setInterval(() => {
-      setPercent((prevPercent) => Math.min(prevPercent + 10, 96));
+      setPercent((prevPercent) => Math.min(prevPercent + 5, 90));
     }, 500);
 
     return () => clearInterval(interval);
@@ -22,26 +21,24 @@ const DiscoveryLoadingProgress = ({
 
   const progressContainerStyle = {
     textAlign: 'center',
-    width: '600px',
-    margin: '40px auto 10px',
-    transition: allBatchesAreLoaded ? 'visibility 2s, height  3s' : null,
-    height: allBatchesAreLoaded ? '0' : '80px',
+    marginBottom: '5px',
+    transition: allBatchesAreLoaded ? 'visibility 1s, height 1s' : null,
+    height: allBatchesAreLoaded ? '0' : '30px',
     visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
     pointerEvents: allBatchesAreLoaded ? 'none' : 'auto', // Optional: Prevents interaction with the hidden element
   };
 
-  if (!showBigProgress) return <></>;
   return (
     <div style={progressContainerStyle}>
-      <b
-        style={{ lineHeight: 'normal' }}
+      <Progress width={80} showInfo={false} percent={percent} status='active' />
+      <p
+        style={{ lineHeight: 'normal', textTransform: 'inherit' }}
         className='discovery-header__stat-label'
       >
         Loading all studies...
-      </b>
-      <Progress percent={percent} showInfo={false} status='active' />
+      </p>
     </div>
   );
 };
 
-export default DiscoveryLoadingProgress;
+export default DiscoveryLoadingProgressMini;
