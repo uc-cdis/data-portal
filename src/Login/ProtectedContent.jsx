@@ -86,8 +86,8 @@ class ProtectedContent extends React.Component {
             },
           ),
       );
-    // if userAccessToSite is enabled do not load homepage until access is checked
-    if (this.props.public && !(this.props.match.path === '/' && userAccessToSite?.enabled)) {
+    // if userAccessToSite is enabled do not load until access is checked, expetion login page
+    if (this.props.public && !(this.props.match.path !== '/login' && userAccessToSite?.enabled)) {
       getReduxStore()
         .then(
           (store) => {
