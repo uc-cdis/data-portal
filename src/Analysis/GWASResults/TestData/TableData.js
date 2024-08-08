@@ -26,7 +26,7 @@ const TableData = [
     gen3username: 'jakedoe@aol.com',
     startedAt: '2023-02-16T10:00:00Z',
     finishedAt: '2023-02-16T10:00:00Z',
-    phase: 'Succeeded',
+    phase: 'Failed',
     submittedAt: '2023-02-16T10:30:00Z',
   },
 ];

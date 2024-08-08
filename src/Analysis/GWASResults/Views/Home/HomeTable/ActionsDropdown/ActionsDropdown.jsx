@@ -1,9 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Space, Dropdown, Button, notification,
+  Space, Dropdown, Button, notification, Spin,
 } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
+import { components } from '../../../../../../params';
+import {
+  fetchMonthlyWorkflowLimitInfo,
+  workflowLimitInfoIsValid,
+  workflowLimitsInvalidDataMessage,
+  workflowLimitsLoadingErrorMessage,
+} from '../../../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 import {
   fetchPresignedUrlForWorkflowArtifact,
   retryWorkflow,
@@ -12,13 +19,73 @@ import PHASES from '../../../../Utils/PhasesEnumeration';
 
 const ActionsDropdown = ({ record }) => {
   const [api, contextHolder] = notification.useNotification();
-  const openNotification = (notificationMessage) => {
+
+  // Updates notifaction if already open and the key matches
+  // otherwise opens a new notification
+  const openOrUpdateNotification = (notificationMessage, key) => {
     api.open({
+      key,
       message: notificationMessage,
       description: '',
       duration: 0,
     });
   };
+
+  const supportEmail = components.login?.email || 'support@datacommons.io';
+  const checkWorkflowLimit = async () => {
+    try {
+      const data = await fetchMonthlyWorkflowLimitInfo();
+      if (!workflowLimitInfoIsValid(data)) {
+        openOrUpdateNotification(
+          <React.Fragment>
+            <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
+            {workflowLimitsInvalidDataMessage}
+          </React.Fragment>,
+          'retry',
+        );
+        return false;
+      }
+      if (data.workflow_run >= data.workflow_limit) {
+        openOrUpdateNotification(
+          <React.Fragment>
+            <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>Workflow
+            limit reached. Please contact support for assistance:{' '}
+            <a href={supportEmail}>{supportEmail}</a>
+          </React.Fragment>,
+          'retry',
+        );
+        return false;
+      }
+      // workflow info is valid, return true to continue to Retry workflow
+      return true;
+    } catch (error) {
+      openOrUpdateNotification(
+        <React.Fragment>
+          <h3 style={{ color: '#2E77B8' }}>Monthly Workflow Limit</h3>
+          {workflowLimitsLoadingErrorMessage}
+        </React.Fragment>,
+        'retry',
+      );
+      console.error('Error fetching workflow limit info: ', error);
+    }
+    return false;
+  };
+
+  const checkWorkflowLimitThenRetryWorkflow = async () => {
+    const isUserUnderWorkflowLimit = await checkWorkflowLimit();
+    if (isUserUnderWorkflowLimit === true) {
+      retryWorkflow(record.name, record.uid)
+        .then(() => {
+          openOrUpdateNotification('Workflow successfully restarted.', 'retry');
+        })
+        .catch((error) => {
+          console.error(error);
+          openOrUpdateNotification('❌ Retry request failed.', 'retry');
+        });
+    }
+    return null;
+  };
+
   const items = [
     {
       key: '1',
@@ -36,7 +103,10 @@ const ActionsDropdown = ({ record }) => {
                 window.open(res, '_blank');
               })
               .catch((error) => {
-                openNotification(`❌ Could not download. \n\n${error}`);
+                openOrUpdateNotification(
+                  `❌ Could not download. \n\n${error}`,
+                  'download',
+                );
               });
           }}
         >
@@ -52,13 +122,8 @@ const ActionsDropdown = ({ record }) => {
           href=''
           onClick={(e) => {
             e.preventDefault();
-            retryWorkflow(record.name, record.uid)
-              .then(() => {
-                openNotification('Workflow successfully restarted.');
-              })
-              .catch(() => {
-                openNotification('❌ Retry request failed.');
-              });
+            openOrUpdateNotification(<Spin />, 'retry');
+            checkWorkflowLimitThenRetryWorkflow(record.name, record.uid);
           }}
         >
           Retry
