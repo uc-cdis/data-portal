@@ -215,23 +215,18 @@ const DiscoveryWithMDSBackend: React.FC<{
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }
+  const allBatchesAreLoaded = studies === null
+    ? false
+    : studies?.length > numberOfStudiesForSmallerBatch * 2;
   return (
     <React.Fragment>
       <DiscoveryLoadingProgress
-        allBatchesAreLoaded={
-          studies === null
-            ? false
-            : studies?.length > numberOfStudiesForSmallerBatch * 2
-        }
+        allBatchesAreLoaded={ allBatchesAreLoaded }
       />
       <Discovery
         studies={studies === null ? [] : studies}
         studyRegistrationValidationField={studyRegistrationValidationField}
-        allBatchesAreLoaded={
-          studies === null
-            ? false
-            : studies?.length > numberOfStudiesForSmallerBatch * 2
-        }
+        allBatchesAreLoaded={ allBatchesAreLoaded }
         {...props}
       />
     </React.Fragment>
