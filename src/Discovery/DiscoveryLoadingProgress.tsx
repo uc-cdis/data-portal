@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Progress } from 'antd';
 
 interface DiscoveryLoadingProps {
-  allBatchesAreLoaded: boolean;
+  batchLoadingInfo: {allBatchesAreLoaded:boolean; isBatchLoadingEnabled: boolean;}
 }
 
 const DiscoveryLoadingProgress = ({
-  allBatchesAreLoaded,
+  batchLoadingInfo
 }: DiscoveryLoadingProps) => {
+  const { allBatchesAreLoaded, isBatchLoadingEnabled } = batchLoadingInfo;
   const showBigProgress = window.location.toString().includes('showBig');
   const [percent, setPercent] = useState(0);
 
@@ -20,18 +21,18 @@ const DiscoveryLoadingProgress = ({
     return () => clearInterval(interval);
   }, [percent]);
 
+  // hide the bar with a transition delay after the batches are loaded,
+  // giving the browser some time to process the batch
   const progressContainerStyle = {
     textAlign: 'left',
     width: '50%',
     margin: '0px 0 0  40px',
-    transition: allBatchesAreLoaded ? 'visibility 1s, height  1s' : null,
+    transition: allBatchesAreLoaded ? `visibility 1s, height  1s` : null,
     height: allBatchesAreLoaded ? '0' : '40px',
     visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
-    pointerEvents: allBatchesAreLoaded ? 'none' : 'auto', // Optional: Prevents interaction with the hidden element
   };
 
-  // className='discovery-header__stat-label'
-  if (!showBigProgress) return <></>;
+  if (!showBigProgress || !isBatchLoadingEnabled) return <></>;
   return (
     <div style={progressContainerStyle}>
       <Progress percent={percent} showInfo={false} status='success' />

@@ -56,7 +56,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
-  allBatchesAreLoaded: boolean;
+  batchLoadingInfo: object;
 }
 
 // for demonstration purposes for determining desired UI:
@@ -79,7 +79,7 @@ const DiscoverySummary = (props: Props) => (
             </div>
             {showMiniProgress === true && (
               <DiscoveryLoadingProgressMini
-                allBatchesAreLoaded={props.allBatchesAreLoaded}
+                batchLoadingInfo={props.batchLoadingInfo}
               />
             )}
           </div>

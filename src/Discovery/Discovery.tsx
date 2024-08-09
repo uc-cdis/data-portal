@@ -215,7 +215,7 @@ export interface Props {
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
   onResourcesSelected: (resources: DiscoveryResource[]) => any,
   onPaginationSet: (pagination: { currentPage: number, resultsPerPage: number }) => any,
-  allBatchesAreLoaded: boolean,
+  batchLoadingInfo: object,
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -657,7 +657,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       {/* Header with stats */}
       <div className='discovery-header'>
         <DiscoverySummary
-          allBatchesAreLoaded={props.allBatchesAreLoaded}
+          batchLoadingInfo={props.batchLoadingInfo}
           visibleResources={visibleResources}
           config={config}
         />
