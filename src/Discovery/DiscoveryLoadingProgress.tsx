@@ -21,25 +21,21 @@ const DiscoveryLoadingProgress = ({
   }, [percent]);
 
   const progressContainerStyle = {
-    textAlign: 'center',
-    width: '600px',
-    margin: '40px auto 10px',
-    transition: allBatchesAreLoaded ? 'visibility 2s, height  3s' : null,
-    height: allBatchesAreLoaded ? '0' : '80px',
+    textAlign: 'left',
+    width: '50%',
+    margin: '0px 0 0  40px',
+    transition: allBatchesAreLoaded ? 'visibility 1s, height  1s' : null,
+    height: allBatchesAreLoaded ? '0' : '40px',
     visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
     pointerEvents: allBatchesAreLoaded ? 'none' : 'auto', // Optional: Prevents interaction with the hidden element
   };
 
+  // className='discovery-header__stat-label'
   if (!showBigProgress) return <></>;
   return (
     <div style={progressContainerStyle}>
-      <b
-        style={{ lineHeight: 'normal' }}
-        className='discovery-header__stat-label'
-      >
-        Loading all studies...
-      </b>
-      <Progress percent={percent} showInfo={false} status='active' />
+      <Progress percent={percent} showInfo={false} status='success' />
+      <b style={{ lineHeight: 'normal' }}>Loading studies...</b>
     </div>
   );
 };

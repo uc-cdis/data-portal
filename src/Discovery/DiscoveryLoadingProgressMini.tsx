@@ -15,7 +15,6 @@ const DiscoveryLoadingProgressMini = ({
     const interval = setInterval(() => {
       setPercent((prevPercent) => Math.min(prevPercent + 5, 90));
     }, 500);
-
     return () => clearInterval(interval);
   }, [percent]);
 
@@ -30,12 +29,17 @@ const DiscoveryLoadingProgressMini = ({
 
   return (
     <div style={progressContainerStyle}>
-      <Progress width={80} showInfo={false} percent={percent} status='active' />
+      <Progress
+        width={80}
+        showInfo={false}
+        percent={percent}
+        status='success'
+      />
       <p
         style={{ lineHeight: 'normal', textTransform: 'inherit' }}
         className='discovery-header__stat-label'
       >
-        Loading all studies...
+        Loading studies...
       </p>
     </div>
   );
