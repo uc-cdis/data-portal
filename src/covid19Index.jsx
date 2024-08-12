@@ -15,7 +15,7 @@ import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchAndSetCsrfToken } from './configs';
+import { fetchAndSetCsrfToken, userAccessToSite } from './configs';
 import {
   fetchDictionary,
   fetchSchema,
@@ -63,6 +63,7 @@ import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
 import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import NotFound from './components/NotFound';
+import AccessDenied from './components/AccessDenied';
 
 // monitor user's session
 sessionMonitor.start();
