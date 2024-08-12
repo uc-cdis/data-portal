@@ -1,0 +1,35 @@
+.workflow-limits-modal-error-message {
+  position: relative;
+}
+
+.workflow-limits-modal-error-message div {
+  background: #fff5f5;
+  border: 1px solid #c59999;
+  padding: 15px 9px 9px 40px;
+  color: #830e0e;
+  min-height: 50px;
+  margin-top: 17px;
+  line-height: normal;
+}
+
+.workflow-limits-modal-error-message div.long-message {
+  padding: 9px 9px 9px 40px;
+  min-height: 50px;
+}
+
+.workflow-limits-modal-error-message div::before {
+  position: absolute;
+  display: inline-block;
+  content: '!';
+  border-radius: 50%;
+  border: 2px solid #830e0e;
+  width: 20px;
+  height: 20px;
+  line-height: 16px;
+  text-align: center;
+  color: #830e0e;
+  font-weight: bold;
+  font-size: 15px;
+  top: 33px;
+  left: 10px;
+}
