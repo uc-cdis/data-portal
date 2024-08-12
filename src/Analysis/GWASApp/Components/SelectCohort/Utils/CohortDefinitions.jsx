@@ -18,7 +18,7 @@ const CohortDefinitions = ({
   const cohorts = useQuery(
     ['cohortdefinitions', source, selectedTeamProject],
     () => fetchCohortDefinitions(source, selectedTeamProject),
-    // only call this once with the queryConfig once the source is not undefined
+    // only call this once the source is not undefined
     { enabled: source !== undefined, ...queryConfig },
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
