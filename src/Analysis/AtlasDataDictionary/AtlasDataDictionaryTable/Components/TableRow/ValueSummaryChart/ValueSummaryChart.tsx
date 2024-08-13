@@ -46,8 +46,7 @@ const ValueSummaryChart = ({
   const xAxisInterval = chartType === 'Number' ? 1 : 0;
 
   const processNumericChartData = (unProcessedChartData:IValueSummary[]) => {
-    console.log('unProcessedChartData',unProcessedChartData);
-    if(unProcessedChartData == null) return false;
+    if (unProcessedChartData == null) return false;
     let processedNumericData = unProcessedChartData.sort(
       (a: IValueSummary | any, b: IValueSummary| any) => a.start - b.start,
     );
