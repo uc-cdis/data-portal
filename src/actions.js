@@ -109,8 +109,7 @@ export const fetchWithCreds = (opts) => {
     method,
     body,
   };
-  return fetch(path, request,
-  )
+  return fetch(path, request)
     .then(
       (response) => {
         if (response.status !== 403 && response.status !== 401) {
