@@ -6,6 +6,7 @@ class AccessDenied extends React.Component {
   render() {
     const convertEmailsToLink = (str) => {
       // can only handle one email address
+      //eslint-disable-next-line
       const emailAddressArr = str.match(/[\w\.]+@[\w\.]+/g);
       if (emailAddressArr.length > 0) {
         const splitStringOnEmail = str.split(emailAddressArr[0]);
