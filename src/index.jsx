@@ -9,7 +9,6 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Helmet } from 'react-helmet';
-import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
@@ -75,26 +74,7 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
-  // Datadog setup
-  if (ddApplicationId && !ddClientToken) {
-    // eslint-disable-next-line no-console
-    console.warn('Datadog applicationId is set, but clientToken is missing');
-  } else if (!ddApplicationId && ddClientToken) {
-    // eslint-disable-next-line no-console
-    console.warn('Datadog clientToken is set, but applicationId is missing');
-  } else if (ddApplicationId && ddClientToken) {
-    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
-    datadogRum.init({
-      applicationId: ddApplicationId,
-      clientToken: ddClientToken,
-      site: ddUrl,
-      service: 'portal',
-      env: ddEnv,
-      version: portalVersion,
-      sampleRate: conditionalSampleRate,
-      trackInteractions: true,
-    });
-  }
+
 
   await Promise.all(
     [
