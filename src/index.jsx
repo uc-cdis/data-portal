@@ -86,14 +86,12 @@ async function init() {
   const history = createBrowserHistory();
   initializeFaro({
     url: 'my/collector/url',
-
     app: {
-      name: `data-portal - ${portalVersion}`,
+      name: 'data-portal',
+      version: portalVersion,
     },
-
     instrumentations: [
       ...getWebInstrumentations(),
-
       new ReactIntegration({
         router: createReactRouterV5Options({
           history,
