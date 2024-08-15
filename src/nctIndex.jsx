@@ -26,7 +26,7 @@ import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchAndSetCsrfToken } from './configs';
+import { fetchAndSetCsrfToken, userAccessToSite } from './configs';
 import {
   fetchDictionary,
   fetchSchema,
@@ -78,6 +78,7 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './nctIndex.css';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
+import AccessDenied from './components/AccessDenied';
 import FooterNIAID from './components/layout/FooterNIAID';
 
 // monitor user's session
@@ -505,6 +506,12 @@ async function init() {
                     path='/not-found'
                     component={NotFound}
                   />
+                  {userAccessToSite?.enabled && (
+                    <Route
+                      path={userAccessToSite.deniedPageURL || '/access-denied'}
+                      component={AccessDenied}
+                    />
+                  )}
                   <Route
                     exact
                     path='/:project'

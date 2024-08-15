@@ -12,7 +12,7 @@ import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchAndSetCsrfToken } from './configs';
+import { fetchAndSetCsrfToken, userAccessToSite } from './configs';
 import {
   fetchDictionary,
   fetchSchema,
@@ -65,6 +65,7 @@ import StudyRegistration from './StudyRegistration';
 import ReduxGenericAccessRequestForm from './GenericAccessRequestForm/ReduxGenericAccessRequestForm';
 import ReduxDataDictionarySubmission from './StudyRegistration/ReduxDataDictionarySubmission';
 import NotFound from './components/NotFound';
+import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
 
 // monitor user's session
@@ -583,6 +584,12 @@ async function init() {
                     path='/not-found'
                     component={NotFound}
                   />
+                  {userAccessToSite?.enabled && (
+                    <Route
+                      path={userAccessToSite.deniedPageURL || '/access-denied'}
+                      component={AccessDenied}
+                    />
+                  )}
                   <Route
                     exact
                     path={Error403Url}
