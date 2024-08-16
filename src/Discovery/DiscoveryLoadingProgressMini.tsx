@@ -20,8 +20,8 @@ const DiscoveryLoadingProgressMini = ({
   document.head.appendChild(style);
 
   // Fake loading UI
-  const percentUpdateInterval = 400;
-  const percentIncrementAmount = 10;
+  const percentUpdateInterval = 500;
+  const percentIncrementAmount = 5;
   useEffect(() => {
     const interval = setInterval(() => {
       setPercent((prevPercent) => prevPercent + percentIncrementAmount);
@@ -29,10 +29,9 @@ const DiscoveryLoadingProgressMini = ({
     return () => clearInterval(interval);
   }, [percent, allBatchesAreLoaded]);
 
-  const delayTimeBeforeHidingProgressBar = 500;
+  const delayTimeBeforeHidingProgressBar = 2000;
   useEffect(() => {
     if (allBatchesAreLoaded) {
-      setPercent(100);
       // Change displayProgressBar to false after delay
       setTimeout(() => {
         setDisplayProgressBar(false);
@@ -54,7 +53,7 @@ const DiscoveryLoadingProgressMini = ({
         <Progress
           width={80}
           showInfo={false}
-          percent={percent}
+          percent={allBatchesAreLoaded ? 100 : percent}
           status='success'
           strokeColor='#99286B'
         />
