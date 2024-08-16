@@ -10,6 +10,7 @@ const DiscoveryLoadingProgressMini = ({
 }: DiscoveryLoadingProps) => {
   const [percent, setPercent] = useState(0);
   const { allBatchesAreLoaded, isBatchLoadingEnabled } = batchLoadingInfo;
+  const [displayProgressBar, setDisplayProgressBar] = useState(true);
 
   // this should probably be done in a CSS for production:
   const style = document.createElement('style');
@@ -19,26 +20,32 @@ const DiscoveryLoadingProgressMini = ({
   document.head.appendChild(style);
 
   // Fake loading UI
+  const percentUpdateInterval = 400;
+  const percentIncrementAmount = 10;
   useEffect(() => {
-    if (percent === 100) return;
-    if (allBatchesAreLoaded) {
-      setPercent(100);
-    }
     const interval = setInterval(() => {
-      setPercent((prevPercent) => prevPercent + 10);
-    }, 300);
+      setPercent((prevPercent) => prevPercent + percentIncrementAmount);
+    }, percentUpdateInterval);
     return () => clearInterval(interval);
   }, [percent, allBatchesAreLoaded]);
 
+  const delayTimeBeforeHidingProgressBar = 500;
+  useEffect(() => {
+    if (allBatchesAreLoaded) {
+      setPercent(100);
+      // Change displayProgressBar to false after delay
+      setTimeout(() => {
+        setDisplayProgressBar(false);
+      }, delayTimeBeforeHidingProgressBar);
+    }
+  }, [allBatchesAreLoaded]);
+
   // hide the bar with a transition delay after the batches are loaded,
   // giving the browser some time to process the batch
-  const processingTimeDelay = 1;
   const progressContainerStyle = {
     textAlign: 'center',
     marginBottom: '5px',
-    transition: allBatchesAreLoaded ? `visibility ${processingTimeDelay}s, height ${processingTimeDelay}s` : null,
-    height: allBatchesAreLoaded ? '0' : '30px',
-    visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
+    display: displayProgressBar ? 'block' : 'none',
   };
 
   if (isBatchLoadingEnabled) {
