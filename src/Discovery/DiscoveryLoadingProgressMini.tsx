@@ -20,19 +20,23 @@ const DiscoveryLoadingProgressMini = ({
 
   // Fake loading UI
   useEffect(() => {
-    if (percent >= 96) return;
+    if (percent === 100) return;
+    if (allBatchesAreLoaded) {
+      setPercent(100);
+    }
     const interval = setInterval(() => {
-      setPercent((prevPercent) => Math.min(prevPercent + 5, 90));
-    }, 500);
+      setPercent((prevPercent) => prevPercent + 10);
+    }, 300);
     return () => clearInterval(interval);
-  }, [percent]);
+  }, [percent, allBatchesAreLoaded]);
 
   // hide the bar with a transition delay after the batches are loaded,
   // giving the browser some time to process the batch
+  const processingTimeDelay = 0.5;
   const progressContainerStyle = {
     textAlign: 'center',
     marginBottom: '5px',
-    transition: allBatchesAreLoaded ? 'visibility 1s, height 1s' : null,
+    transition: allBatchesAreLoaded ? `visibility ${processingTimeDelay}s, height ${processingTimeDelay}s` : null,
     height: allBatchesAreLoaded ? '0' : '30px',
     visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
   };
@@ -45,6 +49,7 @@ const DiscoveryLoadingProgressMini = ({
           showInfo={false}
           percent={percent}
           status='success'
+          strokeColor='#99286B'
         />
         <p
           style={{ lineHeight: 'normal', textTransform: 'inherit' }}

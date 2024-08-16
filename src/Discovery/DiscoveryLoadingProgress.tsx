@@ -6,18 +6,20 @@ interface DiscoveryLoadingProps {
 }
 
 const DiscoveryLoadingProgress = ({
-  batchLoadingInfo
+  batchLoadingInfo,
 }: DiscoveryLoadingProps) => {
   const { allBatchesAreLoaded, isBatchLoadingEnabled } = batchLoadingInfo;
   const showBigProgress = window.location.toString().includes('showBig');
   const [percent, setPercent] = useState(0);
 
   useEffect(() => {
-    if (percent >= 96) return;
+    if (percent === 100) return;
+    if (allBatchesAreLoaded) {
+      setPercent(100);
+    }
     const interval = setInterval(() => {
-      setPercent((prevPercent) => Math.min(prevPercent + 10, 96));
+      setPercent((prevPercent) => prevPercent + 10);
     }, 500);
-
     return () => clearInterval(interval);
   }, [percent]);
 
@@ -27,15 +29,15 @@ const DiscoveryLoadingProgress = ({
     textAlign: 'left',
     width: '50%',
     margin: '0px 0 0  40px',
-    transition: allBatchesAreLoaded ? `visibility 1s, height  1s` : null,
+    transition: allBatchesAreLoaded ? 'visibility 1s, height  1s' : null,
     height: allBatchesAreLoaded ? '0' : '40px',
     visibility: allBatchesAreLoaded ? 'hidden' : 'visible',
   };
 
-  if (!showBigProgress || !isBatchLoadingEnabled) return <></>;
+  if (!showBigProgress || !isBatchLoadingEnabled) return <React.Fragment />;
   return (
     <div style={progressContainerStyle}>
-      <Progress percent={percent} showInfo={false} status='success' />
+      <Progress percent={percent} showInfo={false} status='success' strokeColor='#99286B' />
       <b style={{ lineHeight: 'normal' }}>Loading studies...</b>
     </div>
   );
