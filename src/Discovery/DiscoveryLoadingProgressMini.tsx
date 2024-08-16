@@ -32,7 +32,7 @@ const DiscoveryLoadingProgressMini = ({
 
   // hide the bar with a transition delay after the batches are loaded,
   // giving the browser some time to process the batch
-  const processingTimeDelay = 0.5;
+  const processingTimeDelay = 1;
   const progressContainerStyle = {
     textAlign: 'center',
     marginBottom: '5px',
