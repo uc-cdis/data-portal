@@ -85,7 +85,7 @@ async function init() {
   // setup Grafana Faro
   const history = createBrowserHistory();
   initializeFaro({
-    url: 'my/collector/url',
+    url: 'https://faro.planx-pla.net/collect',
     app: {
       name: 'data-portal',
       version: portalVersion,
