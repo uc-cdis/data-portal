@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import CohortSelect from '../../Components/SelectCohort/SelectCohort';
+import SelectCohort from '../../Components/SelectCohort/SelectCohort';
 
 const SelectStudyPopulation = ({ selectedCohort, dispatch, selectedTeamProject }) => {
   const handleStudyPopulationSelect = (selectedRow) => {
@@ -13,7 +13,7 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch, selectedTeamProject }
 
   return (
     <div data-tour='cohort-select'>
-      <CohortSelect
+      <SelectCohort
         selectedCohort={selectedCohort}
         handleCohortSelect={handleStudyPopulationSelect}
         selectedTeamProject={selectedTeamProject}
