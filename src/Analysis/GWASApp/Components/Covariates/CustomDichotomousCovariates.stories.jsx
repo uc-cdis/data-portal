@@ -22,10 +22,12 @@ const Template = (args) => (
       `}
     </style>
     <SourceContextProvider>
-      <div className='GWASApp'>
+      <div className='GWASApp' style={{ background: '#f5f5f5' }}>
         <div className='steps-content'>
           <div className='GWASUI-double-column'>
-            <CustomDichotomousCovariates {...args} />
+            <div className='select-container' style={{ background: '#fff' }}>
+              <CustomDichotomousCovariates {...args} />
+            </div>
           </div>
         </div>
       </div>

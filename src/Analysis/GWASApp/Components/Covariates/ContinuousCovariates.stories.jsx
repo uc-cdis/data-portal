@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import ContinuousCovariates from './ContinuousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
+import '../../GWASApp.css';
 
 export default {
   title: 'Tests3/GWASApp/ContinuousCovariates',
@@ -10,30 +11,35 @@ export default {
 };
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
-
 const mockedQueryClient = new QueryClient();
 
 const Template = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <div className='GWASApp'>
-          <ContinuousCovariates
-            selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
-            selectedCovariates={[]}
-            covariates={[]}
-            outcome={null}
-            handleClose={() => {
-              console.log('close');
-            }}
-            handleSelect={(chosenCovariate) => {
-              console.log('chosen covariate:', chosenCovariate);
-            }}
-            dispatch={(payload) => {
-              console.log('payload:', payload);
-            }}
-            submitButtonLabel={'Add'}
-          />
+        <div className='GWASApp' style={{ background: '#f5f5f5' }}>
+          <div className='steps-content'>
+            <div className='GWASUI-double-column'>
+              <div className='select-container' style={{ background: '#fff' }}>
+                <ContinuousCovariates
+                  selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
+                  selectedCovariates={[]}
+                  covariates={[]}
+                  outcome={null}
+                  handleClose={() => {
+                    console.log('close');
+                  }}
+                  handleSelect={(chosenCovariate) => {
+                    console.log('chosen covariate:', chosenCovariate);
+                  }}
+                  dispatch={(payload) => {
+                    console.log('payload:', payload);
+                  }}
+                  submitButtonLabel={'Add'}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </SourceContextProvider>
     </QueryClientProvider>

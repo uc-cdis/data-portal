@@ -4,7 +4,6 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import './SelectOutcome.css';
 import '../../GWASApp.css';
 
 const SelectOutcome = ({
@@ -16,11 +15,12 @@ const SelectOutcome = ({
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
-    () => () => dispatch({
-      type: ACTIONS.SET_SELECTION_MODE,
-      payload: '',
-    }),
-    [],
+    () => () =>
+      dispatch({
+        type: ACTIONS.SET_SELECTION_MODE,
+        payload: '',
+      }),
+    []
   );
 
   const determineSelectOutcomeJsx = () => {
@@ -118,10 +118,12 @@ const SelectOutcome = ({
         <CovariatesCardsList
           covariates={covariates}
           outcome={outcome}
-          deleteCovariate={(chosenCovariate) => dispatch({
-            type: ACTIONS.DELETE_COVARIATE,
-            payload: chosenCovariate,
-          })}
+          deleteCovariate={(chosenCovariate) =>
+            dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })
+          }
         />
       </div>
     </div>
