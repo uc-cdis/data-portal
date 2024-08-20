@@ -14,6 +14,7 @@ import DismissibleMessagesList from './Components/DismissibleMessagesList/Dismis
 import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 import InitializeCurrentState from './Utils/StateManagement/InitializeCurrentState';
 import './GWASApp.css';
+import WorkflowLimitsDashboard from '../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsDashboard';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, InitializeCurrentState());
@@ -101,6 +102,7 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider>
+      <WorkflowLimitsDashboard />
       <ProgressBar
         currentStep={state.currentStep}
         selectionMode={state.selectionMode}
