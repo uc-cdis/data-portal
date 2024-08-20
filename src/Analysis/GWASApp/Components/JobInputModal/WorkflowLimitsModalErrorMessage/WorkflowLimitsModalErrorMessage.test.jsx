@@ -37,7 +37,7 @@ describe('WorkflowLimitsModalErrorMessage', () => {
 
   test(`renders limit reached message when status is "success",
     workflowLimitInfoIsValid is true, and workFlowLimitExceeded is true`, async () => {
-    const supportEmail = components.login?.email || 'support@datacommons.io';
+    const supportEmail = components.login?.email || 'support@gen3.org';
     render(
       <WorkflowLimitsModalErrorMessage
         {...defaultProps}

@@ -21,7 +21,7 @@ const testDataExceeds = {
   workflow_limit: 50,
 };
 
-const supportEmail = components.login?.email || 'support@datacommons.io';
+const supportEmail = components.login?.email || 'support@gen3.org';
 
 const testJSX = () => (
   <QueryClientProvider client={mockedQueryClient}>

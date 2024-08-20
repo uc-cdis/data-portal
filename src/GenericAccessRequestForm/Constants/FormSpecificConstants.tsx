@@ -1,7 +1,7 @@
 import React from 'react';
 import { workspaceRegistrationConfig } from '../../localconf';
 
-const defaultEmail = 'support@datacommons.io';
+const defaultEmail = 'support@gen3.org';
 
 const StudyRegistrationAccessRequest = {
   name: 'StudyRegistration',
