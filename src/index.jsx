@@ -17,6 +17,7 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { Helmet } from 'react-helmet';
+import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
@@ -51,7 +52,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, commonsWideAltText,
+  discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, ddKnownBotRegex,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -82,6 +83,27 @@ workspaceSessionMonitor.start();
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
+
+  // Datadog setup
+  if (ddApplicationId && !ddClientToken) {
+    // eslint-disable-next-line no-console
+    console.warn('Datadog applicationId is set, but clientToken is missing');
+  } else if (!ddApplicationId && ddClientToken) {
+    // eslint-disable-next-line no-console
+    console.warn('Datadog clientToken is set, but applicationId is missing');
+  } else if (ddApplicationId && ddClientToken) {
+    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
+    datadogRum.init({
+      applicationId: ddApplicationId,
+      clientToken: ddClientToken,
+      site: ddUrl,
+      service: 'portal',
+      env: ddEnv,
+      version: portalVersion,
+      sampleRate: conditionalSampleRate,
+      trackInteractions: true,
+    });
+  }
 
   // setup Grafana Faro
   const history = createBrowserHistory();
