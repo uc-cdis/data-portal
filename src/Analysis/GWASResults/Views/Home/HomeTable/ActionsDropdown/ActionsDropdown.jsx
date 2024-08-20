@@ -31,7 +31,7 @@ const ActionsDropdown = ({ record }) => {
     });
   };
 
-  const supportEmail = components.login?.email || 'support@datacommons.io';
+  const supportEmail = components.login?.email || 'support@gen3.org';
   const checkWorkflowLimit = async () => {
     try {
       const data = await fetchMonthlyWorkflowLimitInfo();
