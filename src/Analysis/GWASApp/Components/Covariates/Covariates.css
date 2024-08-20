@@ -148,3 +148,34 @@
   text-align: center;
   margin-top: 20px;
 }
+
+/* Shared select container styles */
+.GWASUI-selectionUI {
+  border: 1px solid #e2e2e3;
+}
+
+.GWASApp .select-container {
+  padding: 20px;
+  background: #fff;
+  height: 519px;
+}
+
+.GWASApp .select-container .ant-table-content {
+  max-height: 390px;
+  overflow-y: auto;
+}
+
+.GWASApp .select-container .GWASUI-emptyTable {
+  border: 2px solid #e9eef2;
+  min-height: 450px;
+}
+
+.GWASApp .select-container .GWASUI-flexRow {
+  width: 100%;
+}
+
+.GWASApp .select-container .custom-dichotomous-covariates .GWASUI-spinnerContainer,
+.GWASApp .select-container .custom-dichotomous-covariates .GWASUI-emptyTable {
+  min-height: inherit;
+  height: inherit;
+}

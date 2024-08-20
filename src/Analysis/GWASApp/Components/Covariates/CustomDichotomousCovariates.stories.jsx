@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import CustomDichotomousCovariates from './CustomDichotomousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
-import '../../GWASApp.css';
+import './Covariates.css';
 
 export default {
   title: 'Tests3/GWASApp/CustomDichotomousCovariates',
@@ -14,13 +14,6 @@ const mockedQueryClient = new QueryClient();
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
-    <style jsx>
-      {`
-        .custom-dichotomous-covariates .GWASUI-flexRow {
-          width: 100%;
-        }
-      `}
-    </style>
     <SourceContextProvider>
       <div className='GWASApp' style={{ background: '#f5f5f5' }}>
         <div className='steps-content'>
