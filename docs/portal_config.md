@@ -14,6 +14,9 @@ Below is an example, with inline comments describing what each JSON block config
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
   "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
+  "faroEnable": true, // optional; flag to turn on Grafana Faro RUN, default to false
+  "faroUrl": "", // optional: the Grafana Faro collector url. Defaults to https://faro.planx-pla.net/collect
+  "faroSampleRate": 1, // optional; numeric; the Grafana Faro option specifying the percentage of sessions to track: 1 for all, 0 for none. Default to 1 if omitted
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
     "boardCounts": [ // required; graphQL fields to query for the homepage chart
@@ -148,13 +151,13 @@ Below is an example, with inline comments describing what each JSON block config
       "text": "This is a generic Gen3 data commons.", // optional; text on the login page
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
-      "image": "gene" // optional; images displayed on the login page
+      "image": "gene", // optional; images displayed on the login page
       "hideNavLink": false// optional default false; hide login link in main naviagion
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
-      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
-      "expireUseMsgDays" : 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "systemUseText" : [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays": 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
       "showOnlyOnLogin" : false, // optional; if set to true, the USe Message will only be shown after a success login
     },
     "footer": {

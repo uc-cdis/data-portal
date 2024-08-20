@@ -157,13 +157,29 @@ function buildConfig(opts) {
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
       // eslint-disable-next-line no-console
-      console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
+      console.warn('Datadog sample rate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
     }
   }
   const ddKnownBotPattern = crawlers.map((c) => c.pattern).join('|');
   const ddKnownBotRegex = new RegExp(ddKnownBotPattern, 'i');
+
+  // faro related setup (this will be merged with DD setup block above when DD RUM is removed)
+  const faroEnable = !!config.faroEnable;
+  let faroUrl = 'https://faro.planx-pla.net/collect';
+  if (config.faroUrl) {
+    faroUrl = config.faroUrl;
+  }
+  let faroSampleRate = 1;
+  if (config.faroSampleRate) {
+    if (Number.isNaN(config.faroSampleRate)) {
+      // eslint-disable-next-line no-console
+      console.warn('Faro sample rate value in Portal config is not a number, ignoring');
+    } else {
+      faroSampleRate = config.faroSampleRate;
+    }
+  }
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -597,6 +613,9 @@ function buildConfig(opts) {
     ddUrl,
     ddSampleRate,
     ddKnownBotRegex,
+    faroEnable,
+    faroUrl,
+    faroSampleRate,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,

@@ -21,7 +21,7 @@ import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
-import { fetchAndSetCsrfToken, userAccessToSite } from './configs';
+import { fetchAndSetCsrfToken } from './configs';
 import {
   fetchDictionary,
   fetchSchema,
@@ -53,6 +53,7 @@ import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, ddKnownBotRegex,
+  userAccessToSite, faroEnable, faroUrl, faroSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -106,23 +107,33 @@ async function init() {
   }
 
   // setup Grafana Faro
-  const history = createBrowserHistory();
-  initializeFaro({
-    url: 'https://faro.planx-pla.net/collect',
-    app: {
-      name: 'data-portal',
-      version: portalVersion,
-    },
-    instrumentations: [
-      ...getWebInstrumentations(),
-      new ReactIntegration({
-        router: createReactRouterV5Options({
-          history,
-          Route,
+  if (faroEnable) {
+    const history = createBrowserHistory();
+    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
+    initializeFaro({
+      url: faroUrl,
+      app: {
+        name: 'portal',
+        version: portalVersion,
+        environment: ddEnv,
+      },
+      instrumentations: [
+        ...getWebInstrumentations(),
+        new ReactIntegration({
+          router: createReactRouterV5Options({
+            history,
+            Route,
+          }),
         }),
-      }),
-    ],
-  });
+      ],
+      sessionTracking: {
+        enabled: true,
+        persistent: true,
+        samplingRate: conditionalSampleRate,
+      },
+      ignoreUrls: ['https://*.logs.datadoghq.com', 'https://*.browser-intake-ddog-gov.com', 'https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net'],
+    });
+  }
 
   await Promise.all(
     [
