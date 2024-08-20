@@ -147,7 +147,7 @@ Below is an example, with inline comments describing what each JSON block config
       "subTitle": "Explore, Analyze, and Share Data", // optional; subtitle for login page
       "text": "This is a generic Gen3 data commons.", // optional; text on the login page
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
-      "email": "support@datacommons.io", // optional; email for contact
+      "email": "support@gen3.org", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
       "hideNavLink": false// optional default false; hide login link in main naviagion
     },
