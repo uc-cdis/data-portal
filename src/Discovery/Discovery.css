@@ -1,6 +1,6 @@
 .discovery-container {
   background-color: #f2f2f2;
-  padding: 30px 32px;
+  padding: 0 32px 30px 32px;
   min-height: calc(100vh - 221px);
   display: flex;
   flex-direction: column;
@@ -503,9 +503,9 @@
   font-weight: bold;
 }
 
-#discovery-page-accessibility-links {
-  top: 129px;
-  padding-right: 16px;
+.discovery-page-accessibility-links {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .discovery-hidden-link {
