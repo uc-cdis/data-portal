@@ -343,6 +343,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     }
   });
 
+  // to dynamically set the top padding for discovery panel to compensate for the height of the accessibility links
   useEffect(() => {
     if (discoveryAccessibilityLinksRef.current) {
       setDiscoveryTopPadding(30 - discoveryAccessibilityLinksRef.current.clientHeight);
