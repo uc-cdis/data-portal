@@ -14,10 +14,12 @@ const CohortDefinitions = ({
   selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
+
   const cohorts = useQuery(
     ['cohortdefinitions', source, selectedTeamProject],
     () => fetchCohortDefinitions(source, selectedTeamProject),
-    queryConfig,
+    // only call this once the source is not undefined
+    { enabled: source !== undefined, ...queryConfig },
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
