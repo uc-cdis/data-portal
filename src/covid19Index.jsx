@@ -54,7 +54,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, ddKnownBotRegex,
   userAccessToSite, faroEnable, faroUrl, faroSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
@@ -90,6 +90,7 @@ async function init() {
     // eslint-disable-next-line no-console
     console.warn('Datadog clientToken is set, but applicationId is missing');
   } else if (ddApplicationId && ddClientToken) {
+    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
     datadogRum.init({
       applicationId: ddApplicationId,
       clientToken: ddClientToken,
@@ -97,7 +98,7 @@ async function init() {
       service: 'portal',
       env: ddEnv,
       version: portalVersion,
-      sampleRate: ddSampleRate,
+      sampleRate: conditionalSampleRate,
       trackInteractions: true,
     });
   }
