@@ -52,7 +52,7 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "metaDescription": "", // optional; meta description used by search engines
-    "banner": [ // optional; banner displayed accross top of all of data portal
+    "banner": [ // optional; banner displayed across top of all of data portal
       {
         "type": "info", // Type of Alert styles, options: success, info, warning, error
         "message": "I'm a banner", // message to be displayed
@@ -150,9 +150,9 @@ Below is an example, with inline comments describing what each JSON block config
       "subTitle": "Explore, Analyze, and Share Data", // optional; subtitle for login page
       "text": "This is a generic Gen3 data commons.", // optional; text on the login page
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
-      "email": "support@datacommons.io", // optional; email for contact
+      "email": "support@gen3.org", // optional; email for contact
       "image": "gene", // optional; images displayed on the login page
-      "hideNavLink": false// optional default false; hide login link in main naviagion
+      "hideNavLink": false// optional default false; hide login link in main navigation
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
@@ -730,7 +730,7 @@ Below is an example, with inline comments describing what each JSON block config
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
-  "analysisTools": [ // analysis apps to be diplayed at the /analysis/ page.
+  "analysisTools": [ // analysis apps to be displayed at the /analysis/ page.
     {
       "appId": "myAppId", // Optional. Can be used to ensure the app path after the /analysis/ subpath is fixed, e.g. URL https://SERVER-DOMAIN/analysis/myAppId. If not set, then "title" (below) is used.
       "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
