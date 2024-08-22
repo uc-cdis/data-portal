@@ -120,33 +120,34 @@ async function init() {
   }
 
   // setup Grafana Faro
-  if (faroEnable) {
-    const history = createBrowserHistory();
-    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
-    initializeFaro({
-      url: faroUrl,
-      app: {
-        name: 'portal',
-        version: portalVersion,
-        environment: ddEnv,
-      },
-      instrumentations: [
-        ...getWebInstrumentations(),
-        new ReactIntegration({
-          router: createReactRouterV5Options({
-            history,
-            Route,
-          }),
-        }),
-      ],
-      sessionTracking: {
-        enabled: true,
-        persistent: true,
-        samplingRate: conditionalSampleRate,
-      },
-      ignoreUrls: ['https://*.logs.datadoghq.com', 'https://*.browser-intake-ddog-gov.com', 'https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net'],
-    });
+  const history = createBrowserHistory();
+  let conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
+  if (!faroEnable) {
+    conditionalSampleRate = 0;
   }
+  initializeFaro({
+    url: faroUrl,
+    app: {
+      name: 'portal',
+      version: portalVersion,
+      environment: ddEnv,
+    },
+    instrumentations: [
+      ...getWebInstrumentations(),
+      new ReactIntegration({
+        router: createReactRouterV5Options({
+          history,
+          Route,
+        }),
+      }),
+    ],
+    sessionTracking: {
+      enabled: true,
+      persistent: true,
+      samplingRate: conditionalSampleRate,
+    },
+    ignoreUrls: ['https://*.logs.datadoghq.com', 'https://*.browser-intake-ddog-gov.com', 'https://www.google-analytics.com', 'https://*.analytics.google.com', 'https://analytics.google.com', 'https://*.g.doubleclick.net'],
+  });
 
   await Promise.all(
     [
