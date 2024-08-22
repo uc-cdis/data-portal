@@ -29,6 +29,8 @@ const DiscoveryLoadingProgressMini = ({
     return () => clearInterval(interval);
   }, [percent, allBatchesAreLoaded]);
 
+  // hide the bar with a transition delay after the batches are loaded,
+  // giving the browser some time to process the batch
   const delayTimeBeforeHidingProgressBar = 2000;
   useEffect(() => {
     if (allBatchesAreLoaded) {
@@ -39,8 +41,6 @@ const DiscoveryLoadingProgressMini = ({
     }
   }, [allBatchesAreLoaded]);
 
-  // hide the bar with a transition delay after the batches are loaded,
-  // giving the browser some time to process the batch
   const progressContainerStyle = {
     textAlign: 'center',
     marginBottom: '5px',
