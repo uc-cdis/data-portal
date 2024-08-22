@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
-import './Covariates.css';
+import '../../GWASApp.css';
 
 const ContinuousCovariates = ({
   dispatch,
