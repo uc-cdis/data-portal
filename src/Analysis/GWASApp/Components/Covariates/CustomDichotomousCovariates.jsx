@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
-import '../../GWASApp.css';
+import './Covariates.css';
 
 const CustomDichotomousCovariates = ({
   dispatch,
