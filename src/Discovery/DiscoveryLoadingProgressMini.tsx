@@ -5,19 +5,19 @@ interface DiscoveryLoadingProps {
  batchLoadingInfo: {allBatchesAreLoaded:boolean; isBatchLoadingEnabled: boolean;}
 }
 
+// this should probably be done in a CSS for production:
+const style = document.createElement('style');
+style.type = 'text/css';
+const css = '.discovery-header__dropdown-tags-container {margin-top: 15px;} .discovery-header{align-items:start;} ';
+style.innerHTML = css;
+document.head.appendChild(style);
+
 const DiscoveryLoadingProgressMini = ({
   batchLoadingInfo,
 }: DiscoveryLoadingProps) => {
   const [percent, setPercent] = useState(0);
-  const { allBatchesAreLoaded, isBatchLoadingEnabled } = batchLoadingInfo;
+  const { allBatchesAreLoaded } = batchLoadingInfo;
   const [displayProgressBar, setDisplayProgressBar] = useState(true);
-
-  // this should probably be done in a CSS for production:
-  const style = document.createElement('style');
-  style.type = 'text/css';
-  const css = '.discovery-header__dropdown-tags-container {margin-top: 15px;} .discovery-header{align-items:start;} ';
-  style.innerHTML = css;
-  document.head.appendChild(style);
 
   // Fake loading UI
   const percentUpdateInterval = 500;
@@ -47,26 +47,23 @@ const DiscoveryLoadingProgressMini = ({
     display: displayProgressBar ? 'block' : 'none',
   };
 
-  if (isBatchLoadingEnabled) {
-    return (
-      <div style={progressContainerStyle}>
-        <Progress
-          width={80}
-          showInfo={false}
-          percent={allBatchesAreLoaded ? 100 : percent}
-          status='success'
-          strokeColor='#99286B'
-        />
-        <p
-          style={{ lineHeight: 'normal', textTransform: 'inherit' }}
-          className='discovery-header__stat-label'
-        >
+  return (
+    <div style={progressContainerStyle}>
+      <Progress
+        width={80}
+        showInfo={false}
+        percent={allBatchesAreLoaded ? 100 : percent}
+        status='success'
+        strokeColor='#99286B'
+      />
+      <p
+        style={{ lineHeight: 'normal', textTransform: 'inherit' }}
+        className='discovery-header__stat-label'
+      >
         Loading studies...
-        </p>
-      </div>
-    );
-  }
-  return <React.Fragment />;
+      </p>
+    </div>
+  );
 };
 
 export default DiscoveryLoadingProgressMini;

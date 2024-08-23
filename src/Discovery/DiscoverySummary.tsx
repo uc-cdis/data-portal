@@ -56,11 +56,8 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
-  batchLoadingInfo: object;
+  batchLoadingInfo: {isBatchLoadingEnabled: boolean, allBatchesAreLoaded: boolean},
 }
-
-// for demonstration purposes for determining desired UI:
-const showMiniProgress = window.location.toString().includes('showMini');
 
 const DiscoverySummary = (props: Props) => (
   <div className='discovery-header__stats-container' id='discovery-summary-statistics'>
@@ -77,11 +74,15 @@ const DiscoverySummary = (props: Props) => (
                 {aggregation.name}
               </div>
             </div>
-            {showMiniProgress === true && (
+            {
+              props.batchLoadingInfo.isBatchLoadingEnabled
+            && (
               <DiscoveryLoadingProgressMini
                 batchLoadingInfo={props.batchLoadingInfo}
               />
-            )}
+            )
+
+            }
           </div>
         </React.Fragment>
       ))

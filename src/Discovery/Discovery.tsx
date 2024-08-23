@@ -4,7 +4,7 @@ import React, {
 import * as JsSearch from 'js-search';
 import jsonpath from 'jsonpath';
 import {
-  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
+  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
 } from 'antd';
 import {
   LockOutlined,
@@ -185,6 +185,8 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
+
+
 export interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
@@ -215,7 +217,7 @@ export interface Props {
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
   onResourcesSelected: (resources: DiscoveryResource[]) => any,
   onPaginationSet: (pagination: { currentPage: number, resultsPerPage: number }) => any,
-  batchLoadingInfo: object,
+  batchLoadingInfo: {isBatchLoadingEnabled: boolean, allBatchesAreLoaded: boolean},
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -237,6 +239,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       || config.features.search.tagSearchDropdown.collapseOnDefault === undefined),
   );
   const [visibleResources, setVisibleResources] = useState([]);
+
+  const batchesAreLoading = props.batchLoadingInfo.isBatchLoadingEnabled
+  && props.batchLoadingInfo.allBatchesAreLoaded === false;
+  const BatchLoadingSpinner = () => (
+    <div style={{ textAlign: 'center' }}>
+      <Spin />
+    </div>
+  );
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -698,12 +708,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>
                 <Panel className='discovery-header__dropdown-tags-display-panel' header='' key='1'>
                   <div className='discovery-header__dropdown-tags'>
-                    <DiscoveryDropdownTagViewer
-                      config={config}
-                      studies={props.studies}
-                      selectedTags={props.selectedTags}
-                      setSelectedTags={props.onTagsSelected}
-                    />
+                    { batchesAreLoading
+                      ? (
+                        <BatchLoadingSpinner />
+                      )
+                      : (
+                        <DiscoveryDropdownTagViewer
+                          config={config}
+                          studies={props.studies}
+                          selectedTags={props.selectedTags}
+                          setSelectedTags={props.onTagsSelected}
+                        />
+                      )}
                   </div>
                 </Panel>
               </Collapse>
@@ -753,17 +769,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <div
                 className='discovery-filters--visible'
               >
-                <DiscoveryAdvancedSearchPanel
-                  config={props.config}
-                  studies={props.studies}
-                  filterState={filterState}
-                  setFilterState={(event) => {
-                    props.onAdvancedSearch(event);
-                    setFilterState(event);
-                  }}
-                  filterMultiSelectionLogic={filterMultiSelectionLogic}
-                  setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
-                />
+                {batchesAreLoading ? <BatchLoadingSpinner />
+                  : (
+                    <DiscoveryAdvancedSearchPanel
+                      config={props.config}
+                      studies={props.studies}
+                      filterState={filterState}
+                      setFilterState={(event) => {
+                        props.onAdvancedSearch(event);
+                        setFilterState(event);
+                      }}
+                      filterMultiSelectionLogic={filterMultiSelectionLogic}
+                      setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
+                    />
+                  )}
               </div>
             ) : (<div className='discovery-filters--hide' />)}
 

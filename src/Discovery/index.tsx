@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import DiscoveryLoadingProgress from './DiscoveryLoadingProgress';
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
@@ -224,17 +223,12 @@ const DiscoveryWithMDSBackend: React.FC<{
   };
 
   return (
-    <React.Fragment>
-      <DiscoveryLoadingProgress
-        batchLoadingInfo={batchLoadingInfo}
-      />
-      <Discovery
-        studies={studies === null ? [] : studies}
-        studyRegistrationValidationField={studyRegistrationValidationField}
-        batchLoadingInfo={batchLoadingInfo}
-        {...props}
-      />
-    </React.Fragment>
+    <Discovery
+      studies={studies === null ? [] : studies}
+      studyRegistrationValidationField={studyRegistrationValidationField}
+      batchLoadingInfo={batchLoadingInfo}
+      {...props}
+    />
   );
 };
 
