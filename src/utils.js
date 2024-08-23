@@ -236,11 +236,11 @@ export const isFooterHidden = (pathname) => (!!((pathname
 
 export const createZendeskTicket = async (subject, fullName, email, contents, zendeskSubdomainName) => {
   try {
-    const zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
+    let zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
     if (zendeskSubdomainName) {
-      zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
+      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
     } else {
-      zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
+      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
     }
     let ticketSubject = subject;
     if (subject.length > ZENDESK_MAX_SUBJECT_LENGTH) {
@@ -249,10 +249,9 @@ export const createZendeskTicket = async (subject, fullName, email, contents, ze
         ZENDESK_MAX_SUBJECT_LENGTH - 3,
       )}...`;
     }
-    await fetch({
-      path: zendeskTicketCreationURL,
+    await fetch(zendeskTicketCreationURL, {
       method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         request: {
           subject: ticketSubject,
