@@ -24,13 +24,12 @@ import {
 import '../StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  hostname, kayakoConfig, studyRegistrationConfig,
+  hostname, zendeskConfig, studyRegistrationConfig,
 } from '../../localconf';
 import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from '../utils';
-import { createKayakoTicket } from '../../utils';
+import { createZendeskTicket } from '../../utils';
 import {
   FORM_LAYOUT,
-  KAYAKO_MAX_SUBJECT_LENGTH,
   TAIL_LAYOUT,
   VALIDATE_MESSAGE,
   VLMDSubmissionProps,
@@ -128,10 +127,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-            let subject = `Data dictionary submission for ${props.studyNumber} ${props.studyName}`;
-            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-            }
+            const subject = `Data dictionary submission for ${props.studyNumber} ${props.studyName}`;
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
             let contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nData Dictionary GUID: ${guid}`;
@@ -142,7 +138,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
             // This is the CLI command to kick off the argo wf from AdminVM
             const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });

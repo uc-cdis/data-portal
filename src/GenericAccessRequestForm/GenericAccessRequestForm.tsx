@@ -80,6 +80,8 @@ const GenericAccessRequestForm: React.FunctionComponent<StudyRegistrationProps> 
     if (!useArboristUI) {
       return true;
     }
+    // We don't need this method anymore after we migrated to Zendesk, but just an extra layer of check here
+    // This may get removed in the future
     return userHasMethodForServiceOnResource(
       'create',
       'kayako',

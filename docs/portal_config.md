@@ -750,7 +750,7 @@ Below is an example, with inline comments describing what each JSON block config
     ...
   ],
   "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
-  "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
+  "registrationConfigs": { // optional; Required when using Zendesk integration with Study/Workspace registration
       "features":{ // Optional; Required when using study/Workspace registration
         "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
           "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
@@ -773,8 +773,8 @@ Below is an example, with inline comments describing what each JSON block config
         }
       }
       },
-      "kayakoConfig":{ //Required; if using either of the study/workspace registration feature
-        "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
+      "zendeskConfig":{ // Optional; add this if you want to customize the subdomain that Zendesk is using in either of the study/workspace registration feature
+        "zendeskSubdomainName": "projectSupport"  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
       }
     }
 }
