@@ -79,10 +79,7 @@ const handleRegisterFormSubmission = async (
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
           const subject = determineSubjectLine();
-          let contents = `Request ID: ${data.request_id}\n
-              Grant Number: ${studyNumber}\n
-              Study Name: ${studyName}\n
-              Environment: ${hostname}`;
+          let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
           if (specificFormInfo.name === 'WorkspaceAccessRequest') {
             contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
           }
