@@ -240,6 +240,7 @@ export const createZendeskTicket = async (subject, fullName, email, contents, ze
     if (zendeskSubdomainName) {
       zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
     } else {
+      // This is the default Gen3 helpdesk subdomain
       zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
     }
     let ticketSubject = subject;
