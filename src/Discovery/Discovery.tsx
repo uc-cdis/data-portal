@@ -185,8 +185,6 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-
-
 export interface FilterState {
   [key: string]: { [value: string]: boolean }
 }

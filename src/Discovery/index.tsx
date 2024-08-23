@@ -78,9 +78,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   // Then a batch with all the studies
   const [studiesBatchCount, setStudiesBatchCount] = useState(0);
   const expectedNumberOfTotalBatches = 2;
-  const numberOfStudiesForSmallerBatch = isEnabled('discoveryUseAggMDS')
-    ? 5
-    : 10;
+  const numberOfStudiesForSmallerBatch = 5;
   const numberOfStudiesForAllStudiesBatch = 2000;
   const isBatchLoadingEnabled = isEnabled('discoveryUseAggMDS') && isEnabled('studyRegistration');
 
@@ -217,6 +215,9 @@ const DiscoveryWithMDSBackend: React.FC<{
 
   const batchLoadingInfo = {
     isBatchLoadingEnabled,
+    // All batches all loaded if the studies are not null and
+    // their length is great than the studies for the smaller batches
+    // from loadStudiesFromAggMDS and getSomeStudiesFromMDS
     allBatchesAreLoaded: studies === null
       ? false
       : studies?.length > numberOfStudiesForSmallerBatch * 2,
