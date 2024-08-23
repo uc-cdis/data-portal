@@ -1,6 +1,7 @@
-import { submissionApiPath, kayakoWrapperURL } from './localconf';
+import { submissionApiPath, gen3ZendeskURL } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
-import { fetchWithCreds } from './actions';
+
+const ZENDESK_MAX_SUBJECT_LENGTH = 255;
 
 export const humanFileSize = (size) => {
   if (typeof size !== 'number') {
@@ -233,24 +234,45 @@ export const isFooterHidden = (pathname) => (!!((pathname
   || pathname.toLowerCase().startsWith('/dd/')
   ))));
 
-export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
+export const createZendeskTicket = async (subject, fullName, email, contents, zendeskSubdomainName) => {
   try {
-    const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
-    await fetchWithCreds({
-      path: kayakoTicketCreationURL,
+    const zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
+    if (zendeskSubdomainName) {
+      zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
+    } else {
+      zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
+    }
+    let ticketSubject = subject;
+    if (subject.length > ZENDESK_MAX_SUBJECT_LENGTH) {
+      ticketSubject = `${subject.substring(
+        0,
+        ZENDESK_MAX_SUBJECT_LENGTH - 3,
+      )}...`;
+    }
+    await fetch({
+      path: zendeskTicketCreationURL,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        subject, fullname: fullName, email, contents, departmentid: departmentID,
+        request: {
+          subject: ticketSubject,
+          comment: {
+            body: contents,
+          },
+          requester: {
+            name: fullName,
+            email,
+          },
+        },
       }),
     }).then((response) => {
       if (response.status !== 201) {
-        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
+        throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
       }
       return response;
     });
   } catch (err) {
-    throw new Error(`Request for create Kayako ticket failed: ${err}`);
+    throw new Error(`Request for create Zendesk ticket failed: ${err}`);
   }
 };
 

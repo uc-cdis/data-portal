@@ -1,11 +1,9 @@
 import { doesUserHaveRequestPending } from '../StudyRegistration/utils';
 import {
-  kayakoConfig, hostname, workspaceRegistrationConfig, requestorPath,
+  zendeskConfig, hostname, workspaceRegistrationConfig, requestorPath,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import { createKayakoTicket } from '../utils';
-
-const KAYAKO_MAX_SUBJECT_LENGTH = 255;
+import { createZendeskTicket } from '../utils';
 
 const handleRegisterFormSubmission = async (
   specificFormInfo,
@@ -29,7 +27,7 @@ const handleRegisterFormSubmission = async (
 
   // first, check if there is already a pending request in requestor
   let userHaveRequestPending : boolean;
-  let policyID : string;
+  let policyID : string = '';
   try {
     if (specificFormInfo.name === 'WorkspaceAccessRequest') {
       policyID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
@@ -77,16 +75,10 @@ const handleRegisterFormSubmission = async (
     .then(({ data, status }) => {
       if (status === 201) {
         if (data && data.request_id) {
-          // request created, now create a kayako ticket
+          // request created, now create a zendesk ticket
           const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
           const email = formValues['E-mail Address'];
-          let subject = determineSubjectLine();
-          if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-            subject = `${subject.substring(
-              0,
-              KAYAKO_MAX_SUBJECT_LENGTH - 3,
-            )}...`;
-          }
+          const subject = determineSubjectLine();
           let contents = `Request ID: ${data.request_id}\n
               Grant Number: ${studyNumber}\n
               Study Name: ${studyName}\n
@@ -101,12 +93,12 @@ const handleRegisterFormSubmission = async (
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
-          createKayakoTicket(
+          createZendeskTicket(
             subject,
             fullName,
             email,
             contents,
-            kayakoConfig?.kayakoDepartmentId,
+            zendeskConfig?.zendeskSubdomainName,
           ).then(
             () => setFormSubmissionStatus({ status: 'success' }),
             (err) => setFormSubmissionStatus({
