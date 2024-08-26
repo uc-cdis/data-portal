@@ -1,5 +1,6 @@
 import React, {
   useState, useEffect, ReactNode, useMemo,
+  useRef,
 } from 'react';
 import * as JsSearch from 'js-search';
 import jsonpath from 'jsonpath';
@@ -236,6 +237,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       || config.features.search.tagSearchDropdown.collapseOnDefault === undefined),
   );
   const [visibleResources, setVisibleResources] = useState([]);
+  const [discoveryTopPadding, setDiscoveryTopPadding] = useState(30);
+  const discoveryAccessibilityLinksRef = useRef(null);
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -339,6 +342,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterPopup.onkeypress = accessibleDataFilterToggle;
     }
   });
+
+  // to dynamically set the top padding for discovery panel to compensate for the height of the accessibility links
+  useEffect(() => {
+    if (discoveryAccessibilityLinksRef.current) {
+      setDiscoveryTopPadding(30 - discoveryAccessibilityLinksRef.current.clientHeight);
+    }
+  }, [setDiscoveryTopPadding]);
 
   // Set up table columns
   // -----
@@ -647,11 +657,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   // Disabling noninteractive-tabindex rule because the span tooltip must be focusable as per https://www.w3.org/TR/2017/REC-wai-aria-1.1-20171214/#tooltip
   /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
   return (
-    <div className='discovery-container'>
+    <div className='discovery-container' style={{ paddingTop: discoveryTopPadding }}>
       {(config.features.pageTitle && config.features.pageTitle.enabled)
         && <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>}
 
-      <DiscoveryAccessibilityLinks />
+      <DiscoveryAccessibilityLinks ref={discoveryAccessibilityLinksRef} />
 
       {/* Header with stats */}
       <div className='discovery-header'>

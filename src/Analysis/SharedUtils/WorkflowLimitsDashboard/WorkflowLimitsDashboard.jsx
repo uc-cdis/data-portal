@@ -12,7 +12,7 @@ import LoadingErrorMessage from '../LoadingErrorMessage/LoadingErrorMessage';
 import './WorkflowLimitsDashboard.css';
 
 const WorkflowLimitsDashboard = React.memo(() => {
-  const supportEmail = components.login?.email || 'support@datacommons.io';
+  const supportEmail = components.login?.email || 'support@gen3.org';
   const refetchInterval = 5000;
 
   const { data, status } = useQuery(

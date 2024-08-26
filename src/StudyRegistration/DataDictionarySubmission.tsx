@@ -24,10 +24,10 @@ import {
 import './StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  hostname, kayakoConfig, studyRegistrationConfig, useArboristUI,
+  hostname, zendeskConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
 import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from './utils';
-import { createKayakoTicket } from '../utils';
+import { createZendeskTicket } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { StudyRegistrationProps } from './StudyRegistration';
 
@@ -38,8 +38,6 @@ export interface FormSubmissionState {
   status?: ResultStatusType;
   text?: string;
 }
-
-const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
 const layout = {
   labelCol: {
@@ -165,10 +163,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-            let subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
-            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-            }
+            const subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
             let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}`;
@@ -179,7 +174,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             // This is the CLI command to kick off the argo wf from AdminVM
             const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });

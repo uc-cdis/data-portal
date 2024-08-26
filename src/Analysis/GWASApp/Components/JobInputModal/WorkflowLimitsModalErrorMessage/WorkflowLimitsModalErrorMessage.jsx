@@ -7,7 +7,7 @@ import {
 import { components } from '../../../../../params';
 import './WorkflowLimitsModalErrorMessage.css';
 
-const supportEmail = components.login?.email || 'support@datacommons.io';
+const supportEmail = components.login?.email || 'support@gen3.org';
 
 const WorkflowLimitsModalErrorMessage = ({
   status,
