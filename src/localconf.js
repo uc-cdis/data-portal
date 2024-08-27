@@ -173,7 +173,7 @@ function buildConfig(opts) {
     grafanaFaroConfig.grafanaFaroEnv = 'PROD';
     if (hostnameOnly.includes('qa-')) {
       grafanaFaroConfig.grafanaFaroEnv = 'QA';
-    } else if (hostnameOnly.includes('planx-pla.net')) {
+    } else if (hostnameOnly.endswith('.planx-pla.net')) {
       grafanaFaroConfig.grafanaFaroEnv = 'DEV';
     }
   }
