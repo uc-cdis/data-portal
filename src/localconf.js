@@ -350,7 +350,7 @@ function buildConfig(opts) {
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
     ? registrationConfigs.features.workspaceRegistrationConfig : null;
-  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
+  const zendeskConfig = registrationConfigs ? registrationConfigs.zendeskConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -487,7 +487,7 @@ function buildConfig(opts) {
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
   const cedarWrapperURL = `${hostname}cedar`;
-  const kayakoWrapperURL = `${hostname}kayako`;
+  const gen3ZendeskURL = 'https://<SUBDOMAIN_NAME>.zendesk.com';
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -589,7 +589,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
-    kayakoConfig,
+    zendeskConfig,
     studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
@@ -605,7 +605,7 @@ function buildConfig(opts) {
     mdsURL,
     aggMDSDataURL,
     cedarWrapperURL,
-    kayakoWrapperURL,
+    gen3ZendeskURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
