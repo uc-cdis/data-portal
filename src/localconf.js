@@ -162,24 +162,31 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
-  const knownBotPattern = crawlers.map((c) => c.pattern).join('|');
-  const knownBotRegex = new RegExp(knownBotPattern, 'i');
 
-  // faro related setup (this will be merged with DD setup block above when DD RUM is removed)
-  const faroEnable = !!config.faroEnable;
-  let faroUrl = 'https://faro.planx-pla.net/collect';
-  if (config.faroUrl) {
-    faroUrl = config.faroUrl;
+  // Grafana Faro related setup (this will be merged with DD setup block above when DD RUM is removed)
+  const grafanaFaroConfig = config.grafanaFaroConfig || {};
+  grafanaFaroConfig.grafanaFaroEnable = !!grafanaFaroConfig.grafanaFaroEnable;
+  if (!grafanaFaroConfig.grafanaFaroUrl) {
+    grafanaFaroConfig.grafanaFaroUrl = 'https://faro.planx-pla.net/collect';
   }
-  let faroSampleRate = 1;
-  if (config.faroSampleRate) {
-    if (Number.isNaN(config.faroSampleRate)) {
-      // eslint-disable-next-line no-console
-      console.warn('Faro sample rate value in Portal config is not a number, ignoring');
-    } else {
-      faroSampleRate = config.faroSampleRate;
+  if (!grafanaFaroConfig.grafanaFaroEnv) {
+    grafanaFaroConfig.grafanaFaroEnv = 'PROD';
+    if (hostnameOnly.includes('qa-')) {
+      grafanaFaroConfig.grafanaFaroEnv = 'QA';
+    } else if (hostnameOnly.includes('planx-pla.net')) {
+      grafanaFaroConfig.grafanaFaroEnv = 'DEV';
     }
   }
+  if (!grafanaFaroConfig.grafanaFaroSampleRate) {
+    // set default sample rate for Grafana Faro if not provided
+    grafanaFaroConfig.grafanaFaroSampleRate = 1;
+  } else if (Number.isNaN(grafanaFaroConfig.grafanaFaroSampleRate)) {
+    // eslint-disable-next-line no-console
+    console.warn('Grafana Faro sample rate value in Portal config is not a number, ignoring');
+    grafanaFaroConfig.grafanaFaroSampleRate = 1;
+  }
+  const knownBotPattern = crawlers.map((c) => c.pattern).join('|');
+  const knownBotRegex = new RegExp(knownBotPattern, 'i');
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -613,9 +620,7 @@ function buildConfig(opts) {
     ddUrl,
     ddSampleRate,
     knownBotRegex,
-    faroEnable,
-    faroUrl,
-    faroSampleRate,
+    grafanaFaroConfig,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,

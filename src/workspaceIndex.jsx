@@ -37,7 +37,7 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
   ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, knownBotRegex,
-  userAccessToSite, faroEnable, faroUrl, faroSampleRate,
+  grafanaFaroConfig,
 } from './localconf';
 import { portalVersion } from './versions';
 import { components } from './params';
@@ -83,16 +83,16 @@ async function init() {
   // setup Grafana Faro
   const history = createBrowserHistory();
   // to filter bots from RUM, see https://grafana.com/docs/grafana-cloud/monitor-applications/frontend-observability/instrument/filter-bots/#filter-bots-by-user-agent
-  let conditionalSampleRate = knownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
-  if (!faroEnable) {
+  let conditionalSampleRate = knownBotRegex.test(navigator.userAgent) ? 0 : grafanaFaroConfig.grafanaFaroSampleRate;
+  if (!grafanaFaroConfig.grafanaFaroEnable) {
     conditionalSampleRate = 0;
   }
   initializeFaro({
-    url: faroUrl,
+    url: grafanaFaroConfig.grafanaFaroUrl,
     app: {
       name: 'portal',
       version: portalVersion,
-      environment: ddEnv,
+      environment: grafanaFaroConfig.grafanaFaroEnv,
     },
     instrumentations: [
       ...getWebInstrumentations(),
