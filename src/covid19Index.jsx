@@ -54,7 +54,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, ddKnownBotRegex,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, knownBotRegex,
   userAccessToSite, faroEnable, faroUrl, faroSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
@@ -90,7 +90,7 @@ async function init() {
     // eslint-disable-next-line no-console
     console.warn('Datadog clientToken is set, but applicationId is missing');
   } else if (ddApplicationId && ddClientToken) {
-    const conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
+    const conditionalSampleRate = knownBotRegex.test(navigator.userAgent) ? 0 : ddSampleRate;
     datadogRum.init({
       applicationId: ddApplicationId,
       clientToken: ddClientToken,
@@ -105,7 +105,8 @@ async function init() {
 
   // setup Grafana Faro
   const history = createBrowserHistory();
-  let conditionalSampleRate = ddKnownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
+  // to filter bots from RUM, see https://grafana.com/docs/grafana-cloud/monitor-applications/frontend-observability/instrument/filter-bots/#filter-bots-by-user-agent
+  let conditionalSampleRate = knownBotRegex.test(navigator.userAgent) ? 0 : faroSampleRate;
   if (!faroEnable) {
     conditionalSampleRate = 0;
   }

@@ -162,8 +162,8 @@ function buildConfig(opts) {
       ddSampleRate = config.ddSampleRate;
     }
   }
-  const ddKnownBotPattern = crawlers.map((c) => c.pattern).join('|');
-  const ddKnownBotRegex = new RegExp(ddKnownBotPattern, 'i');
+  const knownBotPattern = crawlers.map((c) => c.pattern).join('|');
+  const knownBotRegex = new RegExp(knownBotPattern, 'i');
 
   // faro related setup (this will be merged with DD setup block above when DD RUM is removed)
   const faroEnable = !!config.faroEnable;
@@ -612,7 +612,7 @@ function buildConfig(opts) {
     ddEnv,
     ddUrl,
     ddSampleRate,
-    ddKnownBotRegex,
+    knownBotRegex,
     faroEnable,
     faroUrl,
     faroSampleRate,

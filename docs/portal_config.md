@@ -14,7 +14,7 @@ Below is an example, with inline comments describing what each JSON block config
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
   "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
-  "faroEnable": true, // optional; flag to turn on Grafana Faro RUN, default to false
+  "faroEnable": true, // optional; flag to turn on Grafana Faro RUM, default to false
   "faroUrl": "", // optional: the Grafana Faro collector url. Defaults to https://faro.planx-pla.net/collect
   "faroSampleRate": 1, // optional; numeric; the Grafana Faro option specifying the percentage of sessions to track: 1 for all, 0 for none. Default to 1 if omitted
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
