@@ -45,7 +45,7 @@ const CheckDownloadStatus = (
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               try {
-                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                const regexp = /^https?:\/\/(\S*)\.?s3\.amazonaws\.com\/(\S+)/gm;
                 if (!new RegExp(regexp).test(output)) {
                   throw new Error('Invalid download URL');
                 }
