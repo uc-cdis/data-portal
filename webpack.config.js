@@ -28,6 +28,7 @@ if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
 }
 if (process.env.DATA_UPLOAD_BUCKET) {
   connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
+  connectSrcURLs.push('https://s3.amazonaws.com');
 }
 // add any extra URLs that should be whitelisted
 if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.length > 0) {
