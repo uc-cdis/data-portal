@@ -39,12 +39,12 @@ describe('The localconf', () => {
   it('can identify bot by user-agent value', () => {
     global.userAgent.mockReturnValue('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
     const newConf = conf.buildConfig(conf.app);
-    expect(global.navigator.userAgent).toMatch(newConf.ddKnownBotRegex);
+    expect(global.navigator.userAgent).toMatch(newConf.knownBotRegex);
   });
 
   it('can ignore normal browser event by user-agent value', () => {
     global.userAgent.mockReturnValue('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36');
     const newConf = conf.buildConfig(conf.app);
-    expect(global.navigator.userAgent).not.toMatch(newConf.ddKnownBotRegex);
+    expect(global.navigator.userAgent).not.toMatch(newConf.knownBotRegex);
   });
 });
