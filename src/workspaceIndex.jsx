@@ -37,7 +37,7 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
   ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, knownBotRegex,
-  grafanaFaroConfig,
+  grafanaFaroConfig, hostnameWithSubdomain,
 } from './localconf';
 import { portalVersion } from './versions';
 import { components } from './params';
@@ -92,7 +92,8 @@ async function init() {
     app: {
       name: 'portal',
       version: portalVersion,
-      environment: grafanaFaroConfig.grafanaFaroEnv,
+      namespace: grafanaFaroConfig.grafanaFaroNamespace,
+      environment: hostnameWithSubdomain,
     },
     instrumentations: [
       ...getWebInstrumentations(),

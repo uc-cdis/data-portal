@@ -169,12 +169,12 @@ function buildConfig(opts) {
   if (!grafanaFaroConfig.grafanaFaroUrl) {
     grafanaFaroConfig.grafanaFaroUrl = 'https://faro.planx-pla.net/collect';
   }
-  if (!grafanaFaroConfig.grafanaFaroEnv) {
-    grafanaFaroConfig.grafanaFaroEnv = 'PROD';
+  if (!grafanaFaroConfig.grafanaFaroNamespace) {
+    grafanaFaroConfig.grafanaFaroNamespace = 'PROD';
     if (hostnameOnly.includes('qa-')) {
-      grafanaFaroConfig.grafanaFaroEnv = 'QA';
+      grafanaFaroConfig.grafanaFaroNamespace = 'QA';
     } else if (hostnameOnly.endsWith('.planx-pla.net')) {
-      grafanaFaroConfig.grafanaFaroEnv = 'DEV';
+      grafanaFaroConfig.grafanaFaroNamespace = 'DEV';
     }
   }
   if (!grafanaFaroConfig.grafanaFaroSampleRate) {
