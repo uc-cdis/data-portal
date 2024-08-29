@@ -53,7 +53,7 @@ import {
   basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddUrl, ddSampleRate, knownBotRegex,
-  userAccessToSite, grafanaFaroConfig,
+  userAccessToSite, grafanaFaroConfig, hostnameWithSubdomain,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -118,7 +118,8 @@ async function init() {
     app: {
       name: 'portal',
       version: portalVersion,
-      environment: grafanaFaroConfig.grafanaFaroEnv,
+      namespace: grafanaFaroConfig.grafanaFaroNamespace,
+      environment: hostnameWithSubdomain,
     },
     instrumentations: [
       ...getWebInstrumentations(),
