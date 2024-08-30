@@ -215,7 +215,7 @@ export interface Props {
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
   onResourcesSelected: (resources: DiscoveryResource[]) => any,
   onPaginationSet: (pagination: { currentPage: number, resultsPerPage: number }) => any,
-  batchLoadingInfo: {isBatchLoadingEnabled: boolean, allBatchesAreLoaded: boolean},
+  batchLoadingInfo: {allBatchesAreLoaded: boolean},
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -238,8 +238,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   const [visibleResources, setVisibleResources] = useState([]);
 
-  const batchesAreLoading = props.batchLoadingInfo.isBatchLoadingEnabled
-  && props.batchLoadingInfo.allBatchesAreLoaded === false;
+  const batchesAreLoading = props.batchLoadingInfo.allBatchesAreLoaded === false;
   const BatchLoadingSpinner = () => (
     <div style={{ textAlign: 'center' }}>
       <Spin />

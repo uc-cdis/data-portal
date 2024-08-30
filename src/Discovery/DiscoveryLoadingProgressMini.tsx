@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Progress } from 'antd';
 
 interface DiscoveryLoadingProps {
- batchLoadingInfo: {allBatchesAreLoaded:boolean; isBatchLoadingEnabled: boolean;}
+ batchLoadingInfo: { allBatchesAreLoaded: boolean }
 }
 
 // this should probably be done in a CSS for production:

@@ -80,15 +80,11 @@ const DiscoveryWithMDSBackend: React.FC<{
   const expectedNumberOfTotalBatches = 2;
   const numberOfStudiesForSmallerBatch = 5;
   const numberOfStudiesForAllStudiesBatch = 2000;
-  const isBatchLoadingEnabled = isEnabled('discoveryUseAggMDS') && isEnabled('studyRegistration');
 
   useEffect(() => {
     // If batch loading is Enabled, update the studiesBatchCount to enable calling of different batch sizes
     // with different parameters
-    if (
-      studiesBatchCount < expectedNumberOfTotalBatches
-      && isBatchLoadingEnabled
-    ) setStudiesBatchCount(studiesBatchCount + 1);
+    if (studiesBatchCount < expectedNumberOfTotalBatches) setStudiesBatchCount(studiesBatchCount + 1);
 
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
@@ -214,7 +210,6 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   const batchLoadingInfo = {
-    isBatchLoadingEnabled,
     // All batches all loaded if the studies are not null and
     // their length is great than the studies for the smaller batches
     // from loadStudiesFromAggMDS and getSomeStudiesFromMDS

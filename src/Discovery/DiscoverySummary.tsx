@@ -56,7 +56,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
-  batchLoadingInfo: {isBatchLoadingEnabled: boolean, allBatchesAreLoaded: boolean},
+  batchLoadingInfo: { allBatchesAreLoaded: boolean },
 }
 
 const DiscoverySummary = (props: Props) => (
@@ -74,15 +74,10 @@ const DiscoverySummary = (props: Props) => (
                 {aggregation.name}
               </div>
             </div>
-            {
-              props.batchLoadingInfo.isBatchLoadingEnabled
-            && (
-              <DiscoveryLoadingProgressMini
-                batchLoadingInfo={props.batchLoadingInfo}
-              />
-            )
+            <DiscoveryLoadingProgressMini
+              batchLoadingInfo={props.batchLoadingInfo}
+            />
 
-            }
           </div>
         </React.Fragment>
       ))
