@@ -98,7 +98,7 @@
   margin-top: 60px;
 }
 
-.GWASApp .phenotype-histogram .histrogram-loading {
+.GWASApp .phenotype-histogram .histrogram-loading,.GWASApp .phenotype-histogram .no-data  {
   margin-top: 80px;
   text-align: center;
   width: 600px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CohortsOverlapTextVersion from './Simple3SetsOverlapTextVersion';
+import Simple3SetsTextVersion from './Simple3SetsOverlapTextVersion';
 
 describe('CohortsOverlapTextVersion', () => {
   const eulerArgs = {
@@ -15,7 +15,7 @@ describe('CohortsOverlapTextVersion', () => {
   };
 
   it('renders the correct cohort intersections', () => {
-    render(<CohortsOverlapTextVersion eulerArgs={eulerArgs} />);
+    render(<Simple3SetsTextVersion eulerArgs={eulerArgs} />);
     expect(
       screen.getByText(
         `${eulerArgs.set1Label} ∩ ${

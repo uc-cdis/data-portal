@@ -9,8 +9,9 @@ import {
   Label,
 } from 'recharts';
 import PropTypes from 'prop-types';
-import { formatNumber } from '../../../Utils/constants';
 import './Histogram.css';
+
+export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
