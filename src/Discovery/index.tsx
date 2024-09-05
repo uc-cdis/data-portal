@@ -80,7 +80,8 @@ const DiscoveryWithMDSBackend: React.FC<{
   */
   const [studiesBatchCount, setStudiesBatchCount] = useState(0);
   const expectedNumberOfTotalBatches = 2;
-  const numberOfStudiesForSmallerBatch = 5;
+  // if loading with both unregistered and registered studies, load 5 for each (10 total)
+  const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {

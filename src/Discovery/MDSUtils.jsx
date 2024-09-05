@@ -45,7 +45,7 @@ export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
 
 export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', numberOfStudies = 10) => {
   try {
-    let allStudies = [];
+    let someStudies = [];
     // request up to LIMIT studies from MDS at a time.
       const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${numberOfStudies}`;
       const res = await fetch(url);
@@ -62,8 +62,8 @@ export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', num
         }
         return study;
       });
-      allStudies = allStudies.concat(studies);
-      return allStudies;
+      someStudies = someStudies.concat(studies);
+      return someStudies;
   } catch (err) {
     throw new Error(`Request for study data failed: ${err}`);
   }

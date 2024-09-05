@@ -22,7 +22,7 @@ const DiscoveryLoadingProgressBar = ({
     return () => clearInterval(interval);
   }, [percent, allBatchesAreLoaded]);
 
-  // hide the bar with a transition delay after the batches are loaded,
+  // hide the bar after a delay after the batches are loaded,
   // giving the browser some time to process the batch
   const delayTimeBeforeHidingProgressBar = 2000;
   useEffect(() => {
@@ -37,7 +37,10 @@ const DiscoveryLoadingProgressBar = ({
   return (
     <React.Fragment>
       { displayProgressBar && (
-        <div className='discovery-loading-progress-bar' style={{ display: displayProgressBar ? 'block' : 'none' }}>
+        <div
+          className='discovery-loading-progress-bar'
+          style={{ display: displayProgressBar ? 'block' : 'none' }}
+        >
           <Progress
             width={80}
             showInfo={false}
