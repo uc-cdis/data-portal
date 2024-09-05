@@ -1,0 +1,18 @@
+/* Styles related to Progress bar and adjacent components */
+.discovery-header__dropdown-tags-container {
+    margin-top: 15px;
+}
+
+.discovery-header {
+    align-items:start;
+}
+
+.discovery-loading-progress-bar {
+    text-align: 'center';
+    margin-bottom: '5px';
+}
+
+.discovery-loading-progress-bar  .discovery-header__stat-label {
+    line-height: 'normal';
+    text-transform: 'inherit';
+}
