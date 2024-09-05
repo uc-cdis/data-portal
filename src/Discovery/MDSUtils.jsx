@@ -3,7 +3,7 @@ import { mdsURL, studyRegistrationConfig } from '../localconf';
 const LIMIT = 2000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
-const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
+export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   try {
     let allStudies = [];
     let offset = 0;
@@ -43,4 +43,28 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   }
 };
 
-export default loadStudiesFromMDS;
+export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', numberOfStudies = 10) => {
+  try {
+    let allStudies = [];
+    // request up to LIMIT studies from MDS at a time.
+      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${numberOfStudies}`;
+      const res = await fetch(url);
+      if (res.status !== 200) {
+        throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const jsonResponse = await res.json();
+      const studies = Object.values(jsonResponse).map((entry) => {
+        const study = { ...entry[STUDY_DATA_FIELD] };
+        // copy VLMD info if exists
+        if (studyRegistrationConfig?.dataDictionaryField && entry[studyRegistrationConfig.dataDictionaryField]) {
+          study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
+        }
+        return study;
+      });
+      allStudies = allStudies.concat(studies);
+      return allStudies;
+  } catch (err) {
+    throw new Error(`Request for study data failed: ${err}`);
+  }
+};

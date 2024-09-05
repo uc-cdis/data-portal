@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Progress } from 'antd';
+import './DiscoveryLoadingProgress.css';
 
 interface DiscoveryLoadingProgressBarProps {
- batchLoadingInfo: { allBatchesAreLoaded: boolean }
+ allBatchesAreLoaded: boolean;
 }
 
-// this should probably be done in a CSS for production:
-/*
-const style = document.createElement('style');
-style.type = 'text/css';
-const css = '.discovery-header__dropdown-tags-container {margin-top: 15px;} .discovery-header{align-items:start;} ';
-style.innerHTML = css;
-document.head.appendChild(style);
-*/
-
 const DiscoveryLoadingProgressBar = ({
-  batchLoadingInfo,
+  allBatchesAreLoaded,
 }: DiscoveryLoadingProgressBarProps) => {
   const [percent, setPercent] = useState(0);
-  const { allBatchesAreLoaded } = batchLoadingInfo;
   const [displayProgressBar, setDisplayProgressBar] = useState(true);
 
-  // Fake loading UI
+  // Auto incrementing percent logic
   const percentUpdateInterval = 500;
   const percentIncrementAmount = 5;
   useEffect(() => {

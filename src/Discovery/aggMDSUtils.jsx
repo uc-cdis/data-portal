@@ -64,18 +64,13 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
     allStudies = allStudies.concat(editedStudies);
   });
-
   return allStudies;
 };
 
-const loadStudiesFromAggMDS = async () => {
+const loadStudiesFromAggMDS = async (limit=2000) => {
   // Retrieve from aggregate MDS
-
   const offset = 0; // For pagination
-  const limit = 2000; // Total number of rows requested
-
   const studies = await loadStudiesFromAggMDSRequests(offset, limit);
-
   return studies;
 };
 
