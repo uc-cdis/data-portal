@@ -12,7 +12,7 @@ class Footer extends Component {
       return (<React.Fragment />);
     }
     if (this.props.externalURL) {
-      return <ExternalFooter url={this.props.externalURL} />;
+      // return <ExternalFooter url={this.props.externalURL} />;
     }
     return (
       <footer className='footer-container'>
