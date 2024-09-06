@@ -644,15 +644,10 @@
 
 /* Media Queries */
 @media (max-width: 1080px) {
-  .discovery-modal__header-buttons, .discovery-modal__header-buttons > .ant-space {
+  .discovery-modal__header-buttons,
+  .discovery-modal__header-buttons > .ant-space {
     display: block;
   }
-
-  /*
-  .discovery-modal__header-buttons > .ant-space {
-    display: inline-flex;
-  }
-  */
 
   .discovery-modal__header-buttons > div.ant-space-horizontal > span.ant-space-item-split {
     display: none;
