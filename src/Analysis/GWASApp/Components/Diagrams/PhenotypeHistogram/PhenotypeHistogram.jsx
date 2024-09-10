@@ -39,7 +39,7 @@ const PhenotypeHistogram = ({
 
   useEffect(() => {
     // Validate and give error message if there is no data:
-    if (data?.bins === null) {
+    if (data?.bins === null || data?.bins === undefined) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.NO_BINS_ERROR,
@@ -70,11 +70,6 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
   };
-  if (!data?.bins) {
-    return (
-      <div className='no-data'>Error loading histrogram, bin data unavailable</div>
-    );
-  }
   return <Histogram {...histogramArgs} />;
 };
 
