@@ -39,9 +39,8 @@ const PhenotypeHistogram = ({
 
   useEffect(() => {
     // Validate and give error message if there is no data:
-    console.log(status)
-    if (data?.bins === null ||
-      status === 'success' && data?.bins === undefined) {
+    if (data?.bins === null
+      || (status === 'success' && data?.bins === undefined)) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.NO_BINS_ERROR,
