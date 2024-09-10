@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import Histogram from '../../../../SharedUtils/Data-Viz/Histogram/Histogram';
+import Histogram from '../../../../SharedUtils/DataViz/Histogram/Histogram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
@@ -70,7 +70,11 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
   };
-  if (!data?.bins) return <div className='no-data'>Error loading histrogram, bin data unavailable</div>;
+  if (!data?.bins) {
+    return (
+      <div className='no-data'>Error loading histrogram, bin data unavailable</div>
+    );
+  }
   return <Histogram {...histogramArgs} />;
 };
 
