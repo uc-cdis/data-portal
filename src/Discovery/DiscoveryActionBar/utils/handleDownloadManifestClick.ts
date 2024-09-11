@@ -1,5 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { faro } from '@grafana/faro-web-sdk';
+import { faro } from '@grafana/faro-core';
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import assembleFileManifest from './assembleFileManifest';

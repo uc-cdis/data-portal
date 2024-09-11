@@ -1,5 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { faro } from '@grafana/faro-web-sdk';
+import { faro } from '@grafana/faro-core';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { fetchWithCreds } from '../../../../actions';

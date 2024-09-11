@@ -1,6 +1,6 @@
 import React from 'react';
 import { datadogRum } from '@datadog/browser-rum';
-import { faro } from '@grafana/faro-web-sdk';
+import { faro } from '@grafana/faro-core';
 import {
   JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS, DOWNLOAD_SUCCEEDED_MESSAGE,
 } from '../DiscoveryActionBarConstants';
