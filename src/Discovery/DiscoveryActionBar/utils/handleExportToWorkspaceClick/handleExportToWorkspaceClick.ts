@@ -1,4 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-web-sdk';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { fetchWithCreds } from '../../../../actions';
@@ -74,6 +75,15 @@ const handleExportToWorkspaceClick = async (
     exportToWorkspaceStudyName: studyName,
     exportToWorkspaceRepositoryName: repositoryName,
   });
+  faro.api.pushEvent(
+    'exportToWorkspace',
+    // Faro only accept string-string pairs in payload
+    {
+      exportToWorkspaceProjectNumber: projectNumber.join(','),
+      exportToWorkspaceStudyName: studyName.join(','),
+      exportToWorkspaceRepositoryName: repositoryName.join(','),
+    },
+  );
 
   // post exported manifest to manifestservice
   if (manifest.length) {

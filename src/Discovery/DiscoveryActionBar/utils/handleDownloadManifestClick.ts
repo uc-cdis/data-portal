@@ -1,4 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-web-sdk';
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import assembleFileManifest from './assembleFileManifest';
@@ -28,6 +29,15 @@ const handleDownloadManifestClick = (
     manifestDownloadStudyName: studyName,
     manifestDownloadRepositoryName: repositoryName,
   });
+  faro.api.pushEvent(
+    'manifestDownload',
+    // Faro only accept string-string pairs in payload
+    {
+      manifestDownloadProjectNumber: projectNumber.join(','),
+      manifestDownloadStudyName: studyName.join(','),
+      manifestDownloadRepositoryName: repositoryName.join(','),
+    },
+  );
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
   const blob = new Blob([JSON.stringify(manifest, null, 2)], {

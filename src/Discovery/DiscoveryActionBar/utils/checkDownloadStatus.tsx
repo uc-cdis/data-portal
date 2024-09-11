@@ -1,5 +1,6 @@
 import React from 'react';
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-web-sdk';
 import {
   JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS, DOWNLOAD_SUCCEEDED_MESSAGE,
 } from '../DiscoveryActionBarConstants';
@@ -79,6 +80,15 @@ const checkDownloadStatus = (
                   datasetDownloadStudyName: studyName,
                   datasetDownloadRepositoryName: repositoryName,
                 });
+                faro.api.pushEvent(
+                  'datasetDownload',
+                  // Faro only accept string-string pairs in payload
+                  {
+                    datasetDownloadProjectNumber: projectNumber.join(','),
+                    datasetDownloadStudyName: studyName.join(','),
+                    datasetDownloadRepositoryName: repositoryName.join(','),
+                  },
+                );
               } catch {
                 // job output is not a url -> then it is an error message
                 setDownloadStatus({
