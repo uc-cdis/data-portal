@@ -1,0 +1,148 @@
+
+{
+    "Subject":[
+        {
+            "name":"Sex",
+            "label":"sex",
+            "values":[
+                "Male",
+                "Female",
+                "Undifferentiated",
+                "Other",
+                "Unknown",
+                "Not Reported"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Race",
+            "label":"race",
+            "values":[
+                "American Indian or Alaska Native",
+                "Asian",
+                "Black or African American",
+                "Multiracial",
+                "Native Hawaiian or Other Pacific Islander",
+                "White",
+                "Other",
+                "Unknown",
+                "Not Reported"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Ethnicity",
+            "label":"ethnicity",
+            "values":[
+                "Hispanic or Latino",
+                "Not Hispanic or Latino",
+                "Unknown",
+                "Not Reported"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Year At Disease Phase",
+            "label":"year_at_disease_phase",
+            "values":[0,99],
+            "type":"continuous"
+        },
+        {
+            "name":"Lkss",
+            "label": "survival_characteristics.lkss_obfuscated",
+            "values":[
+                "Alive",
+                "Dead",
+                "Unknown"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Cencer Status",
+            "label":"censor_status",
+            "values":[
+                "Subject is censored (i.e. has had no event(s))",
+                "Subject has had one or more events",
+                "Unknown"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Age at Cencor Status",
+            "label": "age_at_censor_status",
+            "values":[0,99],
+            "type":"continuous"
+        },
+        {
+            "name":"Medical History",
+            "label":"medical_histories.medical_history",
+            "values":[
+                "Adenomatous Polyposis Coli",
+                "Beckwith-Wiedemann Syndrome",
+                "Breast and Ovarian Cancer",
+                "Celiac Disease",
+                "Central Hypoventilation Syndrome",
+                "Cleft Lip",
+                "Cleft Palate",
+                "Clubfoot",
+                "Costello Syndrome",
+                "Cushings Syndrome",
+                "Denys-Drash Syndrome",
+                "Diabetes Mellitus (Type I)",
+                "DICER1 Syndrome",
+                "Down Syndrome",
+                "Fanconi Anemia",
+                "Frasier Syndrome",
+                "Gastroschisis",
+                "Gonadal Dysgenesis",
+                "Goodpasture's Syndrome",
+                "Gorlin Syndrome",
+                "Graves' Disease",
+                "Hashimoto's Thyroiditis",
+                "Heart Defect",
+                "Hemihypertrophy",
+                "Heretidary Retinoblastoma",
+                "Hirschprung Disease",
+                "Inflammatory Bowel Disease (Crohn's Disease or Ulcerative Colitis)",
+                "Juvenile Idiopathic Arthritis",
+                "Klinerfelter Syndrome",
+                "Li-Fraumeni Syndrome",
+                "Lynch Syndrome",
+                "Mixed Connective Tissue Disease",
+                "Multiple Sclerosis",
+                "Neurofibromatosis Type 1",
+                "Noonan Syndrome",
+                "Not Reported",
+                "Other",
+                "Psoriasis",
+                "RB Transcriptional Corepressor 1",
+                "Scleroderma",
+                "Secondary Malignancy",
+                "Swyer Syndrome",
+                "Systematic Lupus Erythematosus",
+                "Trisomy 21",
+                "Trisomy 21 Mosaicism",
+                "Turner Syndrome",
+                "Unknown",
+                "Vitiligo",
+                "WAGR Syndrome",
+                "Werner Syndrome"
+              ],
+            "type":"categorical"
+        },
+        {
+            "name":"Medical History Status",
+            "label":"medical_histories.medical_history_status",
+            "values": [
+                "Present",
+                "Absent",
+                "Unknown",
+                "Not Reported"
+              ],
+            "type":"categorical"
+        }
+    ],
+    "Disease":[],
+    "Molecular":[],
+    "SMN":[]
+}

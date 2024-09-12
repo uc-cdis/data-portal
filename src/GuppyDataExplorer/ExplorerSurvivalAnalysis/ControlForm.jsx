@@ -140,7 +140,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
       : isDisallowedVariables
       ? 'This Filter Set includes disallowed variables and cannot be used for survival analysis.'
       : '';
-
+   // console.log(label, value)
     filterSetOptions.push({
       label: isDisabled ? (
         <Tooltip
@@ -179,6 +179,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
       efsFlag: survivalType.value === 'efs',
       usedFilterSets,
     });
+    console.log(usedFilterSets)
   };
 
   const resetUserInput = () => {

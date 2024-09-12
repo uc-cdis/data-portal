@@ -14,6 +14,7 @@ import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerFilterSetWorkspace from '../ExplorerFilterSetWorkspace';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
+import ExplorerTableOne from '../ExplorerTableOne-lwtest';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
@@ -189,7 +190,10 @@ function ExplorerVisualization({
     patientIdsConfig,
     survivalAnalysisConfig,
     tableConfig,
-  } = useAppSelector((state) => state.explorer.config);
+  } = useAppSelector((state) => {
+  return state.explorer.config});
+
+  const tableOneConfig = true;
 
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
@@ -197,6 +201,8 @@ function ExplorerVisualization({
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
   if (survivalAnalysisConfig.enabled) explorerViews.push('survival analysis');
+  if (tableOneConfig) explorerViews.push('table one');
+  
 
   const explorerView = searchParams.get('view') ?? explorerViews[0];
   function updateExplorerView(view) {
@@ -360,6 +366,13 @@ function ExplorerVisualization({
         <ViewContainer showIf={explorerView === 'survival analysis'}>
           <ExplorerSurvivalAnalysis />
         </ViewContainer>
+        
+      )}
+      {tableOneConfig && (
+        <ViewContainer showIf={explorerView === 'table one'}>
+          <ExplorerTableOne />
+        </ViewContainer>
+        
       )}
     </div>
   );

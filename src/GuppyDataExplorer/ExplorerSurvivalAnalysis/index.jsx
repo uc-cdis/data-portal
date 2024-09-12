@@ -35,7 +35,7 @@ function ExplorerSurvivalAnalysis() {
     setTimeInterval(input.timeInterval);
     setStartTime(input.startTime);
     setEndTime(input.endTime);
-
+    console.log(input.usedFilterSets)
     dispatch(
       updateSurvivalResult({
         efsFlag: input.efsFlag,

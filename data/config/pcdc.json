@@ -55,7 +55,10 @@
           "link": "/query",
           "label": "Query data"
         }
-      ]
+      ],
+      "barChart": {
+        "showPercentage": true
+      }
     },
     "navigation": {
       "items": [
@@ -76,12 +79,6 @@
           "link": "/query",
           "color": "#a2a2a2",
           "name": "Query"
-        },
-        {
-          "icon": "profile",
-          "link": "/identity",
-          "color": "#a2a2a2",
-          "name": "Profile"
         }
       ]
     },
@@ -98,11 +95,6 @@
           "leftOrientation": true,
           "link": "https://commons.cri.uchicago.edu/sponsors/",
           "name": "Our Sponsors"
-        },
-        {
-          "icon": "upload",
-          "link": "/submission",
-          "name": "Data Submission"
         }
       ]
     },
@@ -111,7 +103,7 @@
       "subTitle": "Connect. Share. Cure.",
       "text": "The Pediatric Cancer Data Commons (PCDC) harnesses pediatric cancer clinical data from around the globe into a single combined platform, connecting the data to other sources and making it available to clinicians and researchers everywhere. Headquartered at the University of Chicago, the PCDC team works with international leaders in pediatric cancers to develop and apply uniform data standards that facilitate the collection, combination, and analysis of data from many different sources. The PCDC currently houses the world's largest sets of clinical data for pediatric neuroblastoma and soft tissue sarcoma and is in the process of onboarding additional pediatric cancer disease groups.",
       "contact": "If you have any questions about access or the registration process, please contact ",
-      "email": "pcdc_root@lists.uchicago.edu"
+      "email": "pcdc_help@lists.uchicago.edu"
     },
     "footerLogos": [
       {
@@ -144,13 +136,528 @@
         "ethnicity": {
           "chartType": "bar",
           "title": "Ethnicity"
+        },
+        "consortium": {
+          "chartType": "bar",
+          "title": "Consortium"
         }
       },
       "filters": {
         "anchor": {
           "field": "disease_phase",
           "options": ["Initial Diagnosis", "Relapse"],
-          "tabs": ["Disease", "Molecular"]
+          "tabs": ["Disease", "Molecular", "Surgery", "Radiation", "Response", "SMN", "Imaging", "Labs", "SCT"]
+        },
+        "tabs": [
+          {
+            "title": "Subject",
+            "fields": [
+              "consortium",
+              "data_contributor_id",
+              "studies.study_id",
+              "studies.treatment_arm",
+              "sex",
+              "race",
+              "ethnicity",
+              "year_at_disease_phase",
+              "survival_characteristics.lkss_obfuscated",
+              "censor_status",
+              "age_at_censor_status",
+              "medical_histories.medical_history",
+              "medical_histories.medical_history_status",
+              "external_references.external_resource_name"
+            ]
+          },
+          {
+            "title": "Disease",
+            "fields": [
+              "histologies.histology",
+              "histologies.histology_grade",
+              "histologies.histology_inpc",
+              "tumor_assessments.age_at_tumor_assessment",
+              "tumor_assessments.tumor_classification",
+              "tumor_assessments.tumor_site",
+              "tumor_assessments.tumor_state",
+              "tumor_assessments.longest_diam_dim1",
+              "tumor_assessments.depth",
+              "tumor_assessments.tumor_size",
+              "tumor_assessments.invasiveness",
+              "tumor_assessments.nodal_clinical",
+              "tumor_assessments.nodal_pathology",
+              "tumor_assessments.parameningeal_extension",
+              "tumor_assessments.necrosis",
+              "tumor_assessments.necrosis_pct",
+              "tumor_assessments.tumor_laterality",
+              "stagings.irs_group",
+              "stagings.tnm_finding",
+              "stagings.stage_system",
+              "stagings.stage",
+              "stagings.AB",
+              "stagings.E",
+              "stagings.S",
+              "disease_characteristics.mki",
+              "disease_characteristics.bulk_disease",
+              "disease_characteristics.BULK_MED_MASS",
+              "disease_characteristics.bulky_nodal_aggregate"
+            ]
+          },
+          {
+            "title": "Molecular",
+            "fields": [
+              "molecular_analysis.anaplasia",
+              "molecular_analysis.anaplasia_extent",
+              "molecular_analysis.molecular_abnormality",
+              "molecular_analysis.molecular_abnormality_result",
+              "molecular_analysis.gene1",
+              "molecular_analysis.gene2",
+              "molecular_analysis.dna_index",
+              "molecular_analysis.age_at_molecular_analysis",
+              "molecular_analysis.mitoses",
+              "molecular_analysis.cytodifferentiation"
+            ]
+          },
+          {
+            "title": "Surgery",
+            "fields": [
+              "biopsy_surgical_procedures.tumor_classification",
+              "biopsy_surgical_procedures.procedure_type",
+              "biopsy_surgical_procedures.margins"
+            ]
+          },
+          {
+            "title": "Radiation",
+            "fields": [
+              "radiation_therapies.tumor_classification",
+              "radiation_therapies.energy_type",
+              "radiation_therapies.rt_dose"
+            ]
+          },
+          {
+            "title": "Response",
+            "fields": [
+              "subject_responses.tx_prior_response",
+              "subject_responses.response",
+              "subject_responses.interim_response",
+              "subject_responses.response_method"
+            ]
+          },
+          {
+            "title": "SMN",
+            "fields": [
+              "secondary_malignant_neoplasm.age_at_smn",
+              "secondary_malignant_neoplasm.smn_site",
+              "secondary_malignant_neoplasm.smn_type",
+              "secondary_malignant_neoplasm.smn_morph_icdo"
+            ]
+          },
+          {
+            "title": "Imaging",
+            "fields": [
+              "imagings.imaging_method",
+              "imagings.imaging_result"
+            ]
+          },
+          {
+            "title": "Labs",
+            "fields": [
+              "labs.lab_test",
+              "labs.lab_result",
+              "labs.lab_result_numeric",
+              "labs.lab_result_unit"
+            ]
+          },
+          {
+            "title": "SCT",
+            "fields": [
+              "stem_cell_transplants.sct_type"
+            ]
+          }
+        ]
+      },
+      "projectId": "search",
+      "graphqlField": "subject",
+      "index": "",
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "export-to-pfb",
+          "title": "Export to PFB",
+          "leftIcon": "datafile",
+          "rightIcon": "download"
+        },
+        {
+          "enabled": false,
+          "type": "data",
+          "title": "Download Data",
+          "leftIcon": "user",
+          "rightIcon": "download",
+          "fileName": "data.json",
+          "tooltipText": "You can only download data accessible to you"
+        }
+      ],
+      "table": {
+        "enabled": true,
+        "fields": [
+          "external_references.external_links",
+          "consortium",
+          "data_contributor_id",
+          "subject_submitter_id",
+          "sex",
+          "race",
+          "ethnicity",
+          "survival_characteristics.lkss",
+          "survival_characteristics.age_at_lkss"
+        ]
+      },
+      "patientIds": {
+        "filter": false,
+        "export": true
+      },
+      "survivalAnalysis": {
+        "result": {
+          "pval": false,
+          "risktable": true,
+          "survival": true
+        }
+      },
+      "guppyConfig": {
+        "dataType": "subject",
+        "nodeCountTitle": "Subjects",
+        "fieldMapping": [
+          {
+            "field": "data_contributor_id",
+            "name": "Data Contributor",
+            "tooltip": "Survival analysis is not allowed for this variable. Filtering by this variable will disable survival analysis."
+          },
+          {
+            "field": "studies.study_id",
+            "name": "Study Id",
+            "tooltip": "Survival analysis is not allowed for this variable. Filtering by this variable will disable survival analysis."
+          },
+          {
+            "field": "studies.treatment_arm",
+            "name": "Treatment Arm",
+            "tooltip": "Survival analysis is not allowed for this variable. Filtering by this variable will disable survival analysis."
+          },
+          {
+            "field": "year_at_disease_phase",
+            "name": "Year at Initial Diagnosis"
+          },
+          {
+            "field": "survival_characteristics.lkss",
+            "name": "Last Known Survival Status (LKSS)"
+          },
+          {
+            "field": "survival_characteristics.lkss_obfuscated",
+            "name": "Last Known Survival Status (LKSS)"
+          },
+          {
+            "field": "medical_histories.medical_history",
+            "name": "Medical History"
+          },
+          {
+            "field": "medical_histories.medical_history_status",
+            "name": "Medical History Status"
+          },
+          {
+            "field": "external_references.external_resource_name",
+            "name": "External Resource Name"
+          },
+          {
+            "field": "histologies.histology",
+            "name": "Histology"
+          },
+          {
+            "field": "histologies.histology_grade",
+            "name": "Histology Grade"
+          },
+          {
+            "field": "histologies.histology_inpc",
+            "name": "INPC Classification"
+          },
+          {
+            "field": "tumor_assessments.age_at_tumor_assessment",
+            "name": "Age at Tumor Assessment"
+          },
+          {
+            "field": "tumor_assessments.tumor_classification",
+            "name": "Tumor Classification"
+          },
+          {
+            "field": "tumor_assessments.tumor_site",
+            "name": "Tumor Site"
+          },
+          {
+            "field": "tumor_assessments.tumor_state",
+            "name": "Tumor State"
+          },
+          {
+            "field": "tumor_assessments.longest_diam_dim1",
+            "name": "Longest Diameter Dimension 1"
+          },
+          {
+            "field": "tumor_assessments.depth",
+            "name": "Tumor Depth"
+          },
+          {
+            "field": "tumor_assessments.tumor_size",
+            "name": "Tumor Size"
+          },
+          {
+            "field": "tumor_assessments.invasiveness",
+            "name": "Invasiveness"
+          },
+          {
+            "field": "tumor_assessments.nodal_clinical",
+            "name": "Nodal Clinical"
+          },
+          {
+            "field": "tumor_assessments.nodal_pathology",
+            "name": "Nodal Pathology"
+          },
+          {
+            "field": "tumor_assessments.parameningeal_extension",
+            "name": "Parameningeal Extension"
+          },
+          {
+            "field": "tumor_assessments.necrosis",
+            "name": "Necrosis"
+          },
+          {
+            "field": "tumor_assessments.necrosis_pct",
+            "name": "Necrosis PCT"
+          },
+          {
+            "field": "tumor_assessments.tumor_laterality",
+            "name": "Tumor Laterality"
+          }, 
+          {
+            "field": "stagings.irs_group",
+            "name": "IRS Group"
+          },
+          {
+            "field": "stagings.tnm_finding",
+            "name": "TNM Finding"
+          },
+          {
+            "field": "stagings.stage_system",
+            "name": "Stage System"
+          },
+          {
+            "field": "stagings.stage",
+            "name": "Stage"
+          },
+          {
+            "field": "stagings.AB",
+            "name": "Ann Arbor AB"
+          },
+          {
+            "field": "stagings.E",
+            "name": "Ann Arbor E"
+          },
+          {
+            "field": "stagings.S",
+            "name": "Ann Arbor S"
+          },
+          {
+            "field": "disease_characteristics.mki",
+            "name": "MKI"
+          },
+          {
+            "field": "disease_characteristics.bulk_disease",
+            "name": "Bulky Disease"
+          },
+          {
+            "field": "disease_characteristics.BULK_MED_MASS",
+            "name": "Bulky Mediastinal Mass"
+          },
+          {
+            "field": "disease_characteristics.bulky_nodal_aggregate",
+            "name": "Bulky Nodal Aggregate"
+          },
+          {
+            "field": "molecular_analysis.anaplasia",
+            "name": "Anaplasia"
+          },
+          {
+            "field": "molecular_analysis.anaplasia_extent",
+            "name": "Anaplasia Extent"
+          },
+          {
+            "field": "molecular_analysis.molecular_abnormality",
+            "name": "Molecular Abnormality"
+          },
+          {
+            "field": "molecular_analysis.molecular_abnormality_result",
+            "name": "Molecular Abnormality Result"
+          },
+          {
+            "field": "molecular_analysis.gene1",
+            "name": "Gene 1"
+          },
+          {
+            "field": "molecular_analysis.gene2",
+            "name": "Gene 2"
+          },
+          {
+            "field": "molecular_analysis.dna_index",
+            "name": "DNA Index"
+          },
+          {
+            "field": "molecular_analysis.age_at_molecular_analysis",
+            "name": "Age at Molecular Analysis"
+          },
+          {
+            "field": "molecular_analysis.mitoses",
+            "name": "Mitoses"
+          },
+          {
+            "field": "molecular_analysis.cytodifferentiation",
+            "name": "Cytodifferentiation"
+          },
+          {
+            "field": "biopsy_surgical_procedures.tumor_classification",
+            "name": "Tumor Classification"
+          },
+          {
+            "field": "biopsy_surgical_procedures.procedure_type",
+            "name": "Procedure Type"
+          },
+          {
+            "field": "biopsy_surgical_procedures.procedure_site",
+            "name": "Procedure Site"
+          },
+          {
+            "field": "biopsy_surgical_procedures.margins",
+            "name": "Margins"
+          },
+          {
+            "field": "radiation_therapies.tumor_classification",
+            "name": "Tumor Classification"
+          },
+          {
+            "field": "radiation_therapies.age_at_rt_start",
+            "name": "Age at Radiation Therapy"
+          },
+          {
+            "field": "radiation_therapies.rt_site",
+            "name": "Radiation Site"
+          },
+          {
+            "field": "radiation_therapies.energy_type",
+            "name": "Energy Type"
+          },
+          {
+            "field": "radiation_therapies.rt_dose",
+            "name": "Radiation Dose"
+          },
+          {
+            "field": "radiation_therapies.rt_unit",
+            "name": "Radiation Unit"
+          },
+          {
+            "field": "subject_responses.age_at_response",
+            "name": "Age at Response"
+          },
+          {
+            "field": "subject_responses.tx_prior_response",
+            "name": "Treatment Prior Response"
+          },
+          {
+            "field": "subject_responses.response",
+            "name": "Response"
+          },
+          {
+            "field": "subject_responses.interim_response",
+            "name": "Interim Response"
+          },
+          {
+            "field": "subject_responses.response_method",
+            "name": "Response Method"
+          },
+          {
+            "field": "subject_responses.necrosis",
+            "name": "Necrosis"
+          },
+          {
+            "field": "secondary_malignant_neoplasm.age_at_smn",
+            "name": "Age at SMN"
+          },
+          {
+            "field": "secondary_malignant_neoplasm.smn_site",
+            "name": "SMN Site"
+          },
+          {
+            "field": "secondary_malignant_neoplasm.smn_type",
+            "name": "SMN Type"
+          },
+          {
+            "field": "secondary_malignant_neoplasm.smn_morph_icdo",
+            "name": "ICD-O Morphology"
+          },
+          {
+            "field": "imagings.imaging_method",
+            "name": "Imaging Method"
+          },
+          {
+            "field": "imagings.imaging_result",
+            "name": "Imaging Result"
+          },
+          {
+            "field": "labs.lab_result_numeric",
+            "name": "Numeric Lab Result"
+          },
+          {
+            "field": "labs.lab_result_unit",
+            "name": "Lab Result Unit"
+          },
+          {
+            "field": "labs.lab_result",
+            "name": "Lab Result"
+          },
+          {
+            "field": "labs.lab_test",
+            "name": "Lab Test"
+          },
+          {
+            "field": "stem_cell_transplants.sct_type",
+            "name": "SCT Type"
+          }
+        ]
+      },
+      "dataRequests": {
+        "enabled": false
+      },
+      "getAccessButtonLink": "https://docs.pedscommons.org/PCDCProjectRequestForm/"
+    },
+    {
+      "id": 2,
+      "label": "data - survival",
+      "charts": {
+        "sex": {
+          "chartType": "bar",
+          "title": "Sex"
+        },
+        "race": {
+          "chartType": "bar",
+          "title": "Race"
+        },
+        "ethnicity": {
+          "chartType": "bar",
+          "title": "Ethnicity"
+        }
+      },
+      "adminAppliedPreFilters": {
+        "consortium": {
+          "selectedValues": ["INSTRuCT"]
+        }
+      },
+      "filters": {
+        "anchor": {
+          "field": "disease_phase",
+          "options": ["Initial Diagnosis", "Relapse"],
+          "tabs": ["Disease", "Molecular"],
+          "tooltip": "You can describe this filter here"
         },
         "tabs": [
           {
@@ -193,9 +700,19 @@
           }
         ]
       },
+      "projectId": "search",
+      "graphqlField": "subject",
+      "index": "",
       "buttons": [
         {
           "enabled": true,
+          "type": "export-to-pfb",
+          "title": "Export to PFB",
+          "leftIcon": "datafile",
+          "rightIcon": "download"
+        },
+        {
+          "enabled": false,
           "type": "data",
           "title": "Download Data",
           "leftIcon": "user",
@@ -220,13 +737,13 @@
       },
       "patientIds": {
         "filter": false,
-        "export": false
+        "export": true
       },
       "survivalAnalysis": {
         "result": {
           "pval": false,
-          "risktable": false,
-          "survival": false
+          "risktable": true,
+          "survival": true
         }
       },
       "guppyConfig": {
@@ -235,7 +752,8 @@
         "fieldMapping": [
           {
             "field": "survival_characteristics.lkss",
-            "name": "Last Known Survival Status (LKSS)"
+            "name": "Last Known Survival Status (LKSS)",
+            "tooltip": "test tooltip"
           },
           {
             "field": "survival_characteristics.age_at_lkss",
@@ -263,7 +781,7 @@
           },
           {
             "field": "tumor_assessments.longest_diam_dim1",
-            "name": "Longest Diam Dim 1"
+            "name": "Longest Diameter Dimension 1"
           },
           {
             "field": "tumor_assessments.invasiveness",
@@ -322,10 +840,6 @@
             "name": "Data Release Version"
           },
           {
-            "field": "data_contributor_id",
-            "name": "Data Contributor"
-          },
-          {
             "field": "stagings.irs_group",
             "name": "IRS Group"
           },
@@ -336,9 +850,9 @@
         ]
       },
       "dataRequests": {
-        "enabled": true
+        "enabled": false
       },
-      "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
+      "getAccessButtonLink": "https://docs.pedscommons.org/PCDCProjectRequestForm/"
     }
   ]
 }

@@ -69,7 +69,6 @@ function ExplorerFilter({ className = '', ...filterProps }) {
   };
   const hasExplorerFilter =
     Object.keys(filterProps.filter.value ?? {}).length > 0;
-
   return (
     <div className={className}>
       <div className='explorer-filter__title-container'>
@@ -84,6 +83,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
           </button>
         )}
       </div>
+
       <ConnectedFilter {...connectedFilterProps} />
     </div>
   );

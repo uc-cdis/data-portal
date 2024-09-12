@@ -219,7 +219,7 @@ function ExplorerFilterSetWorkspace() {
   return (
     <div className='explorer-filter-set-workspace'>
       <header>
-        <h2>Filter Set Workspace</h2>
+        <h2>Filter Set workspace</h2>
         {/* eslint-disable-next-line no-nested-ternary */}
         {savedFilterSets.isError ? (
           <div className='explorer-filter-set-workspace__error'>

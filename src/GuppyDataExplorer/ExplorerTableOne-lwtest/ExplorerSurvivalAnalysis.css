@@ -1,0 +1,209 @@
+.explorer-survival-analysis {
+  background-color: var(--g3-color__white);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 10px;
+  padding: 12px 12px 5rem;
+}
+
+.explorer-survival-analysis__warning {
+  color: #e74c3c;
+  font-style: italic;
+  padding: 0.5rem 0;
+  text-align: center;
+  width: 100%;
+}
+
+.explorer-survival-analysis__column-left {
+  display: flex;
+  flex-grow: 1;
+  max-width: 600px;
+}
+
+.explorer-survival-analysis__column-right {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.explorer-survival-analysis__error {
+  text-align: center;
+  margin: 1rem auto;
+}
+
+.explorer-survival-analysis__error-message {
+  margin-bottom: 1rem;
+  text-align: initial;
+  background: var(--g3-color__bg-cloud);
+  padding: 0.5rem;
+}
+
+.explorer-survival-analysis__control-form {
+  margin: 12px;
+  min-height: calc(100% + 200px);
+  text-align: center;
+  width: 100%;
+}
+
+.explorer-survival-analysis__filter-set-card {
+  background-color: var(--g3-color__white);
+  border: 1px solid var(--g3-color__silver);
+  margin-top: 1rem;
+  padding: 0.75rem;
+}
+
+.explorer-survival-analysis__filter-set-card button {
+  background-color: initial;
+  border: initial;
+  border-radius: initial;
+  height: initial;
+  margin: 0.25rem;
+  padding: initial;
+  width: initial;
+}
+
+.explorer-survival-analysis__filter-set-card i {
+  background-color: var(--g3-color__bg-coal);
+}
+
+.explorer-survival-analysis__filter-set-card > header {
+  align-items: center;
+  color: var(--g3-color__bg-coal);
+  display: flex;
+  font-weight: var(--g3-font__semi-bold-weight);
+  justify-content: space-between;
+}
+
+.explorer-survival-analysis__filter-set-card > header > *:first-child {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  padding: 0.25rem;
+}
+
+.explorer-survival-analysis__filter-set-card > header > *:first-child > i {
+  margin-right: 0.5rem;
+}
+
+.explorer-survival-analysis__filter-set-card > header > em {
+  margin: 0 0.5rem;
+}
+
+.explorer-survival-analysis__filter-set-select {
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.explorer-survival-analysis__filter-set-select > *:first-child {
+  flex-grow: 1;
+  margin-right: 1rem;
+}
+
+.explorer-survival-analysis__filter-group {
+  background-color: var(--g3-color__bg-cloud);
+  padding: 1rem;
+}
+
+.explorer-survival-analysis__button-group {
+  background-color: var(--g3-color__white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 2rem;
+}
+
+.explorer-survival-analysis__button-group > button {
+  margin-left: 1rem;
+}
+
+.explorer-survival-analysis__survival-plot {
+  margin: 12px;
+  min-height: 300px;
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.explorer-survival-analysis .recharts-wrapper {
+  background-blend-mode: lighten;
+  background-color: rgba(255, 255, 255, 0.9);
+  background-image: url(../../img/logo-watermark.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.explorer-survival-analysis__risk-table {
+  margin: 12px;
+  min-height: 150px;
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.explorer-survival-analysis__risk-table .yAxis tspan {
+  font-size: 0.8rem;
+}
+
+.explorer-survival-analysis__figure-title {
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem 0;
+}
+
+.explorer-survival-analysis__figure-placeholder {
+  border: 1px dashed lightgray;
+  color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 90%;
+  margin: auto;
+}
+
+@media screen and (max-width: 1090px) {
+  .explorer-survival-analysis {
+    padding-bottom: 5rem;
+  }
+  .explorer-survival-analysis__button-group {
+    padding-left: 0;
+    padding-bottom: 4rem;
+    justify-content: center;
+  }
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1023px) {
+  .explorer-survival-analysis__column-left,
+  .explorer-survival-analysis__column-right {
+    min-width: 100%;
+    max-width: auto;
+  }
+}
+
+.explorer-survival-analysis__user-agreement {
+  margin: 1rem 1rem 2rem;
+  width: 100%;
+}
+
+.explorer-survival-analysis__user-agreement > p,
+.explorer-survival-analysis__user-agreement > ul,
+.explorer-survival-analysis__user-agreement > video {
+  margin-bottom: 1rem;
+  max-width: 80ch;
+}
+
+.explorer-survival-analysis__user-agreement > ul {
+  padding-left: 2rem;
+}
+
+.explorer-survival-analysis__user-agreement > ul > li {
+  margin-top: 0.5rem;
+}
+
+/***************************************************************/
+
+.exploerer-table-one__filter-group-variable{
+  background-color: var(--g3-color__bg-cloud);
+  padding: 1rem;
+}
