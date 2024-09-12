@@ -22,7 +22,7 @@ const handleDownloadManifestClick = (
   // combine manifests from all selected studies
   const manifest = assembleFileManifest(manifestFieldName, selectedResources);
   const projectNumber = selectedResources.map((study) => study.project_number);
-  const studyName = selectedResources.map((study) => study.study_name);
+  const studyName = selectedResources.map((study) => study.study_metadata.minimal_info.study_name);
   const repositoryName = selectedResources.map((study) => study.commons);
   datadogRum.addAction('manifestDownload', {
     manifestDownloadProjectNumber: projectNumber,

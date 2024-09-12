@@ -70,7 +70,7 @@ const checkDownloadStatus = (
                   (study) => study.project_number,
                 );
                 const studyName = selectedResources.map(
-                  (study) => study.study_name,
+                  (study) => study.study_metadata.minimal_info.study_name,
                 );
                 const repositoryName = selectedResources.map(
                   (study) => study.commons,
