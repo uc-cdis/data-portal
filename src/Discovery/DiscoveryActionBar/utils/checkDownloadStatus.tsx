@@ -67,13 +67,13 @@ const checkDownloadStatus = (
                 });
                 setTimeout(() => window.open(output), 2000);
                 const projectNumber = selectedResources.map(
-                  (study) => study.project_number,
+                  (study) => study.project_number || [],
                 );
                 const studyName = selectedResources.map(
-                  (study) => study.study_metadata.minimal_info.study_name,
+                  (study) => study.study_metadata?.minimal_info?.study_name || [],
                 );
                 const repositoryName = selectedResources.map(
-                  (study) => study.commons,
+                  (study) => study.commons || [],
                 );
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
