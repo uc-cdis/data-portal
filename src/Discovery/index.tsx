@@ -76,15 +76,15 @@ const DiscoveryWithMDSBackend: React.FC<{
   // to improve load time & usability
   // Initially uses a smaller batch to load interface quickly
   // Then a batch with all the studies
-  const [studiesBatchCount, setStudiesBatchCount] = useState(0);
+  const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(0);
   const expectedNumberOfTotalBatches = 2;
   const numberOfStudiesForSmallerBatch = 5;
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
-    // If batch loading is Enabled, update the studiesBatchCount to enable calling of different batch sizes
+    // If batch loading is Enabled, update the numberOfBatchesLoaded to enable calling of different batch sizes
     // with different parameters
-    if (studiesBatchCount < expectedNumberOfTotalBatches) setStudiesBatchCount(studiesBatchCount + 1);
+    if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
 
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
@@ -93,7 +93,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       let loadStudiesParameters: any;
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
-        loadStudiesParameters = studiesBatchCount === 1
+        loadStudiesParameters = numberOfBatchesLoaded === 1
           ? numberOfStudiesForSmallerBatch
           : numberOfStudiesForAllStudiesBatch;
       } else {
@@ -107,7 +107,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (isEnabled('studyRegistration')) {
         // Load fewer raw studies if on the first studies batch
         // Otherwise load them all
-        rawStudiesUnregistered = studiesBatchCount === 1
+        rawStudiesUnregistered = numberOfBatchesLoaded === 1
           ? (rawStudiesUnregistered = await getSomeStudiesFromMDS(
             'unregistered_discovery_metadata',
             numberOfStudiesForSmallerBatch,
@@ -202,7 +202,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props, studiesBatchCount]);
+  }, [props, numberOfBatchesLoaded]);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
