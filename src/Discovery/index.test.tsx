@@ -1,11 +1,9 @@
-// DiscoveryWithMDSBackend.test.js
-
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import DiscoveryWithMDSBackend from './DiscoveryWithMDSBackend';
+import DiscoveryWithMDSBackend from './index.tsx';
 import rootReducer from '../reducers'; // Adjust the import to match your root reducer
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min.js';
 
 // Mock the dependencies
 jest.mock('../helpers/featureFlags', () => ({
@@ -27,21 +25,35 @@ jest.mock('../authMappingUtils', () => ({
 }));
 
 // Create a mock store
-const mockStore = createStore(rootReducer, {
+
+const mockStore = {
   userAuthMapping: {},
   userAggregateAuthMappings: {},
   discovery: {},
-});
+  subscribe: {},
+  getState: () => ({
+    userAggregateAuthMappings: false,
+  }),
+};
 
-const setup = (props) => {
-  return render(
+const setup = (props) =>
+  render(
     <Provider store={mockStore}>
       <DiscoveryWithMDSBackend {...props} />
     </Provider>
   );
-};
 
 describe('DiscoveryWithMDSBackend', () => {
+  // Mock window.location
+  beforeAll(() => {
+    delete window.location; // Delete the original window.location
+    window.location = {
+      search: '',
+      assign: jest.fn(),
+      reload: jest.fn(),
+      replace: jest.fn(),
+    };
+  });
   const defaultProps = {
     userAggregateAuthMappings: {},
     config: {
