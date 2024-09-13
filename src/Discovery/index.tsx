@@ -78,7 +78,10 @@ const DiscoveryWithMDSBackend: React.FC<{
   // Then a batch with all the studies
   const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(0);
   const expectedNumberOfTotalBatches = 2;
-  const numberOfStudiesForSmallerBatch = 5;
+  // if loading with both unregistered and registered studies, load 5 for each (10 total)
+  const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
+  const numberOfSmallBatchesLoaded = isEnabled('studyRegistration') ? 2 : 1;
+  const totalNumberOfStudiesFromSmallBatches = numberOfStudiesForSmallerBatch * numberOfSmallBatchesLoaded;
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
@@ -88,7 +91,6 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
-      const startTime = performance.now();
       let loadStudiesFunction: Function;
       let loadStudiesParameters: any;
       if (isEnabled('discoveryUseAggMDS')) {
@@ -120,10 +122,6 @@ const DiscoveryWithMDSBackend: React.FC<{
           }),
         );
       }
-      const endTime = performance.now();
-      console.log(
-        `Call to fetchRawStudies took ${endTime - startTime} milliseconds`,
-      );
       return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
     fetchRawStudies().then((rawStudies) => {
@@ -202,27 +200,22 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props, numberOfBatchesLoaded]);
+  }, [props, numberOfBatchesLoaded, numberOfStudiesForSmallerBatch]);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }
 
-  const batchLoadingInfo = {
-    // All batches all loaded if the studies are not null and
-    // their length is great than the studies for the smaller batches
-    // from loadStudiesFromAggMDS and getSomeStudiesFromMDS
-    allBatchesAreLoaded: studies === null
-      ? false
-      : studies?.length > numberOfStudiesForSmallerBatch * 2,
-  };
+  const allBatchesAreLoaded = studies === null
+    ? false
+    : (studies as Array<any>)?.length > totalNumberOfStudiesFromSmallBatches;
 
   return (
     <Discovery
       studies={studies === null ? [] : studies}
       studyRegistrationValidationField={studyRegistrationValidationField}
-      batchLoadingInfo={batchLoadingInfo}
+      allBatchesAreLoaded={allBatchesAreLoaded}
       {...props}
     />
   );
