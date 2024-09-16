@@ -31,8 +31,4 @@ describe(' addUniqueObjectToArray', () => {
     }
     expect(actualErrorMsg).toEqual(expectedErrorMsg);
   });
-
-
-
-
 });
