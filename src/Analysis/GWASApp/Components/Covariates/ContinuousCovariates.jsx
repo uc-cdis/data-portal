@@ -20,7 +20,13 @@ const ContinuousCovariates = ({
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
   });
+  const submittedCovariateIds = outcome?.concept_id ?
+  [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] :
+   [...selectedCovariates.map((obj) => obj.concept_id)];
 
+  console.log('outcome', outcome)
+  console.log(' submittedCovariateIds', submittedCovariateIds)
+  console.log()
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow continuous-covariates'>
@@ -28,7 +34,7 @@ const ContinuousCovariates = ({
           <Covariates
             selected={selected}
             handleSelect={setSelected}
-            submittedCovariateIds={outcome?.concept_id ? [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] : []}
+            submittedCovariateIds={submittedCovariateIds}
           />
         </div>
         <div className='phenotype-histogram'>

@@ -16,7 +16,7 @@ const reducer = (state, action) => {
   case ACTIONS.ADD_COVARIATE:
     console.log(state.covariates);
     // return { ...state, covariates: addUniqueObjectToArray([...state.covariates], action.payload)};
-    return {...state, covariates: addUniqueObjectToArray([...state.covariates], action.payload)};
+    return { ...state, covariates: addUniqueObjectToArray([...state.covariates], action.payload) };
     // return {...state, covariates:[...state.covariates, action.payload] };
   case ACTIONS.DELETE_COVARIATE:
     // Used to delete continuous covariates:

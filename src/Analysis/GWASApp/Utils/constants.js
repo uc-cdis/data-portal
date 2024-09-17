@@ -67,14 +67,13 @@ export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
   return hasZeroSizeIssue;
 };
 
-
 export const addUniqueObjectToArray = (currArray, newObj) => {
   if (!Array.isArray(currArray) || typeof newObj !== 'object' || newObj === null) {
     throw new TypeError('addUniqueObjectToArray recieved invalid parameters');
   }
-  const isUnique = !currArray.some(obj => isEqual(obj, newObj));
+  const isUnique = !currArray.some((obj) => isEqual(obj, newObj));
   if (isUnique) {
-      currArray.push(newObj);
+    currArray.push(newObj);
   }
   return currArray;
 };
