@@ -22,7 +22,7 @@ const ContinuousCovariates = ({
   });
 
   // when a user has selected a outcome phenotype that is a continous covariate with a concept ID,
-  // that should not appear as a selectable option, and included in the submitted covariates.
+  // that should not appear as a selectable option, and be included in the submitted covariates.
   // If they selected a outcome phenotype that is dichotomous
   // the outcome doesn't need to be included as a submitted covariate
   const submittedCovariateIds = outcome?.concept_id
