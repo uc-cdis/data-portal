@@ -20,13 +20,14 @@ const ContinuousCovariates = ({
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
   });
-  const submittedCovariateIds = outcome?.concept_id ?
-  [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)] :
-   [...selectedCovariates.map((obj) => obj.concept_id)];
 
-  console.log('outcome', outcome)
-  console.log(' submittedCovariateIds', submittedCovariateIds)
-  console.log()
+  // when a user has selected a outcome phenotype that is a continous covariate with a concept ID,
+  // that should not appear as an option. If they selected a outcome phenotype that is dichotomous
+  // the outcome doesn't need to be included as a submitted covariate
+  const submittedCovariateIds = outcome?.concept_id
+    ? [outcome.concept_id, ...selectedCovariates.map((obj) => obj.concept_id)]
+    : [...selectedCovariates.map((obj) => obj.concept_id)];
+
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow continuous-covariates'>
