@@ -1,7 +1,7 @@
 import { addUniqueObjectToArray } from './constants';
 
 const expectedErrorMsg = 'addUniqueObjectToArray recieved invalid parameters';
-describe(' addUniqueObjectToArray', () => {
+describe('addUniqueObjectToArray', () => {
   it('should add a unique object to array', async () => {
     expect(addUniqueObjectToArray([], { test: 1 })).toEqual([{ test: 1 }]);
   });
