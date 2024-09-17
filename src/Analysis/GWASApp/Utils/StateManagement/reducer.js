@@ -14,10 +14,7 @@ const reducer = (state, action) => {
   case ACTIONS.SET_OUTCOME:
     return { ...state, currentStep: 2, outcome: action.payload };
   case ACTIONS.ADD_COVARIATE:
-    console.log(state.covariates);
-    // return { ...state, covariates: addUniqueObjectToArray([...state.covariates], action.payload)};
     return { ...state, covariates: addUniqueObjectToArray([...state.covariates], action.payload) };
-    // return {...state, covariates:[...state.covariates, action.payload] };
   case ACTIONS.DELETE_COVARIATE:
     // Used to delete continuous covariates:
     if ('concept_id' in action.payload) {
