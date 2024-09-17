@@ -16,8 +16,6 @@ export const GWASAppSteps = [
   },
 ];
 
-export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
-
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
