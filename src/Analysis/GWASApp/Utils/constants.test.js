@@ -6,11 +6,13 @@ describe('addUniqueObjectToArray', () => {
     expect(addUniqueObjectToArray([], { test: 1 })).toEqual([{ test: 1 }]);
   });
   it('should reject a non-unique object from being added to the array', async () => {
-    expect(addUniqueObjectToArray([{ test: 1 }, { test: 2 }], { test: 2 })).toEqual([{ test: 1 }, { test: 2 }]);
+    expect(addUniqueObjectToArray([{ test: 1 }, { test: 2 }], { test: 2 }))
+      .toEqual([{ test: 1 }, { test: 2 }]);
   });
-  it(`should reject a non-unique object from being added to the array when object key value pairs are declared
-    in different orders`, async () => {
-    expect(addUniqueObjectToArray([{ test: 1 }, { test: 2, key: 'value' }], { key: 'value', test: 2 }))
+  it(`should reject a non-unique object from being added to the array when object key value
+    pairs are declared in different orders`, async () => {
+    expect(addUniqueObjectToArray([{ test: 1 }, { test: 2, key: 'value' }],
+      { key: 'value', test: 2 }))
       .toEqual([{ test: 1 }, { test: 2, key: 'value' }]);
   });
   it('should throw an error if first param is invalid', () => {
