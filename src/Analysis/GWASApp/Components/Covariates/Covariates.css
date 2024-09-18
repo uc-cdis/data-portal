@@ -59,14 +59,14 @@
   color: white;
 }
 
-/* Continous Covariate Selection */
+/* Continuous Covariate Selection */
 .GWASApp .phenotype-histogram {
   padding-left: 30px;
   margin-top: 8px;
   width: 600px;
 }
 
-.GWASApp .continuous-covariates .continous-covariates-table {
+.GWASApp .continuous-covariates .continuous-covariates-table {
   width: 400px;
 }
 
