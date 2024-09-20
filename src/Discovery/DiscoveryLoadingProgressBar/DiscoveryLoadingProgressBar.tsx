@@ -15,6 +15,7 @@ const DiscoveryLoadingProgressBar = ({
   // Auto incrementing percent logic
   const percentUpdateInterval = 500;
   const percentIncrementAmount = 5;
+
   useEffect(() => {
     const interval = setInterval(() => {
       setPercent((prevPercent) => prevPercent + percentIncrementAmount);
@@ -24,14 +25,12 @@ const DiscoveryLoadingProgressBar = ({
 
   // hide the bar after a delay after the batches are loaded,
   // giving the browser some time to process the batch
-  const delayTimeBeforeHidingProgressBar = 2000;
+  const delayTimeBeforeHidingProgressBar = 2500;
   useEffect(() => {
-    console.log('useeffect achieved!');
     if (allBatchesAreLoaded) {
       setPercent(100);
       // Change displayProgressBar to false after delay
       setTimeout(() => {
-        console.log('timeout achieved!');
         setDisplayProgressBar(false);
       }, delayTimeBeforeHidingProgressBar);
     }
@@ -40,10 +39,7 @@ const DiscoveryLoadingProgressBar = ({
   return (
     <React.Fragment>
       { displayProgressBar && (
-        <div
-          className='discovery-loading-progress-bar'
-          style={{ display: displayProgressBar ? 'block' : 'none' }}
-        >
+        <div className='discovery-loading-progress-bar'>
           <Progress
             width={80}
             showInfo={false}
