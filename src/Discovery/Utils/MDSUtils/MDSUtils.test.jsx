@@ -1,7 +1,6 @@
-import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './Utils/MDSUtils/MDSUtils';
-import { mdsURL } from '../localconf';
+import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './MDSUtils';
+import { mdsURL } from '../../../localconf';
 
-// Mocking the global fetch API
 global.fetch = jest.fn();
 
 const checkForFetchError = async (targetFunction) => {
@@ -25,7 +24,7 @@ const checkForFetchError = async (targetFunction) => {
 
 describe('MDS Data Loading Functions', () => {
   afterEach(() => {
-    jest.clearAllMocks(); // Clear mocks after each test
+    jest.clearAllMocks();
   });
 
   describe('loadStudiesFromMDS', () => {
