@@ -26,9 +26,12 @@ const DiscoveryLoadingProgressBar = ({
   // giving the browser some time to process the batch
   const delayTimeBeforeHidingProgressBar = 2000;
   useEffect(() => {
+    console.log('useeffect achieved!');
     if (allBatchesAreLoaded) {
+      setPercent(100);
       // Change displayProgressBar to false after delay
       setTimeout(() => {
+        console.log('timeout achieved!');
         setDisplayProgressBar(false);
       }, delayTimeBeforeHidingProgressBar);
     }
@@ -44,9 +47,10 @@ const DiscoveryLoadingProgressBar = ({
           <Progress
             width={80}
             showInfo={false}
-            percent={allBatchesAreLoaded ? 100 : percent}
+            percent={percent}
             status='success'
             strokeColor='#99286B'
+            aria-valuenow={percent}
           />
           <p className='discovery-header__stat-label'>
             Loading studies...

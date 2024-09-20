@@ -80,11 +80,12 @@ const DiscoveryWithMDSBackend: React.FC<{
   const expectedNumberOfTotalBatches = 2;
   // if loading with both unregistered and registered studies, load 5 for each (10 total)
   const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
-  const numberOfSmallBatchesLoaded = isEnabled('studyRegistration') ? 2 : 1;
-  const totalNumberOfStudiesFromSmallBatches = numberOfStudiesForSmallerBatch * numberOfSmallBatchesLoaded;
+  const numberOfSmallBatchesToBeLoaded = isEnabled('studyRegistration') ? 2 : 1;
+  const totalNumberOfStudiesFromSmallBatches = numberOfStudiesForSmallerBatch * numberOfSmallBatchesToBeLoaded;
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
+    console.log('ran useEffect ln 88')
     // If batch loading is Enabled, update the numberOfBatchesLoaded to enable calling of different batch sizes
     // with different parameters
     if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
