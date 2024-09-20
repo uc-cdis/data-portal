@@ -8,8 +8,8 @@ import {
   hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-import loadStudiesFromAggMDS from './aggMDSUtils';
-import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './MDSUtils';
+import loadStudiesFromAggMDS from './Utils/aggMDSUtils/aggMDSUtils';
+import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './Utils/MDSUtils/MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
   if (!config.studies) {
@@ -85,7 +85,6 @@ const DiscoveryWithMDSBackend: React.FC<{
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
-    console.log('ran useEffect ln 88')
     // If batch loading is Enabled, update the numberOfBatchesLoaded to enable calling of different batch sizes
     // with different parameters
     if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);

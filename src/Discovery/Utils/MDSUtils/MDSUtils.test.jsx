@@ -1,4 +1,4 @@
-import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './MDSUtils';
+import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './Utils/MDSUtils/MDSUtils';
 import { mdsURL } from '../localconf';
 
 // Mocking the global fetch API

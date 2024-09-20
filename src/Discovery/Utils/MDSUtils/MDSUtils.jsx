@@ -1,4 +1,4 @@
-import { mdsURL, studyRegistrationConfig } from '../localconf';
+import { mdsURL, studyRegistrationConfig } from '../../../localconf';
 
 const LIMIT = 2000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data

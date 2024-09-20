@@ -1,4 +1,4 @@
-import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../localconf';
+import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../../../localconf';
 
 /**
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
