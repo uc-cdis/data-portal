@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'antd';
 import AttritionTableRow from './AttritionTableRow';
+import AttritionTableModal from './AttritionTableModal/AttritionTableModal';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
-const AttritionTable = ({
-  selectedCohort, outcome, covariates, tableType,
-}) => {
-
-  const [modalIsOpen, setOpen] = React.useState(false);
+const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
+  const [modalInfo, setModalInfo] = useState({
+    title: 'Historgram',
+    isModalOpen: true,
+  });
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
@@ -56,6 +57,7 @@ const AttritionTable = ({
 
   return (
     <div className='gwasv2-attrition-table' key={tableType}>
+      <AttritionTableModal modalInfo={modalInfo} setModalInfo={setModalInfo} />
       <Collapse onClick={(event) => event.stopPropagation()}>
         <Panel header={`${tableType} Attrition Table`} key='2'>
           <table>
@@ -104,6 +106,8 @@ const AttritionTable = ({
                 <React.Fragment key={tableType}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
+                    modalInfo={modalInfo}
+                    setModalInfo={setModalInfo}
                     selectedCohort={selectedCohort}
                     rowType='Outcome'
                     outcome={outcome}
@@ -114,26 +118,26 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-              {selectedCohort?.cohort_definition_id
-              && outcome
-              && covariatesProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              outcome &&
+              covariatesProcessed.length > 0
                 ? covariatesProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      rowType='Covariate'
-                      currentCovariateAndCovariatesFromPrecedingRows={[
-                        ...item,
-                        applyAutoGenFilters(),
-                      ]}
-                    />
-                  </React.Fragment>
-                ))
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        rowType='Covariate'
+                        currentCovariateAndCovariatesFromPrecedingRows={[
+                          ...item,
+                          applyAutoGenFilters(),
+                        ]}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>

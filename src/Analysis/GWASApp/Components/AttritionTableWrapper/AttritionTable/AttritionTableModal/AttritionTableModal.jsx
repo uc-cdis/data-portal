@@ -2,29 +2,22 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 
-
-const AttritionTableModal = ({
-  selectedCohort, outcome, covariates, tableType,
-}) => {
-
+const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
   return (
     <div>
-        <Modal />
+      <Modal
+        title={<h3>{modalInfo.title}</h3>}
+        open={modalInfo.isModalOpen}
+        onOk={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
+        onCancel={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
+        footer={null}
+      />
     </div>
   );
 };
 
-AttritionTable.propTypes = {
-  selectedCohort: PropTypes.object,
-  outcome: PropTypes.object,
-  covariates: PropTypes.array,
-  tableType: PropTypes.string.isRequired,
+AttritionTableModal.propTypes = {
+  modalInfo: PropTypes.object,
 };
 
-AttritionTable.defaultProps = {
-  selectedCohort: undefined,
-  outcome: null,
-  covariates: [],
-};
-
-export default AttritionTable;
+export default AttritionTableModal;

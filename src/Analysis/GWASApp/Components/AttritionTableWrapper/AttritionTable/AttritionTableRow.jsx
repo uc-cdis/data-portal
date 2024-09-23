@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
 import { fetchConceptStatsByHareSubset } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import BarChart from '../ChartIcons/BarChart';
@@ -9,6 +9,8 @@ import EulerDiagram from '../ChartIcons/EulerDiagram';
 import { useSourceContext } from '../../../Utils/Source';
 
 const AttritionTableRow = ({
+  modalInfo,
+  setModalInfo,
   selectedCohort,
   rowType,
   rowObject,
@@ -33,13 +35,14 @@ const AttritionTableRow = ({
     ],
     // if there are not two cohorts selected, then quantitative
     // Otherwise if there are two cohorts selected, case control
-    () => fetchConceptStatsByHareSubset(
-      cohortDefinitionId,
-      currentCovariateAndCovariatesFromPrecedingRows,
-      outcome,
-      sourceId,
-    ),
-    queryConfig,
+    () =>
+      fetchConceptStatsByHareSubset(
+        cohortDefinitionId,
+        currentCovariateAndCovariatesFromPrecedingRows,
+        outcome,
+        sourceId
+      ),
+    queryConfig
   );
 
   const breakdown = data?.concept_breakdown;
@@ -48,13 +51,13 @@ const AttritionTableRow = ({
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value !== 'OTH',
+        ({ concept_value }) => concept_value !== 'OTH'
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0,
-        ),
+          0
+        )
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
@@ -72,7 +75,7 @@ const AttritionTableRow = ({
     const getSizeByColumn = (hare) => {
       const hareIndex = breakdownColumns.findIndex(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value === hare,
+        ({ concept_value }) => concept_value === hare
       );
       return hareIndex > -1
         ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -94,8 +97,8 @@ const AttritionTableRow = ({
       }
       throw new Error(
         `Invalid Row Type: ${rowType} and rowObject.variable_type ${JSON.stringify(
-          rowObject,
-        )} combination`,
+          rowObject
+        )} combination`
       );
     }
     return null;
@@ -116,7 +119,7 @@ const AttritionTableRow = ({
       return selectedCohort.cohort_name;
     }
     throw new Error(
-      `Invalid Row Type: ${rowType}. Expected one of ['Outcome', 'Covariate', 'Cohort']`,
+      `Invalid Row Type: ${rowType}. Expected one of ['Outcome', 'Covariate', 'Cohort']`
     );
   };
 
@@ -130,13 +133,26 @@ const AttritionTableRow = ({
     return value;
   };
 
+  const handleChatIconClick = () => {
+    setModalInfo({
+      ...modalInfo,
+      title:
+        rowType === 'Covariate' || rowType === 'Outcome'
+          ? 'Histogram'
+          : 'Euler',
+      isModalOpen: true,
+    });
+  };
+
   return (
     <tr>
       <td className='gwasv2-attrition-table--leftpad'>
         {rowType === 'Outcome' ? 'Outcome Phenotype' : rowType}
       </td>
       <td className='gwasv2-attrition-table--chart'>
-        {determineChartIcon(rowType)}
+        <Button type='text' onClick={handleChatIconClick}>
+          {determineChartIcon(rowType)}
+        </Button>
       </td>
       <td>{rowName()}</td>
       <td className='gwasv2-attrition-table--rightborder'>
