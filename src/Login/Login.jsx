@@ -60,7 +60,6 @@ class Login extends React.Component {
     };
   }
 
-
   // componentDidMount() {
   //   window.addEventListener('resize', this.updateDimensions);
   // }
@@ -115,7 +114,7 @@ class Login extends React.Component {
         </div>
       </React.Fragment>
     );
-    console.log('providers',this.props.providers);
+
     if (this.props.providers.length > 0) {
       const loginOptions = {}; // one for each login provider
       this.props.providers.forEach((provider, i) => {
