@@ -7,13 +7,26 @@ import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
-const AttritionTable = ({
-  selectedCohort, outcome, covariates, tableType,
-}) => {
+const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
   const [modalInfo, setModalInfo] = useState({
-    title: 'Historgram',
+    title: '',
     isModalOpen: false,
+    dispatch: () => alert('dispatch called :('),
+    selectedCohort: null,
+    covariates: null,
+    outcome: null,
+    rowObject: null,
   });
+  // Keep modal info up-to-date with changes in the data needed for data viz
+  useEffect(() => {
+    setModalInfo({
+      ...modalInfo,
+      selectedCohort: selectedCohort,
+      covariates: covariates,
+      outcome: outcome,
+    });
+  }, [selectedCohort, covariates, outcome]);
+
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
@@ -100,6 +113,7 @@ const AttritionTable = ({
                     outcome={null}
                     rowType='Cohort'
                     rowObject={null}
+                    covariates={covariates}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}
                     modalInfo={modalInfo}
                     setModalInfo={setModalInfo}
@@ -116,34 +130,36 @@ const AttritionTable = ({
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
+                    covariates={covariates}
                     currentCovariateAndCovariatesFromPrecedingRows={[
                       applyAutoGenFilters(),
                     ]}
                   />
                 </React.Fragment>
               )}
-              {selectedCohort?.cohort_definition_id
-              && outcome
-              && covariatesProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              outcome &&
+              covariatesProcessed.length > 0
                 ? covariatesProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      rowType='Covariate'
-                      currentCovariateAndCovariatesFromPrecedingRows={[
-                        ...item,
-                        applyAutoGenFilters(),
-                      ]}
-                      modalInfo={modalInfo}
-                      setModalInfo={setModalInfo}
-                    />
-                  </React.Fragment>
-                ))
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        rowType='Covariate'
+                        covariates={covariates}
+                        currentCovariateAndCovariatesFromPrecedingRows={[
+                          ...item,
+                          applyAutoGenFilters(),
+                        ]}
+                        modalInfo={modalInfo}
+                        setModalInfo={setModalInfo}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>

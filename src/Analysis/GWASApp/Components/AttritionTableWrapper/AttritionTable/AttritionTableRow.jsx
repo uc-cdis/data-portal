@@ -35,13 +35,14 @@ const AttritionTableRow = ({
     ],
     // if there are not two cohorts selected, then quantitative
     // Otherwise if there are two cohorts selected, case control
-    () => fetchConceptStatsByHareSubset(
-      cohortDefinitionId,
-      currentCovariateAndCovariatesFromPrecedingRows,
-      outcome,
-      sourceId,
-    ),
-    queryConfig,
+    () =>
+      fetchConceptStatsByHareSubset(
+        cohortDefinitionId,
+        currentCovariateAndCovariatesFromPrecedingRows,
+        outcome,
+        sourceId
+      ),
+    queryConfig
   );
 
   const breakdown = data?.concept_breakdown;
@@ -50,13 +51,13 @@ const AttritionTableRow = ({
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value !== 'OTH',
+        ({ concept_value }) => concept_value !== 'OTH'
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0,
-        ),
+          0
+        )
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
@@ -74,7 +75,7 @@ const AttritionTableRow = ({
     const getSizeByColumn = (hare) => {
       const hareIndex = breakdownColumns.findIndex(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value === hare,
+        ({ concept_value }) => concept_value === hare
       );
       return hareIndex > -1
         ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -96,8 +97,8 @@ const AttritionTableRow = ({
       }
       throw new Error(
         `Invalid Row Type: ${rowType} and rowObject.variable_type ${JSON.stringify(
-          rowObject,
-        )} combination`,
+          rowObject
+        )} combination`
       );
     }
     return null;
@@ -118,7 +119,7 @@ const AttritionTableRow = ({
       return selectedCohort.cohort_name;
     }
     throw new Error(
-      `Invalid Row Type: ${rowType}. Expected one of ['Outcome', 'Covariate', 'Cohort']`,
+      `Invalid Row Type: ${rowType}. Expected one of ['Outcome', 'Covariate', 'Cohort']`
     );
   };
 
@@ -146,6 +147,7 @@ const AttritionTableRow = ({
       ...modalInfo,
       title: determineModalTitle(),
       isModalOpen: true,
+      rowObject: rowObject,
     });
   };
 
