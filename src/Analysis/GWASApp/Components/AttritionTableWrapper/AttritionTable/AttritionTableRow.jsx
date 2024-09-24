@@ -133,13 +133,19 @@ const AttritionTableRow = ({
     return value;
   };
 
+  const determineModalTitle = () => {
+    let title;
+    rowObject.variable_type === 'concept'
+      ? (title = 'Continuous ')
+      : (title = 'Dichotomous ');
+    title += rowType;
+    rowType === 'Outcome' ? (title += ' Phenotype') : null;
+    return title;
+  };
   const handleChatIconClick = () => {
     setModalInfo({
       ...modalInfo,
-      title:
-        rowType === 'Covariate' || rowType === 'Outcome'
-          ? 'Histogram'
-          : 'Euler',
+      title: determineModalTitle(),
       isModalOpen: true,
     });
   };
@@ -174,6 +180,8 @@ AttritionTableRow.propTypes = {
   outcome: PropTypes.object,
   rowObject: PropTypes.object,
   selectedCohort: PropTypes.object.isRequired,
+  modalInfo: PropTypes.object.isRequired,
+  setModalInfo: PropTypes.func.isRequired,
 };
 
 AttritionTableRow.defaultProps = {

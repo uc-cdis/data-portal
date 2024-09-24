@@ -10,7 +10,7 @@ const { Panel } = Collapse;
 const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
   const [modalInfo, setModalInfo] = useState({
     title: 'Historgram',
-    isModalOpen: true,
+    isModalOpen: false,
   });
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
   // Creates an array of arrays such that given input arr [A,B,C]
@@ -99,6 +99,8 @@ const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
                     rowType='Cohort'
                     rowObject={null}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}
+                    modalInfo={modalInfo}
+                    setModalInfo={setModalInfo}
                   />
                 </React.Fragment>
               )}
@@ -135,6 +137,8 @@ const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
                           ...item,
                           applyAutoGenFilters(),
                         ]}
+                        modalInfo={modalInfo}
+                        setModalInfo={setModalInfo}
                       />
                     </React.Fragment>
                   ))
