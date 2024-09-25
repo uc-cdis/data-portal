@@ -15,7 +15,7 @@ const AttritionTable = ({
     isModalOpen: false,
     dispatch: () => alert('dispatch called :('),
     selectedCohort: null,
-    covariates: null,
+    currentCovariateAndCovariatesFromPrecedingRows: null,
     outcome: null,
     rowObject: null,
   });
@@ -24,7 +24,6 @@ const AttritionTable = ({
     setModalInfo({
       ...modalInfo,
       selectedCohort,
-      covariates,
       outcome,
     });
   }, [selectedCohort, covariates, outcome]);

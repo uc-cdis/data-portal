@@ -29,36 +29,37 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () =>
-      fetchHistogramInfo(
-        sourceId,
-        selectedStudyPopulationCohort.cohort_definition_id,
-        selectedCovariates,
-        outcome,
-        selectedContinuousItem.concept_id
-      ),
-    queryConfig
+    () => fetchHistogramInfo(
+      sourceId,
+      selectedStudyPopulationCohort.cohort_definition_id,
+      selectedCovariates,
+      outcome,
+      selectedContinuousItem.concept_id,
+    ),
+    queryConfig,
   );
 
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
-      data?.bins === null ||
-      (status === 'success' && data?.bins === undefined)
+      data?.bins === null
+      || (status === 'success' && data?.bins === undefined)
     ) {
       setInlineErrorMessage(<h4>❌ {MESSAGES.NO_BINS_ERROR.title}</h4>);
-      dispatch &&
+      if (dispatch) {
         dispatch({
           type: ACTIONS.ADD_MESSAGE,
           payload: MESSAGES.NO_BINS_ERROR,
         });
+      }
     } else {
       setInlineErrorMessage(null);
-      dispatch &&
+      if (dispatch) {
         dispatch({
           type: ACTIONS.DELETE_MESSAGE,
           payload: MESSAGES.NO_BINS_ERROR,
         });
+      }
     }
   }, [data]);
 
@@ -81,10 +82,10 @@ const PhenotypeHistogram = ({
     yAxisLegend: 'Persons',
   };
   return (
-    <>
+    <React.Fragment>
       {useInlineErrorMessages && inlineErrorMessage}
       <Histogram {...histogramArgs} />
-    </>
+    </React.Fragment>
   );
 };
 
@@ -98,6 +99,7 @@ PhenotypeHistogram.propTypes = {
 };
 
 PhenotypeHistogram.defaultProps = {
+  dispatch: false,
   useInlineErrorMessages: false,
   selectedCovariates: [],
   outcome: null,

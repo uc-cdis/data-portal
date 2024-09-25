@@ -133,12 +133,9 @@ const AttritionTableRow = ({
   };
 
   const determineModalTitle = () => {
-    let title;
-    rowObject.variable_type === 'concept'
-      ? (title = 'Continuous ')
-      : (title = 'Dichotomous ');
+    let title = rowObject.variable_type === 'concept' ? 'Continuous ' : 'Dichotomous ';
     title += rowType;
-    rowType === 'Outcome' ? (title += ' Phenotype') : null;
+    title += rowType === 'Outcome' ? ' Phenotype' : '';
     return title;
   };
   const handleChatIconClick = () => {
@@ -146,6 +143,7 @@ const AttritionTableRow = ({
       ...modalInfo,
       title: determineModalTitle(),
       isModalOpen: true,
+      currentCovariateAndCovariatesFromPrecedingRows,
       rowObject,
     });
   };
