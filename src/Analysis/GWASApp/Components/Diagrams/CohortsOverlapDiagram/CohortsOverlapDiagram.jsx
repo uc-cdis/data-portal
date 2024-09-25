@@ -4,9 +4,9 @@ import { useQueries } from 'react-query';
 import { Spin, Button } from 'antd';
 import { fetchSimpleOverlapInfo, addCDFilter } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
-import CohortsOverlapLegend from './CohortsOverlapLegend';
-import CohortsOverlapTextVersion from './Simple3SetsOverlapTextVersion';
+import Simple3SetsEulerDiagram from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsEulerDiagram';
+import Simple3SetsLegend from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsLegend';
+import Simple3SetsTextVersion from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsTextVersion';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
@@ -188,7 +188,7 @@ const CohortsOverlapDiagram = ({
     <React.Fragment>
       {!showTextVersion && (
         <React.Fragment>
-          <CohortsOverlapLegend
+          <Simple3SetsLegend
             cohort1Label={eulerArgs.set1Label}
             cohort2Label={eulerArgs.set2Label}
             cohort3Label={eulerArgs.set3Label}
@@ -197,7 +197,7 @@ const CohortsOverlapDiagram = ({
         </React.Fragment>
       )}
       {showTextVersion && (
-        <CohortsOverlapTextVersion
+        <Simple3SetsTextVersion
           title='Cohort Intersections'
           eulerArgs={eulerArgs}
         />
