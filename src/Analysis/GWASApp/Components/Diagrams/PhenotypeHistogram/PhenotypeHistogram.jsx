@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import PropTypes, { bool } from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
@@ -15,8 +15,10 @@ const PhenotypeHistogram = ({
   selectedCovariates,
   outcome,
   selectedContinuousItem,
+  useInlineErrorMessages,
 }) => {
   const { source } = useSourceContext();
+  const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const sourceId = source; // TODO - change name of source to sourceId for clarity
   const { data, status } = useQuery(
     [
@@ -27,29 +29,36 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () => fetchHistogramInfo(
-      sourceId,
-      selectedStudyPopulationCohort.cohort_definition_id,
-      selectedCovariates,
-      outcome,
-      selectedContinuousItem.concept_id,
-    ),
-    queryConfig,
+    () =>
+      fetchHistogramInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+        selectedContinuousItem.concept_id
+      ),
+    queryConfig
   );
 
   useEffect(() => {
     // Validate and give error message if there is no data:
-    if (data?.bins === null
-      || (status === 'success' && data?.bins === undefined)) {
-      dispatch({
-        type: ACTIONS.ADD_MESSAGE,
-        payload: MESSAGES.NO_BINS_ERROR,
-      });
+    if (
+      data?.bins === null ||
+      (status === 'success' && data?.bins === undefined)
+    ) {
+      setInlineErrorMessage(<h4>❌ {MESSAGES.NO_BINS_ERROR.title}</h4>);
+      dispatch &&
+        dispatch({
+          type: ACTIONS.ADD_MESSAGE,
+          payload: MESSAGES.NO_BINS_ERROR,
+        });
     } else {
-      dispatch({
-        type: ACTIONS.DELETE_MESSAGE,
-        payload: MESSAGES.NO_BINS_ERROR,
-      });
+      setInlineErrorMessage(null);
+      dispatch &&
+        dispatch({
+          type: ACTIONS.DELETE_MESSAGE,
+          payload: MESSAGES.NO_BINS_ERROR,
+        });
     }
   }, [data]);
 
@@ -71,11 +80,17 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
   };
-  return <Histogram {...histogramArgs} />;
+  return (
+    <>
+      {useInlineErrorMessages && inlineErrorMessage}
+      <Histogram {...histogramArgs} />
+    </>
+  );
 };
 
 PhenotypeHistogram.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  useInlineErrorMessages: bool,
+  dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
@@ -83,6 +98,7 @@ PhenotypeHistogram.propTypes = {
 };
 
 PhenotypeHistogram.defaultProps = {
+  useInlineErrorMessages: false,
   selectedCovariates: [],
   outcome: null,
 };

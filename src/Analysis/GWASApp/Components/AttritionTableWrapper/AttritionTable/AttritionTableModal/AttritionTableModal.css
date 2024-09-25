@@ -1,3 +1,11 @@
+.attrition-table-modal .ant-modal-content {
+  width: 650px;
+  min-height: 480px;
+}
+.attrition-table-modal .ant-modal-body {
+  margin: 0 auto;
+}
+
 .attrition-table-modal h3 {
   color: #2e77b8;
   font-size: 14px;
