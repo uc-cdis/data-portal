@@ -10,6 +10,7 @@ const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
   t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
+  var startTimeloadStudiesFromAggMDSRequests= performance.now();
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
   const res = await fetch(url);
@@ -64,18 +65,21 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
     allStudies = allStudies.concat(editedStudies);
   });
-
+  var endTimeloadStudiesFromAggMDSRequests = performance.now();
+  console.log(
+    `Call to loadStudiesFromAggMDSRequests took ${endTimeloadStudiesFromAggMDSRequests - startTimeloadStudiesFromAggMDSRequests} milliseconds`
+  );
   return allStudies;
 };
 
-const loadStudiesFromAggMDS = async () => {
+const loadStudiesFromAggMDS = async (limit=2000) => {
   // Retrieve from aggregate MDS
 
   const offset = 0; // For pagination
-  const limit = 2000; // Total number of rows requested
-
+  // const limit = 2000; // Total number of rows requested
+  // const limit = 5;
+  var startTimeloadStudiesFromAggMDSRequests= performance.now();
   const studies = await loadStudiesFromAggMDSRequests(offset, limit);
-
   return studies;
 };
 
