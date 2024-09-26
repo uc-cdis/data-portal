@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import Histogram from './Histogram';
+import Histogram from '../../../../SharedUtils/DataViz/Histogram/Histogram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
@@ -39,7 +39,8 @@ const PhenotypeHistogram = ({
 
   useEffect(() => {
     // Validate and give error message if there is no data:
-    if (data?.bins === null) {
+    if (data?.bins === null
+      || (status === 'success' && data?.bins === undefined)) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.NO_BINS_ERROR,

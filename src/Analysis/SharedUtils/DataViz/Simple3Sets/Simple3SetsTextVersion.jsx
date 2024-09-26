@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Simple3SetsOverlapTextVersion = ({ title, eulerArgs }) => {
+const Simple3SetsTextVersion = ({ title, eulerArgs }) => {
   const {
     set12Size,
     set13Size,
@@ -33,9 +33,9 @@ const Simple3SetsOverlapTextVersion = ({ title, eulerArgs }) => {
   );
 };
 
-Simple3SetsOverlapTextVersion.propTypes = {
+Simple3SetsTextVersion.propTypes = {
   title: PropTypes.string.isRequired,
   eulerArgs: PropTypes.object.isRequired,
 };
 
-export default Simple3SetsOverlapTextVersion;
+export default Simple3SetsTextVersion;

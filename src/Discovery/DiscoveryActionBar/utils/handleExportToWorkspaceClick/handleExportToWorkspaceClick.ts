@@ -1,4 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { fetchWithCreds } from '../../../../actions';
@@ -66,14 +67,23 @@ const handleExportToWorkspaceClick = async (
     }
   });
 
-  const projectNumber = selectedResources.map((study) => study.project_number);
-  const studyName = selectedResources.map((study) => study.study_name);
-  const repositoryName = selectedResources.map((study) => study.commons);
+  const projectNumber = selectedResources.map((study) => study.project_number || []);
+  const studyName = selectedResources.map((study) => study.study_metadata?.minimal_info?.study_name || []);
+  const repositoryName = selectedResources.map((study) => study.commons || []);
   datadogRum.addAction('exportToWorkspace', {
     exportToWorkspaceProjectNumber: projectNumber,
     exportToWorkspaceStudyName: studyName,
     exportToWorkspaceRepositoryName: repositoryName,
   });
+  faro.api.pushEvent(
+    'exportToWorkspace',
+    // Faro only accept string-string pairs in payload
+    {
+      exportToWorkspaceProjectNumber: projectNumber.join(','),
+      exportToWorkspaceStudyName: studyName.join(','),
+      exportToWorkspaceRepositoryName: repositoryName.join(','),
+    },
+  );
 
   // post exported manifest to manifestservice
   if (manifest.length) {

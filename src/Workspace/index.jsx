@@ -7,6 +7,7 @@ import {
   Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 
 import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
@@ -320,6 +321,12 @@ class Workspace extends React.Component {
           datadogRum.addAction('workspaceLaunch', {
             workspaceName: workspace.name,
           });
+          faro.api.pushEvent(
+            'workspaceLaunch',
+            {
+              workspaceName: workspace.name,
+            },
+          );
           this.checkWorkspaceStatus();
           break;
         default:

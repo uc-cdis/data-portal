@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3-selection';
 import * as venn from '@upsetjs/venn.js';
-import './CohortsOverlapDiagram.css';
+import './Simple3SetsEulerDiagram.css';
 
 const Simple3SetsEulerDiagram = ({
   set1Size,
