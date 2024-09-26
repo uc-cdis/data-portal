@@ -43,7 +43,7 @@ describe('MDS Data Loading Functions', () => {
       expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=2000&offset=0`
+        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=2000&offset=0`,
       );
     });
 
@@ -54,19 +54,17 @@ describe('MDS Data Loading Functions', () => {
     it('should load up to 2000 studies, then load more with a secondary request', async () => {
       const mockStudies = new Array(2500).fill({ mockStudy: 'info' });
       // Simulate first fetch (2000 studies)
-      fetch.mockImplementationOnce(() =>
-        Promise.resolve({
-          status: 200,
-          json: () => Promise.resolve(mockStudies.slice(0, 2000)),
-        })
+      fetch.mockImplementationOnce(() => Promise.resolve({
+        status: 200,
+        json: () => Promise.resolve(mockStudies.slice(0, 2000)),
+      }),
       );
 
       // Simulate second fetch (500 studies)
-      fetch.mockImplementationOnce(() =>
-        Promise.resolve({
-          status: 200,
-          json: () => Promise.resolve(mockStudies.slice(2000, 2500)),
-        })
+      fetch.mockImplementationOnce(() => Promise.resolve({
+        status: 200,
+        json: () => Promise.resolve(mockStudies.slice(2000, 2500)),
+      }),
       );
       const studies = await loadStudiesFromMDS();
       expect(fetch).toHaveBeenCalledTimes(2);
@@ -89,7 +87,7 @@ describe('MDS Data Loading Functions', () => {
         expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
-          `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=2`
+          `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=2`,
         );
       });
       it('should throw an error on fetch failure', async () => {

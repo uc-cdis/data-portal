@@ -45,26 +45,26 @@ export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
 
 export const getSomeStudiesFromMDS = async (guidType = 'discovery_metadata', numberOfStudies = 10) => {
   try {
-      let someStudies = [];
-      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${numberOfStudies}`;
-      const res = await fetch(url);
-      if (res.status !== 200) {
-        throw new Error(`Request for study data at ${url} failed.
+    let someStudies = [];
+    const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${numberOfStudies}`;
+    const res = await fetch(url);
+    if (res.status !== 200) {
+      throw new Error(`Request for study data at ${url} failed.
           Response: ${JSON.stringify(res, null, 2)}`);
+    }
+    // eslint-disable-next-line no-await-in-loop
+    const jsonResponse = await res.json();
+    const studies = Object.values(jsonResponse).map((entry) => {
+      const study = { ...entry[STUDY_DATA_FIELD] };
+      // copy VLMD info if exists
+      if (studyRegistrationConfig?.dataDictionaryField
+           && entry[studyRegistrationConfig.dataDictionaryField]) {
+        study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
       }
-      // eslint-disable-next-line no-await-in-loop
-      const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry) => {
-        const study = { ...entry[STUDY_DATA_FIELD] };
-        // copy VLMD info if exists
-        if (studyRegistrationConfig?.dataDictionaryField &&
-           entry[studyRegistrationConfig.dataDictionaryField]) {
-          study[studyRegistrationConfig.dataDictionaryField] = entry[studyRegistrationConfig.dataDictionaryField];
-        }
-        return study;
-      });
-      someStudies = someStudies.concat(studies);
-      return someStudies;
+      return study;
+    });
+    someStudies = someStudies.concat(studies);
+    return someStudies;
   } catch (err) {
     throw new Error(`Request for study data failed: ${err}`);
   }

@@ -67,7 +67,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   return allStudies;
 };
 
-const loadStudiesFromAggMDS = async (limit=2000) => {
+const loadStudiesFromAggMDS = async (limit = 2000) => {
   // Retrieve from aggregate MDS
   const offset = 0; // For pagination
   const studies = await loadStudiesFromAggMDSRequests(offset, limit);

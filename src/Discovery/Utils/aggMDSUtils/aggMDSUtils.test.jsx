@@ -56,7 +56,7 @@ describe('loadStudiesFromAggMDS', () => {
     const expectedErrorMsg = `Request for study data at ${url} failed.`;
     let actualErrorMsg = null;
     try {
-      const result = await loadStudiesFromAggMDS();
+      await loadStudiesFromAggMDS();
     } catch (e) {
       actualErrorMsg = e.message;
     }
