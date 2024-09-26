@@ -15,7 +15,7 @@ const checkForFetchError = async (targetFunction) => {
   const expectedErrorMsg = 'Request for study data failed: Error';
   let actualErrorMsg = null;
   try {
-    const studies = await targetFunction();
+    await targetFunction();
   } catch (e) {
     actualErrorMsg = e.message;
   }
