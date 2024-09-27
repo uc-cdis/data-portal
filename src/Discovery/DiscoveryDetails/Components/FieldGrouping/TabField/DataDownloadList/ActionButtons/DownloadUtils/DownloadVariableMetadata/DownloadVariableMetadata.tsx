@@ -9,6 +9,11 @@ import { DiscoveryResource } from '../../../../../../../../Discovery';
 import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
 
+enum fetchType {
+  CDE = 'cde',
+  DD = 'dd'
+}
+
 const DownloadVariableMetadata = async (
   variableLevelMetadataRecords: VariableLevelMetadata,
   resourceInfo: DiscoveryResource,
@@ -33,7 +38,7 @@ const DownloadVariableMetadata = async (
     },
   } as DownloadStatus);
 
-  const fetchData = async (key: string, value: string, type: string) => new Promise((resolve, reject) => {
+  const fetchData = async (key: string, value: string, type: fetchType) => new Promise((resolve, reject) => {
     fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
       let { data } = statusResponse;
       if (statusResponse.status !== 200 || !data) {
@@ -42,10 +47,10 @@ const DownloadVariableMetadata = async (
       } else {
         const sanitizedFileName = SanitizeFileName(key);
         let subDirectoryName = '';
-        if (type === 'cde') {
+        if (type === fetchType.CDE) {
           subDirectoryName = 'common_data_elements/';
           data = data.cde_metadata;
-        } else if (type === 'dd') {
+        } else if (type === fetchType.DD) {
           subDirectoryName = 'data_dictionaries/';
           data = data.data_dictionary;
         }
@@ -62,9 +67,9 @@ const DownloadVariableMetadata = async (
         inProgress: 'DownloadVariableMetadata',
       });
       await Promise.all(
-        [...Object.entries(variableLevelMetadataRecords.dataDictionaries || []).map(([key, value]) => fetchData(key, value, 'dd'),
+        [...Object.entries(variableLevelMetadataRecords.dataDictionaries || []).map(([key, value]) => fetchData(key, value, fetchType.DD),
         ),
-        ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, 'cde'),
+        ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, fetchType.CDE),
         )],
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
