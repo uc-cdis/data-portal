@@ -18,15 +18,14 @@ import {
 import { useLocation, Link } from 'react-router-dom';
 import {
   FORM_LAYOUT,
-  KAYAKO_MAX_SUBJECT_LENGTH,
   TAIL_LAYOUT,
   VALIDATE_MESSAGE,
   VLMDSubmissionProps,
 } from './VLMDSubmissionTabbedPanel';
 import {
-  hostname, kayakoConfig, studyRegistrationConfig,
+  hostname, zendeskConfig, studyRegistrationConfig,
 } from '../../localconf';
-import { createKayakoTicket } from '../../utils';
+import { createZendeskTicket } from '../../utils';
 import { FormSubmissionState } from '../StudyRegistration';
 import { loadCDEInfoFromMDS, updateCDEMetadataInMDS } from '../utils';
 
@@ -81,14 +80,11 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
 
     const selectedCDEInfo = cdeInfoFromMDS.filter((entry) => formValues.selectedCDEs.includes(entry.option));
     updateCDEMetadataInMDS(props.studyUID, selectedCDEInfo).then(() => {
-      let subject = `CDE submission for ${props.studyNumber} ${props.studyName}`;
-      if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-        subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-      }
+      const subject = `CDE submission for ${props.studyNumber} ${props.studyName}`;
       const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
       const email = formValues['E-mail Address'];
       const contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nSelected CDEs: ${formValues.selectedCDEs}\n`;
-      createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+      createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
         (err) => {
           setFormSubmissionStatus({ status: 'error', text: err.message });
         });

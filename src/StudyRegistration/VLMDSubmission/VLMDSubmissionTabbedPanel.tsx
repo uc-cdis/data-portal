@@ -24,8 +24,6 @@ export interface VLMDSubmissionProps {
     disableCDESubmissionForm: boolean;
 }
 
-export const KAYAKO_MAX_SUBJECT_LENGTH = 255;
-
 export const FORM_LAYOUT = {
   labelCol: {
     span: 8,
