@@ -186,7 +186,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
           <Divider plain>HEAL CDEs</Divider>
           {(props.disableCDESubmissionForm) ? (
             <Typography style={{ textAlign: 'center' }}>
-              (PLACEHOLDER) This form has been disabled
+              We have received your CDE selections from the HEAL CDE team. If you need to update your selections, please contact <a href='mailto:heal_cde@hsc.utah.edu' target='_blank' rel='noreferrer'>heal_cde@hsc.utah.edu</a>.
             </Typography>
           ) : (
             <Typography style={{ textAlign: 'center' }}>
