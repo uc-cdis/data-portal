@@ -176,7 +176,7 @@ const HeaderButtons = ({ props, setTabActiveKey }) => {
                 ]?.common_data_elements || {},
               ),
               // check if CDE form should be enabled (if CDEs are from REDCap, then disable CDE form)
-              !!props.modalData.use_cde_from_redcap,
+              Boolean(props.modalData.use_cde_from_redcap),
             )}
           >
             <AuditOutlined />

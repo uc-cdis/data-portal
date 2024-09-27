@@ -28,10 +28,12 @@ const DownloadVariableMetadataInfo = (
         if (data[vlmdFieldReference as string].common_data_elements) {
           variableLevelMetadataRecords.cdeMetadata = data[vlmdFieldReference as string].common_data_elements;
         }
-        setVariableMetadataInfo({
-          noVariableLevelMetadata: false,
-          variableLevelMetadataRecords,
-        });
+        if (Object.keys(variableLevelMetadataRecords).length) {
+          setVariableMetadataInfo({
+            noVariableLevelMetadata: false,
+            variableLevelMetadataRecords,
+          });
+        }
       }
     });
   }

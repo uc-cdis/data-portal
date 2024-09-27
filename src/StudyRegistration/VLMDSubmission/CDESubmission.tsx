@@ -36,6 +36,13 @@ interface LocationState {
     existingCDEName?: Array<string>;
 }
 
+type FormValues = {
+  'First Name': string;
+  'Last Name': string;
+  'E-mail Address': string;
+  selectedCDEs: string[];
+};
+
 const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMDSubmissionProps) => {
   const [cdeForm] = Form.useForm();
   const location = useLocation();
@@ -73,7 +80,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
 
   useEffect(() => cdeForm.resetFields(), [props.studyNumber, props.studyName, cdeForm]);
 
-  const handleCDEFormSubmission = (formValues) => {
+  const handleCDEFormSubmission = (formValues: FormValues) => {
     if (!props.studyRegistrationAuthZ) {
       setFormSubmissionStatus({ status: 'error', text: 'Invalid authz info received' });
     }
@@ -97,7 +104,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     cdeForm.submit();
   };
 
-  const onFinish = (values) => {
+  const onFinish = (values: FormValues) => {
     setCDEFormSubmitting(true);
     handleCDEFormSubmission(values);
   };

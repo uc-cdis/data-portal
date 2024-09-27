@@ -33,7 +33,7 @@ afterEach(() => {
 });
 
 describe('DownloadVariableMetadataInfo', () => {
-  it('should not set download data dictionary info when called with invalid status number', async () => {
+  it('should not set download variable-level metadata info when called with invalid status number', async () => {
     const mockStatusResponse = {
       status: 500,
       data: {
@@ -55,7 +55,7 @@ describe('DownloadVariableMetadataInfo', () => {
     expect(mockSetDownloadStatus).not.toHaveBeenCalled();
   });
 
-  it('should not download data dictionary info when called with invalid data', async () => {
+  it('should not download variable-level metadata info when called with invalid data', async () => {
     const mockStatusResponse = {
       status: 200,
       data: {
@@ -77,7 +77,7 @@ describe('DownloadVariableMetadataInfo', () => {
     expect(mockSetDownloadStatus).not.toHaveBeenCalled();
   });
 
-  it(`should not call fetchWithCreds or download data dictionary info when
+  it(`should not call fetchWithCreds or variable-level metadata info when
     called with showDownloadVariableMetadataButton = false`, async () => {
     const mockStatusResponse = {
       status: 200,
@@ -98,7 +98,7 @@ describe('DownloadVariableMetadataInfo', () => {
     expect(mockSetDownloadStatus).not.toHaveBeenCalled();
   });
 
-  it('should set data dictionary info when called with valid params', async () => {
+  it('should set variable-level metadata info when called with valid params', async () => {
     const mockStatusResponse = {
       status: 200,
       data: {

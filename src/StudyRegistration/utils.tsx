@@ -234,7 +234,7 @@ export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
           drupalID: value.drupal_id,
           fileName: value.file_name,
           guid: key,
-          isCoreCDE: !!value.is_core_cde,
+          isCoreCDE: Boolean(value.is_core_cde),
         };
         return cdeInfo;
       });
@@ -252,7 +252,7 @@ export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
   }
 };
 
-export const updateCDEMetadataInMDS = async (metadataID, updatedCDEInfo) => {
+export const updateCDEMetadataInMDS = async (metadataID: string, updatedCDEInfo: {option:string, guid:string}[]) => {
   try {
     const queryURL = `${mdsURL}/${metadataID}`;
     const queryRes = await fetch(queryURL);
