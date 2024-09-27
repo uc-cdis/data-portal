@@ -20,8 +20,8 @@ import {
   FORM_LAYOUT,
   TAIL_LAYOUT,
   VALIDATE_MESSAGE,
-  VLMDSubmissionProps,
-} from './VLMDSubmissionTabbedPanel';
+} from './VLMDSubmissionConstants';
+import { VLMDSubmissionProps } from './VLMDSubmissionTypes';
 import {
   hostname, zendeskConfig, studyRegistrationConfig,
 } from '../../localconf';

@@ -1,6 +1,7 @@
 import { Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { VLMDSubmissionProps } from './VLMDSubmissionTypes';
 import DataDictionarySubmission from './DataDictionarySubmission';
 import CDESubmission from './CDESubmission';
 import { StudyRegistrationProps } from '../StudyRegistration';
@@ -14,37 +15,6 @@ interface LocationState {
     studyRegistrationAuthZ?: string;
     disableCDESubmissionForm: boolean
 }
-
-export interface VLMDSubmissionProps {
-    studyUID?: string | Number;
-    studyNumber?: string;
-    studyName?: string;
-    studyRegistrationAuthZ?: string;
-    userHasAccessToSubmit: boolean;
-    disableCDESubmissionForm: boolean;
-}
-
-export const FORM_LAYOUT = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 32,
-  },
-};
-
-export const TAIL_LAYOUT = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
-
-/* eslint-disable no-template-curly-in-string */
-export const VALIDATE_MESSAGE = {
-  required: '${label} is required',
-};
-/* eslint-enable no-template-curly-in-string */
 
 const VLMDSubmissionTabbedPanel: React.FC<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
   const location = useLocation();

@@ -32,8 +32,8 @@ import {
   FORM_LAYOUT,
   TAIL_LAYOUT,
   VALIDATE_MESSAGE,
-  VLMDSubmissionProps,
-} from './VLMDSubmissionTabbedPanel';
+} from './VLMDSubmissionConstants';
+import { VLMDSubmissionProps } from './VLMDSubmissionTypes';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -136,7 +136,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
               contents = contents.concat(`\n${key}: ${value}`);
             });
             // This is the CLI command to kick off the argo wf from AdminVM
-            const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
+            const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${props.studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
             createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
