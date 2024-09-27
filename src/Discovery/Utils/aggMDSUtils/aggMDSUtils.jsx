@@ -41,7 +41,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
       // add the value of that field as a tag.
 
-      discoveryConfig.tagCategories.forEach((tag) => {
+      discoveryConfig?.tagCategories.forEach((tag) => {
         if (tag.name in entryUnpacked) {
           if (typeof entryUnpacked[tag.name] === 'string') {
             const tagValue = entryUnpacked[tag.name];
