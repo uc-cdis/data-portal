@@ -463,12 +463,19 @@ Below is an example, with inline comments describing what each JSON block config
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": true,
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": true, // text to be displayed on the download manifest button
+          "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enableDownloadZip": true,  // enables a button which allows user to download all the files as a zip file (with pre-set size limits)
+          "downloadZipButtonText": "Download Zip", // text to be displayed on the download zip file button
+          "enableDownloadVariableMetadata": true,  // enables a button (on discovery details page) which allows user to download variable-level metadata
+          "variableMetadataFieldName": "variable_level_metadata", // field name in metadata record to reference variable-level metadata
+          "enableDownloadStudyMetadata": true, // enables a button (on discovery details page) which allows user to download study-level metadata
+          "studyMetadataFieldName": "study_metadata", // field name in metadata record to reference study-level metadata
           "documentationLinks": {
               "gen3Client": "https://gen3-client", // link to documentation about the gen3 client. Used for button tooltips
               "gen3Workspaces": "https://gen3-workspace-docs", // link to documentation about gen3 workspaces. Used for button tooltips.
-          }
+          },
+          "verifyExternalLogins": true // enables verification if the user has access to all the data files selected, by using WTS (a Gen3 ecosystem feature)
       },
       "pageTitle": {
         "enabled": true,
@@ -758,9 +765,10 @@ Below is an example, with inline comments describing what each JSON block config
           "studyRegistrationUIDField": "_hdp_uid", // optional, if omitted, value defaults the same as the "minimalFieldMapping.uid" value. In metadata, values from this field MUST be the same as their GUIDs for each metadata record
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
           "clinicalTrialFields": [], // optional, list of fields to fetch from ClinicalTrials.gov
-          "dataDictionaryField": "data_dictionaries", // optional, specify the field name in metadata for variable-level metadata, default to ""
-          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for VLMD submission. Default to the data upload bucket from fence config if omitted
-          "dataDictionarySubmissionDisclaimerField": "some disclaimer text" // optional, the disclaimer text that appears under the submit button on the VLMD submission page. Defaults to undefined
+          "variableMetadataField": "variable_level_metadata", // optional, specify the field name in metadata for variable-level metadata, default to ""
+          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for data dictionary submission. Default to the data upload bucket from fence config if omitted
+          "dataDictionarySubmissionDisclaimerField": "some disclaimer text", // optional, the disclaimer text that appears under the submit button on the data dictionary submission page. Defaults to undefined
+          "cdeSubmissionDisclaimerField": "some disclaimer text"  // optional, the disclaimer text that appears under the submit button on the CDE submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
