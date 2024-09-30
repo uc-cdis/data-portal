@@ -14,26 +14,26 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => (
     width={650}
     className='attrition-table-modal'
   >
-    {modalInfo?.rowObject &&
-      modalInfo.rowObject.variable_type === 'concept' && (
-        <div data-testid='phenotype-histogram-diagram'>
-          <PhenotypeHistogram
-            useInlineErrorMessages
-            selectedStudyPopulationCohort={modalInfo.selectedCohort}
-            selectedCovariates={
-              modalInfo.currentCovariateAndCovariatesFromPrecedingRows
-            }
-            outcome={modalInfo.outcome}
-            selectedContinuousItem={modalInfo.rowObject}
-          />
-        </div>
-      )}
-    {modalInfo?.rowObject &&
-      modalInfo.rowObject.variable_type === 'custom_dichotomous' && (
-        <div data-testid='euler-diagram'>
-          <h4>Placeholder for Euler Diagram</h4>
-        </div>
-      )}
+    {modalInfo?.rowObject
+      && modalInfo.rowObject.variable_type === 'concept' && (
+      <div data-testid='phenotype-histogram-diagram'>
+        <PhenotypeHistogram
+          useInlineErrorMessages
+          selectedStudyPopulationCohort={modalInfo.selectedCohort}
+          selectedCovariates={
+            modalInfo.currentCovariateAndCovariatesFromPrecedingRows
+          }
+          outcome={modalInfo.outcome}
+          selectedContinuousItem={modalInfo.rowObject}
+        />
+      </div>
+    )}
+    {modalInfo?.rowObject
+      && modalInfo.rowObject.variable_type === 'custom_dichotomous' && (
+      <div data-testid='euler-diagram'>
+        <h4>Placeholder for Euler Diagram</h4>
+      </div>
+    )}
   </Modal>
 );
 

@@ -6,7 +6,7 @@ import AttritionTableModal from './AttritionTableModal';
 // Mock the PhenotypeHistogram component
 jest.mock(
   '../../../Diagrams/PhenotypeHistogram/PhenotypeHistogram',
-  () => () => <div>Mocked Histogram</div>
+  () => () => <div>Mocked Histogram</div>,
 );
 
 describe('AttritionTableModal', () => {
@@ -30,7 +30,7 @@ describe('AttritionTableModal', () => {
     render(<AttritionTableModal {...defaultProps} />);
     expect(screen.getByText('Test Modal')).toBeInTheDocument();
     expect(
-      screen.queryByTestId('phenotype-histogram-diagram')
+      screen.queryByTestId('phenotype-histogram-diagram'),
     ).toBeInTheDocument();
     expect(screen.queryByTestId('euler-diagram')).not.toBeInTheDocument();
   });
@@ -46,7 +46,7 @@ describe('AttritionTableModal', () => {
     render(<AttritionTableModal {...customProps} />);
     expect(screen.queryByTestId('euler-diagram')).toBeInTheDocument();
     expect(
-      screen.queryByTestId('phenotype-histogram-diagram')
+      screen.queryByTestId('phenotype-histogram-diagram'),
     ).not.toBeInTheDocument();
   });
 
@@ -62,7 +62,7 @@ describe('AttritionTableModal', () => {
     expect(screen.getByText('Test Modal')).toBeInTheDocument();
     expect(screen.queryByText('Mocked Histogram')).not.toBeInTheDocument();
     expect(
-      screen.queryByText('Placeholder for Euler Diagram')
+      screen.queryByText('Placeholder for Euler Diagram'),
     ).not.toBeInTheDocument();
   });
 });
