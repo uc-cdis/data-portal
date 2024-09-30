@@ -6,7 +6,7 @@ import AttritionTableModal from './AttritionTableModal';
 // Mock the PhenotypeHistogram component
 jest.mock(
   '../../../Diagrams/PhenotypeHistogram/PhenotypeHistogram',
-  () => () => <div>Mocked Histogram</div>,
+  () => () => null,
 );
 
 describe('AttritionTableModal', () => {
@@ -16,9 +16,9 @@ describe('AttritionTableModal', () => {
       isModalOpen: true,
       title: 'Test Modal',
       rowObject: { variable_type: 'concept' },
-      selectedCohort: 'Cohort A',
+      selectedCohort: {},
       currentCovariateAndCovariatesFromPrecedingRows: [],
-      outcome: 'Test Outcome',
+      outcome: {},
     },
     setModalInfo: mockSetModalInfo,
   };

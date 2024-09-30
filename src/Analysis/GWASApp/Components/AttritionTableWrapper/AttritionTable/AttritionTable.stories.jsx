@@ -13,24 +13,20 @@ export default {
 const mockedQueryClient = new QueryClient();
 
 const generateHistogramTestData = () => {
-  const maxNumberOfBars = 15;
   const minNumberOfBars = 5;
-  const binSizeOffSet = 10;
-  const maxPersonCount = 2000;
+  const maxNumberOfBars = 15;
   const minPersonCount = 100;
+  const maxPersonCount = 2000;
+  const binSizeOffSet = 10;
   const numberOfBars =
     Math.floor(Math.random() * maxNumberOfBars) + minNumberOfBars;
   // Create an array of numberOfBars objects
   const objectsArray = Array.from({ length: numberOfBars }, (v, i) => {
-    const start = i * binSizeOffSet;
-    const end = start + binSizeOffSet;
-    const personCount =
-      Math.floor(Math.random() * (maxPersonCount - minPersonCount)) +
-      minPersonCount;
     return {
-      start: start,
-      end: end,
-      personCount: personCount,
+      start: i * binSizeOffSet,
+      end: start + binSizeOffSet,
+      personCount: Math.floor(Math.random() * (maxPersonCount - minPersonCount)) +
+      minPersonCount,
     };
   });
   return objectsArray;
