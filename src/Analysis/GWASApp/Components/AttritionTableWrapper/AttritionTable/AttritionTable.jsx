@@ -7,9 +7,7 @@ import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
-const AttritionTable = ({
-  selectedCohort, outcome, covariates, tableType,
-}) => {
+const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
   const [modalInfo, setModalInfo] = useState({
     title: '',
     isModalOpen: false,
@@ -114,7 +112,6 @@ const AttritionTable = ({
                     outcome={null}
                     rowType='Cohort'
                     rowObject={null}
-                    covariates={covariates}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}
                     modalInfo={modalInfo}
                     setModalInfo={setModalInfo}
@@ -125,42 +122,40 @@ const AttritionTable = ({
                 <React.Fragment key={tableType}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
-                    modalInfo={modalInfo}
-                    setModalInfo={setModalInfo}
                     selectedCohort={selectedCohort}
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
-                    covariates={covariates}
                     currentCovariateAndCovariatesFromPrecedingRows={[
                       applyAutoGenFilters(),
                     ]}
+                    modalInfo={modalInfo}
+                    setModalInfo={setModalInfo}
                   />
                 </React.Fragment>
               )}
-              {selectedCohort?.cohort_definition_id
-              && outcome
-              && covariatesProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              outcome &&
+              covariatesProcessed.length > 0
                 ? covariatesProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      rowType='Covariate'
-                      covariates={covariates}
-                      currentCovariateAndCovariatesFromPrecedingRows={[
-                        ...item,
-                        applyAutoGenFilters(),
-                      ]}
-                      modalInfo={modalInfo}
-                      setModalInfo={setModalInfo}
-                    />
-                  </React.Fragment>
-                ))
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        rowType='Covariate'
+                        currentCovariateAndCovariatesFromPrecedingRows={[
+                          ...item,
+                          applyAutoGenFilters(),
+                        ]}
+                        modalInfo={modalInfo}
+                        setModalInfo={setModalInfo}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>

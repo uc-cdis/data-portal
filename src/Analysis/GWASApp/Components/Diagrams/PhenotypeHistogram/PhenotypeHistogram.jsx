@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
@@ -29,21 +29,22 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () => fetchHistogramInfo(
-      sourceId,
-      selectedStudyPopulationCohort.cohort_definition_id,
-      selectedCovariates,
-      outcome,
-      selectedContinuousItem.concept_id,
-    ),
-    queryConfig,
+    () =>
+      fetchHistogramInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+        selectedContinuousItem.concept_id
+      ),
+    queryConfig
   );
 
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
-      data?.bins === null
-      || (status === 'success' && data?.bins === undefined)
+      data?.bins === null ||
+      (status === 'success' && data?.bins === undefined)
     ) {
       setInlineErrorMessage(<h4>❌ {MESSAGES.NO_BINS_ERROR.title}</h4>);
       if (dispatch) {
@@ -90,7 +91,7 @@ const PhenotypeHistogram = ({
 };
 
 PhenotypeHistogram.propTypes = {
-  useInlineErrorMessages: bool,
+  useInlineErrorMessages: PropTypes.bool,
   dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
@@ -99,7 +100,7 @@ PhenotypeHistogram.propTypes = {
 };
 
 PhenotypeHistogram.defaultProps = {
-  dispatch: false,
+  dispatch: null,
   useInlineErrorMessages: false,
   selectedCovariates: [],
   outcome: null,
