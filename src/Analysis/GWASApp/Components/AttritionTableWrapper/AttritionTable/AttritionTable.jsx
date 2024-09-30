@@ -11,7 +11,6 @@ const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
   const [modalInfo, setModalInfo] = useState({
     title: '',
     isModalOpen: false,
-    dispatch: () => alert('dispatch called :('),
     selectedCohort: null,
     currentCovariateAndCovariatesFromPrecedingRows: null,
     outcome: null,

@@ -29,22 +29,21 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () =>
-      fetchHistogramInfo(
-        sourceId,
-        selectedStudyPopulationCohort.cohort_definition_id,
-        selectedCovariates,
-        outcome,
-        selectedContinuousItem.concept_id
-      ),
-    queryConfig
+    () => fetchHistogramInfo(
+      sourceId,
+      selectedStudyPopulationCohort.cohort_definition_id,
+      selectedCovariates,
+      outcome,
+      selectedContinuousItem.concept_id,
+    ),
+    queryConfig,
   );
 
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
-      data?.bins === null ||
-      (status === 'success' && data?.bins === undefined)
+      data?.bins === null
+      || (status === 'success' && data?.bins === undefined)
     ) {
       setInlineErrorMessage(<h4>❌ {MESSAGES.NO_BINS_ERROR.title}</h4>);
       if (dispatch) {
