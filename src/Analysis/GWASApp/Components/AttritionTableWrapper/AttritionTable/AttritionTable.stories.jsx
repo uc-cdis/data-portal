@@ -12,21 +12,42 @@ export default {
 
 const mockedQueryClient = new QueryClient();
 
+const generateHistogramTestData = () => {
+  const maxNumberOfBars = 15;
+  const minNumberOfBars = 5;
+  const binSizeOffSet = 10;
+  const maxPersonCount = 2000;
+  const minPersonCount = 100;
+  const numberOfBars =
+    Math.floor(Math.random() * maxNumberOfBars) + minNumberOfBars;
+  // Create an array of numberOfBars objects
+  const objectsArray = Array.from({ length: numberOfBars }, (v, i) => {
+    const start = i * binSizeOffSet;
+    const end = start + binSizeOffSet;
+    const personCount =
+      Math.floor(Math.random() * (maxPersonCount - minPersonCount)) +
+      minPersonCount;
+    return {
+      start: start,
+      end: end,
+      personCount: personCount,
+    };
+  });
+  return objectsArray;
+};
+
 const MockTemplate = () => {
   const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
   const [covariateArrSizeTable2, setCovariateArrSizeTable2] = useState(2);
-
   const selectedCohort = {
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   };
-
   const outcome = {
     variable_type: 'custom_dichotomous',
     cohort_ids: [1, 2],
     provided_name: 'dichotomous test1',
   };
-
   const covariatesArrFirstTable = Array.from(
     { length: covariateArrSizeTable1 },
     (_, i) => ({
@@ -147,6 +168,18 @@ MockedSuccess.parameters = {
                   persons_in_cohort_with_value: 40038 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
                 },
               ],
+            })
+          );
+        }
+      ),
+      rest.post(
+        //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        (req, res, ctx) => {
+          return res(
+            ctx.delay(2000),
+            ctx.json({
+              bins: generateHistogramTestData(),
             })
           );
         }

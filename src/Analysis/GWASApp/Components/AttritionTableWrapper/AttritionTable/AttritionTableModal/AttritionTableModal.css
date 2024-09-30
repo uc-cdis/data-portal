@@ -10,3 +10,7 @@
   color: #2e77b8;
   font-size: 14px;
 }
+.attrition-table-modal h4,
+.attrition-table-modal .histrogram-loading {
+  text-align: center;
+}
