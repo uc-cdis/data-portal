@@ -8,10 +8,6 @@ import CohortsOverlapDiagram from '../../../Diagrams/CohortsOverlapDiagram/Cohor
 const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
   const modalWidth = 650;
 
-  if (modalInfo.isModalOpen) {
-    // console.log('modalInfo.currentCovariateAndCovariatesFromPrecedingRows',modalInfo.currentCovariateAndCovariatesFromPrecedingRows);
-    console.log('modalInfo', modalInfo);
-  }
   return (
     <Modal
       title={<h3>{modalInfo.title}</h3>}
