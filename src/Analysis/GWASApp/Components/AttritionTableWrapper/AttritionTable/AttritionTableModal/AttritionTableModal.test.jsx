@@ -60,9 +60,7 @@ describe('AttritionTableModal', () => {
     };
     render(<AttritionTableModal {...noRowObjectProps} />);
     expect(screen.getByText('Test Modal')).toBeInTheDocument();
-    expect(screen.queryByText('Mocked Histogram')).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Placeholder for Euler Diagram'),
-    ).not.toBeInTheDocument();
+    expect( screen.queryByTestId('phenotype-histogram-diagram')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('euler-diagram')).not.toBeInTheDocument();
   });
 });

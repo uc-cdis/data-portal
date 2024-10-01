@@ -21,6 +21,14 @@ const CustomDichotomousCovariates = ({
   const handleDichotomousSubmit = () => {
     const dichotomous = {
       variable_type: 'custom_dichotomous',
+      cohort_names: [
+        firstPopulation.cohort_name,
+        secondPopulation.cohort_name
+      ],
+      cohort_sizes: [
+        firstPopulation.size,
+        secondPopulation.size
+      ],
       cohort_ids: [
         firstPopulation.cohort_definition_id,
         secondPopulation.cohort_definition_id,

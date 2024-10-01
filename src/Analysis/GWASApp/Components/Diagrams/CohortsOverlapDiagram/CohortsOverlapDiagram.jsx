@@ -19,6 +19,20 @@ const CohortsOverlapDiagram = ({
   selectedCovariates,
   outcome,
 }) => {
+
+  const objects = [    selectedStudyPopulationCohort,
+    selectedCaseCohort,
+    selectedControlCohort,
+    selectedCovariates,
+    outcome
+  ];
+  console.log(" selectedStudyPopulationCohort  selectedCaseCohort  selectedControlCohort  selectedCovariates   outcome",
+    objects.map(obj => JSON.stringify(obj))
+  );
+
+
+
+
   const { source } = useSourceContext();
   const [showTextVersion, setShowTextVersion] = useState(false);
   const sourceId = source; // TODO - change name of source to sourceId for clarity
