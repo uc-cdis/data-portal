@@ -145,13 +145,9 @@ WithDichotomousOutcome.args = {
   ...WithConceptOutcome.args,
   outcome: {
     variable_type: 'custom_dichotomous',
-    cohort_sizes: [123, 293, 293],
-    cohort_names: [
-      'VZ 293 Participants',
-      'test1234 - team1 - test june',
-      'test1234 - team1 - test june',
-    ],
-    cohort_ids: [468, 453, 455],
+    cohort_sizes: [123, 293],
+    cohort_names: ['VZ 293 Participants', 'test1234 - team1 - test june'],
+    cohort_ids: [468, 453],
     provided_name: 'dichotomous test1',
   },
 };
