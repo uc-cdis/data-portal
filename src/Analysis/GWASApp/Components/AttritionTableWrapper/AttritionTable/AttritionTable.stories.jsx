@@ -20,10 +20,12 @@ const MockTemplate = () => {
   const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
   const [covariateArrSizeTable2, setCovariateArrSizeTable2] = useState(2);
   const selectedCohort = {
+    size: 123,
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   };
   const outcome = {
+    size: 123,
     variable_type: 'custom_dichotomous',
     cohort_sizes: [10000, 20000],
     cohort_names: ['name1', 'name2'],

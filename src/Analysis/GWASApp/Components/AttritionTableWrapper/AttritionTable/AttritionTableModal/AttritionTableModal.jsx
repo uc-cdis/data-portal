@@ -55,7 +55,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
               // To get VIZ to Match, outcome should be null if we're viewing the outcome?
               outcome={
                 modalInfo.currentCovariateAndCovariatesFromPrecedingRows
-                  .length == 1
+                  .length === 1
                   ? null
                   : modalInfo.outcome
               }

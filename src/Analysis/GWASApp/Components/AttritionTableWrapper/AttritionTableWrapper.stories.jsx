@@ -28,6 +28,7 @@ export const WithConceptOutcome = Template.bind({});
 WithConceptOutcome.args = {
   sourceId: 1,
   outcome: {
+    size: 123,
     variable_type: 'concept',
     concept_id: 'id',
     concept_name: 'concept name',
@@ -59,6 +60,7 @@ WithConceptOutcome.args = {
     },
   ],
   selectedCohort: {
+    size: 213,
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   },
@@ -143,9 +145,13 @@ WithDichotomousOutcome.args = {
   ...WithConceptOutcome.args,
   outcome: {
     variable_type: 'custom_dichotomous',
-    cohort_sizes: [9999912, 9999932],
-    cohort_names: ['name1', 'name2'],
-    cohort_ids: [1, 2],
+    cohort_sizes: [123, 293, 293],
+    cohort_names: [
+      'VZ 293 Participants',
+      'test1234 - team1 - test june',
+      'test1234 - team1 - test june',
+    ],
+    cohort_ids: [468, 453, 455],
     provided_name: 'dichotomous test1',
   },
 };

@@ -12,6 +12,7 @@
 }
 
 .attrition-table-modal h4,
-.attrition-table-modal .histrogram-loading {
+.attrition-table-modal .histrogram-loading,
+.attrition-table-modal .euler-loading {
   text-align: center;
 }
