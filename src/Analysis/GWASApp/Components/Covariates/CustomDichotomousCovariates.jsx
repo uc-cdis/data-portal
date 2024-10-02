@@ -23,11 +23,11 @@ const CustomDichotomousCovariates = ({
       variable_type: 'custom_dichotomous',
       cohort_names: [
         firstPopulation.cohort_name,
-        secondPopulation.cohort_name
+        secondPopulation.cohort_name,
       ],
       cohort_sizes: [
         firstPopulation.size,
-        secondPopulation.size
+        secondPopulation.size,
       ],
       cohort_ids: [
         firstPopulation.cohort_definition_id,

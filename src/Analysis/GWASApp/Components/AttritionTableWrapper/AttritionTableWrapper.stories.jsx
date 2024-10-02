@@ -3,6 +3,10 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
 import { SourceContextProvider } from '../../Utils/Source';
+import {
+  generateEulerTestData,
+  generateHistogramTestData,
+} from '../../TestData/generateDiagramTestData';
 import '../../GWASApp.css';
 
 let rowCount = 0;
@@ -32,10 +36,14 @@ WithConceptOutcome.args = {
     {
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser',
+      cohort_sizes: [9999912, 9999932],
+      cohort_names: ['name1', 'name2'],
       cohort_ids: [12, 32],
     },
     {
       variable_type: 'custom_dichotomous',
+      cohort_sizes: [9999912, 9999932],
+      cohort_names: ['name1', 'name2'],
       cohort_ids: [1, 2],
       provided_name: 'dichotomous test1',
     },
@@ -106,6 +114,26 @@ WithConceptOutcome.parameters = {
           );
         }
       ),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        (req, res, ctx) => {
+          return res(
+            ctx.delay(2000),
+            ctx.json({
+              bins: generateHistogramTestData(),
+            })
+          );
+        }
+      ),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionA } = req.params;
+          const { cohortdefinitionB } = req.params;
+          return res(ctx.delay(1100), ctx.json(generateEulerTestData()));
+        }
+      ),
     ],
   },
 };
@@ -115,6 +143,8 @@ WithDichotomousOutcome.args = {
   ...WithConceptOutcome.args,
   outcome: {
     variable_type: 'custom_dichotomous',
+    cohort_sizes: [9999912, 9999932],
+    cohort_names: ['name1', 'name2'],
     cohort_ids: [1, 2],
     provided_name: 'dichotomous test1',
   },

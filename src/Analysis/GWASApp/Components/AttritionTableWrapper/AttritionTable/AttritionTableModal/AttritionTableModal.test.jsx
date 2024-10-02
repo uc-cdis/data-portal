@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import AttritionTableModal from './AttritionTableModal';
 import { SourceContextProvider } from '../../../../Utils/Source';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import {
   fetchSimpleOverlapInfo,
   useSourceFetch,
@@ -12,7 +12,7 @@ import {
 // Mock the PhenotypeHistogram component
 jest.mock(
   '../../../Diagrams/PhenotypeHistogram/PhenotypeHistogram',
-  () => () => null
+  () => () => null,
 );
 jest.mock('../../../../Utils/cohortMiddlewareApi');
 fetchSimpleOverlapInfo.mockResolvedValue({
@@ -49,7 +49,7 @@ describe('AttritionTableModal', () => {
     render(<AttritionTableModal {...defaultProps} />);
     expect(screen.getByText('Test Modal')).toBeInTheDocument();
     expect(
-      screen.queryByTestId('phenotype-histogram-diagram')
+      screen.queryByTestId('phenotype-histogram-diagram'),
     ).toBeInTheDocument();
     expect(screen.queryByTestId('euler-diagram')).not.toBeInTheDocument();
   });
@@ -77,11 +77,11 @@ describe('AttritionTableModal', () => {
         <SourceContextProvider>
           <AttritionTableModal {...customProps} />
         </SourceContextProvider>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
     expect(screen.queryByTestId('euler-diagram')).toBeInTheDocument();
     expect(
-      screen.queryByTestId('phenotype-histogram-diagram')
+      screen.queryByTestId('phenotype-histogram-diagram'),
     ).not.toBeInTheDocument();
   });
 
@@ -96,7 +96,7 @@ describe('AttritionTableModal', () => {
     render(<AttritionTableModal {...noRowObjectProps} />);
     expect(screen.getByText('Test Modal')).toBeInTheDocument();
     expect(
-      screen.queryByTestId('phenotype-histogram-diagram')
+      screen.queryByTestId('phenotype-histogram-diagram'),
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId('euler-diagram')).not.toBeInTheDocument();
   });

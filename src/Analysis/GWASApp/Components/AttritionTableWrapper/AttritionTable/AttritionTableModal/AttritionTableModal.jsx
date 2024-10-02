@@ -36,7 +36,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
         modalInfo.rowObject.variable_type === 'custom_dichotomous' && (
           <div data-testid='euler-diagram'>
             <CohortsOverlapDiagram
-              dispatch={() => null}
+              useInlineErrorMessages
               selectedStudyPopulationCohort={modalInfo.selectedCohort}
               selectedCaseCohort={{
                 cohort_name: modalInfo?.rowObject?.cohort_names[0],

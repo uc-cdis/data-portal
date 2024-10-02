@@ -22,14 +22,7 @@ const CohortsOverlapDiagram = ({
   selectedCovariates,
   outcome,
 }) => {
-  const objects = [
-    selectedStudyPopulationCohort,
-    selectedCaseCohort,
-    selectedControlCohort,
-    selectedCovariates,
-    outcome,
-  ];
-
+  const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const { source } = useSourceContext();
   const [showTextVersion, setShowTextVersion] = useState(false);
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -149,15 +142,19 @@ const CohortsOverlapDiagram = ({
         dataStudyPopulationAndCase.cohort_overlap.case_control_overlap === 0 ||
         dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0
       ) {
-        dispatch({
-          type: ACTIONS.ADD_MESSAGE,
-          payload: MESSAGES.OVERLAP_ERROR,
-        });
+        setInlineErrorMessage(<h4>❌ {MESSAGES.OVERLAP_ERROR.title}</h4>);
+        dispatch &&
+          dispatch({
+            type: ACTIONS.ADD_MESSAGE,
+            payload: MESSAGES.OVERLAP_ERROR,
+          });
       } else {
-        dispatch({
-          type: ACTIONS.DELETE_MESSAGE,
-          payload: MESSAGES.OVERLAP_ERROR,
-        });
+        setInlineErrorMessage(null);
+        dispatch &&
+          dispatch({
+            type: ACTIONS.DELETE_MESSAGE,
+            payload: MESSAGES.OVERLAP_ERROR,
+          });
       }
     }
   }, [dataStudyPopulationAndCase, dataStudyPopulationAndControl]);
@@ -203,6 +200,7 @@ const CohortsOverlapDiagram = ({
     <React.Fragment>
       {!showTextVersion && (
         <React.Fragment>
+          <>{inlineErrorMessage}</>
           <Simple3SetsLegend
             cohort1Label={eulerArgs.set1Label}
             cohort2Label={eulerArgs.set2Label}
@@ -236,7 +234,8 @@ const CohortsOverlapDiagram = ({
 };
 
 CohortsOverlapDiagram.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  useInlineErrorMessages: PropTypes.bool,
+  dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object.isRequired,
   selectedControlCohort: PropTypes.object.isRequired,
@@ -245,6 +244,8 @@ CohortsOverlapDiagram.propTypes = {
 };
 
 CohortsOverlapDiagram.defaultProps = {
+  useInlineErrorMessages: false,
+  dispatch: null,
   selectedCovariates: [],
   outcome: null,
 };
