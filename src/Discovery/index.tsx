@@ -106,6 +106,7 @@ const DiscoveryWithMDSBackend: React.FC<{
         loadStudiesParameters,
       );
       let rawStudiesUnregistered: any[] = [];
+
       if (isEnabled('studyRegistration')) {
         // Load fewer raw studies if on the first studies batch
         // Otherwise load them all
@@ -207,15 +208,15 @@ const DiscoveryWithMDSBackend: React.FC<{
     studyRegistrationValidationField = undefined;
   }
 
-  const allBatchesAreLoaded = studies === null
+  const allBatchesAreReady = studies === null
     ? false
-    : (studies as Array<any>)?.length > totalNumberOfStudiesFromSmallBatches;
+    : (studies as Array<any>)?.length !== totalNumberOfStudiesFromSmallBatches;
 
   return (
     <Discovery
       studies={studies === null ? [] : studies}
       studyRegistrationValidationField={studyRegistrationValidationField}
-      allBatchesAreLoaded={allBatchesAreLoaded}
+      allBatchesAreReady={allBatchesAreReady}
       {...props}
     />
   );

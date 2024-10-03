@@ -3,11 +3,11 @@ import { Progress } from 'antd';
 import './DiscoveryLoadingProgress.css';
 
 interface DiscoveryLoadingProgressBarProps {
- allBatchesAreLoaded: boolean;
+ allBatchesAreReady: boolean;
 }
 
 const DiscoveryLoadingProgressBar = ({
-  allBatchesAreLoaded,
+  allBatchesAreReady,
 }: DiscoveryLoadingProgressBarProps) => {
   const [percent, setPercent] = useState(0);
   const [displayProgressBar, setDisplayProgressBar] = useState(true);
@@ -21,20 +21,20 @@ const DiscoveryLoadingProgressBar = ({
       setPercent((prevPercent) => prevPercent + percentIncrementAmount);
     }, percentUpdateInterval);
     return () => clearInterval(interval);
-  }, [percent, allBatchesAreLoaded]);
+  }, [percent, allBatchesAreReady]);
 
-  // hide the bar after a delay after the batches are loaded,
+  // hide the bar after a delay after the batches are ready,
   // giving the browser some time to process the batch
   const delayTimeBeforeHidingProgressBar = 2500;
   useEffect(() => {
-    if (allBatchesAreLoaded) {
+    if (allBatchesAreReady) {
       setPercent(100);
       // Change displayProgressBar to false after delay
       setTimeout(() => {
         setDisplayProgressBar(false);
       }, delayTimeBeforeHidingProgressBar);
     }
-  }, [allBatchesAreLoaded]);
+  }, [allBatchesAreReady]);
 
   return (
     <React.Fragment>

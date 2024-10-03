@@ -216,7 +216,7 @@ export interface Props {
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
   onResourcesSelected: (resources: DiscoveryResource[]) => any,
   onPaginationSet: (pagination: { currentPage: number, resultsPerPage: number }) => any,
-  allBatchesAreLoaded: boolean,
+  allBatchesAreReady: boolean,
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -241,7 +241,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [discoveryTopPadding, setDiscoveryTopPadding] = useState(30);
   const discoveryAccessibilityLinksRef = useRef(null);
 
-  const batchesAreLoading = props.allBatchesAreLoaded === false;
+  const batchesAreLoading = props.allBatchesAreReady === false;
   const BatchLoadingSpinner = () => (
     <div style={{ textAlign: 'center' }}>
       <Spin />
@@ -674,7 +674,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       {/* Header with stats */}
       <div className='discovery-header'>
         <DiscoverySummary
-          allBatchesAreLoaded={props.allBatchesAreLoaded}
+          allBatchesAreReady={props.allBatchesAreReady}
           visibleResources={visibleResources}
           config={config}
         />

@@ -56,7 +56,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
-  allBatchesAreLoaded: boolean;
+  allBatchesAreReady: boolean;
 }
 
 const DiscoverySummary = (props: Props) => (
@@ -74,7 +74,7 @@ const DiscoverySummary = (props: Props) => (
                 {aggregation.name}
               </div>
             </div>
-            <DiscoveryLoadingProgressBar allBatchesAreLoaded={props.allBatchesAreLoaded} />
+            <DiscoveryLoadingProgressBar allBatchesAreReady={props.allBatchesAreReady} />
           </div>
         </React.Fragment>
       ))
