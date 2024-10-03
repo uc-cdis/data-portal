@@ -72,7 +72,7 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
 import ReduxGenericAccessRequestForm from './GenericAccessRequestForm/ReduxGenericAccessRequestForm';
-import ReduxDataDictionarySubmission from './StudyRegistration/ReduxDataDictionarySubmission';
+import ReduxVLMDSubmissionTabbedPanel from './StudyRegistration/VLMDSubmission/ReduxVLMDSubmissionTabbedPanel';
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
@@ -590,11 +590,11 @@ async function init() {
                       ? (
                         <FaroRoute
                           exact
-                          path='/data-dictionary-submission'
+                          path='/vlmd-submission'
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={ReduxDataDictionarySubmission}
+                                component={ReduxVLMDSubmissionTabbedPanel}
                                 {...props}
                               />
                             )
@@ -608,7 +608,7 @@ async function init() {
                       ? (
                         <FaroRoute
                           exact
-                          path='/data-dictionary-submission/request-access'
+                          path='/vlmd-submission/request-access'
                           component={
                             (props) => (
                               <ProtectedContent

@@ -350,8 +350,8 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
     studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
   }
-  if (!studyRegistrationConfig.dataDictionaryField) {
-    studyRegistrationConfig.dataDictionaryField = '';
+  if (!studyRegistrationConfig.variableMetadataField) {
+    studyRegistrationConfig.variableMetadataField = '';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;

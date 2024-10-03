@@ -11,8 +11,8 @@ import DownloadDataFiles from './DownloadUtils/DownloadDataFiles/DownloadDataFil
 import DownloadJsonFile from './DownloadUtils/DownloadJsonFile';
 import DownloadVariableMetadata from './DownloadUtils/DownloadVariableMetadata/DownloadVariableMetadata';
 import './ActionButtons.css';
-import DownloadDataDictionaryInfo from './DownloadUtils/DownloadDataDictionaryInfo';
-import DataDictionaries from '../Interfaces/DataDictionaries';
+import DownloadVariableMetadataInfo from './DownloadUtils/DownloadVariableMetadataInfo';
+import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 
 interface ActionButtonsProps {
@@ -49,7 +49,7 @@ const ActionButtons = ({
     fileManifest = resourceInfo?.[manifestFieldName] || [];
   }
 
-  // Study level metabutton should show only if the downloading study level metadata value is enabled
+  // Study level meta button should show only if the downloading study level metadata value is enabled
   // and resourceInfo includes the study metadata field name reference from the discovery config
   const showDownloadStudyLevelMetadataButton = Boolean(
     discoveryConfig?.features.exportToWorkspace.enableDownloadStudyMetadata
@@ -70,9 +70,9 @@ const ActionButtons = ({
       && discoveryConfig.features.exportToWorkspace.enableDownloadVariableMetadata,
   );
 
-  const [dataDictionaryInfo, setDataDictionaryInfo] = useState({
+  const [variableMetadataInfo, setVariableMetadataInfo] = useState({
     noVariableLevelMetadata: true,
-    dataDictionaries: {} as DataDictionaries,
+    variableLevelMetadataRecords: {} as VariableLevelMetadata,
   });
 
   let uid = '';
@@ -81,11 +81,11 @@ const ActionButtons = ({
   }
 
   useEffect(() => {
-    DownloadDataDictionaryInfo(
+    DownloadVariableMetadataInfo(
       discoveryConfig,
       resourceInfo,
       showDownloadVariableMetadataButton,
-      setDataDictionaryInfo,
+      setVariableMetadataInfo,
     );
   }, [resourceInfo]);
 
@@ -141,12 +141,12 @@ const ActionButtons = ({
               data-testid='download-variable-level-metadata'
               disabled={Boolean(
                 downloadStatus.inProgress
-                  || dataDictionaryInfo.noVariableLevelMetadata,
+                  || variableMetadataInfo.noVariableLevelMetadata,
               )}
               loading={downloadStatus.inProgress === 'DownloadVariableMetadata'}
               onClick={() => {
                 DownloadVariableMetadata(
-                  dataDictionaryInfo.dataDictionaries,
+                  variableMetadataInfo.variableLevelMetadataRecords,
                   resourceInfo,
                   setDownloadStatus,
                 );

@@ -4,6 +4,7 @@ import {
 import { fetchWithCreds } from '../actions';
 import { validFileNameChecks } from '../utils';
 
+const LIMIT = 2000; // required or else mds defaults to returning 10 records
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
 export const preprocessStudyRegistrationMetadata = async (username, metadataID, updatedValues, GUIDType = 'discovery_metadata') => {
@@ -109,13 +110,13 @@ export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = { 
   return updatedMetadataToRegister;
 };
 
-export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) => {
+export const updateStudyInMDS = async (metadataID, metadataToUpdate = {}) => {
   const updateURL = `${mdsURL}/${metadataID}?overwrite=true`;
   await fetchWithCreds({
     path: updateURL,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(metadataToRegister),
+    body: JSON.stringify(metadataToUpdate),
   }).then((response) => {
     if (response.status !== 200) {
       throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
@@ -206,4 +207,99 @@ export const handleDataDictionaryNameValidation = (_:object, userInput:string): 
     return Promise.reject('Data Dictionary name can only use alphabetic and numeric characters, and []() ._-');
   }
   return Promise.resolve(true);
+};
+
+export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
+  try {
+    let allCDEInfo:any = [];
+    let offset = 0;
+    // request up to LIMIT studies from MDS at a time.
+    let shouldContinue = true;
+    while (shouldContinue) {
+      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
+      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
+      // using Promise.all() so that we can fire multiple requests at one.
+      // But we WANT to delay sending the next request to MDS until we know we need it.
+      // eslint-disable-next-line no-await-in-loop
+      const res = await fetch(url);
+      if (res.status !== 200) {
+        throw new Error(`Request for CDE metadata at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const jsonResponse = await res.json();
+      const cdeInfoList = Object.entries(jsonResponse).map(([k, v]) => {
+        const key:string = k;
+        const value:any = v;
+        const cdeInfo = {
+          drupalID: value.drupal_id,
+          fileName: value.file_name,
+          guid: key,
+          isCoreCDE: Boolean(value.is_core_cde),
+        };
+        return cdeInfo;
+      });
+      allCDEInfo = allCDEInfo.concat(cdeInfoList);
+      const noMoreCDEToLoad = cdeInfoList.length < LIMIT;
+      if (noMoreCDEToLoad) {
+        shouldContinue = false;
+        return allCDEInfo;
+      }
+      offset += LIMIT;
+    }
+    return allCDEInfo;
+  } catch (err) {
+    throw new Error(`Request for CDE metadata failed: ${err}`);
+  }
+};
+
+export const updateCDEMetadataInMDS = async (metadataID: string, updatedCDEInfo: {option:string, guid:string}[]) => {
+  try {
+    const queryURL = `${mdsURL}/${metadataID}`;
+    const queryRes = await fetch(queryURL);
+    if (queryRes.status !== 200) {
+      throw new Error(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
+    }
+    const studyMetadata = await queryRes.json();
+    const variableMetadataField = studyRegistrationConfig?.variableMetadataField;
+    const metadataToUpdate = { ...studyMetadata };
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, variableMetadataField)) {
+      // create VLMD metadata section in metadata if doesn't exist yet
+      metadataToUpdate[variableMetadataField] = {};
+    }
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate[variableMetadataField], 'common_data_elements')) {
+      // create CDE metadata section inside VLMD metadata section if doesn't exist yet
+      metadataToUpdate[variableMetadataField].common_data_elements = {};
+    }
+    const cdeMetadataToUpdate = updatedCDEInfo.reduce((acc, entry) => {
+      const { option, guid } = entry;
+      return { ...acc, [option]: guid };
+    }, {});
+    metadataToUpdate[variableMetadataField].common_data_elements = cdeMetadataToUpdate;
+    // update tags
+    const tagField = discoveryConfig?.minimalFieldMapping?.tagsListFieldName;
+    if (tagField) {
+      if (!metadataToUpdate[STUDY_DATA_FIELD][tagField]) {
+        metadataToUpdate[STUDY_DATA_FIELD][tagField] = [];
+      }
+      // remove any existing CDE tags first
+      const updatedTags = metadataToUpdate[STUDY_DATA_FIELD][tagField].filter((entry) => entry.category !== 'Common Data Elements');
+      Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedTags.push({ name: cdeKey, category: 'Common Data Elements' }));
+      metadataToUpdate[STUDY_DATA_FIELD][tagField] = updatedTags;
+    }
+
+    // update filters
+    const filterField = discoveryConfig?.features?.advSearchFilters?.field;
+    if (filterField) {
+      if (!metadataToUpdate[STUDY_DATA_FIELD][filterField]) {
+        metadataToUpdate[STUDY_DATA_FIELD][filterField] = [];
+      }
+      // remove any existing CDE filters first
+      const updatedFilters = metadataToUpdate[STUDY_DATA_FIELD][filterField].filter((entry) => entry.key !== 'Common Data Elements');
+      Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedFilters.push({ value: cdeKey, key: 'Common Data Elements' }));
+      metadataToUpdate[STUDY_DATA_FIELD][filterField] = updatedFilters;
+    }
+    await updateStudyInMDS(metadataID, metadataToUpdate);
+  } catch (err) {
+    throw new Error(`Request for query MDS failed: ${err}`);
+  }
 };
