@@ -85,8 +85,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
-    // If batch loading is Enabled, update the numberOfBatchesLoaded to enable calling of different batch sizes
-    // with different parameters
+    // Update the numberOfBatchesLoaded to enable calling of different batch sizes with different parameters
     if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
 
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
