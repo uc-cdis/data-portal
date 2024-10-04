@@ -513,7 +513,8 @@ Below is an example, with inline comments describing what each JSON block config
             "menuText": "Not Accessible"
           },
           "waiting": {...},
-          "notAvailable": {...}
+          "notAvailable": {...},
+          "mixed": {...}
         }
       },
       "tagsColumn" : {
