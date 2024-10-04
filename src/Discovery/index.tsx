@@ -9,7 +9,7 @@ import {
 } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './Utils/aggMDSUtils/aggMDSUtils';
-import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './Utils/MDSUtils/MDSUtils';
+import loadStudiesFromMDS from './Utils/MDSUtils/MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
   if (!config.studies) {
@@ -91,18 +91,18 @@ const DiscoveryWithMDSBackend: React.FC<{
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
       let loadStudiesFunction: Function;
-      let loadStudiesParameters: any;
+      let loadStudiesParameters: any[] = [];
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
-        loadStudiesParameters = numberOfBatchesLoaded === 1
+        loadStudiesParameters.push(numberOfBatchesLoaded === 1
           ? numberOfStudiesForSmallerBatch
-          : numberOfStudiesForAllStudiesBatch;
+          : numberOfStudiesForAllStudiesBatch);
       } else {
-        loadStudiesFunction = getSomeStudiesFromMDS;
-        loadStudiesParameters = props.config?.features?.guidType;
+        loadStudiesFunction = loadStudiesFromMDS;
+        loadStudiesParameters = [props.config?.features?.guidType, 10, false];
       }
       const rawStudiesRegistered = await loadStudiesFunction(
-        loadStudiesParameters,
+        ...loadStudiesParameters,
       );
       let rawStudiesUnregistered: any[] = [];
 
@@ -110,9 +110,10 @@ const DiscoveryWithMDSBackend: React.FC<{
         // Load fewer raw studies if on the first studies batch
         // Otherwise load them all
         rawStudiesUnregistered = numberOfBatchesLoaded === 1
-          ? (rawStudiesUnregistered = await getSomeStudiesFromMDS(
+          ? (rawStudiesUnregistered = await loadStudiesFromMDS(
             'unregistered_discovery_metadata',
             numberOfStudiesForSmallerBatch,
+            false,
           ))
           : await loadStudiesFromMDS('unregistered_discovery_metadata');
         rawStudiesUnregistered = rawStudiesUnregistered.map(

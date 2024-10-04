@@ -1,26 +1,9 @@
-import { loadStudiesFromMDS, getSomeStudiesFromMDS } from './MDSUtils';
+import loadStudiesFromMDS from './MDSUtils';
 import { mdsURL } from '../../../localconf';
 
 global.fetch = jest.fn();
 
-const checkForFetchError = async (targetFunction) => {
-  const mockResponse = {
-    0: { gen3_discovery: { name: 'Study 1' } },
-    1: { gen3_discovery: { name: 'Study 2' } },
-  };
-  fetch.mockResolvedValueOnce({
-    status: 401,
-    json: jest.fn().mockResolvedValueOnce(mockResponse),
-  });
-  const expectedErrorMsg = 'Request for study data failed: Error';
-  let actualErrorMsg = null;
-  try {
-    await targetFunction();
-  } catch (e) {
-    actualErrorMsg = e.message;
-  }
-  expect(actualErrorMsg.toString().includes(expectedErrorMsg)).toBe(true);
-};
+
 
 describe('MDS Data Loading Functions', () => {
   afterEach(() => {
@@ -28,17 +11,15 @@ describe('MDS Data Loading Functions', () => {
   });
 
   describe('loadStudiesFromMDS', () => {
-    it('should load studies successfully', async () => {
+    it('should load studies successfully with limit of 2000', async () => {
       const mockResponse = {
         0: { gen3_discovery: { name: 'Study 1' } },
         1: { gen3_discovery: { name: 'Study 2' } },
       };
-
       fetch.mockResolvedValueOnce({
         status: 200,
         json: jest.fn().mockResolvedValueOnce(mockResponse),
       });
-
       const studies = await loadStudiesFromMDS();
       expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
       expect(fetch).toHaveBeenCalledTimes(1);
@@ -47,8 +28,40 @@ describe('MDS Data Loading Functions', () => {
       );
     });
 
+    it('should load studies successfully with limit of 5', async () => {
+      const mockResponse = {
+        0: { gen3_discovery: { name: 'Study 1' } },
+        1: { gen3_discovery: { name: 'Study 2' } },
+      };
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      });
+      const studies = await loadStudiesFromMDS('discovery_metadata', 5);
+      expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledWith(
+        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=5&offset=0`,
+      );
+    });
+
     it('should throw an error on fetch failure', async () => {
-      checkForFetchError(loadStudiesFromMDS);
+      const mockResponse = {
+        0: { gen3_discovery: { name: 'Study 1' } },
+        1: { gen3_discovery: { name: 'Study 2' } },
+      };
+      fetch.mockResolvedValueOnce({
+        status: 401,
+        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      });
+      const expectedErrorMsg = 'Request for study data failed: Error';
+      let actualErrorMsg = null;
+      try {
+        await loadStudiesFromMDS();
+      } catch (e) {
+        actualErrorMsg = e.message;
+      }
+      expect(actualErrorMsg.toString().includes(expectedErrorMsg)).toBe(true);
     });
 
     it('should load up to 2000 studies, then load more with a secondary request', async () => {
@@ -69,30 +82,6 @@ describe('MDS Data Loading Functions', () => {
       const studies = await loadStudiesFromMDS();
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(studies.length).toBe(2500);
-    });
-
-    describe('getSomeStudiesFromMDS', () => {
-      it('should retrieve a limited number of studies', async () => {
-        const mockResponse = {
-          0: { gen3_discovery: { name: 'Study 1' } },
-          1: { gen3_discovery: { name: 'Study 2' } },
-        };
-
-        fetch.mockResolvedValueOnce({
-          status: 200,
-          json: jest.fn().mockResolvedValueOnce(mockResponse),
-        });
-
-        const studies = await getSomeStudiesFromMDS('discovery_metadata', 2);
-        expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith(
-          `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=2`,
-        );
-      });
-      it('should throw an error on fetch failure', async () => {
-        checkForFetchError(getSomeStudiesFromMDS);
-      });
     });
   });
 });
