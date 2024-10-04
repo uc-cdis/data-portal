@@ -512,6 +512,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               [AccessLevel.NOT_AVAILABLE]: true,
               [AccessLevel.WAITING]: true,
               [AccessLevel.UNACCESSIBLE]: true,
+              [AccessLevel.MIXED]: true,
             },
             )}
           > Reset

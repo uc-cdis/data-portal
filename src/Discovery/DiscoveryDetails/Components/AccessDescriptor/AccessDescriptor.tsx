@@ -1,11 +1,12 @@
 import React from 'react';
 import { Alert } from 'antd';
 import { UnlockOutlined } from '@ant-design/icons';
+import { AccessLevel } from '../../../Discovery';
 
-interface NonTabbedDiscoveryDetailsProps {userHasAccess:boolean, userDoesNotHaveAccess:boolean}
+interface NonTabbedDiscoveryDetailsProps {accessibleFieldValue: AccessLevel}
 
-const AccessDescriptor = ({ userHasAccess, userDoesNotHaveAccess }: NonTabbedDiscoveryDetailsProps) => {
-  if (userHasAccess) {
+const AccessDescriptor = ({ accessibleFieldValue }: NonTabbedDiscoveryDetailsProps) => {
+  if (accessibleFieldValue === AccessLevel.ACCESSIBLE) {
     return (
       <Alert
         className='discovery-modal__access-alert'
@@ -18,13 +19,24 @@ const AccessDescriptor = ({ userHasAccess, userDoesNotHaveAccess }: NonTabbedDis
       />
     );
   }
-  if (userDoesNotHaveAccess) {
+  if (accessibleFieldValue === AccessLevel.UNACCESSIBLE) {
     return (
       <Alert
         className='discovery-modal__access-alert'
         type='warning'
         message={
           <React.Fragment>You do not have access to this data.</React.Fragment>
+        }
+      />
+    );
+  }
+  if (accessibleFieldValue === AccessLevel.MIXED) {
+    return (
+      <Alert
+        className='discovery-modal__access-alert'
+        type='info'
+        message={
+          <React.Fragment>This dataset contains mixed availabilities.</React.Fragment>
         }
       />
     );
