@@ -26,21 +26,23 @@ describe('MDS Data Loading Functions', () => {
       );
     });
 
-    it('should load studies successfully with limit of 5', async () => {
+    it('should load studies successfully with limit of 3 with loadAllMetadata false', async () => {
       const mockResponse = {
         0: { gen3_discovery: { name: 'Study 1' } },
         1: { gen3_discovery: { name: 'Study 2' } },
+        2: { gen3_discovery: { name: 'Study 3' } },
       };
       fetch.mockResolvedValueOnce({
         status: 200,
         json: jest.fn().mockResolvedValueOnce(mockResponse),
       });
-      const studies = await loadStudiesFromMDS('discovery_metadata', 5);
-      expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
+      const studies = await loadStudiesFromMDS('discovery_metadata', 3, false);
+
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=5&offset=0`,
+        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=3&offset=0`,
       );
+      expect(studies).toEqual([{ name: 'Study 1' },{ name: 'Study 2' },{ name: 'Study 3' }]);
     });
 
     it('should throw an error on fetch failure', async () => {
