@@ -3,8 +3,6 @@ import { mdsURL } from '../../../localconf';
 
 global.fetch = jest.fn();
 
-
-
 describe('MDS Data Loading Functions', () => {
   afterEach(() => {
     jest.clearAllMocks();
