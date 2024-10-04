@@ -129,7 +129,13 @@ const DiscoveryWithMDSBackend: React.FC<{
               || userHasMethodForServiceOnResource('read', 'guppy', study[authzField], authMapping)
               || userHasMethodForServiceOnResource('read-storage', 'fence', study[authzField], authMapping);
             if (supportedValues?.accessible?.enabled && isAuthorized === true) {
-              accessible = AccessLevel.ACCESSIBLE;
+              if (supportedValues?.mixed?.enabled
+                && dataAvailabilityField
+                && study[dataAvailabilityField] === 'mixed_availability') {
+                accessible = AccessLevel.MIXED;
+              } else {
+                accessible = AccessLevel.ACCESSIBLE;
+              }
             } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
             } else {

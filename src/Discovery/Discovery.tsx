@@ -44,6 +44,7 @@ export enum AccessLevel {
   WAITING = 3,
   NOT_AVAILABLE = 4,
   OTHER = 5,
+  MIXED = 6,
 }
 
 export enum AccessSortDirection {
@@ -475,10 +476,16 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             checked={props.accessFilters[accessLevel]}
             onChange={
               () => {
-                props.onAccessFilterSet({
+                const updatedAccessFilter = {
                   ...props.accessFilters,
                   [accessLevel]: !props.accessFilters[accessLevel],
-                });
+                };
+                // If "mixed availability" is enabled, set its value so it would show when either "accessible" or "unaccessible" is set
+                if (config.features?.authorization?.supportedValues?.mixed?.enabled === true) {
+                  updatedAccessFilter[AccessLevel.MIXED] = Boolean(updatedAccessFilter[AccessLevel.ACCESSIBLE])
+                  || Boolean(updatedAccessFilter[AccessLevel.UNACCESSIBLE]);
+                }
+                props.onAccessFilterSet(updatedAccessFilter);
               }
             }
           >
@@ -636,6 +643,24 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 </div>
               )}
             >
+              <LockOutlined className='discovery-table__access-icon' />
+            </Popover>
+          );
+        }
+        if (record[accessibleFieldName] === AccessLevel.MIXED) {
+          return (
+            <Popover
+              overlayClassName='discovery-popover'
+              placement='topRight'
+              arrowPointAtCenter
+              title={'You have access to some of these data.'}
+              content={(
+                <div className='discovery-popover__text'>
+                  <React.Fragment>Some of these data requires visiting the repository to request access.</React.Fragment>
+                </div>
+              )}
+            >
+              <UnlockOutlined className='discovery-table__access-icon' />
               <LockOutlined className='discovery-table__access-icon' />
             </Popover>
           );
