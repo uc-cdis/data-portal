@@ -21,7 +21,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
-import loadStudiesFromMDS from '../Discovery/MDSUtils';
+import loadStudiesFromMDS from '../Discovery/Utils/MDSUtils/MDSUtils';
 import { updateStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 import Spinner from '../components/Spinner';
 
