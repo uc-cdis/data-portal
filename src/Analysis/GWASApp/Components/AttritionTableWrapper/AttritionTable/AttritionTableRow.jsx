@@ -154,7 +154,7 @@ const AttritionTableRow = ({
         {rowType === 'Outcome' ? 'Outcome Phenotype' : rowType}
       </td>
       <td className='gwasv2-attrition-table--chart'>
-        <Button type='text' onClick={handleChatIconClick}>
+        <Button aria-label='show attrition table modal' type='text' onClick={handleChatIconClick}>
           {determineChartIcon(rowType)}
         </Button>
       </td>
