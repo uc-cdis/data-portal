@@ -5,7 +5,7 @@ import React, {
 import * as JsSearch from 'js-search';
 import jsonpath from 'jsonpath';
 import {
-  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
+  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
 } from 'antd';
 import {
   LockOutlined,
@@ -217,6 +217,7 @@ export interface Props {
   onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
   onResourcesSelected: (resources: DiscoveryResource[]) => any,
   onPaginationSet: (pagination: { currentPage: number, resultsPerPage: number }) => any,
+  allBatchesAreReady: boolean,
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -240,6 +241,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [visibleResources, setVisibleResources] = useState([]);
   const [discoveryTopPadding, setDiscoveryTopPadding] = useState(30);
   const discoveryAccessibilityLinksRef = useRef(null);
+
+  const batchesAreLoading = props.allBatchesAreReady === false;
+  const BatchLoadingSpinner = () => (
+    <div style={{ textAlign: 'center' }}>
+      <Spin />
+    </div>
+  );
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -692,6 +700,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       {/* Header with stats */}
       <div className='discovery-header'>
         <DiscoverySummary
+          allBatchesAreReady={props.allBatchesAreReady}
           visibleResources={visibleResources}
           config={config}
         />
@@ -732,12 +741,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>
                 <Panel className='discovery-header__dropdown-tags-display-panel' header='' key='1'>
                   <div className='discovery-header__dropdown-tags'>
-                    <DiscoveryDropdownTagViewer
-                      config={config}
-                      studies={props.studies}
-                      selectedTags={props.selectedTags}
-                      setSelectedTags={props.onTagsSelected}
-                    />
+                    { batchesAreLoading
+                      ? (
+                        <BatchLoadingSpinner />
+                      )
+                      : (
+                        <DiscoveryDropdownTagViewer
+                          config={config}
+                          studies={props.studies}
+                          selectedTags={props.selectedTags}
+                          setSelectedTags={props.onTagsSelected}
+                        />
+                      )}
                   </div>
                 </Panel>
               </Collapse>
