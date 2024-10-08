@@ -49,11 +49,11 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
               size: modalInfo?.rowObject?.cohort_sizes[1],
               cohort_definition_id: modalInfo?.rowObject?.cohort_ids[1],
             }}
-            // To Get VIZ to match, need to remove first item from currentCovariateAndCovariatesFromPrecedingRows?
+            // Need to remove first item from currentCovariateAndCovariatesFromPrecedingRows
             selectedCovariates={modalInfo.currentCovariateAndCovariatesFromPrecedingRows.slice(
               1,
             )}
-            // To get VIZ to Match, outcome should be null if we're viewing the outcome?
+            // Outcome should be null if we're viewing the outcome
             outcome={
               modalInfo.currentCovariateAndCovariatesFromPrecedingRows
                 .length === 1
