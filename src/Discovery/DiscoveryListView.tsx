@@ -69,7 +69,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           let disabled;
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
-            disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) || (record[props.accessibleFieldName] !== AccessLevel.MIXED);
+            disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
           }
           // disable checkbox if there's no manifest or external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
