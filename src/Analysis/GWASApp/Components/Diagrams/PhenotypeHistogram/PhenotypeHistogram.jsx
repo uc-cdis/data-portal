@@ -16,6 +16,7 @@ const PhenotypeHistogram = ({
   outcome,
   selectedContinuousItem,
   useInlineErrorMessages,
+  useAnimation,
 }) => {
   const { source } = useSourceContext();
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
@@ -80,6 +81,7 @@ const PhenotypeHistogram = ({
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
+    useAnimation,
   };
   return (
     <React.Fragment>
@@ -96,6 +98,7 @@ PhenotypeHistogram.propTypes = {
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   selectedContinuousItem: PropTypes.object.isRequired,
+  useAnimation: PropTypes.bool,
 };
 
 PhenotypeHistogram.defaultProps = {
@@ -103,6 +106,7 @@ PhenotypeHistogram.defaultProps = {
   dispatch: null,
   selectedCovariates: [],
   outcome: null,
+  useAnimation: true,
 };
 
 export default PhenotypeHistogram;

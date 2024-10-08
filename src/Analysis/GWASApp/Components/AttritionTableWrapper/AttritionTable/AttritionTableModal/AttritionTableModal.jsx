@@ -29,6 +29,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
             }
             outcome={modalInfo.outcome}
             selectedContinuousItem={modalInfo.rowObject}
+            useAnimation={false}
           />
         </div>
       )}
