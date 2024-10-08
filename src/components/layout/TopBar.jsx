@@ -38,6 +38,12 @@ class TopBar extends Component {
       <div className='top-bar'>
         <header className='top-bar__header'>
           <nav className='top-bar__nav'>
+            <a
+              href='#main-content'
+              className='top-bar__link g3-ring-on-focus top-bar__link_skip'
+            >
+              Skip Navigation
+            </a>
             {
               this.props.topItems.filter(
                 (item) => {
