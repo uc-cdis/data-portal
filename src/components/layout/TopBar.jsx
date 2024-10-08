@@ -69,12 +69,12 @@ class TopBar extends Component {
                         href={itemHref}
                         target='_blank'
                         rel='noopener noreferrer'
-                        isActive={this.isActive(itemHref)}
                         onActiveTab={() => this.props.onActiveTab(itemHref)}
                       >
                         <TopIconButton
                           name={buttonText}
                           icon={item.icon}
+                          isActive={this.isActive(itemHref)}
                         />
                       </a>
                     );
@@ -84,12 +84,12 @@ class TopBar extends Component {
                       className='top-bar__link g3-ring-on-focus'
                       key={item.link}
                       to={item.link}
-                      isActive={this.isActive(item.link)}
                       onActiveTab={() => this.props.onActiveTab(item.link)}
                     >
                       <TopIconButton
                         name={buttonText}
                         icon={item.icon}
+                        isActive={this.isActive(item.link)}
                       />
                     </Link>
                   );
@@ -103,12 +103,12 @@ class TopBar extends Component {
                   <Link
                     className='top-bar__link g3-ring-on-focus'
                     to='/identity'
-                    isActive={this.isActive('/identity')}
                     onActiveTab={() => this.props.onActiveTab('/identity')}
                   >
                     <TopIconButton
                       icon='user-circle'
                       name={this.props.user.username}
+                      isActive={this.isActive('/identity')}
                     />
                   </Link>
                   <Link className='top-bar__link g3-ring-on-focus' to='#' onClick={this.props.onLogoutClick}>
@@ -137,12 +137,12 @@ class TopBar extends Component {
                   <Link
                     className='top-bar__link g3-ring-on-focus'
                     to='#'
-                    isActive={this.isActive('/identity')}
                     onActiveTab={() => this.props.onActiveTab('/identity')}
                   >
                     <TopIconButton
                       icon='user-circle'
                       name=''
+                      isActive={this.isActive('/identity')}
                     />
                   </Link>
                 </Popover>
