@@ -665,7 +665,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               title={'You have access to some of these data.'}
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>Some of these data requires visiting the repository to request access.</React.Fragment>
+                  <React.Fragment>Some of these data require visiting the repository to request access.</React.Fragment>
                 </div>
               )}
             >

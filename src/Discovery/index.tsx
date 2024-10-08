@@ -72,7 +72,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
-  // Downloads and processes studies in two seperate batches
+  // Downloads and processes studies in two separate batches
   // to improve load time & usability
   // Initially uses a smaller batch to load interface quickly
   // Then a batch with all the studies
