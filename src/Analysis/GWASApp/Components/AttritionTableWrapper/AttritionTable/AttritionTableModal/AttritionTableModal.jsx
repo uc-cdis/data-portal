@@ -49,11 +49,11 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
               size: modalInfo?.rowObject?.cohort_sizes[1],
               cohort_definition_id: modalInfo?.rowObject?.cohort_ids[1],
             }}
-            // Need to remove first item from currentCovariateAndCovariatesFromPrecedingRows
+            // Need to remove first item from currentCovariateAndCovariatesFromPrecedingRows for this visualization
             selectedCovariates={modalInfo.currentCovariateAndCovariatesFromPrecedingRows.slice(
               1,
             )}
-            // Outcome should be null if we're viewing the outcome
+            // Outcome should be null if we're viewing the outcome for this visualization
             outcome={
               modalInfo.currentCovariateAndCovariatesFromPrecedingRows
                 .length === 1
