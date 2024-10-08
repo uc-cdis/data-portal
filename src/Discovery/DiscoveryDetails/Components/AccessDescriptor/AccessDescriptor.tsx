@@ -36,7 +36,7 @@ const AccessDescriptor = ({ accessibleFieldValue }: NonTabbedDiscoveryDetailsPro
         className='discovery-modal__access-alert'
         type='info'
         message={
-          <React.Fragment>This dataset contains mixed availabilities.</React.Fragment>
+          <React.Fragment>This study contains both open and restricted access data.</React.Fragment>
         }
       />
     );
