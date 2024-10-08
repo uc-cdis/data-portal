@@ -21,7 +21,7 @@ const CohortsOverlapDiagram = ({
   selectedControlCohort,
   selectedCovariates,
   outcome,
-  useInlineErrorMessages
+  useInlineErrorMessages,
 }) => {
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const { source } = useSourceContext();
@@ -139,7 +139,7 @@ const CohortsOverlapDiagram = ({
         dataStudyPopulationAndCase.cohort_overlap.case_control_overlap === 0
         || dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0
       ) {
-        if(useInlineErrorMessages) setInlineErrorMessage(<h4>❌ {MESSAGES.OVERLAP_ERROR.title}</h4>);
+        if (useInlineErrorMessages) setInlineErrorMessage(<h4>❌ {MESSAGES.OVERLAP_ERROR.title}</h4>);
         if (dispatch !== null) {
           dispatch({
             type: ACTIONS.ADD_MESSAGE,
