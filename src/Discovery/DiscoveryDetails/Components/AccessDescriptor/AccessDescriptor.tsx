@@ -13,7 +13,7 @@ const AccessDescriptor = ({ accessibleFieldValue }: NonTabbedDiscoveryDetailsPro
         type='success'
         message={(
           <React.Fragment>
-            <UnlockOutlined /> You have access to this data.
+            <UnlockOutlined />You have access to this data.
           </React.Fragment>
         )}
       />
@@ -46,9 +46,7 @@ const AccessDescriptor = ({ accessibleFieldValue }: NonTabbedDiscoveryDetailsPro
       className='discovery-modal__access-alert'
       type='info'
       message={(
-        <React.Fragment>
-          This does not include data access authorization details.
-        </React.Fragment>
+        <React.Fragment>This does not include data access authorization details.</React.Fragment>
       )}
     />
   );
