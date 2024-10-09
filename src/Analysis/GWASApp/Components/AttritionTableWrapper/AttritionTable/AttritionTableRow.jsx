@@ -138,7 +138,7 @@ const AttritionTableRow = ({
     title += rowType === 'Outcome' ? ' Phenotype' : '';
     return title;
   };
-  const handleChatIconClick = () => {
+  const handleChartIconClick = () => {
     setModalInfo({
       ...modalInfo,
       title: determineModalTitle(),
@@ -154,7 +154,7 @@ const AttritionTableRow = ({
         {rowType === 'Outcome' ? 'Outcome Phenotype' : rowType}
       </td>
       <td className='gwasv2-attrition-table--chart'>
-        <Button aria-label='show attrition table modal' type='text' onClick={handleChatIconClick}>
+        <Button aria-label='show attrition table modal' type='text' onClick={handleChartIconClick}>
           {determineChartIcon(rowType)}
         </Button>
       </td>

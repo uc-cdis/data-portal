@@ -7,7 +7,7 @@ import CohortsOverlapDiagram from '../../../Diagrams/CohortsOverlapDiagram/Cohor
 
 const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
   const modalWidth = 650;
-  const rowIsOutcome =  modalInfo.currentCovariateAndCovariatesFromPrecedingRows?.length === 1;
+  const rowIsOutcome = modalInfo.currentCovariateAndCovariatesFromPrecedingRows?.length === 1;
 
   return (
     <Modal
@@ -50,7 +50,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
               size: modalInfo?.rowObject?.cohort_sizes[1],
               cohort_definition_id: modalInfo?.rowObject?.cohort_ids[1],
             }}
-            selectedCovariates={rowIsOutcome  ? [] : modalInfo.currentCovariateAndCovariatesFromPrecedingRows}
+            selectedCovariates={rowIsOutcome ? [] : modalInfo.currentCovariateAndCovariatesFromPrecedingRows}
             outcome={rowIsOutcome ? null : modalInfo.outcome}
           />
         </div>
