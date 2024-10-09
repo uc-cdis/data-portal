@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AttritionTableModal from './AttritionTableModal';
-import { SourceContextProvider } from '../../../../Utils/Source';
+import { SourceContextProvider } from '../../../Utils/Source';
 import {
   fetchSimpleOverlapInfo,
   useSourceFetch,
-} from '../../../../Utils/cohortMiddlewareApi';
+} from '../../../Utils/cohortMiddlewareApi';
 
 // Mock the PhenotypeHistogram component
 jest.mock(

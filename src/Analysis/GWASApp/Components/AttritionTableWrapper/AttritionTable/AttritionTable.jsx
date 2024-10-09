@@ -2,31 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'antd';
 import AttritionTableRow from './AttritionTableRow';
-import AttritionTableModal from './AttritionTableModal/AttritionTableModal';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
 const AttritionTable = ({
-  selectedCohort, outcome, covariates, tableType,
+  selectedCohort, outcome, covariates, tableType, modalInfo, setModalInfo,
 }) => {
-  const [modalInfo, setModalInfo] = useState({
-    title: '',
-    isModalOpen: false,
-    selectedCohort: null,
-    currentCovariateAndCovariatesFromPrecedingRows: null,
-    outcome: null,
-    rowObject: null,
-  });
-  // Keep modal info up-to-date with changes in the data needed for data viz
-  useEffect(() => {
-    setModalInfo({
-      ...modalInfo,
-      selectedCohort,
-      outcome,
-    });
-  }, [selectedCohort, covariates, outcome]);
-
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
@@ -72,7 +54,6 @@ const AttritionTable = ({
 
   return (
     <div className='gwasv2-attrition-table' key={tableType}>
-      <AttritionTableModal modalInfo={modalInfo} setModalInfo={setModalInfo} />
       <Collapse onClick={(event) => event.stopPropagation()}>
         <Panel header={`${tableType} Attrition Table`} key='2'>
           <table>
@@ -169,6 +150,8 @@ AttritionTable.propTypes = {
   outcome: PropTypes.object,
   covariates: PropTypes.array,
   tableType: PropTypes.string.isRequired,
+  modalInfo: PropTypes.object.isRequired,
+  setModalInfo: PropTypes.func.isRequired,
 };
 
 AttritionTable.defaultProps = {

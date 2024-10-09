@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import './AttritionTableModal.css';
-import PhenotypeHistogram from '../../../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
-import CohortsOverlapDiagram from '../../../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
+import PhenotypeHistogram from '../../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
+import CohortsOverlapDiagram from '../../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
 
 const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
   const modalWidth = 650;
@@ -13,8 +13,8 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
     <Modal
       title={<h3>{modalInfo.title}</h3>}
       open={modalInfo.isModalOpen}
-      onOk={() => setModalInfo({ ...modalInfo, currentCovariateAndCovariatesFromPrecedingRows: [], isModalOpen: false })}
-      onCancel={() => setModalInfo({ ...modalInfo, currentCovariateAndCovariatesFromPrecedingRows: [], isModalOpen: false })}
+      onOk={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
+      onCancel={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
       footer={null}
       width={modalWidth}
       className='attrition-table-modal'
