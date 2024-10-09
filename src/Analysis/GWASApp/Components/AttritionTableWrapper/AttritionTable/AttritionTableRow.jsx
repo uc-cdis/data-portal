@@ -186,7 +186,7 @@ AttritionTableRow.defaultProps = {
   outcome: null,
   rowObject: null,
   modalInfo: null,
-  setModalInfo: ()=> null,
+  setModalInfo: () => null,
 };
 
 export default AttritionTableRow;
