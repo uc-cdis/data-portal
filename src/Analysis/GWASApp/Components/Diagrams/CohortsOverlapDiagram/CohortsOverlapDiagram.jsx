@@ -63,6 +63,7 @@ const CohortsOverlapDiagram = ({
         outcome,
       ),
       ...queryConfig,
+      refetchOnMount:true,
     },
     {
       queryKey: [

@@ -178,13 +178,15 @@ AttritionTableRow.propTypes = {
   outcome: PropTypes.object,
   rowObject: PropTypes.object,
   selectedCohort: PropTypes.object.isRequired,
-  modalInfo: PropTypes.object.isRequired,
-  setModalInfo: PropTypes.func.isRequired,
+  modalInfo: PropTypes.object,
+  setModalInfo: PropTypes.func,
 };
 
 AttritionTableRow.defaultProps = {
   outcome: null,
   rowObject: null,
+  modalInfo: null,
+  setModalInfo: ()=> null,
 };
 
 export default AttritionTableRow;

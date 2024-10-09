@@ -13,8 +13,8 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
     <Modal
       title={<h3>{modalInfo.title}</h3>}
       open={modalInfo.isModalOpen}
-      onOk={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
-      onCancel={() => setModalInfo({ ...modalInfo, isModalOpen: false })}
+      onOk={() => setModalInfo({ ...modalInfo, currentCovariateAndCovariatesFromPrecedingRows:[], isModalOpen: false })}
+      onCancel={() => setModalInfo({ ...modalInfo, currentCovariateAndCovariatesFromPrecedingRows:[], isModalOpen: false })}
       footer={null}
       width={modalWidth}
       className='attrition-table-modal'

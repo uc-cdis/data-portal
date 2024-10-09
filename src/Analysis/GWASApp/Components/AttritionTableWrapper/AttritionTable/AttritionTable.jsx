@@ -114,8 +114,6 @@ const AttritionTable = ({
                     rowType='Cohort'
                     rowObject={null}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}
-                    modalInfo={modalInfo}
-                    setModalInfo={setModalInfo}
                   />
                 </React.Fragment>
               )}
