@@ -5,7 +5,6 @@ import DataDownloadList from './DataDownloadList/DataDownloadList';
 import {
   renderFieldContent,
   DiscoveryResource,
-  AccessLevel,
   accessibleFieldName,
 } from '../../../../Discovery';
 import { User } from '../../../DiscoveryDetailsInterfaces';
@@ -28,12 +27,9 @@ const TabField = (
 ): JSX.Element | null => {
   // Setup special fields first
   if (fieldConfig.type === 'accessDescriptor') {
-    // return accessDescriptor(resource);
-    // return AccessDescriptor(resource);
     return (
       <AccessDescriptor
-        userHasAccess={resource[accessibleFieldName] === AccessLevel.ACCESSIBLE}
-        userDoesNotHaveAccess={resource[accessibleFieldName] === AccessLevel.UNACCESSIBLE}
+        accessibleFieldValue={resource[accessibleFieldName]}
       />
     );
   }

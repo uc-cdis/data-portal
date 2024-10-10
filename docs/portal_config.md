@@ -513,7 +513,8 @@ Below is an example, with inline comments describing what each JSON block config
             "menuText": "Not Accessible"
           },
           "waiting": {...},
-          "notAvailable": {...}
+          "notAvailable": {...},
+          "mixed": {...} // this is a special state, it will only has effect if the "accessible" level has also been enabled. This state won't show up in the data access filter
         }
       },
       "tagsColumn" : {

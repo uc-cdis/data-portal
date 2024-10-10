@@ -5,7 +5,7 @@ import React, {
 import * as JsSearch from 'js-search';
 import jsonpath from 'jsonpath';
 import {
-  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
+  Tag, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
 } from 'antd';
 import {
   LockOutlined,
@@ -35,6 +35,7 @@ import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
+import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
 
 export const accessibleFieldName = '__accessible';
 
@@ -44,6 +45,7 @@ export enum AccessLevel {
   WAITING = 3,
   NOT_AVAILABLE = 4,
   OTHER = 5,
+  MIXED = 6,
 }
 
 export enum AccessSortDirection {
@@ -51,8 +53,6 @@ export enum AccessSortDirection {
 }
 
 const { Panel } = Collapse;
-
-const ARBORIST_READ_PRIV = 'read';
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
   if (supportedValues?.waiting?.enabled === true) {
@@ -483,10 +483,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             checked={props.accessFilters[accessLevel]}
             onChange={
               () => {
-                props.onAccessFilterSet({
+                const updatedAccessFilter = {
                   ...props.accessFilters,
                   [accessLevel]: !props.accessFilters[accessLevel],
-                });
+                };
+                // If "mixed availability" is enabled, set its value so it would show when either "accessible" or "unaccessible" is set
+                const isMixedAvailabilityEnabled = config.features?.authorization?.supportedValues?.mixed?.enabled === true;
+                const setMixedAvailabilityToShowWhenAccessibleOrUnaccessibleIsSet = () => {
+                  updatedAccessFilter[AccessLevel.MIXED] = Boolean(updatedAccessFilter[AccessLevel.ACCESSIBLE])
+                  || Boolean(updatedAccessFilter[AccessLevel.UNACCESSIBLE]);
+                };
+                if (isMixedAvailabilityEnabled) {
+                  setMixedAvailabilityToShowWhenAccessibleOrUnaccessibleIsSet();
+                }
+                props.onAccessFilterSet(updatedAccessFilter);
               }
             }
           >
@@ -513,6 +523,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               [AccessLevel.NOT_AVAILABLE]: true,
               [AccessLevel.WAITING]: true,
               [AccessLevel.UNACCESSIBLE]: true,
+              [AccessLevel.MIXED]: true,
             },
             )}
           > Reset
@@ -578,78 +589,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       ellipsis: false,
       width: '200px',
       textWrap: 'word-break',
-      render: (_, record) => {
-        if (record[accessibleFieldName] === AccessLevel.WAITING) {
-          return (
-            <Popover
-              overlayClassName='discovery-popover'
-              placement='topRight'
-              arrowPointAtCenter
-              content={(
-                <div className='discovery-popover__text'>
-                  Data are not yet available for this study
-                </div>
-              )}
-            >
-              <ClockCircleOutlined className='discovery-table__access-icon' />
-            </Popover>
-          );
-        }
-        if (record[accessibleFieldName] === AccessLevel.NOT_AVAILABLE) {
-          return (
-            <Popover
-              overlayClassName='discovery-popover'
-              placement='topRight'
-              arrowPointAtCenter
-              content={(
-                <div className='discovery-popover__text'>
-                  No data will be shared by this study
-                </div>
-              )}
-            >
-              <DashOutlined className='discovery-table__access-icon' />
-            </Popover>
-          );
-        }
-        if (record[accessibleFieldName] === AccessLevel.ACCESSIBLE) {
-          return (
-            <Popover
-              overlayClassName='discovery-popover'
-              placement='topRight'
-              arrowPointAtCenter
-              title={'You have access to these data.'}
-              content={(
-                <div className='discovery-popover__text'>
-                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
-                </div>
-              )}
-            >
-              <UnlockOutlined className='discovery-table__access-icon' />
-            </Popover>
-          );
-        }
-        if (record[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
-          return (
-            <Popover
-              overlayClassName='discovery-popover'
-              placement='topRight'
-              arrowPointAtCenter
-              title={'You do not currently have access to these data.'}
-              content={(
-                <div className='discovery-popover__text'>
-                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to </React.Fragment>
-                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>. </React.Fragment>
-                  <React.Fragment>Visit the repository to request access to these data</React.Fragment>
-                </div>
-              )}
-            >
-              <LockOutlined className='discovery-table__access-icon' />
-            </Popover>
-          );
-        }
-        return <React.Fragment />;
-      },
+      render: (_, record) => (
+        <DiscoveryDataAvailabilityTooltips
+          dataAvailabilityLevel={record[accessibleFieldName]}
+          authzFieldName={record[config.minimalFieldMapping.authzField]}
+        />
+      ),
     });
   }
   // -----

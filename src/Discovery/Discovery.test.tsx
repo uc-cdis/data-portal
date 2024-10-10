@@ -23,6 +23,7 @@ const initStoreData = {
       [AccessLevel.UNACCESSIBLE]: true,
       [AccessLevel.WAITING]: true,
       [AccessLevel.NOT_AVAILABLE]: true,
+      [AccessLevel.MIXED]: true,
     },
     selectedTags: {},
     pagination: {
