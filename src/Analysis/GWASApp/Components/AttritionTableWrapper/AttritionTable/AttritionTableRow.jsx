@@ -145,7 +145,7 @@ const AttritionTableRow = ({
       isModalOpen: true,
       currentCovariateAndCovariatesFromPrecedingRows,
       rowObject,
-      rowType:rowType,
+      rowType,
     });
   };
 
