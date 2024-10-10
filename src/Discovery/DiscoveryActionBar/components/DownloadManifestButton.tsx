@@ -6,7 +6,7 @@ import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectT
 
 const DownloadManifestButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, history, location,
-}) => (props.config.features.exportToWorkspace?.enableDownloadManifest && (
+}) => (props.config.features.exportToWorkspace?.enableDownloadManifest ? (
   <Popover
     className='discovery-popover'
     arrowPointAtCenter
@@ -68,5 +68,5 @@ const DownloadManifestButton = ({
         }`}
     </Button>
   </Popover>
-));
+) : null);
 export default DownloadManifestButton;

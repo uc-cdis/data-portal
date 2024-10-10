@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CohortsOverlapLegend from './CohortsOverlapLegend';
+import Simple3SetsLegend from './Simple3SetsLegend';
 
 describe('CohortsOverlapLegend', () => {
   const cohort1Label = 'Cohort 1';
@@ -10,7 +10,7 @@ describe('CohortsOverlapLegend', () => {
 
   it('renders the legend items with the correct labels', () => {
     render(
-      <CohortsOverlapLegend
+      <Simple3SetsLegend
         cohort1Label={cohort1Label}
         cohort2Label={cohort2Label}
         cohort3Label={cohort3Label}

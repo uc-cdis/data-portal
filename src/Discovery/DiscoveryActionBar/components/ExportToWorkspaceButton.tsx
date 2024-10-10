@@ -6,7 +6,7 @@ import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectT
 
 const ExportToWorkspaceButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, setDownloadStatus, history, location,
-}) => (props.config.features.exportToWorkspace?.enabled && (
+}) => (props.config.features.exportToWorkspace?.enabled ? (
   <Popover
     className='discovery-popover'
     arrowPointAtCenter
@@ -61,6 +61,6 @@ const ExportToWorkspaceButton = ({
         : 'Login to Open In Workspace'}
     </Button>
   </Popover>
-));
+) : null);
 
 export default ExportToWorkspaceButton;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CohortsOverlapLegend = ({ cohort1Label, cohort2Label, cohort3Label }) => (
+const Simple3SetsLegend = ({ cohort1Label, cohort2Label, cohort3Label }) => (
   <div className='euler-diagram-legend'>
     <div className='legend-item'>
       <span className='legend-mark legend-mark-1' />
@@ -18,10 +18,10 @@ const CohortsOverlapLegend = ({ cohort1Label, cohort2Label, cohort3Label }) => (
   </div>
 );
 
-CohortsOverlapLegend.propTypes = {
+Simple3SetsLegend.propTypes = {
   cohort1Label: PropTypes.string.isRequired,
   cohort2Label: PropTypes.string.isRequired,
   cohort3Label: PropTypes.string.isRequired,
 };
 
-export default CohortsOverlapLegend;
+export default Simple3SetsLegend;

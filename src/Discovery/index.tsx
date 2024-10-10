@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
@@ -9,8 +8,8 @@ import {
   hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-import loadStudiesFromAggMDS from './aggMDSUtils';
-import loadStudiesFromMDS from './MDSUtils';
+import loadStudiesFromAggMDS from './Utils/aggMDSUtils/aggMDSUtils';
+import loadStudiesFromMDS from './Utils/MDSUtils/MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
   if (!config.studies) {
@@ -73,21 +72,56 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
+  // Downloads and processes studies in two seperate batches
+  // to improve load time & usability
+  // Initially uses a smaller batch to load interface quickly
+  // Then a batch with all the studies
+  const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(0);
+  const expectedNumberOfTotalBatches = 2;
+  // if loading with both unregistered and registered studies, load 5 for each (10 total)
+  const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
+  const numberOfSmallBatchesToBeLoaded = isEnabled('studyRegistration') ? 2 : 1;
+  const totalNumberOfStudiesFromSmallBatches = numberOfStudiesForSmallerBatch * numberOfSmallBatchesToBeLoaded;
+  const numberOfStudiesForAllStudiesBatch = 2000;
+
   useEffect(() => {
+    // Update the numberOfBatchesLoaded to enable calling of different batch sizes with different parameters
+    if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
+
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
-      let loadStudiesFunction;
+      let loadStudiesFunction: Function;
+      let loadStudiesParameters: any[] = [];
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
+        loadStudiesParameters.push(numberOfBatchesLoaded === 1
+          ? numberOfStudiesForSmallerBatch
+          : numberOfStudiesForAllStudiesBatch);
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
+        loadStudiesParameters = [props.config?.features?.guidType, 10, false];
       }
-      const rawStudiesRegistered = await loadStudiesFunction(props.config?.features?.guidType);
-      let rawStudiesUnregistered = [];
+      const rawStudiesRegistered = await loadStudiesFunction(
+        ...loadStudiesParameters,
+      );
+      let rawStudiesUnregistered: any[] = [];
+
       if (isEnabled('studyRegistration')) {
-        rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
-        rawStudiesUnregistered = rawStudiesUnregistered
-          .map((unregisteredStudy) => ({ ...unregisteredStudy, [studyRegistrationValidationField]: false }));
+        // Load fewer raw studies if on the first studies batch
+        // Otherwise load them all
+        rawStudiesUnregistered = numberOfBatchesLoaded === 1
+          ? (rawStudiesUnregistered = await loadStudiesFromMDS(
+            'unregistered_discovery_metadata',
+            numberOfStudiesForSmallerBatch,
+            false,
+          ))
+          : await loadStudiesFromMDS('unregistered_discovery_metadata');
+        rawStudiesUnregistered = rawStudiesUnregistered.map(
+          (unregisteredStudy) => ({
+            ...unregisteredStudy,
+            [studyRegistrationValidationField]: false,
+          }),
+        );
       }
       return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
@@ -103,7 +137,13 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (supportedValues?.notAvailable?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'not_available') {
+          if (supportedValues?.unaccessible?.enabled
+            && dataAvailabilityField
+            && study[dataAvailabilityField] === 'unaccessible') {
+            accessible = AccessLevel.UNACCESSIBLE;
+          } else if (supportedValues?.notAvailable?.enabled
+            && dataAvailabilityField
+            && study[dataAvailabilityField] === 'not_available') {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else if (supportedValues?.waiting?.enabled && !study[authzField]) {
             accessible = AccessLevel.WAITING;
@@ -161,16 +201,22 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, []);
+  }, [props, numberOfBatchesLoaded, numberOfStudiesForSmallerBatch]);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }
+
+  const allBatchesAreReady = studies === null
+    ? false
+    : (studies as Array<any>)?.length !== totalNumberOfStudiesFromSmallBatches;
+
   return (
     <Discovery
       studies={studies === null ? [] : studies}
       studyRegistrationValidationField={studyRegistrationValidationField}
+      allBatchesAreReady={allBatchesAreReady}
       {...props}
     />
   );

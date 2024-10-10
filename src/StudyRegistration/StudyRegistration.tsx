@@ -21,8 +21,8 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
-import loadStudiesFromMDS from '../Discovery/MDSUtils';
-import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import loadStudiesFromMDS from '../Discovery/Utils/MDSUtils/MDSUtils';
+import { updateStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 import Spinner from '../components/Spinner';
 
 const { Option } = Select;
@@ -176,7 +176,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
           .then(
-            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+            (updatedMetadataToRegister) => updateStudyInMDS(studyID, updatedMetadataToRegister)
               .then(
                 () => setFormSubmissionStatus({ status: 'success' }),
               ),
