@@ -11,10 +11,10 @@ import {
 
 // Mock the PhenotypeHistogram component
 jest.mock(
-  '../../../Diagrams/PhenotypeHistogram/PhenotypeHistogram',
+  '../../Diagrams/PhenotypeHistogram/PhenotypeHistogram',
   () => () => null,
 );
-jest.mock('../../../../Utils/cohortMiddlewareApi');
+jest.mock('../../../Utils/cohortMiddlewareApi');
 fetchSimpleOverlapInfo.mockResolvedValue({
   cohort_overlap: {
     case_control_overlap: 123,
