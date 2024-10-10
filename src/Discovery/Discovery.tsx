@@ -489,9 +489,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   [accessLevel]: !props.accessFilters[accessLevel],
                 };
                 // If "mixed availability" is enabled, set its value so it would show when either "accessible" or "unaccessible" is set
-                if (config.features?.authorization?.supportedValues?.mixed?.enabled === true) {
+                const isMixedAvailabilityEnabled = config.features?.authorization?.supportedValues?.mixed?.enabled === true;
+                const setMixedAvailabilityToShowWhenAccessibleOrUnaccessibleIsSet = () => {
                   updatedAccessFilter[AccessLevel.MIXED] = Boolean(updatedAccessFilter[AccessLevel.ACCESSIBLE])
                   || Boolean(updatedAccessFilter[AccessLevel.UNACCESSIBLE]);
+                };
+                if (isMixedAvailabilityEnabled) {
+                  setMixedAvailabilityToShowWhenAccessibleOrUnaccessibleIsSet();
                 }
                 props.onAccessFilterSet(updatedAccessFilter);
               }

@@ -5,7 +5,6 @@ import DataDownloadList from './DataDownloadList/DataDownloadList';
 import {
   renderFieldContent,
   DiscoveryResource,
-  AccessLevel,
   accessibleFieldName,
 } from '../../../../Discovery';
 import { User } from '../../../DiscoveryDetailsInterfaces';

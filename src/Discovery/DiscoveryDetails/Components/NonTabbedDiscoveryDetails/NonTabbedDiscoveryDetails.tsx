@@ -3,7 +3,6 @@ import { Button, Collapse, List } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import jsonpath from 'jsonpath';
 import {
-  AccessLevel,
   accessibleFieldName,
   renderFieldContent,
 } from '../../../Discovery';
