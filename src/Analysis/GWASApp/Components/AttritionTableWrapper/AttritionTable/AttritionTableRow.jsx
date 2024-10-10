@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
 import { fetchConceptStatsByHareSubset } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import BarChart from '../ChartIcons/BarChart';
@@ -14,6 +14,8 @@ const AttritionTableRow = ({
   rowObject,
   outcome,
   currentCovariateAndCovariatesFromPrecedingRows,
+  modalInfo,
+  setModalInfo,
 }) => {
   const sourceId = useSourceContext().source;
   const [breakdownSize, setBreakdownSize] = useState(null);
@@ -130,13 +132,32 @@ const AttritionTableRow = ({
     return value;
   };
 
+  const determineModalTitle = () => {
+    let title = rowObject.variable_type === 'concept' ? 'Continuous ' : 'Dichotomous ';
+    title += rowType;
+    title += rowType === 'Outcome' ? ' Phenotype' : '';
+    return title;
+  };
+  const handleChartIconClick = () => {
+    setModalInfo({
+      ...modalInfo,
+      title: determineModalTitle(),
+      isModalOpen: true,
+      currentCovariateAndCovariatesFromPrecedingRows,
+      rowObject,
+      rowType,
+    });
+  };
+
   return (
     <tr>
       <td className='gwasv2-attrition-table--leftpad'>
         {rowType === 'Outcome' ? 'Outcome Phenotype' : rowType}
       </td>
       <td className='gwasv2-attrition-table--chart'>
-        {determineChartIcon(rowType)}
+        <Button aria-label='show attrition table modal' type='text' onClick={handleChartIconClick}>
+          {determineChartIcon(rowType)}
+        </Button>
       </td>
       <td>{rowName()}</td>
       <td className='gwasv2-attrition-table--rightborder'>
@@ -158,11 +179,15 @@ AttritionTableRow.propTypes = {
   outcome: PropTypes.object,
   rowObject: PropTypes.object,
   selectedCohort: PropTypes.object.isRequired,
+  modalInfo: PropTypes.object,
+  setModalInfo: PropTypes.func,
 };
 
 AttritionTableRow.defaultProps = {
   outcome: null,
   rowObject: null,
+  modalInfo: null,
+  setModalInfo: () => null,
 };
 
 export default AttritionTableRow;

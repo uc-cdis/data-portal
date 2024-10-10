@@ -7,7 +7,7 @@ import './AttritionTable.css';
 const { Panel } = Collapse;
 
 const AttritionTable = ({
-  selectedCohort, outcome, covariates, tableType,
+  selectedCohort, outcome, covariates, tableType, modalInfo, setModalInfo,
 }) => {
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
   // Creates an array of arrays such that given input arr [A,B,C]
@@ -109,6 +109,8 @@ const AttritionTable = ({
                     currentCovariateAndCovariatesFromPrecedingRows={[
                       applyAutoGenFilters(),
                     ]}
+                    modalInfo={modalInfo}
+                    setModalInfo={setModalInfo}
                   />
                 </React.Fragment>
               )}
@@ -129,6 +131,8 @@ const AttritionTable = ({
                         ...item,
                         applyAutoGenFilters(),
                       ]}
+                      modalInfo={modalInfo}
+                      setModalInfo={setModalInfo}
                     />
                   </React.Fragment>
                 ))
@@ -146,6 +150,8 @@ AttritionTable.propTypes = {
   outcome: PropTypes.object,
   covariates: PropTypes.array,
   tableType: PropTypes.string.isRequired,
+  modalInfo: PropTypes.object.isRequired,
+  setModalInfo: PropTypes.func.isRequired,
 };
 
 AttritionTable.defaultProps = {

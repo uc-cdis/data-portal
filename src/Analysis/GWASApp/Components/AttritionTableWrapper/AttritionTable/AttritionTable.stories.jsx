@@ -3,6 +3,10 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
 import { SourceContextProvider } from '../../../Utils/Source';
+import {
+  generateEulerTestData,
+  generateHistogramTestData,
+} from '../../../TestData/generateDiagramTestData';
 import '../../../GWASApp.css';
 
 export default {
@@ -15,18 +19,19 @@ const mockedQueryClient = new QueryClient();
 const MockTemplate = () => {
   const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
   const [covariateArrSizeTable2, setCovariateArrSizeTable2] = useState(2);
-
   const selectedCohort = {
+    size: 123,
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   };
-
   const outcome = {
+    size: 123,
     variable_type: 'custom_dichotomous',
+    cohort_sizes: [10000, 20000],
+    cohort_names: ['name1', 'name2'],
     cohort_ids: [1, 2],
     provided_name: 'dichotomous test1',
   };
-
   const covariatesArrFirstTable = Array.from(
     { length: covariateArrSizeTable1 },
     (_, i) => ({
@@ -41,6 +46,8 @@ const MockTemplate = () => {
     (_, i) => ({
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser' + i,
+      cohort_sizes: [10000, 20000],
+      cohort_names: ['name1', 'name2'],
       cohort_ids: [i, i * i],
     })
   );
@@ -149,6 +156,26 @@ MockedSuccess.parameters = {
               ],
             })
           );
+        }
+      ),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        (req, res, ctx) => {
+          return res(
+            ctx.delay(2000),
+            ctx.json({
+              bins: generateHistogramTestData(),
+            })
+          );
+        }
+      ),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionA } = req.params;
+          const { cohortdefinitionB } = req.params;
+          return res(ctx.delay(1100), ctx.json(generateEulerTestData()));
         }
       ),
     ],

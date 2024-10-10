@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
@@ -15,8 +15,11 @@ const PhenotypeHistogram = ({
   selectedCovariates,
   outcome,
   selectedContinuousItem,
+  useInlineErrorMessages,
+  useAnimation,
 }) => {
   const { source } = useSourceContext();
+  const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const sourceId = source; // TODO - change name of source to sourceId for clarity
   const { data, status } = useQuery(
     [
@@ -39,17 +42,25 @@ const PhenotypeHistogram = ({
 
   useEffect(() => {
     // Validate and give error message if there is no data:
-    if (data?.bins === null
-      || (status === 'success' && data?.bins === undefined)) {
-      dispatch({
-        type: ACTIONS.ADD_MESSAGE,
-        payload: MESSAGES.NO_BINS_ERROR,
-      });
+    if (
+      data?.bins === null
+      || (status === 'success' && data?.bins === undefined)
+    ) {
+      setInlineErrorMessage(<h4>❌ {MESSAGES.NO_BINS_ERROR.title}</h4>);
+      if (dispatch) {
+        dispatch({
+          type: ACTIONS.ADD_MESSAGE,
+          payload: MESSAGES.NO_BINS_ERROR,
+        });
+      }
     } else {
-      dispatch({
-        type: ACTIONS.DELETE_MESSAGE,
-        payload: MESSAGES.NO_BINS_ERROR,
-      });
+      setInlineErrorMessage(null);
+      if (dispatch) {
+        dispatch({
+          type: ACTIONS.DELETE_MESSAGE,
+          payload: MESSAGES.NO_BINS_ERROR,
+        });
+      }
     }
   }, [data]);
 
@@ -70,21 +81,32 @@ const PhenotypeHistogram = ({
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
+    useAnimation,
   };
-  return <Histogram {...histogramArgs} />;
+  return (
+    <React.Fragment>
+      {useInlineErrorMessages && inlineErrorMessage}
+      <Histogram {...histogramArgs} />
+    </React.Fragment>
+  );
 };
 
 PhenotypeHistogram.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  useInlineErrorMessages: PropTypes.bool,
+  dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   selectedContinuousItem: PropTypes.object.isRequired,
+  useAnimation: PropTypes.bool,
 };
 
 PhenotypeHistogram.defaultProps = {
+  useInlineErrorMessages: false,
+  dispatch: null,
   selectedCovariates: [],
   outcome: null,
+  useAnimation: true,
 };
 
 export default PhenotypeHistogram;
