@@ -72,7 +72,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
-  // Downloads and processes studies in two seperate batches
+  // Downloads and processes studies in two separate batches
   // to improve load time & usability
   // Initially uses a smaller batch to load interface quickly
   // Then a batch with all the studies
@@ -163,7 +163,13 @@ const DiscoveryWithMDSBackend: React.FC<{
               || userHasMethodForServiceOnResource('read', 'guppy', study[authzField], authMapping)
               || userHasMethodForServiceOnResource('read-storage', 'fence', study[authzField], authMapping);
             if (supportedValues?.accessible?.enabled && isAuthorized === true) {
-              accessible = AccessLevel.ACCESSIBLE;
+              if (supportedValues?.mixed?.enabled
+                && dataAvailabilityField
+                && study[dataAvailabilityField] === 'mixed_availability') {
+                accessible = AccessLevel.MIXED;
+              } else {
+                accessible = AccessLevel.ACCESSIBLE;
+              }
             } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
             } else {

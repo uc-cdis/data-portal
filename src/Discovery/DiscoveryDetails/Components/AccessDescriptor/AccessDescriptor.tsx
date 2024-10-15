@@ -1,24 +1,25 @@
 import React from 'react';
 import { Alert } from 'antd';
 import { UnlockOutlined } from '@ant-design/icons';
+import { AccessLevel } from '../../../Discovery';
 
-interface NonTabbedDiscoveryDetailsProps {userHasAccess:boolean, userDoesNotHaveAccess:boolean}
+interface NonTabbedDiscoveryDetailsProps {accessibleFieldValue: AccessLevel}
 
-const AccessDescriptor = ({ userHasAccess, userDoesNotHaveAccess }: NonTabbedDiscoveryDetailsProps) => {
-  if (userHasAccess) {
+const AccessDescriptor = ({ accessibleFieldValue }: NonTabbedDiscoveryDetailsProps) => {
+  if (accessibleFieldValue === AccessLevel.ACCESSIBLE) {
     return (
       <Alert
         className='discovery-modal__access-alert'
         type='success'
         message={(
           <React.Fragment>
-            <UnlockOutlined /> You have access to this data.
+            <UnlockOutlined />You have access to this data.
           </React.Fragment>
         )}
       />
     );
   }
-  if (userDoesNotHaveAccess) {
+  if (accessibleFieldValue === AccessLevel.UNACCESSIBLE) {
     return (
       <Alert
         className='discovery-modal__access-alert'
@@ -29,14 +30,23 @@ const AccessDescriptor = ({ userHasAccess, userDoesNotHaveAccess }: NonTabbedDis
       />
     );
   }
+  if (accessibleFieldValue === AccessLevel.MIXED) {
+    return (
+      <Alert
+        className='discovery-modal__access-alert'
+        type='info'
+        message={
+          <React.Fragment>This study contains both open and restricted access data.</React.Fragment>
+        }
+      />
+    );
+  }
   return (
     <Alert
       className='discovery-modal__access-alert'
       type='info'
       message={(
-        <React.Fragment>
-          This does not include data access authorization details.
-        </React.Fragment>
+        <React.Fragment>This does not include data access authorization details.</React.Fragment>
       )}
     />
   );
