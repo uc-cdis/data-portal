@@ -75,6 +75,10 @@ export type AddFilterSetIdUpdateParams = {
   filtersetId: number
 }
 
+export type DeleteRequestParams = {
+  project_id: number
+}
+
 export type ProjectUsersUpdateParams = {
   users: { project_id: number, email: string, id?: number }[]
 }

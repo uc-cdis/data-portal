@@ -317,3 +317,43 @@ export const createProject = createAsyncThunk(
         }
     }
   );
+
+  export const deleteRequest = createAsyncThunk(
+    'dataRequest/deleteRequest',
+    /** @param {import('./types').DeleteRequestParams} deleteParams */
+    async(deleteParams, {rejectWithValue}) => {
+      try {
+        const { data, response, status } = await fetchWithCreds({
+          path: '/amanuensis/admin/delete-project',
+          method: 'DELETE',
+          body: JSON.stringify(deleteParams)
+        });
+        if (statusCategory(status) !== '2XX') {
+          switch (statusCategory(status)) {
+            case '5XX':
+              return {
+                isError: true,
+                message: 'Oops! An issue occurred on our end, please try again',
+                data: null,
+              };
+            case '4XX':
+              return {
+                isError: true,
+                message: 'Oop! We were unable to process your request, make sure you have the right permissions',
+                data: null,
+              }
+          }
+          console.error(`WARNING: failed to with status ${response.statusText}`);
+          return {
+            isError: true,
+            message: 'An unknown error occurred',
+            data: null,
+          };
+        }
+        return { data, isError: false, message: '' };
+
+      } catch(e) {
+        rejectWithValue(e);
+      }
+    }
+  )
