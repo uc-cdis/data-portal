@@ -1,0 +1,9 @@
+.team-project-modal .teams-dropdown select {
+  width: 100%;
+  display: block;
+  padding: 5px;
+  background: #fff;
+  border-radius: 2px;
+  border: 1px solid #d9d9d9;
+  color: #bfbfbf;
+}
