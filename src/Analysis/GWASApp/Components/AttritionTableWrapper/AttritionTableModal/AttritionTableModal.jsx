@@ -52,6 +52,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
             }}
             selectedCovariates={rowIsOutcome ? [] : modalInfo.currentCovariateAndCovariatesFromPrecedingRows}
             outcome={rowIsOutcome ? null : modalInfo.outcome}
+            diagramId='modal-euler'
           />
         </div>
       )}

@@ -22,6 +22,7 @@ const CohortsOverlapDiagram = ({
   selectedCovariates,
   outcome,
   useInlineErrorMessages,
+  diagramId,
 }) => {
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const { source } = useSourceContext();
@@ -198,6 +199,7 @@ const CohortsOverlapDiagram = ({
     set1Label: selectedStudyPopulationCohort.cohort_name,
     set2Label: selectedCaseCohort.cohort_name,
     set3Label: selectedControlCohort.cohort_name,
+    diagramId,
   };
 
   return (
@@ -245,6 +247,7 @@ CohortsOverlapDiagram.propTypes = {
   selectedControlCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
+  diagramId: PropTypes.string,
 };
 
 CohortsOverlapDiagram.defaultProps = {
@@ -252,6 +255,7 @@ CohortsOverlapDiagram.defaultProps = {
   dispatch: null,
   selectedCovariates: [],
   outcome: null,
+  diagramId: 'euler',
 };
 
 export default CohortsOverlapDiagram;

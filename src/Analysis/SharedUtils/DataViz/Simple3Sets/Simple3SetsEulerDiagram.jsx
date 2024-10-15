@@ -20,6 +20,7 @@ const Simple3SetsEulerDiagram = ({
   set13Label,
   set23Label,
   set123Label,
+  diagramId,
 }) => {
   const sets = [
     {
@@ -78,13 +79,13 @@ const Simple3SetsEulerDiagram = ({
       );
     }
     const chart = venn.VennDiagram().height(maxDiagramSize);
-    d3.select('#euler')
+    d3.select(`#${diagramId}`)
       .datum(sets)
       .call(chart);
   }, [sets]);
 
   return (
-    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
+    <div id={diagramId} className='euler-diagram' data-testid='euler-diagram' />
   );
 };
 
@@ -103,6 +104,7 @@ Simple3SetsEulerDiagram.propTypes = {
   set23Label: PropTypes.string,
   set123Size: PropTypes.number.isRequired,
   set123Label: PropTypes.string,
+  diagramId: PropTypes.string,
 };
 
 Simple3SetsEulerDiagram.defaultProps = {
@@ -113,6 +115,7 @@ Simple3SetsEulerDiagram.defaultProps = {
   set13Label: null,
   set23Label: null,
   set123Label: null,
+  diagramId: 'euler',
 };
 
 export default Simple3SetsEulerDiagram;
