@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Modal, Spin, Select,
-} from 'antd';
+import { Button, Modal, Spin, Select } from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import './TeamProjectModal.css';
 import { useHistory } from 'react-router-dom';
+import TeamsDropdown from './TeamsDropdown/TeamsDropdown';
 
 const TeamProjectModal = ({
   isModalOpen,
@@ -26,6 +25,7 @@ const TeamProjectModal = ({
     history.push('/');
   };
 
+  console.log('selectedTeamProject',selectedTeamProject);
   if (status === 'error') {
     return (
       <Modal
@@ -66,8 +66,8 @@ const TeamProjectModal = ({
           ]}
         >
           <div className='team-project-modal_modal-description'>
-              Please select your team.
-          </div>
+            Please select your team.
+          </div>{/*
           <Select
             id='input-selectTeamProjectDropDown'
             labelInValue
@@ -77,8 +77,9 @@ const TeamProjectModal = ({
             fieldNames={{ label: 'teamName', value: 'teamName' }}
             options={data.teams}
             dropdownStyle={{ width: '100%' }}
-          />
-        </Modal>
+          /> */}
+          <TeamsDropdown teams={data.teams} setSelectedTeamProject={setSelectedTeamProject} selectedTeamProject={selectedTeamProject}/>
+         </Modal>
       );
     }
     return (
@@ -90,17 +91,15 @@ const TeamProjectModal = ({
         maskClosable={false}
         keyboard={false}
         footer={[
-          <Button
-            key='submit'
-            type='primary'
-            onClick={redirectToHomepage}
-          >
+          <Button key='submit' type='primary' onClick={redirectToHomepage}>
             Ok
           </Button>,
         ]}
       >
         <div className='team-project-modal_modal-description'>
-      Please reach out to <a href='mailto:vadc@lists.uchicago.edu'>vadc@lists.uchicago.edu</a> to gain access to the system
+          Please reach out to{' '}
+          <a href='mailto:vadc@lists.uchicago.edu'>vadc@lists.uchicago.edu</a>{' '}
+          to gain access to the system
         </div>
       </Modal>
     );
