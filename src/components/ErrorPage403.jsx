@@ -5,7 +5,7 @@ import { components } from '../params';
 
 class ErrorPage403 extends React.Component {
   render() {
-    const supportEmail = components.login?.email || 'support@datacommons.io';
+    const supportEmail = components.login?.email || 'support@gen3.org';
     return (
       <div className='error-placeholder__error-msg '>
         <h1>Error accessing requested resource...</h1>

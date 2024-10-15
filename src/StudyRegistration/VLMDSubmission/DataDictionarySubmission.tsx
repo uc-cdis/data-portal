@@ -21,63 +21,37 @@ import {
   PlusOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 
-import './StudyRegistration.css';
+import '../StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  hostname, kayakoConfig, studyRegistrationConfig, useArboristUI,
-} from '../localconf';
-import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from './utils';
-import { createKayakoTicket } from '../utils';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { StudyRegistrationProps } from './StudyRegistration';
+  hostname, zendeskConfig, studyRegistrationConfig,
+} from '../../localconf';
+import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from '../utils';
+import { createZendeskTicket } from '../../utils';
+import {
+  FORM_LAYOUT,
+  TAIL_LAYOUT,
+  VALIDATE_MESSAGE,
+} from './VLMDSubmissionConstants';
+import { VLMDSubmissionProps } from './VLMDSubmissionTypes';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-export interface FormSubmissionState {
+interface FormSubmissionState {
   status?: ResultStatusType;
   text?: string;
 }
 
-const KAYAKO_MAX_SUBJECT_LENGTH = 255;
-
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 32,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
-/* eslint-disable no-template-curly-in-string */
-const validateMessages = {
-  required: '${label} is required',
-};
-/* eslint-enable no-template-curly-in-string */
-
 interface LocationState {
-  studyUID?: string | Number;
-  studyNumber?: string;
-  studyName?: string;
-  studyRegistrationAuthZ?: string;
   existingDataDictionaryName?: Array<string>;
 }
 
-const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
+const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMDSubmissionProps) => {
   const [form] = Form.useForm();
   const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
-  const [studyNumber, setStudyNumber] = useState<string | undefined | null>(null);
-  const [studyName, setStudyName] = useState<string | undefined | null>(null);
-  const [studyUID, setStudyUID] = useState<string | Number | undefined | null>(null);
-  const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<string | undefined | null>(null);
   const [existingDataDictionaryName, setExistingDataDictionaryName] = useState<Array<string> | undefined>([]);
   const [uploadProgress, setUploadProgress] = useState<number>(100);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -86,14 +60,10 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
-    setStudyUID(locationStateData.studyUID);
-    setStudyNumber(locationStateData.studyNumber);
-    setStudyName(locationStateData.studyName);
-    setStudyRegistrationAuthZ(locationStateData.studyRegistrationAuthZ);
     setExistingDataDictionaryName(locationStateData.existingDataDictionaryName);
   }, [location.state]);
 
-  useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
+  useEffect(() => form.resetFields(), [props.studyNumber, props.studyName, form]);
 
   const handleFileSizeValidation = (_, fileList: RcFile): Promise<boolean|void> => {
     const fileInfo = fileList[0];
@@ -110,14 +80,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       return Promise.reject('Invalid file: file size cannot exceed 10MB');
     }
     return Promise.resolve(true);
-  };
-
-  const userHasAccess = () => {
-    if (!useArboristUI) {
-      return true;
-    }
-    return (userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
-    );
   };
 
   const uploadToS3 = (s3URL, file, progressCallback): Promise<any> => new Promise((resolve, reject) => {
@@ -154,32 +116,29 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
       return;
     }
-    if (!studyRegistrationAuthZ) {
+    if (!props.studyRegistrationAuthZ) {
       setFormSubmissionStatus({ status: 'error', text: 'Invalid authz info received' });
       return;
     }
-    generatePresignedURL(fileInfo.name, studyRegistrationAuthZ, studyRegistrationConfig.dataDictionarySubmissionBucket)
+    generatePresignedURL(fileInfo.name, props.studyRegistrationAuthZ, studyRegistrationConfig.dataDictionarySubmissionBucket)
       .then((data) => {
         setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
         const { url, guid } = data;
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-            let subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
-            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-            }
+            const subject = `Data dictionary submission for ${props.studyNumber} ${props.studyName}`;
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}`;
+            let contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nData Dictionary GUID: ${guid}`;
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
             // This is the CLI command to kick off the argo wf from AdminVM
-            const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
+            const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${props.studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });
@@ -228,7 +187,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
     switch (formSubmissionStatus.status) {
     case 'success':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -246,7 +205,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       );
     case 'info':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -259,7 +218,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       );
     case 'error':
       return (
-        <div className='study-reg-container'>
+        <div className='vlmd-sub-container'>
           <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
@@ -280,7 +239,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
   }
 
   return (
-    <div className='study-reg-container'>
+    <div className='vlmd-sub-container'>
       <Modal
         title='Confirm Overwrite'
         open={overwriteConfirmModalVisible}
@@ -300,7 +259,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
         Are you sure you want to overwrite <Text strong>{`"${duplicatedDataDictionaryName}"`}</Text>?
       </Modal>
       <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...layout} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={validateMessages}>
+        <Form className='study-reg-form' {...FORM_LAYOUT} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={VALIDATE_MESSAGE}>
           <Divider plain>Data Dictionary Submission</Divider>
           <Typography style={{ textAlign: 'center' }}>
           Data dictionaries must conform to the HEAL VLMD schema. View more information and VLMD templates <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
@@ -310,7 +269,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             label='Study Name - Grant Number'
             name='Study Grant_doNotInclude'
-            initialValue={(!studyName && !studyNumber) ? '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
+            initialValue={(!props.studyName && !props.studyNumber) ? '' : `${props.studyName || 'N/A'} - ${props.studyNumber || 'N/A'}`}
             rules={[
               {
                 required: true,
@@ -353,7 +312,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           </Form.Item>
           {(existingDataDictionaryName?.length)
             ? (
-              <Form.Item {...tailLayout}>
+              <Form.Item {...TAIL_LAYOUT}>
                 <Space direction='vertical'>
                   <Typography>This study is already linked to data dictionaries with the following names:</Typography>
                   <div>{existingDataDictionaryName.map((name) => <Tag key={name}>{name}</Tag>)}</div>
@@ -403,10 +362,9 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           >
             <Input />
           </Form.Item>
-
-          <Form.Item {...tailLayout}>
+          <Form.Item {...TAIL_LAYOUT}>
             <Space>
-              {(!userHasAccess()) ? (
+              {(!props.userHasAccessToSubmit) ? (
                 <Tooltip title={'You don\'t have permission to submit data dictionary'}>
                   <Button type='primary' disabled>
                     Submit data dictionary

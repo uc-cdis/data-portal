@@ -1,4 +1,4 @@
-import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../localconf';
+import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../../../localconf';
 
 /**
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
@@ -41,7 +41,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
       // add the value of that field as a tag.
 
-      discoveryConfig.tagCategories.forEach((tag) => {
+      discoveryConfig?.tagCategories.forEach((tag) => {
         if (tag.name in entryUnpacked) {
           if (typeof entryUnpacked[tag.name] === 'string') {
             const tagValue = entryUnpacked[tag.name];
@@ -56,26 +56,21 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       entryUnpacked.tags = [...getUniqueTags(entryUnpacked.tags).entries()].map((e) => (e[1]));
 
       // copy VLMD info if exists
-      if (studyRegistrationConfig?.dataDictionaryField && entry[studyId][studyRegistrationConfig.dataDictionaryField]) {
-        entryUnpacked[studyRegistrationConfig.dataDictionaryField] = entry[studyId][studyRegistrationConfig.dataDictionaryField];
+      if (studyRegistrationConfig?.variableMetadataField && entry[studyId][studyRegistrationConfig.variableMetadataField]) {
+        entryUnpacked[studyRegistrationConfig.variableMetadataField] = entry[studyId][studyRegistrationConfig.variableMetadataField];
       }
       return entryUnpacked;
     });
 
     allStudies = allStudies.concat(editedStudies);
   });
-
   return allStudies;
 };
 
-const loadStudiesFromAggMDS = async () => {
+const loadStudiesFromAggMDS = async (limit = 2000) => {
   // Retrieve from aggregate MDS
-
   const offset = 0; // For pagination
-  const limit = 2000; // Total number of rows requested
-
   const studies = await loadStudiesFromAggMDSRequests(offset, limit);
-
   return studies;
 };
 

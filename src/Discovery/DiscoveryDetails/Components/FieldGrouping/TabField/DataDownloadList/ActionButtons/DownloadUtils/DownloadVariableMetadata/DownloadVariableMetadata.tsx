@@ -6,11 +6,16 @@ import { mdsURL } from '../../../../../../../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../../../Discovery';
-import DataDictionaries from '../../../Interfaces/DataDictionaries';
+import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
 
+enum fetchType {
+  CDE = 'cde',
+  DD = 'dd'
+}
+
 const DownloadVariableMetadata = async (
-  dataDictionaries: DataDictionaries,
+  variableLevelMetadataRecords: VariableLevelMetadata,
   resourceInfo: DiscoveryResource,
   setDownloadStatus: Function,
 ) => {
@@ -33,16 +38,24 @@ const DownloadVariableMetadata = async (
     },
   } as DownloadStatus);
 
-  const fetchData = async (key: string, value: string) => new Promise((resolve, reject) => {
+  const fetchData = async (key: string, value: string, type: fetchType) => new Promise((resolve, reject) => {
     fetchWithCreds({ path: `${mdsURL}/${value}` }).then((statusResponse) => {
-      const { data } = statusResponse;
+      let { data } = statusResponse;
       if (statusResponse.status !== 200 || !data) {
         setDownloadStatus(createUniqueDownloadErrorMsg(key));
         reject(new Error(`Issue with ${key}: ${value}`));
       } else {
         const sanitizedFileName = SanitizeFileName(key);
-        zip.file(sanitizedFileName, JSON.stringify(data));
-        resolve(`Data resolved for ${key}: ${value}`);
+        let subDirectoryName = '';
+        if (type === fetchType.CDE) {
+          subDirectoryName = 'common_data_elements/';
+          data = data.cde_metadata;
+        } else if (type === fetchType.DD) {
+          subDirectoryName = 'data_dictionaries/';
+          data = data.data_dictionary;
+        }
+        zip.file(`${subDirectoryName}${sanitizedFileName}`, JSON.stringify(data));
+        resolve(`Data resolved for ${key}: ${value}, with type ${type}`);
       }
     });
   });
@@ -54,11 +67,13 @@ const DownloadVariableMetadata = async (
         inProgress: 'DownloadVariableMetadata',
       });
       await Promise.all(
-        Object.entries(dataDictionaries).map(([key, value]) => fetchData(key, value),
+        [...Object.entries(variableLevelMetadataRecords.dataDictionaries || []).map(([key, value]) => fetchData(key, value, fetchType.DD),
         ),
+        ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, fetchType.CDE),
+        )],
       ).then(() => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
-          FileSaver.saveAs(content, 'variable-metadata.zip');
+          FileSaver.saveAs(content, 'variable-level-metadata.zip');
         });
         setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       });

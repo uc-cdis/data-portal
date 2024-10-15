@@ -14,6 +14,12 @@ Below is an example, with inline comments describing what each JSON block config
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
   "ddUrl": "", // optional: the Datadog RUM site/url. Defaults to datadoghq.com
   "ddSampleRate": 100, // optional; numeric; the Datadog RUM option specifying the percentage of sessions to track: 100 for all, 0 for none. Default to 100 if omitted
+  "grafanaFaroConfig": {
+    "grafanaFaroEnable": true, // optional; flag to turn on Grafana Faro RUM, default to false
+    "grafanaFaroNamespace": "DEV", // optional; the Grafana Faro RUM option specifying the application’s namespace, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted. But it is highly recommended to customize it to include project information, such as 'healprod'
+    "grafanaFaroUrl": "", // optional: the Grafana Faro collector url. Defaults to https://faro.planx-pla.net/collect
+    "grafanaFaroSampleRate": 1, // optional; numeric; the Grafana Faro option specifying the percentage of sessions to track: 1 for all, 0 for none. Default to 1 if omitted
+  },
   "DAPTrackingURL": "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY&subagency=SUB", // optional, for adding DAP tracking feature if specified (see https://github.com/digital-analytics-program/gov-wide-code#participating-in-the-dap)
   "graphql": { // required; start of query section - these attributes must be in the dictionary
     "boardCounts": [ // required; graphQL fields to query for the homepage chart
@@ -49,7 +55,7 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "metaDescription": "", // optional; meta description used by search engines
-    "banner": [ // optional; banner displayed accross top of all of data portal
+    "banner": [ // optional; banner displayed across top of all of data portal
       {
         "type": "info", // Type of Alert styles, options: success, info, warning, error
         "message": "I'm a banner", // message to be displayed
@@ -147,14 +153,14 @@ Below is an example, with inline comments describing what each JSON block config
       "subTitle": "Explore, Analyze, and Share Data", // optional; subtitle for login page
       "text": "This is a generic Gen3 data commons.", // optional; text on the login page
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
-      "email": "support@datacommons.io", // optional; email for contact
-      "image": "gene" // optional; images displayed on the login page
-      "hideNavLink": false// optional default false; hide login link in main naviagion
+      "email": "support@gen3.org", // optional; email for contact
+      "image": "gene", // optional; images displayed on the login page
+      "hideNavLink": false// optional default false; hide login link in main navigation
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
-      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
-      "expireUseMsgDays" : 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "systemUseText" : [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays": 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
       "showOnlyOnLogin" : false, // optional; if set to true, the USe Message will only be shown after a success login
     },
     "footer": {
@@ -457,15 +463,22 @@ Below is an example, with inline comments describing what each JSON block config
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": true,
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": true, // text to be displayed on the download manifest button
+          "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "enableFillRequestForm" : true, // enables a button which opens a new form to request access to a resoruce
           "openFillRequestForm": "Request Access", // text to be displayed on fill the request form
           "fillRequestFormURL" : "https://URL/form", // URL to the new form which would be used to fill the form
           "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enableDownloadZip": true,  // enables a button which allows user to download all the files as a zip file (with pre-set size limits)
+          "downloadZipButtonText": "Download Zip", // text to be displayed on the download zip file button
+          "enableDownloadVariableMetadata": true,  // enables a button (on discovery details page) which allows user to download variable-level metadata
+          "variableMetadataFieldName": "variable_level_metadata", // field name in metadata record to reference variable-level metadata
+          "enableDownloadStudyMetadata": true, // enables a button (on discovery details page) which allows user to download study-level metadata
+          "studyMetadataFieldName": "study_metadata", // field name in metadata record to reference study-level metadata
           "documentationLinks": {
               "gen3Client": "https://gen3-client", // link to documentation about the gen3 client. Used for button tooltips
               "gen3Workspaces": "https://gen3-workspace-docs", // link to documentation about gen3 workspaces. Used for button tooltips.
-          }
+          },
+          "verifyExternalLogins": true // enables verification if the user has access to all the data files selected, by using WTS (a Gen3 ecosystem feature)
       },
       "pageTitle": {
         "enabled": true,
@@ -503,7 +516,8 @@ Below is an example, with inline comments describing what each JSON block config
             "menuText": "Not Accessible"
           },
           "waiting": {...},
-          "notAvailable": {...}
+          "notAvailable": {...},
+          "mixed": {...} // this is a special state, it will only has effect if the "accessible" level has also been enabled. This state won't show up in the data access filter
         }
       },
       "tagsColumn" : {
@@ -721,10 +735,16 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
+  "userAccessToSite": { // optional: user must have access to a resorces to acess the site, including public pages
+    "enabled": true,// optional: enable ristricted access
+    "noAccessMessage": "Access to this site requires special permission.",// optional: defaults to this value, first email addresses will be turned into mailto link if used
+    "deniedPageURL": "/access-denied",//optional: defaults to this value
+    "userAccessIncludes": ["/argo", "/workspace"] //optional: defaults to any, otherwise must have access to one item in array
+  },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
-  "analysisTools": [ // analysis apps to be diplayed at the /analysis/ page.
+  "analysisTools": [ // analysis apps to be displayed at the /analysis/ page.
     {
       "appId": "myAppId", // Optional. Can be used to ensure the app path after the /analysis/ subpath is fixed, e.g. URL https://SERVER-DOMAIN/analysis/myAppId. If not set, then "title" (below) is used.
       "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
@@ -740,7 +760,7 @@ Below is an example, with inline comments describing what each JSON block config
     ...
   ],
   "stridesPortalURL": "https://strides-admin-portal.org", // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
-  "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
+  "registrationConfigs": { // optional; Required when using Zendesk integration with Study/Workspace registration
       "features":{ // Optional; Required when using study/Workspace registration
         "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
           "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
@@ -749,9 +769,10 @@ Below is an example, with inline comments describing what each JSON block config
           "studyRegistrationUIDField": "_hdp_uid", // optional, if omitted, value defaults the same as the "minimalFieldMapping.uid" value. In metadata, values from this field MUST be the same as their GUIDs for each metadata record
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
           "clinicalTrialFields": [], // optional, list of fields to fetch from ClinicalTrials.gov
-          "dataDictionaryField": "data_dictionaries", // optional, specify the field name in metadata for variable-level metadata, default to ""
-          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for VLMD submission. Default to the data upload bucket from fence config if omitted
-          "dataDictionarySubmissionDisclaimerField": "some disclaimer text" // optional, the disclaimer text that appears under the submit button on the VLMD submission page. Defaults to undefined
+          "variableMetadataField": "variable_level_metadata", // optional, specify the field name in metadata for variable-level metadata, default to ""
+          "dataDictionarySubmissionBucket": "bucket-1", // optional, customize the S3 bucket that will be used for data dictionary submission. Default to the data upload bucket from fence config if omitted
+          "dataDictionarySubmissionDisclaimerField": "some disclaimer text", // optional, the disclaimer text that appears under the submit button on the data dictionary submission page. Defaults to undefined
+          "cdeSubmissionDisclaimerField": "some disclaimer text"  // optional, the disclaimer text that appears under the submit button on the CDE submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
@@ -762,8 +783,8 @@ Below is an example, with inline comments describing what each JSON block config
         }
       }
       },
-      "kayakoConfig":{ //Required; if using either of the study/workspace registration feature
-        "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
+      "zendeskConfig":{ // Optional; add this if you want to customize the subdomain that Zendesk is using in either of the study/workspace registration feature
+        "zendeskSubdomainName": "projectSupport"  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
       }
     }
 }

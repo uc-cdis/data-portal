@@ -4,8 +4,6 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import './SelectOutcome.css';
-import '../../GWASApp.css';
 
 const SelectOutcome = ({
   dispatch,

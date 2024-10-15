@@ -1,4 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
 import { DiscoveryConfig } from '../../../DiscoveryConfig';
 import { fetchWithCreds } from '../../../../actions';
@@ -15,12 +16,6 @@ const handleExportToWorkspaceClick = async (
   location: any,
   healIDPLoginNeeded: boolean,
 ) => {
-  const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
-  if (enableExportFullMetadata) {
-    const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
-    assembleAndExportMetadata(keysToRemove as Array<string>, selectedResources);
-  }
-
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error(
@@ -46,6 +41,13 @@ const handleExportToWorkspaceClick = async (
   }
 
   setExportingToWorkspace(true);
+  // export metadata first, if enabled
+  const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
+  if (enableExportFullMetadata) {
+    const keysToRemove = config.features.exportToWorkspace?.excludedMetadataFields;
+    assembleAndExportMetadata(keysToRemove as Array<string>, selectedResources);
+  }
+
   // combine manifests from all selected studies
   const manifest: any = [];
   selectedResources.forEach((study) => {
@@ -65,25 +67,36 @@ const handleExportToWorkspaceClick = async (
     }
   });
 
-  const projectNumber = selectedResources.map((study) => study.project_number);
-  const studyName = selectedResources.map((study) => study.study_name);
-  const repositoryName = selectedResources.map((study) => study.commons);
+  const projectNumber = selectedResources.map((study) => study.project_number || []);
+  const studyName = selectedResources.map((study) => study.study_metadata?.minimal_info?.study_name || []);
+  const repositoryName = selectedResources.map((study) => study.commons || []);
   datadogRum.addAction('exportToWorkspace', {
     exportToWorkspaceProjectNumber: projectNumber,
     exportToWorkspaceStudyName: studyName,
     exportToWorkspaceRepositoryName: repositoryName,
   });
+  faro.api.pushEvent(
+    'exportToWorkspace',
+    // Faro only accept string-string pairs in payload
+    {
+      exportToWorkspaceProjectNumber: projectNumber.join(','),
+      exportToWorkspaceStudyName: studyName.join(','),
+      exportToWorkspaceRepositoryName: repositoryName.join(','),
+    },
+  );
 
-  // post selected resources to manifestservice
-  const res = await fetchWithCreds({
-    path: `${manifestServiceApiPath}`,
-    body: JSON.stringify(manifest),
-    method: 'POST',
-  });
-  if (res.status !== 200) {
-    throw new Error(
-      `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
-    );
+  // post exported manifest to manifestservice
+  if (manifest.length) {
+    const res = await fetchWithCreds({
+      path: `${manifestServiceApiPath}`,
+      body: JSON.stringify(manifest),
+      method: 'POST',
+    });
+    if (res.status !== 200) {
+      throw new Error(
+        `Encountered error while exporting to Workspace: ${JSON.stringify(res)}`,
+      );
+    }
   }
   setExportingToWorkspace(false);
   // redirect to Workspaces page

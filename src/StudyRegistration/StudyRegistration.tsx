@@ -21,8 +21,8 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
-import loadStudiesFromMDS from '../Discovery/MDSUtils';
-import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import loadStudiesFromMDS from '../Discovery/Utils/MDSUtils/MDSUtils';
+import { updateStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 import Spinner from '../components/Spinner';
 
 const { Option } = Select;
@@ -176,7 +176,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
           .then(
-            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+            (updatedMetadataToRegister) => updateStudyInMDS(studyID, updatedMetadataToRegister)
               .then(
                 () => setFormSubmissionStatus({ status: 'success' }),
               ),
@@ -326,13 +326,13 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='GitHub'>GitHub</Option>
               <Option value='Harvard Dataverse'>Harvard Dataverse</Option>
               <Option value='ICPSR'>ICPSR</Option>
-              <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
               <Option value='openICPSR'>openICPSR</Option>
               <Option value='JCOIN'>JCOIN</Option>
               <Option value='MassIVE'>MassIVE</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
               <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
               <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
+              <Option value='NAHDAP'>NAHDAP</Option>
               <Option value='National Sleep Research Resource (NSRR)'>National Sleep Research Resource (NSRR)</Option>
               <Option value='NICHD DASH'>NICHD DASH</Option>
               <Option value='NIDA Data Share'>NIDA Data Share</Option>
