@@ -8,20 +8,13 @@ const TeamsDropdown = ({
   selectedTeamProject,
   setSelectedTeamProject,
 }) => {
-  console.log('teams', teams);
-  console.log(
-    'selectedTeamProject?.teamName ln 7 in TeamsDropdown',
-    JSON.stringify(selectedTeamProject),
-  );
-
-  // const [isOpen, setIsOpen] = useState(false);
-
   const handleChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedTeamProject(selectedValue);
   };
 
-  const selectedValue = selectedTeamProject === null ? 'placeholder' : selectedTeamProject;
+  const selectedValue =
+    selectedTeamProject === null ? 'placeholder' : selectedTeamProject;
 
   return (
     <div className='teams-dropdown'>
