@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './TeamsDropdown.css';
-import '../../../../SharedUtils/AccessibilityUtils/Accessibility.css';
+import '../../../AccessibilityUtils/Accessibility.css';
 
 const TeamsDropdown = ({
   teams,
@@ -39,14 +39,11 @@ const TeamsDropdown = ({
           <option value='placeholder' disabled>
             -select one of the team projects below-
           </option>
-          {teams.map((team, index) => {
-            console.log(team.teamName === selectedTeamProject);
-            return (
-              <option key={index} value={team.teamName}>
-                {team.teamName}
-              </option>
-            );
-          })}
+          {teams.map((team, index) => (
+            <option key={index} value={team.teamName}>
+              {team.teamName}
+            </option>
+          ))}
         </select>
       </div>
     </div>
