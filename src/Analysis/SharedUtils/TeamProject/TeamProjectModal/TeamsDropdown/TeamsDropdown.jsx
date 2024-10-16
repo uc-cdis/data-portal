@@ -1,28 +1,62 @@
 import React, { useState } from 'react';
 import './TeamsDropdown.css';
-import '../../../../SharedUtils/AccessibilityUtils/Accessibility.css'
+import '../../../../SharedUtils/AccessibilityUtils/Accessibility.css';
 
-const TeamsDropdown = ({ teams, setSelectedTeamProject, selectedTeamProject}) => {
+const TeamsDropdown = ({
+  teams,
+  selectedTeamProject,
+  setSelectedTeamProject,
+}) => {
   console.log('teams', teams);
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
-  };
+  console.log(
+    'selectedTeamProject?.teamName ln 7 in TeamsDropdown',
+    JSON.stringify(selectedTeamProject)
+  );
+
+  // const [isOpen, setIsOpen] = useState(false);
 
   const handleChange = (event) => {
-    const selectedValue = event.target.value.teamName;
-    console.log('selectedValue', selectedValue);
+    const selectedValue = event.target.value;
     setSelectedTeamProject(selectedValue);
   };
 
+  const selectedValue =
+    selectedTeamProject === null ? 'placeholder' : selectedTeamProject;
+
   return (
     <div className='teams-dropdown'>
-      <label id='team-projects-label' className='screen-reader-only' htmlFor='team-projects'>
-        {isOpen
-          ? 'Team Projects, expanded combo box'
-          : 'Team Projects, collapsed combo box'}
-      </label>
-      <div
+      <div>
+        <label className='screen-reader-only' htmlFor='options'>
+          Team Projects Combo Box
+        </label>
+        <select
+          id='options'
+          value={selectedValue}
+          aria-labelledby='options'
+          onChange={handleChange}
+          className={selectedTeamProject === null ? 'no-selection' : ''}
+        >
+          <option value='placeholder' disabled>
+            -select one of the team projects below-
+          </option>
+          {teams.map((team, index) => {
+            console.log(team.teamName === selectedTeamProject);
+            return (
+              <option key={index} value={team.teamName}>
+                {team.teamName}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+export default TeamsDropdown;
+
+{
+  /*  <div
         role='combobox'
         aria-haspopup='listbox'
         aria-expanded={isOpen}
@@ -38,7 +72,7 @@ const TeamsDropdown = ({ teams, setSelectedTeamProject, selectedTeamProject}) =>
       >
         <select
           id='team-projects'
-          value={selectedTeamProject.teamName}
+          value={selectedTeamProject?.teamName}
           onChange={handleChange}
         >
           <option value='' disabled>
@@ -50,9 +84,5 @@ const TeamsDropdown = ({ teams, setSelectedTeamProject, selectedTeamProject}) =>
             </option>
           ))}
         </select>
-      </div>
-    </div>
-  );
-};
-
-export default TeamsDropdown;
+      </div> */
+}

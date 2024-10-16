@@ -25,7 +25,10 @@ const TeamProjectModal = ({
     history.push('/');
   };
 
-  console.log('selectedTeamProject',selectedTeamProject);
+  console.log(
+    'selectedTeamProject ln 28 in TeamProjectModal: ',
+    selectedTeamProject
+  );
   if (status === 'error') {
     return (
       <Modal
@@ -67,8 +70,8 @@ const TeamProjectModal = ({
         >
           <div className='team-project-modal_modal-description'>
             Please select your team.
-          </div>{/*
-          <Select
+          </div>
+          {/* <Select
             id='input-selectTeamProjectDropDown'
             labelInValue
             defaultValue={selectedTeamProject}
@@ -78,8 +81,12 @@ const TeamProjectModal = ({
             options={data.teams}
             dropdownStyle={{ width: '100%' }}
           /> */}
-          <TeamsDropdown teams={data.teams} setSelectedTeamProject={setSelectedTeamProject} selectedTeamProject={selectedTeamProject}/>
-         </Modal>
+          <TeamsDropdown
+            teams={data.teams}
+            selectedTeamProject={selectedTeamProject}
+            setSelectedTeamProject={setSelectedTeamProject}
+          />
+        </Modal>
       );
     }
     return (
