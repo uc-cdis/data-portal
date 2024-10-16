@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './TeamsDropdown.css';
 import '../../../AccessibilityUtils/Accessibility.css';
 
@@ -10,7 +11,7 @@ const TeamsDropdown = ({
   console.log('teams', teams);
   console.log(
     'selectedTeamProject?.teamName ln 7 in TeamsDropdown',
-    JSON.stringify(selectedTeamProject)
+    JSON.stringify(selectedTeamProject),
   );
 
   // const [isOpen, setIsOpen] = useState(false);
@@ -20,25 +21,30 @@ const TeamsDropdown = ({
     setSelectedTeamProject(selectedValue);
   };
 
-  const selectedValue =
-    selectedTeamProject === null ? 'placeholder' : selectedTeamProject;
+  const selectedValue = selectedTeamProject === null ? 'placeholder' : selectedTeamProject;
 
   return (
     <div className='teams-dropdown'>
       <div>
-        <label className='screen-reader-only' htmlFor='options'>
+        <label
+          id='team-select-label'
+          className='screen-reader-only'
+          htmlFor='team-select'
+        >
           Team Projects Combo Box
         </label>
         <select
-          id='options'
+          id='team-select'
+          aria-labelledby='team-select-label'
           value={selectedValue}
-          aria-labelledby='options'
           onChange={handleChange}
           className={selectedTeamProject === null ? 'no-selection' : ''}
         >
-          <option value='placeholder' disabled>
-            -select one of the team projects below-
-          </option>
+          {selectedTeamProject === null && (
+            <option value='placeholder' disabled>
+              -select one of the team projects below-
+            </option>
+          )}
           {teams.map((team, index) => (
             <option key={index} value={team.teamName}>
               {team.teamName}
@@ -50,36 +56,10 @@ const TeamsDropdown = ({
   );
 };
 
-export default TeamsDropdown;
+TeamsDropdown.propTypes = {
+  teams: PropTypes.array.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
+  setSelectedTeamProject: PropTypes.func.isRequired,
+};
 
-{
-  /*  <div
-        role='combobox'
-        aria-haspopup='listbox'
-        aria-expanded={isOpen}
-        aria-labelledby='team-projects-label'
-        tabIndex={0}
-        onClick={toggleDropdown}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            toggleDropdown();
-          }
-        }}
-        aria-live='polite'
-      >
-        <select
-          id='team-projects'
-          value={selectedTeamProject?.teamName}
-          onChange={handleChange}
-        >
-          <option value='' disabled>
-            Select a team project
-          </option>
-          {teams.map((team, index) => (
-            <option key={index} value={team}>
-              {team.teamName}
-            </option>
-          ))}
-        </select>
-      </div> */
-}
+export default TeamsDropdown;
