@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import EditIcon from './Icons/EditIcon';
-import isEnterOrSpace from '../../IsEnterOrSpace';
+import isEnterOrSpace from '../../AccessibilityUtils/IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
 import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';

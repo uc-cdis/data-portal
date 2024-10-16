@@ -1,9 +1,17 @@
 .team-project-modal .teams-dropdown select {
   width: 100%;
   display: block;
-  padding: 5px;
+  padding: 7px 10px;
   background: #fff;
   border-radius: 2px;
   border: 1px solid #d9d9d9;
+  color: #000;
+}
+
+.team-project-modal .teams-dropdown select:hover {
+  border-color: #40a9ff;
+}
+
+.team-project-modal .teams-dropdown select.no-selection {
   color: #bfbfbf;
 }

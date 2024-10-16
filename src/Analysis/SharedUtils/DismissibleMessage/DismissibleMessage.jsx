@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './DismissibleMessage.css';
-import isEnterOrSpace from '../IsEnterOrSpace';
+import isEnterOrSpace from '../AccessibilityUtils/IsEnterOrSpace';
 
 const DismissibleMessage = ({
   title = 'Placeholder Title',
