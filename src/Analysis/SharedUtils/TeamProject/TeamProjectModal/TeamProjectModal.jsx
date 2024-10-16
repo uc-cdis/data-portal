@@ -25,10 +25,6 @@ const TeamProjectModal = ({
     history.push('/');
   };
 
-  console.log(
-    'selectedTeamProject ln 28 in TeamProjectModal: ',
-    selectedTeamProject
-  );
   if (status === 'error') {
     return (
       <Modal
