@@ -8,6 +8,7 @@ import './KeyTable.less';
 const LIST_API_KEY_MSG = 'You have the following API key(s)';
 const API_KEY_COLUMN = 'API key(s)';
 const EXPIRES_COLUMN = 'Expires';
+const DELETE_BTN_COLUMN = 'Remove API key(s)';
 export const DELETE_BTN = 'Delete';
 
 const TimestampToDateTime = (timestamp) => {
@@ -43,7 +44,7 @@ class KeyTable extends React.Component {
       <div className='key-table'>
         <Table
           title={LIST_API_KEY_MSG}
-          header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
+          header={[API_KEY_COLUMN, EXPIRES_COLUMN, DELETE_BTN_COLUMN]}
           data={this.getData(this.props.jtis)}
         />
       </div>
