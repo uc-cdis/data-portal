@@ -12,7 +12,7 @@ class ErrorPage403 extends React.Component {
         <p>
         The page you are trying to reach has restricted access. Please contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
         </p>
-        <NotFoundSVG />
+        <NotFoundSVG aria-hidden='true' />
       </div>
     );
   }
