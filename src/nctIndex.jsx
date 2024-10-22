@@ -194,7 +194,7 @@ async function init() {
                 : null}
               <ReduxTopBar />
               <ReduxNavBar />
-              <div className='main-content'>
+              <div className='main-content' id='main-content'>
                 <ReduxWorkspaceShutdownBanner />
                 <ReduxWorkspaceShutdownPopup />
                 <Switch>

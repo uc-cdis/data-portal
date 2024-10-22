@@ -3,14 +3,10 @@ import PropTypes from 'prop-types';
 import './TopIconButton.less';
 
 const TopIconButton = ({
-  name, icon, onActiveTab = () => {}, isActive = false, tabIndex = '0',
+  name, icon, isActive = false,
 }) => (
   <div
     className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
-    onClick={onActiveTab}
-    onKeyDown={onActiveTab}
-    role='button'
-    tabIndex={tabIndex}
   >
     {name}&nbsp;{icon ? (
       <i
@@ -24,15 +20,11 @@ TopIconButton.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
-  onActiveTab: PropTypes.func,
-  tabIndex: PropTypes.string,
 };
 
 TopIconButton.defaultProps = {
   icon: null,
-  onActiveTab: () => {},
   isActive: false,
-  tabIndex: 0,
 };
 
 export default TopIconButton;
