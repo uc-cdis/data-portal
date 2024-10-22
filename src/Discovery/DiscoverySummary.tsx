@@ -3,6 +3,7 @@ import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import jsonpath from 'jsonpath';
 import { DiscoveryConfig } from './DiscoveryConfig';
+import DiscoveryLoadingProgressBar from './DiscoveryLoadingProgressBar/DiscoveryLoadingProgressBar';
 
 /**
  * Check for non-numeric items in an array and convert them to numbers.
@@ -55,6 +56,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
+  allBatchesAreReady: boolean;
 }
 
 const DiscoverySummary = (props: Props) => (
@@ -72,6 +74,7 @@ const DiscoverySummary = (props: Props) => (
                 {aggregation.name}
               </div>
             </div>
+            <DiscoveryLoadingProgressBar allBatchesAreReady={props.allBatchesAreReady} />
           </div>
         </React.Fragment>
       ))

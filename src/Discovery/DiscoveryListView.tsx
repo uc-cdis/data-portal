@@ -70,7 +70,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           let disabled;
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
-            disabled = record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE;
+            disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
           }
           // if enableFillRequestForm is true, we allow users to check the checkbox without login
           if (props.config.features.exportToWorkspace?.enableFillRequestForm

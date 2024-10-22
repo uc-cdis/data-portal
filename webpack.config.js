@@ -43,6 +43,13 @@ if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
   connectSrcURLs.push('https://*.browser-intake-ddog-gov.com');
 }
+if (configFile.grafanaFaroConfig?.grafanaFaroEnable) {
+  if (configFile.grafanaFaroConfig?.grafanaFaroUrl) {
+    connectSrcURLs.push(configFile.grafanaFaroConfig.grafanaFaroUrl);
+  } else {
+    connectSrcURLs.push('https://faro.planx-pla.net');
+  }
+}
 if (process.env.MAPBOX_API_TOKEN) {
   connectSrcURLs.push('https://*.tiles.mapbox.com');
   connectSrcURLs.push('https://api.mapbox.com');

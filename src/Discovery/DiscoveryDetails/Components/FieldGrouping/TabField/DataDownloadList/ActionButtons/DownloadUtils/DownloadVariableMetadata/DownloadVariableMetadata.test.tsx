@@ -17,8 +17,8 @@ const mockResourceInfo = {
   project_title: 'Sample Project',
 };
 
-const mockDataDictionaries = {
-  'anotherDataDictionary.json': 'string-associated-with-file-name',
+const mockVariableLevelMetadata = {
+  dataDictionaries: { 'anotherDataDictionary.json': 'string-associated-with-file-name' },
 };
 
 const mockSetDownloadStatus = jest.fn();
@@ -41,7 +41,7 @@ describe('DownloadVariableMetadata', () => {
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
       await DownloadVariableMetadata(
-        mockDataDictionaries,
+        mockVariableLevelMetadata,
         mockResourceInfo as unknown as DiscoveryResource,
         mockSetDownloadStatus,
       );
@@ -66,7 +66,7 @@ describe('DownloadVariableMetadata', () => {
     (fetchWithCreds as jest.Mock).mockResolvedValue(mockStatusResponse);
     await act(async () => {
       await DownloadVariableMetadata(
-        mockDataDictionaries,
+        mockVariableLevelMetadata,
         mockResourceInfo as unknown as DiscoveryResource,
         mockSetDownloadStatus,
       );

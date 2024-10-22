@@ -7,6 +7,7 @@ import {
   Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 
 import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
@@ -320,6 +321,12 @@ class Workspace extends React.Component {
           datadogRum.addAction('workspaceLaunch', {
             workspaceName: workspace.name,
           });
+          faro.api.pushEvent(
+            'workspaceLaunch',
+            {
+              workspaceName: workspace.name,
+            },
+          );
           this.checkWorkspaceStatus();
           break;
         default:
@@ -458,7 +465,7 @@ class Workspace extends React.Component {
 
   handleMenuClick = async (e) => {
     if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
-      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@datacommons.io with questions.');
+      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@gen3.org with questions.');
       return;
     }
     await fetchWithCreds({
@@ -741,7 +748,7 @@ class Workspace extends React.Component {
                   {isPayModelAboveLimit
                     ? (
                       <Alert
-                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
+                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@gen3.org if you have questions.'
                         type='error'
                         banner
                         closable

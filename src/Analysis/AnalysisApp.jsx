@@ -62,7 +62,7 @@ class AnalysisApp extends React.Component {
         `Found illegal "teamProject" parameter value: ${TeamProject}`,
       );
     }
-    return `${this.state.app.applicationUrl}#/home?teamproject=${TeamProject}`;
+    return `${this.state.app.applicationUrl}/WebAPI/user/login/openid?redirectUrl=/home?teamproject=${TeamProject}`;
   }
 
   onSubmitJob = (e) => {

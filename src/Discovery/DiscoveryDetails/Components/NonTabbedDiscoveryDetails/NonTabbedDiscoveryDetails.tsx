@@ -3,7 +3,6 @@ import { Button, Collapse, List } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import jsonpath from 'jsonpath';
 import {
-  AccessLevel,
   accessibleFieldName,
   renderFieldContent,
 } from '../../../Discovery';
@@ -15,15 +14,6 @@ import AccessDescriptor from '../AccessDescriptor/AccessDescriptor';
 const { Panel } = Collapse;
 
 const NonTabbedDiscoveryDetails = ({ props }) => {
-  const userHasAccess = props.config.features.authorization.enabled
-    && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-    && props.modalData[accessibleFieldName] !== AccessLevel.WAITING
-    && props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE;
-  const userDoesNotHaveAccess = props.config.features.authorization.enabled
-    && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-    && props.modalData[accessibleFieldName] !== AccessLevel.WAITING
-    && props.modalData[accessibleFieldName] !== AccessLevel.ACCESSIBLE;
-
   const showDownloadPanel = props.config.studyPageFields.downloadLinks
     && props.config.studyPageFields.downloadLinks.field
     && props.modalData[props.config.studyPageFields.downloadLinks.field];
@@ -43,8 +33,7 @@ const NonTabbedDiscoveryDetails = ({ props }) => {
       <div className='discovery-modal-content'>
         <StudyHeader props={props} />
         <AccessDescriptor
-          userHasAccess={userHasAccess}
-          userDoesNotHaveAccess={userDoesNotHaveAccess}
+          accessibleFieldValue={props.modalData[accessibleFieldName]}
         />
         <div className='discovery-modal-attributes-container'>
           {props.config.studyPageFields.fieldsToShow.map(
