@@ -1,17 +1,21 @@
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contactEmail } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import DataRequestsTable from './DataRequestsTable';
 import { toggleAdminActive } from '../redux/dataRequest/slice';
-import { fetchProjects, fetchProjectStates } from '../redux/dataRequest/asyncThunks';
+import {
+  fetchProjects,
+  fetchProjectStates,
+} from '../redux/dataRequest/asyncThunks';
 import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import './DataRequests.css';
 
-/** @typedef {import('../redux/dataRequest/types').DataRequestProject} DataRequestProject */
-/** @typedef {import('../redux/types').RootState} RootState */
+/** @typedef {import("../redux/dataRequest/types").DataRequestProject} DataRequestProject */
+
+/** @typedef {import("../redux/types").RootState} RootState */
 
 /**
  * @param {RootState} state
@@ -22,29 +26,35 @@ function mapPropsToState(state) {
     projectStates: state.dataRequest.projectStates,
     savedFilterSets: state.explorer.savedFilterSets,
     isProjectsReloading: state.dataRequest.isProjectsReloading,
-    isAdminActive: state.dataRequest.isAdminActive
+    isAdminActive: state.dataRequest.isAdminActive,
   };
 }
 
 /**
  * @param {Object} props
  * @param {DataRequestProject[]} [props.projects]
- * @param {RootState['dataRequest']['projectStates']} [props.projectStates]
- * @param {RootState['explorer']['savedFilterSets']} props.savedFilterSets
+ * @param {RootState["dataRequest"]["projectStates"]} [props.projectStates]
+ * @param {RootState["explorer"]["savedFilterSets"]} props.savedFilterSets
  * @param {boolean} [props.isAdminActive]
  * @param {boolean} [props.isProjectsReloading]
  */
-function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive, isProjectsReloading }) {
-  let [searchParams, setSearchParams] = useSearchParams();
-  let dispatch = useAppDispatch();
-  let { 
-      is_admin,
-      authz: { '/services/amanuensis': serviceAccessMethods }
+function DataRequests({
+  projects,
+  projectStates,
+  savedFilterSets,
+  isAdminActive,
+  isProjectsReloading,
+}) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useAppDispatch();
+  const {
+    is_admin: isAdminUser,
+    authz: { '/services/amanuensis': serviceAccessMethods },
   } = useAppSelector((state) => state.user);
-  let serviceAccessMethod = Array.isArray(serviceAccessMethods) ?
-    serviceAccessMethods[0]?.method :
-    undefined;
-  let isAdmin = is_admin || !!serviceAccessMethod;
+  let serviceAccessMethod = Array.isArray(serviceAccessMethods)
+    ? serviceAccessMethods[0]?.method
+    : undefined;
+  const isAdmin = isAdminUser || !!serviceAccessMethod;
 
   return (
     <div className='data-requests'>
@@ -63,8 +73,8 @@ function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive,
                 Error in fetching your projects...
               </h2>
               <p>
-                Please refresh the page. If the problem persists,
-                please contact the administrator (
+                Please refresh the page. If the problem persists, please contact
+                the administrator (
                 <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
                 information.
               </p>
@@ -77,19 +87,26 @@ function DataRequests({ projects, projectStates, savedFilterSets, isAdminActive,
             projects={projects}
             projectStates={projectStates}
             savedFilterSets={savedFilterSets}
-            onToggleAdmin={(isAdminActive) => {
+            onToggleAdmin={(isActive) => {
               dispatch(toggleAdminActive());
               searchParams.delete('admin');
-              if (isAdminActive) {
+              if (isActive) {
                 dispatch(fetchProjectStates());
                 dispatch(fetchFilterSets());
-                setSearchParams(new URLSearchParams([...Array.from(searchParams.entries()), ['admin', 'true']]));
+                setSearchParams(
+                  new URLSearchParams([
+                    ...Array.from(searchParams.entries()),
+                    ['admin', 'true'],
+                  ]),
+                );
               } else {
                 setSearchParams(searchParams);
               }
               dispatch(fetchProjects({ triggerReloading: true }));
             }}
-            reloadProjects={() => { dispatch(fetchProjects({ triggerReloading: true })); }}
+            reloadProjects={() => {
+              dispatch(fetchProjects({ triggerReloading: true }));
+            }}
             isAdminActive={isAdminActive}
             isAdmin={isAdmin}
             isLoading={isProjectsReloading}

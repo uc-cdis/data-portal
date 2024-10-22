@@ -1,73 +1,67 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import TableRow from './TableRow';
+import TableRow, { cellValueToText } from './TableRow';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
-import innerText from 'react-innertext';
 import './Table.css';
 
-export function cellValueToText(value) {
-  let text = '';
-  if (value instanceof Date) {
-    text = value.toLocaleDateString();
-  } else if (Array.isArray(value)) {
-    text = value.reduce((acc, value, index, array) => {
-      if (index < array.length-1) {
-        return acc + cellValueToText(value) + ', '
-      } else {
-        return acc + cellValueToText(value);
-      }
-    }, '');
-  } else if (typeof value === 'object') {
-    text = innerText(value);
-  } else {
-    text = value?.toString?.() ?? '';
-  }
-  return text;
-} 
-
-function Table({ title, header, data, footer }) {
-  let [filterArray, setFilters] = useState([]);
-  let [filteredData, setData] = useState(data);
+function Table({ title, header, data, footer, filterConfig }) {
+  const [filterArray, setFilters] = useState([]);
+  const [filteredData, setData] = useState(data);
 
   useEffect(() => {
-    setData(data.filter(
-      (row) => row.every((value, j) => {
-        let text = cellValueToText(value);
-        let filterValue = filterArray[j];
-        if (!filterValue) {
-          return true;
-        } else if (typeof filterValue === 'object' && Object.hasOwn(filterValue, 'start')) {
-          let valueDate = new Date(value);        
-          return new Date(`${filterValue.start}T00:00:00.000`) <= valueDate && 
-            valueDate <= new Date(`${filterValue.end.add({days:1})}T00:00:00.000`);
-        } else if (Array.isArray(filterValue)) {
-          if (filterValue.length === 0) {
+    setData(
+      data.filter((row) =>
+        row.every((value, j) => {
+          const text = cellValueToText(value);
+          const filterValue = filterArray[j];
+          if (!filterValue) {
             return true;
           }
-          return filterValue.some((filterString) => {
-            return value.includes?.(filterString) || text.includes(filterString);
-          });
-        } else if (typeof filterValue === 'number') {
-          return filterValue > 0 &&  value <= filterValue;
-        } else {
+          if (
+            typeof filterValue === 'object' &&
+            Object.hasOwn(filterValue, 'start')
+          ) {
+            const valueDate = new Date(value);
+            return (
+              new Date(`${filterValue.start}T00:00:00.000`) <= valueDate &&
+              valueDate <=
+                new Date(`${filterValue.end.add({ days: 1 })}T00:00:00.000`)
+            );
+          }
+          if (Array.isArray(filterValue)) {
+            if (filterValue.length === 0) {
+              return true;
+            }
+            return filterValue.some(
+              (filterString) =>
+                value.includes?.(filterString) || text.includes(filterString),
+            );
+          }
+          if (typeof filterValue === 'number') {
+            return filterValue > 0 && value <= filterValue;
+          }
           return text.includes(filterArray[j]);
-        }
-      }
-    )));
-  }, [filterArray]);
+        }),
+      ),
+    );
+  }, [filterArray, data]);
 
   return (
     <div className='base-table'>
       {title ? <h2>{title}</h2> : null}
       <table className='base-table__body'>
-        <TableHead cols={header} data={data} setFilters={setFilters} />
+        <TableHead
+          cols={header}
+          data={data}
+          setFilters={setFilters}
+          filterConfig={filterConfig}
+        />
         {footer.length > 0 && <TableFoot cols={footer} />}
         <tbody>
-          {filteredData
-            .map((row, i) => (
-              <TableRow key={`${title}_${i}`} cols={row} />
-            ))}
+          {filteredData.map((row, i) => (
+            <TableRow key={`${title}_${i}`} cols={row} />
+          ))}
         </tbody>
       </table>
     </div>
@@ -79,6 +73,7 @@ Table.propTypes = {
   header: PropTypes.array,
   data: PropTypes.array,
   footer: PropTypes.array,
+  filterConfig: PropTypes.object,
 };
 
 Table.defaultProps = {
@@ -86,6 +81,7 @@ Table.defaultProps = {
   header: [],
   data: [],
   footer: [],
+  filterConfig: {},
 };
 
 export default Table;
