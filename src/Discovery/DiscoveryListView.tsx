@@ -18,7 +18,7 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  selectedTags: any [];
+  selectedTags: any[];
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
   onTagsSelected: (selectedTags: any) => any;
 }
@@ -48,8 +48,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
         (props.config.features.exportToWorkspace
-          && props.config.features.exportToWorkspace.enabled) || ((props.config.features.exportToWorkspace?.enableFillRequestForm
-            && props.config.features.exportToWorkspace.enableFillRequestForm === true))
+          && props.config.features.exportToWorkspace.enabled) || (props.config.features.exportToWorkspace?.enableFillRequestForm
+            && props.config.features.exportToWorkspace.enableFillRequestForm === true)
       ) && {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
@@ -141,7 +141,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               }
               return (
                 <React.Fragment key={value}>
-                  { start > 0 && '...' }
+                  {start > 0 && '...'}
                   {value.slice(start, matchIndex)}
                   <span className='matched'>{value.slice(matchIndex,
                     matchIndex + props.searchTerm.length)}
@@ -180,7 +180,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                   {studyPreviewTextArray.map((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
-              { config.features.tagsInDescription?.enabled
+              {config.features.tagsInDescription?.enabled
                 ? (
                   <div className='discovery-table__row-horizontal-content'>
                     {(record[config.minimalFieldMapping.tagsListFieldName] || []).map(({ name, category }) => {

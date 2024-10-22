@@ -16,7 +16,7 @@ export interface DiscoveryConfig {
             variableMetadataFieldName?: string
             enableDownloadVariableMetadata?: boolean
             enableFillRequestForm?: boolean
-            openFillRequestForm?: string
+            fillRequestFormDisplayText?: string
             fillRequestFormURL?: string
         },
         // explorationIntegration: {

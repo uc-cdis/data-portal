@@ -5,7 +5,7 @@ import { Popover, Button } from 'antd';
 const OpenFillRequestFormButton = ({
     props,
   }) => (
-  props.config.features.exportToWorkspace?.openFillRequestForm && (
+  props.config.features.exportToWorkspace?.enableFillRequestForm && (
     <Popover
       className='discovery-popover'
       arrowPointAtCenter
@@ -26,13 +26,7 @@ const OpenFillRequestFormButton = ({
     >
       <Button
         onClick={props.config.features.exportToWorkspace?.fillRequestFormURL ? () => {
-          let combinedIds = '';
-          props.discovery.selectedResources.forEach((item) => {
-            if (combinedIds !== '') {
-              combinedIds += ',';
-            }
-            combinedIds += item._medical_sample_id;
-          });
+          const combinedIds = props.discovery.selectedResources.map((item)=>(item._medical_sample_id)).join(',');
           const url = `${props.config.features.exportToWorkspace.fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
           window.open(url, '_blank');
         } : () => {
@@ -40,10 +34,10 @@ const OpenFillRequestFormButton = ({
         }}
         type='default'
         className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-        disabled={props.discovery.selectedResources.length === 0}
+        disabled={props.discovery.selectedResources.length === 0 || !props.config.features.exportToWorkspace.fillRequestFormURL }
         icon={<FileTextOutlined />}
       >
-        {'Click Here to Access Request'}
+        {'Click Here to ' + (props.config.features.exportToWorkspace.fillRequestFormDisplayText || 'Request Access')}
       </Button>
     </Popover>
   )
