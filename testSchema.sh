@@ -8,7 +8,6 @@ testCases=(
 bpa "data.bloodpac.org"
 dcf "nci-crdc.datacommons.io"
 gtex "gen3.biodatacatalyst.nhlbi.nih.gov"
-genomel "genomel.bionimbus.org"
 )
 index=0
 while [[ $index -lt ${#testCases[@]} ]]; do

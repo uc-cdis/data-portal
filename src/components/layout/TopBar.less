@@ -16,6 +16,7 @@
   justify-content: flex-end;
   color: white;
   overflow: hidden;
+  position: relative;
 }
 
 @media screen and (max-width: 1090px) {
@@ -40,6 +41,27 @@
   padding: 0 0;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.top-bar__link_skip {
+  border: 0;
+  color: var(--g3-color__white);
+  margin: 10px auto 5px 30px;
+  width: auto;
+  height: 1.7em;
+  display: block;
+  border-bottom: 1px solid var(--g3-color__white);
+  position: absolute;
+  left: -9999px;
+}
+
+.top-bar__link_skip:focus {
+  left: 0;
+}
+
+.top-bar__link:hover .top-icon-button,
+.top-bar__link:focus .top-icon-button {
+  border-bottom: 1px solid var(--g3-color__white);
 }
 
 @media screen and (max-width: 820px) {
