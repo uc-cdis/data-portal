@@ -69,11 +69,11 @@ const ActionButtons = ({
     discoveryConfig.features.exportToWorkspace.variableMetadataFieldName
       && discoveryConfig.features.exportToWorkspace.enableDownloadVariableMetadata,
   );
-
-  const [variableMetadataInfo, setVariableMetadataInfo] = useState({
+  const defaultVariableMetadataInfo = {
     noVariableLevelMetadata: true,
     variableLevelMetadataRecords: {} as VariableLevelMetadata,
-  });
+  };
+  const [variableMetadataInfo, setVariableMetadataInfo] = useState(defaultVariableMetadataInfo);
 
   let uid = '';
   if (resourceInfo) {
@@ -87,6 +87,8 @@ const ActionButtons = ({
       showDownloadVariableMetadataButton,
       setVariableMetadataInfo,
     );
+    // reset variableMetadataInfo on unmount:
+    return setVariableMetadataInfo(defaultVariableMetadataInfo);
   }, [resourceInfo]);
 
   const ConditionalPopover = ({ children }) => {
