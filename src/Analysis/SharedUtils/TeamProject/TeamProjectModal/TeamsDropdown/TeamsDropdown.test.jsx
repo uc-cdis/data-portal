@@ -21,15 +21,15 @@ describe('TeamsDropdown', () => {
         teams={teams}
         selectedTeamProject={null}
         setSelectedTeamProject={mockSetSelectedTeamProject}
-      />
+      />,
     );
 
     expect(
-      screen.getByLabelText('Team Projects Combo Box')
+      screen.getByLabelText('Team Projects Combo Box'),
     ).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toHaveValue('placeholder');
     expect(
-      screen.getByText('-select one of the team projects below-')
+      screen.getByText('-select one of the team projects below-'),
     ).toBeInTheDocument();
     expect(screen.getAllByRole('option')).toHaveLength(teams.length + 1); // +1 for the placeholder
   });
@@ -40,24 +40,21 @@ describe('TeamsDropdown', () => {
         teams={teams}
         selectedTeamProject={null}
         setSelectedTeamProject={mockSetSelectedTeamProject}
-      />
+      />,
     );
-
     const select = screen.getByRole('combobox');
     fireEvent.change(select, { target: { value: 'Team A' } });
-
     expect(mockSetSelectedTeamProject).toHaveBeenCalledWith('Team A');
   });
 
-  test('displays the selected team project after selection', () => {
+  test('displays the selected team project when it is selected', () => {
     render(
       <TeamsDropdown
         teams={teams}
         selectedTeamProject='Team A'
         setSelectedTeamProject={mockSetSelectedTeamProject}
-      />
+      />,
     );
-
     expect(screen.getByRole('combobox')).toHaveValue('Team A');
   });
 });
