@@ -12,6 +12,10 @@
 .team-project-header_modal-button {
   margin-left: 10px;
   cursor: pointer;
+  border: none;
+  background: none;
+  height: auto;
+  width: auto;
 }
 
 .team-project-header_modal-button:hover {

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
 import { SourceContextProvider } from '../../../Utils/Source';
+import { generateEulerTestData } from '../../../TestData/generateDiagramTestData';
 
 export default {
   title: 'Tests3/GWASApp/CohortsOverlapDiagram',
@@ -57,14 +58,7 @@ SuccessCase.parameters = {
           const { cohortmiddlewarepath } = req.params;
           const { cohortdefinitionA } = req.params;
           const { cohortdefinitionB } = req.params;
-          return res(
-            ctx.delay(1100),
-            ctx.json({
-              cohort_overlap: {
-                case_control_overlap: Math.floor(Math.random() * 500),
-              }, // because of random here, we get some data that does not really make sense...SuccessCase2 tries to fix that for some of the relevant group overlaps...
-            })
-          );
+          return res(ctx.delay(1100), ctx.json(generateEulerTestData()));
         }
       ),
     ],

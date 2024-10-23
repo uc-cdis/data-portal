@@ -51,34 +51,38 @@ const Histogram = ({
   barColor,
   xAxisLegend,
   yAxisLegend,
-}) => (
-  <div data-testid='histogram'>
-    <BarChart
-      width={chartWidth}
-      height={chartHeight}
-      data={data}
-      margin={{ top: 20, bottom: 65, right: 60 }}
-    >
-      <XAxis
-        dataKey={xAxisDataKey}
-        minTickGap={50}
-        tickFormatter={(tick) => formatNumber(tick)}
+  useAnimation,
+}) => {
+  const defaultAnimationTime = 400;
+  return (
+    <div data-testid='histogram'>
+      <BarChart
+        width={chartWidth}
+        height={chartHeight}
+        data={data}
+        margin={{ top: 20, bottom: 65, right: 60 }}
       >
-        <Label
-          value={xAxisLegend || xAxisDataKey}
-          position='bottom'
-          offset={20}
-        />
-      </XAxis>
-      <YAxis>
-        <Label value={yAxisLegend || barDataKey} position='top' offset={10} />
-      </YAxis>
-      <Tooltip content={<CustomTooltip />} />
-      <CartesianGrid strokeDasharray='3 3' />
-      <Bar dataKey={barDataKey} fill={barColor} />
-    </BarChart>
-  </div>
-);
+        <XAxis
+          dataKey={xAxisDataKey}
+          minTickGap={50}
+          tickFormatter={(tick) => formatNumber(tick)}
+        >
+          <Label
+            value={xAxisLegend || xAxisDataKey}
+            position='bottom'
+            offset={20}
+          />
+        </XAxis>
+        <YAxis>
+          <Label value={yAxisLegend || barDataKey} position='top' offset={10} />
+        </YAxis>
+        <Tooltip content={<CustomTooltip />} />
+        <CartesianGrid strokeDasharray='3 3' />
+        <Bar dataKey={barDataKey} fill={barColor} animationDuration={useAnimation ? defaultAnimationTime : 0} />
+      </BarChart>
+    </div>
+  );
+};
 
 Histogram.propTypes = {
   data: PropTypes.array.isRequired,
@@ -89,6 +93,7 @@ Histogram.propTypes = {
   barColor: PropTypes.string,
   xAxisLegend: PropTypes.string,
   yAxisLegend: PropTypes.string,
+  useAnimation: PropTypes.bool,
 };
 
 Histogram.defaultProps = {
@@ -97,6 +102,7 @@ Histogram.defaultProps = {
   barColor: '#8884d8',
   xAxisLegend: null,
   yAxisLegend: null,
+  useAnimation: true,
 };
 
 export default Histogram;
