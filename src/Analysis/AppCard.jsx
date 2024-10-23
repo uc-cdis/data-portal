@@ -15,7 +15,7 @@ class AppCard extends React.Component {
         <img
           className='app-card__image'
           src={(this.props.imageUrl) ? this.props.imageUrl : '/src/img/analysis-icons/default-app.png'}
-          alt={`${this.props.title}`}
+          alt=""
         />
       </div>
     );
