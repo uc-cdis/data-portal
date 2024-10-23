@@ -11,7 +11,7 @@ class NotFound extends React.Component {
         Either this URL is not valid, or you do not have access.
         Please contact your administrator for more information.
         </p>
-        <NotFoundSVG />
+        <NotFoundSVG aria-hidden='true' />
       </div>
     );
   }
