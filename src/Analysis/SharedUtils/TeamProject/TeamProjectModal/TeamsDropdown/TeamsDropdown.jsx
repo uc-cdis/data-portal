@@ -17,33 +17,31 @@ const TeamsDropdown = ({
 
   return (
     <div className='teams-dropdown'>
-      <div>
-        <label
-          id='team-select-label'
-          className='screen-reader-only'
-          htmlFor='team-select'
-        >
-          Team Projects Combo Box
-        </label>
-        <select
-          id='team-select'
-          aria-labelledby='team-select-label'
-          value={selectedValue}
-          onChange={handleChange}
-          className={selectedTeamProject === null ? 'no-selection' : ''}
-        >
-          {selectedTeamProject === null && (
-            <option value='placeholder' disabled>
-              -select one of the team projects below-
-            </option>
-          )}
-          {teams.map((team, index) => (
-            <option key={index} value={team.teamName}>
-              {team.teamName}
-            </option>
-          ))}
-        </select>
-      </div>
+      <label
+        id='team-select-label'
+        className='screen-reader-only'
+        htmlFor='team-select'
+      >
+        Team Projects Combo Box
+      </label>
+      <select
+        id='team-select'
+        aria-labelledby='team-select-label'
+        value={selectedValue}
+        onChange={handleChange}
+        className={selectedTeamProject === null ? 'no-selection' : ''}
+      >
+        {selectedTeamProject === null && (
+          <option value='placeholder' disabled>
+            -select one of the team projects below-
+          </option>
+        )}
+        {teams.map((team, index) => (
+          <option key={index} value={team.teamName}>
+            {team.teamName}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
