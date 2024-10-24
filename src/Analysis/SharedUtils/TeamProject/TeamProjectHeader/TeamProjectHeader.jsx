@@ -59,10 +59,11 @@ const TeamProjectHeader = ({ isEditable }) => {
       <div className='team-project-header'>
         <strong>Team Project</strong> / {bannerText}
         {isEditable && (
-          <span
+          <button
             className='team-project-header_modal-button'
+            aria-label='Change Team Project'
+            type='button'
             tabIndex='0'
-            role='button'
             data-testid='team-project-edit'
             onClick={() => {
               showModal();
@@ -72,7 +73,7 @@ const TeamProjectHeader = ({ isEditable }) => {
             }}
           >
             <EditIcon />
-          </span>
+          </button>
         )}
       </div>
       {isEditable && (
