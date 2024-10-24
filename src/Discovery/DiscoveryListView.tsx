@@ -18,7 +18,7 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  selectedTags: any [];
+  selectedTags: any[];
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
   onTagsSelected: (selectedTags: any) => any;
 }
@@ -47,8 +47,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
-        props.config.features.exportToWorkspace
-              && props.config.features.exportToWorkspace.enabled
+        (props.config.features.exportToWorkspace
+          && props.config.features.exportToWorkspace.enabled) || (props.config.features.exportToWorkspace?.enableFillRequestForm
+            && props.config.features.exportToWorkspace.enableFillRequestForm === true)
       ) && {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
@@ -70,6 +71,11 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
             disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
+          }
+          // if enableFillRequestForm is true, we allow users to check the checkbox without login
+          if (props.config.features.exportToWorkspace?.enableFillRequestForm
+            && props.config.features.exportToWorkspace.enableFillRequestForm === true) {
+            disabled = false;
           }
           // disable checkbox if there's no manifest or external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
@@ -135,7 +141,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               }
               return (
                 <React.Fragment key={value}>
-                  { start > 0 && '...' }
+                  {start > 0 && '...'}
                   {value.slice(start, matchIndex)}
                   <span className='matched'>{value.slice(matchIndex,
                     matchIndex + props.searchTerm.length)}
@@ -174,7 +180,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                   {studyPreviewTextArray.map((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
-              { config.features.tagsInDescription?.enabled
+              {config.features.tagsInDescription?.enabled
                 ? (
                   <div className='discovery-table__row-horizontal-content'>
                     {(record[config.minimalFieldMapping.tagsListFieldName] || []).map(({ name, category }) => {
