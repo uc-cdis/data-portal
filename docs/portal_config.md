@@ -54,6 +54,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
+
     "metaDescription": "", // optional; meta description used by search engines
     "banner": [ // optional; banner displayed across top of all of data portal
       {
@@ -63,6 +64,7 @@ Below is an example, with inline comments describing what each JSON block config
       }
     ],
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
+    "logoAltText": "VA logo and Seal, U.S. Department of Veterans Affairs Data Commons", // optional; alt text for logo, if not included the appName value will be used instead.
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
