@@ -22,7 +22,7 @@ const TeamsDropdown = ({
         className='screen-reader-only'
         htmlFor='team-select'
       >
-        Team Projects Combo Box
+        Select Team Project
       </label>
       <select
         id='team-select'
