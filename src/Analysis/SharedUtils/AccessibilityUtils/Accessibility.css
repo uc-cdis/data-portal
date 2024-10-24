@@ -1,0 +1,19 @@
+:root {
+  --focus-outline-color: #007bff; /* Bright Blue */
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.ant-modal-content button:focus {
+  outline: 1px dashed var(--focus-outline-color);
+  outline-offset: 1px;
+}
