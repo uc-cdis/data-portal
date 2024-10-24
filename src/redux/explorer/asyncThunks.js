@@ -58,6 +58,18 @@ export const updateFilterSet = createAsyncThunk(
   }
 );
 
+export const fetchFederationQuery = createAsyncThunk(
+  'explorer/fetchFederationQuery',
+  /** @param {string} token */
+  async (token, { getState, rejectWithValue }) => {
+    try {
+      return filterSetsAPI.fetchFederationQueryWithToken(token);
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+
 export const updateSurvivalResult = createAsyncThunk(
   'explorer/updateSurvivalResult',
   /**

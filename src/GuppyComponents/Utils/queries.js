@@ -741,6 +741,61 @@ export function getGQLFilter(filterState) {
 }
 
 /**
+ * Convert filter obj into GQL filter format
+ * @param {GqlFilter} gqlFilter
+ * @returns {FilterState}
+ */
+export function getFilterState(gqlFilter) {
+  const combinator = Object.keys(gqlFilter)[0];
+  const filterValues = gqlFilter[combinator];
+
+  if (
+    gqlFilter === undefined || 
+    Object.keys(gqlFilter[combinator]).length === 0
+  )
+    return undefined;
+  
+  if (combinator === 'AND' || combinator === 'OR') {
+    /** @type {import('../types').BaseFilter} */
+    let values = {};
+    for (const filterValue of filterValues) {
+      const valueCombinator = Object.keys(filterValue)[0];
+      const value = filterValue[valueCombinator];
+  
+      if (valueCombinator === 'IN') {
+        const option = {};
+        const optionFields = Object.keys(value);
+        
+        for (let field of optionFields) {
+          option[field] = {
+            __type: 'OPTION',
+            selectedValues: value[field],
+            isExclusion: false
+          };
+        }
+
+        values = { ...option, ...values };
+      } 
+      // else if (valueCombinator === '!=') {
+        // TODO: handle not filter here
+      // } else if (valueCombinator === 'GTE' || valueCombinator === 'LTE') {
+        // TODO: handle range filter here
+      // } else if (valueCombinator === 'AND' || valueCombinator === 'OR') {
+        // TODO: handle anchor filter here
+      // }
+    }
+
+    return {
+      __combineMode: combinator,
+      __type: 'STANDARD',
+      value: values
+    };
+  }
+
+  return undefined;
+}
+
+/**
  * Download all data from guppy using fields, filter, and sort args.
  * @param {object} args
  * @param {string} args.type
