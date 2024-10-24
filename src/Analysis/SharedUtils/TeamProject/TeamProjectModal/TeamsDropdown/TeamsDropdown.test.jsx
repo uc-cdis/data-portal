@@ -25,7 +25,7 @@ describe('TeamsDropdown', () => {
     );
 
     expect(
-      screen.getByLabelText('Team Projects Combo Box'),
+      screen.getByLabelText('Select Team Project'),
     ).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toHaveValue('placeholder');
     expect(
