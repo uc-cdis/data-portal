@@ -20,13 +20,7 @@ const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
   }
   return (
     <div className='atlas-data-dictionary-container'>
-      <ProtectedContent
-        public
-        location={location}
-        history={history}
-        match={match}
-        component={() => <AtlasDataDictionaryLoading />}
-      />
+      <AtlasDataDictionaryLoading />
     </div>
   );
 };
