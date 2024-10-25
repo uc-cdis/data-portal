@@ -17,3 +17,14 @@
   outline: 1px dashed var(--focus-outline-color);
   outline-offset: 1px;
 }
+
+.team-project-modal .ant-btn-primary {
+  background: #215C9E;
+  border: #215C9E;
+}
+
+.team-project-modal .ant-btn-primary:hover,
+.team-project-modal .ant-btn-primary:focus {
+  background: hotpink;
+  border: hotpink;
+}
