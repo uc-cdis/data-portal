@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './NotFound.less';
 import { userAccessToSite } from '../configs';
+import { logoutAPI } from '../actions';
 
 class AccessDenied extends React.Component {
   render() {
@@ -17,6 +19,7 @@ class AccessDenied extends React.Component {
     return (
       <div className='error-placeholder__error-msg'>
         <h1>{userAccessToSite.noAccessMessage ? convertEmailsToLink(userAccessToSite.noAccessMessage) : 'Access to this site requires special permission.'}</h1>
+        <p><h2><Link to='#' onClick={logoutAPI()}>Logout and Return to Homepage</Link></h2></p>
       </div>
     );
   }
