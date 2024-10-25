@@ -96,6 +96,16 @@ class Login extends React.Component {
     }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
 
+    const getLocationForText = (location) => {
+      let next = location.from;
+      if (location.state && location.state.from) {
+        next = location.state.from;
+      }
+
+      return next ? `Please log in to access ${next}` : undefined;
+    };
+    const fromLocationText = getLocationForText(location);
+
     let loginComponent = (
       <React.Fragment key='login-component'>
         <div className='login-page__entries'>
@@ -204,11 +214,18 @@ class Login extends React.Component {
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
           </div>
-          <div className='high-light login-page__sub-title'>
-            {this.props.data.subTitle}
-          </div>
-          <hr className='login-page__separator' />
-          <div className='body-typo'>{this.props.data.text}</div>
+          {fromLocationText ? (
+            <div className='high-light login-page__sub-title'>
+              {fromLocationText}
+            </div>
+          ) : (
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              {this.props.data.subTitle}
+                            </div>
+            <hr className='login-page__separator' />
+            <div className='body-typo'>{this.props.data.text}</div>
+            </React.Fragment>
+          )}
           {loginComponent}
           <div>
             {this.props.data.contact}
