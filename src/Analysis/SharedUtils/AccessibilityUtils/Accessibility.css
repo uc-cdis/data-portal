@@ -19,12 +19,12 @@
 }
 
 .team-project-modal .ant-btn-primary {
-  background: #215C9E;
-  border: #215C9E;
+  background: #194C90;
+  border: #194C90;
 }
 
 .team-project-modal .ant-btn-primary:hover,
 .team-project-modal .ant-btn-primary:focus {
-  background: hotpink;
-  border: hotpink;
+  background: #2466AC;
+  border: #2466AC;
 }
