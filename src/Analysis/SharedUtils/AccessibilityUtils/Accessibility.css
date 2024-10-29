@@ -36,13 +36,13 @@
 
 /* GWAS App */
 
-.steps-action .ant-btn-primary:not([disabled]) {
+.GWASUI-navBtn:not([disabled]) {
   background: #194C90;
   border: #194C90;
 }
 
-.steps-action .ant-btn-primary:not([disabled]):hover,
-.steps-action .ant-btn-primary:not([disabled]):focus {
+.GWASUI-navBtn:not([disabled]):hover,
+.GWASUI-navBtn:not([disabled]):focus {
   background: #2466AC;
   border: #2466AC;
 }
