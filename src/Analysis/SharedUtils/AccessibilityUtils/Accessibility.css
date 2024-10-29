@@ -21,15 +21,16 @@
   outline-offset: 1px;
 }
 
+
 /* VADC Apps */
 
-.team-project-modal .ant-btn-primary {
+.team-project-modal .ant-btn-primary:not([disabled]) {
   background: #194C90;
   border: #194C90;
 }
 
-.team-project-modal .ant-btn-primary:hover,
-.team-project-modal .ant-btn-primary:focus {
+.team-project-modal .ant-btn-primary:hover:not([disabled]),
+.team-project-modal .ant-btn-primary:focus:not([disabled]) {
   background: #2466AC;
   border: #2466AC;
 }
