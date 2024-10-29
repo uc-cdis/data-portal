@@ -9,6 +9,7 @@ import {
 } from '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils';
 
 import './JobInputModal.css';
+import '../../../SharedUtils/AccessibilityUtils/Accessibility.css';
 import WorkflowLimitsModalErrorMessage from './WorkflowLimitsModalErrorMessage/WorkflowLimitsModalErrorMessage';
 
 const JobInputModal = ({
@@ -40,6 +41,7 @@ const JobInputModal = ({
 
   return (
     <Modal
+      className='gwas-modal'
       okText='Submit'
       cancelText='Back'
       open={open}

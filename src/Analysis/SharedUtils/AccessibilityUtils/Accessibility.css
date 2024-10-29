@@ -21,29 +21,50 @@
   outline-offset: 1px;
 }
 
-
 /* VADC Apps */
 
 .team-project-modal .ant-btn-primary:not([disabled]) {
   background: #194C90;
-  border: #194C90;
+  border-color: #194C90;
 }
 
 .team-project-modal .ant-btn-primary:hover:not([disabled]),
 .team-project-modal .ant-btn-primary:focus:not([disabled]) {
   background: #2466AC;
-  border: #2466AC;
+  border-color: #2466AC;
 }
 
 /* GWAS App */
 
 .GWASUI-navBtn:not([disabled]) {
   background: #194C90;
-  border: #194C90;
+  border-color: #194C90;
 }
 
 .GWASUI-navBtn:not([disabled]):hover,
 .GWASUI-navBtn:not([disabled]):focus {
   background: #2466AC;
-  border: #2466AC;
+  border-color: #2466AC;
+}
+
+.gwas-modal .ant-btn-primary:not([disabled]) {
+  background: #194C90;
+  border-color: #194C90;
+}
+
+.gwas-modal .ant-btn-primary:hover:not([disabled]),
+.gwas-modal .ant-btn-primary:focus:not([disabled]) {
+  background: #2466AC;
+  border-color: #2466AC;
+}
+
+.gwas-modal .ant-btn-default {
+  color: #194C90;
+  border-color: #194C90;
+}
+
+.gwas-modal .ant-btn-default:hover,
+.gwas-modal .ant-btn-default:focus {
+  color: #2466AC;
+  border-color: #2466AC;
 }
