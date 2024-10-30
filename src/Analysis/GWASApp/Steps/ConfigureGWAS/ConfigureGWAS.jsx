@@ -39,10 +39,10 @@ const ConfigureGWAS = ({
   const [showError, setShowError] = useState(false);
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
-  const covariatesWithoutCohortNamesAndCohortSizes = covariates.map(
+  const workflowCovariates = covariates.map(
     ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
   );
-  const outcomeWithoutCohortNamesAndCohortSizes = Object.fromEntries(
+  const workflowOutcome = Object.fromEntries(
     Object.entries(outcome).filter(([key]) => key !== 'cohort_names' && key !== 'cohort_sizes'),
   );
 
@@ -85,8 +85,8 @@ const ConfigureGWAS = ({
     () => jobSubmission(
       sourceId,
       numOfPCs,
-      covariatesWithoutCohortNamesAndCohortSizes,
-      outcomeWithoutCohortNamesAndCohortSizes,
+      workflowCovariates,
+      workflowOutcome,
       selectedHare,
       mafThreshold,
       imputationScore,
