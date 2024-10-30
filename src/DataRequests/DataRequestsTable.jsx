@@ -1,5 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
@@ -141,6 +141,13 @@ function DataRequestsTable({
   );
   let shouldReloadProjectsOnActionClose = false;
 
+  const closeProjectActionPopup = () => {
+    if (shouldReloadProjectsOnActionClose) {
+      reloadProjects?.();
+    }
+    setProjectDisplayOptions(null);
+  }
+
   return (
     <div className={className}>
         <div className='data-requests__table-header'>
@@ -189,24 +196,20 @@ function DataRequestsTable({
           }
           {projectDisplayOptions &&
             <Popup
-              hideFooter={true}
+              hideFooter
               title={`Edit "${projectDisplayOptions.name}"`}
-              onClose={() => { 
-                if (shouldReloadProjectsOnActionClose) {
-                  reloadProjects?.();
-                }
-                setProjectDisplayOptions(null);
-              }}
+              onClose={closeProjectActionPopup}
             >
               <AdminProjectActions
                 project={projectDisplayOptions}
                 projectStates={projectStates}
                 savedFilterSets={savedFilterSets}
                 onAction={(type) => {
-                  if (type === 'PROJECT_STATE') {  
+                  if (type === 'PROJECT_STATE' || type === 'DELETE_REQUEST') {
                     shouldReloadProjectsOnActionClose = true;
                   }
                 }}
+                onClose={closeProjectActionPopup}
               />
             </Popup>
           }

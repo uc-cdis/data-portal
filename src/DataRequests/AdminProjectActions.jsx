@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as Yup from 'yup';
 import { useAppDispatch  } from '../redux/hooks';
 import Button from '../gen3-ui-component/components/Button';
 import IconComponent from '../components/Icon';
@@ -15,9 +16,9 @@ import {
     updateProjectState,
     updateProjectUsers,
     updateUserDataAccess,
-    addFiltersetToRequest
+    addFiltersetToRequest,
+    deleteRequest
 } from '../redux/dataRequest/asyncThunks';
-import * as Yup from 'yup';
 import '../GuppyDataExplorer/ExplorerFilterSetForms/ExplorerFilterSetForms.css';
 
 
@@ -51,7 +52,7 @@ function errorObjectForField(errors, touched, fieldName) {
    * @param {RootState['explorer']['savedFilterSets']} props.savedFilterSets
    * @param {function} [props.onAction]
    */
-export default function AdminProjectActions({ project, projectStates, savedFilterSets, onAction }) {
+export default function AdminProjectActions({ project, projectStates, savedFilterSets, onAction, onClose }) {
     let dispatch = useAppDispatch();
     let [actionType, setActionType] = useState('')
     let [currentEmailInput, setCurrentEmailInput] = useState("");
@@ -391,6 +392,42 @@ export default function AdminProjectActions({ project, projectStates, savedFilte
                     return <div className="data-request-admin__action-success">
                         <span>Success!</span>
                     </div>;
+                case 'DELETE_REQUEST':
+                    return (
+                      <div className="data-request__form">
+                        <div className='data-request__header'>
+                          <h2>Are you sure to delete the request?</h2>
+                        </div>
+                        <div>
+                            <Button
+                              label='Yes'
+                              buttonType='secondary'
+                              onClick={() => {
+                                setActionPending(true);
+                                dispatch(
+                                  deleteRequest({ project_id: project.id }),
+                                ).then((action) => {
+                                  setActionPending(false);
+                                  if (!action.payload.isError) {
+                                    onAction?.(actionType);
+                                    onClose?.();
+                                    return;
+                                  }
+
+                                  const { isError, message } = action.payload;
+                                  setRequestactionError({ isError, message });
+                                });
+                              }}
+                            />
+                            <Button label='No' buttonType='secondary'
+                                    onClick={() => {
+                                        setActionType('');
+                                        setRequestactionError({ isError: false, message: '' });
+                                    }}/>
+                        </div>
+                        {actionRequestError.isError && <span className="data-request__request-error">{actionRequestError.message}</span>}
+                      </div>
+                    );
                 default:
                     return <div className="data-request-admin__action-list-container">
                         <ul className="data-request-admin__action-list">
@@ -429,9 +466,16 @@ export default function AdminProjectActions({ project, projectStates, savedFilte
                                     buttonType="secondary"
                                 />
                             </li>
+                            <li>
+                                <Button
+                                  label="Delete Request"
+                                  onClick={() => setActionType('DELETE_REQUEST')}
+                                  buttonType="secondary"
+                                />
+                            </li>
                         </ul>
                     </div>;
             }
         })()}
     </div>;
-}
+  }
