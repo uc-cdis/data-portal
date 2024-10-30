@@ -11,7 +11,3 @@
 .team-project-modal .teams-dropdown select:hover {
   border-color: #40a9ff;
 }
-
-.team-project-modal .teams-dropdown select.no-selection {
-  color: #bfbfbf;
-}

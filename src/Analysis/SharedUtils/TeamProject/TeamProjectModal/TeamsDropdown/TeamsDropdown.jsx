@@ -28,7 +28,6 @@ const TeamsDropdown = ({
         aria-labelledby='team-select-label'
         value={selectedValue}
         onChange={handleChange}
-        className={selectedTeamProject === null ? 'no-selection' : ''}
       >
         {selectedTeamProject === null && (
           <option value='placeholder' disabled>
