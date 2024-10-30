@@ -37,7 +37,7 @@ const ConfigureGWAS = ({
   const outcomeWithoutCohortNamesAndCohortSizes = outcome.map(
     ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
   );
-  console.log('outcome',outcome);
+  console.log('outcome', outcome);
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
@@ -84,7 +84,7 @@ const ConfigureGWAS = ({
     () => jobSubmission(
       sourceId,
       numOfPCs,
-      covariatesDataWithoutCohortNamesAndCohortSizes,
+      covariatesWithoutCohortNamesAndCohortSizes,
       outcomeWithoutCohortNamesAndCohortSizes,
       selectedHare,
       mafThreshold,
