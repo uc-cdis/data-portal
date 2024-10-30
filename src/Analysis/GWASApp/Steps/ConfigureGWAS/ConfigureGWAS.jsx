@@ -15,6 +15,7 @@ import {
   checkFinalPopulationSizeZero,
 } from '../../Utils/constants';
 import '../../GWASApp.css';
+/* eslint-disable camelcase */
 
 const ConfigureGWAS = ({
   dispatch,
@@ -31,19 +32,18 @@ const ConfigureGWAS = ({
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
-  const covariatesWithoutCohortNamesAndCohortSizes = covariates.map(
-    ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
-  );
-  const outcomeWithoutCohortNamesAndCohortSizes = outcome.map(
-    ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
-  );
-  console.log('outcome', outcome);
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
   const [showError, setShowError] = useState(false);
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
+  const covariatesWithoutCohortNamesAndCohortSizes = covariates.map(
+    ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
+  );
+  const outcomeWithoutCohortNamesAndCohortSizes = Object.fromEntries(
+    Object.entries(outcome).filter(([key]) => key !== 'cohort_names' && key !== 'cohort_sizes'),
+  );
 
   const handleEnterJobName = (e) => {
     setJobName(e.target.value);
