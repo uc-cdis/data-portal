@@ -101,8 +101,13 @@ class Login extends React.Component {
       if (location.state && location.state.from) {
         next = location.state.from;
       }
+      if (!next) {
+        return undefined;
+      }
+      // Lookup next to get actuale page name, if item is not in main navigation display default messaging
+      const nextItem = components.navigation.items.filter((item) => item.link === next)[0];
 
-      return next ? `Please log in to access ${next}` : undefined;
+      return nextItem ? nextItem.name : 'Restricted';
     };
     const fromLocationText = getLocationForText(location);
 
@@ -215,9 +220,11 @@ class Login extends React.Component {
             {this.props.data.title}
           </div>
           {fromLocationText ? (
-            <div className='high-light login-page__sub-title'>
-              {fromLocationText}
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              Access {fromLocationText}
             </div>
+            <div className='body-typo'>The {fromLocationText === 'Restricted' ? 'page' : fromLocationText} requires access. Please login using one of the options blow to continue.</div>
+            </React.Fragment>
           ) : (
             <React.Fragment><div className='high-light login-page__sub-title'>
               {this.props.data.subTitle}
