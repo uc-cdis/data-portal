@@ -31,7 +31,9 @@ const ConfigureGWAS = ({
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
-
+  const covariatesWithoutCohortNamesAndCohortSizes = covariates.map(
+    ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs
+  );
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successText, setSuccessText] = useState('');
@@ -56,14 +58,17 @@ const ConfigureGWAS = ({
         payload: MESSAGES.ZERO_SIZE_WARNING,
       });
     } else if (
-      finalPopulationSizes.length === 1
-      && checkFinalPopulationSizes(finalPopulationSizes)
+      finalPopulationSizes.length === 1 &&
+      checkFinalPopulationSizes(finalPopulationSizes)
     ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
       });
-    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes(finalPopulationSizes)) {
+    } else if (
+      finalPopulationSizes.length > 1 &&
+      checkFinalPopulationSizes(finalPopulationSizes)
+    ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
@@ -72,18 +77,19 @@ const ConfigureGWAS = ({
   }, [finalPopulationSizes]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-      selectedTeamProject,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariatesDataWithoutCohortNamesAndCohortSizes,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName,
+        selectedTeamProject
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -94,13 +100,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {
