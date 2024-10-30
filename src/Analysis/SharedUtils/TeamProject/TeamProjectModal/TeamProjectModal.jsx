@@ -5,7 +5,6 @@ import { Button, Modal, Spin } from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import TeamsDropdown from './TeamsDropdown/TeamsDropdown';
 import './TeamProjectModal.css';
-import '../../AccessibilityUtils/Accessibility.css';
 
 const TeamProjectModal = ({
   isModalOpen,

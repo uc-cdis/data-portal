@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './TeamsDropdown.css';
-import '../../../AccessibilityUtils/Accessibility.css';
 
 const TeamsDropdown = ({
   teams,
@@ -29,7 +28,6 @@ const TeamsDropdown = ({
         aria-labelledby='team-select-label'
         value={selectedValue}
         onChange={handleChange}
-        className={selectedTeamProject === null ? 'no-selection' : ''}
       >
         {selectedTeamProject === null && (
           <option value='placeholder' disabled>
