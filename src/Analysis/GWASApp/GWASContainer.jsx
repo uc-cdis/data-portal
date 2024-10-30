@@ -14,7 +14,6 @@ import DismissibleMessagesList from './Components/DismissibleMessagesList/Dismis
 import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
 import InitializeCurrentState from './Utils/StateManagement/InitializeCurrentState';
 import './GWASApp.css';
-import '../SharedUtils/AccessibilityUtils/Accessibility.css';
 import WorkflowLimitsDashboard from '../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsDashboard';
 
 const GWASContainer = () => {

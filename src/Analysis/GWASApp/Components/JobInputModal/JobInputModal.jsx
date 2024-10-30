@@ -40,6 +40,7 @@ const JobInputModal = ({
 
   return (
     <Modal
+      className='gwas-modal'
       okText='Submit'
       cancelText='Back'
       open={open}
