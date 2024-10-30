@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './TeamsDropdown.css';
-import '../../../AccessibilityUtils/Accessibility.css';
 
 const TeamsDropdown = ({
   teams,
