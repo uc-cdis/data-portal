@@ -28,8 +28,8 @@
   border-color: #194C90;
 }
 
-.team-project-modal .ant-btn-primary:hover:not([disabled]),
-.team-project-modal .ant-btn-primary:focus:not([disabled]) {
+.team-project-modal .ant-btn-primary:not([disabled]):hover,
+.team-project-modal .ant-btn-primary:not([disabled]):focus {
   background: #2466AC;
   border-color: #2466AC;
 }
@@ -52,8 +52,8 @@
   border-color: #194C90;
 }
 
-.gwas-modal .ant-btn-primary:hover:not([disabled]),
-.gwas-modal .ant-btn-primary:focus:not([disabled]) {
+.gwas-modal .ant-btn-primary:not([disabled]):hover,
+.gwas-modal .ant-btn-primary:not([disabled]):focus {
   background: #2466AC;
   border-color: #2466AC;
 }
