@@ -1,5 +1,7 @@
-@import "AccessibilityGWAS.css";
+/* App-specific styles */
+
 @import "AccessibilityTeams.css";
+@import "AccessibilityGWAS.css";
 
 /* Global styles */
 
