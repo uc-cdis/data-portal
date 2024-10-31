@@ -138,7 +138,9 @@ class AnalysisApp extends React.Component {
     case 'AtlasDataDictionary': {
       return (
         <div className='analysis-app_flex_row'>
-          <AtlasDataDictionaryContainer />
+          <AtlasDataDictionaryContainer
+            dataDictionaryVersion={analysisApps[app].dataDictionaryVersion}
+          />
         </div>
       );
     }
