@@ -465,8 +465,10 @@ Below is an example, with inline comments describing what each JSON block config
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
           "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "enableFillRequestForm" : true, // enables a button which opens a new form to request access to a resoruce
-          "fillRequestFormDisplayText": "Request Access", // text to be displayed on fill the request form
+          "fillRequestFormDisplayText": "Request Information", // text to be displayed on fill the request form
           "fillRequestFormURL" : "https://URL/form", // URL to the new form which would be used to fill the form
+          "externalWebsiteName" : "", // Name of external website needed, this variable at development is used for showing an external website in a popover for chicagoland pandemic response commons, in commons this will be loaded only if enableFillRequestForm is true
+          "externalWebsiteURL" : "", // URL of external website needed, this variable is used with externalWebsiteName be loaded only if enableFillRequestForm is true
           "manifestFieldName": "__manifest", // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "enableDownloadZip": true,  // enables a button which allows user to download all the files as a zip file (with pre-set size limits)
           "downloadZipButtonText": "Download Zip", // text to be displayed on the download zip file button
