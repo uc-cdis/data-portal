@@ -748,7 +748,8 @@ Below is an example, with inline comments describing what each JSON block config
       "title": "My app title", // App title/name, also displayed on the App card in the /analysis page
       "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
       "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
-      "needsTeamProject": true // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
+      "needsTeamProject": true, // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
+      "dataDictionaryVersion": "new", // Optional, for custom AtlasDataDictionary. Set to "new" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary when the user navigates to /analysis/AtlasDataDictionary.
     },
     {
       "title": "My other app",
