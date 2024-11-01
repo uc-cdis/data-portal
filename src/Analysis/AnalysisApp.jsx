@@ -17,6 +17,7 @@ import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/Chec
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import './AnalysisApp.css';
 import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
+import AtlasLegacyDataDictionaryButton from './AtlasDataDictionary/AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 
 const queryClient = new QueryClient();
 
@@ -168,7 +169,9 @@ class AnalysisApp extends React.Component {
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
             {this.state.app.title === 'OHDSI Atlas' && (
-              <AtlasDataDictionaryButton />
+              analysisApps[app].dataDictionaryVersion === 'new'
+                ? <AtlasDataDictionaryButton />
+                : <AtlasLegacyDataDictionaryButton />
             )}
             <iframe
               className='analysis-app__iframe'

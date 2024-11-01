@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import ProtectedContent from '../../Login/ProtectedContent';
 import AtlasDataDictionaryLoading from './AtlasDataDictionaryTable/AtlasDataDictionaryLoading';
-import AtlasDataDictionaryButton from './AtlasDataDictionaryButton/AtlasDataDictionaryButton';
+import AtlasLegacyDataDictionaryButton from './AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
@@ -12,10 +11,10 @@ const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
   const match = useRouteMatch();
 
   if (!dataDictionaryVersion || !dataDictionaryVersion.includes('new')) {
-    // Default legacy component: render a div with AtlasDataDictionaryButton when
+    // Default legacy component: render a div with AtlasLegacyDataDictionaryButton when
     // no dataDictionaryVersion is set or it does not include 'new':
     return (
-      <div style={{ width: '100%' }}><AtlasDataDictionaryButton /></div>
+      <div style={{ width: '100%' }}><AtlasLegacyDataDictionaryButton /></div>
     );
   }
   return (
