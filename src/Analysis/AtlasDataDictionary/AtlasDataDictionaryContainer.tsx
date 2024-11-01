@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import AtlasDataDictionaryLoading from './AtlasDataDictionaryTable/AtlasDataDictionaryLoading';
 import AtlasLegacyDataDictionaryButton from './AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 import './AtlasDataDictionary.css';
 
 const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const match = useRouteMatch();
-
   if (!dataDictionaryVersion || !dataDictionaryVersion.includes('new')) {
     // Default legacy component: render a div with AtlasLegacyDataDictionaryButton when
     // no dataDictionaryVersion is set or it does not include 'new':
