@@ -3,15 +3,14 @@ import { FileTextOutlined } from '@ant-design/icons';
 import { Popover, Button } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const OpenFillRequestFormButton = (props) => { // Destructure props directly from parameters
-  // Check conditions to determine if the component should render
+const OpenFillRequestFormButton = (props) => {
   if (
     !props.config.features.exportToWorkspace?.enableFillRequestForm ||
     !props.config.features.exportToWorkspace.fillRequestFormURL?.trim() ||
     !props.config.features.exportToWorkspace.externalWebsiteURL?.trim() ||
     !props.config.features.exportToWorkspace.externalWebsiteName?.trim()
   ) {
-    return null; // Return null if any condition is not met
+    return null; 
   }
 
   return (
