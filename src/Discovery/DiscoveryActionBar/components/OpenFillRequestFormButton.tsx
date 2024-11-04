@@ -6,10 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const OpenFillRequestFormButton = ({
   props,
 }) => (
-    props.config.features.exportToWorkspace?.enableFillRequestForm &&
-    props.config.features.exportToWorkspace.fillRequestFormURL && props.config.features.exportToWorkspace.fillRequestFormURL.trim() !== '' && 
-    props.config.features.exportToWorkspace.externalWebsiteURL && props.config.features.exportToWorkspace.externalWebsiteURL.trim() !== '' && 
-    props.config.features.exportToWorkspace.externalWebsiteName && props.config.features.exportToWorkspace.externalWebsiteName.trim() !== '' && (
+  props.config.features.exportToWorkspace?.enableFillRequestForm
+    && props.config.features.exportToWorkspace.fillRequestFormURL && props.config.features.exportToWorkspace.fillRequestFormURL.trim() !== ''
+    && props.config.features.exportToWorkspace.externalWebsiteURL && props.config.features.exportToWorkspace.externalWebsiteURL.trim() !== ''
+    && props.config.features.exportToWorkspace.externalWebsiteName && props.config.features.exportToWorkspace.externalWebsiteName.trim() !== ''
+    && (
       <Popover
         className='discovery-popover'
         arrowPointAtCenter
@@ -37,7 +38,7 @@ const OpenFillRequestFormButton = ({
       >
         <Button
           onClick={props.config.features.exportToWorkspace?.fillRequestFormURL ? () => {
-            const combinedIds = props.discovery.selectedResources.map((item) => (item._medical_sample_id)).join(',');
+            const combinedIds = props.discovery.selectedResources.map((item) => item._medical_sample_id).join(',');
             const url = `${props.config.features.exportToWorkspace.fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
             window.open(url, '_blank');
           } : () => {
@@ -45,13 +46,13 @@ const OpenFillRequestFormButton = ({
           }}
           type='default'
           className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-          disabled={props.discovery.selectedResources.length === 0 || !props.config.features.exportToWorkspace.fillRequestFormURL || props.discovery.selectedResources.map((item) => (item._medical_sample_id)).join(',').length == 0}
+          disabled={props.discovery.selectedResources.length === 0 || !props.config.features.exportToWorkspace.fillRequestFormURL || props.discovery.selectedResources.map((item) => (item._medical_sample_id)).join(',').length === 0}
           icon={<FileTextOutlined />}
         >
-          {'Click Here to ' + (props.config.features.exportToWorkspace.fillRequestFormDisplayText || 'Request Information')}
+          {`Click Here to ${props.config.features.exportToWorkspace.fillRequestFormDisplayText || 'Request Information'}`}
         </Button>
       </Popover>
     )
-  );
+);
 
 export default OpenFillRequestFormButton;
