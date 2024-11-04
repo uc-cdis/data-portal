@@ -18,6 +18,8 @@ export interface DiscoveryConfig {
             enableFillRequestForm?: boolean
             fillRequestFormDisplayText?: string
             fillRequestFormURL?: string
+            externalWebsiteName?: string
+            externalWebsiteURL?: string
         },
         // explorationIntegration: {
         //     enabled: boolean // not supported
