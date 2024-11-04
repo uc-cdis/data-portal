@@ -15,6 +15,7 @@ import {
   checkFinalPopulationSizeZero,
 } from '../../Utils/constants';
 import '../../GWASApp.css';
+/* eslint-disable camelcase */
 
 const ConfigureGWAS = ({
   dispatch,
@@ -38,6 +39,12 @@ const ConfigureGWAS = ({
   const [showError, setShowError] = useState(false);
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
+  const workflowCovariates = covariates.map(
+    ({ cohort_names, cohort_sizes, ...allOtherKeyValuePairs }) => allOtherKeyValuePairs,
+  );
+  const workflowOutcome = Object.fromEntries(
+    Object.entries(outcome).filter(([key]) => key !== 'cohort_names' && key !== 'cohort_sizes'),
+  );
 
   const handleEnterJobName = (e) => {
     setJobName(e.target.value);
@@ -63,7 +70,10 @@ const ConfigureGWAS = ({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_COHORT_CAUTION,
       });
-    } else if (finalPopulationSizes.length > 1 && checkFinalPopulationSizes(finalPopulationSizes)) {
+    } else if (
+      finalPopulationSizes.length > 1
+      && checkFinalPopulationSizes(finalPopulationSizes)
+    ) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
         payload: MESSAGES.SMALL_CONTROL_OR_CASE_CAUTION,
@@ -75,8 +85,8 @@ const ConfigureGWAS = ({
     () => jobSubmission(
       sourceId,
       numOfPCs,
-      covariates,
-      outcome,
+      workflowCovariates,
+      workflowOutcome,
       selectedHare,
       mafThreshold,
       imputationScore,

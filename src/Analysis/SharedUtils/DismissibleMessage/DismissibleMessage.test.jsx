@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, fireEvent } from '@testing-library/react';
 import DismissibleMessage from './DismissibleMessage';
-import isEnterOrSpace from '../IsEnterOrSpace';
+import isEnterOrSpace from '../AccessibilityUtils/IsEnterOrSpace';
 
 const args = {
   title: 'Custom Title',
