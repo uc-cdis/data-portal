@@ -15,7 +15,8 @@
   border-color: #194C90;
 }
 
-.euler-diagram-controls .ant-btn-primary:not([disabled]) {
+.euler-diagram-controls .ant-btn-primary:not([disabled]),
+.euler-diagram-controls  .ant-btn-primary:not([disabled]):focus {
   background: #194C90;
   border-color: #194C90;
 }
@@ -43,8 +44,7 @@
   border-color: #2466AC;
 }
 
-.euler-diagram-controls  .ant-btn-primary:not([disabled]):hover,
-.euler-diagram-controls  .ant-btn-primary:not([disabled]):focus {
+.euler-diagram-controls  .ant-btn-primary:not([disabled]):hover {
   background: #2466AC;
   border-color: #2466AC;
 }
