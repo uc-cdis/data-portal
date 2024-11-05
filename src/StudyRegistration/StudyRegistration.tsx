@@ -168,7 +168,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     const ctgovID = formValues.clinical_trials_id;
     const valuesToUpdate = {
       repository: formValues.repository || '',
-      repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
+      repository_study_ids: ((!formValues.repository_study_ids || (formValues.repository_study_ids.length === 1 && formValues.repository_study_ids[0] === '')) ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
       clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
@@ -309,8 +309,22 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
           <Form.Item
             name='repository'
             label='Study Data Repository'
-            hasFeedback
-            help={(
+            rules={[
+              {
+                message: '"Study Data ID from Repository" field has been filled with values. Please select a Study Data Repository name here.',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const repositoryStudyIDs = getFieldValue('repository_study_ids');
+                  const doesRepositoryStudyIDsHaveValue = repositoryStudyIDs && !(repositoryStudyIDs.length === 1 && repositoryStudyIDs[0] === '');
+                  if (!doesRepositoryStudyIDsHaveValue || (doesRepositoryStudyIDsHaveValue && value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('"Study Data ID from Repository" field has been filled with values. Please select a Study Data Repository name here.'));
+                },
+              }),
+            ]}
+            extra={(
               <React.Fragment> If you have already selected a data repository, indicate it here;
                  otherwise, leave empty.<br />
                  If you have deposited your data and you have a unique Study ID for the data at

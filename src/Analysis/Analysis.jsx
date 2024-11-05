@@ -7,6 +7,7 @@ import AppCard from './AppCard';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import './Analysis.less';
+import './SharedUtils/AccessibilityUtils/AccessibilityCSS/Accessibility.css';
 
 class Analysis extends React.Component {
   openApp = (app) => {
