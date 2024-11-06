@@ -38,12 +38,10 @@ const OpenFillRequestFormButton = (props) => {
       )}
     >
       <Button
-        onClick={props.config.features.exportToWorkspace.fillRequestFormURL ? () => {
+        onClick={() => {
           const combinedIds = props.discovery.selectedResources.map((item) => item._medical_sample_id).join(',');
           const url = `${props.config.features.exportToWorkspace.fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
           window.open(url, '_blank');
-        } : () => {
-          window.open(props.config.features.exportToWorkspace.fillRequestFormURL, '_blank');
         }}
         type='default'
         className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
