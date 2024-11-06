@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
-import './AtlasLegacyDataDictionaryButton.css';
+import '../AtlasDataDictionaryButton/AtlasDataDictionaryButton.css';
 
 const AtlasLegacyDataDictionaryButton = () => {
   const dataDictionaryURL = 'https://vincicentral.vinci.med.va.gov/SitePages/VINCI_University-VADC_Academy.aspx';
