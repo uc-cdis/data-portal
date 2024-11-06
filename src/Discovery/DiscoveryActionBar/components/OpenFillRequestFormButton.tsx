@@ -45,11 +45,7 @@ const OpenFillRequestFormButton = (props) => {
         }}
         type='default'
         className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-        disabled={
-          props.discovery.selectedResources.length === 0 ||
-          !props.config.features.exportToWorkspace.fillRequestFormURL ||
-          props.discovery.selectedResources.map((item) => item._medical_sample_id).join(',').length === 0
-        }
+        disabled={props.discovery.selectedResources.length === 0}
         icon={<FileTextOutlined />}
       >
         {`Click Here to ${props.config.features.exportToWorkspace.fillRequestFormDisplayText || 'Request Information'}`}
