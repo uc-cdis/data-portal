@@ -141,7 +141,7 @@ class AnalysisApp extends React.Component {
       return (
         <div className='analysis-app_flex_row'>
           <AtlasDataDictionaryContainer
-            useLegacyDataDictionary={isEnabled('legacyDataDictionary')}
+            useLegacyDataDictionary={isEnabled('legacyVADCDataDictionary')}
           />
         </div>
       );
@@ -170,7 +170,7 @@ class AnalysisApp extends React.Component {
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
             {this.state.app.title === 'OHDSI Atlas' && (
-              isEnabled('legacyDataDictionary')
+              isEnabled('legacyVADCDataDictionary')
                 ? <AtlasLegacyDataDictionaryButton />
                 : <AtlasDataDictionaryButton />
             )}

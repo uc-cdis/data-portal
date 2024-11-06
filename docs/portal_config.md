@@ -204,7 +204,7 @@ Below is an example, with inline comments describing what each JSON block config
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
-    "legacyDataDictionary": false, // optional. Set to "true" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary is displayed the user navigates to /analysis/AtlasDataDictionary, and when the user clicks on the data dictionary button in when in the Atlas app page.
+    "legacyVADCDataDictionary": false, // optional, VADC specific. Set to "true" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary is displayed the user navigates to /analysis/AtlasDataDictionary, and when the user clicks on the data dictionary button in when in the Atlas app page.
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
