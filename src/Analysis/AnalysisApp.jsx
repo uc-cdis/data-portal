@@ -18,6 +18,7 @@ import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamP
 import './AnalysisApp.css';
 import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 import AtlasLegacyDataDictionaryButton from './AtlasDataDictionary/AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
+import isEnabled from '../helpers/featureFlags';
 
 const queryClient = new QueryClient();
 
@@ -140,7 +141,7 @@ class AnalysisApp extends React.Component {
       return (
         <div className='analysis-app_flex_row'>
           <AtlasDataDictionaryContainer
-            dataDictionaryVersion={analysisApps[app].dataDictionaryVersion}
+            useLegacyDataDictionary={isEnabled('legacyDataDictionary')}
           />
         </div>
       );
@@ -169,9 +170,9 @@ class AnalysisApp extends React.Component {
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
             {this.state.app.title === 'OHDSI Atlas' && (
-              analysisApps[app].dataDictionaryVersion === 'new'
-                ? <AtlasDataDictionaryButton />
-                : <AtlasLegacyDataDictionaryButton />
+              isEnabled('legacyDataDictionary')
+                ? <AtlasLegacyDataDictionaryButton />
+                : <AtlasDataDictionaryButton />
             )}
             <iframe
               className='analysis-app__iframe'

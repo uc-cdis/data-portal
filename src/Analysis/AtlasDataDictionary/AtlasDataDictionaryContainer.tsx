@@ -4,10 +4,10 @@ import AtlasDataDictionaryLoading from './AtlasDataDictionaryTable/AtlasDataDict
 import AtlasLegacyDataDictionaryButton from './AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 import './AtlasDataDictionary.css';
 
-const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
-  if (!dataDictionaryVersion || !dataDictionaryVersion.includes('new')) {
+const AtlasDataDictionaryContainer = ({ useLegacyDataDictionary }) => {
+  if (useLegacyDataDictionary) {
     // Default legacy component: render a div with AtlasLegacyDataDictionaryButton when
-    // no dataDictionaryVersion is set or it does not include 'new':
+    // useLegacyDataDictionary is set to true:
     return (
       <div style={{ width: '100%' }}><AtlasLegacyDataDictionaryButton /></div>
     );
@@ -20,11 +20,11 @@ const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
 };
 
 AtlasDataDictionaryContainer.propTypes = {
-  dataDictionaryVersion: PropTypes.string,
+  useLegacyDataDictionary: PropTypes.bool,
 };
 
 AtlasDataDictionaryContainer.defaultProps = {
-  dataDictionaryVersion: null,
+  useLegacyDataDictionary: false,
 };
 
 export default AtlasDataDictionaryContainer;
