@@ -466,6 +466,7 @@ Below is an example, with inline comments describing what each JSON block config
           "enableDownloadManifest": true, // enables a button which allows user to download a manifest file for gen3 client
           "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "enableFillRequestForm" : true, // enables a button which opens a new form to request access to a resoruce
+          "enableCheckboxWithoutLogin" : true, // allow checkboxes in discovery portal without logging in
           "fillRequestFormDisplayText": "Request Information", // text to be displayed on fill the request form
           "fillRequestFormCheckField" : "_medical_sample_id", // field defiend in MDS which is related to checkbox, this fiels is use to validate if the entry in discovery portal have unique ids
           "fillRequestFormURL" : "https://URL/form", // URL to the new form which would be used to fill the form

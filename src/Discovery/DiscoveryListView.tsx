@@ -74,8 +74,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           }
 
           // Enable checkbox if enableFillRequestForm is true, allowing access without login
-          const enableFillRequestForm = props.config.features.exportToWorkspace?.enableFillRequestForm;
-          if (enableFillRequestForm) {
+          const enableCheckboxWithoutLogin = props.config.features.exportToWorkspace?.enableCheckboxWithoutLogin;
+          if (enableCheckboxWithoutLogin) {
             disabled = false;
           }
 
