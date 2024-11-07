@@ -77,15 +77,12 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
             disabled = false;
             const fillRequestFormCheckField = props.config.features.exportToWorkspace?.fillRequestFormCheckField;
             const fieldValue = fillRequestFormCheckField ? record[fillRequestFormCheckField] : null;
-          
+
             // Disable checkbox if the specified field is empty or missing in the record
             if (!fieldValue || fieldValue.length === 0) {
               disabled = true;
             }
           }
-          
-
-
 
           // disable checkbox if there's no manifest or git external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
