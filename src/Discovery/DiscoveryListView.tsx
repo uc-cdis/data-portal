@@ -72,16 +72,20 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           if (props.config.features.authorization.enabled) {
             disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
           }
-          const fillRequestFormCheckField = props.config.features.exportToWorkspace?.fillRequestFormCheckField;
-          const enableFillRequestForm = props.config.features.exportToWorkspace?.enableFillRequestForm;
 
-          if (!enableFillRequestForm || (!record[fillRequestFormCheckField]?.length)) {
-            disabled = true;
-          } else {
+          // Enable checkbox if enableFillRequestForm is true, allowing access without login
+          const enableFillRequestForm = props.config.features.exportToWorkspace?.enableFillRequestForm;
+          if (enableFillRequestForm) {
             disabled = false;
           }
 
-          // disable checkbox if there's no manifest or egit axternal file metadata (if metadata handoff is enabled) found for this study
+          // If fillRequestFormCheckField is undefined or empty in record, disable checkbox
+          const fillRequestFormCheckField = props.config.features.exportToWorkspace?.fillRequestFormCheckField;
+          if (fillRequestFormCheckField && (!record[fillRequestFormCheckField] || record[fillRequestFormCheckField].length === 0)) {
+            disabled = true;
+          }
+
+          // disable checkbox if there's no manifest or git external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
           const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
