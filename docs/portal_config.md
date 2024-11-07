@@ -467,6 +467,7 @@ Below is an example, with inline comments describing what each JSON block config
           "downloadManifestButtonText": "Download Manifest", // text to be displayed on the download manifest button
           "enableFillRequestForm" : true, // enables a button which opens a new form to request access to a resoruce
           "fillRequestFormDisplayText": "Request Information", // text to be displayed on fill the request form
+          "fillRequestFormCheckField" : "_medical_sample_id", // field defiend in MDS which is related to checkbox, this fiels is use to validate if the entry in discovery portal have unique ids
           "fillRequestFormURL" : "https://URL/form", // URL to the new form which would be used to fill the form
           "externalWebsiteName" : "", // Name of external website needed, this variable at development is used for showing an external website in a popover for chicagoland pandemic response commons, in commons this will be loaded only if enableFillRequestForm is true
           "externalWebsiteURL" : "", // URL of external website needed, this variable is used with externalWebsiteName be loaded only if enableFillRequestForm is true

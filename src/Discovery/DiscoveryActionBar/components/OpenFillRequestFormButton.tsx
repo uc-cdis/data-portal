@@ -44,7 +44,7 @@ const OpenFillRequestFormButton = (props) => {
     >
       <Button
         onClick={() => {
-          const combinedIds = selectedResources.map((item) => item._medical_sample_id).join(',');
+          const combinedIds = selectedResources.map((item) => item[props.config.features.exportToWorkspace.fillRequestFormCheckField]).join(',');
           const url = `${fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
           window.open(url, '_blank');
         }}
@@ -55,6 +55,7 @@ const OpenFillRequestFormButton = (props) => {
       >
         {`Click Here to ${fillRequestFormDisplayText || 'Request Information'}`}
       </Button>
+
     </Popover>
   );
 };

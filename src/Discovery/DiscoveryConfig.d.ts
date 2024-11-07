@@ -16,6 +16,7 @@ export interface DiscoveryConfig {
             variableMetadataFieldName?: string
             enableDownloadVariableMetadata?: boolean
             enableFillRequestForm?: boolean
+            fillRequestFormCheckField?: string
             fillRequestFormDisplayText?: string
             fillRequestFormURL?: string
             externalWebsiteName?: string

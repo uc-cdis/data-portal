@@ -72,10 +72,17 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           if (props.config.features.authorization.enabled) {
             disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
           }
-          // if enableFillRequestForm is true, we allow users to check the checkbox without login
-          if (props.config.features.exportToWorkspace?.enableFillRequestForm
-            && props.config.features.exportToWorkspace.enableFillRequestForm === true) {
+          // If enableFillRequestForm is true, allow users to check the checkbox without login
+          if (props.config.features.exportToWorkspace?.enableFillRequestForm) {
             disabled = false;
+          }
+          // Check if the fillRequestFormCheckField is empty, and disable the checkbox if true
+          const fillRequestFormCheckField = props.config.features.exportToWorkspace?.fillRequestFormCheckField;
+          if (fillRequestFormCheckField) {
+            const fieldValue = record[fillRequestFormCheckField];
+            if (!fieldValue || fieldValue.length === 0) {
+              disabled = true;
+            }
           }
           // disable checkbox if there's no manifest or external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
