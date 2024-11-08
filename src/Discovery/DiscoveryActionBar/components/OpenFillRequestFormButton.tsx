@@ -4,7 +4,7 @@ import { Popover, Button } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const OpenFillRequestFormButton = (props) => {
-  const { config, discovery } = props;
+  const { config, discovery } = props.props;
 
   // Check if Fill Request Form button should be disabled based on configuration
   const isFillRequestFormDisabled = !config?.features?.exportToWorkspace?.enableFillRequestForm
@@ -44,7 +44,7 @@ const OpenFillRequestFormButton = (props) => {
     >
       <Button
         onClick={() => {
-          const combinedIds = selectedResources.map((item) => item[props.config.features.exportToWorkspace.fillRequestFormCheckField]).join(',');
+          const combinedIds = selectedResources.map((item) => item[props.props.config.features.exportToWorkspace.fillRequestFormCheckField]).join(',');
           const url = `${fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
           window.open(url, '_blank');
         }}
