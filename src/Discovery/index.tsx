@@ -99,7 +99,8 @@ const DiscoveryWithMDSBackend: React.FC<{
           : numberOfStudiesForAllStudiesBatch);
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
-        loadStudiesParameters = [props.config?.features?.guidType, 10, false];
+        loadStudiesParameters = (numberOfBatchesLoaded === 1
+          ? [props.config?.features?.guidType, 10, false] : [props.config?.features?.guidType, 2000, true]);
       }
       const rawStudiesRegistered = await loadStudiesFunction(
         ...loadStudiesParameters,
