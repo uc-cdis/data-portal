@@ -21,7 +21,7 @@ ARG BASENAME
 
 RUN mkdir -p /data-portal
 COPY . /data-portal
-RUN cp /data-portal/nginx.conf /etc/nginx/nginx.conf \
+RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
     && chown -R gen3: /data-portal
 
 WORKDIR /data-portal
