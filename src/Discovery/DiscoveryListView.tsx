@@ -59,7 +59,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
             title={`Click to select item for ${
               [
                 props.config.features.exportToWorkspace.enableFillRequestForm
-                  ? props.config.features.exportToWorkspace.fillRequestFormDisplayText.toLowerCase()
+                  ? props.config.features.exportToWorkspace.fillRequestFormDisplayText?.toLowerCase()
                   : '',
                 (props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip)
                   ? 'download'
