@@ -11,24 +11,7 @@
   border-color: #2466AC;
 }
 
-.gwas-modal .ant-btn-primary:not([disabled]) {
+.euler-diagram-controls  .ant-btn-primary:not([disabled]):focus {
   background: #194C90;
   border-color: #194C90;
-}
-
-.gwas-modal .ant-btn-primary:not([disabled]):hover,
-.gwas-modal .ant-btn-primary:not([disabled]):focus {
-  background: #2466AC;
-  border-color: #2466AC;
-}
-
-.gwas-modal .ant-btn-default {
-  color: #194C90;
-  border-color: #194C90;
-}
-
-.gwas-modal .ant-btn-default:hover,
-.gwas-modal .ant-btn-default:focus {
-  color: #2466AC;
-  border-color: #2466AC;
 }

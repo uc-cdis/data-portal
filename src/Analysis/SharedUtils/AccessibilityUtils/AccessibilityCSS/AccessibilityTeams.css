@@ -1,12 +1,1 @@
 /* VADC Apps - Team Selection */
-
-.team-project-modal .ant-btn-primary:not([disabled]) {
-  background: #194C90;
-  border-color: #194C90;
-}
-
-.team-project-modal .ant-btn-primary:not([disabled]):hover,
-.team-project-modal .ant-btn-primary:not([disabled]):focus {
-  background: #2466AC;
-  border-color: #2466AC;
-}
