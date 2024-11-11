@@ -1,21 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import ProtectedContent from '../../Login/ProtectedContent';
 import AtlasDataDictionaryLoading from './AtlasDataDictionaryTable/AtlasDataDictionaryLoading';
-import AtlasDataDictionaryButton from './AtlasDataDictionaryButton/AtlasDataDictionaryButton';
+import AtlasLegacyDataDictionaryButton from './AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 import './AtlasDataDictionary.css';
 
-const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const match = useRouteMatch();
-
-  if (!dataDictionaryVersion || !dataDictionaryVersion.includes('new')) {
-    // Default legacy component: render a div with AtlasDataDictionaryButton when
-    // no dataDictionaryVersion is set or it does not include 'new':
+const AtlasDataDictionaryContainer = ({ useLegacyDataDictionary }) => {
+  if (useLegacyDataDictionary) {
+    // Default legacy component: render a div with AtlasLegacyDataDictionaryButton when
+    // useLegacyDataDictionary is set to true:
     return (
-      <div style={{ width: '100%' }}><AtlasDataDictionaryButton /></div>
+      <div style={{ width: '100%' }}><AtlasLegacyDataDictionaryButton /></div>
     );
   }
   return (
@@ -26,11 +20,11 @@ const AtlasDataDictionaryContainer = ({ dataDictionaryVersion }) => {
 };
 
 AtlasDataDictionaryContainer.propTypes = {
-  dataDictionaryVersion: PropTypes.string,
+  useLegacyDataDictionary: PropTypes.bool,
 };
 
 AtlasDataDictionaryContainer.defaultProps = {
-  dataDictionaryVersion: null,
+  useLegacyDataDictionary: false,
 };
 
 export default AtlasDataDictionaryContainer;

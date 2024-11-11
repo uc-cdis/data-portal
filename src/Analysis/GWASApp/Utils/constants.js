@@ -19,7 +19,7 @@ export const GWASAppSteps = [
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
-      'None of the persons in the (remaining) population of your selected cohorts overlap with the study population',
+      'One or more groups have no overlap with the (remaining) population of any of the other groups',
     messageType: 'warning',
   },
   NO_BINS_ERROR: {

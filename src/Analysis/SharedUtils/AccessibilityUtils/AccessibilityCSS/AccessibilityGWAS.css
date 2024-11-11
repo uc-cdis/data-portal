@@ -9,7 +9,6 @@
 .GWASUI-navBtn:not([disabled]):focus {
   background: #2466AC;
   border-color: #2466AC;
-}
 
 .euler-diagram-controls  .ant-btn-primary:not([disabled]):focus {
   background: #194C90;
