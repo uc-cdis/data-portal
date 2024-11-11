@@ -86,11 +86,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
   useEffect(() => {
     // Update the numberOfBatchesLoaded to enable calling of different batch sizes with different parameters
-    if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) {
-      setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
-    } else {
-      return;
-    }
+    if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
 
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
@@ -98,13 +94,12 @@ const DiscoveryWithMDSBackend: React.FC<{
       let loadStudiesParameters: any[] = [];
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
-        loadStudiesParameters.push(numberOfBatchesLoaded === 0
+        loadStudiesParameters.push(numberOfBatchesLoaded === 1
           ? numberOfStudiesForSmallerBatch
           : numberOfStudiesForAllStudiesBatch);
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
-        loadStudiesParameters = (numberOfBatchesLoaded === 0
-          ? [props.config?.features?.guidType, 10, false] : [props.config?.features?.guidType, 2000, true]);
+        loadStudiesParameters = [props.config?.features?.guidType, 10, false];
       }
       const rawStudiesRegistered = await loadStudiesFunction(
         ...loadStudiesParameters,
@@ -114,7 +109,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (isEnabled('studyRegistration')) {
         // Load fewer raw studies if on the first studies batch
         // Otherwise load them all
-        rawStudiesUnregistered = numberOfBatchesLoaded === 0
+        rawStudiesUnregistered = numberOfBatchesLoaded === 1
           ? (rawStudiesUnregistered = await loadStudiesFromMDS(
             'unregistered_discovery_metadata',
             numberOfStudiesForSmallerBatch,
