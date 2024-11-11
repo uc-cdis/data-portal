@@ -24,6 +24,13 @@ COPY . /data-portal
 RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
     && chown -R gen3: /data-portal
 
+# In standard prod these will be overwritten by volume mounts
+# Provided here for ease of use in development and
+# non-standard deployment environments
+
+RUN mkdir /mnt/ssl \
+    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
+
 WORKDIR /data-portal
 USER gen3
 RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
@@ -36,12 +43,5 @@ RUN npm config set unsafe-perm=true \
     && npm run params
     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
 RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production npx webpack build
-
-# In standard prod these will be overwritten by volume mounts
-# Provided here for ease of use in development and
-# non-standard deployment environments
-
-RUN mkdir /mnt/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
 
 CMD [ "bash", "./dockerStart.sh" ]
