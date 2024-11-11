@@ -44,7 +44,7 @@ const OpenFillRequestFormButton = (props) => {
     >
       <Button
         onClick={() => {
-          const combinedIds = selectedResources.map((item) => item[props.props.config.features.exportToWorkspace.fillRequestFormCheckField]).join(',');
+          const combinedIds = selectedResources.map((item) => item[config.features.exportToWorkspace.fillRequestFormCheckField]).join(',');
           const url = `${fillRequestFormURL}?query=${encodeURIComponent(combinedIds)}`;
           window.open(url, '_blank');
         }}
