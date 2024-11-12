@@ -14,6 +14,7 @@ import { BATCH_EXPORT_JOB_PREFIX, JOB_POLLING_INTERVAL } from './DiscoveryAction
 import DownloadZipButton from './components/DownloadZipButton';
 import ExportToWorkspaceButton from './components/ExportToWorkspaceButton';
 import DownloadManifestButton from './components/DownloadManifestButton';
+import OpenFillRequestFormButton from './components/OpenFillRequestFormButton';
 
 /* eslint react/prop-types: 0 */
 interface Props {
@@ -192,6 +193,9 @@ const DiscoveryActionBar = (props: Props) => {
             setDownloadStatus={setDownloadStatus}
             history={history}
             location={location}
+          />
+          <OpenFillRequestFormButton
+            props={props}
           />
         </Space>
       </div>
