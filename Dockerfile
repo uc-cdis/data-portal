@@ -31,7 +31,7 @@ RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
 
 RUN mkdir /mnt/ssl \
     && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org' \
-    && chomd 755 /mnt/ssl/nginx.crt \
+    && chmod 755 /mnt/ssl/nginx.crt \
     && chmod 755 /mnt/ssl/nginx.key
 
 WORKDIR /data-portal
