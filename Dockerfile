@@ -22,6 +22,7 @@ ARG BASENAME
 RUN mkdir -p /data-portal
 COPY . /data-portal
 RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
+    && chmod 755 /etc/nginx/conf.d/nginx.conf \
     && chown -R gen3: /data-portal
 
 # In standard prod these will be overwritten by volume mounts
@@ -29,7 +30,9 @@ RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
 # non-standard deployment environments
 
 RUN mkdir /mnt/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
+    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org' \
+    && chomd 755 /mnt/ssl/nginx.crt \
+    && chmod 755 /mnt/ssl/nginx.key
 
 WORKDIR /data-portal
 USER gen3
