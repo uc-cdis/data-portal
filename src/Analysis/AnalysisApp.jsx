@@ -15,10 +15,11 @@ import GWASContainer from './GWASApp/GWASContainer';
 import GWASResultsContainer from './GWASResults/GWASResultsContainer';
 import CheckForTeamProjectApplication from './SharedUtils/TeamProject/Utils/CheckForTeamProjectApplication';
 import TeamProjectHeader from './SharedUtils/TeamProject/TeamProjectHeader/TeamProjectHeader';
-import './AnalysisApp.css';
 import AtlasDataDictionaryButton from './AtlasDataDictionary/AtlasDataDictionaryButton/AtlasDataDictionaryButton';
 import AtlasLegacyDataDictionaryButton from './AtlasDataDictionary/AtlasLegacyDataDictionaryButton/AtlasLegacyDataDictionaryButton';
 import isEnabled from '../helpers/featureFlags';
+import './AnalysisApp.css';
+import './SharedUtils/AccessibilityUtils/AccessibilityStyles/Accessibility.less';
 
 const queryClient = new QueryClient();
 
