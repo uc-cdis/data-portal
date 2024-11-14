@@ -1,11 +1,26 @@
 import SetDOMAttribute from './SetDOMAttribute';
 
+const delayToAllowDOMRendering = 500;
 const addAriaLabelsToCohortDefinationsTable = () => {
-  console.log(Math.random());
   SetDOMAttribute(
-    '.GWASUI-table1 input.ant-radio-input',
+    '.GWASUI-mainTable input.ant-radio-input',
     'aria-label',
     'Select row for study population'
   );
 };
-export { addAriaLabelsToCohortDefinationsTable };
+
+const addAriaLabelsToCovariatesTable = () => {
+  console.log('called');
+  setTimeout(() => {
+    SetDOMAttribute(
+      '.continuous-covariates-table input.ant-radio-input',
+      'aria-label',
+      'Select row for outcome phenotype'
+    );
+  }, delayToAllowDOMRendering);
+};
+
+export {
+  addAriaLabelsToCohortDefinationsTable,
+  addAriaLabelsToCovariatesTable,
+};

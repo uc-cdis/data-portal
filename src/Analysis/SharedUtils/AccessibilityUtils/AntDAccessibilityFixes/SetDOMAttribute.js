@@ -3,15 +3,18 @@
  * example: useSetDOMAttribute('.ant-radio-input',' aria-label', 'radio button')
  */
 
+const delayToAllowDOMRendering = 500;
 const SetDOMAttribute = (selector, attribute, value) => {
-  const elements = document.querySelectorAll(selector);
-  elements?.forEach((element) => {
-    if (element) {
-      element.setAttribute(attribute, value);
-    } else {
-      console.error('Unable to find selector in setDOMAttribute: ', selector);
-    }
-  });
+  setTimeout(() => {
+    const elements = document.querySelectorAll(selector);
+    elements?.forEach((element) => {
+      if (element) {
+        element.setAttribute(attribute, value);
+      } else {
+        console.error('Unable to find selector in setDOMAttribute: ', selector);
+      }
+    });
+  }, delayToAllowDOMRendering);
 };
 
 export default SetDOMAttribute;

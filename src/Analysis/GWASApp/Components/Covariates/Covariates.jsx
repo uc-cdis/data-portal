@@ -7,6 +7,7 @@ import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../Utils/formHooks';
 import { useSourceContext } from '../../Utils/Source';
 import SearchBar from '../SearchBar/SearchBar';
+import { addAriaLabelsToCovariatesTable } from '../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes/index';
 
 const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const { source } = useSourceContext();
@@ -14,7 +15,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig,
+    queryConfig
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,11 +27,13 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const filteredCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name',
+    'concept_name'
   );
 
   // remove already selected Covariates from list
-  const displayedCovariates = filteredCovariates.filter((x) => !submittedCovariateIds.includes(x.concept_id));
+  const displayedCovariates = filteredCovariates.filter(
+    (x) => !submittedCovariateIds.includes(x.concept_id)
+  );
 
   const covariateSelection = () => ({
     type: 'radio',
@@ -76,6 +79,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   }
 
   if (covariates?.status === 'success') {
+    addAriaLabelsToCovariatesTable();
     return (
       <div data-tour='select-concept'>
         <SearchBar
@@ -85,6 +89,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
         />
         <Table
           className='GWASUI-table1'
+          onChange={addAriaLabelsToCovariatesTable}
           data-tour='concept-table'
           rowKey='concept_id'
           size='middle'
