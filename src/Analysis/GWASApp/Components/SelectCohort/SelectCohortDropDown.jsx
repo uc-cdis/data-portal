@@ -23,7 +23,6 @@ const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
     );
     handleCohortSelect(selectedCohort);
   };
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const handleDropdownVisibleChange = (open) => {
     setIsDropdownVisible(open);
     if (open) {

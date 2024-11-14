@@ -116,6 +116,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
 Covariates.propTypes = {
   selected: PropTypes.object,
   handleSelect: PropTypes.func.isRequired,
+  submittedCovariateIds: PropTypes.object.isRequired,
 };
 
 Covariates.defaultProps = {
