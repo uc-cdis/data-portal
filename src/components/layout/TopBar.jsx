@@ -36,8 +36,8 @@ class TopBar extends Component {
   render() {
     return (
       <div className='top-bar'>
-        <header className='top-bar__header'>
-          <nav className='top-bar__nav'>
+        <div className='top-bar__header'>
+          <nav className='top-bar__nav' aria-label='Top'>
             <a
               href='#main-content'
               className='top-bar__link g3-ring-on-focus top-bar__link_skip'
@@ -206,7 +206,7 @@ class TopBar extends Component {
                 key={banner.id}
               />
             ))}
-        </header>
+        </div>
       </div>
     );
   }
