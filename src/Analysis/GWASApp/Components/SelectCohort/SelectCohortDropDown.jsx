@@ -12,14 +12,14 @@ const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
   const cohorts = useQuery(
     ['cohortdefinitions', source, selectedTeamProject],
     () => fetchCohortDefinitions(source, selectedTeamProject),
-    queryConfig
+    queryConfig,
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
 
   const onChange = (selectedCohortDefinitionId) => {
     // find cohort object based on id:
     const selectedCohort = fetchedCohorts.find(
-      (item) => item.cohort_definition_id === selectedCohortDefinitionId
+      (item) => item.cohort_definition_id === selectedCohortDefinitionId,
     );
     handleCohortSelect(selectedCohort);
   };
@@ -53,9 +53,7 @@ const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
       placeholder='Select a cohort'
       optionFilterProp='children'
       onChange={onChange}
-      filterOption={(input, option) =>
-        (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())
-      }
+      filterOption={(input, option) => (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())}
       options={fetchedCohorts}
       fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
     />
