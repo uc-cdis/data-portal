@@ -101,7 +101,7 @@ class Login extends React.Component {
       if (location.state && location.state.from) {
         next = location.state.from;
       }
-      if (!next) {
+      if (!next || next === '/') {
         return undefined;
       }
       // Lookup next to get actuale page name, if item is not in main navigation display default messaging
