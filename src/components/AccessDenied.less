@@ -1,0 +1,44 @@
+.access-denied {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+}
+@media screen and (max-width: 820px) {
+  .access-denied {
+    justify-content: center;
+  }
+}
+
+.access-denied__side-box {
+  width: 200px;
+  min-height: ~"calc(100vh - 221px)";
+  background-size: 200px;
+}
+
+.access-denied__central-content {
+  text-align: center;
+  flex-basis: 50%;
+  color: #000000;
+  align-self: center;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.logoutBtn {
+  margin: 40px;
+}
+
+@media screen and (max-width: 820px) {
+  .access-denied__central-content {
+    padding: 40px 10px;
+  }
+  .access-denied__side-box {
+    display: none;
+  }
+}
+
+.h1_heading {
+  text-transform: uppercase;
+}
