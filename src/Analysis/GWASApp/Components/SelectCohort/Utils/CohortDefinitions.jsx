@@ -6,6 +6,7 @@ import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
+import { addAriaLabelsToCohortDefinationsTable } from '../../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes/index';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -19,7 +20,7 @@ const CohortDefinitions = ({
     ['cohortdefinitions', source, selectedTeamProject],
     () => fetchCohortDefinitions(source, selectedTeamProject),
     // only call this once the source is not undefined
-    { enabled: source !== undefined, ...queryConfig },
+    { enabled: source !== undefined, ...queryConfig }
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
@@ -46,34 +47,41 @@ const CohortDefinitions = ({
       key: 'size',
     },
   ];
-  if (cohorts?.status === 'error') return <React.Fragment>Error getting data for table</React.Fragment>;
+  if (cohorts?.status === 'error')
+    return <React.Fragment>Error getting data for table</React.Fragment>;
 
-  return cohorts?.status === 'success' ? (
-    <Table
-      className='GWASUI-table1'
-      rowKey='cohort_definition_id'
-      size='middle'
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20', '50', '100', '500'],
-      }}
-      onRow={(selectedRow) => ({
-        onClick: () => {
-          handleCohortSelect(selectedRow);
-        },
-      })}
-      rowSelection={cohortSelection(selectedCohort)}
-      columns={cohortTableConfig}
-      dataSource={displayedCohorts}
-    />
-  ) : (
-    <React.Fragment>
-      <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
-        <Spin />
-      </div>
-    </React.Fragment>
-  );
+  if (cohorts?.status === 'success') {
+    addAriaLabelsToCohortDefinationsTable();
+    return (
+      <Table
+        className='GWASUI-table1'
+        onChange={addAriaLabelsToCohortDefinationsTable}
+        rowKey='cohort_definition_id'
+        size='middle'
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50', '100', '500'],
+        }}
+        onRow={(selectedRow) => ({
+          onClick: () => {
+            handleCohortSelect(selectedRow);
+          },
+        })}
+        rowSelection={cohortSelection(selectedCohort)}
+        columns={cohortTableConfig}
+        dataSource={displayedCohorts}
+      />
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+          <Spin />
+        </div>
+      </React.Fragment>
+    );
+  }
 };
 
 CohortDefinitions.propTypes = {
