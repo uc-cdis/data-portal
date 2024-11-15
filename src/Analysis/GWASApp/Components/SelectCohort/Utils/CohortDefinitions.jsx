@@ -6,6 +6,7 @@ import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
+import { Radio } from 'antd';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -33,6 +34,13 @@ const CohortDefinitions = ({
     onChange: (_, selectedRows) => {
       handleCohortSelect(selectedRows[0]);
     },
+    renderCell: (checked, record, index) => (
+      <Radio
+        checked={checked}
+        value={record.cohort_definition_id}
+        aria-label={`Select cohort ${record.cohort_name || record.cohort_definition_id}`}
+      />
+    ),
   });
   const cohortTableConfig = [
     {
@@ -62,6 +70,7 @@ const CohortDefinitions = ({
         onClick: () => {
           handleCohortSelect(selectedRow);
         },
+        "aria-label": "test456_row",
       })}
       rowSelection={cohortSelection(selectedCohort)}
       columns={cohortTableConfig}
