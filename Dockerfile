@@ -14,7 +14,10 @@ RUN yum install nginx -y && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
     mkdir -p /var/lib/nginx/tmp/client_body && \
-    chown -R gen3:gen3 /var/lib/nginx/
+    chown -R gen3:gen3 /var/lib/nginx/ && \
+    chown -R gen3:gen3 /var/cache/nginx \
+    && touch /var/run/nginx.pid \
+    && chown -R gen3:gen3 /var/run/nginx.pid
 
 ARG APP=dev
 ARG BASENAME
@@ -22,8 +25,8 @@ ARG BASENAME
 RUN mkdir -p /data-portal
 COPY . /data-portal
 RUN cp /data-portal/nginx.conf /etc/nginx/conf.d/nginx.conf \
-    && chmod 755 /etc/nginx/conf.d/nginx.conf \
-    && chown -R gen3: /data-portal
+    && chown -R gen3:gen3 /etc/nginx/conf.d \
+    && chown -R gen3:gen3 /data-portal
 
 # In standard prod these will be overwritten by volume mounts
 # Provided here for ease of use in development and
