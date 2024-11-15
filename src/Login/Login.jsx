@@ -96,6 +96,21 @@ class Login extends React.Component {
     }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
 
+    const getLocationForText = (location) => {
+      let next = location.from;
+      if (location.state && location.state.from) {
+        next = location.state.from;
+      }
+      if (!next || next === '/') {
+        return undefined;
+      }
+      // Lookup next to get actuale page name, if item is not in main navigation display default messaging
+      const nextItem = components.navigation.items.filter((item) => item.link === next)[0];
+
+      return nextItem ? nextItem.name : 'Restricted';
+    };
+    const fromLocationText = getLocationForText(location);
+
     let loginComponent = (
       <React.Fragment key='login-component'>
         <div className='login-page__entries'>
@@ -204,11 +219,20 @@ class Login extends React.Component {
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
           </div>
-          <div className='high-light login-page__sub-title'>
-            {this.props.data.subTitle}
-          </div>
-          <hr className='login-page__separator' />
-          <div className='body-typo'>{this.props.data.text}</div>
+          {fromLocationText ? (
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              Access {fromLocationText}
+            </div>
+            <div className='body-typo'>The {fromLocationText === 'Restricted' ? 'page' : fromLocationText} requires access. Please login using one of the options blow to continue.</div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              {this.props.data.subTitle}
+                            </div>
+            <hr className='login-page__separator' />
+            <div className='body-typo'>{this.props.data.text}</div>
+            </React.Fragment>
+          )}
           {loginComponent}
           <div>
             {this.props.data.contact}
