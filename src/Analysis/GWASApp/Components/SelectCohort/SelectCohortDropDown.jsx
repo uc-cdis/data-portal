@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Select, Spin } from 'antd';
@@ -23,14 +23,6 @@ const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
     );
     handleCohortSelect(selectedCohort);
   };
-  const handleDropdownVisibleChange = (open) => {
-    setIsDropdownVisible(open);
-    if (open) {
-      alert('open');
-    } else {
-      alert('closed');
-    }
-  };
 
   if (cohorts?.status === 'loading') {
     return (
@@ -48,7 +40,6 @@ const SelectCohortDropDown = ({ handleCohortSelect, selectedTeamProject }) => {
   return (
     <Select
       showSearch
-      onDropdownVisibleChange={handleDropdownVisibleChange}
       className='select-cohort'
       placeholder='Select a cohort'
       optionFilterProp='children'
