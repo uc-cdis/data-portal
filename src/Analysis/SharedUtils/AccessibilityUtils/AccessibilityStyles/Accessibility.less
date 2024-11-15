@@ -1,0 +1,57 @@
+/* App-specific styles */
+
+@import "AccessibilityGWAS.less";
+
+/* Global styles */
+
+:root {
+  --focus-outline-color: #007bff; /* Bright Blue */
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Rules for all VADC Apps */
+
+.analysis-app-wrapper {
+  .ant-modal-content button:focus {
+    outline: 1px dashed var(--focus-outline-color);
+    outline-offset: 1px;
+  }
+
+  .ant-btn-default {
+    color: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-primary:not([disabled]) {
+    background: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-secondary {
+    color: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-default:hover,
+  .ant-btn-default:focus {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-btn-primary:not([disabled]):hover,
+  .ant-btn-primary:not([disabled]):focus {
+    background: #2466AC;
+    border-color: #2466AC;
+  }
+}
