@@ -59,7 +59,7 @@ const UserProfile = ({
       {
         userProfile.jtis !== undefined && userProfile.jtis !== []
         && (
-          <ul className='user-profile__key-pair-table'>
+          <div className='user-profile__key-pair-table'>
             {
               popups.deleteTokenPopup === true
             && (
@@ -153,7 +153,7 @@ const UserProfile = ({
               />
             )
             }
-          </ul>
+          </div>
         )
       }
       {
