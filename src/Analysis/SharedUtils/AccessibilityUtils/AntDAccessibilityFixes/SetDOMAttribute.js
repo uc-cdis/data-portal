@@ -1,6 +1,6 @@
 /*
  * Used to update DOM attributes after component mounts
- * example: useSetDOMAttribute('.ant-radio-input',' aria-label', 'radio button')
+ * example: useSetDOMAttribute('.ant-radio-input','aria-label', 'Select row for study population')
  */
 
 const delayToAllowDOMRendering = 500;
@@ -11,7 +11,9 @@ const SetDOMAttribute = (selector, attribute, value) => {
       if (element) {
         element.setAttribute(attribute, value);
       } else {
+        /* eslint-disable no-console */
         console.error('Unable to find selector in setDOMAttribute: ', selector);
+        /* eslint-enable no-console */
       }
     });
   }, delayToAllowDOMRendering);
