@@ -15,6 +15,7 @@ RUN yum install nginx -y && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
     mkdir -p /var/lib/nginx/tmp/client_body && \
     chown -R gen3:gen3 /var/lib/nginx/ && \
+    mkdir -p /var/cache/nginx && \
     chown -R gen3:gen3 /var/cache/nginx \
     && touch /var/run/nginx.pid \
     && chown -R gen3:gen3 /var/run/nginx.pid
