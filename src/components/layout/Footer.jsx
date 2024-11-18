@@ -16,7 +16,7 @@ class Footer extends Component {
     }
     return (
       <footer className='footer-container'>
-        <nav className='footer__nav'>
+        <nav className='footer__nav' aria-label='Footer'>
           <div className='footer__version-area'>
             {
               [{ name: 'Dictionary', version: this.props.dictionaryVersion },
