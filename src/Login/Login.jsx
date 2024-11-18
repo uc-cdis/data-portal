@@ -216,9 +216,9 @@ class Login extends React.Component {
             : null
         }
         <div className='login-page__central-content'>
-          <div className='h1-typo login-page__title'>
+          <h1 className='h1-typo login-page__title'>
             {this.props.data.title}
-          </div>
+          </h1>
           {fromLocationText ? (
             <React.Fragment><div className='high-light login-page__sub-title'>
               Access {fromLocationText}
