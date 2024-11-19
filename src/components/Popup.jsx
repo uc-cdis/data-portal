@@ -64,7 +64,7 @@ class Popup extends React.Component {
               )
             }
           </div>
-          <div className='popup__message' id='popup__message' aria-labelledby='popup__message'>
+          <div className='popup__message' id='popup__message'>
             { this.props.message && <div className='high-light'>{this.props.message.map((text, i) => <p key={i}>{text}</p>)}</div> }
             {
               this.props.lines.length > 0
@@ -127,6 +127,7 @@ class Popup extends React.Component {
                       enabled={(btn.enabled !== undefined) ? btn.enabled : true}
                       buttonType='primary'
                       value={btn.value}
+                      aria-labelledby='popup__message'
                     />
                   ) : (
                     <Button
@@ -137,6 +138,7 @@ class Popup extends React.Component {
                       buttonType='primary'
                       rightIcon={btn.icon}
                       value={btn.value}
+                      aria-labelledby='popup__message'
                     />
                   ),
                 ])
