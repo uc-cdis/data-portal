@@ -709,9 +709,9 @@ class Workspace extends React.Component {
                 <div>
                   {workspacePageTitle
                     ? (
-                      <h2 className='workspace__title'>
+                      <h1 className='workspace__title'>
                         {parse(workspacePageTitle)}
-                      </h2>
+                      </h1>
                     )
                     : null}
                   {workspacePageDescription
