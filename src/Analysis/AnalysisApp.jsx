@@ -262,7 +262,7 @@ class AnalysisApp extends React.Component {
           <div className='analysis-app'>
             <Row>
               <Col flex='1 0 auto'>
-                <h2>{app.title}</h2>
+                <h1>{app.title}</h1>
               </Col>
               {CheckForTeamProjectApplication(analysisApps) && (
                 <Col flex='1 0 auto'>
