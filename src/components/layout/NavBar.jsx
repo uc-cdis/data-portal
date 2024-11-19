@@ -93,8 +93,8 @@ class NavBar extends Component {
 
     return (
       <div className='nav-bar'>
-        <header className='nav-bar__header'>
-          <nav className='nav-bar__nav--info'>
+        <nav className='nav-bar__header' aria-label='Main'>
+          <div className='nav-bar__nav--info'>
             <div className='nav-bar__logo g3-ring-on-focus'>
               {homepageHref
                 ? (
@@ -142,7 +142,7 @@ class NavBar extends Component {
                 </div>
               )
             }
-          </nav>
+          </div>
           <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
             <div
               className='nav-bar__menu'
@@ -160,21 +160,21 @@ class NavBar extends Component {
             </div>
             {
               this.state.menuOpen ? (
-                <nav className='nav-bar__nav--items'>
+                <div className='nav-bar__nav--items'>
                   { navItems }
-                </nav>
+                </div>
               ) : null
             }
           </MediaQuery>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-            <nav className='nav-bar__nav--items'>
+            <div className='nav-bar__nav--items'>
               { navItems }
-            </nav>
+            </div>
             { this.state.tooltipDetails.content !== ''
               ? <NavBarTooltip {...this.state.tooltipDetails} />
               : null }
           </MediaQuery>
-        </header>
+        </nav>
       </div>
     );
   }
