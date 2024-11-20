@@ -6,6 +6,7 @@ import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
+import { addAriaLabelsToCohortDefinationsTable } from '../../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes/index';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -48,26 +49,31 @@ const CohortDefinitions = ({
   ];
   if (cohorts?.status === 'error') return <React.Fragment>Error getting data for table</React.Fragment>;
 
-  return cohorts?.status === 'success' ? (
-    <Table
-      className='GWASUI-table1'
-      rowKey='cohort_definition_id'
-      size='middle'
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20', '50', '100', '500'],
-      }}
-      onRow={(selectedRow) => ({
-        onClick: () => {
-          handleCohortSelect(selectedRow);
-        },
-      })}
-      rowSelection={cohortSelection(selectedCohort)}
-      columns={cohortTableConfig}
-      dataSource={displayedCohorts}
-    />
-  ) : (
+  if (cohorts?.status === 'success') {
+    addAriaLabelsToCohortDefinationsTable();
+    return (
+      <Table
+        className='GWASUI-table1'
+        onChange={addAriaLabelsToCohortDefinationsTable}
+        rowKey='cohort_definition_id'
+        size='middle'
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50', '100', '500'],
+        }}
+        onRow={(selectedRow) => ({
+          onClick: () => {
+            handleCohortSelect(selectedRow);
+          },
+        })}
+        rowSelection={cohortSelection(selectedCohort)}
+        columns={cohortTableConfig}
+        dataSource={displayedCohorts}
+      />
+    );
+  }
+  return (
     <React.Fragment>
       <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
         <Spin />
