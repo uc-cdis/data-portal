@@ -707,13 +707,9 @@ class Workspace extends React.Component {
               && this.state.workspaceStatus !== 'Stopped'
               ? (
                 <div>
-                  {workspacePageTitle
-                    ? (
-                      <h1 className='workspace__title'>
-                        {parse(workspacePageTitle)}
-                      </h1>
-                    )
-                    : null}
+                  <h1 className='workspace__title'>
+                    {workspacePageTitle ? parse(workspacePageTitle) : 'Workspace'}
+                  </h1>
                   {workspacePageDescription
                     ? (
                       <div className='workspace__description'>

@@ -45,13 +45,9 @@ const UserProfile = ({
 
   return (
     <div className='user-profile'>
-      {profilePageTitle
-        ? (
-          <h1>
-            {parse(profilePageTitle)}
-          </h1>
-        )
-        : null}
+      <h1>
+        {profilePageTitle ? parse(profilePageTitle) : 'Profile'}
+      </h1>
       {
         showExternalLoginsOnProfile
         && <ExternalLogins />
