@@ -14,7 +14,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig
+    queryConfig,
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,12 +26,12 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const filteredCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name'
+    'concept_name',
   );
 
   // remove already selected Covariates from list
   const displayedCovariates = filteredCovariates.filter(
-    (x) => !submittedCovariateIds.includes(x.concept_id)
+    (x) => !submittedCovariateIds.includes(x.concept_id),
   );
 
   const covariateSelection = () => ({
@@ -120,10 +120,12 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
 Covariates.propTypes = {
   selected: PropTypes.object,
   handleSelect: PropTypes.func.isRequired,
+  submittedCovariateIds: PropTypes.array,
 };
 
 Covariates.defaultProps = {
   selected: null,
+  submittedCovariateIds: null,
 };
 
 export default Covariates;
