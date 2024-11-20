@@ -30,9 +30,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   );
 
   // remove already selected Covariates from list
-  const displayedCovariates = filteredCovariates.filter(
-    (x) => !submittedCovariateIds.includes(x.concept_id),
-  );
+  const displayedCovariates = filteredCovariates.filter((x) => !submittedCovariateIds.includes(x.concept_id));
 
   const covariateSelection = () => ({
     type: 'radio',
