@@ -17,9 +17,9 @@ class ResourceBrowser extends React.Component {
     const resources = settings.resources || [];
     return (
       <div className='resource-browser'>
-        <h2 className='resource-browser__title'>
+        <h1 className='resource-browser__title'>
           {settings.title}
-        </h2>
+        </h1>
         {settings.description
           ? (
             <p className='resource-browser__description'>

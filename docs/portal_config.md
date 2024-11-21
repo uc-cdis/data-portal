@@ -709,11 +709,12 @@ Below is an example, with inline comments describing what each JSON block config
     "tableScrollHeight": 450 // optional, no scroll if omitted
   },
   "resourceBrowser": {}, // see Resource Browser documentation
-  "workspacePageTitle": "", // title to display above workspacePageDescription
+  "workspacePageTitle": "Workspace", // title to display above workspacePageDescription; Defaults to Workspace
   "workspacePageDescription": "", // html to display above the workspace options
   "studyViewerConfig": [],//See docs/study_viewer.md for more details.
   "useArboristUI": false, // optional; set true to enable Arborist UI; defaults to false if absent
   "hideSubmissionIfIneligible": true, // optional; only works if Arborist UI is enabled; if set to true, link/buttons to /submission page will be hidden to users who don't have permissions to submit data; defaults to false if absent
+  "profilePageTitle": "Profile", // title to display at top of Profile Page; Defaults to Profile
   "showArboristAuthzOnProfile": false, // optional; set true to list Arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
   "showExternalLoginsOnProfile": false, // enable WTS OIDC logins via the profile page
