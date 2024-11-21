@@ -700,16 +700,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               />
             </div>
           )}
+        <div className='discovery-action-section'>
 
-        {/* Bar with actions, stats, around advanced search and data actions */}
-        <ReduxDiscoveryActionBar
-          config={props.config}
-          exportingToWorkspace={exportingToWorkspace}
-          setExportingToWorkspace={setExportingToWorkspace}
-          filtersVisible={filtersVisible}
-          setFiltersVisible={setFiltersVisible}
-          disableFilterButton={!props.studies.length}
-        />
+          {/* Bar with actions, stats, around advanced search and data actions */}
+          <ReduxDiscoveryActionBar
+            config={props.config}
+            exportingToWorkspace={exportingToWorkspace}
+            setExportingToWorkspace={setExportingToWorkspace}
+            filtersVisible={filtersVisible}
+            setFiltersVisible={setFiltersVisible}
+            disableFilterButton={!props.studies.length}
+          />
+        </div>
         <div className='discovery-studies__content'>
           {/* Advanced search panel */}
           {(
