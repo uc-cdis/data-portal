@@ -15,6 +15,7 @@ import DownloadZipButton from './components/DownloadZipButton';
 import ExportToWorkspaceButton from './components/ExportToWorkspaceButton';
 import DownloadManifestButton from './components/DownloadManifestButton';
 import OpenFillRequestFormButton from './components/OpenFillRequestFormButton';
+import DiscoveryDataLibrary from "./DiscoveryDataLibrary";
 
 /* eslint react/prop-types: 0 */
 interface Props {
@@ -170,6 +171,7 @@ const DiscoveryActionBar = (props: Props) => {
           <span className='discovery-export__selected-ct'>
             {props.discovery.selectedResources.length} selected
           </span>
+          <DiscoveryDataLibrary config={props.config} user={props.user} discovery={props.discovery} />
           <DownloadZipButton
             props={props}
             healIDPLoginNeeded={healIDPLoginNeeded}
