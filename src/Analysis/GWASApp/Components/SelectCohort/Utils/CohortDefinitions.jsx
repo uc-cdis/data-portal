@@ -6,7 +6,7 @@ import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
-import AntDTableAccessibilityFix from '../../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes';
+import { AntDTableAccessibilityFix } from '../../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
