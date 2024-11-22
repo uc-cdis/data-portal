@@ -7,6 +7,7 @@ import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../Utils/formHooks';
 import { useSourceContext } from '../../Utils/Source';
 import SearchBar from '../SearchBar/SearchBar';
+import { AntDTableAccessibilityFix } from '../../../SharedUtils/AccessibilityUtils/AntDAccessibilityFixes';
 
 const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const { source } = useSourceContext();
@@ -76,6 +77,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   }
 
   if (covariates?.status === 'success') {
+    AntDTableAccessibilityFix();
     return (
       <div data-tour='select-concept'>
         <SearchBar
