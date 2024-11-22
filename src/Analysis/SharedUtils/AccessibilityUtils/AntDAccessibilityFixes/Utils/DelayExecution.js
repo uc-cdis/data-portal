@@ -1,11 +1,11 @@
-import { DELAY_TIME } from "./Constants";
+const DELAY_TIME = 500;
 
 // Utility function to call other function with a delay for loading
 // example: DelayExecution(myFunction, 'parameter1', 'parameter2');
 const DelayExecution = (fn, ...args) => {
-    setTimeout(() => {
-      fn(...args);
-    }, DELAY_TIME);
-  }
+  setTimeout(() => {
+    fn(...args);
+  }, DELAY_TIME);
+};
 
-  export default DelayExecution;
+export default DelayExecution;
