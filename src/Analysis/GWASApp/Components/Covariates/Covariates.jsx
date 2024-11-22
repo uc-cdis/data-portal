@@ -14,7 +14,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig,
+    queryConfig
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,11 +26,13 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const filteredCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name',
+    'concept_name'
   );
 
   // remove already selected Covariates from list
-  const displayedCovariates = filteredCovariates.filter((x) => !submittedCovariateIds.includes(x.concept_id));
+  const displayedCovariates = filteredCovariates.filter(
+    (x) => !submittedCovariateIds.includes(x.concept_id)
+  );
 
   const covariateSelection = () => ({
     type: 'radio',
@@ -43,7 +45,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
       <Radio
         checked={checked}
         value={record.concept_id}
-        aria-label={'Select row for concept'}
+        aria-label={'Row action: concept selection'}
       />
     ),
   });
