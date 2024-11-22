@@ -13,7 +13,7 @@ const RemoveDOMAttribute = (selector, attribute) => {
       // eslint-disable-next-line no-console
       console.error(
         'Unable to find selector in removeDOMAttribute: ',
-        selector
+        selector,
       );
     }
   });
