@@ -7,10 +7,14 @@ const RemoveDOMAttribute = (selector, attribute) => {
   const elements = document.querySelectorAll(selector);
   elements?.forEach((element) => {
     if (element) {
+      console.log(element);
       element.removeAttribute(attribute);
     } else {
       // eslint-disable-next-line no-console
-      console.error('Unable to find selector in removeDOMAttribute: ', selector);
+      console.error(
+        'Unable to find selector in removeDOMAttribute: ',
+        selector
+      );
     }
   });
 };

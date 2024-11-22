@@ -1,17 +1,18 @@
 import isEnterOrSpace from '../../IsEnterOrSpace';
+import DelayExecution from '../Utils/DelayExecution';
 import RemoveDOMAttribute from '../Utils/RemoveDOMAttribute';
 
 const FixPaginationDropDown = () => {
   const pageDropdown = document.querySelector(
-    '.ant-pagination-options-size-changer',
+    '.ant-pagination-options-size-changer'
   );
   if (pageDropdown) {
     pageDropdown.addEventListener('click', () => {
-      RemoveDOMAttribute('.ant-select-item', 'aria-selected');
+      DelayExecution(RemoveDOMAttribute, '.ant-select-item', 'aria-selected');
     });
     pageDropdown.addEventListener('keydown', (event) => {
       if (isEnterOrSpace(event)) {
-        RemoveDOMAttribute('.ant-select-item', 'aria-selected');
+        DelayExecution(RemoveDOMAttribute, '.ant-select-item', 'aria-selected');
       }
     });
   }

@@ -1,4 +1,4 @@
-const DELAY_TIME = 500;
+const DELAY_TIME = 250;
 
 // Utility function to call other function with a delay for loading
 // example: DelayExecution(myFunction, 'parameter1', 'parameter2');
