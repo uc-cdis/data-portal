@@ -1,19 +1,19 @@
-const handlePaginationDropdownClick = () => {
-    RemoveDOMAttribute(
-      '.ant-select-item-option-active',
-      'aria-selected',
-    );
-    RemoveDOMAttribute(
-      '.ant-select-item',
-      'aria-selected',
-    );
-  };
+import isEnterOrSpace from '../../IsEnterOrSpace';
+import RemoveDOMAttribute from '../Utils/RemoveDOMAttribute';
 
 const FixPaginationDropDown = () => {
-    const pageDropdown = document.querySelector('.ant-pagination-options-size-changer');
-    if (pageDropdown) {
-      pageDropdown.addEventListener('click', handlePaginationDropdownClick);
-    }
-  };
-
-  export default FixPaginationDropDown;
+  const pageDropdown = document.querySelector(
+    '.ant-pagination-options-size-changer'
+  );
+  if (pageDropdown) {
+    pageDropdown.addEventListener('click', () => {
+      RemoveDOMAttribute('.ant-select-item', 'aria-selected');
+    });
+    pageDropdown.addEventListener('keydown', function (event) {
+      if (isEnterOrSpace(event)) {
+        RemoveDOMAttribute('.ant-select-item', 'aria-selected');
+      }
+    });
+  }
+};
+export default FixPaginationDropDown;
