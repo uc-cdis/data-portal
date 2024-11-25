@@ -142,10 +142,10 @@ function DataDictionaryPropertyTable({
                 </td>
                 <td className='data-dictionary-property-table__data'>
                   {Array.isArray(property.term) ? (
-                      property.term.filter((obj) => { return obj["termDef"]?.["term_url"] && obj["termDef"]?.["cde_id"]})
-                                    .map((x,i) => { return (<li key={i}><a href={x["termDef"]["term_url"]} target="_blank"> {x["termDef"]["cde_id"]} </a></li>);})
+                      property.term.filter((obj) => { return obj["termDef"]?.["term_url"] && obj["termDef"]?.["code"]})
+                                    .map((x,i) => { return (<li key={i}><a href={x["termDef"]["term_url"]} target="_blank"> {x["termDef"]["code"]} </a></li>);})
                     ) : (
-                      property.term?.["termDef"] && property.term["termDef"]["term_url"] && property.term["termDef"]["cde_id"] && <a href={property.term["termDef"]["term_url"]} target="_blank"> {property.term["termDef"]["cde_id"]} </a>
+                      property.term?.["termDef"] && property.term["termDef"]["term_url"] && property.term["termDef"]["code"] && <a href={property.term["termDef"]["term_url"]} target="_blank"> {property.term["termDef"]["code"]} </a>
                     )
                   }
                 </td>
