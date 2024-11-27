@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { Table, Spin } from 'antd';
+import { Table, Spin, Radio } from 'antd';
 import { fetchCovariates } from '../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../Utils/formHooks';
@@ -14,7 +14,7 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig,
+    queryConfig
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,11 +26,13 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
   const filteredCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name',
+    'concept_name'
   );
 
   // remove already selected Covariates from list
-  const displayedCovariates = filteredCovariates.filter((x) => !submittedCovariateIds.includes(x.concept_id));
+  const displayedCovariates = filteredCovariates.filter(
+    (x) => !submittedCovariateIds.includes(x.concept_id)
+  );
 
   const covariateSelection = () => ({
     type: 'radio',
@@ -39,6 +41,13 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
     onChange: (_, selectedRows) => {
       handleSelect(selectedRows[0]);
     },
+    renderCell: (checked, record) => (
+      <Radio
+        checked={checked}
+        value={record.concept_id}
+        aria-label={'Row action: concept selection'}
+      />
+    ),
   });
 
   const covariateTableConfig = [
@@ -111,10 +120,12 @@ const Covariates = ({ selected, handleSelect, submittedCovariateIds }) => {
 Covariates.propTypes = {
   selected: PropTypes.object,
   handleSelect: PropTypes.func.isRequired,
+  submittedCovariateIds: PropTypes.array,
 };
 
 Covariates.defaultProps = {
   selected: null,
+  submittedCovariateIds: null,
 };
 
 export default Covariates;

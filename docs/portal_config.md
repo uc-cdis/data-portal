@@ -204,6 +204,7 @@ Below is an example, with inline comments describing what each JSON block config
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
+    "legacyVADCDataDictionary": false, // optional, VADC specific. Set to "true" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary is displayed the user navigates to /analysis/AtlasDataDictionary, and when the user clicks on the data dictionary button in when in the Atlas app page.
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -756,7 +757,6 @@ Below is an example, with inline comments describing what each JSON block config
       "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
       "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
       "needsTeamProject": true, // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
-      "dataDictionaryVersion": "new", // Optional, for custom AtlasDataDictionary. Set to "new" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary when the user navigates to /analysis/AtlasDataDictionary.
     },
     {
       "title": "My other app",

@@ -1,0 +1,141 @@
+/* App-specific styles */
+
+@import "AccessibilityGWAS.less";
+@import "AccessibilityTeams.less";
+
+/* Global styles */
+
+:root {
+  --focus-outline-color: #007bff; /* Bright Blue */
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Rules for all VADC Apps */
+
+.analysis-app-wrapper {
+  .ant-modal-content button:focus {
+    outline: 1px dashed var(--focus-outline-color);
+    outline-offset: 1px;
+  }
+
+  .ant-btn-default {
+    color: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-primary:not([disabled]) {
+    background: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-secondary {
+    color: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-btn-default:hover,
+  .ant-btn-default:focus {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-btn-primary:not([disabled]):hover,
+  .ant-btn-primary:not([disabled]):focus {
+    background: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .back-link {
+    color: #215c9e;
+  }
+
+  .back-link:hover,
+  .back-link:focus {
+    color: #2E77B8;
+  }
+
+  .ant-pagination-item-active {
+    color: #194C90;
+    border-color: #194C90;
+  }
+
+  .ant-pagination-item-active a {
+    color: #194C90;
+  }
+
+  .ant-pagination-item-active:hover,
+  .ant-pagination-item-active:focus {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-item-active:hover a,
+  .ant-pagination-item-active:focus a {
+    color: #2466AC;
+  }
+
+  .ant-pagination-item:hover,
+  .ant-pagination-item:focus {
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-item:hover a,
+  .ant-pagination-item:focus a {
+    color: #2466AC;
+  }
+
+  .ant-pagination-next:hover .ant-pagination-item-link,
+  .ant-pagination-next:focus .ant-pagination-item-link {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-jump-next:hover .ant-pagination-item-link-icon,
+  .ant-pagination-jump-next:focus .ant-pagination-item-link-icon {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-prev:hover .ant-pagination-item-link,
+  .ant-pagination-prev:focus .ant-pagination-item-link {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-jump-prev:hover .ant-pagination-item-link-icon,
+  .ant-pagination-jump-prev:focus .ant-pagination-item-link-icon {
+    color: #2466AC;
+    border-color: #2466AC;
+  }
+
+  .ant-select-focused:not([disabled]).ant-select .ant-select-selector {
+    border-color: #2466AC;
+  }
+
+  .ant-pagination-options:hover .ant-select:not([disabled]) .ant-select-selector {
+    border-color: #2466AC;
+  }
+
+  .ant-card-meta-description {
+    color: #333333;
+  }
+
+  .ant-card-actions .anticon {
+    color: #333333;
+  }
+
+  .ant-card-actions .anticon:hover {
+    color: #2466AC;
+  }
+}
