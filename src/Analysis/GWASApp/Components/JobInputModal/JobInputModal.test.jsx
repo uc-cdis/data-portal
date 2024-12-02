@@ -93,7 +93,7 @@ describe('JobInputModal outputs correct values', () => {
   it('should display each population size', () => {
     const populationContainer = wrapper.find('#modal-population-size');
     finalPopulationSizes.forEach((item) => {
-      expect(populationContainer.text()).toContain(item.size);
+      expect(populationContainer.text()).toContain(item.size.toString());
     });
   });
   it('should display each covariate', () => {
