@@ -55,4 +55,4 @@ RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
 RUN mkdir /mnt/ssl \
     && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
 
-CMD [ "bash", "./startServer.sh" ]
+CMD [ "bash", "./dockerStart.sh" ]
