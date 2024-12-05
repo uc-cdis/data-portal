@@ -8,6 +8,7 @@ import {
   fetchSurvivalConfig,
   updateFilterSet,
   updateSurvivalResult,
+  fetchFederationQuery,
 } from './asyncThunks';
 import {
   checkIfFilterEmpty,
@@ -304,6 +305,16 @@ const slice = createSlice({
       })
       .addCase(fetchFilterSets.rejected, (state) => {
         state.savedFilterSets.isError = true;
+      })
+      .addCase(fetchFederationQuery.fulfilled, (state, action) => {
+        const newActiveId = crypto.randomUUID();
+        const filterSet = { filter: action.payload };
+
+        state.workspaces[state.explorerId].activeId = newActiveId;
+        state.workspaces[state.explorerId].all[newActiveId] = filterSet;
+
+        // sync with exploreFilter
+        state.explorerFilter = filterSet.filter;
       })
       .addCase(updateFilterSet.fulfilled, (state, action) => {
         const filterSet = action.payload;

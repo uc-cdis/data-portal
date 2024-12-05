@@ -39,6 +39,7 @@ import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
 import {
   fetchSurvivalConfig,
   fetchFilterSets,
+  fetchFederationQuery,
 } from './redux/explorer/asyncThunks';
 import {
   fetchProjects as fetchDataRequestProjects,
@@ -219,6 +220,24 @@ function App() {
                   dispatch(fetchSurvivalConfig()),
                 ])
               }
+            >
+              <Explorer />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='links/ccdifederation/:token'
+          element={
+            <ProtectedContent
+              preload={({ location }) => {
+                const { params: { token }} = matchPath('links/ccdifederation/:token', location.pathname);
+                console.log(token);
+                return Promise.all([
+                  dispatch(fetchFederationQuery(token)),
+                  dispatch(fetchDictionary()),
+                  dispatch(fetchSurvivalConfig()),
+                ])
+              }}
             >
               <Explorer />
             </ProtectedContent>

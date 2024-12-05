@@ -155,7 +155,9 @@ function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
         </>
       ) : (
         <>
-          <div className='nav-bar__nav--items'>{navButtons}</div>
+          <div className='nav-bar__nav--items'>
+            {navButtons}
+          </div>
           {tooltipDetails.content !== '' && (
             <NavBarTooltip {...tooltipDetails} />
           )}
