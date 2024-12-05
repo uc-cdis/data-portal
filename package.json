@@ -175,7 +175,10 @@
     },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
-    "@reactour/mask": "0.5.1"
+    "@reactour/mask": "0.5.1",
+    "msw":{
+      "cookie": "0.7.1"
+    }
   },
   "jest": {
     "verbose": true,
