@@ -4,9 +4,8 @@ import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import {
   DOWNLOAD_FAIL_STATUS,
-  DOWNLOAD_SUCCEEDED_MESSAGE,
   JOB_POLLING_INTERVAL,
-} from './Constants';
+} from '../Constants';
 
 const CheckDownloadStatus = (
   uid: string,
@@ -55,10 +54,7 @@ const CheckDownloadStatus = (
                     title: 'Your download is ready',
                     content: (
                       <React.Fragment>
-                        <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
-                        <a href={output} target='_blank' rel='noreferrer'>
-                          {output}
-                        </a>
+                        <p>Your download has been prepared. If your download doesn&apos;t start automatically, please click <a href={output} target='_blank' rel='noreferrer'>this link</a></p>
                       </React.Fragment>
                     ),
                     active: true,

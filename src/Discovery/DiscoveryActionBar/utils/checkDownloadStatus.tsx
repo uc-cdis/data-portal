@@ -2,7 +2,7 @@ import React from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import { faro } from '@grafana/faro-core';
 import {
-  JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS, DOWNLOAD_SUCCEEDED_MESSAGE,
+  JOB_POLLING_INTERVAL, DOWNLOAD_FAIL_STATUS,
 } from '../DiscoveryActionBarConstants';
 import { jobAPIPath } from '../../../localconf';
 import { DownloadStatus } from '../DiscoveryActionBarInterfaces';
@@ -56,10 +56,7 @@ const checkDownloadStatus = (
                     title: 'Your download is ready',
                     content: (
                       <React.Fragment>
-                        <p> {DOWNLOAD_SUCCEEDED_MESSAGE} </p>
-                        <a href={output} target='_blank' rel='noreferrer'>
-                          {output}
-                        </a>
+                        <p>Your download has been prepared. If your download doesn&apos;t start automatically, please click <a href={output} target='_blank' rel='noreferrer'>this link</a></p>
                       </React.Fragment>
                     ),
                     active: true,
