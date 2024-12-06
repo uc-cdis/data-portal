@@ -192,8 +192,10 @@ async function init() {
                   </Helmet>
                 )
                 : null}
-              <ReduxTopBar />
-              <ReduxNavBar />
+              <header>
+                <ReduxTopBar />
+                <ReduxNavBar />
+              </header>
               <div className='main-content' id='main-content'>
                 <ReduxWorkspaceShutdownBanner />
                 <ReduxWorkspaceShutdownPopup />

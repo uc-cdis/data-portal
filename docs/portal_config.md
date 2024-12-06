@@ -204,6 +204,7 @@ Below is an example, with inline comments describing what each JSON block config
     "studyRegistration": true, // optional, whether to enable the study registration feature
     "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
+    "legacyVADCDataDictionary": false, // optional, VADC specific. Set to "true" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary is displayed the user navigates to /analysis/AtlasDataDictionary, and when the user clicks on the data dictionary button in when in the Atlas app page.
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -709,11 +710,12 @@ Below is an example, with inline comments describing what each JSON block config
     "tableScrollHeight": 450 // optional, no scroll if omitted
   },
   "resourceBrowser": {}, // see Resource Browser documentation
-  "workspacePageTitle": "", // title to display above workspacePageDescription
+  "workspacePageTitle": "Workspace", // title to display above workspacePageDescription; Defaults to Workspace
   "workspacePageDescription": "", // html to display above the workspace options
   "studyViewerConfig": [],//See docs/study_viewer.md for more details.
   "useArboristUI": false, // optional; set true to enable Arborist UI; defaults to false if absent
   "hideSubmissionIfIneligible": true, // optional; only works if Arborist UI is enabled; if set to true, link/buttons to /submission page will be hidden to users who don't have permissions to submit data; defaults to false if absent
+  "profilePageTitle": "Profile", // title to display at top of Profile Page; Defaults to Profile
   "showArboristAuthzOnProfile": false, // optional; set true to list Arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
   "showExternalLoginsOnProfile": false, // enable WTS OIDC logins via the profile page
@@ -755,7 +757,6 @@ Below is an example, with inline comments describing what each JSON block config
       "description": "My app description", // App title/name, also displayed on the App card in the /analysis page
       "image": "/src/img/analysis-icons/myapp-image.svg",  // App logo/image to be displayed on the App card in the /analysis page
       "needsTeamProject": true, // Optional. Whether the app needs a "team project" selection to be made by the user first. If true, it will force the user to select a "team project" first. See also https://github.com/uc-cdis/data-portal/pull/1445
-      "dataDictionaryVersion": "new", // Optional, for custom AtlasDataDictionary. Set to "new" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary when the user navigates to /analysis/AtlasDataDictionary.
     },
     {
       "title": "My other app",

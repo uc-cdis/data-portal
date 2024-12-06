@@ -34,3 +34,7 @@
 .team-project-modal .ant-select {
   width: 100%;
 }
+
+.team-project-modal a {
+  color: #2F7ABC;
+}

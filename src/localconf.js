@@ -354,6 +354,7 @@ function buildConfig(opts) {
     studyRegistrationConfig.variableMetadataField = '';
   }
   const { workspacePageTitle } = config;
+  const { profilePageTitle } = config;
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
     ? registrationConfigs.features.workspaceRegistrationConfig : null;
@@ -604,6 +605,7 @@ function buildConfig(opts) {
     auspiceUrl,
     auspiceUrlIL,
     workspacePageTitle,
+    profilePageTitle,
     workspacePageDescription,
     enableDAPTracker,
     workspaceRegistrationConfig,
