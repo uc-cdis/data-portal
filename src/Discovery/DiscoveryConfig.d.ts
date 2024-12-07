@@ -1,6 +1,12 @@
 export interface DiscoveryConfig {
     public?: boolean // If false, requires user to sign in before seeing the Discovery page
     features: {
+        exportToDataLibrary: {
+            enabled: boolean
+            dataObjectFieldName: string
+            datesetIdFieldName: string
+            dataObjectIdField: string
+        },
         exportToWorkspace: {
             enabled: boolean
             enableDownloadManifest: boolean

@@ -138,6 +138,7 @@ function buildConfig(opts) {
   const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
   const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
+  const userDataLibraryUrl = `${hostname}library`;
 
   // datadog related setup
   let ddEnv = 'PROD';
@@ -628,6 +629,7 @@ function buildConfig(opts) {
     Error403Url,
     bundle,
     topNavLogin,
+    userDataLibraryUrl,
   };
 }
 
