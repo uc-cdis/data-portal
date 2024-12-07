@@ -47,7 +47,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
-        (props.config.features.exportToWorkspace
+        (props.config.features.exportToDataLibrary
+              && props.config.features.exportToDataLibrary.enabled)
+        || (props.config.features.exportToWorkspace
           && props.config.features.exportToWorkspace.enabled) || (props.config.features.exportToWorkspace?.enableFillRequestForm
             && props.config.features.exportToWorkspace.enableFillRequestForm === true)
       ) && {
@@ -64,11 +66,11 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 (props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip)
                   ? 'download'
                   : '',
-                'open in workspace'
+                'open in workspace',
               ]
                 .filter(Boolean)
                 .join(' or ')
-              }`}
+            }`}
             overlayStyle={{ maxWidth: '150px' }}
           >
             {node}
