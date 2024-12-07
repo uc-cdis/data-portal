@@ -6,12 +6,10 @@ import { CaretDownFilled, CheckOutlined } from '@ant-design/icons';
 import './ComboboxWithInput.less';
 
 const ComboboxWithInput = ({
-  items: initialItems = [
-    { value: 'item1', label: 'First Item' },
-    { value: 'item2', label: 'Second Item' },
-  ],
+  items: initialItems = [],
   value: externalValue,
   onChange: externalOnChange,
+  disabled = false,
   placeholder = 'Select or create...',
   searchPlaceholder = 'Search or create new...',
 }) => {
@@ -23,6 +21,10 @@ const ComboboxWithInput = ({
   const wrapperRef = useRef(null);
   const listboxId = 'combobox-listbox';
   const inputId = 'combobox-input';
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -49,6 +51,7 @@ const ComboboxWithInput = ({
   }, [externalValue]);
 
   const handleKeyDown = (e) => {
+    if (disabled) return;
     if (e.key === 'Enter' && inputValue.trim()) {
       const newItem = {
         value: `item${items.length + 1}`,
@@ -57,13 +60,14 @@ const ComboboxWithInput = ({
       setItems([...items, newItem]);
       const newValue = newItem.value;
       setValue(newValue);
-      externalOnChange?.(newValue);
+      externalOnChange?.(newItem.label, undefined); // inform of new list name
       setInputValue('');
       setOpen(false);
     }
   };
 
   const handleSelect = (newValue) => {
+    if (disabled) return;
     const finalValue = value === newValue ? '' : newValue;
     setValue(finalValue);
     externalOnChange?.(finalValue);
@@ -71,9 +75,10 @@ const ComboboxWithInput = ({
   };
 
   return (
-    <div className='combobox-wrapper' ref={wrapperRef}>
+    <div className={`combobox-wrapper ${disabled ? 'disabled' : ''}`} ref={wrapperRef}>
       <div className='combobox-inner'>
         <button
+          disabled={disabled}
           type='button'
           onClick={() => setOpen(!open)}
           className='combobox-button'
@@ -95,6 +100,11 @@ const ComboboxWithInput = ({
           <div className='dropdown-container' role='presentation'>
             <div className='input-wrapper'>
               <input
+                disabled={disabled}
+                autoComplete='off'
+                autoCorrect='off'
+                autoCapitalize='off'
+                spellCheck='false'
                 type='text'
                 id={inputId}
                 className='search-input'
@@ -127,7 +137,7 @@ const ComboboxWithInput = ({
               {filteredItems.map((item) => (
                 <li
                   key={item.value}
-                  onClick={() => handleSelect(item.value)}
+                  onClick={() => handleSelect(item.value, item.label)}
                   className='list-item'
                   role='option'
                   aria-selected={value === item.value}
@@ -157,6 +167,7 @@ ComboboxWithInput.propTypes = {
   ),
   value: PropTypes.string,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
   placeholder: PropTypes.string,
   searchPlaceholder: PropTypes.string,
 };
@@ -165,6 +176,7 @@ ComboboxWithInput.defaultProps = {
   items: [],
   value: '',
   onChange: () => {},
+  disabled: false,
   placeholder: 'Select or create...',
   searchPlaceholder: 'Search or create new...',
 };
