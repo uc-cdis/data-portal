@@ -57,7 +57,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
-        (props.config.features.exportToWorkspace
+        (props.config.features.exportToDataLibrary
+              && props.config.features.exportToDataLibrary.enabled)
+        || (props.config.features.exportToWorkspace
           && props.config.features.exportToWorkspace.enabled) || (props.config.features.exportToWorkspace?.enableFillRequestForm
             && props.config.features.exportToWorkspace.enableFillRequestForm === true)
       ) && {
