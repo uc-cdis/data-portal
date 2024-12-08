@@ -66,11 +66,10 @@ const ComboboxWithInput = ({
     }
   };
 
-  const handleSelect = (newValue) => {
+  const handleSelect = (newValue, label) => {
     if (disabled) return;
-    const finalValue = value === newValue ? '' : newValue;
-    setValue(finalValue);
-    externalOnChange?.(finalValue);
+    setValue(newValue);
+    externalOnChange?.(label, newValue );
     setOpen(false);
   };
 
