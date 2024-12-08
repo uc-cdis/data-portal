@@ -484,6 +484,12 @@ Below is an example, with inline comments describing what each JSON block config
           },
           "verifyExternalLogins": true // enables verification if the user has access to all the data files selected, by using WTS (a Gen3 ecosystem feature)
       },
+      "exportToDataLibrary": {
+        "enabled": true, // enable use of saving selections to data-library service
+        "dataObjectFieldName" : "objects", // field name containing data objects
+        "datesetIdFieldName" : "study_id", // field containing name of "data set" i.e. the unique parent id of the data objects
+        "dataObjectIdField" : "guid" // unique identifer of the data object
+      },
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
