@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Space, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Space, Button, notification } from 'antd';
 import ComboboxWithInput from '../../components/ComboboxWithInput';
 import { DiscoveryConfig } from '../DiscoveryConfig';
 import { userDataLibraryUrl } from '../../localconf';
@@ -11,20 +11,44 @@ interface ComboboxItem {
   label: string;
 }
 
+type NotificationType = 'success' | 'warning' | 'error';
+
+const postNotification = (description: string, type:NotificationType) => {
+  notification[type]({
+    message: 'Data Library',
+    description,
+  });
+};
+
 const extractListNameAndId = (data:any) : ComboboxItem[] => Object.keys(data).map((id) => ({ value: id, label: data[id].name }));
 
 const updateList = async (list: { name: string, items: any[] }, listId: string = undefined) => {
-  const response = await fetchWithCreds({
-    path: listId ? `${userDataLibraryUrl}/lists/${listId}` : `${userDataLibraryUrl}/lists`,
-    method: 'PUT',
-    customHeaders: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ lists: [list] }),
-  });
-  if (!response.ok) {
-    // @ts-ignore
-    throw new Error('Network response was not ok', { cause: response.status });
+  try {
+    const response = await fetchWithCreds({
+      path: listId ? `${userDataLibraryUrl}/lists/${listId}` : `${userDataLibraryUrl}/lists`,
+      method: 'PUT',
+      customHeaders: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(listId ? list : { lists: [list] }),
+    });
+    switch (response.status) {
+    case 200:
+    case 201:
+      postNotification(listId ? 'List contents have been updated.' : 'List has been created.', 'success');
+      break;
+    case 401:
+      postNotification('Not Authorized. Please log in', 'error');
+      break;
+    case 409:
+      postNotification('Selection is already in a list. Please choose a different selection.', 'warning');
+      break;
+    default: {
+      postNotification('Unknown error. Please try again later.', 'error');
+    }
+    }
+  } catch (error) {
+    postNotification('Unknown error. Please try again later.', 'error');
   }
 };
 
@@ -78,7 +102,7 @@ const DiscoveryDataLibrary = (props: Props) => {
         items,
       }, listId);
     } catch (err) {
-      console.error(err);
+      postNotification('Data Library update failed. Please try again later.', 'error');
     }
   };
 
@@ -110,6 +134,7 @@ const DiscoveryDataLibrary = (props: Props) => {
       <Space size='small'>
         <ComboboxWithInput items={data} onChange={onChangeListSelection} disabled={notLoggedIn} />
         <Button
+          loading={loading}
           type='primary'
           disabled={error !== null || loading || data?.length === 0 || currentList === undefined || selectedResources.length === 0 || notLoggedIn}
           onClick={() => {
@@ -117,6 +142,7 @@ const DiscoveryDataLibrary = (props: Props) => {
               saveToList(currentList.label, currentList.value);
             } else {
               saveToList(currentList.label);
+              fetchLists();
             }
           }}
         > Save to List
