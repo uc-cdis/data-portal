@@ -132,7 +132,12 @@ const DiscoveryDataLibrary = (props: Props) => {
   return (
     <React.Fragment>
       <Space size='small'>
-        <ComboboxWithInput items={data} onChange={onChangeListSelection} disabled={notLoggedIn} />
+        <ComboboxWithInput
+          items={data}
+          onChange={onChangeListSelection}
+          placeholder={notLoggedIn ? 'Login to save to a list' : 'Select/create a list to save to'}
+          disabled={notLoggedIn}
+        />
         <Button
           loading={loading}
           type='primary'
