@@ -9,6 +9,12 @@
         "gen3Workspaces": "https://docs.gen3.org/gen3-resources/user-guide/analyze-data/"
       }
     },
+    "exportToDataLibrary": {
+      "enabled": true,
+      "dataObjectFieldName" : "objects",
+      "datesetIdFieldName" : "study_id",
+      "dataObjectIdField" : "guid"
+    },
     "pageTitle": {
       "enabled": true,
       "text": "My Special Test Discovery Page"
