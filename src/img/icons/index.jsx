@@ -43,6 +43,7 @@ import IcoAcctPlanning from './acct-icons/acct-planning.svg';
 import IcoAcctAccess from './acct-icons/acct-access.svg';
 import IcoAcctExplore from './acct-icons/acct-explore.svg';
 import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
+import IcoList from './list.svg';
 
 const dictIcons = {
   analysis: (height, customedStyles) => (
@@ -122,6 +123,9 @@ const dictIcons = {
   ),
   key: (height, customedStyles) => (
     <IcoKey height={height} style={{ ...customedStyles }} />
+  ),
+  list: (height, customedStyles) => (
+    <IcoList height={height} style={{ ...customedStyles }} />
   ),
   profile: (height, customedStyles) => (
     <IcoProfile height={height} style={{ ...customedStyles }} />
