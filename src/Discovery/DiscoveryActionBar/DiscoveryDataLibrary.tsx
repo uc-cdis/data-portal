@@ -70,7 +70,13 @@ const DiscoveryDataLibrary = (props: Props) => {
   const [error, setError] = useState(null);
   const { config: { features: { exportToDataLibrary } }, discovery: { selectedResources }, healIDPLoginNeeded } = props;
 
-  const onChangeListSelection = (listname: string, listId: string) => {
+  const onChangeListSelection = async (listname: string, listId: string) => {
+    if (!listId) {
+      await updateList({
+        name: listname,
+        items: {},
+      });
+    }
     setCurrentList({ label: listname, value: listId });
   };
 
