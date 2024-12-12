@@ -65,6 +65,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
     const objs = value.map(
       (item) => `${insertSpace(indent + spaces)}${doStringify(item, variables, indent + spaces, spaces)}`,
     ).join(`,${ending}`);
+    // console.log(doWrapping(objs, '[', ']', indent, spaces));
     return doWrapping(objs, '[', ']', indent, spaces);
   }
   if (typeof value === 'string') {
@@ -109,8 +110,14 @@ function buildConfig(appIn, data) {
       if (typeof result[k] === 'object') {
         const defaultVal = defaultConfig[k];
         const appVal = appConfig[k];
-        if (defaultVal && appVal && typeof defaultVal === 'object' && typeof appVal === 'object') {
-          result[k] = { ...defaultVal, ...appVal };
+        if (defaultVal && appVal) {
+          if (typeof defaultVal === 'object' && typeof appVal === 'object') {
+            if (Array.isArray(defaultVal) && Array.isArray(appVal)) {
+              result[k] = defaultVal.concat(appVal);
+            } else if (!Array.isArray(defaultVal) && !Array.isArray(appVal)) {
+              result[k] = { ...defaultVal, ...appVal };
+            }
+          }
         }
       }
     },
