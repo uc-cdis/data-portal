@@ -187,97 +187,99 @@
     "explorer": true,
     "analysis": false
   },
-  "dataExplorerConfig": {
-    "charts": {
-      "project": {
-        "chartType": "count",
-        "title": "Projects"
-      },
-      "study": {
-        "chartType": "count",
-        "title": "Studies"
-      },
-      "file_type": {
-        "chartType": "count",
-        "title": "File Types"
-      },
-      "ethnicity": {
-        "chartType": "stackedBar",
-        "title": "Ethnicity"
-      },
-      "gender": {
-        "chartType": "pie",
-        "title": "Gender"
-      },
-      "race": {
-        "chartType": "pie",
-        "title": "Race"
-      },
-      "vital_status": {
-        "chartType": "bar",
-        "title": "Vital Status"
-      }
-    },
-    "filters": {
-      "tabs": [
-        {
-          "title": "Project",
-          "fields": [
-            "project",
-            "study"
-          ]
+  "explorerConfig":[
+    {
+      "charts": {
+        "project": {
+          "chartType": "count",
+          "title": "Projects"
         },
-        {
-          "title": "Subject",
-          "fields": [
-            "race",
-            "ethnicity",
-            "gender",
-            "vital_status"
-          ]
+        "study": {
+          "chartType": "count",
+          "title": "Studies"
         },
-        {
-          "title": "File",
-          "fields": [
-            "file_type"
-          ]
+        "file_type": {
+          "chartType": "count",
+          "title": "File Types"
+        },
+        "ethnicity": {
+          "chartType": "stackedBar",
+          "title": "Ethnicity"
+        },
+        "gender": {
+          "chartType": "pie",
+          "title": "Gender"
+        },
+        "race": {
+          "chartType": "pie",
+          "title": "Race"
+        },
+        "vital_status": {
+          "chartType": "bar",
+          "title": "Vital Status"
         }
-      ]
-    },
-    "buttons": [
-      {
-        "enabled": true,
-        "type": "data",
-        "title": "Download All Data",
-        "leftIcon": "user",
-        "rightIcon": "download",
-        "fileName": "data.json"
       },
-      {
+      "filters": {
+        "tabs": [
+          {
+            "title": "Project",
+            "fields": [
+              "project",
+              "study"
+            ]
+          },
+          {
+            "title": "Subject",
+            "fields": [
+              "race",
+              "ethnicity",
+              "gender",
+              "vital_status"
+            ]
+          },
+          {
+            "title": "File",
+            "fields": [
+              "file_type"
+            ]
+          }
+        ]
+      },
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "data",
+          "title": "Download All Data",
+          "leftIcon": "user",
+          "rightIcon": "download",
+          "fileName": "data.json"
+        },
+        {
+          "enabled": true,
+          "type": "manifest",
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json"
+        }
+      ],
+      "table": {
         "enabled": true,
-        "type": "manifest",
-        "title": "Download Manifest",
-        "leftIcon": "datafile",
-        "rightIcon": "download",
-        "fileName": "manifest.json"
+        "fields": [
+          "project",
+          "study",
+          "race",
+          "ethnicity",
+          "gender",
+          "vital_status",
+          "whatever_lab_result_value",
+          "file_count",
+          "file_type",
+          "file_format"
+        ]
       }
-    ],
-    "table": {
-      "enabled": true,
-      "fields": [
-        "project",
-        "study",
-        "race",
-        "ethnicity",
-        "gender",
-        "vital_status",
-        "whatever_lab_result_value",
-        "file_count",
-        "file_type",
-        "file_format"
-      ]
     }
-  },
+  ],
   "useArboristUI": false,
   "showArboristAuthzOnProfile": false,
   "showFenceAuthzOnProfile": true,
