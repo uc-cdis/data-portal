@@ -187,7 +187,7 @@
     "explorer": true,
     "analysis": false
   },
-  "dataExplorerConfig": {
+  "explorerConfig": [{
     "charts": {
       "project": {
         "chartType": "count",
@@ -277,7 +277,7 @@
         "file_format"
       ]
     }
-  },
+  }],
   "useArboristUI": false,
   "showArboristAuthzOnProfile": false,
   "showFenceAuthzOnProfile": true,
