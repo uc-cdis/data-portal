@@ -103,6 +103,8 @@ function buildConfig(appIn, data) {
   const app = appIn || process.env.APP || 'default';
   const appConfig = data[app] || {};
   const defaultConfig = data.default || {};
+  // din't copy 'explorerConfig' over from default config since that is a non-working example
+  delete defaultConfig.explorerConfig;
   const result = { ...defaultConfig, ...appConfig };
   delete result.components;
   Object.keys(result).forEach(
