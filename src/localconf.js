@@ -233,8 +233,6 @@ function buildConfig(opts) {
     explorerConfig = config.explorerConfig;
   }
 
-  console.log(explorerConfig);
-
   // Two tiered-access options: site-wide and index-scoped.
   // Tiered access is index-scoped if all guppyConfigs in the portal config
   // contain a tierAccessLevel.
