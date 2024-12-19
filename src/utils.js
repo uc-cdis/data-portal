@@ -106,7 +106,7 @@ export const getCategoryColor = (category) => {
 };
 
 /**
- * @param {import('d3-selection').Selection<SVGGElement>} legendGroup
+ * @param {import("d3-selection").Selection<SVGGElement>} legendGroup
  * @param {{ category: string }[]} nodes
  * @param {number} legendWidth
  */
@@ -150,7 +150,7 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .style('text-decoration', 'underline');
 }
 
-/** @param {import('d3-selection').Selection<SVGGElement>} graphSvg */
+/** @param {import("d3-selection").Selection<SVGGElement>} graphSvg */
 export function addArrows(graphSvg) {
   graphSvg
     .append('svg:defs')
@@ -168,7 +168,7 @@ export function addArrows(graphSvg) {
 }
 
 /**
- * @param {import('d3-selection').Selection<SVGGElement>} graphSvg
+ * @param {import("d3-selection").Selection<SVGGElement>} graphSvg
  * @param {any[]} edges
  */
 export function addLinks(graphSvg, edges) {
@@ -211,7 +211,7 @@ export function capitalizeFirstLetter(str) {
   const res = str.replace(/_|\./gi, ' ');
   return res.replace(
     /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
   );
 }
 
@@ -242,8 +242,8 @@ export const parseParamWidth = (width) =>
   typeof width === 'number' ? `${width}px` : width;
 
 /**
- * @param {import('react-select').Theme} theme
- * @returns {import('react-select').Theme}
+ * @param {import("react-select").Theme} theme
+ * @returns {import("react-select").Theme}
  */
 export function overrideSelectTheme(theme) {
   return {
@@ -262,4 +262,18 @@ export function formatLocalTime(datetime) {
   const date = new Date(datetime);
   const offset = -date.getTimezoneOffset() / 60;
   return `${date.toLocaleString()} UTC${offset < 0 ? '' : '+'}${offset}`;
+}
+
+export function isAdminUser(authz) {
+  const {
+    '/services/amanuensis': serviceAccessMethods,
+    '/services/fence/admin': fenceAdminMethods,
+  } = authz;
+  const serviceAccessMethod = Array.isArray(serviceAccessMethods)
+    ? serviceAccessMethods[0]?.method
+    : undefined;
+  const fenceAdminMethod = Array.isArray(fenceAdminMethods)
+    ? fenceAdminMethods[0]?.method
+    : undefined;
+  return !!fenceAdminMethod || !!serviceAccessMethod;
 }
