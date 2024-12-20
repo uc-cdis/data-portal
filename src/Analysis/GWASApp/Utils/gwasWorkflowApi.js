@@ -20,6 +20,7 @@ export const jobSubmission = async (
     out_prefix: Date.now().toString(),
     outcome,
     hare_population: selectedHare.concept_value_name,
+    hare_population_concept_id: selectedHare.concept_value_as_concept_id,
     hare_concept_id: 2000007027,
     maf_threshold: Number(mafThreshold),
     imputation_score_cutoff: Number(imputationScore),
