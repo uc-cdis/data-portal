@@ -39,6 +39,7 @@ import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
 import {
   fetchSurvivalConfig,
   fetchFilterSets,
+  fetchFederationQuery,
 } from './redux/explorer/asyncThunks';
 import {
   fetchProjects as fetchDataRequestProjects,
@@ -47,6 +48,7 @@ import {
 import { toggleAdminActive } from './redux/dataRequest/slice';
 import { useAppDispatch } from './redux/hooks';
 import useGoogleAnalytics from './hooks/useGoogleAnalytics';
+import { isAdminUser } from './utils';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -224,6 +226,26 @@ function App() {
             </ProtectedContent>
           }
         />
+        <Route
+          path='links/ccdifederation/:token'
+          element={
+            <ProtectedContent
+              preload={({ location }) => {
+                const {
+                  params: { token },
+                } = matchPath('links/ccdifederation/:token', location.pathname);
+                console.log(token);
+                return Promise.all([
+                  dispatch(fetchFederationQuery(token)),
+                  dispatch(fetchDictionary()),
+                  dispatch(fetchSurvivalConfig()),
+                ]);
+              }}
+            >
+              <Explorer />
+            </ProtectedContent>
+          }
+        />
         {enableResourceBrowser && (
           <Route
             path='resource-browser'
@@ -241,17 +263,10 @@ function App() {
               <ProtectedContent
                 preload={({ state }) => {
                   if (searchParams.get('admin') === 'true') {
-                    let {
-                      is_admin,
-                      authz: { '/services/amanuensis': serviceAccessMethods },
-                    } = state.user;
-                    let serviceAccessMethod = Array.isArray(
-                      serviceAccessMethods,
-                    )
-                      ? serviceAccessMethods[0]?.method
-                      : undefined;
-                    let isAdmin = is_admin || !!serviceAccessMethod;
-                    if (isAdmin && !state.dataRequest.isAdminActive) {
+                    if (
+                      isAdminUser(state.user.authz) &&
+                      !state.dataRequest.isAdminActive
+                    ) {
                       dispatch(toggleAdminActive());
                     }
                     return Promise.all([
@@ -276,17 +291,9 @@ function App() {
             element={
               <ProtectedContent
                 preload={({ state }) => {
-                  let {
-                    is_admin,
-                    authz: { '/services/amanuensis': serviceAccessMethods },
-                  } = state.user;
-                  let serviceAccessMethod = Array.isArray(serviceAccessMethods)
-                    ? serviceAccessMethods[0]?.method
-                    : undefined;
-                  let isAdmin = is_admin || !!serviceAccessMethod;
                   /** @type {Promise[]} */
-                  let requests = [dispatch(fetchFilterSets())];
-                  if (isAdmin) {
+                  const requests = [dispatch(fetchFilterSets())];
+                  if (isAdminUser(state.user.authz)) {
                     requests.push(dispatch(adminFetchUsers()));
                   }
                   return Promise.all(requests);

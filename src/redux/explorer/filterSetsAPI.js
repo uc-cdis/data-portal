@@ -1,10 +1,14 @@
-import { fetchWithCreds } from '../utils.fetch';
+import { fetchWithCreds, fetchWithOpts } from '../utils.fetch';
 import { convertFromFilterSetDTO, convertToFilterSetDTO } from './utils';
+import { getFilterState } from '../../GuppyComponents/Utils/queries';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
+/** @typedef {import('../../GuppyComponents/types').FilterState} FilterState */
+
 
 const FILTER_SET_URL = '/amanuensis/filter-sets';
+const FEDERATION_QUERY_URL = 'https://ccdifederation.pedscommons.org/api/v1/gateway/token'
 
 /**
  * @param {number} explorerId
@@ -100,3 +104,18 @@ export function fetchWithToken(token) {
     return convertFromFilterSetDTO(data);
   });
 }
+
+
+/**
+ * @param {string} token
+ * @returns {Promise<FilterState>}
+ */
+export function fetchFederationQueryWithToken(token) {
+  return fetchWithCreds({
+    path: `${FEDERATION_QUERY_URL}?token=${token}`,
+  }).then(({ response, data, status }) => {
+    if (status !== 200) throw response.statusText;
+    return getFilterState(data.filter);
+  });
+}
+

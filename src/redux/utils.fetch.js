@@ -123,6 +123,55 @@ export async function fetchWithCreds(opts) {
 }
 
 /**
+* @param {FetchHelperOptions} opts
+* @return {Promise<FetchHelperResult>}
+*/
+export async function fetchWithOpts(opts) {
+  const { method = 'GET', onError, path, useCache } = opts;
+
+  // cache requested & available; return cached data
+  if (useCache && method === 'GET' && fetchCache[path])
+    return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
+
+  try {
+    const { body = null, customHeaders, signal } = opts;
+
+    /** @type {RequestInit} */
+    const request = {
+      credentials: 'omit',
+      headers: { ...headers, ...customHeaders },
+      method,
+      body,
+      signal,
+    };
+
+    let response = await fetch(path, request);
+
+    // user is authorized; return data
+    if (response.status !== 403 && response.status !== 401)
+      return parseResponse(path, response, useCache, method);
+
+    // user not authorized; re-fetch user info
+    const credsResponse = await fetchCreds({ onError });
+
+    // failed to re-fetch user info; return empty data
+    if (credsResponse.status !== 200)
+      return {
+        response: credsResponse.response,
+        data: { data: {} },
+        status: credsResponse.status,
+        headers: credsResponse.headers,
+      };
+
+    // re-fetch
+    response = await fetch(path, request);
+  } catch (error) {
+    onError?.();
+    throw error;
+  }
+}
+
+/**
  * @param {FetchHelperOptions} opts
  * @param {number} timeoutInMS
  */

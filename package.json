@@ -1,6 +1,6 @@
 {
   "name": "@pcdc/windmill",
-  "version": "1.33.0",
+  "version": "1.34.0",
   "description": "PCDC Data Portal",
   "dependencies": {
     "@adobe/react-spectrum": "3.32.2",

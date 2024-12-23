@@ -12,6 +12,7 @@ import {
 } from '../redux/dataRequest/asyncThunks';
 import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import './DataRequests.css';
+import { isAdminUser } from '../utils';
 
 /** @typedef {import("../redux/dataRequest/types").DataRequestProject} DataRequestProject */
 
@@ -47,14 +48,8 @@ function DataRequests({
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
-  const {
-    is_admin: isAdminUser,
-    authz: { '/services/amanuensis': serviceAccessMethods },
-  } = useAppSelector((state) => state.user);
-  let serviceAccessMethod = Array.isArray(serviceAccessMethods)
-    ? serviceAccessMethods[0]?.method
-    : undefined;
-  const isAdmin = isAdminUser || !!serviceAccessMethod;
+  const { authz } = useAppSelector((state) => state.user);
+  const isAdmin = isAdminUser(authz);
 
   return (
     <div className='data-requests'>
