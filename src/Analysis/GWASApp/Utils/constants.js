@@ -1,3 +1,5 @@
+import { isEqual } from 'lodash';
+
 /* eslint-disable import/prefer-default-export */
 export const GWASAppSteps = [
   {
@@ -14,12 +16,10 @@ export const GWASAppSteps = [
   },
 ];
 
-export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleString();
-
 export const MESSAGES = {
   OVERLAP_ERROR: {
     title:
-      'None of the persons in the (remaining) population of your selected cohorts overlap with the study population',
+      'One or more groups have no overlap with the (remaining) population of any of the other groups',
     messageType: 'warning',
   },
   NO_BINS_ERROR: {
@@ -63,4 +63,15 @@ export const checkFinalPopulationSizeZero = (finalPopulationSizes) => {
     }
   });
   return hasZeroSizeIssue;
+};
+
+export const addUniqueObjectToArray = (currArray, newObj) => {
+  if (!Array.isArray(currArray) || typeof newObj !== 'object' || newObj === null) {
+    throw new TypeError('addUniqueObjectToArray recieved invalid parameters');
+  }
+  const isUnique = !currArray.some((obj) => isEqual(obj, newObj));
+  if (isUnique) {
+    currArray.push(newObj);
+  }
+  return currArray;
 };

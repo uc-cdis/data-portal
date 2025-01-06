@@ -18,12 +18,12 @@ import {
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation } from 'react-router-dom';
-
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
-import loadStudiesFromMDS from '../Discovery/MDSUtils';
-import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import loadStudiesFromMDS from '../Discovery/Utils/MDSUtils/MDSUtils';
+import { updateStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
+import Spinner from '../components/Spinner';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -73,13 +73,13 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://classic.clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
+  const resp = await fetch(`https://clinicaltrials.gov/api/v2/studies/${ctID}?fields=NCTId`);
   if (!resp || resp.status !== 200) {
     return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
   try {
     const respJson = await resp.json();
-    if (respJson.FieldValuesResponse?.FieldValues?.length === 1 && respJson.FieldValuesResponse.FieldValues[0].FieldValue === ctID) {
+    if (respJson.protocolSection?.identificationModule?.nctId === ctID) {
       return Promise.resolve(true);
     }
     return Promise.reject('Invalid ClinicalTrials.gov ID');
@@ -90,55 +90,18 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
 
 const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
   const errMsg = 'Unable to fetch study metadata from ClinicalTrials.gov';
-
-  // get metadata from the clinicaltrials.gov API
-  const promiseList: Promise<any>[] = [];
-  const limit = 20; // the API has a limit of 20 fields
-  let offset = 0;
   const clinicalTrialFieldsToFetch = studyRegistrationConfig.clinicalTrialFields || [];
-  while (offset < clinicalTrialFieldsToFetch.length) {
-    const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
-    offset += limit;
-    promiseList.push(
-      fetch(`https://classic.clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
-        .then(
-          (resp) => {
-            if (!resp || resp.status !== 200) {
-              return Promise.reject(errMsg);
-            }
-            return resp.json();
-          },
-        ),
-    );
+  // get metadata from the clinicaltrials.gov API
+  const resp = await fetch(`https://clinicaltrials.gov/api/v2/studies/${ctID}?fields=${clinicalTrialFieldsToFetch.join('|')}`);
+  if (!resp || resp.status !== 200) {
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
-  const responsesJson = await Promise.all(promiseList);
-
-  // add the metadata returned by each call to a single `metadata` object
-  let metadata = {};
-  responsesJson.forEach((respJson) => {
-    // it should return data for a single study
-    if (respJson.StudyFieldsResponse?.StudyFields?.length !== 1) {
-      // eslint-disable-next-line no-console
-      console.error(`${errMsg}; received response:`, respJson);
-      throw new Error(errMsg);
-    }
-    // `respData` looks like this:
-    // {Rank: value to discard, FieldWithData: [value], FieldWithoutData: []}
-    const respData = respJson.StudyFieldsResponse.StudyFields[0];
-    // `partialMetadata` looks like this: (remove Rank and fields without data)
-    // {FieldWithData: value}
-    delete respData.Rank;
-    const partialMetadata = Object.keys(respData).reduce((res, key) => {
-      if (respData[key].length > 0) {
-        res[key] = respData[key][0];
-      }
-      return res;
-    }, {});
-    // add the new key:value pairs to the ones we already have
-    metadata = { ...metadata, ...partialMetadata };
-  });
-
-  return Promise.resolve(metadata);
+  try {
+    const respJson = await resp.json();
+    return respJson;
+  } catch {
+    throw errMsg;
+  }
 };
 
 const isUUID = (input: string) => {
@@ -205,7 +168,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     const ctgovID = formValues.clinical_trials_id;
     const valuesToUpdate = {
       repository: formValues.repository || '',
-      repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
+      repository_study_ids: ((!formValues.repository_study_ids || (formValues.repository_study_ids.length === 1 && formValues.repository_study_ids[0] === '')) ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
       clinicaltrials_gov: ctgovID ? await getClinicalTrialMetadata(ctgovID) : undefined,
     };
@@ -213,7 +176,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
           .then(
-            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+            (updatedMetadataToRegister) => updateStudyInMDS(studyID, updatedMetadataToRegister)
               .then(
                 () => setFormSubmissionStatus({ status: 'success' }),
               ),
@@ -272,7 +235,9 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       </div>
     );
   }
-
+  if (!studies) {
+    return <Spinner text={'Loading study registration form, please wait...'} />;
+  }
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
@@ -292,7 +257,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                   key={study[studyRegistrationConfig.studyRegistrationUIDField]}
                   value={study[studyRegistrationConfig.studyRegistrationUIDField]}
                 >
-                  {`${study.project_number} : ${study.project_title} : ${study.appl_id}`}
+                  {`${study.project_number || 'N/A'} : ${study.study_metadata?.minimal_info?.study_name || 'N/A'} : ${study.study_metadata?.metadata_location?.nih_application_id || 'N/A'}`}
                 </Option>
               ))}
             </Select>
@@ -344,31 +309,57 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
           <Form.Item
             name='repository'
             label='Study Data Repository'
-            hasFeedback
-            help='Leave this section blank if your data is not yet available'
+            rules={[
+              {
+                message: '"Study Data ID from Repository" field has been filled with values. Please select a Study Data Repository name here.',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const repositoryStudyIDs = getFieldValue('repository_study_ids');
+                  const doesRepositoryStudyIDsHaveValue = repositoryStudyIDs && !(repositoryStudyIDs.length === 1 && repositoryStudyIDs[0] === '');
+                  if (!doesRepositoryStudyIDsHaveValue || (doesRepositoryStudyIDsHaveValue && value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('"Study Data ID from Repository" field has been filled with values. Please select a Study Data Repository name here.'));
+                },
+              }),
+            ]}
+            extra={(
+              <React.Fragment> If you have already selected a data repository, indicate it here;
+                 otherwise, leave empty.<br />
+                 If you have deposited your data and you have a unique Study ID for the data at
+                  the repository, enter it below; otherwise, leave blank.
+              </React.Fragment>
+            )}
           >
             <Select placeholder='Select a data repository' showSearch allowClear>
               <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
-              <Option value='Dataverse'>Dataverse</Option>
               <Option value='Dryad'>Dryad</Option>
               <Option value='Figshare'>Figshare</Option>
+              <Option value='GitHub'>GitHub</Option>
+              <Option value='Harvard Dataverse'>Harvard Dataverse</Option>
               <Option value='ICPSR'>ICPSR</Option>
-              <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
+              <Option value='openICPSR'>openICPSR</Option>
               <Option value='JCOIN'>JCOIN</Option>
+              <Option value='MassIVE'>MassIVE</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
-              <Option value='Metabolomics Workbench'>Metabolomics Workbench</Option>
               <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
               <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
+              <Option value='NAHDAP'>NAHDAP</Option>
+              <Option value='National Sleep Research Resource (NSRR)'>National Sleep Research Resource (NSRR)</Option>
               <Option value='NICHD DASH'>NICHD DASH</Option>
               <Option value='NIDA Data Share'>NIDA Data Share</Option>
-              <Option value='NIDDK Central'>NIDDK Central</Option>
+              <Option value='NIDDK Central Repository'>NIDDK Central Repository</Option>
               <Option value='NIMH Data Archive'>NIMH Data Archive</Option>
-              <Option value='NINDS Data Share'>NINDS Data Share</Option>
               <Option value='OpenNEURO'>OpenNEURO</Option>
-              <Option value='OpenScience Framework'>OpenScience Framework</Option>
-              <Option value='Syracuse Qualitative'>Syracuse Qualitative</Option>
+              <Option value='Open Science Framework'>Open Science Framework</Option>
+              <Option value='Pennsieve'>Pennsieve</Option>
+              <Option value='Protocols.io'>Protocols.io</Option>
+              <Option value='Qualitative Data Repository at Syracuse University'>Qualitative Data Repository at Syracuse University</Option>
               <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
+              <Option value='Sequence Read Archive (SRA)'>Sequence Read Archive (SRA)</Option>
+              <Option value='SPARC'>SPARC</Option>
               <Option value='Vivli'>Vivli</Option>
               <Option value='The Zebrafish Model Organism Database (ZFIN)'>The Zebrafish Model Organism Database (ZFIN)</Option>
               <Option value='Zenodo'>Zenodo</Option>

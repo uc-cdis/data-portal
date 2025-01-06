@@ -3,7 +3,6 @@ import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { GWASAppSteps, checkFinalPopulationSizeZero } from './Utils/constants';
 import { SourceContextProvider } from './Utils/Source';
-import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
 import ACTIONS from './Utils/StateManagement/Actions';
 import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
@@ -12,10 +11,13 @@ import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessagesList/DismissibleMessagesList';
+import MakeFullscreenButton from './Components/MakeFullscreenButton/MakeFullscreenButton';
+import InitializeCurrentState from './Utils/StateManagement/InitializeCurrentState';
 import './GWASApp.css';
+import WorkflowLimitsDashboard from '../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsDashboard';
 
 const GWASContainer = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, InitializeCurrentState());
 
   const generateStep = () => {
     switch (state.currentStep) {
@@ -25,6 +27,7 @@ const GWASContainer = () => {
           <SelectStudyPopulation
             selectedCohort={state.selectedStudyPopulationCohort}
             dispatch={dispatch}
+            selectedTeamProject={state.selectedTeamProject}
           />
         </div>
       );
@@ -35,6 +38,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           covariates={state.covariates}
           dispatch={dispatch}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 2:
@@ -44,6 +48,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           covariates={state.covariates}
           dispatch={dispatch}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 3:
@@ -59,6 +64,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal={false}
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     case 4:
@@ -74,6 +80,7 @@ const GWASContainer = () => {
           outcome={state.outcome}
           showModal
           finalPopulationSizes={state.finalPopulationSizes}
+          selectedTeamProject={state.selectedTeamProject}
         />
       );
     default:
@@ -95,6 +102,7 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider>
+      <WorkflowLimitsDashboard />
       <ProgressBar
         currentStep={state.currentStep}
         selectionMode={state.selectionMode}
@@ -150,6 +158,7 @@ const GWASContainer = () => {
               </Button>
             )}
           </div>
+          <MakeFullscreenButton />
         </Space>
       </div>
     </SourceContextProvider>

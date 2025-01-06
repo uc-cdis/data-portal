@@ -8,11 +8,13 @@ import VIEWS from './Utils/ViewsEnumeration';
 import HideShowElementsCreatedByOuterAnalysisApp from './Utils/HideShowElementsCreatedByOuterAnalysisApp';
 import InitialHomeTableState from './Views/Home/HomeTableState/InitialHomeTableState';
 import './GWASResultsContainer.css';
+import WorkflowLimitsDashboard from '../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsDashboard';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [selectedRowData, setSelectedRowData] = useState({});
   const [homeTableState, setHomeTableState] = useState(InitialHomeTableState);
+  const [selectedTeamProject] = useState(localStorage.getItem('teamProject'));
 
   useEffect(() => {
     HideShowElementsCreatedByOuterAnalysisApp(currentView);
@@ -21,7 +23,7 @@ const GWASResultsContainer = () => {
   const generateStep = () => {
     switch (currentView) {
     case VIEWS.home:
-      return <Home />;
+      return <Home selectedTeamProject={selectedTeamProject} />;
     case VIEWS.results:
       return <Results />;
     case VIEWS.execution:
@@ -35,6 +37,7 @@ const GWASResultsContainer = () => {
 
   return (
     <div className='GWASResults'>
+      <WorkflowLimitsDashboard />
       <SharedContext.Provider
         value={{
           setCurrentView,

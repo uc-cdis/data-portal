@@ -1,0 +1,28 @@
+.team-project-header {
+  text-align: right;
+  color: #215c9e;
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.analysis .team-project-header {
+  line-height: 80px;
+}
+
+.team-project-header_modal-button {
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  height: auto;
+  width: auto;
+}
+
+.team-project-header_modal-button:hover {
+  opacity: 0.8;
+}
+
+.team-project-header_modal-button:focus-visible {
+  padding: 2px;
+  outline: 2px solid #1890ff;
+}

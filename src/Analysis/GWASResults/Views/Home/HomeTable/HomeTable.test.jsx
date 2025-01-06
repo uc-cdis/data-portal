@@ -5,6 +5,7 @@ import HomeTable from './HomeTable';
 import SharedContext from '../../../Utils/SharedContext';
 import TableData from '../../../TestData/TableData';
 import InitialHomeTableState from '../HomeTableState/InitialHomeTableState';
+import PHASES from '../../../Utils/PhasesEnumeration';
 
 describe('HomeTable component', () => {
   const data = TableData;
@@ -23,13 +24,14 @@ describe('HomeTable component', () => {
     );
 
     // Check that each of the values from data that needed to be shown appear in the dom
-    data.forEach((item) => {
+    data.forEach((item, iterator) => {
       const finishedTestDate = new Date(item.finishedAt);
       const formattedFinishedTestDate = finishedTestDate.toLocaleDateString();
       const submittedTestDate = new Date(item.submittedAt);
       const formattedSubmittedTestDate = submittedTestDate.toLocaleDateString();
 
       expect(screen.getAllByText(item.name)[0]).toBeInTheDocument();
+      expect(screen.getAllByText(item.gen3username)[0]).toBeInTheDocument();
       expect(screen.getAllByText(item.wf_name)[0]).toBeInTheDocument();
       expect(
         screen.getAllByText(formattedFinishedTestDate)[0],
@@ -38,15 +40,34 @@ describe('HomeTable component', () => {
       expect(
         screen.getAllByText(formattedSubmittedTestDate)[0],
       ).toBeInTheDocument();
+
+      // Check that the execution and results buttons render for each row
+      const inputButton = screen.getAllByText('Input');
+      expect(inputButton[iterator]).toBeInTheDocument();
+
+      const executionButton = screen.getAllByText('Execution');
+      expect(executionButton[iterator]).toBeInTheDocument();
+
+      const resultsButton = screen.getAllByText('Results');
+      expect(resultsButton[iterator]).toBeInTheDocument();
     });
+  });
 
-    // Check that the execution and results buttons render for each row
-    const executionButton = screen.getAllByText('Execution');
-    expect(executionButton[0]).toBeInTheDocument();
-    expect(executionButton[1]).toBeInTheDocument();
+  it('should render disable results button only if not Succeeded', () => {
+    render(
+      <SharedContext.Provider value={mockContext}>
+        <HomeTable data={data} />
+      </SharedContext.Provider>,
+    );
 
-    const resultsButton = screen.getAllByText('Results');
-    expect(resultsButton[0]).toBeInTheDocument();
-    expect(resultsButton[1]).toBeInTheDocument();
+    data.forEach((item, iterator) => {
+      const resultsButton = screen.getAllByText('Results');
+      const currentResultsButton = resultsButton[iterator].closest('button');
+      if (item.phase === PHASES.Succeeded) {
+        expect(currentResultsButton).not.toBeDisabled();
+      } else {
+        expect(currentResultsButton).toBeDisabled();
+      }
+    });
   });
 });

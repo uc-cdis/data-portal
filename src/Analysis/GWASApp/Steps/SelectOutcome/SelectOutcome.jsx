@@ -4,14 +4,13 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import './SelectOutcome.css';
-import '../../GWASApp.css';
 
 const SelectOutcome = ({
   dispatch,
   studyPopulationCohort,
   outcome,
   covariates,
+  selectedTeamProject,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
@@ -29,7 +28,7 @@ const SelectOutcome = ({
           <ContinuousCovariates
             dispatch={dispatch}
             selectedStudyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
@@ -53,7 +52,7 @@ const SelectOutcome = ({
           <CustomDichotomousCovariates
             dispatch={dispatch}
             studyPopulationCohort={studyPopulationCohort}
-            outcome={outcome}
+            outcome={null}
             handleClose={() => {
               setSelectionMode('');
               dispatch({
@@ -67,6 +66,7 @@ const SelectOutcome = ({
                 payload: chosenOutcome,
               });
             }}
+            selectedTeamProject={selectedTeamProject}
           />
         </div>
       );
@@ -131,6 +131,7 @@ SelectOutcome.propTypes = {
   studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object,
   covariates: PropTypes.array,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 SelectOutcome.defaultProps = {

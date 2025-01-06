@@ -1,0 +1,287 @@
+.atlas-data-dictionary-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  height: auto;
+  overflow-y: hidden;
+}
+
+.atlas-data-dictionary-container .row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.atlas-data-dictionary-container  .column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.atlas-data-dictionary-container .data-not-available,
+.atlas-data-dictionary-container .no-data-found,
+.atlas-data-dictionary-container .loading-container {
+  text-align: center;
+}
+
+.atlas-data-dictionary-container table tbody tr:nth-child(4n + 3) {
+  background-color: #fafafb;
+}
+
+.atlas-data-dictionary-container table thead.search-bar {
+  background: #cfdbe6;
+}
+
+/* Column and Entries Headers */
+.atlas-data-dictionary-container table thead.column-headers {
+  background: #e9eef2;
+}
+
+.atlas-data-dictionary-container table thead.column-headers th {
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
+}
+
+.atlas-data-dictionary-container table thead.column-headers .extra-wide-header {
+  padding-right: 1em;
+}
+
+.atlas-data-dictionary-container table caption.entries-header th {
+  cursor: default;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.atlas-data-dictionary-container .column-header th:hover {
+  background-color: #f5f5f5;
+}
+
+.atlas-data-dictionary-container table caption.entries-header {
+  background-color: #cfdbe6;
+  color: black;
+  padding: 8px 0 7px 10px;
+  width: 100%;
+  font-size: 12px;
+  font-family: inherit;
+  user-select: inherit;
+}
+
+.atlas-data-dictionary-container table caption.entries-header th:hover {
+  background-color: #cfdbe6;
+}
+
+.atlas-data-dictionary-container .table-column-sorters {
+  display: flex;
+  flex: auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.atlas-data-dictionary-container th.not-sortable:hover {
+  background-color: inherit;
+  cursor: inherit;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-inner {
+  padding-left: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-inner span {
+  font-size: 11px;
+  line-height: 0;
+  display: inline-block;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-down {
+  margin-top: 4px;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-down svg path,
+.atlas-data-dictionary-container .table-column-sorter-up svg path {
+  fill: #ccc;
+}
+
+.atlas-data-dictionary-container .table-column-sorter-down.active svg path,
+.atlas-data-dictionary-container .table-column-sorter-up.active svg path {
+  fill: #1890ff;
+}
+
+/* Expandable rows */
+.atlas-data-dictionary-container tr.expandable > td:first-child {
+  padding: 0;
+}
+
+.atlas-data-dictionary-container tr td div.expandable {
+  max-height: 0;
+  overflow: hidden;
+  height: 0;
+  transition: height 0.3s, max-height 0.3s;
+}
+
+.atlas-data-dictionary-container tr td div.expandable.expanded {
+  max-height: 359px;
+  height: 359px;
+  background: #e2e2e3;
+}
+
+.atlas-data-dictionary-container .expanded-container {
+  background: #fff;
+  height: 327px;
+  padding: 16px;
+  margin: 16px;
+  overflow-y: auto;
+}
+
+.atlas-data-dictionary-container .chart-details-wrapper {
+  background: #fff;
+}
+
+.atlas-data-dictionary-container
+.chart-details-wrapper.expanded-container.search-highlight {
+  background: #fff;
+  border: 2px solid #ef8523;
+}
+
+.atlas-data-dictionary-container .expanded-container table thead {
+  background: #e9eef2;
+}
+
+.atlas-data-dictionary-container .td-container {
+  width: 80%;
+  word-wrap: break-word;
+  display: block;
+  padding: 0;
+  background: none;
+}
+
+.atlas-data-dictionary-container .search-highlight,
+table > tbody > tr > td.search-highlight:last-of-type {
+  background: #fcefe4;
+  background: linear-gradient(
+    to right,
+    #ef8523,
+    #ef8523 2px,
+    #fcefe4 2px,
+    #fcefe4 80%,
+    transparent 80%,
+    transparent
+  );
+}
+
+.atlas-data-dictionary-container .search-highlight,
+table > tbody > tr > td.preview-chart {
+  min-width: 145px;
+}
+
+/* Pagination */
+.atlas-data-dictionary-container .pagination-wrapper button {
+  width: unset;
+  transform: scale(0.9);
+  padding: 0;
+}
+
+.atlas-data-dictionary-container .pagination-container {
+  width: 450px;
+  margin-left: auto;
+}
+
+.atlas-data-dictionary-container .pagination-container div {
+  float: right;
+  color: #333333;
+  font-size: 12px;
+}
+
+.atlas-data-dictionary-container .entries-quantity-select select {
+  margin: 0 8px 0 5px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+  width: 44px;
+  text-align: center;
+}
+
+/* Search Bar */
+.atlas-data-dictionary-container .search-bar {
+  background: #cfdbe6;
+}
+
+.atlas-data-dictionary-container .search-bar-container {
+  width: 425px;
+  padding: 6px 0 6px 0;
+}
+
+.atlas-data-dictionary-container .search-bar-input-control {
+  display: block;
+  cursor: pointer;
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  color: white;
+  border-radius: 7px;
+  border: none;
+  background: #adb5bd;
+  line-height: 0;
+  text-align: center;
+  opacity: 70%;
+  padding-bottom: 2px;
+}
+
+.atlas-data-dictionary-container .search-bar-message {
+  margin: 6px 0 0 16px;
+}
+
+.atlas-data-dictionary-container .search-bar-message button {
+  background: #fff;
+  margin-left: 16px;
+}
+
+.atlas-data-dictionary-container .search-bar-message button  .mantine-Button-icon {
+  margin-right: 4px;
+}
+
+.atlas-data-dictionary-container .search-bar-message button:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.atlas-data-dictionary-container .search-bar-message svg {
+  margin: 0 4px -2px 0;
+}
+
+/* Charts */
+.atlas-data-dictionary-container .recharts-cartesian-grid-vertical {
+  opacity: 0;
+}
+
+.atlas-data-dictionary-container .value-summary-chart {
+  margin: 35px auto 0 auto;
+  text-align: center;
+}
+
+.atlas-data-dictionary-container .value-summary-chart.Number {
+  margin: 10px auto 0 auto;
+}
+
+.atlas-data-dictionary-container .value-summary-chart.preview {
+  margin: 0 auto;
+}
+
+.atlas-data-dictionary-container .value-summary-chart.Number .recharts-wrapper {
+  margin-bottom: 20px;
+}
+
+.atlas-data-dictionary-container .value-summary-chart-title {
+  font-size: 10px;
+  padding-left: 65px;
+}
+
+.atlas-data-dictionary-container .value-summary-chart .recharts-text.recharts-cartesian-axis-tick-value {
+  font-size: 10px;
+}

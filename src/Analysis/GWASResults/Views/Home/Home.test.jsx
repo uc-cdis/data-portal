@@ -24,7 +24,7 @@ const testJSX = () => (
         setHomeTableState: jest.fn(),
       }}
     >
-      <Home />
+      <Home selectedTeamProject='test' />
     </SharedContext.Provider>
   </QueryClientProvider>
 );
@@ -46,6 +46,7 @@ describe('Home component', () => {
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValueOnce(TableData),
     });
     render(testJSX());

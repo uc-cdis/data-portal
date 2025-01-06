@@ -7,6 +7,7 @@ import {
   Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 
 import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
@@ -264,14 +265,12 @@ class Workspace extends React.Component {
       ))) {
         workspaceLaunchStepsConfig.steps[2].description = 'Error';
         workspaceLaunchStepsConfig.currentStepsStatus = 'error';
-      }
-      else
-      {
-        //If container states are available, display detailed pod statuses
+      } else {
+        // If container states are available, display detailed pod statuses
         if (cs.length > 0) {
           for (let i = 0; i < cs.length; i++) {
-            const j = i+1
-            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(' \n Container ' + j + ' Ready: ' + cs[i].ready);
+            const j = i + 1;
+            workspaceLaunchStepsConfig.steps[2].description = workspaceLaunchStepsConfig.steps[2].description.concat(` \n Container ${j} Ready: ${cs[i].ready}`);
           }
         }
       }
@@ -287,8 +286,7 @@ class Workspace extends React.Component {
       workspaceLaunchStepsConfig.currentIndex = 2;
       if (workspaceStatusData.status === 'Launching') {
         workspaceLaunchStepsConfig.steps[2].description = 'ECS task pending';
-      }
-      else if (workspaceStatusData.status !== 'Active') {
+      } else if (workspaceStatusData.status !== 'Active') {
         workspaceLaunchStepsConfig.steps[2].description = 'ECS task failed';
       }
       return workspaceLaunchStepsConfig;
@@ -323,10 +321,16 @@ class Workspace extends React.Component {
           datadogRum.addAction('workspaceLaunch', {
             workspaceName: workspace.name,
           });
+          faro.api.pushEvent(
+            'workspaceLaunch',
+            {
+              workspaceName: workspace.name,
+            },
+          );
           this.checkWorkspaceStatus();
           break;
         default:
-          message.error('There is an error when trying to launch your workspace');
+          message.error('There was an error when trying to launch your workspace');
           this.setState({
             workspaceID: null,
             workspaceLaunchStepsConfig: null,
@@ -461,7 +465,7 @@ class Workspace extends React.Component {
 
   handleMenuClick = async (e) => {
     if (this.state.payModel.all_pay_models[e.key].request_status === 'above limit') {
-      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@datacommons.io with questions.');
+      message.error('Selected pay model usage has exceeded its available funding. Please choose another pay model. Contact brhsupport@gen3.org with questions.');
       return;
     }
     await fetchWithCreds({
@@ -473,6 +477,7 @@ class Workspace extends React.Component {
           this.setState({
             payModel: data,
           });
+          this.getWorkspaceOptions();
         });
       }
     });
@@ -657,7 +662,7 @@ class Workspace extends React.Component {
                         >
                           {(this.state.workspaceLaunchStepsConfig.steps.map((step) => (
                             <Step
-                              classname = 'workspaceStep'
+                              classname='workspaceStep'
                               key={step.title}
                               title={step.title}
                               description={step.description}
@@ -702,13 +707,9 @@ class Workspace extends React.Component {
               && this.state.workspaceStatus !== 'Stopped'
               ? (
                 <div>
-                  {workspacePageTitle
-                    ? (
-                      <h2 className='workspace__title'>
-                        {parse(workspacePageTitle)}
-                      </h2>
-                    )
-                    : null}
+                  <h1 className='workspace__title'>
+                    {workspacePageTitle ? parse(workspacePageTitle) : 'Workspace'}
+                  </h1>
                   {workspacePageDescription
                     ? (
                       <div className='workspace__description'>
@@ -743,7 +744,7 @@ class Workspace extends React.Component {
                   {isPayModelAboveLimit
                     ? (
                       <Alert
-                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@datacommons.io if you have questions.'
+                        description='Selected pay model usage has exceeded its available funding.  Please replenish your funds or choose a different pay model. Contact brhsupport@gen3.org if you have questions.'
                         type='error'
                         banner
                         closable

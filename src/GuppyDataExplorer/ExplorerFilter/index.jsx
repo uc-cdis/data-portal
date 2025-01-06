@@ -60,7 +60,34 @@ class ExplorerFilter extends React.Component {
     return null;
   }
 
-  componentDidUpdate() {
+  /**
+   * Little helper function to apply accessibility filters to aggregation histogram results
+   * @param {*} accessibleValues list of values that user has access to
+   * @param {*} histogram raw histogram array
+   * @returns modified histogram after applying accessibility filters
+   */
+  applyAccessibleFilter = (accessibleValues, histogram) => {
+    if (!Array.isArray(histogram)) {
+      throw new Error('Invalid histogram format');
+    }
+    return histogram.filter(({ key }) => {
+      const accessible = accessibleValues.includes(key);
+      switch (this.state.selectedAccessFilter) {
+      case 'all-data':
+        return true; // always show all items if 'all-data'
+      case 'with-access':
+        return accessible; // only show accessible items if 'with-access'
+      case 'without-access':
+        return !accessible; // only show unaccessible items if 'without-access'
+      default:
+        throw new Error('Invalid access filter option');
+      }
+    })
+      .map(({ key, count }) => ({
+        key,
+        count,
+        accessible: accessibleValues.includes(key),
+      }));
   }
 
   /**
@@ -87,26 +114,12 @@ class ExplorerFilter extends React.Component {
       // if the field is in accessibleFieldObject, add "accessible=false"
       // to those items which are unaccessible
       const accessibleValues = this.props.accessibleFieldObject[field];
-      const newHistogram = aggsData[field].histogram
-        .filter(({ key }) => {
-          const accessible = accessibleValues.includes(key);
-          switch (this.state.selectedAccessFilter) {
-          case 'all-data':
-            return true; // always show all items if 'all-data'
-          case 'with-access':
-            return accessible; // only show accessible items if 'with-access'
-          case 'without-access':
-            return !accessible; // only show unaccessible items if 'without-access'
-          default:
-            throw new Error('Invalid access filter option');
-          }
-        })
-        .map(({ key, count }) => ({
-          key,
-          count,
-          accessible: accessibleValues.includes(key),
-        }));
+      const newHistogram = this.applyAccessibleFilter(accessibleValues, aggsData[field].histogram);
       res[field] = { histogram: newHistogram };
+      if (Array.isArray(aggsData[field].asTextHistogram)) {
+        const newAsTextHistogram = this.applyAccessibleFilter(accessibleValues, aggsData[field].asTextHistogram);
+        res[field] = { ...res[field], asTextHistogram: newAsTextHistogram };
+      }
       return res;
     }, {});
     return newAggsData;
@@ -139,6 +152,7 @@ class ExplorerFilter extends React.Component {
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       hideEmptyFilterSection: explorerHideEmptyFilterSection,
       filterValuesToHide: explorerFilterValuesToHide,
+      csrfToken: this.props.csrfToken,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -202,6 +216,7 @@ ExplorerFilter.propTypes = {
   unaccessibleFieldObject: PropTypes.object, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
+  csrfToken: PropTypes.string, // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
   userFilterFromURL: PropTypes.object,
@@ -221,6 +236,7 @@ ExplorerFilter.defaultProps = {
   unaccessibleFieldObject: {},
   adminAppliedPreFilters: {},
   accessibleFieldCheckList: [],
+  csrfToken: '',
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
   userFilterFromURL: {},

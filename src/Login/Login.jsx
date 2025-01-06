@@ -3,12 +3,16 @@ import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { basename } from '../localconf';
+import { basename, forceSingleLoginDropdownOptions } from '../localconf';
 import { components } from '../params';
 
 import './Login.less';
 
 const getInitialState = (height) => ({ height });
+
+const determineIfEntryLoginSelectShown = (name, loginOptionsLength) => ((forceSingleLoginDropdownOptions
+    && forceSingleLoginDropdownOptions.includes(name))
+  || loginOptionsLength > 1);
 
 // Get a url for a given "location" (location object should have at least the .from attribute)
 export const getUrlForRedirectLocation = (location) => {
@@ -92,6 +96,21 @@ class Login extends React.Component {
     }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
 
+    const getLocationForText = (location) => {
+      let next = location.from;
+      if (location.state && location.state.from) {
+        next = location.state.from;
+      }
+      if (!next || next === '/') {
+        return undefined;
+      }
+      // Lookup next to get actuale page name, if item is not in main navigation display default messaging
+      const nextItem = components.navigation.items.filter((item) => item.link === next)[0];
+
+      return nextItem ? nextItem.name : 'Restricted';
+    };
+    const fromLocationText = getLocationForText(location);
+
     let loginComponent = (
       <React.Fragment key='login-component'>
         <div className='login-page__entries'>
@@ -157,7 +176,7 @@ class Login extends React.Component {
                   // over the login options' names (e.g. "The University of
                   // Chicago") and not the actual option values, which are
                   // URLs.
-                  loginOptions[i].length > 1 && (
+                  determineIfEntryLoginSelectShown(p.name, loginOptions[i].length) && (
                     <Select
                       isClearable
                       isSearchable
@@ -197,14 +216,23 @@ class Login extends React.Component {
             : null
         }
         <div className='login-page__central-content'>
-          <div className='h1-typo login-page__title'>
+          <h1 className='h1-typo login-page__title'>
             {this.props.data.title}
-          </div>
-          <div className='high-light login-page__sub-title'>
-            {this.props.data.subTitle}
-          </div>
-          <hr className='login-page__separator' />
-          <div className='body-typo'>{this.props.data.text}</div>
+          </h1>
+          {fromLocationText ? (
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              Access {fromLocationText}
+            </div>
+            <div className='body-typo'>The {fromLocationText === 'Restricted' ? 'page' : fromLocationText} requires access. Please login using one of the options below to continue.</div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment><div className='high-light login-page__sub-title'>
+              {this.props.data.subTitle}
+                            </div>
+            <hr className='login-page__separator' />
+            <div className='body-typo'>{this.props.data.text}</div>
+            </React.Fragment>
+          )}
           {loginComponent}
           <div>
             {this.props.data.contact}

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import ContinuousCovariates from './ContinuousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
+import '../../GWASApp.css';
 
 export default {
   title: 'Tests3/GWASApp/ContinuousCovariates',
@@ -10,30 +11,35 @@ export default {
 };
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
-
 const mockedQueryClient = new QueryClient();
 
 const Template = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <div className='GWASApp'>
-          <ContinuousCovariates
-            selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
-            selectedCovariates={[]}
-            covariates={[]}
-            outcome={null}
-            handleClose={() => {
-              console.log('close');
-            }}
-            handleSelect={(chosenCovariate) => {
-              console.log('chosen covariate:', chosenCovariate);
-            }}
-            dispatch={(payload) => {
-              console.log('payload:', payload);
-            }}
-            submitButtonLabel={'Add'}
-          />
+        <div className='GWASApp' style={{ background: '#f5f5f5' }}>
+          <div className='steps-content'>
+            <div className='GWASUI-double-column'>
+              <div className='select-container' style={{ background: '#fff' }}>
+                <ContinuousCovariates
+                  selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
+                  selectedCovariates={[]}
+                  covariates={[]}
+                  outcome={null}
+                  handleClose={() => {
+                    console.log('close');
+                  }}
+                  handleSelect={(chosenCovariate) => {
+                    console.log('chosen covariate:', chosenCovariate);
+                  }}
+                  dispatch={(payload) => {
+                    console.log('payload:', payload);
+                  }}
+                  submitButtonLabel={'Add'}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </SourceContextProvider>
     </QueryClientProvider>
@@ -108,15 +114,15 @@ SuccessCase.parameters = {
             ctx.delay(1100),
             ctx.json({
               bins: [
-                { start: 1.4564567, end: 10.45642, nr_persons: 100 },
-                { start: 10.45642, end: 20, nr_persons: 200 },
-                { start: 20, end: 30, nr_persons: 300 },
-                { start: 30, end: 40, nr_persons: 400 },
-                { start: 40, end: 50, nr_persons: 500 },
-                { start: 50, end: 60, nr_persons: 400 },
-                { start: 60, end: 70, nr_persons: 350 },
-                { start: 70, end: 80, nr_persons: 100 },
-                { start: 80, end: 90, nr_persons: 50 },
+                { start: 1.4564567, end: 10.45642, personCount: 100 },
+                { start: 10.45642, end: 20, personCount: 200 },
+                { start: 20, end: 30, personCount: 300 },
+                { start: 30, end: 40, personCount: 400 },
+                { start: 40, end: 50, personCount: 500 },
+                { start: 50, end: 60, personCount: 400 },
+                { start: 60, end: 70, personCount: 350 },
+                { start: 70, end: 80, personCount: 100 },
+                { start: 80, end: 90, personCount: 50 },
               ],
             })
           );

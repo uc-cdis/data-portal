@@ -55,6 +55,13 @@ const HomeTable = ({ data }) => {
         nameSearchTerm: event.target.value,
       });
     }
+    if (searchTermKey === 'gen3username') {
+      setHomeTableState({
+        ...homeTableState,
+        currentPage: 1,
+        userNameSearchTerm: event.target.value,
+      });
+    }
     if (searchTermKey === 'wf_name') {
       setHomeTableState({
         ...homeTableState,
@@ -133,6 +140,29 @@ const HomeTable = ({ data }) => {
             />
           ),
           dataIndex: 'name',
+        },
+      ],
+    },
+    {
+      title: 'User Name',
+      dataIndex: 'gen3username',
+      key: 'gen3username',
+      show: homeTableState.columnManagement.showUserName,
+      sorter: (a, b) => a.gen3username.localeCompare(b.gen3username),
+      sortOrder:
+        homeTableState.sortInfo?.columnKey === 'gen3username'
+        && homeTableState.sortInfo.order,
+      children: [
+        {
+          title: (
+            <Input
+              placeholder='Search by User Name'
+              value={homeTableState.userNameSearchTerm}
+              onChange={(event) => handleSearchTermChange(event, 'gen3username')}
+              suffix={<SearchOutlined />}
+            />
+          ),
+          dataIndex: 'gen3username',
         },
       ],
     },
@@ -281,6 +311,7 @@ const HomeTable = ({ data }) => {
                   setSelectedRowData(record);
                   setCurrentView(VIEWS.results);
                 }}
+                disabled={record.phase !== PHASES.Succeeded}
               >
                 Results
               </Button>

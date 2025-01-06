@@ -30,9 +30,9 @@
           "enabled": false,
           "menuText": "Not Accessible"
         },
-        "pending": {
+        "waiting": {
           "enabled": true,
-          "menuText": "Pending"
+          "menuText": "Waiting"
         },
         "notAvailable": {
           "enabled": true,
@@ -96,6 +96,9 @@
   "studyPageFields": {
     "header": {
       "field": "name"
+    },
+    "subHeader": {
+      "field": "study_id"
     },
     "fieldsToShow": [
       {

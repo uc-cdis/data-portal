@@ -1,3 +1,5 @@
+import crawlers from 'crawler-user-agents';
+
 /* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
@@ -155,11 +157,36 @@ function buildConfig(opts) {
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
       // eslint-disable-next-line no-console
-      console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
+      console.warn('Datadog sample rate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
     }
   }
+
+  // Grafana Faro related setup (this will be merged with DD setup block above when DD RUM is removed)
+  const grafanaFaroConfig = config.grafanaFaroConfig || {};
+  grafanaFaroConfig.grafanaFaroEnable = !!grafanaFaroConfig.grafanaFaroEnable;
+  if (!grafanaFaroConfig.grafanaFaroUrl) {
+    grafanaFaroConfig.grafanaFaroUrl = 'https://faro.planx-pla.net/collect';
+  }
+  if (!grafanaFaroConfig.grafanaFaroNamespace) {
+    grafanaFaroConfig.grafanaFaroNamespace = 'PROD';
+    if (hostnameOnly.includes('qa-')) {
+      grafanaFaroConfig.grafanaFaroNamespace = 'QA';
+    } else if (hostnameOnly.endsWith('.planx-pla.net')) {
+      grafanaFaroConfig.grafanaFaroNamespace = 'DEV';
+    }
+  }
+  if (!grafanaFaroConfig.grafanaFaroSampleRate) {
+    // set default sample rate for Grafana Faro if not provided
+    grafanaFaroConfig.grafanaFaroSampleRate = 1;
+  } else if (Number.isNaN(grafanaFaroConfig.grafanaFaroSampleRate)) {
+    // eslint-disable-next-line no-console
+    console.warn('Grafana Faro sample rate value in Portal config is not a number, ignoring');
+    grafanaFaroConfig.grafanaFaroSampleRate = 1;
+  }
+  const knownBotPattern = crawlers.map((c) => c.pattern).join('|');
+  const knownBotRegex = new RegExp(knownBotPattern, 'i');
 
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
@@ -291,6 +318,11 @@ function buildConfig(opts) {
     explorerFilterValuesToHide = config.featureFlags.explorerFilterValuesToHide;
   }
 
+  let forceSingleLoginDropdownOptions = [];
+  if (config.featureFlags && config.featureFlags.forceSingleLoginDropdownOptions) {
+    forceSingleLoginDropdownOptions = config.featureFlags.forceSingleLoginDropdownOptions;
+  }
+
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -318,14 +350,15 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
     studyRegistrationConfig.studyRegistrationUIDField = discoveryConfig?.minimalFieldMapping?.uid;
   }
-  if (!studyRegistrationConfig.dataDictionaryField) {
-    studyRegistrationConfig.dataDictionaryField = '';
+  if (!studyRegistrationConfig.variableMetadataField) {
+    studyRegistrationConfig.variableMetadataField = '';
   }
   const { workspacePageTitle } = config;
+  const { profilePageTitle } = config;
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
     ? registrationConfigs.features.workspaceRegistrationConfig : null;
-  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
+  const zendeskConfig = registrationConfigs ? registrationConfigs.zendeskConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -441,23 +474,11 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASUIApp':
-          analysisApps.GWASUIApp = {
-            title: 'Gen3 GWAS',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
-        case 'GWASResults':
-          analysisApps.GWASResults = {
-            title: 'GWAS Results',
-            description: 'Use this App to view status & results of submitted workflows',
-            image: '/src/img/analysis-icons/gwasResults.svg',
-          };
-          break;
         default:
           break;
         }
+      } else if (at.appId) {
+        analysisApps[at.appId] = at;
       } else if (at.title) {
         analysisApps[at.title] = at;
       }
@@ -474,17 +495,23 @@ function buildConfig(opts) {
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
   const cedarWrapperURL = `${hostname}cedar`;
-  const kayakoWrapperURL = `${hostname}kayako`;
+  const gen3ZendeskURL = 'https://<SUBDOMAIN_NAME>.zendesk.com';
 
-  // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
-  // This allows for one point-of-change in the case of future rebranding.
-  // Map href or explicit descriptor to alt text.
+  const portalLogoAltText = () => {
+    if (components?.logoAltText) return `${components.logoAltText} - home`;
+    return `${components.appName} - home`;
+  };
+
   const commonsWideAltText = {
-    portalLogo: `${components.appName} - home`, // Standardized, accessible logo alt text for all commons
+    portalLogo: portalLogoAltText(),
     'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
     'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
 
   };
+
+  const topNavLogin = !components?.login?.hideNavLink;
+
+  const userAccessToSite = config.userAccessToSite;
 
   return {
     app,
@@ -518,6 +545,7 @@ function buildConfig(opts) {
     logoutInactiveUsers,
     workspaceTimeoutInMinutes,
     requiredCerts,
+    userAccessToSite,
     lineLimit,
     certs: components.certs,
     workspaceUrl,
@@ -559,6 +587,7 @@ function buildConfig(opts) {
     explorerPublic,
     explorerHideEmptyFilterSection,
     explorerFilterValuesToHide,
+    forceSingleLoginDropdownOptions,
     authzPath,
     authzMappingPath,
     enableResourceBrowser,
@@ -570,12 +599,13 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
-    kayakoConfig,
+    zendeskConfig,
     studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
     workspacePageTitle,
+    profilePageTitle,
     workspacePageDescription,
     enableDAPTracker,
     workspaceRegistrationConfig,
@@ -586,17 +616,20 @@ function buildConfig(opts) {
     mdsURL,
     aggMDSDataURL,
     cedarWrapperURL,
-    kayakoWrapperURL,
+    gen3ZendeskURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
     ddEnv,
     ddUrl,
     ddSampleRate,
+    knownBotRegex,
+    grafanaFaroConfig,
     showSystemUse,
     showSystemUseOnlyOnLogin,
     Error403Url,
     bundle,
+    topNavLogin,
   };
 }
 

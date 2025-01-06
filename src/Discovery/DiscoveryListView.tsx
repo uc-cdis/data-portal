@@ -18,7 +18,7 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  selectedTags: any [];
+  selectedTags: any[];
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
   onTagsSelected: (selectedTags: any) => any;
 }
@@ -47,15 +47,28 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
-        props.config.features.exportToWorkspace
-              && props.config.features.exportToWorkspace.enabled
+        (props.config.features.exportToWorkspace
+          && props.config.features.exportToWorkspace.enabled) || (props.config.features.exportToWorkspace?.enableFillRequestForm
+            && props.config.features.exportToWorkspace.enableFillRequestForm === true)
       ) && {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
         ),
         renderCell: (_checked, _record, _index, node) => (
           <Tooltip
-            title={`Click to select item for ${(props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip) ? 'download or ' : ''}open in workspace`}
+            title={`Click to select item for ${
+              [
+                props.config.features.exportToWorkspace.enableFillRequestForm
+                  ? props.config.features.exportToWorkspace.fillRequestFormDisplayText?.toLowerCase()
+                  : '',
+                (props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip)
+                  ? 'download'
+                  : '',
+                'open in workspace'
+              ]
+                .filter(Boolean)
+                .join(' or ')
+              }`}
             overlayStyle={{ maxWidth: '150px' }}
           >
             {node}
@@ -69,13 +82,29 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           let disabled;
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
-            disabled = record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE;
+            disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
           }
-          // disable checkbox if there's no manifest found for this study
+
+          if (props.config.features.exportToWorkspace?.enableFillRequestForm) {
+            disabled = false;
+            const fillRequestFormCheckField = props.config.features.exportToWorkspace?.fillRequestFormCheckField;
+            const fieldValue = fillRequestFormCheckField ? record[fillRequestFormCheckField] : null;
+
+            // Disable checkbox if the specified field is empty or missing in the record
+            if (!fieldValue || fieldValue.length === 0) {
+              disabled = true;
+            }
+          }
+
+          // disable checkbox if there's no manifest or git external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
-          const { manifestFieldName } = exportToWorkspaceConfig;
+          const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
-            disabled = true;
+            // put some hard-coded field names here, so that only checkboxes in proper table rows will be enabled
+            // TODO: this can be addressed by the cart feature
+            if (enableExportFullMetadata && (!record.external_file_metadata || record.external_file_metadata.length === 0)) {
+              disabled = true;
+            }
           }
           return { disabled };
         },
@@ -131,7 +160,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               }
               return (
                 <React.Fragment key={value}>
-                  { start > 0 && '...' }
+                  {start > 0 && '...'}
                   {value.slice(start, matchIndex)}
                   <span className='matched'>{value.slice(matchIndex,
                     matchIndex + props.searchTerm.length)}
@@ -170,10 +199,10 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                   {studyPreviewTextArray.map((item: string | undefined) => renderValue(item))}
                 </div>
               </div>
-              { config.features.tagsInDescription?.enabled
+              {config.features.tagsInDescription?.enabled
                 ? (
                   <div className='discovery-table__row-horizontal-content'>
-                    {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+                    {(record[config.minimalFieldMapping.tagsListFieldName] || []).map(({ name, category }) => {
                       const isSelected = !!props.selectedTags[name];
                       const color = getTagColor(category, config);
                       if (typeof name !== 'string') {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { Modal, Input } from 'antd';
+import { QueryClient, QueryClientProvider } from 'react-query/';
 import JobInputModal from './JobInputModal';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import ValidState from '../../TestData/States/ValidState';
@@ -23,10 +24,18 @@ const {
   selectedStudyPopulationCohort,
 } = ValidState;
 
-describe('JobInputModal', () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = mount(
+jest.mock(
+  '../../../SharedUtils/WorkflowLimitsDashboard/WorkflowLimitsUtils',
+  () => ({
+    fetchMonthlyWorkflowLimitInfo: jest.fn(),
+    workflowLimitInfoIsValid: () => true,
+  }),
+);
+
+describe('JobInputModal outputs correct values', () => {
+  const queryClient = new QueryClient();
+  const wrapper = mount(
+    <QueryClientProvider client={queryClient}>
       <JobInputModal
         open={open}
         jobName={jobName}
@@ -42,9 +51,9 @@ describe('JobInputModal', () => {
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
-      />,
-    );
-  });
+      />
+    </QueryClientProvider>,
+  );
 
   it('should render an AntD modal with an AntD input', () => {
     const modal = wrapper.find(Modal);
@@ -84,7 +93,7 @@ describe('JobInputModal', () => {
   it('should display each population size', () => {
     const populationContainer = wrapper.find('#modal-population-size');
     finalPopulationSizes.forEach((item) => {
-      expect(populationContainer.text()).toContain(item.size);
+      expect(populationContainer.text()).toContain(item.size.toString());
     });
   });
   it('should display each covariate', () => {

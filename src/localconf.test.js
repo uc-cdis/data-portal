@@ -19,9 +19,6 @@ describe('The localconf', () => {
 
   it('Defines a bunch of configuration variables', () => {
     expectedKeys.forEach((key) => {
-      // if (conf[key] === undefined) {
-      //   console.log(`conf[${key}] === ${conf[key]}`);
-      // }
       expect(conf[key]).toBeDefined();
     });
   });
@@ -37,5 +34,17 @@ describe('The localconf', () => {
     expectedKeys.forEach((key) => {
       expect(newConf[key]).toEqual(conf[key]);
     });
+  });
+
+  it('can identify bot by user-agent value', () => {
+    global.userAgent.mockReturnValue('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
+    const newConf = conf.buildConfig(conf.app);
+    expect(global.navigator.userAgent).toMatch(newConf.knownBotRegex);
+  });
+
+  it('can ignore normal browser event by user-agent value', () => {
+    global.userAgent.mockReturnValue('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36');
+    const newConf = conf.buildConfig(conf.app);
+    expect(global.navigator.userAgent).not.toMatch(newConf.knownBotRegex);
   });
 });

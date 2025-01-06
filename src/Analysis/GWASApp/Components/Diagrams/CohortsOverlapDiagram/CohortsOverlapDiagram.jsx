@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import { Spin, Button } from 'antd';
-import { fetchSimpleOverlapInfo, addCDFilter } from '../../../Utils/cohortMiddlewareApi';
+import {
+  fetchSimpleOverlapInfo,
+  addCDFilter,
+} from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
-import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
-import CohortsOverlapLegend from './CohortsOverlapLegend';
-import CohortsOverlapTextVersion from './Simple3SetsOverlapTextVersion';
+import Simple3SetsEulerDiagram from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsEulerDiagram';
+import Simple3SetsLegend from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsLegend';
+import Simple3SetsTextVersion from '../../../../SharedUtils/DataViz/Simple3Sets/Simple3SetsTextVersion';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
@@ -18,10 +21,13 @@ const CohortsOverlapDiagram = ({
   selectedControlCohort,
   selectedCovariates,
   outcome,
+  useInlineErrorMessages,
+  diagramId,
 }) => {
+  const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
   const { source } = useSourceContext();
   const [showTextVersion, setShowTextVersion] = useState(false);
-  const sourceId = source; // TODO - change name of source to sourceId for clarity
+  const sourceId = source;
   const results = useQueries([
     {
       queryKey: [
@@ -58,6 +64,7 @@ const CohortsOverlapDiagram = ({
         outcome,
       ),
       ...queryConfig,
+      refetchOnMount: true,
     },
     {
       queryKey: [
@@ -134,15 +141,21 @@ const CohortsOverlapDiagram = ({
         dataStudyPopulationAndCase.cohort_overlap.case_control_overlap === 0
         || dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0
       ) {
-        dispatch({
-          type: ACTIONS.ADD_MESSAGE,
-          payload: MESSAGES.OVERLAP_ERROR,
-        });
+        if (useInlineErrorMessages) setInlineErrorMessage(<h4>❌ {MESSAGES.OVERLAP_ERROR.title}</h4>);
+        if (dispatch !== null) {
+          dispatch({
+            type: ACTIONS.ADD_MESSAGE,
+            payload: MESSAGES.OVERLAP_ERROR,
+          });
+        }
       } else {
-        dispatch({
-          type: ACTIONS.DELETE_MESSAGE,
-          payload: MESSAGES.OVERLAP_ERROR,
-        });
+        setInlineErrorMessage(null);
+        if (dispatch !== null) {
+          dispatch({
+            type: ACTIONS.DELETE_MESSAGE,
+            payload: MESSAGES.OVERLAP_ERROR,
+          });
+        }
       }
     }
   }, [dataStudyPopulationAndCase, dataStudyPopulationAndControl]);
@@ -165,7 +178,11 @@ const CohortsOverlapDiagram = ({
       statusStudyPopulationAndCaseAndControl,
     ].some((status) => status === 'loading')
   ) {
-    return <Spin data-testid='loading-spinner' />;
+    return (
+      <div className='euler-loading'>
+        Fetching euler diagram data... <Spin data-testid='loading-spinner' />
+      </div>
+    );
   }
   const eulerArgs = {
     set1Size: selectedStudyPopulationCohort.size,
@@ -182,13 +199,15 @@ const CohortsOverlapDiagram = ({
     set1Label: selectedStudyPopulationCohort.cohort_name,
     set2Label: selectedCaseCohort.cohort_name,
     set3Label: selectedControlCohort.cohort_name,
+    diagramId,
   };
 
   return (
     <React.Fragment>
       {!showTextVersion && (
         <React.Fragment>
-          <CohortsOverlapLegend
+          <React.Fragment>{inlineErrorMessage}</React.Fragment>
+          <Simple3SetsLegend
             cohort1Label={eulerArgs.set1Label}
             cohort2Label={eulerArgs.set2Label}
             cohort3Label={eulerArgs.set3Label}
@@ -197,7 +216,7 @@ const CohortsOverlapDiagram = ({
         </React.Fragment>
       )}
       {showTextVersion && (
-        <CohortsOverlapTextVersion
+        <Simple3SetsTextVersion
           title='Cohort Intersections'
           eulerArgs={eulerArgs}
         />
@@ -221,17 +240,22 @@ const CohortsOverlapDiagram = ({
 };
 
 CohortsOverlapDiagram.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  useInlineErrorMessages: PropTypes.bool,
+  dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object.isRequired,
   selectedControlCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
+  diagramId: PropTypes.string,
 };
 
 CohortsOverlapDiagram.defaultProps = {
+  useInlineErrorMessages: false,
+  dispatch: null,
   selectedCovariates: [],
   outcome: null,
+  diagramId: 'euler',
 };
 
 export default CohortsOverlapDiagram;

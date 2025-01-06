@@ -3,6 +3,29 @@ import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import jsonpath from 'jsonpath';
 import { DiscoveryConfig } from './DiscoveryConfig';
+import DiscoveryLoadingProgressBar from './DiscoveryLoadingProgressBar/DiscoveryLoadingProgressBar';
+
+/**
+ * Check for non-numeric items in an array and convert them to numbers.
+ * Handles strings, numbers, and nested arrays.
+ * It will silently convert any non-numeric items to 0 so as not to break the sum.
+ * @param fields - array of fields to check
+ */
+const checkForNonNumericItems = (fields: (number | string | any)[]): number[] => fields.map((item) => {
+  if (typeof item === 'number') {
+    return item;
+  }
+  // parse any string representation of an integer
+  if (typeof item === 'string') {
+    return parseInt(item, 10) || 0;
+  }
+  // if it's an array, recurse and sum the result
+  if (Array.isArray(item)) {
+    return sum(checkForNonNumericItems(item));
+  }
+  // if it's not a number, return 0 so as not to break the sum
+  return 0;
+});
 
 interface AggregationConfig {
   name: string
@@ -20,8 +43,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
   fields = fields.map((item) => (typeof item === 'undefined' ? 0 : item));
   switch (type) {
   case 'sum': {
-    // parse any string representation of an integer
-    fields = fields.map((item) => (typeof item === 'string' ? parseInt(item, 10) || 0 : item));
+    fields = checkForNonNumericItems(fields);
     return sum(fields).toLocaleString();
   }
   case 'count':
@@ -34,6 +56,7 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 interface Props {
   visibleResources: any[] | null;
   config: DiscoveryConfig;
+  allBatchesAreReady: boolean;
 }
 
 const DiscoverySummary = (props: Props) => (
@@ -51,6 +74,7 @@ const DiscoverySummary = (props: Props) => (
                 {aggregation.name}
               </div>
             </div>
+            <DiscoveryLoadingProgressBar allBatchesAreReady={props.allBatchesAreReady} />
           </div>
         </React.Fragment>
       ))

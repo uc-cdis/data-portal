@@ -1,6 +1,7 @@
-import { submissionApiPath, kayakoWrapperURL } from './localconf';
+import { submissionApiPath, gen3ZendeskURL } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
-import { fetchWithCreds } from './actions';
+
+const ZENDESK_MAX_SUBJECT_LENGTH = 255;
 
 export const humanFileSize = (size) => {
   if (typeof size !== 'number') {
@@ -233,23 +234,52 @@ export const isFooterHidden = (pathname) => (!!((pathname
   || pathname.toLowerCase().startsWith('/dd/')
   ))));
 
-export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
+export const createZendeskTicket = async (subject, fullName, email, contents, zendeskSubdomainName) => {
   try {
-    const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
-    await fetchWithCreds({
-      path: kayakoTicketCreationURL,
+    let zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
+    if (zendeskSubdomainName) {
+      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
+    } else {
+      // This is the default Gen3 helpdesk subdomain
+      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
+    }
+    let ticketSubject = subject;
+    if (subject.length > ZENDESK_MAX_SUBJECT_LENGTH) {
+      ticketSubject = `${subject.substring(
+        0,
+        ZENDESK_MAX_SUBJECT_LENGTH - 3,
+      )}...`;
+    }
+    await fetch(zendeskTicketCreationURL, {
       method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        subject, fullname: fullName, email, contents, departmentid: departmentID,
+        request: {
+          subject: ticketSubject,
+          comment: {
+            body: contents,
+          },
+          requester: {
+            name: fullName,
+            email,
+          },
+        },
       }),
     }).then((response) => {
       if (response.status !== 201) {
-        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
+        throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
       }
       return response;
     });
   } catch (err) {
-    throw new Error(`Request for create Kayako ticket failed: ${err}`);
+    throw new Error(`Request for create Zendesk ticket failed: ${err}`);
   }
+};
+
+export const validFileNameChecks = {
+  fileNameCharactersCheckRegex: /[^a-zA-Z0-9[\]() ._-]+/g,
+  invalidWindowsFileNames: ['CON', 'PRN', 'AUX', 'NUL', 'COM0',
+    'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT0',
+    'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9'],
+  maximumAllowedFileNameLength: 250,
 };

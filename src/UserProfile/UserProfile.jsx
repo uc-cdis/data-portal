@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
+import parse from 'html-react-parser';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import { credentialCdisPath } from '../localconf';
+import { credentialCdisPath, profilePageTitle } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
 import ExternalLogins from './ExternalLogins';
@@ -44,6 +45,9 @@ const UserProfile = ({
 
   return (
     <div className='user-profile'>
+      <h1>
+        {profilePageTitle ? parse(profilePageTitle) : 'Profile'}
+      </h1>
       {
         showExternalLoginsOnProfile
         && <ExternalLogins />
@@ -59,7 +63,7 @@ const UserProfile = ({
       {
         userProfile.jtis !== undefined && userProfile.jtis !== []
         && (
-          <ul className='user-profile__key-pair-table'>
+          <div className='user-profile__key-pair-table'>
             {
               popups.deleteTokenPopup === true
             && (
@@ -153,7 +157,7 @@ const UserProfile = ({
               />
             )
             }
-          </ul>
+          </div>
         )
       }
       {

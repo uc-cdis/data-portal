@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
 import './Covariates.css';
-import '../../GWASApp.css';
 
 const CustomDichotomousCovariates = ({
   dispatch,
@@ -13,6 +12,7 @@ const CustomDichotomousCovariates = ({
   covariates,
   outcome,
   submitButtonLabel,
+  selectedTeamProject,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
@@ -21,6 +21,14 @@ const CustomDichotomousCovariates = ({
   const handleDichotomousSubmit = () => {
     const dichotomous = {
       variable_type: 'custom_dichotomous',
+      cohort_names: [
+        firstPopulation.cohort_name,
+        secondPopulation.cohort_name,
+      ],
+      cohort_sizes: [
+        firstPopulation.size,
+        secondPopulation.size,
+      ],
       cohort_ids: [
         firstPopulation.cohort_definition_id,
         secondPopulation.cohort_definition_id,
@@ -86,12 +94,16 @@ const CustomDichotomousCovariates = ({
               </div>
               <div>
                 <h3>Get Value 0</h3>
-                <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
+                <SelectCohortDropDown
+                  handleCohortSelect={setFirstPopulation}
+                  selectedTeamProject={selectedTeamProject}
+                />
               </div>
               <div>
                 <h3>Get Value 1</h3>
                 <SelectCohortDropDown
                   handleCohortSelect={setSecondPopulation}
+                  selectedTeamProject={selectedTeamProject}
                 />
               </div>
             </div>
@@ -128,6 +140,7 @@ CustomDichotomousCovariates.propTypes = {
   outcome: PropTypes.object,
   submitButtonLabel: PropTypes.string,
   handleClose: PropTypes.func.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 CustomDichotomousCovariates.defaultProps = {

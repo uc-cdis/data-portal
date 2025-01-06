@@ -1,23 +1,18 @@
 import React from 'react';
 import { Spin } from 'antd';
 import { useQuery } from 'react-query';
+import PropTypes from 'prop-types';
 import HomeTable from './HomeTable/HomeTable';
-import { gwasWorkflowPath } from '../../../../localconf';
 import LoadingErrorMessage from '../../../SharedUtils/LoadingErrorMessage/LoadingErrorMessage';
 import ManageColumns from './ManageColumns/ManageColumns';
+import { fetchGwasWorkflows } from '../../Utils/gwasWorkflowApi';
 
-const Home = () => {
+const Home = ({ selectedTeamProject }) => {
   const refetchInterval = 5000;
-
-  async function fetchGwasWorkflows() {
-    const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
-    const getWorkflows = await fetch(workflowsEndpoint);
-    return getWorkflows.json();
-  }
-
-  const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
-    refetchInterval,
-  });
+  const { data, status } = useQuery(['workflows', selectedTeamProject],
+    fetchGwasWorkflows, {
+      refetchInterval,
+    });
   if (status === 'loading') {
     return (
       <React.Fragment>
@@ -39,4 +34,9 @@ const Home = () => {
     </React.Fragment>
   );
 };
+
+Home.propTypes = {
+  selectedTeamProject: PropTypes.string.isRequired,
+};
+
 export default Home;

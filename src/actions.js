@@ -109,8 +109,7 @@ export const fetchWithCreds = (opts) => {
     method,
     body,
   };
-  return fetch(path, request,
-  )
+  return fetch(path, request)
     .then(
       (response) => {
         if (response.status !== 403 && response.status !== 401) {
@@ -206,45 +205,22 @@ export const fetchWrapper = ({
 // We first update the session so that the user will be notified
 // if their auth is insufficient to perform the query.
 export const fetchGraphQL = (graphQLParams) => sessionMonitor.updateSession()
-  .then(() => {
-    const request = {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    };
-
-    return fetch(graphqlPath, request)
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      });
-  });
+  .then(() => fetchWithCreds({ path: graphqlPath, body: JSON.stringify(graphQLParams), method: 'POST' })
+    .then((response) => {
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return response;
+    }));
 
 export const fetchFlatGraphQL = (graphQLParams) => sessionMonitor.updateSession()
-  .then(() => {
-    const request = {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    };
-
-    const graphqlUrl = guppyGraphQLUrl;
-    return fetch(graphqlUrl, request)
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      });
-  });
+  .then(() => fetchWithCreds({ path: guppyGraphQLUrl, body: JSON.stringify(graphQLParams), method: 'POST' })
+    .then((response) => {
+      if (response.status === 200 && response.data) {
+        return response.data;
+      }
+      return response;
+    }));
 
 export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {

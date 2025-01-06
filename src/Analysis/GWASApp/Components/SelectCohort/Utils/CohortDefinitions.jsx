@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { Table, Spin } from 'antd';
+import { Table, Spin, Radio } from 'antd';
 import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
@@ -11,12 +11,15 @@ const CohortDefinitions = ({
   selectedCohort = undefined,
   handleCohortSelect,
   searchTerm,
+  selectedTeamProject,
 }) => {
   const { source } = useSourceContext();
+
   const cohorts = useQuery(
-    ['cohortdefinitions', source],
-    () => fetchCohortDefinitions(source),
-    queryConfig,
+    ['cohortdefinitions', source, selectedTeamProject],
+    () => fetchCohortDefinitions(source, selectedTeamProject),
+    // only call this once the source is not undefined
+    { enabled: source !== undefined, ...queryConfig }
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
@@ -30,6 +33,13 @@ const CohortDefinitions = ({
     onChange: (_, selectedRows) => {
       handleCohortSelect(selectedRows[0]);
     },
+    renderCell: (checked, record) => (
+      <Radio
+        checked={checked}
+        value={record.cohort_definition_id}
+        aria-label={'Row action: study population selection'}
+      />
+    ),
   });
   const cohortTableConfig = [
     {
@@ -43,6 +53,8 @@ const CohortDefinitions = ({
       key: 'size',
     },
   ];
+  if (cohorts?.status === 'error')
+    return <React.Fragment>Error getting data for table</React.Fragment>;
 
   return cohorts?.status === 'success' ? (
     <Table
@@ -76,6 +88,7 @@ CohortDefinitions.propTypes = {
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.any.isRequired,
   searchTerm: PropTypes.string.isRequired,
+  selectedTeamProject: PropTypes.string.isRequired,
 };
 
 CohortDefinitions.defaultProps = {
