@@ -27,7 +27,7 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
       if (study[tagField]) {
         study[tagField].forEach((tag) => {
-          if (tag.category === category.name) {
+          if (typeof tag.name === 'string' && tag.category === category.name) {
             tagMap[tag.name] = 1;
           }
         });
