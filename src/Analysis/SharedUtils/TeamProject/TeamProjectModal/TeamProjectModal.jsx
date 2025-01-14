@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Spin } from 'antd';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import TeamsDropdown from './TeamsDropdown/TeamsDropdown';
 import './TeamProjectModal.css';
+import { BroadcastChannel } from 'broadcast-channel';
 
 const TeamProjectModal = ({
   isModalOpen,
   setIsModalOpen,
+  isWarningModalOpen,
+  setIsWarningModalOpen,
   setBannerText,
   data,
   status,
@@ -16,11 +19,24 @@ const TeamProjectModal = ({
   setSelectedTeamProject,
 }) => {
   const history = useHistory();
+
+  const channel = new BroadcastChannel('teamProjectChannel');
+  const sendMessage = (msg) => {
+    channel.postMessage(msg);
+  };
+
   const closeAndUpdateTeamProject = () => {
-    setIsModalOpen(false);
+    //Closing Modal is handled in the header
+    sendMessage('Team Project Changed!')
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
+
+  const closeWarningAndRefreshPage = () => {
+    setIsWarningModalOpen(false);
+    window.location.reload();
+  };
+
   const redirectToHomepage = () => {
     history.push('/');
   };
@@ -41,6 +57,32 @@ const TeamProjectModal = ({
         />
       </Modal>
     );
+  }
+  if (isWarningModalOpen === true) {
+    return (
+      <Modal
+        open={isWarningModalOpen}
+        className='team-project-modal'
+        title='Team Projects'
+        closable={true}
+        maskClosable={false}
+        keyboard={false}
+        footer={[
+          <Button
+            key='submit'
+            type='primary'
+            disabled={!selectedTeamProject}
+            onClick={() => closeWarningAndRefreshPage()}
+          >
+            Refresh Page
+          </Button>,
+        ]}
+      >
+        <div className='team-project-modal_modal-description'>
+          Team Project has been updated in another tab. Please click refresh page to prevent errors.
+        </div>
+      </Modal>
+    )
   }
   if (data) {
     if (data.teams.length > 0) {
@@ -119,6 +161,8 @@ const TeamProjectModal = ({
 TeamProjectModal.propTypes = {
   isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
+  isWarningModalOpen: PropTypes.bool.isRequired,
+  setIsWarningModalOpen: PropTypes.func.isRequired,
   setBannerText: PropTypes.func.isRequired,
   data: PropTypes.object,
   status: PropTypes.string.isRequired,

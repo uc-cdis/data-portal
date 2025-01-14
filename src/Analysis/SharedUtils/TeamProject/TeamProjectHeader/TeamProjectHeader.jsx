@@ -9,6 +9,7 @@ import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
 import './TeamProjectHeader.css';
+import { BroadcastChannel } from 'broadcast-channel';
 
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +28,34 @@ const TeamProjectHeader = ({ isEditable }) => {
       history.push('/analysis');
     }
   };
+
+  const channel = new BroadcastChannel('teamProjectChannel');
+
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const showWarningModal = () => {
+    console.log("show warning modal");
+    setIsWarningModalOpen(true);
+  };
+
+  useEffect(() => {
+      const handleMessage = (event) => {
+        //Only Show Warning Modal for tabs
+        //that didn't just submit the team change
+        if(!isModalOpen)
+        {
+          showWarningModal();
+        }
+        //Close Open Team Change Modal
+        setIsModalOpen(false);
+      };
+
+      channel.onmessage = handleMessage;
+
+      // Clean up the channel when the component unmounts
+      return () => {
+          channel.close();
+      };
+  }, [channel, showWarningModal]);
 
   const { data, status } = useQuery(
     'teamprojects',
@@ -76,11 +105,26 @@ const TeamProjectHeader = ({ isEditable }) => {
           </button>
         )}
       </div>
+      {isWarningModalOpen && (
+        <TeamProjectModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setBannerText={setBannerText}
+          isWarningModalOpen={isWarningModalOpen}
+          setIsWarningModalOpen={setIsWarningModalOpen}
+          data={data}
+          status={status}
+          selectedTeamProject={selectedTeamProject}
+          setSelectedTeamProject={setSelectedTeamProject}
+        />
+      )}
       {isEditable && (
         <TeamProjectModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setBannerText={setBannerText}
+          isWarningModalOpen={isWarningModalOpen}
+          setIsWarningModalOpen={setIsWarningModalOpen}
           data={data}
           status={status}
           selectedTeamProject={selectedTeamProject}
