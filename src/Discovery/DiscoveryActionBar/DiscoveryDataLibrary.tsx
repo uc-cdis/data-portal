@@ -36,7 +36,7 @@ const updateList = async (list: { name: string, items: any[] }, listId: string =
     case 200:
     case 201:
       postNotification(listId ? 'List contents have been updated.' : 'List has been created.', 'success');
-      break;
+      return response.data;
     case 401:
       postNotification('Not Authorized. Please log in', 'error');
       break;
@@ -70,8 +70,18 @@ const DiscoveryDataLibrary = (props: Props) => {
   const [error, setError] = useState(null);
   const { config: { features: { exportToDataLibrary } }, discovery: { selectedResources }, healIDPLoginNeeded } = props;
 
-  const onChangeListSelection = (listname: string, listId: string) => {
-    setCurrentList({ label: listname, value: listId });
+  const onChangeListSelection = async (listname: string, listId: string) => {
+    if (!listId) {
+      const response = await updateList({
+        name: listname,
+        items: {},
+      });
+      const newList = extractListNameAndId(response.lists)[0];
+      await fetchLists();
+      setCurrentList(newList);
+    } else {
+      setCurrentList({ label: listname, value: listId });
+    }
   };
 
   const saveToList = (listname: string, listId: string = undefined) => {
