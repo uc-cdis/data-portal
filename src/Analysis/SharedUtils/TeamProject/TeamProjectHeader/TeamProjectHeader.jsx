@@ -33,12 +33,11 @@ const TeamProjectHeader = ({ isEditable }) => {
 
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const showWarningModal = () => {
-    console.log('show warning modal');
     setIsWarningModalOpen(true);
   };
 
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = () => {
       // Only Show Warning Modal for tabs
       // that didn't just submit the team change
       if (!isModalOpen) {

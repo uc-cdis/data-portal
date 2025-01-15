@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Spin } from 'antd';
+import { BroadcastChannel } from 'broadcast-channel';
 import LoadingErrorMessage from '../../LoadingErrorMessage/LoadingErrorMessage';
 import TeamsDropdown from './TeamsDropdown/TeamsDropdown';
 import './TeamProjectModal.css';
-import { BroadcastChannel } from 'broadcast-channel';
+
 
 const TeamProjectModal = ({
   isModalOpen,
