@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { BroadcastChannel } from 'broadcast-channel';
 import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../AccessibilityUtils/IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
@@ -9,7 +10,6 @@ import queryConfig from '../../QueryConfig';
 import fetchArboristTeamProjectRoles from '../Utils/teamProjectApi';
 import IsCurrentTeamProjectValid from './IsCurrentTeamProjectValid';
 import './TeamProjectHeader.css';
-import { BroadcastChannel } from 'broadcast-channel';
 
 const TeamProjectHeader = ({ isEditable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,28 +33,27 @@ const TeamProjectHeader = ({ isEditable }) => {
 
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const showWarningModal = () => {
-    console.log("show warning modal");
+    console.log('show warning modal');
     setIsWarningModalOpen(true);
   };
 
   useEffect(() => {
-      const handleMessage = (event) => {
-        //Only Show Warning Modal for tabs
-        //that didn't just submit the team change
-        if(!isModalOpen)
-        {
-          showWarningModal();
-        }
-        //Close Open Team Change Modal
-        setIsModalOpen(false);
-      };
+    const handleMessage = (event) => {
+      // Only Show Warning Modal for tabs
+      // that didn't just submit the team change
+      if (!isModalOpen) {
+        showWarningModal();
+      }
+      // Close Open Team Change Modal
+      setIsModalOpen(false);
+    };
 
-      channel.onmessage = handleMessage;
+    channel.onmessage = handleMessage;
 
-      // Clean up the channel when the component unmounts
-      return () => {
-          channel.close();
-      };
+    // Clean up the channel when the component unmounts
+    return () => {
+      channel.close();
+    };
   }, [channel, showWarningModal]);
 
   const { data, status } = useQuery(

@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Spin } from 'antd';
@@ -26,8 +26,8 @@ const TeamProjectModal = ({
   };
 
   const closeAndUpdateTeamProject = () => {
-    //Closing Modal is handled in the header
-    sendMessage('Team Project Changed!')
+    // Closing Modal is handled in the header
+    sendMessage('Team Project Changed!');
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
   };
@@ -64,7 +64,7 @@ const TeamProjectModal = ({
         open={isWarningModalOpen}
         className='team-project-modal'
         title='Team Projects'
-        closable={true}
+        closable
         maskClosable={false}
         keyboard={false}
         footer={[
@@ -82,7 +82,7 @@ const TeamProjectModal = ({
           Team Project has been updated in another tab. Please click refresh page to prevent errors.
         </div>
       </Modal>
-    )
+    );
   }
   if (data) {
     if (data.teams.length > 0) {

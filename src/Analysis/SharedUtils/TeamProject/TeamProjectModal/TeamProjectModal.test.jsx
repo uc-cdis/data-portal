@@ -21,7 +21,7 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
-        isWarningModalOpen ={false}
+        isWarningModalOpen={false}
         setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={undefined}
@@ -43,7 +43,7 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
-        isWarningModalOpen ={false}
+        isWarningModalOpen={false}
         setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={TeamProjectTestData.data}
@@ -72,7 +72,7 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
-        isWarningModalOpen ={false}
+        isWarningModalOpen={false}
         setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={TeamProjectTestData.data}
@@ -100,7 +100,7 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-        isWarningModalOpen ={false}
+        isWarningModalOpen={false}
         setIsWarningModalOpen={setIsWarningModalOpen}
         data={TeamProjectTestData.data}
         status='success'
@@ -124,7 +124,7 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
-        isWarningModalOpen ={true}
+        isWarningModalOpen
         setIsWarningModalOpen={setIsWarningModalOpen}
         data={TeamProjectTestData.data}
         status='success'
