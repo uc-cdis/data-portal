@@ -71,17 +71,15 @@ const DiscoveryDataLibrary = (props: Props) => {
   const { config: { features: { exportToDataLibrary } }, discovery: { selectedResources }, healIDPLoginNeeded } = props;
 
   const onChangeListSelection = async (listname: string, listId: string) => {
-    if (!listId) {
+    let newListId = listId;
+    if (!newListId) {
       const response = await updateList({
         name: listname,
         items: {},
       });
-      const newList = extractListNameAndId(response.lists)[0];
-      await fetchLists();
-      setCurrentList(newList);
-    } else {
-      setCurrentList({ label: listname, value: listId });
+      newListId = Object.keys(response.lists)[0];
     }
+    setCurrentList({ label: listname, value: newListId });
   };
 
   const saveToList = (listname: string, listId: string = undefined) => {
