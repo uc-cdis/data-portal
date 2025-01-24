@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Select } from 'antd';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
@@ -15,11 +16,16 @@ const ContinuousCovariates = ({
 }) => {
   const [selected, setSelected] = useState(null);
 
-  const formatSelected = () => ({
+  const formatSelected = (transformationType) => ({
     variable_type: 'concept',
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
+    transformation: transformationType,
   });
+
+  const onChange = (selectedTransformationType) => {
+    setSelected(formatSelected(selectedTransformationType.key));
+  };
 
   // when a user has selected a outcome phenotype that is a continuous covariate with a concept ID,
   // that should not appear as a selectable option, and be included in the submitted covariates.
@@ -64,6 +70,15 @@ const ContinuousCovariates = ({
           </div>
           {selected ? (
             <div data-tour='phenotype-histogram'>
+              <Select
+                showSearch={false}
+                labelInValue
+                onChange={onChange}
+                placeholder='-optional transformation-'
+                fieldNames={{ label: 'description', value: 'type' }}
+                options={[{type: 'log', description: 'log transformation'},{type: 'z_score', description: 'z-score transformation'}]}
+                dropdownStyle={{ width: '800' }}
+              />
               <PhenotypeHistogram
                 dispatch={dispatch}
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
