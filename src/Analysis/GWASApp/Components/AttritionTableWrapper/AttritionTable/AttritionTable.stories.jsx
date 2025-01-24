@@ -159,7 +159,7 @@ MockedSuccess.parameters = {
         }
       ),
       rest.post(
-        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId',
         (req, res, ctx) => {
           return res(
             ctx.delay(2000),

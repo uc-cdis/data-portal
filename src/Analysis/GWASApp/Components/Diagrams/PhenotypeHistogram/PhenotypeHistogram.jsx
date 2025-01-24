@@ -29,6 +29,7 @@ const PhenotypeHistogram = ({
       selectedCovariates,
       outcome,
       selectedContinuousItem.concept_id,
+      selectedContinuousItem.transformation,
     ],
     () => fetchHistogramInfo(
       sourceId,
@@ -36,6 +37,7 @@ const PhenotypeHistogram = ({
       selectedCovariates,
       outcome,
       selectedContinuousItem.concept_id,
+      selectedContinuousItem.transformation,
     ),
     queryConfig,
   );
