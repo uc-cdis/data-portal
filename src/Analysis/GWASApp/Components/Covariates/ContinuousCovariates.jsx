@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select } from 'antd';
+import { Select, InputNumber } from 'antd';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
@@ -16,16 +16,62 @@ const ContinuousCovariates = ({
 }) => {
   const [selected, setSelected] = useState(null);
 
-  const formatSelected = (transformationType) => ({
+  const formatSelected = () => ({
     variable_type: 'concept',
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
-    transformation: transformationType,
+    transformation: selected.transformation,
+    filters: selected.filters,
   });
 
-  const onChange = (selectedTransformationType) => {
-    setSelected(formatSelected(selectedTransformationType.key));
+  const onChangeTransformation = (selectedTransformationType) => {
+    setSelected((prevSelected) => {
+      const transformation = selectedTransformationType.key;
+      return { ...prevSelected, transformation };
+    });
   };
+
+  const onChangeMinOutlierCutoff = (minOutlierCutoff) => {
+    setSelected((prevSelected) => {
+      // Ensure filters array exists
+      const filters = prevSelected.filters ? [...prevSelected.filters] : [];
+
+      // Find the index of the ">=" filter
+      const minFilterIndex = filters.findIndex((filter) => filter.type === ">=");
+
+      if (minFilterIndex !== -1) {
+        // Update the existing ">=" filter
+        filters[minFilterIndex] = { type: ">=", value: minOutlierCutoff };
+      } else {
+        // Add a new ">=" filter
+        filters.push({ type: ">=", value: minOutlierCutoff });
+      }
+
+      return { ...prevSelected, filters };
+    });
+  };
+
+  const onChangeMaxOutlierCutoff = (maxOutlierCutoff) => {
+    setSelected((prevSelected) => {
+      // Ensure filters array exists
+      const filters = prevSelected.filters ? [...prevSelected.filters] : [];
+
+      // Find the index of the "<=" filter
+      const maxFilterIndex = filters.findIndex((filter) => filter.type === "<=");
+
+      if (maxFilterIndex !== -1) {
+        // Update the existing "<=" filter
+        filters[maxFilterIndex] = { type: "<=", value: maxOutlierCutoff };
+      } else {
+        // Add a new "<=" filter
+        filters.push({ type: "<=", value: maxOutlierCutoff });
+      }
+
+      return { ...prevSelected, filters };
+    });
+  };
+
+
 
   // when a user has selected a outcome phenotype that is a continuous covariate with a concept ID,
   // that should not appear as a selectable option, and be included in the submitted covariates.
@@ -73,7 +119,7 @@ const ContinuousCovariates = ({
               <Select
                 showSearch={false}
                 labelInValue
-                onChange={onChange}
+                onChange={onChangeTransformation}
                 placeholder='-optional transformation-'
                 fieldNames={{ label: 'description', value: 'type' }}
                 options={[{type: 'log', description: 'log transformation'},{type: 'z_score', description: 'z-score transformation'}]}
@@ -86,6 +132,30 @@ const ContinuousCovariates = ({
                 outcome={outcome}
                 selectedContinuousItem={selected}
               />
+              <div className='GWASUI-row'>
+                <div className='GWASUI-column'>
+                  <label htmlFor='input-minOutlierCutoff'>Minimum outlier cutoff</label>
+                </div>
+                <div className='GWASUI-column'>
+                  <InputNumber
+                    id='input-minOutlierCutoff'
+                    min={1}
+                    max={10}
+                    onChange={onChangeMinOutlierCutoff}
+                  />
+                </div>
+                <div className='GWASUI-column'>
+                  <label htmlFor='input-maxOutlierCutoff'>Maximum outlier cutoff</label>
+                </div>
+                <div className='GWASUI-column'>
+                  <InputNumber
+                    id='input-maxOutlierCutoff'
+                    min={1}
+                    max={10}
+                    onChange={onChangeMaxOutlierCutoff}
+                  />
+                </div>
+              </div>
             </div>
           ) : (
             <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>
