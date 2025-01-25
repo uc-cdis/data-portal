@@ -43,7 +43,6 @@ export const fetchHistogramInfo = async (
   outcome,
   selectedConceptId,
   transformationType,
-  filters,
 ) => {
   const variablesPayload = {
     variables: [...selectedCovariates, outcome,
@@ -56,7 +55,6 @@ export const fetchHistogramInfo = async (
         variable_type: 'concept',
         concept_id: selectedConceptId,
         transformation: transformationType,
-        filters: filters
       }
     ].filter(Boolean), // filter out any undefined or null items (e.g. in some
     // scenarios "outcome" and "selectedCovariates" are still null and/or empty)
