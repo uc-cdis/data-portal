@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   Label,
+  ReferenceLine,
 } from 'recharts';
 import PropTypes from 'prop-types';
 import './Histogram.css';
@@ -52,8 +53,16 @@ const Histogram = ({
   xAxisLegend,
   yAxisLegend,
   useAnimation,
+  minCutoff,
+  maxCutoff,
 }) => {
   const defaultAnimationTime = 400;
+  const xValues = data.map((d) => d[xAxisDataKey]);
+  const minX = Math.min(minCutoff ?? Infinity, ...xValues);
+  const maxX = Math.max(maxCutoff ?? -Infinity, ...xValues);
+  const padding = (maxX - minX) * 0.10;
+  const xDomain = [minX - padding, maxX + padding];
+
   return (
     <div data-testid='histogram'>
       <BarChart
@@ -64,6 +73,8 @@ const Histogram = ({
       >
         <XAxis
           dataKey={xAxisDataKey}
+          type="number"
+          domain={xDomain}
           minTickGap={50}
           tickFormatter={(tick) => formatNumber(tick)}
         >
@@ -79,6 +90,23 @@ const Histogram = ({
         <Tooltip content={<CustomTooltip />} />
         <CartesianGrid strokeDasharray='3 3' />
         <Bar dataKey={barDataKey} fill={barColor} animationDuration={useAnimation ? defaultAnimationTime : 0} />
+        {/* Add ReferenceLines for min and max cutoffs */}
+        {minCutoff !== undefined && (
+          <ReferenceLine
+            x={minCutoff}
+            stroke="red"
+            strokeDasharray="3 3"
+            label={{ value: 'Min', position: 'top', fill: 'red' }}
+          />
+        )}
+        {maxCutoff !== undefined && (
+          <ReferenceLine
+            x={maxCutoff}
+            stroke="green"
+            strokeDasharray="3 3"
+            label={{ value: 'Max', position: 'top', fill: 'green' }}
+          />
+        )}
       </BarChart>
     </div>
   );
@@ -94,6 +122,8 @@ Histogram.propTypes = {
   xAxisLegend: PropTypes.string,
   yAxisLegend: PropTypes.string,
   useAnimation: PropTypes.bool,
+  minCutoff: PropTypes.number,
+  maxCutoff: PropTypes.number,
 };
 
 Histogram.defaultProps = {
@@ -103,6 +133,8 @@ Histogram.defaultProps = {
   xAxisLegend: null,
   yAxisLegend: null,
   useAnimation: true,
+  minCutoff: undefined,
+  maxCutoff: undefined,
 };
 
 export default Histogram;

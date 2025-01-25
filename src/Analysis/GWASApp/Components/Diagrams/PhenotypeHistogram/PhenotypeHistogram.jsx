@@ -84,6 +84,8 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
     useAnimation,
+    minCutoff: selectedContinuousItem.filters?.find(filter => filter.type === '>=')?.value ?? undefined,
+    maxCutoff: selectedContinuousItem.filters?.find(filter => filter.type === '<=')?.value ?? undefined,
   };
   return (
     <React.Fragment>

@@ -139,8 +139,6 @@ const ContinuousCovariates = ({
                 <div className='GWASUI-column'>
                   <InputNumber
                     id='input-minOutlierCutoff'
-                    min={1}
-                    max={10}
                     onChange={onChangeMinOutlierCutoff}
                   />
                 </div>
@@ -150,8 +148,6 @@ const ContinuousCovariates = ({
                 <div className='GWASUI-column'>
                   <InputNumber
                     id='input-maxOutlierCutoff'
-                    min={1}
-                    max={10}
                     onChange={onChangeMaxOutlierCutoff}
                   />
                 </div>
