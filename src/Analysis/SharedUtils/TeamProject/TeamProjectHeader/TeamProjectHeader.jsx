@@ -38,13 +38,7 @@ const TeamProjectHeader = ({ isEditable }) => {
 
   useEffect(() => {
     const handleMessage = () => {
-      // Only Show Warning Modal for tabs
-      // that didn't just submit the team change
-      if (!isModalOpen) {
-        showWarningModal();
-      }
-      // Close Open Team Change Modal
-      setIsModalOpen(false);
+      showWarningModal();
     };
 
     channel.onmessage = handleMessage;

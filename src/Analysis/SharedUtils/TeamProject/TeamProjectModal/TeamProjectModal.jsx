@@ -27,7 +27,7 @@ const TeamProjectModal = ({
   };
 
   const closeAndUpdateTeamProject = () => {
-    // Closing Modal is handled in the header
+    setIsModalOpen(false);
     sendMessage('Team Project Changed!');
     setBannerText(selectedTeamProject);
     localStorage.setItem('teamProject', selectedTeamProject);
