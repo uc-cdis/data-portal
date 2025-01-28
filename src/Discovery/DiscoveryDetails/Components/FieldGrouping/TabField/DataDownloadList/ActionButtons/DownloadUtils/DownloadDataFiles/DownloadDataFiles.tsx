@@ -5,7 +5,7 @@ import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
-import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from './Constants';
+import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from '../Constants';
 
 const DownloadDataFiles = async (
   downloadStatus: DownloadStatus,
