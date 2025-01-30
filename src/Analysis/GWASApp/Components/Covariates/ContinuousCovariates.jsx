@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Select, InputNumber } from 'antd';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
@@ -116,42 +115,16 @@ const ContinuousCovariates = ({
           </div>
           {selected ? (
             <div data-tour='phenotype-histogram'>
-              <Select
-                showSearch={false}
-                labelInValue
-                onChange={onChangeTransformation}
-                placeholder='-optional transformation-'
-                fieldNames={{ label: 'description', value: 'type' }}
-                options={[{type: 'log', description: 'log transformation'},{type: 'z_score', description: 'z-score transformation'}]}
-                dropdownStyle={{ width: '800' }}
-              />
               <PhenotypeHistogram
                 dispatch={dispatch}
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
                 outcome={outcome}
                 selectedContinuousItem={selected}
+                handleChangeTransformation={onChangeTransformation}
+                handleChangeMinOutlierCutoff={onChangeMinOutlierCutoff}
+                handleChangeMaxOutlierCutoff={onChangeMaxOutlierCutoff}
               />
-              <div className='GWASUI-row'>
-                <div className='GWASUI-column'>
-                  <label htmlFor='input-minOutlierCutoff'>Minimum outlier cutoff</label>
-                </div>
-                <div className='GWASUI-column'>
-                  <InputNumber
-                    id='input-minOutlierCutoff'
-                    onChange={onChangeMinOutlierCutoff}
-                  />
-                </div>
-                <div className='GWASUI-column'>
-                  <label htmlFor='input-maxOutlierCutoff'>Maximum outlier cutoff</label>
-                </div>
-                <div className='GWASUI-column'>
-                  <InputNumber
-                    id='input-maxOutlierCutoff'
-                    onChange={onChangeMaxOutlierCutoff}
-                  />
-                </div>
-              </div>
             </div>
           ) : (
             <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
+import { Select, InputNumber } from 'antd';
 import { Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
@@ -15,8 +16,10 @@ const PhenotypeHistogram = ({
   selectedCovariates,
   outcome,
   selectedContinuousItem,
-  useInlineErrorMessages,
   useAnimation,
+  handleChangeTransformation,
+  handleChangeMinOutlierCutoff,
+  handleChangeMaxOutlierCutoff
 }) => {
   const { source } = useSourceContext();
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
@@ -89,28 +92,65 @@ const PhenotypeHistogram = ({
   };
   return (
     <React.Fragment>
-      {useInlineErrorMessages && inlineErrorMessage}
-      <Histogram {...histogramArgs} />
+      {inlineErrorMessage}
+      {data.bins !== null &&
+        <div data-tour='phenotype-histogram-with-filter-and-transformation'>
+          <Select
+            showSearch={false}
+            labelInValue
+            onChange={handleChangeTransformation}
+            placeholder='-optional transformation-'
+            fieldNames={{ label: 'description', value: 'type' }}
+            options={[{type: 'log', description: 'log transformation'},{type: 'z_score', description: 'z-score transformation'}]}
+            dropdownStyle={{ width: '800' }}
+          />
+          <Histogram {...histogramArgs} />
+          <div className='GWASUI-row'>
+            <div className='GWASUI-column'>
+              <label htmlFor='input-minOutlierCutoff'>Minimum outlier cutoff</label>
+            </div>
+            <div className='GWASUI-column'>
+              <InputNumber
+                id='input-minOutlierCutoff'
+                onChange={handleChangeMinOutlierCutoff}
+              />
+            </div>
+            <div className='GWASUI-column'>
+              <label htmlFor='input-maxOutlierCutoff'>Maximum outlier cutoff</label>
+            </div>
+            <div className='GWASUI-column'>
+              <InputNumber
+                id='input-maxOutlierCutoff'
+                onChange={handleChangeMaxOutlierCutoff}
+              />
+            </div>
+          </div>
+        </div>
+      }
     </React.Fragment>
   );
 };
 
 PhenotypeHistogram.propTypes = {
-  useInlineErrorMessages: PropTypes.bool,
   dispatch: PropTypes.func,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   selectedContinuousItem: PropTypes.object.isRequired,
   useAnimation: PropTypes.bool,
+  handleChangeTransformation: PropTypes.func,
+  handleChangeMinOutlierCutoff: PropTypes.func,
+  handleChangeMaxOutlierCutoff: PropTypes.func
 };
 
 PhenotypeHistogram.defaultProps = {
-  useInlineErrorMessages: false,
   dispatch: null,
   selectedCovariates: [],
   outcome: null,
   useAnimation: true,
+  handleChangeTransformation: null,
+  handleChangeMinOutlierCutoff: null,
+  handleChangeMaxOutlierCutoff: null
 };
 
 export default PhenotypeHistogram;
