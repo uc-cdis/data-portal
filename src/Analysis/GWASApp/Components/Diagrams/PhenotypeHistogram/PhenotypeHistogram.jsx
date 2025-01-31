@@ -9,6 +9,7 @@ import Histogram from '../../../../SharedUtils/DataViz/Histogram/Histogram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
+import FILTERS from '../../../../SharedUtils/FiltersEnumeration';
 
 const PhenotypeHistogram = ({
   dispatch,
@@ -87,8 +88,8 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
     useAnimation,
-    minCutoff: selectedContinuousItem.filters?.find(filter => filter.type === '>=')?.value ?? undefined,
-    maxCutoff: selectedContinuousItem.filters?.find(filter => filter.type === '<=')?.value ?? undefined,
+    minCutoff: selectedContinuousItem.filters?.find(filter => filter.type === FILTERS.greaterThanOrEqualTo)?.value ?? undefined,
+    maxCutoff: selectedContinuousItem.filters?.find(filter => filter.type === FILTERS.lessThanOrEqualTo)?.value ?? undefined,
   };
   return (
     <React.Fragment>

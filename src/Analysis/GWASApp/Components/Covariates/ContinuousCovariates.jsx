@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
 import './Covariates.css';
+import FILTERS from '../../../SharedUtils/FiltersEnumeration';
 
 const ContinuousCovariates = ({
   dispatch,
@@ -36,14 +37,14 @@ const ContinuousCovariates = ({
       const filters = prevSelected.filters ? [...prevSelected.filters] : [];
 
       // Find the index of the ">=" filter
-      const minFilterIndex = filters.findIndex((filter) => filter.type === ">=");
+      const minFilterIndex = filters.findIndex((filter) => filter.type === FILTERS.greaterThanOrEqualTo);
 
       if (minFilterIndex !== -1) {
         // Update the existing ">=" filter
-        filters[minFilterIndex] = { type: ">=", value: minOutlierCutoff };
+        filters[minFilterIndex] = { type: FILTERS.greaterThanOrEqualTo, value: minOutlierCutoff };
       } else {
         // Add a new ">=" filter
-        filters.push({ type: ">=", value: minOutlierCutoff });
+        filters.push({ type: FILTERS.greaterThanOrEqualTo, value: minOutlierCutoff });
       }
 
       return { ...prevSelected, filters };
@@ -56,14 +57,14 @@ const ContinuousCovariates = ({
       const filters = prevSelected.filters ? [...prevSelected.filters] : [];
 
       // Find the index of the "<=" filter
-      const maxFilterIndex = filters.findIndex((filter) => filter.type === "<=");
+      const maxFilterIndex = filters.findIndex((filter) => filter.type === FILTERS.lessThanOrEqualTo);
 
       if (maxFilterIndex !== -1) {
         // Update the existing "<=" filter
-        filters[maxFilterIndex] = { type: "<=", value: maxOutlierCutoff };
+        filters[maxFilterIndex] = { type: FILTERS.lessThanOrEqualTo, value: maxOutlierCutoff };
       } else {
         // Add a new "<=" filter
-        filters.push({ type: "<=", value: maxOutlierCutoff });
+        filters.push({ type: FILTERS.lessThanOrEqualTo, value: maxOutlierCutoff });
       }
 
       return { ...prevSelected, filters };
