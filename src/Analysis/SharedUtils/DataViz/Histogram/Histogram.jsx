@@ -75,7 +75,7 @@ const Histogram = ({
       >
         <XAxis
           dataKey={xAxisDataKey}
-          type="number"
+          type='number'
           domain={xDomain}
           minTickGap={50}
           tickFormatter={(tick) => formatNumber(tick)}
@@ -96,16 +96,16 @@ const Histogram = ({
         {minCutoff !== undefined && (
           <ReferenceLine
             x={minCutoff}
-            stroke="red"
-            strokeDasharray="3 3"
+            stroke='red'
+            strokeDasharray='3 3'
             label={{ value: 'Min', position: 'top', fill: 'red' }}
           />
         )}
         {maxCutoff !== undefined && (
           <ReferenceLine
             x={maxCutoff}
-            stroke="green"
-            strokeDasharray="3 3"
+            stroke='green'
+            strokeDasharray='3 3'
             label={{ value: 'Max', position: 'top', fill: 'green' }}
           />
         )}

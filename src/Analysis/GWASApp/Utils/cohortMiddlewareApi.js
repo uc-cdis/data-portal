@@ -55,7 +55,7 @@ export const fetchHistogramInfo = async (
         variable_type: 'concept',
         concept_id: selectedConceptId,
         transformation: transformationType,
-      }
+      },
     ].filter(Boolean), // filter out any undefined or null items (e.g. in some
     // scenarios "outcome" and "selectedCovariates" are still null and/or empty)
   };

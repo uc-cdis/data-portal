@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { Select, InputNumber } from 'antd';
-import { Spin } from 'antd';
+import { Select, InputNumber, Spin } from 'antd';
 import { fetchHistogramInfo } from '../../../Utils/cohortMiddlewareApi';
 import queryConfig from '../../../../SharedUtils/QueryConfig';
 import Histogram from '../../../../SharedUtils/DataViz/Histogram/Histogram';
@@ -20,7 +19,7 @@ const PhenotypeHistogram = ({
   useAnimation,
   handleChangeTransformation,
   handleChangeMinOutlierCutoff,
-  handleChangeMaxOutlierCutoff
+  handleChangeMaxOutlierCutoff,
 }) => {
   const { source } = useSourceContext();
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
@@ -88,46 +87,47 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
     useAnimation,
-    minCutoff: selectedContinuousItem.filters?.find(filter => filter.type === FILTERS.greaterThanOrEqualTo)?.value ?? undefined,
-    maxCutoff: selectedContinuousItem.filters?.find(filter => filter.type === FILTERS.lessThanOrEqualTo)?.value ?? undefined,
+    minCutoff: selectedContinuousItem.filters?.find((filter) => filter.type === FILTERS.greaterThanOrEqualTo)?.value ?? undefined,
+    maxCutoff: selectedContinuousItem.filters?.find((filter) => filter.type === FILTERS.lessThanOrEqualTo)?.value ?? undefined,
   };
   return (
     <React.Fragment>
       {inlineErrorMessage}
-      {data.bins !== null &&
-        <div>
-          <Select
-            showSearch={false}
-            labelInValue
-            onChange={handleChangeTransformation}
-            placeholder='-optional transformation-'
-            fieldNames={{ label: 'description', value: 'type' }}
-            options={[{type: 'log', description: 'log transformation'},{type: 'z_score', description: 'z-score transformation'}]}
-            dropdownStyle={{ width: '800' }}
-          />
-          <Histogram {...histogramArgs} />
-          <div className='GWASUI-row'>
-            <div className='GWASUI-column'>
-              <label htmlFor='input-minOutlierCutoff'>Minimum outlier cutoff</label>
-            </div>
-            <div className='GWASUI-column'>
-              <InputNumber
-                id='input-minOutlierCutoff'
-                onChange={handleChangeMinOutlierCutoff}
-              />
-            </div>
-            <div className='GWASUI-column'>
-              <label htmlFor='input-maxOutlierCutoff'>Maximum outlier cutoff</label>
-            </div>
-            <div className='GWASUI-column'>
-              <InputNumber
-                id='input-maxOutlierCutoff'
-                onChange={handleChangeMaxOutlierCutoff}
-              />
+      {data.bins !== null
+        && (
+          <div>
+            <Select
+              showSearch={false}
+              labelInValue
+              onChange={handleChangeTransformation}
+              placeholder='-optional transformation-'
+              fieldNames={{ label: 'description', value: 'type' }}
+              options={[{ type: 'log', description: 'log transformation' }, { type: 'z_score', description: 'z-score transformation' }]}
+              dropdownStyle={{ width: '800' }}
+            />
+            <Histogram {...histogramArgs} />
+            <div className='GWASUI-row'>
+              <div className='GWASUI-column'>
+                <label htmlFor='input-minOutlierCutoff'>Minimum outlier cutoff</label>
+              </div>
+              <div className='GWASUI-column'>
+                <InputNumber
+                  id='input-minOutlierCutoff'
+                  onChange={handleChangeMinOutlierCutoff}
+                />
+              </div>
+              <div className='GWASUI-column'>
+                <label htmlFor='input-maxOutlierCutoff'>Maximum outlier cutoff</label>
+              </div>
+              <div className='GWASUI-column'>
+                <InputNumber
+                  id='input-maxOutlierCutoff'
+                  onChange={handleChangeMaxOutlierCutoff}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      }
+        )}
     </React.Fragment>
   );
 };
@@ -141,7 +141,7 @@ PhenotypeHistogram.propTypes = {
   useAnimation: PropTypes.bool,
   handleChangeTransformation: PropTypes.func,
   handleChangeMinOutlierCutoff: PropTypes.func,
-  handleChangeMaxOutlierCutoff: PropTypes.func
+  handleChangeMaxOutlierCutoff: PropTypes.func,
 };
 
 PhenotypeHistogram.defaultProps = {
@@ -151,7 +151,7 @@ PhenotypeHistogram.defaultProps = {
   useAnimation: true,
   handleChangeTransformation: null,
   handleChangeMinOutlierCutoff: null,
-  handleChangeMaxOutlierCutoff: null
+  handleChangeMaxOutlierCutoff: null,
 };
 
 export default PhenotypeHistogram;
