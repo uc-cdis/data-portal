@@ -94,7 +94,7 @@ const PhenotypeHistogram = ({
     <React.Fragment>
       {inlineErrorMessage}
       {data.bins !== null &&
-        <div data-tour='phenotype-histogram-with-filter-and-transformation'>
+        <div>
           <Select
             showSearch={false}
             labelInValue

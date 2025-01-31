@@ -58,7 +58,9 @@ const Histogram = ({
 }) => {
   const defaultAnimationTime = 400;
   const xValues = data.map((d) => d[xAxisDataKey]);
+  // Find min value in the set of [(minCutoff OR Infinity), and xValues]:
   const minX = Math.min(minCutoff ?? Infinity, ...xValues);
+  // Find max value in the set of [(maxCutoff OR -Infinity), and xValues]:
   const maxX = Math.max(maxCutoff ?? -Infinity, ...xValues);
   const padding = (maxX - minX) * 0.10;
   const xDomain = [minX - padding, maxX + padding];
