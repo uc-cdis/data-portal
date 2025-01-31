@@ -89,6 +89,7 @@ import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer'
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import FooterNIAID from './components/layout/FooterNIAID';
+import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 // monitor user's session
 sessionMonitor.start();
@@ -577,6 +578,7 @@ async function init() {
                 logos={components.footerLogos}
               />
             </div>
+            <ReduxAuthTimeoutPopup />
           </BrowserRouter>
         </ThemeProvider>
       </Provider>
