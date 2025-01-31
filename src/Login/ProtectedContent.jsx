@@ -9,7 +9,6 @@ import {
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts, userAccessToSite } from '../configs';
-import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import ReduxSystemUseWarningPopup from '../Popup/SystemUseWarningPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
@@ -288,7 +287,6 @@ class ProtectedContent extends React.Component {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
-          <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );

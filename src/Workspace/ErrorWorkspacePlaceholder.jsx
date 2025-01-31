@@ -11,7 +11,7 @@ const ErrorWorkspacePlaceholder = () => {
       <p>
       Workspace access requires authorization. Please contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
       </p>
-      <NotFoundSVG />
+      <NotFoundSVG aria-hidden='true' />
     </div>
   );
 };
