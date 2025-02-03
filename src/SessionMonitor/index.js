@@ -95,48 +95,59 @@ export class SessionMonitor {
   }
 
   updateSession() {
+    const afterUserCheck = () => {
+      const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
+      // If user has been inactive for Y min, and they are not in a workspace
+      if (timeSinceLastActivity >= this.inactiveTimeLimit
+          && !SessionMonitor.isUserOnPage('workspace')
+          && logoutInactiveUsers) {
+        this.logoutUser();
+        return Promise.resolve(0);
+      }
+
+      // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
+      // and they *are* in a workspace
+      if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
+          && SessionMonitor.isUserOnPage('workspace')
+          && logoutInactiveUsers) {
+        this.logoutUser();
+        return Promise.resolve(0);
+      }
+
+      // If user has been inactive for Y min, and they are not in a workspace
+      // trigger warning popup
+      if (timeSinceLastActivity >= (this.inactiveTimeLimit - this.inactiveWarningTime)
+          && !SessionMonitor.isUserOnPage('workspace')
+          && logoutInactiveUsers) {
+        this.warnUser(this.mostRecentActivityTimestamp + this.inactiveTimeLimit);
+        return Promise.resolve(0);
+      }
+
+      // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
+      // and they *are* in a workspace
+      // trigger warning popup
+      if (timeSinceLastActivity >= (this.inactiveWorkspaceTimeLimit - this.inactiveWarningTime)
+          && SessionMonitor.isUserOnPage('workspace')
+          && logoutInactiveUsers) {
+        this.warnUser(this.mostRecentActivityTimestamp + this.inactiveWorkspaceTimeLimit);
+        return Promise.resolve(0);
+      }
+
+      return this.refreshSession();
+    }
+
     if (SessionMonitor.isUserOnPage('login') || this.logoutPopupShown) {
       return Promise.resolve(0);
     }
 
-    const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
-    // If user has been inactive for Y min, and they are not in a workspace
-    if (timeSinceLastActivity >= this.inactiveTimeLimit
-        && !SessionMonitor.isUserOnPage('workspace')
-        && logoutInactiveUsers) {
-      this.logoutUser();
-      return Promise.resolve(0);
-    }
+    // check if user is logged in for logout warnings
+    return getReduxStore().then((store) => {
+      if (!store?.getState()?.user?.username) {
+        return Promise.resolve(0);
+      }
+      return afterUserCheck();
+    });
 
-    // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
-    // and they *are* in a workspace
-    if (timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit
-        && SessionMonitor.isUserOnPage('workspace')
-        && logoutInactiveUsers) {
-      this.logoutUser();
-      return Promise.resolve(0);
-    }
-
-    // If user has been inactive for Y min, and they are not in a workspace
-    // trigger warning popup
-    if (timeSinceLastActivity >= (this.inactiveTimeLimit - this.inactiveWarningTime)
-        && !SessionMonitor.isUserOnPage('workspace')
-        && logoutInactiveUsers) {
-      this.warnUser(this.mostRecentActivityTimestamp + this.inactiveTimeLimit);
-      return Promise.resolve(0);
-    }
-
-    // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
-    // and they *are* in a workspace
-    // trigger warning popup
-    if (timeSinceLastActivity >= (this.inactiveWorkspaceTimeLimit - this.inactiveWarningTime)
-        && SessionMonitor.isUserOnPage('workspace')
-        && logoutInactiveUsers) {
-      this.warnUser(this.mostRecentActivityTimestamp + this.inactiveWorkspaceTimeLimit);
-      return Promise.resolve(0);
-    }
-
-    return this.refreshSession();
   }
 
   refreshSession() {
