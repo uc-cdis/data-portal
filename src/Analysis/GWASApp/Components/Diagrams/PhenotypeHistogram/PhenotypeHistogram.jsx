@@ -125,6 +125,16 @@ const PhenotypeHistogram = ({
                     setMinOutlierCutoff(value);
                     handleChangeMinOutlierCutoff(value);
                   }}
+                  min={data.bins[0]?.start || 0}
+                  max={maxOutlierCutoff || data.bins[data.bins.length - 1]?.end || 100}
+                  onKeyDown={(e) => {
+                    const { key } = e;
+                    // Allow only numeric keys, backspace, and delete, and one decimal point
+                    if (!/[\d]/.test(key) && key !== 'Backspace' && key !== 'Delete' && key !== 'ArrowLeft' && key !== 'ArrowRight'
+                    && (key !== '.' || e.target.value.includes('.'))) {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
               <div className='GWASUI-column'>
@@ -137,6 +147,16 @@ const PhenotypeHistogram = ({
                   onChange={(value) => {
                     setMaxOutlierCutoff(value);
                     handleChangeMaxOutlierCutoff(value);
+                  }}
+                  min={minOutlierCutoff || data.bins[0]?.start || 0}
+                  max={data.bins[data.bins.length - 1]?.end || 100}
+                  onKeyDown={(e) => {
+                    const { key } = e;
+                    // Allow only numeric keys, backspace, and delete, and one decimal point
+                    if (!/[\d]/.test(key) && key !== 'Backspace' && key !== 'Delete' && key !== 'ArrowLeft' && key !== 'ArrowRight'
+                    && (key !== '.' || e.target.value.includes('.'))) {
+                      e.preventDefault();
+                    }
                   }}
                 />
               </div>
