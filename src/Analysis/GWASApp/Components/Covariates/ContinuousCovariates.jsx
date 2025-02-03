@@ -113,7 +113,7 @@ const ContinuousCovariates = ({
             </button>
           </div>
           {selected ? (
-            <div data-tour='phenotype-histogram'>
+            <div data-tour='phenotype-histogram' className='phenotype-histogram-component'>
               <PhenotypeHistogram
                 dispatch={dispatch}
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}

@@ -99,19 +99,29 @@ const PhenotypeHistogram = ({
       {data.bins !== null
         && (
           <div>
-            <Select
-              showSearch={false}
-              labelInValue
-              value={selectedTransformation}
-              onChange={(value) => {
-                setSelectedTransformation(value);
-                handleChangeTransformation(value);
-              }}
-              placeholder='-optional transformation-'
-              fieldNames={{ label: 'description', value: 'type' }}
-              options={[{ type: 'log', description: 'log transformation' }, { type: 'z_score', description: 'z-score transformation' }]}
-              dropdownStyle={{ width: '800' }}
-            />
+            <div className='GWASUI-row'>
+              <div className='GWASUI-column'>
+                <label id='transformation-dropdown-label' htmlFor='transformation-select'>Select Transformation</label>
+              </div>
+              <div className='GWASUI-column'>
+                <Select
+                  id='transformation-select'
+                  showSearch={false}
+                  labelInValue
+                  value={selectedTransformation}
+                  onChange={(value) => {
+                    setSelectedTransformation(value);
+                    handleChangeTransformation(value);
+                  }}
+                  placeholder='-optional transformation-'
+                  fieldNames={{ label: 'description', value: 'type' }}
+                  options={[{ type: 'log', description: 'log transformation' }, { type: 'z_score', description: 'z-score transformation' }]}
+                  aria-label='Transformation Selection'
+                  aria-labelledby='transformation-dropdown-label'
+                />
+              </div>
+              <div className='GWASUI-column' />
+            </div>
             <Histogram {...histogramArgs} />
             <div className='GWASUI-row'>
               <div className='GWASUI-column'>
