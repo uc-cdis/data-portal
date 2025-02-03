@@ -23,6 +23,9 @@ const PhenotypeHistogram = ({
 }) => {
   const { source } = useSourceContext();
   const [inlineErrorMessage, setInlineErrorMessage] = useState(null);
+  const [minOutlierCutoff, setMinOutlierCutoff] = useState(null);
+  const [maxOutlierCutoff, setMaxOutlierCutoff] = useState(null);
+  const [selectedTransformation, setSelectedTransformation] = useState(null);
   const sourceId = source; // TODO - change name of source to sourceId for clarity
   const { data, status } = useQuery(
     [
@@ -99,7 +102,11 @@ const PhenotypeHistogram = ({
             <Select
               showSearch={false}
               labelInValue
-              onChange={handleChangeTransformation}
+              value={selectedTransformation}
+              onChange={(value) => {
+                setSelectedTransformation(value);
+                handleChangeTransformation(value);
+              }}
               placeholder='-optional transformation-'
               fieldNames={{ label: 'description', value: 'type' }}
               options={[{ type: 'log', description: 'log transformation' }, { type: 'z_score', description: 'z-score transformation' }]}
@@ -113,7 +120,11 @@ const PhenotypeHistogram = ({
               <div className='GWASUI-column'>
                 <InputNumber
                   id='input-minOutlierCutoff'
-                  onChange={handleChangeMinOutlierCutoff}
+                  value={minOutlierCutoff}
+                  onChange={(value) => {
+                    setMinOutlierCutoff(value);
+                    handleChangeMinOutlierCutoff(value);
+                  }}
                 />
               </div>
               <div className='GWASUI-column'>
@@ -122,7 +133,11 @@ const PhenotypeHistogram = ({
               <div className='GWASUI-column'>
                 <InputNumber
                   id='input-maxOutlierCutoff'
-                  onChange={handleChangeMaxOutlierCutoff}
+                  value={maxOutlierCutoff}
+                  onChange={(value) => {
+                    setMaxOutlierCutoff(value);
+                    handleChangeMaxOutlierCutoff(value);
+                  }}
                 />
               </div>
             </div>
