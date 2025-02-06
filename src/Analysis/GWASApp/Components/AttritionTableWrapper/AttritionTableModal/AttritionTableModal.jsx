@@ -23,7 +23,6 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
         && modalInfo.rowObject.variable_type === 'concept' && (
         <div data-testid='phenotype-histogram-diagram'>
           <PhenotypeHistogram
-            useInlineErrorMessages
             selectedStudyPopulationCohort={modalInfo.selectedCohort}
             selectedCovariates={
               modalInfo.currentCovariateAndCovariatesFromPrecedingRows

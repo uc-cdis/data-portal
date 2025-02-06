@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
+import FILTERS from '../../../SharedUtils/FiltersEnumeration';
+import BarChart from '../AttritionTableWrapper/ChartIcons/BarChart';
 import './Covariates.css';
 
 const ContinuousCovariates = ({
@@ -19,7 +21,56 @@ const ContinuousCovariates = ({
     variable_type: 'concept',
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
+    transformation: selected.transformation,
+    filters: selected.filters,
   });
+
+  const onChangeTransformation = (selectedTransformationType) => {
+    setSelected((prevSelected) => {
+      const transformation = selectedTransformationType.key;
+      return { ...prevSelected, transformation };
+    });
+  };
+
+  const onChangeMinOutlierCutoff = (minOutlierCutoff) => {
+    setSelected((prevSelected) => {
+      // Ensure filters array exists
+      const filters = prevSelected.filters ? [...prevSelected.filters] : [];
+
+      // Find the index of the ">=" filter
+      const minFilterIndex = filters.findIndex((filter) => filter.type === FILTERS.greaterThanOrEqualTo);
+
+      if (minFilterIndex !== -1) {
+        // Update the existing ">=" filter
+        filters[minFilterIndex] = { type: FILTERS.greaterThanOrEqualTo, value: minOutlierCutoff };
+      } else {
+        // Add a new ">=" filter
+        filters.push({ type: FILTERS.greaterThanOrEqualTo, value: minOutlierCutoff });
+      }
+
+      return { ...prevSelected, filters };
+    });
+  };
+
+  const onChangeMaxOutlierCutoff = (maxOutlierCutoff) => {
+    setSelected((prevSelected) => {
+      // Ensure filters array exists
+      const filters = prevSelected.filters ? [...prevSelected.filters] : [];
+
+      // Find the index of the "<=" filter
+      const maxFilterIndex = filters.findIndex((filter) => filter.type === FILTERS.lessThanOrEqualTo);
+
+      if (maxFilterIndex !== -1) {
+        // Update the existing "<=" filter
+        filters[maxFilterIndex] = { type: FILTERS.lessThanOrEqualTo, value: maxOutlierCutoff };
+      } else {
+        // Add a new "<=" filter
+        filters.push({ type: FILTERS.lessThanOrEqualTo, value: maxOutlierCutoff });
+      }
+
+      return { ...prevSelected, filters };
+    });
+  };
 
   // when a user has selected a outcome phenotype that is a continuous covariate with a concept ID,
   // that should not appear as a selectable option, and be included in the submitted covariates.
@@ -63,18 +114,21 @@ const ContinuousCovariates = ({
             </button>
           </div>
           {selected ? (
-            <div data-tour='phenotype-histogram'>
+            <div data-tour='phenotype-histogram' className='phenotype-histogram-component'>
               <PhenotypeHistogram
                 dispatch={dispatch}
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
                 outcome={outcome}
                 selectedContinuousItem={selected}
+                handleChangeTransformation={onChangeTransformation}
+                handleChangeMinOutlierCutoff={onChangeMinOutlierCutoff}
+                handleChangeMaxOutlierCutoff={onChangeMaxOutlierCutoff}
               />
             </div>
           ) : (
             <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>
-              Select a concept to render its corresponding histogram
+              <BarChart />Select a concept to render its corresponding histogram
             </div>
           )}
         </div>

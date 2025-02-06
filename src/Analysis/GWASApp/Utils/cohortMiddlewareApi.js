@@ -42,6 +42,7 @@ export const fetchHistogramInfo = async (
   selectedCovariates,
   outcome,
   selectedConceptId,
+  transformationType,
 ) => {
   const variablesPayload = {
     variables: [...selectedCovariates, outcome,
@@ -49,10 +50,16 @@ export const fetchHistogramInfo = async (
       {
         variable_type: 'concept',
         concept_id: hareConceptId,
-      }].filter(Boolean), // filter out any undefined or null items (e.g. in some
+      },
+      {
+        variable_type: 'concept',
+        concept_id: selectedConceptId,
+        transformation: transformationType,
+      },
+    ].filter(Boolean), // filter out any undefined or null items (e.g. in some
     // scenarios "outcome" and "selectedCovariates" are still null and/or empty)
   };
-  const endPoint = `${cohortMiddlewarePath}histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${selectedConceptId}`;
+  const endPoint = `${cohortMiddlewarePath}histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}`;
   const reqBody = {
     method: 'POST',
     credentials: 'include',

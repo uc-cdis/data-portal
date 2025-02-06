@@ -31,6 +31,8 @@ FirstStepActive.args = {
   xAxisDataKey: 'ageBin',
   barDataKey: 'patients',
   barColor: 'darkblue',
+  minCutoff: 3, // Minimum cutoff value
+  maxCutoff: 4 // Maximum cutoff value
 };
 
 export const SecondStepError = Template.bind({});

@@ -105,8 +105,7 @@ SuccessCase.parameters = {
         }
       ),
       rest.post(
-        //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
-        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId',
         (req, res, ctx) => {
           const { cohortmiddlewarepath } = req.params;
           const { cohortdefinitionId } = req.params;
@@ -152,8 +151,7 @@ EmptyDataCase.parameters = {
         }
       ),
       rest.post(
-        //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
-        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId',
         (req, res, ctx) => {
           const { cohortmiddlewarepath } = req.params;
           const { cohortdefinitionId } = req.params;
