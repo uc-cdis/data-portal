@@ -23,7 +23,6 @@ class Popup extends React.Component {
         modal.classList.remove('trap-is-active');
         html.classList.remove('lock-scroll');
       },
-      initialFocus: false,
     });
 
     this.focusTrap.activate();
