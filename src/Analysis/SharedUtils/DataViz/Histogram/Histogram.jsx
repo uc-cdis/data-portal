@@ -62,7 +62,7 @@ const Histogram = ({
   const minX = Math.min(minCutoff ?? Infinity, ...xValues);
   // Find max value in the set of [(maxCutoff OR -Infinity), and xValues]:
   const maxX = Math.max(maxCutoff ?? -Infinity, ...xValues);
-  const padding = (maxX - minX) * 0.10;
+  const padding = (maxX - minX) * 0.1;
   const xDomain = [minX - padding, maxX + padding];
 
   return (
@@ -81,6 +81,7 @@ const Histogram = ({
           tickFormatter={(tick) => formatNumber(tick)}
         >
           <Label
+            className='xAxisLabel'
             value={xAxisLegend || xAxisDataKey}
             position='bottom'
             offset={20}
@@ -91,7 +92,11 @@ const Histogram = ({
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
         <CartesianGrid strokeDasharray='3 3' />
-        <Bar dataKey={barDataKey} fill={barColor} animationDuration={useAnimation ? defaultAnimationTime : 0} />
+        <Bar
+          dataKey={barDataKey}
+          fill={barColor}
+          animationDuration={useAnimation ? defaultAnimationTime : 0}
+        />
         {/* Add ReferenceLines for min and max cutoffs */}
         {minCutoff !== undefined && (
           <ReferenceLine

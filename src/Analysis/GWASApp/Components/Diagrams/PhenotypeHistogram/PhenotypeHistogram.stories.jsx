@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import PhenotypeHistogram from './PhenotypeHistogram';
 import { SourceContextProvider } from '../../../Utils/Source';
+import '../../../GWASApp.css';
 
 export default {
   title: 'Tests3/GWASApp/PhenotypeHistogram',
@@ -14,7 +15,17 @@ const mockedQueryClient = new QueryClient();
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
     <SourceContextProvider>
-      <PhenotypeHistogram {...args} />
+      <div className='GWASApp' style={{ background: '#f5f5f5' }}>
+        <div className='steps-content'>
+          <div className='GWASUI-double-column'>
+            <div className='select-container' style={{ background: '#fff' }}>
+              <div style={{ width: 600 }}>
+                <PhenotypeHistogram {...args} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </SourceContextProvider>
   </QueryClientProvider>
 );

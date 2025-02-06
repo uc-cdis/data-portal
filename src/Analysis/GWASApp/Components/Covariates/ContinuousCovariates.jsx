@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
-import './Covariates.css';
 import FILTERS from '../../../SharedUtils/FiltersEnumeration';
+import BarChart from '../AttritionTableWrapper/ChartIcons/BarChart';
+import './Covariates.css';
 
 const ContinuousCovariates = ({
   dispatch,
@@ -127,7 +128,7 @@ const ContinuousCovariates = ({
             </div>
           ) : (
             <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>
-              Select a concept to render its corresponding histogram
+              <BarChart />Select a concept to render its corresponding histogram
             </div>
           )}
         </div>

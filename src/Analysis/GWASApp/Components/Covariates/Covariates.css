@@ -92,6 +92,7 @@
   display: block;
   float: right;
   height: 36px;
+  margin-right: 5%;
 }
 
 .GWASApp .phenotype-histogram .recharts-wrapper {
@@ -109,6 +110,10 @@
   margin-top: 50px;
   text-align: center;
   width: 600px;
+}
+
+.GWASApp .phenotype-histogram-directions svg {
+  margin-right: 4px;
 }
 
 .GWASApp .phenotype-histogram-component {

@@ -1,0 +1,21 @@
+.GWASUI-column.transformation-dropdown-label {
+  max-width: 25%;
+}
+
+.GWASUI-column.transformation-select {
+  max-width: 65%;
+}
+
+label[for='input-minOutlierCutoff'],
+label[for='input-maxOutlierCutoff'] {
+  margin-top: 3px;
+}
+
+.GWASUI-row.outlier-inputs {
+  margin-top: -8px;
+}
+
+.recharts-text.xAxisLabel tspan:nth-child(1) {
+  font-weight: bold;
+  fill: black;
+}
