@@ -934,7 +934,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       if (this.state.manifestEntryCount != 'too-many-terms') {
         buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
       } else {
-        buttonTitle = `${buttonConfig.title} (too many rows to download at once; make a smaller selection)`;
+        buttonTitle = `${buttonConfig.title} (cohort too large; make a smaller selection)`;
       }
     }
 
