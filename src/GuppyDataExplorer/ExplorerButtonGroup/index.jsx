@@ -14,6 +14,8 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
+const ES_MAX_QUERY_TERMS = 65536; // max number of terms supported in ES queries
+
 // template variable for export-pfb-to-url/export-file-pfb-to-url button config.
 // see docs/export_pfb_to_url.md
 const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
@@ -22,7 +24,7 @@ class ExplorerButtonGroup extends React.Component {
     super(props);
     this.state = {
       // for manifest
-      manifestEntryCount: null,
+      manifestEntryCount: 0,
       // for exports
       toasterOpen: false,
       toasterHeadline: '',
@@ -691,7 +693,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
         // state is set to true while the manifest is being counted. This is because we want the button to show
         // the spinner instead of the download icon while the counting is in progress.
         this.setState({
-          manifestEntryCount: null, downloadingInProgress: { manifest: true }, toasterOpen: false,
+          manifestEntryCount: 0, downloadingInProgress: { manifest: true }, toasterOpen: false,
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
@@ -709,13 +711,16 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           } else {
             let caseIDList = caseIDResult.map((i) => i[caseField]);
             caseIDList = _.uniq(caseIDList);
-            let countResult = 0;
-            if (caseIDList.length <= 65536) { // max number of terms in ES query
+            let countResult;
+            if (caseIDList.length <= ES_MAX_QUERY_TERMS) {
               countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
                 [caseFieldInFileIndex]: {
                   selectedValues: caseIDList,
                 },
               });
+            } else {
+              // this will disable the button, preventing download attemps that would fail
+              countResult = 'too-many-terms';
             }
             this.setState({
               manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
@@ -782,7 +787,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (buttonConfig.type.startsWith('data') || buttonConfig.type === 'manifest' || buttonConfig.type === 'file-manifest') {
       let isEnabled = Object.values(this.state.downloadingInProgress).every((x) => x === false);
       if (buttonConfig.type === 'manifest') {
-        isEnabled = isEnabled && this.state.manifestEntryCount != null;
+        isEnabled = isEnabled && this.state.manifestEntryCount != 0 && this.state.manifestEntryCount != 'too-many-terms';
       }
       return isEnabled;
     }
@@ -865,7 +870,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       }
     }
     if (buttonConfig.type === 'export-to-workspace') {
-      return this.state.manifestEntryCount != null;
+      return this.state.manifestEntryCount != 0 && this.state.manifestEntryCount != 'too-many-terms';
     }
 
     return this.props.totalCount > 0;
@@ -925,11 +930,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (buttonConfig.type === 'data') {
       const buttonCount = (this.props.totalCount >= 0) ? this.props.totalCount : 0;
       buttonTitle = `${buttonConfig.title} (${buttonCount})`;
-    } else if (buttonConfig.type === 'manifest' && this.state.manifestEntryCount != null) {
-      buttonTitle = `${buttonConfig.title}`;
-      // if the count is 0 (we couldn't check the count), don't display it
-      if (this.state.manifestEntryCount != 0) {
+    } else if (buttonConfig.type === 'manifest' && this.state.manifestEntryCount != 0) {
+      if (this.state.manifestEntryCount != 'too-many-terms') {
         buttonTitle = `${buttonConfig.title} (${humanizeNumber(this.state.manifestEntryCount)})`;
+      } else {
+        buttonTitle = `${buttonConfig.title} (too many rows to download at once; make a smaller selection)`;
       }
     }
 
