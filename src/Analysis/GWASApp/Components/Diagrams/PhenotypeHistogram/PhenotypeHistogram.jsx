@@ -150,12 +150,11 @@ const PhenotypeHistogram = ({
                   setMinOutlierCutoff(value);
                   handleChangeMinOutlierCutoff(value);
                 }}
-                min={data.bins[0]?.start || 0}
+                min={(data.bins[0]?.start ?? 0) - 1}
                 max={
-                  maxOutlierCutoff
-                  || data.bins[data.bins.length - 1]?.end
-                  || 100
-                }
+                  (maxOutlierCutoff
+                  ?? data.bins[data.bins.length - 1]?.end
+                  ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
@@ -185,8 +184,8 @@ const PhenotypeHistogram = ({
                   setMaxOutlierCutoff(value);
                   handleChangeMaxOutlierCutoff(value);
                 }}
-                min={minOutlierCutoff || data.bins[0]?.start || 0}
-                max={data.bins[data.bins.length - 1]?.end || 100}
+                min={(minOutlierCutoff ?? data.bins[0]?.start ?? 0) - 1}
+                max={(data.bins[data.bins.length - 1]?.end ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
