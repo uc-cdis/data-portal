@@ -49,6 +49,18 @@ const PhenotypeHistogram = ({
     queryConfig,
   );
 
+  const getMinCutoff = (continuousItem) => {
+    return continuousItem?.filters?.find(
+      (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
+    )?.value ?? null;
+  };
+
+  const getMaxCutoff = (continuousItem) => {
+    return continuousItem?.filters?.find(
+      (filter) => filter.type === FILTERS.lessThanOrEqualTo,
+    )?.value ?? null;
+  };
+
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
@@ -70,6 +82,9 @@ const PhenotypeHistogram = ({
           payload: MESSAGES.NO_BINS_ERROR,
         });
       }
+      setMinOutlierCutoff(getMinCutoff(selectedContinuousItem));
+      setMaxOutlierCutoff(getMaxCutoff(selectedContinuousItem));
+      setSelectedTransformation(selectedContinuousItem.transformation);
     }
   }, [data]);
 
@@ -91,14 +106,8 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
     useAnimation,
-    minCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
-      )?.value ?? undefined,
-    maxCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.lessThanOrEqualTo,
-      )?.value ?? undefined,
+    minCutoff: getMinCutoff(selectedContinuousItem),
+    maxCutoff: getMaxCutoff(selectedContinuousItem),
   };
   return (
     <React.Fragment>
