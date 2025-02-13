@@ -29,7 +29,7 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
             selectedCovariates={rowIsOutcome ? [] : modalInfo.currentCovariateAndCovariatesFromPrecedingRows.slice(0, -1)}
             outcome={rowIsOutcome ? null : modalInfo.outcome}
             selectedContinuousItem={modalInfo.rowObject}
-            useAnimation={false}
+            readOnly={true}
           />
         </div>
       )}

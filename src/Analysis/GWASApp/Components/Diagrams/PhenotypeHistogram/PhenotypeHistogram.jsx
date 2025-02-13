@@ -17,7 +17,7 @@ const PhenotypeHistogram = ({
   selectedCovariates,
   outcome,
   selectedContinuousItem,
-  useAnimation,
+  readOnly,
   handleChangeTransformation,
   handleChangeMinOutlierCutoff,
   handleChangeMaxOutlierCutoff,
@@ -105,7 +105,7 @@ const PhenotypeHistogram = ({
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
-    useAnimation,
+    useAnimation: !readOnly,
     minCutoff: getMinCutoff(selectedContinuousItem),
     maxCutoff: getMaxCutoff(selectedContinuousItem),
   };
@@ -126,6 +126,7 @@ const PhenotypeHistogram = ({
             <div className='GWASUI-column transformation-select'>
               <Select
                 id='transformation-select'
+                disabled={readOnly}
                 showSearch={false}
                 labelInValue
                 value={selectedTransformation}
@@ -154,6 +155,7 @@ const PhenotypeHistogram = ({
             <div className='GWASUI-column'>
               <InputNumber
                 id='input-minOutlierCutoff'
+                disabled={readOnly}
                 value={minOutlierCutoff}
                 onChange={(value) => {
                   setMinOutlierCutoff(value);
@@ -188,6 +190,7 @@ const PhenotypeHistogram = ({
             <div className='GWASUI-column'>
               <InputNumber
                 id='input-maxOutlierCutoff'
+                disabled={readOnly}
                 value={maxOutlierCutoff}
                 onChange={(value) => {
                   setMaxOutlierCutoff(value);
@@ -224,7 +227,7 @@ PhenotypeHistogram.propTypes = {
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   selectedContinuousItem: PropTypes.object.isRequired,
-  useAnimation: PropTypes.bool,
+  readOnly: PropTypes.bool,
   handleChangeTransformation: PropTypes.func,
   handleChangeMinOutlierCutoff: PropTypes.func,
   handleChangeMaxOutlierCutoff: PropTypes.func,
@@ -234,7 +237,7 @@ PhenotypeHistogram.defaultProps = {
   dispatch: null,
   selectedCovariates: [],
   outcome: null,
-  useAnimation: true,
+  readOnly: false,
   handleChangeTransformation: null,
   handleChangeMinOutlierCutoff: null,
   handleChangeMaxOutlierCutoff: null,
