@@ -81,7 +81,7 @@ export const fetchConceptStatsByHareSubset = async (
   sourceId,
 ) => {
   const variablesPayload = {
-    variables: [outcome, ...subsetCovariates],
+    variables: [...(outcome !== null ? [outcome] : []), ...subsetCovariates],
   };
   const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
   const reqBody = {

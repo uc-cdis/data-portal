@@ -49,6 +49,18 @@ const PhenotypeHistogram = ({
     queryConfig,
   );
 
+  const getMinCutoff = (continuousItem) => {
+    return continuousItem?.filters?.find(
+      (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
+    )?.value ?? null;
+  };
+
+  const getMaxCutoff = (continuousItem) => {
+    return continuousItem?.filters?.find(
+      (filter) => filter.type === FILTERS.lessThanOrEqualTo,
+    )?.value ?? null;
+  };
+
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
@@ -70,6 +82,9 @@ const PhenotypeHistogram = ({
           payload: MESSAGES.NO_BINS_ERROR,
         });
       }
+      setMinOutlierCutoff(getMinCutoff(selectedContinuousItem));
+      setMaxOutlierCutoff(getMaxCutoff(selectedContinuousItem));
+      setSelectedTransformation(selectedContinuousItem.transformation);
     }
   }, [data]);
 
@@ -91,14 +106,8 @@ const PhenotypeHistogram = ({
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
     useAnimation,
-    minCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
-      )?.value ?? undefined,
-    maxCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.lessThanOrEqualTo,
-      )?.value ?? undefined,
+    minCutoff: getMinCutoff(selectedContinuousItem),
+    maxCutoff: getMaxCutoff(selectedContinuousItem),
   };
   return (
     <React.Fragment>
@@ -150,12 +159,11 @@ const PhenotypeHistogram = ({
                   setMinOutlierCutoff(value);
                   handleChangeMinOutlierCutoff(value);
                 }}
-                min={data.bins[0]?.start || 0}
+                min={(data.bins[0]?.start ?? 0) - 1}
                 max={
-                  maxOutlierCutoff
-                  || data.bins[data.bins.length - 1]?.end
-                  || 100
-                }
+                  (maxOutlierCutoff
+                  ?? data.bins[data.bins.length - 1]?.end
+                  ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
@@ -185,8 +193,8 @@ const PhenotypeHistogram = ({
                   setMaxOutlierCutoff(value);
                   handleChangeMaxOutlierCutoff(value);
                 }}
-                min={minOutlierCutoff || data.bins[0]?.start || 0}
-                max={data.bins[data.bins.length - 1]?.end || 100}
+                min={(minOutlierCutoff ?? data.bins[0]?.start ?? 0) - 1}
+                max={(data.bins[data.bins.length - 1]?.end ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
