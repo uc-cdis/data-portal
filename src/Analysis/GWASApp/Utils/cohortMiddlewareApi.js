@@ -13,7 +13,7 @@ export const fetchSimpleOverlapInfo = async (
   outcome,
 ) => {
   const variablesPayload = {
-    variables: [outcome, ...selectedCovariates,
+    variables: [outcome, ...selectedCovariates, // <- note: this order is important (outcome first, then covariates)
       // add extra filter to make sure we only count persons that have a HARE group as well:
       {
         variable_type: 'concept',
@@ -45,7 +45,7 @@ export const fetchHistogramInfo = async (
   transformationType,
 ) => {
   const variablesPayload = {
-    variables: [...selectedCovariates, outcome,
+    variables: [outcome, ...selectedCovariates, // <- note: this order is important (outcome first, then covariates)
       // add extra filter to make sure we only count persons that have a HARE group as well:
       {
         variable_type: 'concept',
@@ -112,7 +112,6 @@ export const addCDFilter = (cohortId, otherCohortId, covariateArr) => {
   covariateRequest.push(cdFilter);
   return covariateRequest;
 };
-
 
 export const fetchCohortDefinitions = async (sourceId, selectedTeamProject) => {
   const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}/by-team-project?team-project=${selectedTeamProject}`;

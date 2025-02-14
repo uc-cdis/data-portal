@@ -49,17 +49,13 @@ const PhenotypeHistogram = ({
     queryConfig,
   );
 
-  const getMinCutoff = (continuousItem) => {
-    return continuousItem?.filters?.find(
-      (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
-    )?.value ?? null;
-  };
+  const getMinCutoff = (continuousItem) => continuousItem?.filters?.find(
+    (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
+  )?.value ?? null;
 
-  const getMaxCutoff = (continuousItem) => {
-    return continuousItem?.filters?.find(
-      (filter) => filter.type === FILTERS.lessThanOrEqualTo,
-    )?.value ?? null;
-  };
+  const getMaxCutoff = (continuousItem) => continuousItem?.filters?.find(
+    (filter) => filter.type === FILTERS.lessThanOrEqualTo,
+  )?.value ?? null;
 
   useEffect(() => {
     // Validate and give error message if there is no data:
@@ -114,13 +110,16 @@ const PhenotypeHistogram = ({
       {inlineErrorMessage}
       {data.bins !== null && (
         <div>
+          <div>{(outcome?.variable_type === 'custom_dichotomous' && readOnly
+            ? '\u2139\uFE0F histogram displaying data from both case and control groups'
+            : '')}
+          </div>
           <div className='GWASUI-row'>
             <div className='GWASUI-column transformation-dropdown-label'>
               <label
                 id='transformation-dropdown-label'
                 htmlFor='transformation-select'
-              >
-                Select Transformation
+              >{(readOnly ? 'Selected Transformation' : 'Select Transformation')}
               </label>
             </div>
             <div className='GWASUI-column transformation-select'>
@@ -165,7 +164,8 @@ const PhenotypeHistogram = ({
                 max={
                   (maxOutlierCutoff
                   ?? data.bins[data.bins.length - 1]?.end
-                  ?? 100) + 1}
+                  ?? 100) + 1
+                }
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point

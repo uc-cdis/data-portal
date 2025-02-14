@@ -1,9 +1,12 @@
 .GWASUI-column.transformation-dropdown-label {
-  max-width: 25%;
+  max-width: 30%;
+  padding-top: 10px;
+  padding-bottom: 5px;
 }
 
 .GWASUI-column.transformation-select {
-  max-width: 65%;
+  max-width: 60%;
+  padding-bottom: 10px;
 }
 
 label[for='input-minOutlierCutoff'],
