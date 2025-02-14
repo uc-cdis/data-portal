@@ -16,7 +16,7 @@ export const jobSubmission = async (
   const submitEndpoint = `${gwasWorkflowPath}submit`;
   const requestBody = {
     n_pcs: numOfPCs,
-    variables: [...selectedCovariates, outcome],
+    variables: [outcome, ...selectedCovariates], // <- note: this order is important (outcome first, then covariates)
     out_prefix: Date.now().toString(),
     outcome,
     hare_population: selectedHare.concept_value_name,
