@@ -18,7 +18,7 @@ class SubmissionHeader extends React.Component {
   }
 
   openGen3Tutorials = () => {
-    window.open('https://gen3.org/resources/user/gen3-client/', '_blank');
+    window.open('https://docs.gen3.org/gen3-resources/operator-guide/submit-unstructured-data/#gen3-client-instructions-for-uploading-data', '_blank');
   }
 
   render() {

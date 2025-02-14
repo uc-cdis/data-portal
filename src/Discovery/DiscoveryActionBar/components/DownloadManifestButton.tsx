@@ -20,7 +20,7 @@ const DownloadManifestButton = ({
             <a
               target='_blank'
               rel='noreferrer'
-              href='https://gen3.org/resources/user/gen3-client/'
+              href='https://docs.gen3.org/gen3-resources/user-guide/access-data/#download-files-using-the-gen3-client'
             >
               {'Gen3 Client'}
             </a>

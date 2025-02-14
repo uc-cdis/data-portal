@@ -20,7 +20,7 @@ const ExportToWorkspaceButton = ({
             <a
               target='blank'
               rel='noreferrer'
-              href='https://gen3.org/resources/user/analyze-data/'
+              href='https://docs.gen3.org/gen3-resources/user-guide/analyze-data/'
             >
                 Gen3 Workspace
             </a>
