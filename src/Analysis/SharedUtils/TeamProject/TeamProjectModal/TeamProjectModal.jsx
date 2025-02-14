@@ -134,7 +134,7 @@ const TeamProjectModal = ({
       >
         <div className='team-project-modal_modal-description'>
           Please reach out to{' '}
-          <a href='mailto:vadc@lists.uchicago.edu'>vadc@lists.uchicago.edu</a>{' '}
+          <a href='mailto:vadc-support@gen3.org'>vadc-support@gen3.org</a>{' '}
           to gain access to the system
         </div>
       </Modal>
