@@ -33,7 +33,7 @@ export const adminFetchUsers = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const { status, data } = await fetchWithCreds({
-        path: `${userapiPath}admin/user`,
+        path: `${hostname}amanuensis/admin/get_users`,
         onError: () => dispatch(requestErrored()),
       });
       if (status === 200) return { data, status };
