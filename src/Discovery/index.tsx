@@ -46,6 +46,8 @@ const populateStudiesWithConfigInfo = (studies, config) => {
   });
 };
 
+let allStudies;
+
 const DiscoveryWithMDSBackend: React.FC<{
     userAggregateAuthMappings: any,
     config: DiscoveryConfig,
@@ -91,19 +93,20 @@ const DiscoveryWithMDSBackend: React.FC<{
     } else {
       return;
     }
-
+    let isLoadingSmallBatch;
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
       let loadStudiesFunction: Function;
       let loadStudiesParameters: any[] = [];
+      isLoadingSmallBatch = numberOfBatchesLoaded === 0;
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
-        loadStudiesParameters.push(numberOfBatchesLoaded === 0
+        loadStudiesParameters.push(isLoadingSmallBatch
           ? numberOfStudiesForSmallerBatch
           : numberOfStudiesForAllStudiesBatch);
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
-        loadStudiesParameters = (numberOfBatchesLoaded === 0
+        loadStudiesParameters = (isLoadingSmallBatch
           ? [props.config?.features?.guidType, 10, false] : [props.config?.features?.guidType, 2000, true]);
       }
       const rawStudiesRegistered = await loadStudiesFunction(
@@ -114,7 +117,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (isEnabled('studyRegistration')) {
         // Load fewer raw studies if on the first studies batch
         // Otherwise load them all
-        rawStudiesUnregistered = numberOfBatchesLoaded === 0
+        rawStudiesUnregistered = isLoadingSmallBatch
           ? (rawStudiesUnregistered = await loadStudiesFromMDS(
             'unregistered_discovery_metadata',
             numberOfStudiesForSmallerBatch,
@@ -128,7 +131,11 @@ const DiscoveryWithMDSBackend: React.FC<{
           }),
         );
       }
-      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
+      const result = _.union(rawStudiesRegistered, rawStudiesUnregistered);
+      if (!isLoadingSmallBatch) {
+        allStudies = result;
+      }
+      return allStudies || result;
     }
     fetchRawStudies().then((rawStudies) => {
       let studiesToSet;
@@ -193,7 +200,9 @@ const DiscoveryWithMDSBackend: React.FC<{
 
       populateStudiesWithConfigInfo(studiesToSet, props.config);
       setStudies(studiesToSet);
-
+      if (!isLoadingSmallBatch) {
+        allStudies = studiesToSet;
+      }
       // resume action in progress if redirected from login
       const urlParams = decodeURIComponent(window.location.search);
       if (urlParams.startsWith('?state=')) {
