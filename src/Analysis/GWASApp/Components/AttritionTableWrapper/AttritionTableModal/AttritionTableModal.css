@@ -36,6 +36,10 @@
   min-width: 180px;
 }
 
+.attrition-table-modal .outlier-inputs .GWASUI-column:nth-child(3) {
+  margin-left: 35px;
+}
+
 .attrition-table-modal .outlier-inputs .GWASUI-column:nth-child(even) {
   margin-left: -25px;
 }
