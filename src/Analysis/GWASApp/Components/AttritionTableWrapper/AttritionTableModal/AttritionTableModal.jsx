@@ -27,8 +27,8 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
             selectedCovariates={(() => {
               // If row is outcome, we don't want covariates to be included in the filter.
               // If not, we only want covariates from previous rows here. The current one will be in selectedContinuousItem below.
-              // Overall, the result of the logic below should be a histogram that reflects what was displayed in the "select covariate" step.
-              // A TODO could be to have another histogram display the remaining data. Will it be transformed again using just the remaining set?
+              // Overall, the result of the logic below should be a histogram that reflects what was displayed in the "select covariate"
+              // step (i.e. not the data that remains *after* filtering, but what was displayed while selecting the covariate).
               if (rowIsOutcome) return [];
 
               if (modalInfo.outcome.variable_type === 'custom_dichotomous') {

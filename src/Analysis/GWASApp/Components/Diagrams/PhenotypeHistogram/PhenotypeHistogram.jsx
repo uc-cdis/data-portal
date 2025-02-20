@@ -161,11 +161,11 @@ const PhenotypeHistogram = ({
                   handleChangeMinOutlierCutoff(value);
                 }}
                 min={(data.bins[0]?.start ?? 0) - 1}
-                max={
-                  (maxOutlierCutoff
-                  ?? data.bins[data.bins.length - 1]?.end
-                  ?? 100) + 1
-                }
+                max={(() => {
+                  const lastBinEnd = data.bins[data.bins.length - 1]?.end;
+                  const cutOffValue = maxOutlierCutoff ?? lastBinEnd ?? 100;
+                  return cutOffValue + 1;
+                })()}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
@@ -175,6 +175,7 @@ const PhenotypeHistogram = ({
                     && key !== 'Delete'
                     && key !== 'ArrowLeft'
                     && key !== 'ArrowRight'
+                    && (key !== '-' || e.target.value.includes('-'))
                     && (key !== '.' || e.target.value.includes('.'))
                   ) {
                     e.preventDefault();
@@ -196,7 +197,11 @@ const PhenotypeHistogram = ({
                   setMaxOutlierCutoff(value);
                   handleChangeMaxOutlierCutoff(value);
                 }}
-                min={(minOutlierCutoff ?? data.bins[0]?.start ?? 0) - 1}
+                min={(() => {
+                  const firstBinStart = data.bins[0]?.start;
+                  const cutOffValue = minOutlierCutoff ?? firstBinStart ?? 0;
+                  return cutOffValue - 1;
+                })()}
                 max={(data.bins[data.bins.length - 1]?.end ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
@@ -207,6 +212,7 @@ const PhenotypeHistogram = ({
                     && key !== 'Delete'
                     && key !== 'ArrowLeft'
                     && key !== 'ArrowRight'
+                    && (key !== '-' || e.target.value.includes('-'))
                     && (key !== '.' || e.target.value.includes('.'))
                   ) {
                     e.preventDefault();
