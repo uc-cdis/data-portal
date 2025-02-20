@@ -17,3 +17,25 @@
 .attrition-table-modal .euler-loading {
   text-align: center;
 }
+
+.attrition-table-modal .GWASUI-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.attrition-table-modal .GWASUI-column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.attrition-table-modal .outlier-inputs .GWASUI-column:nth-child(odd) {
+  min-width: 180px;
+}
+
+.attrition-table-modal .outlier-inputs .GWASUI-column:nth-child(even) {
+  margin-left: -25px;
+}
