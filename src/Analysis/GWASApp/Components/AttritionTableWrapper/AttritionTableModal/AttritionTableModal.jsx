@@ -24,12 +24,23 @@ const AttritionTableModal = ({ modalInfo, setModalInfo }) => {
         <div data-testid='phenotype-histogram-diagram'>
           <PhenotypeHistogram
             selectedStudyPopulationCohort={modalInfo.selectedCohort}
-            selectedCovariates={
-              modalInfo.currentCovariateAndCovariatesFromPrecedingRows
-            }
-            outcome={modalInfo.outcome}
+            selectedCovariates={(() => {
+              // If row is outcome, we don't want covariates to be included in the filter.
+              // If not, we only want covariates from previous rows here. The current one will be in selectedContinuousItem below.
+              // Overall, the result of the logic below should be a histogram that reflects what was displayed in the "select covariate"
+              // step (i.e. not the data that remains *after* filtering, but what was displayed while selecting the covariate).
+              if (rowIsOutcome) return [];
+
+              if (modalInfo.outcome.variable_type === 'custom_dichotomous') {
+                // case/control... - here we also remove an extra item that is added on the fly (see applyAutoGenFilters() in AttritionTable)
+                return modalInfo.currentCovariateAndCovariatesFromPrecedingRows.slice(0, -2);
+              }
+
+              return modalInfo.currentCovariateAndCovariatesFromPrecedingRows.slice(0, -1);
+            })()}
+            outcome={rowIsOutcome ? null : modalInfo.outcome}
             selectedContinuousItem={modalInfo.rowObject}
-            useAnimation={false}
+            readOnly
           />
         </div>
       )}

@@ -17,7 +17,7 @@ const PhenotypeHistogram = ({
   selectedCovariates,
   outcome,
   selectedContinuousItem,
-  useAnimation,
+  readOnly,
   handleChangeTransformation,
   handleChangeMinOutlierCutoff,
   handleChangeMaxOutlierCutoff,
@@ -49,6 +49,14 @@ const PhenotypeHistogram = ({
     queryConfig,
   );
 
+  const getMinCutoff = (continuousItem) => continuousItem?.filters?.find(
+    (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
+  )?.value ?? null;
+
+  const getMaxCutoff = (continuousItem) => continuousItem?.filters?.find(
+    (filter) => filter.type === FILTERS.lessThanOrEqualTo,
+  )?.value ?? null;
+
   useEffect(() => {
     // Validate and give error message if there is no data:
     if (
@@ -70,6 +78,9 @@ const PhenotypeHistogram = ({
           payload: MESSAGES.NO_BINS_ERROR,
         });
       }
+      setMinOutlierCutoff(getMinCutoff(selectedContinuousItem));
+      setMaxOutlierCutoff(getMaxCutoff(selectedContinuousItem));
+      setSelectedTransformation(selectedContinuousItem.transformation);
     }
   }, [data]);
 
@@ -90,33 +101,31 @@ const PhenotypeHistogram = ({
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
     yAxisLegend: 'Persons',
-    useAnimation,
-    minCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.greaterThanOrEqualTo,
-      )?.value ?? undefined,
-    maxCutoff:
-      selectedContinuousItem.filters?.find(
-        (filter) => filter.type === FILTERS.lessThanOrEqualTo,
-      )?.value ?? undefined,
+    useAnimation: !readOnly,
+    minCutoff: getMinCutoff(selectedContinuousItem),
+    maxCutoff: getMaxCutoff(selectedContinuousItem),
   };
   return (
     <React.Fragment>
       {inlineErrorMessage}
       {data.bins !== null && (
         <div>
+          <div>{(outcome?.variable_type === 'custom_dichotomous' && readOnly
+            ? '\u2139\uFE0F histogram displaying data from both case and control groups'
+            : '')}
+          </div>
           <div className='GWASUI-row'>
             <div className='GWASUI-column transformation-dropdown-label'>
               <label
                 id='transformation-dropdown-label'
                 htmlFor='transformation-select'
-              >
-                Select Transformation
+              >{(readOnly ? 'Selected Transformation' : 'Select Transformation')}
               </label>
             </div>
             <div className='GWASUI-column transformation-select'>
               <Select
                 id='transformation-select'
+                disabled={readOnly}
                 showSearch={false}
                 labelInValue
                 value={selectedTransformation}
@@ -145,17 +154,18 @@ const PhenotypeHistogram = ({
             <div className='GWASUI-column'>
               <InputNumber
                 id='input-minOutlierCutoff'
+                disabled={readOnly}
                 value={minOutlierCutoff}
                 onChange={(value) => {
                   setMinOutlierCutoff(value);
                   handleChangeMinOutlierCutoff(value);
                 }}
-                min={data.bins[0]?.start || 0}
-                max={
-                  maxOutlierCutoff
-                  || data.bins[data.bins.length - 1]?.end
-                  || 100
-                }
+                min={(data.bins[0]?.start ?? 0) - 1}
+                max={(() => {
+                  const lastBinEnd = data.bins[data.bins.length - 1]?.end;
+                  const cutOffValue = maxOutlierCutoff ?? lastBinEnd ?? 100;
+                  return cutOffValue + 1;
+                })()}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
@@ -165,6 +175,7 @@ const PhenotypeHistogram = ({
                     && key !== 'Delete'
                     && key !== 'ArrowLeft'
                     && key !== 'ArrowRight'
+                    && (key !== '-' || e.target.value.includes('-'))
                     && (key !== '.' || e.target.value.includes('.'))
                   ) {
                     e.preventDefault();
@@ -180,13 +191,18 @@ const PhenotypeHistogram = ({
             <div className='GWASUI-column'>
               <InputNumber
                 id='input-maxOutlierCutoff'
+                disabled={readOnly}
                 value={maxOutlierCutoff}
                 onChange={(value) => {
                   setMaxOutlierCutoff(value);
                   handleChangeMaxOutlierCutoff(value);
                 }}
-                min={minOutlierCutoff || data.bins[0]?.start || 0}
-                max={data.bins[data.bins.length - 1]?.end || 100}
+                min={(() => {
+                  const firstBinStart = data.bins[0]?.start;
+                  const cutOffValue = minOutlierCutoff ?? firstBinStart ?? 0;
+                  return cutOffValue - 1;
+                })()}
+                max={(data.bins[data.bins.length - 1]?.end ?? 100) + 1}
                 onKeyDown={(e) => {
                   const { key } = e;
                   // Allow only numeric keys, backspace, and delete, and one decimal point
@@ -196,6 +212,7 @@ const PhenotypeHistogram = ({
                     && key !== 'Delete'
                     && key !== 'ArrowLeft'
                     && key !== 'ArrowRight'
+                    && (key !== '-' || e.target.value.includes('-'))
                     && (key !== '.' || e.target.value.includes('.'))
                   ) {
                     e.preventDefault();
@@ -216,7 +233,7 @@ PhenotypeHistogram.propTypes = {
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   selectedContinuousItem: PropTypes.object.isRequired,
-  useAnimation: PropTypes.bool,
+  readOnly: PropTypes.bool,
   handleChangeTransformation: PropTypes.func,
   handleChangeMinOutlierCutoff: PropTypes.func,
   handleChangeMaxOutlierCutoff: PropTypes.func,
@@ -226,7 +243,7 @@ PhenotypeHistogram.defaultProps = {
   dispatch: null,
   selectedCovariates: [],
   outcome: null,
-  useAnimation: true,
+  readOnly: false,
   handleChangeTransformation: null,
   handleChangeMinOutlierCutoff: null,
   handleChangeMaxOutlierCutoff: null,
