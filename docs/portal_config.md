@@ -143,7 +143,7 @@ Below is an example, with inline comments describing what each JSON block config
           "name": "Submit Data"
         },
         {
-          "link": "https://gen3.org/resources/user/",
+          "link": "https://docs.gen3.org/gen3-resources/user-guide/",
           "name": "Documentation"
         }
       ],
