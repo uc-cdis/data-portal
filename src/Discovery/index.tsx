@@ -46,6 +46,8 @@ const populateStudiesWithConfigInfo = (studies, config) => {
   });
 };
 
+let allStudies;
+
 const DiscoveryWithMDSBackend: React.FC<{
     userAggregateAuthMappings: any,
     config: DiscoveryConfig,
@@ -128,7 +130,11 @@ const DiscoveryWithMDSBackend: React.FC<{
           }),
         );
       }
-      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
+      const result = _.union(rawStudiesRegistered, rawStudiesUnregistered);
+      if (numberOfBatchesLoaded > 0) {
+        allStudies = result;
+      }
+      return allStudies || result;
     }
     fetchRawStudies().then((rawStudies) => {
       let studiesToSet;
