@@ -132,6 +132,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     }
     fetchRawStudies().then((rawStudies) => {
       let studiesToSet;
+      console.log(`${rawStudies.length} of rawStudies with ${studies ? studies.length : 0} existing studies`);
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
