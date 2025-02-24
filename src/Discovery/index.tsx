@@ -128,6 +128,8 @@ const DiscoveryWithMDSBackend: React.FC<{
           }),
         );
       }
+      console.log(`${studies ? studies.length : 0} existing studies`);
+
       return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
     fetchRawStudies().then((rawStudies) => {
