@@ -34,7 +34,7 @@ export type User = {
 };
 
 type UserListItem = {
-  name: srring,
+  username: string,
   id: number,
   last_auth?: string,
   first_name?: string,

@@ -79,10 +79,10 @@ function DataRequestCreate({ isCreatePending }) {
   );
   const userList =
     [...admin_user_list].sort((a, b) => {
-      if (a.name < b.name) {
+      if (a.username < b.username) {
         return -1;
       }
-      if (b.name < a.name) {
+      if (b.username < a.username) {
         return 1;
       }
       return 0;
@@ -171,7 +171,7 @@ function DataRequestCreate({ isCreatePending }) {
                           <option
                             key={user.id}
                             value={user.id}
-                            label={user.name}
+                            label={user.username}
                           />
                         ))}
                       </datalist>
