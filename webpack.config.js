@@ -146,6 +146,7 @@ module.exports = {
     ],
   },
   resolve: {
+    fallback: { "punycode": require.resolve("punycode/") },
     alias: {
       "@adobe/react-spectrum": path.resolve('./node_modules/@adobe/react-spectrum/dist/main.js'),
       graphql: path.resolve('./node_modules/graphql'),
