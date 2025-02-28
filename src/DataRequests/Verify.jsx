@@ -4,6 +4,8 @@ import SimpleInputField from '../components/SimpleInputField';
 import Button from '../gen3-ui-component/components/Button';
 import Table from '../components/tables/base/Table';
 import Spinner from '../gen3-ui-component/components/Spinner/Spinner';
+import './DataRequests.css';
+
 
 const tableHeader = [
     'Name',
