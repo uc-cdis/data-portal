@@ -5,7 +5,7 @@ import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
 import AdminProjectActions from './AdminProjectActions';
-import Verify from './Verify';
+import VerifyPersonOrEntityUsingCSL from './VerifyPersonOrEntityUsingCSL';
 import { useAppSelector } from '../redux/hooks';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
@@ -222,12 +222,12 @@ function DataRequestsTable({
         )}
           {isVerifyPopupOpen && (
             <Popup
-              title='Verify Against Consolidated Screening List'
+              title='Verify Person Or Entity Using The Consolidated Screening List'
               onClose={() => {
                 setVerifyPopupOpen(false);
               }}
             >
-              <Verify />
+              <VerifyPersonOrEntityUsingCSL />
             </Popup>
           )}
           {projectDisplayOptions && (

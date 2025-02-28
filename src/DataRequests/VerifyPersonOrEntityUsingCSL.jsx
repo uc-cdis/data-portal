@@ -13,7 +13,7 @@ const tableHeader = [
     'Source',
 ];
 
-export default function Verify() {
+export default function VerifyPersonOrEntityUsingCSL() {
   const [responseJson, setResponseJson] = useState(null);
   const [actionRequestError, setRequestActionError] = useState({isError: false, message: '',});
   const [isActionPending, setActionPending] = useState(false);
