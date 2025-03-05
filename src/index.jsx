@@ -77,6 +77,7 @@ import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
 import GenericAccessRequestForm from './GenericAccessRequestForm/GenericAccessRequestForm';
 import UserMetricDashboard from './UserMetricDashboard/UserMetricDashboard'
+import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 // monitor user's session
 sessionMonitor.start();
@@ -588,6 +589,7 @@ async function init() {
                 privacyPolicy={components.privacyPolicy}
               />
             </div>
+            <ReduxAuthTimeoutPopup />
           </BrowserRouter>
         </ThemeProvider>
       </Provider>

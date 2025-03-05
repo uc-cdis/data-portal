@@ -244,11 +244,6 @@ const handleFetchUser = ({ status, data }) => {
       type: 'RECEIVE_USER',
       user: data,
     };
-  case 401:
-    return {
-      type: 'UPDATE_POPUP',
-      data: { authPopup: true },
-    };
   default:
     return {
       type: 'FETCH_ERROR',
