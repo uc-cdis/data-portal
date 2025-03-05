@@ -76,6 +76,7 @@ import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
 import GenericAccessRequestForm from './GenericAccessRequestForm/GenericAccessRequestForm';
+import UserMetricDashboard from './UserMetricDashboard/UserMetricDashboard'
 import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 // monitor user's session
@@ -550,6 +551,7 @@ async function init() {
                       }
                     />
                   )}
+                  <FaroRoute path="/metrics" component={UserMetricDashboard} />
                   <FaroRoute
                     path='/not-found'
                     component={NotFound}
