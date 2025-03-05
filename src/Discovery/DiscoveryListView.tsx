@@ -64,11 +64,11 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 (props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip)
                   ? 'download'
                   : '',
-                'open in workspace'
+                'open in workspace',
               ]
                 .filter(Boolean)
                 .join(' or ')
-              }`}
+            }`}
             overlayStyle={{ maxWidth: '150px' }}
           >
             {node}
@@ -79,7 +79,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           props.onResourcesSelected(selectedRows);
         },
         getCheckboxProps: (record) => {
-          let disabled;
+          let disabled:boolean;
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
             disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
@@ -102,7 +102,11 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
             // put some hard-coded field names here, so that only checkboxes in proper table rows will be enabled
             // TODO: this can be addressed by the cart feature
-            if (enableExportFullMetadata && (!record.external_file_metadata || record.external_file_metadata.length === 0)) {
+            // if export full metadata is not enabled, disable the checkbox if no manifest
+            if (!enableExportFullMetadata) {
+              disabled = true;
+            // otherwise, check if there is external file metadata
+            } else if (!record.external_file_metadata || record.external_file_metadata.length === 0) {
               disabled = true;
             }
           }
