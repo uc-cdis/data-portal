@@ -79,7 +79,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           props.onResourcesSelected(selectedRows);
         },
         getCheckboxProps: (record) => {
-          let disabled:boolean;
+          let disabled:boolean = false;
           // if auth is enabled, disable checkbox if user doesn't have access
           if (props.config.features.authorization.enabled) {
             disabled = (record[props.accessibleFieldName] !== AccessLevel.ACCESSIBLE) && (record[props.accessibleFieldName] !== AccessLevel.MIXED);
