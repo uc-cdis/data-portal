@@ -551,7 +551,15 @@ async function init() {
                       }
                     />
                   )}
-                  <FaroRoute path="/metrics" component={UserMetricDashboard} />
+                  <FaroRoute path="/metrics" component={
+                      (props) => (
+                        <ProtectedContent
+                          component={UserMetricDashboard}
+                          {...props}
+                        />
+                      )
+                    }
+                  />
                   <FaroRoute
                     path='/not-found'
                     component={NotFound}

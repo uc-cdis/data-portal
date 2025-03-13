@@ -1,4 +1,42 @@
 .dashboard {
     padding: 20px 20px;
     background: inherit;
+    min-height: inherit;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
+
+.heading {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 2em;
+    letter-spacing: 0;
+    color: #000000;
+    display: inherit;
+    align-items: inherit;
+}
+
+table {
+    table-layout: fixed;
+    width: 50%;
+    border-collapse: collapse;
+    border: 3px solid purple;
+    align-items: inherit;
+  }
+
+  thead th:nth-child(1) {
+    width: 50%;
+  }
+
+  thead th:nth-child(2) {
+    width: 50%;
+  }
+
+  th,
+  td {
+    padding: 20px;
+    border: 3px solid purple;
+    text-align: center;
+  }

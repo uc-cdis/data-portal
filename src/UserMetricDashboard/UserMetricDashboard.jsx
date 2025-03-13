@@ -1,10 +1,15 @@
 import React, {useState} from 'react';
 import { fetchWithCreds } from '../actions';
 import { auditAPIPath } from '../localconf';
+import './UserMetricDashboard.css';
+import { Spin } from 'antd';
 
-export const getAuditData = async (url) => {
+export const getAuditData = async (url, setCompleteStatus = null) => {
   const urlPath = `${auditAPIPath}log/${url}`;
   const { data } = await fetchWithCreds({ path: urlPath, method: 'GET' });
+  if(setCompleteStatus) {
+    setCompleteStatus(true)
+  }
   return data;
 };
 
@@ -13,23 +18,49 @@ const UserMetricDashboard = () => {
   const [uchicagoLogins, setUchicagoLogins] = useState(-1);
   const [vaLogins, setVaLogins] = useState(-1);
   const [totalDownloads, setTotalDownloads] = useState(-1);
+  const [queryCompleted, setQueryCompleted] = useState(false);
 
   const epochTimeThirtyDaysAgo = Math.round((Date.now() - (180 * 24 * 60 * 60 * 1000))/1000)
 
-  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count').then((count) => {console.log('setting total login', count); setTotalLogins(count.data);});
-  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count&fence_idp=shibboleth').then((count) => {console.log('setting total login', count); setUchicagoLogins(count.data);});;
-  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count&idp=cognito').then((count) => {console.log('setting total login', count); setVaLogins(count.data);});;
-  getAuditData('presigned_url?start=' + epochTimeThirtyDaysAgo + '&count').then((count) => {console.log('setting total login', count); setTotalDownloads(count.data);});;
+  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count').then((count) => {setTotalLogins(count.data);});
+  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count&fence_idp=shibboleth').then((count) => {setUchicagoLogins(count.data);});;
+  getAuditData('login?start=' + epochTimeThirtyDaysAgo + '&count&idp=cognito').then((count) => {setVaLogins(count.data);});;
+  getAuditData('presigned_url?start=' + epochTimeThirtyDaysAgo + '&count', setQueryCompleted).then((count) => {setTotalDownloads(count.data);});;
 
-  return (
-    <div className='dashboard'>
-      <h1>Metrics</h1>
-      <h3>Total Login: {totalLogins}</h3>
-      <h3>Uchicago Login: {uchicagoLogins}</h3>
-      <h3>VA Login: {vaLogins}</h3>
-      <h3>Downloads: {totalDownloads}</h3>
-    </div>
-  );
+  if(queryCompleted == false) {
+    return <Spin />
+  }
+  else {
+    return (
+      <div className='dashboard'>
+        <div className='heading'><h1>Metric Dashboard</h1></div>
+          <table>
+            <tbody>
+              <tr>
+                <th scope="col">Metrics (Last 30 Days)</th>
+                <th scope="col">Statistics</th>
+              </tr>
+              <tr>
+                <th scope="row">Total Login</th>
+                <td>{totalLogins}</td>
+              </tr>
+              <tr>
+                <th scope="row">Uchicago Login</th>
+                <td>{uchicagoLogins}</td>
+              </tr>
+              <tr>
+                <th scope="row">VA Login</th>
+                <td>{vaLogins}</td>
+              </tr>
+              <tr>
+                <th scope="row">Downloads:</th>
+                <td>{totalDownloads}</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    );
+  }
 
 }
 
