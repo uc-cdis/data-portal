@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { List } from 'antd';
+import { List, Alert } from 'antd';
 import DataDownloadListItem from './Interfaces/DataDownloadListItem';
 import './DataDownloadList.css';
 import ProcessData from './Utils/ProcessData';
@@ -32,9 +32,13 @@ const DataDownloadList = ({
   const history = useHistory();
   const location = useLocation();
 
-  const data: [] = resourceFieldValueIsValid
-    ? ProcessData(sourceFieldData)
-    : [];
+  let data = [];
+  let hasDataBeenTruncated = false;
+  if (resourceFieldValueIsValid) {
+    const resultFromProcessData = ProcessData(sourceFieldData);
+    data = resultFromProcessData.processedDataForDataDownloadList;
+    hasDataBeenTruncated = resultFromProcessData.dataForDataDownloadListHasBeenTruncated;
+  }
   const noData = data.length === 0;
 
   let userHasAccessToDownload = true;
@@ -67,6 +71,9 @@ const DataDownloadList = ({
         history={history}
         location={location}
       />
+      {hasDataBeenTruncated && (
+        <Alert type='info' message='More than 200 files found. Visit repository to view all files.' />
+      )}
       {!noData && resourceFieldValueIsValid && (
         <List
           itemLayout='horizontal'
