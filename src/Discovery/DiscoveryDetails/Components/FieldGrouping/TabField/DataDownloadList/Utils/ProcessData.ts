@@ -1,4 +1,4 @@
-export const MAX_NUMBER_OF_ITEMS_IN_LIST = 5;
+export const MAX_NUMBER_OF_ITEMS_IN_LIST = 200;
 
 export const ProcessData = (sourceFieldData:any) => {
   const dataWithOnlyTitlesOrFileNames = sourceFieldData[0].filter((item:any) => {
