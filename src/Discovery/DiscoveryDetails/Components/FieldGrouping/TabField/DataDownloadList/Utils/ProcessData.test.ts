@@ -13,9 +13,10 @@ describe('ProcessData function', () => {
 
     const result = ProcessData(sourceFieldData);
 
+    // ensure entries are sorted by title
     expect(result.processedDataForDataDownloadList).toEqual([
-      { title: 'Title1', description: 'Description1' },
       { title: 'File1', description: 'Description2' },
+      { title: 'Title1', description: 'Description1' },
       { title: 'Title2', description: 'Description3' },
     ]);
     expect(result.dataForDataDownloadListHasBeenTruncated).toEqual(false);
