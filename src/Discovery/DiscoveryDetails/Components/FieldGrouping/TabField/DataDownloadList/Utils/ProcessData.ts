@@ -17,6 +17,7 @@ const ProcessData = (sourceFieldData:any) => {
     processedDataForDataDownloadList = processedDataForDataDownloadList.slice(0, MAX_NUMBER_OF_ITEMS_IN_LIST);
     dataForDataDownloadListHasBeenTruncated = true;
   }
+  processedDataForDataDownloadList = processedDataForDataDownloadList.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
   return { processedDataForDataDownloadList, dataForDataDownloadListHasBeenTruncated };
 };
 
