@@ -1,4 +1,4 @@
-import ProcessData from './ProcessData';
+import { ProcessData, MAX_NUMBER_OF_ITEMS_IN_LIST } from './ProcessData';
 
 describe('ProcessData function', () => {
   it('filters and processes data correctly', () => {
@@ -41,12 +41,12 @@ describe('ProcessData function', () => {
     expect(consoleLogSpy).toHaveBeenCalledWith('Item without title or file_name:', { description: 'Description2' });
   });
 
-  it('filters and processes large data (more than 200 entries)', () => {
+  it(`filters and processes large data (more than ${MAX_NUMBER_OF_ITEMS_IN_LIST} entries)`, () => {
     const sourceFieldData = [Array.from({ length: 210 }, (_, i) => ({ title: `Title${i}`, description: `Description${i}` }))];
 
     const result = ProcessData(sourceFieldData);
 
-    expect(result.processedDataForDataDownloadList.length).toEqual(200);
+    expect(result.processedDataForDataDownloadList.length).toEqual(MAX_NUMBER_OF_ITEMS_IN_LIST);
     expect(result.dataForDataDownloadListHasBeenTruncated).toEqual(true);
   });
 });

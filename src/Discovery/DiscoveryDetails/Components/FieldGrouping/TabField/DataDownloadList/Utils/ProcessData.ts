@@ -1,6 +1,6 @@
-const MAX_NUMBER_OF_ITEMS_IN_LIST = 200;
+export const MAX_NUMBER_OF_ITEMS_IN_LIST = 5;
 
-const ProcessData = (sourceFieldData:any) => {
+export const ProcessData = (sourceFieldData:any) => {
   const dataWithOnlyTitlesOrFileNames = sourceFieldData[0].filter((item:any) => {
     if (!('title' in item || 'file_name' in item)) {
       console.debug('Item without title or file_name:', item);
@@ -20,5 +20,3 @@ const ProcessData = (sourceFieldData:any) => {
   processedDataForDataDownloadList = processedDataForDataDownloadList.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
   return { processedDataForDataDownloadList, dataForDataDownloadListHasBeenTruncated };
 };
-
-export default ProcessData;

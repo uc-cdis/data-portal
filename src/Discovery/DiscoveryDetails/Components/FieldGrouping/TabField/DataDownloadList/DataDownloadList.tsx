@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { List, Alert } from 'antd';
 import DataDownloadListItem from './Interfaces/DataDownloadListItem';
 import './DataDownloadList.css';
-import ProcessData from './Utils/ProcessData';
+import { ProcessData, MAX_NUMBER_OF_ITEMS_IN_LIST } from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 import { DiscoveryConfig } from '../../../../../DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, accessibleFieldName } from '../../../../../Discovery';
@@ -72,7 +72,7 @@ const DataDownloadList = ({
         location={location}
       />
       {hasDataBeenTruncated && (
-        <Alert type='info' message='More than 200 files found. Visit repository to view all files.' />
+        <Alert type='info' message={`More than ${MAX_NUMBER_OF_ITEMS_IN_LIST} files found. Visit repository to view all files.`} />
       )}
       {!noData && resourceFieldValueIsValid && (
         <List
