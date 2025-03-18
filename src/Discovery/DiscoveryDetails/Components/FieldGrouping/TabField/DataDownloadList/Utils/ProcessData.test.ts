@@ -1,4 +1,4 @@
-import ProcessData from './ProcessData';
+import { ProcessData, MAX_NUMBER_OF_ITEMS_IN_LIST } from './ProcessData';
 
 describe('ProcessData function', () => {
   it('filters and processes data correctly', () => {
@@ -13,11 +13,13 @@ describe('ProcessData function', () => {
 
     const result = ProcessData(sourceFieldData);
 
-    expect(result).toEqual([
-      { title: 'Title1', description: 'Description1' },
+    // ensure entries are sorted by title
+    expect(result.processedDataForDataDownloadList).toEqual([
       { title: 'File1', description: 'Description2' },
+      { title: 'Title1', description: 'Description1' },
       { title: 'Title2', description: 'Description3' },
     ]);
+    expect(result.dataForDataDownloadListHasBeenTruncated).toEqual(false);
   });
 
   it('logs items without title or file_name to console', () => {
@@ -37,5 +39,14 @@ describe('ProcessData function', () => {
     // Check if console.log was called with the correct messages
     expect(consoleLogSpy).toHaveBeenCalledWith('Item without title or file_name:', { other: 'Other1' });
     expect(consoleLogSpy).toHaveBeenCalledWith('Item without title or file_name:', { description: 'Description2' });
+  });
+
+  it(`filters and processes large data (more than ${MAX_NUMBER_OF_ITEMS_IN_LIST} entries)`, () => {
+    const sourceFieldData = [Array.from({ length: 210 }, (_, i) => ({ title: `Title${i}`, description: `Description${i}` }))];
+
+    const result = ProcessData(sourceFieldData);
+
+    expect(result.processedDataForDataDownloadList.length).toEqual(MAX_NUMBER_OF_ITEMS_IN_LIST);
+    expect(result.dataForDataDownloadListHasBeenTruncated).toEqual(true);
   });
 });
