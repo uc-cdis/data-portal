@@ -7,7 +7,6 @@ import Button from '../gen3-ui-component/components/Button';
 import IconComponent from '../components/Icon';
 import SimpleInputField from '../components/SimpleInputField';
 import MultiValueField from '../components/MultiValueField';
-import ExplorerFilterDisplay from '../GuppyDataExplorer/ExplorerFilterDisplay';
 import Pill from '../components/Pill';
 import dictIcons from '../img/icons';
 import { overrideSelectTheme } from '../utils';
@@ -16,11 +15,11 @@ import {
   updateProjectState,
   updateProjectUsers,
   updateUserDataAccess,
-  addFiltersetToRequest,
   deleteRequest,
 } from '../redux/dataRequest/asyncThunks';
 import '../GuppyDataExplorer/ExplorerFilterSetForms/ExplorerFilterSetForms.css';
 import UserAccessTable from './UserAccessTable';
+import DataRequestFilterSets from './DataRequestFilterSets';
 
 const dataAccessSchema = Yup.object().shape({
   email: Yup.string().email().required('Must be a valid email address'),
@@ -76,11 +75,6 @@ export default function AdminProjectActions({
     label: name,
     value: projectStates[name].id,
   }));
-  const [selected, setSelected] = useState({
-    label: '',
-    value: null,
-  });
-
   return (
     <div
       className={`data-request-admin__actions-container
@@ -445,103 +439,13 @@ export default function AdminProjectActions({
               </Formik>
             );
           case 'ADD_FILTERSET_TO_REQUEST': {
-            const filterSets = savedFilterSets?.data ?? [];
-            const options = filterSets.map((filterSet) => ({
-              label: filterSet.name,
-              value: filterSet,
-            }));
             return (
-              <Formik
-                initialValues={{
-                  filtersetId: null,
-                }}
-                onSubmit={({ filtersetId }) => {
-                  setActionPending(true);
-                  const actionRequest =
-                    /** @type {import("../redux/dataRequest/types").Request} */
-                    (
-                      dispatch(
-                        addFiltersetToRequest({
-                          filtersetId,
-                          projectId: project.id,
-                        }),
-                      )
-                    );
-
-                  actionRequest.then((action) => {
-                    setActionPending(false);
-                    if (!action.payload.isError) {
-                      onAction?.(actionType);
-                      setActionType('ACTION_SUCCESS');
-                      return;
-                    }
-
-                    const { isError, message } = action.payload;
-                    setRequestactionError({ isError, message });
-                  });
-                }}
-              >
-                {({ values }) => (
-                  <Form className='data-request__form'>
-                    <div className='data-request__header'>
-                      <h2>Add Filter Set to Request</h2>
-                    </div>
-                    <div className='data-request__fields'>
-                      <Field name='filtersetId'>
-                        {() => (
-                          <div className='explorer-filter-set-form'>
-                            <div>
-                              <SimpleInputField
-                                label='Filter Set'
-                                input={
-                                  <Select
-                                    inputId='open-filter-set-name'
-                                    options={options}
-                                    value={selected}
-                                    isClearable={false}
-                                    theme={overrideSelectTheme}
-                                    onChange={(e) => {
-                                      values.filtersetId = e.value.id;
-                                      setSelected(e);
-                                    }}
-                                  />
-                                }
-                              />
-                              <SimpleInputField
-                                className='simple-input-field__container--label-top'
-                                label='Description'
-                                input={
-                                  <textarea
-                                    className={'filter-set-description'}
-                                    id='open-filter-set-description'
-                                    disabled
-                                    placeholder='No description'
-                                    value={selected.value?.description}
-                                  />
-                                }
-                              />
-                            </div>
-                            <ExplorerFilterDisplay
-                              filter={selected.value?.filter}
-                            />
-                          </div>
-                        )}
-                      </Field>
-                    </div>
-                    <Button
-                      submit
-                      className='data-request__submit'
-                      label='Add'
-                    />
-                    {actionRequestError.isError && (
-                      <span className='data-request__request-error'>
-                        {actionRequestError.message}
-                      </span>
-                    )}
-                  </Form>
-                )}
-              </Formik>
-            );
+              <DataRequestFilterSets
+                projectId={project.id}
+                savedFilterSets={savedFilterSets}
+                onAction={onAction}
+              />
+          );
           }
           case 'ACTION_SUCCESS':
             return (

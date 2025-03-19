@@ -1,4 +1,5 @@
 import { PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import type { ExplorerFilter } from '../../GuppyDataExplorer/types';
 
 type FetchProjectsThunk = createAsyncThunk;
 
@@ -88,14 +89,24 @@ export type ProjectUsersUpdateParams = {
   users: { project_id: number; email: string; id?: number }[];
 };
 
+export type ProjectFilterSets = {
+  filter_object: ExplorerFilter;
+  graphql_object: Dict;
+  id: number;
+  name: string;
+}
+
 export type DataRequestState = {
   projects: DataRequestProject[];
   projectStates: Record<string, { id: number; code: string }>;
   userRoles: { id: number; code: string; role: string }[];
   projectUsers: { email: string; role: string }[];
+  projectFilterSets: ProjectFilterSets[];
   isError: boolean;
   isAdminActive: boolean;
   isProjectsReloading: boolean;
   isCreatePending: boolean;
   isProjectUsersPending: boolean;
+  isProjectFilterSetsPending: boolean;
+  lastProjectFilterSetRefresh: number | null;
 };

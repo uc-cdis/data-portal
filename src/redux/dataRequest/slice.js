@@ -6,6 +6,8 @@ import {
   getProjectUsers,
   getUserRoles,
   deleteProjectUser,
+  getProjectFilterSets,
+  addFiltersetToRequest,
 } from './asyncThunks';
 
 const slice = createSlice({
@@ -15,12 +17,15 @@ const slice = createSlice({
     projectUsers: [],
     userRoles: [],
     projectStates: {},
+    projectFilterSets: [],
     isError: false,
     isAdminActive: false,
     isProjectsReloading: false,
     isCreatePending: false,
     isProjectUsersPending: false,
     isUserRolesPending: false,
+    isProjectFilterSetsPending: false,
+    lastProjectFilterSetRefresh: null,
   }),
   reducers: {
     toggleAdminActive(state) {
@@ -126,6 +131,26 @@ const slice = createSlice({
         state.userRoles = action.payload;
       }
     })
+    builder.addCase(getProjectFilterSets.pending, (state) => {
+      state.isProjectFilterSetsPending = true;
+    }
+    );
+    builder.addCase(getProjectFilterSets.rejected, (state) => {
+      state.isProjectFilterSetsPending = false;
+      state.isError = true;
+    });
+    builder.addCase(getProjectFilterSets.fulfilled, (state, action) => {
+      state.isProjectFilterSetsPending = false;
+      if (action.payload) {
+        state.projectFilterSets = action.payload;
+      }
+    });
+    builder.addCase(addFiltersetToRequest.fulfilled, (state, action) => {
+      if (action.payload?.status === 200) {
+      state.lastProjectFilterSetRefresh = Date.now();
+      }
+    });
+    
   },
 });
 
