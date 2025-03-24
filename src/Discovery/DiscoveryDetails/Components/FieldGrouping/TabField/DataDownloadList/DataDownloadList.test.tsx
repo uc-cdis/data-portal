@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import DataDownloadList from './DataDownloadList';
 import { DiscoveryConfig } from '../../../../../DiscoveryConfig';
 import { DiscoveryResource } from '../../../../../Discovery';
+import { MAX_NUMBER_OF_ITEMS_IN_LIST } from './Utils/ProcessData';
 
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn().mockReturnValue(0),
@@ -141,5 +142,29 @@ describe('DataDownloadList', () => {
       screen.queryByTestId('dataDownloadFileList'),
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
+  });
+
+  // test for banner after MAX_NUMBER_OF_ITEMS_IN_LIST has been exceeded
+  it('Shows banner when max number of items in list is exceeded', () => {
+    const generateSourceFieldData = (count) => [
+      Array.from({ length: count }, (_, i) => ({
+        title: `Title ${i}`,
+        description: `Description ${i}`,
+      })),
+    ];
+
+    const sourceFieldData = generateSourceFieldData(MAX_NUMBER_OF_ITEMS_IN_LIST + 1);
+
+    const { getByText } = render(
+      <DataDownloadList
+        resourceFieldValueIsValid
+        isUserLoggedIn
+        discoveryConfig={testDiscoveryConfig as DiscoveryConfig}
+        sourceFieldData={sourceFieldData}
+        resourceInfo={testResourceInfo as unknown as DiscoveryResource}
+        missingRequiredIdentityProviders={[]}
+      />,
+    );
+    expect(getByText(`More than ${MAX_NUMBER_OF_ITEMS_IN_LIST} files found. Visit repository to view all files.`)).toBeInTheDocument();
   });
 });

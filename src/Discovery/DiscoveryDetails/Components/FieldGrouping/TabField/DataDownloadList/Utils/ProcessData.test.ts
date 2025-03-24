@@ -42,7 +42,7 @@ describe('ProcessData function', () => {
   });
 
   it(`filters and processes large data (more than ${MAX_NUMBER_OF_ITEMS_IN_LIST} entries)`, () => {
-    const sourceFieldData = [Array.from({ length: 210 }, (_, i) => ({ title: `Title${i}`, description: `Description${i}` }))];
+    const sourceFieldData = [Array.from({ length: MAX_NUMBER_OF_ITEMS_IN_LIST + 1 }, (_, i) => ({ title: `Title${i}`, description: `Description${i}` }))];
 
     const result = ProcessData(sourceFieldData);
 
