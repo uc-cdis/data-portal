@@ -6,8 +6,12 @@ describe('ProcessData function', () => {
       [
         { title: 'Title1', description: 'Description1' },
         { file_name: 'File1', description: 'Description2' },
+        { file_name: '/File2', description: 'Description3' },
+        { file_name: '/Dir1/File1', description: 'Description2.1' },
+        { file_name: '/Dir1/File2', description: 'Description2.2' },
+        { file_name: '/Dir2/File3', description: 'Description2.3' },
         { other: 'Other1' },
-        { title: 'Title2', description: 'Description3' },
+        { title: 'Title2', description: 'Description4' },
       ],
     ];
 
@@ -15,9 +19,13 @@ describe('ProcessData function', () => {
 
     // ensure entries are sorted by title
     expect(result.processedDataForDataDownloadList).toEqual([
+      { title: '/File2', description: 'Description3' },
       { title: 'File1', description: 'Description2' },
       { title: 'Title1', description: 'Description1' },
-      { title: 'Title2', description: 'Description3' },
+      { title: 'Title2', description: 'Description4' },
+      { title: '/Dir1/File1', description: 'Description2.1' },
+      { title: '/Dir1/File2', description: 'Description2.2' },
+      { title: '/Dir2/File3', description: 'Description2.3' },
     ]);
     expect(result.dataForDataDownloadListHasBeenTruncated).toEqual(false);
   });

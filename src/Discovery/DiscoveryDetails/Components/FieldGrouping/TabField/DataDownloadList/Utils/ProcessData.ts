@@ -17,6 +17,22 @@ export const ProcessData = (sourceFieldData:any) => {
     processedDataForDataDownloadList = processedDataForDataDownloadList.slice(0, MAX_NUMBER_OF_ITEMS_IN_LIST);
     dataForDataDownloadListHasBeenTruncated = true;
   }
-  processedDataForDataDownloadList = processedDataForDataDownloadList.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+  let rootLevelFiles:any = [];
+  let nonRootLevelFiles:any = [];
+  processedDataForDataDownloadList.forEach((element) => {
+    const titleParts = element.title.split('/');
+    if (titleParts.length > 2) {
+      nonRootLevelFiles.push(element);
+    } else {
+      rootLevelFiles.push(element);
+    }
+  });
+  if (rootLevelFiles.length) {
+    rootLevelFiles = rootLevelFiles.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+  }
+  if (nonRootLevelFiles.length) {
+    nonRootLevelFiles = nonRootLevelFiles.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+  }
+  processedDataForDataDownloadList = rootLevelFiles.concat(nonRootLevelFiles);
   return { processedDataForDataDownloadList, dataForDataDownloadListHasBeenTruncated };
 };

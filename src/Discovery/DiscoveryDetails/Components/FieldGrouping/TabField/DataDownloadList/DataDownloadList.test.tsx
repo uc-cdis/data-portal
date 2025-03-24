@@ -58,7 +58,7 @@ describe('DataDownloadList', () => {
     expect(screen.queryByTestId('actionButtons')).toBeInTheDocument();
   });
 
-  it('renders the component with titles and descriptions when sourceFieledData has file_names and descriptions', () => {
+  it('renders the component with titles and descriptions when sourceFieldData has file_names and descriptions', () => {
     const sourceFieldData = [
       [
         {
