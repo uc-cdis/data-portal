@@ -282,8 +282,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
 
   useEffect(() => {
-    console.log('parametersForDoSearchFilterSort',parametersForDoSearchFilterSort);
     if (props.searchTerm) {
+      // This serves to reinitialize search once allBatchesAreReady
+      // If the user entered a searchterm before allBatches were ready
+      // this resets onSearchChange so the search can be re-initialized
       props.onSearchChange(props.searchTerm);
     }
   }, [props.allBatchesAreReady]);
