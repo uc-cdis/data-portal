@@ -283,9 +283,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     if (props.searchTerm) {
-      // This serves to reinitialize search once allBatchesAreReady
-      // If the user entered a searchterm before allBatches were ready
-      // this resets onSearchChange so the search can be re-initialized
+      // If the user entered a searchterm during loading
+      // this resets onSearchChange to reinitialize search
       props.onSearchChange(props.searchTerm);
     }
   }, [props.allBatchesAreReady]);
