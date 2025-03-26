@@ -5,6 +5,7 @@ import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
 import AdminProjectActions from './AdminProjectActions';
+import VerifyPersonOrEntityUsingCSL from './VerifyPersonOrEntityUsingCSL';
 import { useAppSelector } from '../redux/hooks';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
@@ -134,6 +135,7 @@ function DataRequestsTable({
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const [projectDisplayOptions, setProjectDisplayOptions] = useState(null);
   const [isMoreActionsPopupOpen, setMoreActionsPopupOpen] = useState(false);
+  const [isVerifyPopupOpen, setVerifyPopupOpen] = useState(false);
   const tableData = useMemo(
     () =>
       parseTableData({
@@ -161,6 +163,11 @@ function DataRequestsTable({
       <div className='data-requests__table-header'>
         <h2>{isAdminActive ? 'All Requests' : 'List of My Requests'}</h2>
         <div className='data-requests__table-actions'>
+          <Button
+            label={'CSL Verification'}
+            enabled={isAdmin}
+            onClick={() => setVerifyPopupOpen(true)}
+          />
           <Button
             label={'Create Request'}
             enabled={isAdmin}
@@ -213,12 +220,22 @@ function DataRequestsTable({
             </div>
           </Popup>
         )}
-        {projectDisplayOptions && (
-          <Popup
+          {isVerifyPopupOpen && (
+            <Popup
+              title='Verify Person Or Entity Using The Consolidated Screening List'
+              onClose={() => {
+                setVerifyPopupOpen(false);
+              }}
+            >
+              <VerifyPersonOrEntityUsingCSL />
+            </Popup>
+          )}
+          {projectDisplayOptions && (
+            <Popup
             hideFooter
             title={`Edit "${projectDisplayOptions.name}"`}
             onClose={closeProjectActionPopup}
-          >
+            >
             <AdminProjectActions
               project={projectDisplayOptions}
               projectStates={projectStates}
