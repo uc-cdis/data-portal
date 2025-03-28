@@ -9,7 +9,7 @@ import { config } from '../params';
 import './GqlEditor.less';
 
 const parameters = {};
-const defaultValue = config.dataExplorerConfig ? 1 : 0;
+const defaultValue = (config.dataExplorerConfig || config.explorerConfig) ? 1 : 0;
 
 const handleEscKey = (event) => {
   // To allow for accessible keyboard navigation,
@@ -66,7 +66,7 @@ class GqlEditor extends React.Component {
       },
     ];
 
-    if (config.dataExplorerConfig) {
+    if (config.dataExplorerConfig || config.explorerConfig) {
       options.push({
         name: 'Flat Model',
         endpoint: fetchFlatGraphQL,
