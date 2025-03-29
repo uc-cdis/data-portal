@@ -142,12 +142,16 @@ const slice = createSlice({
     builder.addCase(getProjectFilterSets.fulfilled, (state, action) => {
       state.isProjectFilterSetsPending = false;
       if (action.payload) {
-        state.projectFilterSets = action.payload;
+        state.projectFilterSets = action.payload.data;
+        state.isError = false;
       }
+    });
+    builder.addCase(addFiltersetToRequest.rejected, (state, action) => {
+        state.isError = true;
     });
     builder.addCase(addFiltersetToRequest.fulfilled, (state, action) => {
       if (action.payload?.status === 200) {
-      state.lastProjectFilterSetRefresh = Date.now();
+        state.lastProjectFilterSetRefresh = Date.now();
       }
     });
     

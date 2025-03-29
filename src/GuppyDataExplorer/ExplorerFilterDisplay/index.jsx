@@ -7,8 +7,9 @@ import './ExplorerFilterDisplay.css';
  * @param {Object} props
  * @param {import('../types').ExplorerFilterSet['filter']} props.filter
  * @param {string} [props.title]
+ * @param {boolean} [props.manual]
  */
-function ExplorerFilterDisplay({ filter, title = 'Filters' }) {
+function ExplorerFilterDisplay({ filter, title = 'Filters', manual = false }) {
   const filterInfo = useAppSelector(
     (state) => state.explorer.config.filterConfig.info
   );
@@ -18,7 +19,7 @@ function ExplorerFilterDisplay({ filter, title = 'Filters' }) {
         <>
           <header>{title}</header>
           <main>
-            <FilterDisplay filter={filter} filterInfo={filterInfo} />
+            <FilterDisplay filter={filter} filterInfo={filterInfo} manual={manual} />
           </main>
         </>
       ) : (
@@ -33,6 +34,7 @@ function ExplorerFilterDisplay({ filter, title = 'Filters' }) {
 ExplorerFilterDisplay.propTypes = {
   filter: PropTypes.any,
   title: PropTypes.string,
+  manual: PropTypes.bool,
 };
 
 export default ExplorerFilterDisplay;

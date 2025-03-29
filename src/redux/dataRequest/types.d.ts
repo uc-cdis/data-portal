@@ -93,7 +93,9 @@ export type ProjectFilterSets = {
   filter_object: ExplorerFilter;
   graphql_object: Dict;
   id: number;
+  filter_source_internal_id?: number;
   name: string;
+  ids_list: list[string];
 }
 
 export type DataRequestState = {
@@ -107,6 +109,7 @@ export type DataRequestState = {
   isProjectsReloading: boolean;
   isCreatePending: boolean;
   isProjectUsersPending: boolean;
+  isUserRolesPending: boolean;
   isProjectFilterSetsPending: boolean;
   lastProjectFilterSetRefresh: number | null;
 };

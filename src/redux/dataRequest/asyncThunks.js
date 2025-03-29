@@ -326,11 +326,10 @@ export const getProjectFilterSets = createAsyncThunk(
         method: 'GET',
       });
 
-      if (status !== 200) {
-        console.error(`WARNING: failed to with status ${response.statusText}`);
-        return null;
+      if (statusCategory(status) !== '2XX') {
+        return {data: [], isError: true, message: 'Failed to fetch filter sets', status: status}
       }
-      return data;
+      return { data, isError: false, message: '', status: status };;
     } catch (e) {
       return rejectWithValue(e);
     }

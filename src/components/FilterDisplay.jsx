@@ -27,6 +27,7 @@ import './FilterDisplay.css';
  * @param {'AND' | 'OR'} [props.combineMode]
  * @param {ExplorerFilterSet['filter']} props.filter
  * @param {FilterConfig['info']} props.filterInfo
+ * @param {boolean} [props.manual]
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]
  * @param {ClickFilterHandler} [props.onCloseFilter]
@@ -36,6 +37,7 @@ function FilterDisplay({
   combineMode,
   filter,
   filterInfo,
+  manual = false,
   onClickCombineMode,
   onClickFilter,
   onCloseFilter,
@@ -93,7 +95,7 @@ function FilterDisplay({
       filterElements.push(
         <Pill key={key}>
           <span className='token field'>
-            With <code>{filterInfo[anchorField].label}</code> of{' '}
+            With <code>{manual ? (filterInfo[key]?.label ?? key) : filterInfo[key].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
@@ -121,7 +123,7 @@ function FilterDisplay({
           filterKey={key}
         >
           <span className='token'>
-            <code>{filterInfo[key].label}</code>{' '}
+          <code>{manual ? (filterInfo[key]?.label ?? key) : filterInfo[key].label}</code>{' '}
             {value.selectedValues.length > 1
               ? `is ${value.isExclusion ? 'not' : ''} any of `
               : `is ${value.isExclusion ? 'not' : ''} `}
@@ -153,7 +155,7 @@ function FilterDisplay({
           filterKey={key}
         >
           <span className='token'>
-            <code>{filterInfo[key].label}</code>
+          <code>{manual ? (filterInfo[key]?.label ?? key) : filterInfo[key].label}</code>
             {' is between '}
           </span>
           <span className='token'>
@@ -188,6 +190,7 @@ FilterDisplay.propTypes = {
       label: PropTypes.string.isRequired,
     })
   ),
+  manual: PropTypes.bool,
   onClickCombineMode: PropTypes.func,
   onClickFilter: PropTypes.func,
   onCloseFilter: PropTypes.func,
