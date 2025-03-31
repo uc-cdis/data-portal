@@ -31,18 +31,18 @@
     "projectDetails": "boardCounts"
   },
   "components": {
-    "appName": "BloodPAC Metadata Submission Portal",
+    "appName": "BlPODPAC Metadata Submission Portal",
     "index": {
       "introduction": {
-        "heading": "BloodPAC Data Commons",
-        "text": "The Blood Profiling Atlas in Cancer (BloodPAC) supports the management, analysis and sharing of liquid biopsy data for the oncology research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for cancer treatment and prevention. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
+        "heading": "BlOODPAC Data Commons",
+        "text": "The Blood Profiling Atlas in Cancer (BlOODPAC) supports the management, analysis and sharing of liquid biopsy data for the oncology research community and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for cancer treatment and prevention. The data commons supports cross-project analyses by harmonizing data from different projects through the collaborative development of a data dictionary, providing an API for data queries and download, and providing a cloud-based analysis workspace with rich tools and resources.",
         "link": "/submission"
       },
       "buttons": [
         {
           "name": "Define Data Field",
           "icon": "data-field-define",
-          "body": "The BloodPAC Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
+          "body": "The BlOODPAC Data Commons define the data in a general way. Please study the dictionary before you start browsing.",
           "link": "/DD",
           "label": "Learn more"
         },
@@ -70,7 +70,7 @@
       ]
     },
     "navigation": {
-      "title": "BloodPAC Data Commons",
+      "title": "BlOODPAC Data Commons",
       "items": [
         {
           "icon": "dictionary",
@@ -112,7 +112,7 @@
       ]
     },
     "login": {
-      "title": "BloodPAC Data Commons",
+      "title": "BlOODPAC Data Commons",
       "subTitle": "Explore, Analyze, and Share Data",
       "text": "This website combines liquid biopsy data from academic, government, and industry partners and aims to accelerate discovery and development of therapies, diagnostic tests, and other technologies for the treatment and prevention of cancer.",
       "contact": "If you have any questions about access or the registration process, please contact ",
@@ -121,7 +121,7 @@
     "certs": {
       "security_quiz": {
         "hasCorrectAnswers": true,
-        "title": "BloodPAC User agreement",
+        "title": "BlOODPAC User agreement",
         "description": "",
         "questions": [
           {
