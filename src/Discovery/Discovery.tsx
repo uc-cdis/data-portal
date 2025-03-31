@@ -287,7 +287,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // this resets onSearchChange to reinitialize search
       props.onSearchChange(props.searchTerm);
     }
-  }, [props.allBatchesAreReady, props.searchTerm]);
+  }, [props.allBatchesAreReady]);
 
   const formatSearchIndex = (index: String) => {
     // Removes [*] wild cards used by JSON Path and converts to array
