@@ -282,7 +282,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
 
   useEffect(() => {
-    if (props.searchTerm) {
+    if (props.allBatchesAreReady && props.searchTerm) {
       // If the user entered a search term during loading
       // this resets onSearchChange to reinitialize search
       props.onSearchChange(props.searchTerm);
