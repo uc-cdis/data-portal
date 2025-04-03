@@ -281,6 +281,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterState],
   );
 
+  useEffect(() => {
+    if (props.allBatchesAreReady && props.searchTerm) {
+      // If the user entered a search term during loading
+      // this resets onSearchChange to reinitialize search
+      props.onSearchChange(props.searchTerm);
+    }
+  }, [props.allBatchesAreReady]);
+
   const formatSearchIndex = (index: String) => {
     // Removes [*] wild cards used by JSON Path and converts to array
     const wildCardStringRegex = new RegExp(/\[\*\]/, 'g');
