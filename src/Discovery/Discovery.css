@@ -245,6 +245,11 @@
   width: 100%;
 }
 
+.discovery-action-section {
+  display: flex;
+  flex-direction: row;
+}
+
 .discovery-table-header {
   font-size: 14px;
   text-transform: uppercase;
