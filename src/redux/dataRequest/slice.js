@@ -22,10 +22,7 @@ const slice = createSlice({
     isAdminActive: false,
     isProjectsReloading: false,
     isCreatePending: false,
-    isProjectUsersPending: false,
     isUserRolesPending: false,
-    isProjectFilterSetsPending: false,
-    lastProjectFilterSetRefresh: null,
   }),
   reducers: {
     toggleAdminActive(state) {
@@ -130,31 +127,19 @@ const slice = createSlice({
       if (action.payload) {
         state.userRoles = action.payload;
       }
-    })
-    builder.addCase(getProjectFilterSets.pending, (state) => {
-      state.isProjectFilterSetsPending = true;
-    }
-    );
+    });
     builder.addCase(getProjectFilterSets.rejected, (state) => {
-      state.isProjectFilterSetsPending = false;
       state.isError = true;
     });
     builder.addCase(getProjectFilterSets.fulfilled, (state, action) => {
-      state.isProjectFilterSetsPending = false;
       if (action.payload) {
         state.projectFilterSets = action.payload.data;
         state.isError = false;
       }
     });
-    builder.addCase(addFiltersetToRequest.rejected, (state, action) => {
-        state.isError = true;
+    builder.addCase(addFiltersetToRequest.rejected, (state) => {
+      state.isError = true;
     });
-    builder.addCase(addFiltersetToRequest.fulfilled, (state, action) => {
-      if (action.payload?.status === 200) {
-        state.lastProjectFilterSetRefresh = Date.now();
-      }
-    });
-    
   },
 });
 

@@ -96,7 +96,7 @@ export type ProjectFilterSets = {
   filter_source_internal_id?: number;
   name: string;
   ids_list: list[string];
-}
+};
 
 export type DataRequestState = {
   projects: DataRequestProject[];
@@ -110,6 +110,4 @@ export type DataRequestState = {
   isCreatePending: boolean;
   isProjectUsersPending: boolean;
   isUserRolesPending: boolean;
-  isProjectFilterSetsPending: boolean;
-  lastProjectFilterSetRefresh: number | null;
 };
