@@ -5,9 +5,24 @@ import handleDownloadZipClick from '../utils/handleDownloadZipClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
 
 const DownloadZipButton = ({
-  props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,
-}) => (
-  props.config.features.exportToWorkspace?.enableDownloadZip ? (
+  props,
+  healIDPLoginNeeded,
+  onlyInCommonMsg,
+  downloadStatus,
+  setDownloadStatus,
+  history,
+  location,
+}) => {
+  const checkIfDownloadZipDisabled = () => {
+    const noSelectedResources = props.discovery.selectedResources.length === 0;
+    const downloadInProgress = downloadStatus.inProgress;
+    const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
+      (item: object) => item.__manifest === '',
+    );
+    return (noSelectedResources || downloadInProgress || eachSelectedResourcesIsMissingManifest);
+  };
+
+  return props.config.features.exportToWorkspace?.enableDownloadZip ? (
     <React.Fragment>
       <Popover
         className='discovery-popover'
@@ -33,17 +48,19 @@ const DownloadZipButton = ({
                 healIDPLoginNeeded.length > 0,
               );
             } else {
-              handleRedirectToLoginClickResumable('download', props, history, location);
+              handleRedirectToLoginClickResumable(
+                'download',
+                props,
+                history,
+                location,
+              );
             }
           }}
           type='default'
           className={`discovery-action-bar-button${
             props.discovery.selectedResources.length === 0 ? '--disabled' : ''
           }`}
-          disabled={
-            props.discovery.selectedResources.length === 0
-            || downloadStatus.inProgress
-          }
+          disabled={checkIfDownloadZipDisabled()}
           icon={<DownloadOutlined />}
           loading={downloadStatus.inProgress}
         >
@@ -86,6 +103,7 @@ const DownloadZipButton = ({
         {downloadStatus.message.content}
       </Modal>
     </React.Fragment>
-  ) : null);
+  ) : null;
+};
 
 export default DownloadZipButton;
