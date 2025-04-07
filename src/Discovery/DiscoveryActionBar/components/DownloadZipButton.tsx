@@ -3,6 +3,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
+import { Resource } from '../../SelectedResources';
 
 const DownloadZipButton = ({
   props,
@@ -13,11 +14,11 @@ const DownloadZipButton = ({
   history,
   location,
 }) => {
-  const checkIfDownloadZipDisabled = () => {
+  const checkIfDownloadZipButtonDisabled = () => {
     const noSelectedResources = props.discovery.selectedResources.length === 0;
     const downloadInProgress = downloadStatus.inProgress;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (item: object) => item.__manifest === '',
+      (resource: Resource) => resource.__manifest === '',
     );
     return (noSelectedResources || downloadInProgress || eachSelectedResourcesIsMissingManifest);
   };
@@ -60,7 +61,7 @@ const DownloadZipButton = ({
           className={`discovery-action-bar-button${
             props.discovery.selectedResources.length === 0 ? '--disabled' : ''
           }`}
-          disabled={checkIfDownloadZipDisabled()}
+          disabled={checkIfDownloadZipButtonDisabled()}
           icon={<DownloadOutlined />}
           loading={downloadStatus.inProgress}
         >

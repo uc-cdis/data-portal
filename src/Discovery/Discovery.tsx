@@ -36,6 +36,7 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
+import { SelectedResources } from './SelectedResources';
 
 export const accessibleFieldName = '__accessible';
 
@@ -201,7 +202,7 @@ export interface Props {
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
   params?: { studyUID: string | null }, // from React Router
-  selectedResources,
+  selectedResources: SelectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
   searchTerm: string,
