@@ -3,7 +3,8 @@ import { FileTextOutlined } from '@ant-design/icons';
 import { Popover, Button } from 'antd';
 import handleDownloadManifestClick from '../utils/handleDownloadManifestClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
-import { Resource } from '../../SelectedResources';
+import { DiscoveryResource } from '../../Discovery';
+import isManifestDataMissing from '../../Utils/isManifestDataMissing';
 
 const DownloadManifestButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, history, location,
@@ -11,7 +12,7 @@ const DownloadManifestButton = ({
   const checkIfDownloadManifestButtonDisabled = () => {
     const noSelectedResources = props.discovery.selectedResources.length === 0;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: Resource) => !resource.__manifest || resource.__manifest?.length === 0,
+      (resource: DiscoveryResource) => isManifestDataMissing(resource),
     );
     return (noSelectedResources || eachSelectedResourcesIsMissingManifest);
   };

@@ -3,7 +3,8 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
-import { Resource } from '../../SelectedResources';
+import isManifestDataMissing from '../../Utils/isManifestDataMissing';
+import { DiscoveryResource } from '../../Discovery';
 
 const DownloadZipButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, downloadStatus, setDownloadStatus, history, location,
@@ -12,7 +13,7 @@ const DownloadZipButton = ({
     const noSelectedResources = props.discovery.selectedResources.length === 0;
     const downloadInProgress = downloadStatus.inProgress;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: Resource) => !resource.__manifest || resource.__manifest?.length === 0,
+      (resource: DiscoveryResource) => isManifestDataMissing(resource),
     );
     return (noSelectedResources || downloadInProgress || eachSelectedResourcesIsMissingManifest);
   };

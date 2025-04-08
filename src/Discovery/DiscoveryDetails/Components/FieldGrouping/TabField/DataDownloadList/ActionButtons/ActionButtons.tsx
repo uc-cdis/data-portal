@@ -14,6 +14,8 @@ import './ActionButtons.css';
 import DownloadVariableMetadataInfo from './DownloadUtils/DownloadVariableMetadataInfo';
 import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
+import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
+import { Resource } from '../../../../../../SelectedResources';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -80,8 +82,6 @@ const ActionButtons = ({
     uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
   }
 
-  const isManifestDataMissing = () => !resourceInfo.__manifest || resourceInfo.__manifest?.length === 0;
-
   useEffect(() => {
     DownloadVariableMetadataInfo(
       discoveryConfig,
@@ -96,7 +96,7 @@ const ActionButtons = ({
   const ConditionalPopover = ({ children }) => {
     if (noData) {
       return (
-        <Popover content={'This file is not available for the selected study'}>
+        <Popover content={'The file is not available for the selected study'}>
           {children}
         </Popover>
       );
@@ -185,7 +185,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-manifest'
-                  disabled={Boolean(isManifestDataMissing() || noData
+                  disabled={Boolean(isManifestDataMissing(resourceInfo) || noData
                     || downloadStatus.inProgress || !userHasAccessToDownload)}
                   onClick={() => {
                     HandleDownloadManifestClick(
@@ -223,7 +223,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-all-files'
-                  disabled={Boolean(isManifestDataMissing() || noData
+                  disabled={Boolean(isManifestDataMissing(resourceInfo) || noData
                     || downloadStatus.inProgress || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
