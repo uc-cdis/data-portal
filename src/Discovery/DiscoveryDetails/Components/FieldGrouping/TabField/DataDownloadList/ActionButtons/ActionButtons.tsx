@@ -15,7 +15,6 @@ import DownloadVariableMetadataInfo from './DownloadUtils/DownloadVariableMetada
 import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
-import { Resource } from '../../../../../../SelectedResources';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
