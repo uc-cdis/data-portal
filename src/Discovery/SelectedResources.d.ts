@@ -107,11 +107,19 @@ interface Tag {
       treatment_investigation_stage_or_type: string[];
     };
   }
+  interface ManifestItem {
+    md5: string;
+    file_name: string;
+    file_size: number;
+    object_id: string;
+    commons_url: string;
+  }
+
 export interface Resource {
     tags: Tag[];
     authz: string;
     _hdp_uid: string;
-    __manifest: string;
+    __manifest: string | ManifestItem[];
     institutions: string;
     year_awarded: string;
     is_registered: boolean;
