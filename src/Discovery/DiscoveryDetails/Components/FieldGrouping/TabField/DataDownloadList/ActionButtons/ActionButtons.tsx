@@ -81,8 +81,6 @@ const ActionButtons = ({
   }
 
   const isManifestDataMissing = () => {
-    console.log('resourceInfo', resourceInfo);
-    console.log('!resourceInfo.__manifest || resourceInfo.__manifest?.length === 0', !resourceInfo.__manifest || resourceInfo.__manifest?.length === 0);
     return !resourceInfo.__manifest || resourceInfo.__manifest?.length === 0;
   };
 
