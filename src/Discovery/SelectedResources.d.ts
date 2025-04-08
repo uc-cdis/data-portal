@@ -10,6 +10,7 @@ interface Tag {
   }
   interface DataRepository {
     repository_name: string;
+    repository_citation?: string;
     repository_study_ID: string;
     repository_study_link: string;
     repository_persistent_ID: string;
@@ -24,8 +25,8 @@ interface Tag {
       subject_data_unit_of_collection: string[];
       subject_geographic_data_level_available: string[];
       subject_geographic_data_level_collected: string[];
-      subject_data_unit_of_analysis_expected_number: number;
-      subject_data_unit_of_collection_expected_number: number;
+      subject_data_unit_of_analysis_expected_number: string;
+      subject_data_unit_of_collection_expected_number: string;
     };
     citation: {
       funding: string[];
@@ -143,6 +144,12 @@ export interface Resource {
     time_of_registration: string;
     external_file_metadata: { file_id: string; file_retriever: string }[];
     study_description_summary: string;
+    time_of_last_cedar_updated?: string,
+    commons_url?: string,
+    commons_name?: string,
+    study_id?: string,
+    commons?: string,
+    frontend_uid?: string,
     __accessible: number;
   }
 
