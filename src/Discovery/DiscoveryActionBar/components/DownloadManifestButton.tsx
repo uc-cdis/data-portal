@@ -62,7 +62,7 @@ const DownloadManifestButton = ({
         }
         type='default'
         className={`discovery-action-bar-button${
-          props.discovery.selectedResources.length === 0 ? '--disabled' : ''
+          checkIfDownloadManifestButtonDisabled() ? '--disabled' : ''
         }`}
         disabled={checkIfDownloadManifestButtonDisabled()}
         icon={<FileTextOutlined />}
@@ -80,4 +80,5 @@ const DownloadManifestButton = ({
     </Popover>
   ) : null);
 };
+
 export default DownloadManifestButton;
