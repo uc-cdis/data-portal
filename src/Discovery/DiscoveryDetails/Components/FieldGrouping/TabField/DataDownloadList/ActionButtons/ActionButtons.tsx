@@ -80,9 +80,7 @@ const ActionButtons = ({
     uid = resourceInfo[discoveryConfig.minimalFieldMapping.uid] || '';
   }
 
-  const isManifestDataMissing = () => {
-    return !resourceInfo.__manifest || resourceInfo.__manifest?.length === 0;
-  };
+  const isManifestDataMissing = () => !resourceInfo.__manifest || resourceInfo.__manifest?.length === 0;
 
   useEffect(() => {
     DownloadVariableMetadataInfo(
