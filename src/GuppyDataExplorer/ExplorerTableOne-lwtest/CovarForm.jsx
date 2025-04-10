@@ -13,7 +13,9 @@ import FilterSetCard from './FilterSetCard';
 import CovarCard from './CovarCard';
 import option from '../../../data/tableOneHelper.json'
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
+import "./index.css"
 //import { getGQLFilter } from '@src/GuppyComponents/Utils/queries';
+
 
 const emptyFilterSetIds = [];
 var requestbody = {
@@ -23,10 +25,44 @@ var requestbody = {
   covariates:[]
 }
 
+const response = {
+  variables: [
+    {
+      keys: [
+        {
+          data: {
+            true: "19.8%",
+          },
+          name: "Alive",
+        },
+        {
+          data: {
+            true: "33.0%",
+          },
+          name: "Dead",
+        },
+        {
+          data: {
+            true: "17.6%",
+          },
+          name: "Unknown",
+        },
+      ],
+      name: "lkss",
+      size: {
+        total: 363,
+        true: 91,
+      },
+    },
+  ],
+};
+
 
 
 function CovarForm() {
-  const[ selectableVaris, setSelectableVaris] = useState(option)   
+  const variable = response.variables[0];
+  const[ selectableVaris, setSelectableVaris] = useState(option)
+  const[isReplied, setIsReplied] = useState(null)   
   const filterConfig= useAppSelector((state) => state.explorer.config.filterConfig);
   const savedFilterSets = useAppSelector(
     (state) => state.explorer.savedFilterSets.data
@@ -103,25 +139,8 @@ function CovarForm() {
     requestbody.filterSets = filterSets
     console.log(requestbody)
 
-    fetch('localhost:5000/v0/tools/tableone', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', 
-      },
-      body: JSON.stringify(requestbody) 
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok'); 
-        }
-        return response.json(); 
-      })
-      .then(data => {
-        console.log('Success:', data); 
-      })
-      .catch(error => {
-        console.error('Error:', error); 
-      });
+   
+    setIsReplied(requestbody)
   }
 
   const updateBody = (input, type, i)=>{
@@ -219,6 +238,36 @@ function CovarForm() {
           onClick={handleSubmit}
         />
       </div>
+      {isReplied == null? null : <div className="table-container">
+      <h2>Table One for {variable.name}</h2>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>True</th>
+            <th>False</th>
+          </tr>
+        </thead>
+        <tbody>
+          {variable.keys.map((key, index) => {
+            const trueValue = parseFloat(key.data.true.replace("%", "")) / 100;
+            const falseValue = (1 - trueValue) * 100;
+            return (
+              <tr key={index}>
+                <td>{key.name}</td>
+                <td>{key.data.true}</td>
+                <td>{falseValue.toFixed(1)}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <div className="summary">
+        <p>Total: {variable.size.total}</p>
+        <p>True Count: {variable.size.true}</p>
+        <p>False Count: {variable.size.total - variable.size.true}</p>
+      </div>
+    </div>}
       </div>)
 }
 export default CovarForm

@@ -4,3 +4,41 @@
 .covar_card_check{
     display: block;
 }
+
+.table-container {
+    width: 400px; 
+    margin: 0 auto; 
+    padding: 16px;
+  }
+  
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  
+  .data-table th {
+    /*background-color: #f4f4f4;*/
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .data-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .data-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+  }
+
+  .summary {
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  
+  .summary p {
+    margin: 4px 0;
+  }
+  

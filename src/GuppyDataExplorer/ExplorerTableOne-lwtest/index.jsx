@@ -6,8 +6,6 @@ import { checkUserAgreement, handleUserAgreement } from './utils';
 import './ExplorerSurvivalAnalysis.css';
 import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
 import CovarForm from './CovarForm';
-import Spinner from '../../components/Spinner';
-import SurvivalPlot from './SurvivalPlot';
 import Button from '../../gen3-ui-component/components/Button';
 
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
@@ -50,16 +48,6 @@ function ExplorerTableOne() {
            <CovarForm/>
           </div>
           <div className='explorer-survival-analysis__column-right'>
-          <SurvivalPlot
-                        data={result.parsed.survival}
-                        endTime={endTime}
-                        efsFlag={efsFlag}
-                        startTime={startTime}
-                        timeInterval={timeInterval}
-                      />
-          <div className='explorer-survival-analysis__button-group'>
-            <Button label='Download PDF' buttonType='default'/>
-          </div>
           </div>
         </>
     </div>
