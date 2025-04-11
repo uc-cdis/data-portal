@@ -42,6 +42,8 @@
 .data-requests__table-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .data-requests__table-actions {

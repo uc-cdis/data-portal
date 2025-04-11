@@ -1,4 +1,5 @@
 .base-table {
+  transform: rotateX(180deg);
   overflow-x: scroll;
 }
 
@@ -9,6 +10,7 @@
 .base-table__body {
   border-collapse: collapse;
   overflow-x: scroll;
+  transform: rotateX(180deg);
   margin: 1em 0;
   text-align: left;
   width: 100%;
