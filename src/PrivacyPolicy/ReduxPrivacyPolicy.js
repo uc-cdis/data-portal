@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
-import showdown from 'showdown';
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
+
 import { components } from '../params';
 import PrivacyPolicy from './PrivacyPolicy';
 
@@ -15,8 +17,7 @@ const mapDispatchToProps = (dispatch) => ({
         if (response.ok) {
           response.text().then(
             (text) => {
-              const converter = new showdown.Converter();
-              const html = converter.makeHtml(text);
+              const html = DOMPurify.sanitize(marked.parse(text));
               dispatch({
                 type: 'LOAD_PRIVACY_POLICY',
                 value: html,
