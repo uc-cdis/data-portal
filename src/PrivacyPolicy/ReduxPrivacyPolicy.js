@@ -11,6 +11,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  /**
+   * @deprecated We will be removing the functionality of parsing a local privacy policy file
+   * returned from Fence in the future since this feature is not being actively used
+   */
   loadPrivacyPolicy: () => {
     fetch(components.privacyPolicy.file).then(
       (response) => {
