@@ -228,7 +228,7 @@ export const addFiltersetToRequest = createAsyncThunk(
       if (statusCategory(status) !== '2XX') {
         return handleRequestError(status, response);
       }
-      return { data, isError: false, message: '' };
+      return { data, isError: false, message: '', status: status };
     } catch (e) {
       return rejectWithValue(e);
     }
@@ -310,6 +310,31 @@ export const getUserRoles = createAsyncThunk(
         return null;
       }
       return data;
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  },
+);
+
+export const getProjectFilterSets = createAsyncThunk(
+  'dataRequest/getProjectFilterSets',
+  /** @param {string} projectId */
+  async (projectId, { rejectWithValue }) => {
+    try {
+      const { data, response, status } = await fetchWithCreds({
+        path: `/amanuensis/admin/project_filter_sets/${projectId}`,
+        method: 'GET',
+      });
+
+      if (statusCategory(status) !== '2XX') {
+        return {
+          data: [],
+          isError: true,
+          message: 'Failed to fetch filter sets',
+          status: status,
+        };
+      }
+      return { data, isError: false, message: '', status: status };
     } catch (e) {
       return rejectWithValue(e);
     }

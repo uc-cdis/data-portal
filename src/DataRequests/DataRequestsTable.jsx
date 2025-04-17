@@ -241,7 +241,7 @@ function DataRequestsTable({
               projectStates={projectStates}
               savedFilterSets={savedFilterSets}
               onAction={(type) => {
-                if (type === 'PROJECT_STATE' || type === 'DELETE_REQUEST') {
+                if (type === 'PROJECT_STATE' || type === 'DELETE_REQUEST' || type === 'SUCCESSFUL_FILTER_SET_CHANGE') {
                   shouldReloadProjectsOnActionClose = true;
                 }
               }}
