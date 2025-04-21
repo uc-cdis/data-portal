@@ -11,10 +11,13 @@ const DownloadManifestButton = ({
 }) => {
   const checkIfDownloadManifestButtonDisabled = () => {
     const noSelectedResources = props.discovery.selectedResources.length === 0;
+    if (noSelectedResources) return true;
+    const { manifestFieldName } = props.config.features.exportToWorkspace.manifestFieldName;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: DiscoveryResource) => isManifestDataMissing(resource),
+      (resource: DiscoveryResource) => isManifestDataMissing(resource, manifestFieldName),
     );
-    return (noSelectedResources || eachSelectedResourcesIsMissingManifest);
+    if (eachSelectedResourcesIsMissingManifest) return true;
+    return false;
   };
 
   return (props.config.features.exportToWorkspace?.enableDownloadManifest ? (

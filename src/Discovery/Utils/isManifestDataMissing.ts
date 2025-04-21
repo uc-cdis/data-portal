@@ -1,5 +1,7 @@
 import { DiscoveryResource } from '../Discovery';
 
-const isManifestDataMissing = (resource: DiscoveryResource) => !resource.__manifest || resource.__manifest?.length === 0;
+const isManifestDataMissing = (
+  resource: DiscoveryResource,
+  manifestFieldName: string) => !resource[manifestFieldName] || resource[manifestFieldName]?.length === 0;
 
 export default isManifestDataMissing;

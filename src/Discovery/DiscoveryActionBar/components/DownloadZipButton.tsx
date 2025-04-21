@@ -11,12 +11,17 @@ const DownloadZipButton = ({
 }) => {
   const checkIfDownloadZipButtonDisabled = () => {
     const noSelectedResources = props.discovery.selectedResources.length === 0;
+    if (noSelectedResources) return true;
     const downloadInProgress = downloadStatus.inProgress;
-    const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: DiscoveryResource) => isManifestDataMissing(resource),
+    if (downloadInProgress) return true;
+    const { manifestFieldName } = props.config.features.exportToWorkspace.manifestFieldName;
+   const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
+      (resource: DiscoveryResource) => isManifestDataMissing(resource, manifestFieldName),
     );
-    return (noSelectedResources || downloadInProgress || eachSelectedResourcesIsMissingManifest);
+    if (eachSelectedResourcesIsMissingManifest) return true;
+    return false;
   };
+
   return (
     props.config.features.exportToWorkspace?.enableDownloadZip ? (
       <React.Fragment>
