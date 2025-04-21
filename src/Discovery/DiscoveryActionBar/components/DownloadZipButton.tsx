@@ -14,8 +14,8 @@ const DownloadZipButton = ({
     if (noSelectedResources) return true;
     const downloadInProgress = downloadStatus.inProgress;
     if (downloadInProgress) return true;
-    const { manifestFieldName } = props.config.features.exportToWorkspace.manifestFieldName;
-   const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
+    const { manifestFieldName } = props.config.features.exportToWorkspace;
+    const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
       (resource: DiscoveryResource) => isManifestDataMissing(resource, manifestFieldName),
     );
     if (eachSelectedResourcesIsMissingManifest) return true;
