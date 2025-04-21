@@ -3,24 +3,18 @@ const basename = process.env.BASENAME || '/';
 const webpack = require('webpack');
 
 module.exports = {
-  entry: '../src/index.jsx',
-  output: {
-    path: __dirname,
-    filename: 'bundle.js',
-    publicPath: basename
-  },
   module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loaders: [
-          'babel-loader',
-        ],
-      },
-      {
-        test: /\.json$/,
-        loader: 'json'
+      rules: [
+        {
+        test: /\.js$|\.jsx?$|\.tsx?$/,
+        exclude: /(node_modules\/(?!marked)|bower_component)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/react'],
+            plugins: ['@babel/plugin-proposal-class-properties'],
+          },
+        },
       },
       {
         test: /\.less$/,
@@ -28,7 +22,7 @@ module.exports = {
           'style-loader',
           'css-loader',
           'less-loader',
-        ]
+        ],
       },
       {
         test: /\.css$/,
@@ -40,17 +34,23 @@ module.exports = {
         loader: 'svg-react-loader',
       },
       {
-        test: /\.(png|jpg|eot|ttf|woff)$/,
-        loader: 'url-loader',
+        test: /\.(png|jpg|gif|woff|ttf|eot)$/,
+        loaders: 'url-loader',
+        query: {
+          limit: 8192,
+        },
       },
-      { test: /\.flow$/, loader: 'ignore-loader' },
-    ]
-  },
-  resolve: {
-    alias: {
-      graphql:  path.resolve('./node_modules/graphql'),
-      react:    path.resolve('./node_modules/react')                // Same issue.
+      {
+        test: /\.flow$/,
+        loader: 'ignore-loader',
+      },
+      ],
     },
-    extensions: [ '.js', '.jsx', '.json' ]
-  }
+    resolve: {
+      alias: {
+        graphql: path.resolve('./node_modules/graphql'),
+        react: path.resolve('./node_modules/react'), // Same issue.
+      },
+      extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
+    }
 };
