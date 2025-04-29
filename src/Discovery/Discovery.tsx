@@ -201,7 +201,7 @@ export interface Props {
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
   params?: { studyUID: string | null }, // from React Router
-  selectedResources,
+  selectedResources: DiscoveryResource,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
   searchTerm: string,
@@ -280,6 +280,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       filterMultiSelectionLogic,
       filterState],
   );
+
+  useEffect(() => {
+    if (props.allBatchesAreReady && props.searchTerm) {
+      // If the user entered a search term during loading
+      // this resets onSearchChange to reinitialize search
+      props.onSearchChange(props.searchTerm);
+    }
+  }, [props.allBatchesAreReady]);
 
   const formatSearchIndex = (index: String) => {
     // Removes [*] wild cards used by JSON Path and converts to array

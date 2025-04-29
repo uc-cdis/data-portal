@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { List } from 'antd';
+import { List, Alert } from 'antd';
 import DataDownloadListItem from './Interfaces/DataDownloadListItem';
 import './DataDownloadList.css';
-import ProcessData from './Utils/ProcessData';
+import { ProcessData, MAX_NUMBER_OF_ITEMS_IN_LIST } from './Utils/ProcessData';
 import ActionButtons from './ActionButtons/ActionButtons';
 import { DiscoveryConfig } from '../../../../../DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, accessibleFieldName } from '../../../../../Discovery';
@@ -32,9 +32,13 @@ const DataDownloadList = ({
   const history = useHistory();
   const location = useLocation();
 
-  const data: [] = resourceFieldValueIsValid
-    ? ProcessData(sourceFieldData)
-    : [];
+  let data = [];
+  let hasDataBeenTruncated = false;
+  if (resourceFieldValueIsValid) {
+    const resultFromProcessData = ProcessData(sourceFieldData);
+    data = resultFromProcessData.processedDataForDataDownloadList;
+    hasDataBeenTruncated = resultFromProcessData.dataForDataDownloadListHasBeenTruncated;
+  }
   const noData = data.length === 0;
 
   let userHasAccessToDownload = true;
@@ -67,6 +71,9 @@ const DataDownloadList = ({
         history={history}
         location={location}
       />
+      {hasDataBeenTruncated && (
+        <Alert type='info' message={`More than ${MAX_NUMBER_OF_ITEMS_IN_LIST} files found. Visit repository to view all files.`} />
+      )}
       {!noData && resourceFieldValueIsValid && (
         <List
           itemLayout='horizontal'
