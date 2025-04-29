@@ -141,7 +141,7 @@ const DiscoveryDataLibrary = (props: Props) => {
         <Button
           loading={loading}
           type='primary'
-          disabled={error !== null || loading || data?.length === 0 || currentList === undefined || selectedResources.length === 0 || notLoggedIn}
+          disabled={error !== null || loading || currentList === undefined || selectedResources.length === 0 || notLoggedIn}
           onClick={() => {
             if (currentList) {
               saveToList(currentList.label, currentList.value);
