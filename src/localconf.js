@@ -90,6 +90,7 @@ function buildConfig(opts) {
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobAPIPath = `${hostname}job/`;
+  const auditAPIPath = `${hostname}/audit/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
 
   const coreMetadataPath = `${hostname}api/search/coremetadata/`;
@@ -526,6 +527,7 @@ function buildConfig(opts) {
     userAPIPath,
     jobAPIPath,
     apiPath,
+    auditAPIPath,
     submissionApiPath,
     credentialCdisPath,
     coreMetadataPath,
