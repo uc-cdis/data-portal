@@ -55,7 +55,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
 
   useEffect(() => {
     loadCDEInfoFromMDS().then((cdeInfo) => {
-      const updatedCDEInfo = cdeInfo?.map((entry) => ({ ...entry, option: `${entry.drupalID} ${entry.fileName}` }));
+      const updatedCDEInfo = cdeInfo?.map((entry) => ({ ...entry, option: `${entry.drupalID || entry.internalCDEID} ${entry.fileName}` }));
       setCDEInfoFromMDS(updatedCDEInfo);
     });
   }, []);
