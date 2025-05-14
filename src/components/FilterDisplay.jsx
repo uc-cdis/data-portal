@@ -95,7 +95,7 @@ function FilterDisplay({
       filterElements.push(
         <Pill key={key}>
           <span className='token field'>
-            With <code>{manual ? (filterInfo[key]?.label ?? key) : filterInfo[key].label}</code> of{' '}
+            With <code>{manual ? (filterInfo[anchorField]?.label ?? anchorField) : filterInfo[anchorField].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
