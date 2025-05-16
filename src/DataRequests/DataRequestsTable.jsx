@@ -189,17 +189,6 @@ function DataRequestsTable({
             }}
           >
             <div className='data-requests__more-actions-container'>
-              {/* <div className='data-requests__checkbox'> */}
-              {/*   <input */}
-              {/*     id='data-requests-approved-only-toggle' */}
-              {/*     type='checkbox' */}
-              {/*     checked={showApprovedOnly} */}
-              {/*     onChange={() => setShowApprovedOnly((s) => !s)} */}
-              {/*   /> */}
-              {/*   <label htmlFor='data-requests-approved-only-toggle'> */}
-              {/*     Approved Only */}
-              {/*   </label> */}
-              {/* </div> */}
               <div className='data-requests__checkbox'>
                 <input
                   disabled={!isAdmin}
