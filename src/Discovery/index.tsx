@@ -131,6 +131,7 @@ const DiscoveryWithMDSBackend: React.FC<{
         );
       }
       const result = _.union(rawStudiesRegistered, rawStudiesUnregistered);
+      // The request for all studies always happens when numberOfBatchesLoaded is incremented after the request for a subset of studies happens.
       if (numberOfBatchesLoaded > 0) {
         allStudies = result;
       }
