@@ -1,5 +1,6 @@
 import React from 'react';
 import IcoAnalysis from './analysis.svg';
+import IcoBlank from './blank.svg';
 import IcoBack from './back.svg';
 import IcoBarChart from './bar-chart.svg';
 import IcoCohortTools from './cohort-tools.svg';
@@ -53,6 +54,9 @@ const dictIcons = {
   ),
   back: (height, customedStyles) => (
     <IcoBack height={height} style={{ ...customedStyles }} />
+  ),
+  blank: (height, customedStyles) => (
+    <IcoBlank height={height} style={{ ...customedStyles }} />
   ),
   'cohort-tools': (height, customedStyles) => (
     <IcoCohortTools height={height} style={{ ...customedStyles }} />

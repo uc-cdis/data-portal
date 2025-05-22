@@ -336,6 +336,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='BioSystics-AP'>BioSystics-AP</Option>
               <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
               <Option value='Dryad'>Dryad</Option>
+              <Option value='FaceBase'>FaceBase</Option>
               <Option value='Figshare'>Figshare</Option>
               <Option value='Gene Expression Omnibus (GEO)'>Gene Expression Omnibus (GEO)</Option>
               <Option value='GitHub'>GitHub</Option>

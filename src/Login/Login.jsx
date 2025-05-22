@@ -165,7 +165,7 @@ class Login extends React.Component {
           <React.Fragment key={i}>
             <div className='login-page__entries'>
               {p.desc}
-              <div className='login-page__entry-login'>
+              <div className={'login-page__entry-login ' + p.name.replaceAll(" ", "-")}>
                 {
                   // If there are multiple URLs, display a dropdown next to
                   // the login button We use createFilter here with

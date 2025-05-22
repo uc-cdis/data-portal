@@ -231,7 +231,8 @@ export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
         const key:string = k;
         const value:any = v;
         const cdeInfo = {
-          drupalID: value.drupal_id,
+          drupalID: value.drupal_id || '',
+          internalCDEID: value.internal_cde_id || '',
           fileName: value.file_name,
           guid: key,
           isCoreCDE: Boolean(value.is_core_cde),

@@ -5,8 +5,8 @@
       "manifestFieldName": "__manifest",
       "enableDownloadManifest": true,
       "documentationLinks": {
-        "gen3Client": "https://gen3.org/resources/user/gen3-client/",
-        "gen3Workspaces": "https://gen3.org/resources/user/analyze-data/"
+        "gen3Client": "https://docs.gen3.org/gen3-resources/user-guide/access-data/#download-files-using-the-gen3-client",
+        "gen3Workspaces": "https://docs.gen3.org/gen3-resources/user-guide/analyze-data/"
       }
     },
     "pageTitle": {
