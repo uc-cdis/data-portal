@@ -761,6 +761,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 {enableSearchBar && (
                   <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                     <DiscoveryMDSSearch
+                    config={config}
                       searchTerm={props.searchTerm}
                       handleSearchChange={handleSearchChange}
                       inputSubtitle={

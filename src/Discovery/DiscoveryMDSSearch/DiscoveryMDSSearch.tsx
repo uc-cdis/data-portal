@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { Input, Radio, Checkbox } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
+import { DiscoveryConfig } from '../DiscoveryConfig';
 
-const DiscoveryMDSSearch = (props: {
-  searchTerm;
-  handleSearchChange;
-  inputSubtitle;
-}) => {
+interface DiscoveryMDSSearchProps {
+  config: DiscoveryConfig
+  searchTerm: string;
+  handleSearchChange: Function;
+  inputSubtitle: string;
+}
+const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = (props) => {
   const [radioValue, setRadioValue] = useState('fullTextSearch');
   const [checkedValues, setCheckedValues] = useState([] as string[]);
-  const onRadioChange = (e) => {
+  const onRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRadioValue(e.target.value);
     if (e.target.value === 'fullTextSearch') {
       setCheckedValues([]);
