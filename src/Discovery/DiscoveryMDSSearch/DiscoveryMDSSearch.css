@@ -1,0 +1,17 @@
+.discovery-search-radio-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+/*
+.discovery-search-radio-left {
+  margin-right: auto;
+}
+
+.discovery-search-radio-right {
+  margin-left: auto;
+} */
+
+.discovery-search-checkbox-container .discovery-search-checkbox-item {
+  margin-left: 0px;
+}
