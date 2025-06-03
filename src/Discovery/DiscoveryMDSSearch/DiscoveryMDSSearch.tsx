@@ -16,8 +16,8 @@ const DiscoveryMDSSearch = (props: {
       setCheckedValues([]);
     }
   };
-  const onCheckboxChange = (checkedValues) => {
-    setCheckedValues(checkedValues);
+  const onCheckboxChange = (currentCheckedValues:string[]) => {
+    setCheckedValues(currentCheckedValues);
   };
 
   return (
@@ -58,9 +58,7 @@ const DiscoveryMDSSearch = (props: {
           className='discovery-search-checkbox-item'
           disabled={radioValue === 'fullTextSearch'}
           checked={checkedValues.includes('Project Number')}
-          onChange={() =>
-            onCheckboxChange([...checkedValues, 'Project Number'])
-          }
+          onChange={() => onCheckboxChange([...checkedValues, 'Project Number'])}
         >
           Project Number
         </Checkbox>
@@ -76,9 +74,7 @@ const DiscoveryMDSSearch = (props: {
           className='discovery-search-checkbox-item'
           disabled={radioValue === 'fullTextSearch'}
           checked={checkedValues.includes('Research Program')}
-          onChange={() =>
-            onCheckboxChange([...checkedValues, 'Research Program'])
-          }
+          onChange={() => onCheckboxChange([...checkedValues, 'Research Program'])}
         >
           Research Program
         </Checkbox>
@@ -94,9 +90,7 @@ const DiscoveryMDSSearch = (props: {
           className='discovery-search-checkbox-item'
           disabled={radioValue === 'fullTextSearch'}
           checked={checkedValues.includes('CDE Field Name')}
-          onChange={() =>
-            onCheckboxChange([...checkedValues, 'CDE Field Name'])
-          }
+          onChange={() => onCheckboxChange([...checkedValues, 'CDE Field Name'])}
         >
           CDE Field Name
         </Checkbox>
