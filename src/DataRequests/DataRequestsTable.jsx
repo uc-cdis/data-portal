@@ -39,20 +39,19 @@ function parseResearcherInfo(researcher) {
 /**
  * @param {Object} args
  * @param {DataRequestProject[]} args.projects
- * @param {boolean} args.showApprovedOnly
  * @param {RootState["user"]["user_id"]} args.userId
  * @param {function} args.rowAction
  * @param {boolean} args.isAdminActive
  */
 function parseTableData({
   projects,
-  showApprovedOnly,
   userId,
   rowAction,
   isAdminActive,
 }) {
-  return projects
-    ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
+  // projects are coming from props and are readonly. Have to make a shallow copy to sort them
+  const copiedProjects = projects? [...projects]: [];
+  return copiedProjects
     .sort((a, b) => {
       const dateA = Date.parse(a.submitted_at);
       const dateB = Date.parse(b.submitted_at);
@@ -132,7 +131,6 @@ function DataRequestsTable({
 }) {
   const transitionTo = useNavigate();
   const userId = useAppSelector((state) => state.user.user_id);
-  const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const [projectDisplayOptions, setProjectDisplayOptions] = useState(null);
   const [isMoreActionsPopupOpen, setMoreActionsPopupOpen] = useState(false);
   const [isVerifyPopupOpen, setVerifyPopupOpen] = useState(false);
@@ -140,14 +138,13 @@ function DataRequestsTable({
     () =>
       parseTableData({
         projects,
-        showApprovedOnly,
         userId,
         rowAction: (project) => {
           setProjectDisplayOptions(project);
         },
         isAdminActive,
       }),
-    [projects, showApprovedOnly, userId, isAdminActive],
+    [projects, userId, isAdminActive],
   );
   let shouldReloadProjectsOnActionClose = false;
 
@@ -192,17 +189,6 @@ function DataRequestsTable({
             }}
           >
             <div className='data-requests__more-actions-container'>
-              <div className='data-requests__checkbox'>
-                <input
-                  id='data-requests-approved-only-toggle'
-                  type='checkbox'
-                  checked={showApprovedOnly}
-                  onChange={() => setShowApprovedOnly((s) => !s)}
-                />
-                <label htmlFor='data-requests-approved-only-toggle'>
-                  Approved Only
-                </label>
-              </div>
               <div className='data-requests__checkbox'>
                 <input
                   disabled={!isAdmin}
