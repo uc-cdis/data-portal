@@ -76,27 +76,27 @@ function getCSSVersion() {
 }
 
 const plugins = [
-  new webpack.EnvironmentPlugin(['NODE_ENV']),
+  new webpack.EnvironmentPlugin({ NODE_ENV: 'dev' }),
   new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
-  new webpack.EnvironmentPlugin(['APP']),
+  new webpack.EnvironmentPlugin({ APP: 'dev' }),
   new webpack.EnvironmentPlugin({ BASENAME: '/' }),
-  new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
-  new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
-  new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
-  new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
-  new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
-  new webpack.EnvironmentPlugin(['FENCE_URL']),
-  new webpack.EnvironmentPlugin(['INDEXD_URL']),
-  new webpack.EnvironmentPlugin(['USE_INDEXD_AUTHZ']),
-  new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
-  new webpack.EnvironmentPlugin(['WTS_URL']),
-  new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
-  new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
-  new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
-  new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
-  new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
-  new webpack.EnvironmentPlugin(['GEN3_BUNDLE']),
+  new webpack.EnvironmentPlugin({ LOGOUT_INACTIVE_USERS: false }),
+  new webpack.EnvironmentPlugin({ WORKSPACE_TIMEOUT_IN_MINUTES: 480 }),
+  new webpack.EnvironmentPlugin({ REACT_APP_PROJECT_ID: 'search' }),
+  new webpack.EnvironmentPlugin({ REACT_APP_DISABLE_SOCKET: false }),
+  new webpack.EnvironmentPlugin({ TIER_ACCESS_LEVEL: 'private' }),
+  new webpack.EnvironmentPlugin({ TIER_ACCESS_LIMIT: 1000 }),
+  new webpack.EnvironmentPlugin({ FENCE_URL: '' }),
+  new webpack.EnvironmentPlugin({ INDEXD_URL: '' }),
+  new webpack.EnvironmentPlugin({ USE_INDEXD_AUTHZ: false }),
+  new webpack.EnvironmentPlugin({ WORKSPACE_URL: '' }),
+  new webpack.EnvironmentPlugin({ WTS_URL: '' }),
+  new webpack.EnvironmentPlugin({ MANIFEST_SERVICE_URL: '' }),
+  new webpack.EnvironmentPlugin({ MAPBOX_API_TOKEN: '' }),
+  new webpack.EnvironmentPlugin({ DATADOG_APPLICATION_ID: '' }),
+  new webpack.EnvironmentPlugin({ DATADOG_CLIENT_TOKEN: '' }),
+  new webpack.EnvironmentPlugin({ DATA_UPLOAD_BUCKET: '' }),
+  new webpack.EnvironmentPlugin({ GEN3_BUNDLE: '' }),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -114,19 +114,19 @@ const plugins = [
     template: 'src/index.ejs',
     connectSrc: ((() => {
       const rv = {};
-      if (typeof process.env.FENCE_URL !== 'undefined') {
+      if (process.env.FENCE_URL) {
         rv[(new URL(process.env.FENCE_URL)).origin] = true;
       }
-      if (typeof process.env.INDEXD_URL !== 'undefined') {
+      if (process.env.INDEXD_URL) {
         rv[(new URL(process.env.INDEXD_URL)).origin] = true;
       }
-      if (typeof process.env.WORKSPACE_URL !== 'undefined') {
+      if (process.env.WORKSPACE_URL) {
         rv[(new URL(process.env.WORKSPACE_URL)).origin] = true;
       }
-      if (typeof process.env.WTS_URL !== 'undefined') {
+      if (process.env.WTS_URL) {
         rv[(new URL(process.env.WTS_URL)).origin] = true;
       }
-      if (typeof process.env.MANIFEST_SERVICE_URL !== 'undefined') {
+      if (process.env.MANIFEST_SERVICE_URL) {
         rv[(new URL(process.env.MANIFEST_SERVICE_URL)).origin] = true;
       }
       if (iFrameApplicationURLs.length > 0) {
@@ -310,7 +310,7 @@ module.exports = {
     },
     {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
         'less-loader',
@@ -318,18 +318,20 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      loader: 'style-loader!css-loader',
+      use: ['style-loader', 'css-loader'],
     },
     {
       test: /\.svg$/,
-      // loaders: ['babel-loader', 'react-svg-loader'], // to address the `css-what` vulnerability issue, after updating to webpack 5 and latest `react-svg-loader` we can switch back to this
-      loader: 'svg-react-loader',
+      use: ['babel-loader', 'react-svg-loader'], // to address the `css-what` vulnerability issue, after updating to webpack 5 and latest `react-svg-loader` we can switch back to this
+      // loader: 'svg-react-loader',
     },
     {
       test: /\.(png|jpg|gif|woff|ttf|eot)$/,
-      loaders: 'url-loader',
-      query: {
-        limit: 8192,
+      use: {
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
       },
     },
     {
@@ -346,6 +348,7 @@ module.exports = {
       'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser'),
     },
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
+    fallback: { querystring: require.resolve('querystring-es3') },
   },
   plugins,
 };
