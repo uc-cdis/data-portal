@@ -351,6 +351,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     return indexArr;
   };
 
+  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
   useEffect(() => {
     // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
@@ -762,6 +763,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                     <DiscoveryMDSSearch
                       searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
+                      selectedSearchableTextFields={selectedSearchableTextFields}
+                      setSelectedSearchableTextFields={setSelectedSearchableTextFields}
                       searchTerm={props.searchTerm}
                       handleSearchChange={handleSearchChange}
                       inputSubtitle={
