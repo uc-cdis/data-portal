@@ -2,25 +2,34 @@ import React, { useState } from 'react';
 import { Input, Radio, Checkbox } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
-import { DiscoveryConfig } from '../DiscoveryConfig';
 
+interface SearchableAndSelectableTextFields {
+  [key: string]: string; // Each key is a string and its value is also a string
+}
 interface DiscoveryMDSSearchProps {
-  config: DiscoveryConfig
+  searchableAndSelectableTextFields: SearchableAndSelectableTextFields | undefined;
   searchTerm: string;
   handleSearchChange: Function;
-  inputSubtitle: string;
+  inputSubtitle: string | undefined;
 }
+
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = (props) => {
   const [radioValue, setRadioValue] = useState('fullTextSearch');
-  const [checkedValues, setCheckedValues] = useState([] as string[]);
+  const [checkedValues, setCheckedValues] = useState(new Set());
   const onRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRadioValue(e.target.value);
     if (e.target.value === 'fullTextSearch') {
-      setCheckedValues([]);
+      setCheckedValues(new Set());
     }
   };
-  const onCheckboxChange = (currentCheckedValues:string[]) => {
-    setCheckedValues(currentCheckedValues);
+  const onCheckboxChange = (currentCheckedValue: string) => {
+    const newItems = new Set(checkedValues);
+    if (checkedValues.has(currentCheckedValue)) {
+      newItems.delete(currentCheckedValue);
+    } else {
+      newItems.add(currentCheckedValue);
+    }
+    setCheckedValues(newItems);
   };
 
   return (
@@ -35,69 +44,40 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = (props) => {
         allowClear
       />
       <div className='discovery-input-subtitle'>{props.inputSubtitle}</div>
-      <div className='discovery-search-radio-container'>
-        <Radio.Group onChange={onRadioChange} value={radioValue}>
-          <Radio value='fullTextSearch' className='discovery-search-radio-left'>
+      {props.searchableAndSelectableTextFields
+      && (
+        <React.Fragment>
+          <div className='discovery-search-radio-container'>
+            <Radio.Group onChange={onRadioChange} value={radioValue}>
+              <Radio value='fullTextSearch' className='discovery-search-radio-left'>
             Full Text Search
-          </Radio>
-          <Radio
-            value='restrictSearch'
-            className='discovery-search-radio-right'
-          >
+              </Radio>
+              <Radio
+                value='restrictSearch'
+                className='discovery-search-radio-right'
+              >
             Restrict Search to Selected Fields
-          </Radio>
-        </Radio.Group>
-      </div>
-      <div className='discovery-search-checkbox-container'>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('studyName')}
-          onChange={() => onCheckboxChange([...checkedValues, 'studyName'])}
-        >
-          Study Name
-        </Checkbox>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('Project Number')}
-          onChange={() => onCheckboxChange([...checkedValues, 'Project Number'])}
-        >
-          Project Number
-        </Checkbox>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('DOI')}
-          onChange={() => onCheckboxChange([...checkedValues, 'DOI'])}
-        >
-          DOI
-        </Checkbox>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('Research Program')}
-          onChange={() => onCheckboxChange([...checkedValues, 'Research Program'])}
-        >
-          Research Program
-        </Checkbox>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('CDE Drupal ID')}
-          onChange={() => onCheckboxChange([...checkedValues, 'CDE Drupal ID'])}
-        >
-          CDE Drupal ID
-        </Checkbox>
-        <Checkbox
-          className='discovery-search-checkbox-item'
-          disabled={radioValue === 'fullTextSearch'}
-          checked={checkedValues.includes('CDE Field Name')}
-          onChange={() => onCheckboxChange([...checkedValues, 'CDE Field Name'])}
-        >
-          CDE Field Name
-        </Checkbox>
-      </div>
+              </Radio>
+            </Radio.Group>
+          </div>
+          <div className='discovery-search-checkbox-container'>
+            {Object.entries(props.searchableAndSelectableTextFields).map(
+              ([key, value]) => (
+                <React.Fragment key={key}>
+                  <Checkbox
+                    className='discovery-search-checkbox-item'
+                    disabled={radioValue === 'fullTextSearch'}
+                    checked={checkedValues.has(value)}
+                    onChange={() => onCheckboxChange(value)}
+                  >
+                    {key}
+                  </Checkbox>
+                </React.Fragment>
+              ),
+            )}
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
