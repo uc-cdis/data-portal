@@ -19,7 +19,7 @@ interface DiscoveryMDSSearchProps {
 }
 
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
-  searchableAndSelectableTextFields = false as unknown as SearchableAndSelectableTextFields,
+  searchableAndSelectableTextFields = undefined,
   selectedSearchableTextFields = [],
   setSelectedSearchableTextFields = () => null,
   searchTerm,
@@ -93,7 +93,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
 };
 
 DiscoveryMDSSearch.defaultProps = {
-  searchableAndSelectableTextFields: false as unknown as SearchableAndSelectableTextFields,
+  searchableAndSelectableTextFields: undefined,
   selectedSearchableTextFields: [],
   setSelectedSearchableTextFields: () => null,
 };
