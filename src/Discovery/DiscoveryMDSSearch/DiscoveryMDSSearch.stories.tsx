@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DiscoveryMDSSearch from './DiscoveryMDSSearch';
+import DiscoveryMDSSearch from '.';
 
 export default {
   title: 'HEAL/Discovery/DiscoveryMDSSearch',

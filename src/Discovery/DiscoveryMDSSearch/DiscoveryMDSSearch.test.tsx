@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import DiscoveryMDSSearch from './DiscoveryMDSSearch';
+import DiscoveryMDSSearch from '.';
 
 describe('DiscoveryMDSSearch Component', () => {
   const mockSetSelectedSearchableTextFields = jest.fn();

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Input, Radio, Checkbox } from 'antd';
+import React, { ChangeEventHandler, useState } from 'react';
+import {
+  Input, Radio, Checkbox, RadioChangeEvent,
+} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
 
@@ -8,25 +10,25 @@ interface SearchableAndSelectableTextFields {
 }
 
 interface DiscoveryMDSSearchProps {
-  searchableAndSelectableTextFields: SearchableAndSelectableTextFields | undefined;
-  selectedSearchableTextFields: string[];
-  setSelectedSearchableTextFields: Function;
+  searchableAndSelectableTextFields?: SearchableAndSelectableTextFields;
+  selectedSearchableTextFields?: string[];
+  setSelectedSearchableTextFields?: Function;
   searchTerm: string;
-  handleSearchChange: Function;
+  handleSearchChange: ChangeEventHandler<HTMLInputElement>;
   inputSubtitle: string | undefined;
 }
 
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
-  searchableAndSelectableTextFields,
-  selectedSearchableTextFields,
-  setSelectedSearchableTextFields,
+  searchableAndSelectableTextFields = false as unknown as SearchableAndSelectableTextFields,
+  selectedSearchableTextFields = [],
+  setSelectedSearchableTextFields = () => null,
   searchTerm,
   handleSearchChange,
   inputSubtitle,
 }) => {
   const [radioValue, setRadioValue] = useState('fullTextSearch');
 
-  const onRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onRadioChange = (e: RadioChangeEvent) => {
     setRadioValue(e.target.value);
     if (e.target.value === 'fullTextSearch') {
       setSelectedSearchableTextFields([]);
@@ -88,6 +90,12 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
       )}
     </React.Fragment>
   );
+};
+
+DiscoveryMDSSearch.defaultProps = {
+  searchableAndSelectableTextFields: false as unknown as SearchableAndSelectableTextFields,
+  selectedSearchableTextFields: [],
+  setSelectedSearchableTextFields: () => null,
 };
 
 export default DiscoveryMDSSearch;
