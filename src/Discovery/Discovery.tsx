@@ -645,9 +645,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         setSelectedSearchableTextFields={setSelectedSearchableTextFields}
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
-                        inputSubtitle={
-                          config.features.search.searchBar.inputSubtitle
-                        }
+                        inputSubtitle={config.features.search.searchBar.inputSubtitle}
                       />
                     </div>
                   )}
@@ -710,9 +708,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <DiscoveryMDSSearch
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
-                inputSubtitle={
-                  config.features.search.searchBar.inputSubtitle
-                }
+                inputSubtitle={config.features.search.searchBar.inputSubtitle}
               />
             </div>
           )}

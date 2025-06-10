@@ -37,4 +37,4 @@ const MockTemplate = () => {
   );
 };
 
-export const MockedSuccess = MockTemplate.bind({});
+export const Default = MockTemplate.bind({});
