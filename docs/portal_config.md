@@ -206,258 +206,186 @@ Below is an example, with inline comments describing what each JSON block config
     "workspaceTokenServiceRefreshTokenAtLogin": true, // optional, whether to refresh the WTS token directly at portal login (recommended mode). If not set, this refresh happens only when the user enters the workspace section of the portal (default/old/previous mode).
     "legacyVADCDataDictionary": false, // optional, VADC specific. Set to "true" to ensure the new version of the /analysis/AtlasDataDictionary data dictionary is displayed the user navigates to /analysis/AtlasDataDictionary, and when the user clicks on the data dictionary button in when in the Atlas app page.
   },
-  "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
-    "charts": { // optional; indicates which charts to display in the Data Explorer
-      // Note that the fields configured in `charts` must be present in the `filters` section as well
-      "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
-        "chartType": "count", // required; indicates this chart will display a “count”
-        "title": "Projects" // required; title to display on the chart
+  "explorerConfig":[ // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer) tabs
+    { // configuration for the 1st explorer tab
+      "charts": { // optional; indicates which charts to display in the Data Explorer
+        // Note that the fields configured in `charts` must be present in the `filters` section as well
+        "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
+          "chartType": "count", // required; indicates this chart will display a “count”
+          "title": "Projects" // required; title to display on the chart
+        },
+        "case_id": {
+          "chartType": "count",
+          "title": "Cases"
+        },
+        "gender": {
+          "chartType": "pie", // required; pie chart type
+          "title": "Gender"
+        },
+        "ethnicity": {
+          "chartType": "fullPie", // required; full pie chart type
+          "title": "Ethnicity"
+        },
+        "race": {
+          "chartType": "bar", // required; bar chart type
+          "title": "Race"
+        },
       },
-      "case_id": {
-        "chartType": "count",
-        "title": "Cases"
+      "filters": { // required; details facet configuration for the Data Explorer
+        "tabs": [ // required; divides facets into tabs
+          {
+            "title": "Diagnosis", // required; title of the tab
+            "fields": [ // GraphQL fields (node attributes) to list out facets
+              "diastolic_blood_pressure",
+              "systolic_blood_pressure",
+            ]
+          },
+          {
+            "title": "Case",
+            "fields": [
+              "project_id",
+              "race",
+              "ethnicity",
+              "gender",
+              "bmi",
+              "age_at_index"
+            ]
+          }
+        ]
       },
-      "gender": {
-        "chartType": "pie", // required; pie chart type
-        "title": "Gender"
+      "table": { // required; configuration for Data Explorer table
+        "enabled": true, // required; indicates if the table should be enabled or not by default
+        "fields": [ // optional; fields (node attributes) to include to be displayed in the table
+          "project_id",
+          "race",
+          "ethnicity",
+          "gender",
+          "bmi",
+          "age_at_index",
+          "diastolic_blood_pressure",
+          "systolic_blood_pressure",
+          "url"
+        ],
+        "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
+          "url"
+        ],
+        "dicomServerURL": "", // optional; field to specify the sub-path to DICOM Server. It uses `dicom-server` as a default for backward compatibility if undefined
+        "dicomViewerUrl": "", // optional; field to specify the sub-path to DICOM Viewer. It uses `dicom-viewer` as a default for backward compatibility if undefined
+        "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
       },
-      "ethnicity": {
-        "chartType": "fullPie", // required; full pie chart type
-        "title": "Ethnicity"
+      "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
+        "download": { // required; id of dropdown button
+          "title": "Download" // required; title of dropdown button
+        }
       },
-      "race": {
-        "chartType": "bar", // required; bar chart type
-        "title": "Race"
-      },
-    },
-    "filters": { // required; details facet configuration for the Data Explorer
-      "tabs": [ // required; divides facets into tabs
+      "buttons": [ // optional; buttons for Data Explorer
         {
-          "title": "Diagnosis", // required; title of the tab
-          "fields": [ // GraphQL fields (node attributes) to list out facets
-            "diastolic_blood_pressure",
-            "systolic_blood_pressure",
-          ]
+          "enabled": true, // required; if the button is enabled or disabled
+          "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
+          "title": "Download All Clinical", // required; title of button
+          "leftIcon": "user", // optional; icon on left from /img/icons
+          "rightIcon": "download", // optional; icon on right from /img/icons
+          "fileName": "clinical.json", // required; file name when it is downloaded (set file ext. to default json)
+          "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
         },
         {
-          "title": "Case",
-          "fields": [
-            "project_id",
-            "race",
-            "ethnicity",
-            "gender",
-            "bmi",
-            "age_at_index"
-          ]
-        }
-      ]
-    },
-    "table": { // required; configuration for Data Explorer table
-      "enabled": true, // required; indicates if the table should be enabled or not by default
-      "fields": [ // optional; fields (node attributes) to include to be displayed in the table
-        "project_id",
-        "race",
-        "ethnicity",
-        "gender",
-        "bmi",
-        "age_at_index",
-        "diastolic_blood_pressure",
-        "systolic_blood_pressure",
-        "url"
-      ],
-      "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
-        "url"
-      ],
-      "dicomServerURL": "", // optional; field to specify the sub-path to DICOM Server. It uses `dicom-server` as a default for backward compatibility if undefined
-      "dicomViewerUrl": "", // optional; field to specify the sub-path to DICOM Viewer. It uses `dicom-viewer` as a default for backward compatibility if undefined
-      "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
-    },
-    "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
-      "download": { // required; id of dropdown button
-        "title": "Download" // required; title of dropdown button
-      }
-    },
-    "buttons": [ // optional; buttons for Data Explorer
-      {
-        "enabled": true, // required; if the button is enabled or disabled
-        "type": "data", // required; button data type sub-options (case insensitive): ["data" (default), "data-tsv", "data-csv", "data-json"] - what should it do? Data = downloading default clinical JSON data
-        "title": "Download All Clinical", // required; title of button
-        "leftIcon": "user", // optional; icon on left from /img/icons
-        "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.json", // required; file name when it is downloaded (set file ext. to default json)
-        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
-      },
-      {
-        "enabled": true, // required; if the button is enabled or disabled
-        "type": "data-tsv", // required; button data type - what should it do? Data = downloading clinical TSV data
-        "title": "TSV", // required; title of button
-        "leftIcon": "datafile", // optional; icon on left from /img/icons
-        "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.tsv", // required; file name when it is downloaded (file ext. should match data type)
-        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
-      },
-      {
-        "enabled": true, // required; if the button is enabled or disabled
-        "type": "data-csv", // required; button data type - what should it do? Data = downloading clinical CSV data
-        "title": "CSV", // required; title of button
-        "leftIcon": "datafile", // optional; icon on left from /img/icons
-        "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.csv", // required; file name when it is downloaded (file ext. should match data type)
-        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
-      },
-      {
-        "enabled": true, // required; if the button is enabled or disabled
-        "type": "data-json", // required; (equivalent to just "data" but we add it for consistency) button data type - what should it do? Data = downloading clinical JSON data
-        "title": "JSON", // required; title of button
-        "leftIcon": "datafile", // optional; icon on left from /img/icons
-        "rightIcon": "download", // optional; icon on right from /img/icons
-        "fileName": "clinical.json", // required; file name when it is downloaded (file ext. should match data type)
-        "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
-      },
-      {
-        "enabled": true,
-        "type": "manifest", // required; manifest = create file manifest type
-        "title": "Download Manifest",
-        "leftIcon": "datafile",
-        "rightIcon": "download",
-        "fileName": "manifest.json",
-        "dropdownId": "download"
-      },
-      {
-        "enabled": true,
-        "type": "export", // required; export = export to Terra type
-        "title": "Export All to Terra",
-        "rightIcon": "external-link"
-      },
-      {
-        "enabled": true,
-        "type": "export-to-pfb", // required; export-to-pfb = export to PFB type
-        "title": "Export to PFB",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
-      },
-      {
-        "enabled": true,
-        "type": "export-pfb-to-url", // export PFB to arbitrary URL; see docs/export_pfb_to_url.md
-        "targetURLTemplate": "https://terra.biodatacatalyst.nhlbi.nih.gov/#import-data?url={{PRESIGNED_URL}}", // required if type is `export-pfb-to-url`; `{{PRESIGNED_URL}}` is a required template variable which is replaced by the presigned URL of the exported PFB
-        "title": "Export All to Terra",
-        "rightIcon": "external-link"
-      },
-      {
-        "enabled": true,
-        "type": "export-to-workspace", // required; export-to-workspace = export to workspace type
-        "title": "Export to Workspace",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
-      },
-      {
-        "enabled": true,
-        "type": "export-pfb-to-workspace", // required; export PFB to workspace
-        "title": "Export PFB to Workspace",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
-      }
-    ],
-    "loginForDownload": true, //optional; redirects user to login page if they tries to download data without logging in.
-    "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
-      "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
-      "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
-      "nodeCountTitle": "Cases", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
-      "fileCountField": "file_count", // optional; By default for getting manifest entry counts, Guppy will issue a query with all the "referenceIdFieldInDataIndex" data attached as filter values. This may result in a ES query with huge amount of terms for aggregation. To circumvent this issue, we can pre-calculate the file counts during ETL, and then specify this pre-calculated ESa field as "fileCountField" in this config. In this way, portal will not need to issue that terms aggregation request with huge filters. See the manifest of an env that is using this feature for details
-      "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
-        { "field": "consent_codes", "name": "Data Use Restriction" },
-        { "field": "bmi", "name": "BMI" }
-      ],
-      "manifestMapping": { // optional; how to configure the mapping between cases/subjects/participants and files. This is used to export or download files that are associated with a cohort. It is basically joining two indices on specific GraphQL fields
-        "resourceIndexType": "file", // required; what is the type of the index (must match the guppy config block in manifest.json) that contains the resources you want a manifest of?
-        "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
-        "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
-        "referenceIdFieldInDataIndex": "case_id", // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
-        "useFilterForCounts": false // optional: set to true to use the explore filter to query for file counts. This requires the fields that has been specified in the explorer tab of a certain index must have all those fields injected into its corresponding File index
-      },
-      "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
-      "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
-    },
-    "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
-    "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
-  },
-  "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
-    "charts": { // optional; indicates which charts to display in the File Explorer
-      // Note that the fields configured in `charts` must be present in the `filters` section as well
-      "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
-        "chartType": "stackedBar", // required; chart type of stack bar
-        "title": "File Type" // required; title of chart
-      },
-      "data_format": {
-        "chartType": "stackedBar",
-        "title": "File Format"
-      }
-    },
-    "filters": { // required; details facet configuration for the File Explorer
-      "tabs": [ // required; divides facets into tabs
+          "enabled": true, // required; if the button is enabled or disabled
+          "type": "data-tsv", // required; button data type - what should it do? Data = downloading clinical TSV data
+          "title": "TSV", // required; title of button
+          "leftIcon": "datafile", // optional; icon on left from /img/icons
+          "rightIcon": "download", // optional; icon on right from /img/icons
+          "fileName": "clinical.tsv", // required; file name when it is downloaded (file ext. should match data type)
+          "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+        },
         {
-          "title": "File", // required; title of the tab
-          "fields": [ // required; GraphQL fields (node attributes) to list out facets
-            "project_id",
-            "data_type",
-            "data_format"
-          ],
-          "asTextAggFields": [ // optional; GraphQL fields that would be aggregated as text fields. Only meaningful to numeric fields that HAS NOT been specified in the "charts" section before, there is no behavior differences if used on text fields
-            "consortium_id"
-          ],
-          "defaultFilters": [ // optional; select default filters on page load
-            {
-              "field": "redacted", // field name
-              "values": ["No"] // selected values on page load
-            }
-          ]
+          "enabled": true, // required; if the button is enabled or disabled
+          "type": "data-csv", // required; button data type - what should it do? Data = downloading clinical CSV data
+          "title": "CSV", // required; title of button
+          "leftIcon": "datafile", // optional; icon on left from /img/icons
+          "rightIcon": "download", // optional; icon on right from /img/icons
+          "fileName": "clinical.csv", // required; file name when it is downloaded (file ext. should match data type)
+          "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+        },
+        {
+          "enabled": true, // required; if the button is enabled or disabled
+          "type": "data-json", // required; (equivalent to just "data" but we add it for consistency) button data type - what should it do? Data = downloading clinical JSON data
+          "title": "JSON", // required; title of button
+          "leftIcon": "datafile", // optional; icon on left from /img/icons
+          "rightIcon": "download", // optional; icon on right from /img/icons
+          "fileName": "clinical.json", // required; file name when it is downloaded (file ext. should match data type)
+          "dropdownId": "download" // optional; if putting into a dropdown, the dropdown id
+        },
+        {
+          "enabled": true,
+          "type": "manifest", // required; manifest = create file manifest type
+          "title": "Download Manifest",
+          "leftIcon": "datafile",
+          "rightIcon": "download",
+          "fileName": "manifest.json",
+          "dropdownId": "download"
+        },
+        {
+          "enabled": true,
+          "type": "export", // required; export = export to Terra type
+          "title": "Export All to Terra",
+          "rightIcon": "external-link"
+        },
+        {
+          "enabled": true,
+          "type": "export-to-pfb", // required; export-to-pfb = export to PFB type
+          "title": "Export to PFB",
+          "leftIcon": "datafile",
+          "rightIcon": "download"
+        },
+        {
+          "enabled": true,
+          "type": "export-pfb-to-url", // export PFB to arbitrary URL; see docs/export_pfb_to_url.md
+          "targetURLTemplate": "https://terra.biodatacatalyst.nhlbi.nih.gov/#import-data?url={{PRESIGNED_URL}}", // required if type is `export-pfb-to-url`; `{{PRESIGNED_URL}}` is a required template variable which is replaced by the presigned URL of the exported PFB
+          "title": "Export All to Terra",
+          "rightIcon": "external-link"
+        },
+        {
+          "enabled": true,
+          "type": "export-to-workspace", // required; export-to-workspace = export to workspace type
+          "title": "Export to Workspace",
+          "leftIcon": "datafile",
+          "rightIcon": "download"
+        },
+        {
+          "enabled": true,
+          "type": "export-pfb-to-workspace", // required; export PFB to workspace
+          "title": "Export PFB to Workspace",
+          "leftIcon": "datafile",
+          "rightIcon": "download"
         }
-      ]
-    },
-    "table": { // required; configuration for File Explorer table
-      "enabled": true, // required; indicates if the table should be enabled by default
-      "fields": [ // required; fields (node attributes) to include to be displayed in the table
-        "project_id",
-        "file_name",
-        "file_size",
-        "object_id"
-      ]
-    },
-    "guppyConfig": { // required; how to configure Guppy to work with the File Explorer
-      "dataType": "file", // required; must match the index “type” in the guppy configuration block in the manifest.json
-      "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
-        { "field": "object_id", "name": "GUID" } // required; the file index should always include this one
       ],
-      "nodeCountTitle": "Files", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
-      "manifestMapping": { // optional; how to configure the mapping between cases/subjects/participants and files. This is used to export or download files that are associated with a cohort. It is basically joining two indices on specific GraphQL fields
-        "resourceIndexType": "case", // required; joining this index with the case index
-        "resourceIdField": "case_id", // required; which field should is the main identifier in the other index?
-        "referenceIdFieldInResourceIndex": "object_id", // required; which field should we join on in the other index?
-        "referenceIdFieldInDataIndex": "object_id" // required; which field should we join on in the current index?
+      "loginForDownload": true, //optional; redirects user to login page if they tries to download data without logging in.
+      "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
+        "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
+        "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
+        "nodeCountTitle": "Cases", // optional; If omitted, will default to use plural of `guppyConfig.dataType` of this tab.
+        "fileCountField": "file_count", // optional; By default for getting manifest entry counts, Guppy will issue a query with all the "referenceIdFieldInDataIndex" data attached as filter values. This may result in a ES query with huge amount of terms for aggregation. To circumvent this issue, we can pre-calculate the file counts during ETL, and then specify this pre-calculated ESa field as "fileCountField" in this config. In this way, portal will not need to issue that terms aggregation request with huge filters. See the manifest of an env that is using this feature for details
+        "fieldMapping": [ // optional; a way to rename GraphQL fields to be more human readable
+          { "field": "consent_codes", "name": "Data Use Restriction" },
+          { "field": "bmi", "name": "BMI" }
+        ],
+        "manifestMapping": { // optional; how to configure the mapping between cases/subjects/participants and files. This is used to export or download files that are associated with a cohort. It is basically joining two indices on specific GraphQL fields
+          "resourceIndexType": "file", // required; what is the type of the index (must match the guppy config block in manifest.json) that contains the resources you want a manifest of?
+          "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
+          "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
+          "referenceIdFieldInDataIndex": "case_id", // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
+          "useFilterForCounts": false // optional: set to true to use the explore filter to query for file counts. This requires the fields that has been specified in the explorer tab of a certain index must have all those fields injected into its corresponding File index
+        },
+        "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
+        "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
       },
-      "accessibleFieldCheckList": ["project_id"],
-      "accessibleValidationField": "project_id",
-      "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
+      "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
+      "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
     },
-    "buttons": [ // optional; buttons for File Explorer
-      {
-        "enabled": true, // required; determines if the button is enabled or disabled
-        "type": "file-manifest", // required; button type - file-manifest is for downloading a manifest from the file index
-        "title": "Download Manifest", // required; title of the button
-        "leftIcon": "datafile", // optional; button’s left icon
-        "rightIcon": "download", // optional; button’s right icon
-        "fileName": "file-manifest.json", // required; name of downloaded file
-      },
-      {
-        "enabled": true,
-        "type": "export-files-to-workspace", // required; this type is for export files to the workspace from the File Explorer
-        "title": "Export to Workspace",
-        "leftIcon": "datafile",
-        "rightIcon": "download"
-      }
-    ],
-    "dropdowns": {} // optional; dropdown groupings for buttons
-  },
+    {
+      // configuration for the 2nd explorer tab
+    }
+  ]
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
     "requireLogin": false, // optional, defaults to false. If true, requires user to sign in before seeing the Discovery page
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page

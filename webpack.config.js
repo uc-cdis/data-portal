@@ -298,6 +298,17 @@ module.exports = {
       },
     },
     {
+      test: /\.js$/,
+      include: /node_modules\/(marked\/).*/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
+      },
+    },
+    {
       test: /\.less$/,
       loaders: [
         'style-loader',
