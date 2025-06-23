@@ -333,7 +333,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
     search.addDocuments(props.studies);
     // expose the search function
+    const startTimesetJsSearch = performance.now();
     setJsSearch(search);
+    console.timeEnd('Execution Time setJsSearch(search)');
+    const endTimesetJsSearch = performance.now();
+    const timeTakenInSeconds = (endTimesetJsSearch - startTimesetJsSearch) / 1000;
+    console.log(`setJsSearch Execution Time: ${timeTakenInSeconds} seconds`);
+
     // Reinitialize search?
     props.onSearchChange(props.searchTerm);
   }, [props.studies, selectedSearchableTextFields.length]);
