@@ -359,7 +359,7 @@ Below is an example, with inline comments describing what each JSON block config
           "rightIcon": "download"
         }
       ],
-      "loginForDownload": true, // optional; redirects logged out users to the login page when they try to download data/manifests from the Explorer
+      "loginForDownload": true, //optional; redirects user to login page if they tries to download data without logging in.
       "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
         "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
         "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
@@ -425,6 +425,15 @@ Below is an example, with inline comments describing what each JSON block config
           "placeholder": "Search studies by keyword", // optional, placeholder text of search input
           "searchableTextFields": ["study", "age", "publication", "minimal_info.study_title"] // optional, list of properties in data to make searchable
                                                                   // if not present, only fields visible in the table will be searchable
+          "searchableAndSelectableTextFields":  {
+            "Study Name": "study_metadata.minimal_info.study_name",
+            "Project Number": "project_number",
+            "DOI": "doi_identifier",
+            "Research Program": "research_program",
+            "CDE Drupal ID": "cde.standardMappings.instrument.id",
+            "CDE Field Name": "cde.fields.name",
+            "CDE Field Source": "cde.fields.standardMappings.source"
+          } // optional, enhances the search bar’s functionality by allowing the user to choose a set of metadata fields to search over via checkbox selection.
         },
         "tagSearchDropdown": { // optional, config section for searchable tags
           "enabled": true,
