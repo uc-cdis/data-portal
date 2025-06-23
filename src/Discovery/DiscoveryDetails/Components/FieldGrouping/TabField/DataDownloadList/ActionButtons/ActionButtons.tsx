@@ -45,6 +45,7 @@ const ActionButtons = ({
 
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
+  const enableExportFullMetadata: boolean = Boolean(discoveryConfig?.features.exportToWorkspace);
   let fileManifest: any[] = [];
   if (manifestFieldName) {
     fileManifest = resourceInfo?.[manifestFieldName] || [];
@@ -128,6 +129,25 @@ const ActionButtons = ({
     return children;
   };
 
+  const checkIfDownloadAllFilesButtonDisabled = () => {
+    if (noData) return true;
+    const downloadInProgress = downloadStatus.inProgress;
+    if (downloadInProgress) return true;
+    const eachSelectedResourcesIsMissingManifest = resourceInfo.every(
+      (resource: DiscoveryResource) => {
+        let isExternalFileManifestMissing = false;
+        // put some hard-coded field names here, so this button can be properly enabled for external files
+        // TODO: see similar logics in DiscoveryListView.tsx
+        if (enableExportFullMetadata) {
+          isExternalFileManifestMissing = !resource.external_file_metadata || resource.external_file_metadata.length === 0;
+        }
+        return isManifestDataMissing(resource, manifestFieldName) && isExternalFileManifestMissing;
+      },
+    );
+    if (eachSelectedResourcesIsMissingManifest) return true;
+    return false;
+  };
+
   const isHEALLoginNeeded = Boolean(missingRequiredIdentityProviders.length);
   const downloadManifestButtonText = discoveryConfig.features?.exportToWorkspace?.downloadManifestButtonText || 'Download Manifest';
   return (
@@ -184,8 +204,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-manifest'
-                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData
-                    || downloadStatus.inProgress || !userHasAccessToDownload)}
+                  disabled={checkIfDownloadAllFilesButtonDisabled()}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
@@ -222,7 +241,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-all-files'
-                  disabled={Boolean(isManifestDataMissing(resourceInfo) || noData
+                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData
                     || downloadStatus.inProgress || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
