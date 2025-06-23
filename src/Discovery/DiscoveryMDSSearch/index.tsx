@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, useState } from 'react';
 import {
-  Input, Radio, Checkbox, RadioChangeEvent, message,
+  Input, Radio, Checkbox, RadioChangeEvent, message, Button,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
@@ -28,8 +28,12 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
 }) => {
   const [radioValue, setRadioValue] = useState('fullTextSearch');
   const [messageApi, contextHolder] = message.useMessage();
+  const { hash } = window.location;
+  const runCheckBoxUI = (hash.includes('#checkbox'));
+  const runSearchButtonUI = (hash.includes('#searchButton'));
+
   const info = () => {
-    messageApi.info('Updating search restrictions');
+    if (runCheckBoxUI) messageApi.info('Updating search restrictions');
   };
 
   const onRadioChange = (e: RadioChangeEvent) => {
@@ -61,10 +65,11 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
         prefix={<SearchOutlined />}
         placeholder='Search studies by keyword...'
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={runSearchButtonUI ? undefined : handleSearchChange}
         size='large'
         allowClear
       />
+      <Button>Search</Button>
       <div className='discovery-input-subtitle'>{inputSubtitle}</div>
       {searchableAndSelectableTextFields && (
         <React.Fragment>
