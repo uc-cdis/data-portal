@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, useState } from 'react';
 import {
-  Input, Radio, Checkbox, RadioChangeEvent,
+  Input, Radio, Checkbox, RadioChangeEvent, message,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
@@ -27,15 +27,22 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
   inputSubtitle,
 }) => {
   const [radioValue, setRadioValue] = useState('fullTextSearch');
+  const [messageApi, contextHolder] = message.useMessage();
+  const info = () => {
+    messageApi.info('Updating search restrictions');
+  };
 
   const onRadioChange = (e: RadioChangeEvent) => {
     setRadioValue(e.target.value);
     if (e.target.value === 'fullTextSearch') {
+      info();
       setSelectedSearchableTextFields([]);
     }
   };
 
   const onCheckboxChange = (currentCheckedValue: string) => {
+    info();
+
     if (selectedSearchableTextFields.includes(currentCheckedValue)) {
       const selectionsWithCurrentCheckedValueRemoved = selectedSearchableTextFields.filter(
         (value) => value !== currentCheckedValue,
@@ -48,6 +55,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
 
   return (
     <React.Fragment>
+      {contextHolder}
       <Input
         className='discovery-search'
         prefix={<SearchOutlined />}
