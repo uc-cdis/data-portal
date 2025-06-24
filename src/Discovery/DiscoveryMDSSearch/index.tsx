@@ -1,6 +1,8 @@
 import React, { ChangeEventHandler, useState } from 'react';
 import {
   Input, Radio, Checkbox, RadioChangeEvent, message, Button,
+  Col,
+  Row,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
@@ -57,19 +59,64 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
     }
   };
 
+  // LOGIC FOR SEARCH UI
+  const [inputValue, setInputValue] = useState<string>('');
+  // Event handler for input change
+  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = ev.currentTarget;
+    setInputValue(value); // Update the state with the input value
+  };
+
+  // Function to handle button click
+  const handleButtonClick = () => {
+    // Create a synthetic event to call handleSearchChange
+    const syntheticEvent = {
+      currentTarget: {
+        value: inputValue, // Pass the current input value
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    handleSearchChange(syntheticEvent); // Call the original function with the synthetic event
+  };
+
   return (
     <React.Fragment>
       {contextHolder}
-      <Input
-        className='discovery-search'
-        prefix={<SearchOutlined />}
-        placeholder='Search studies by keyword...'
-        value={searchTerm}
-        onChange={runSearchButtonUI ? undefined : handleSearchChange}
-        size='large'
-        allowClear
-      />
-      <Button>Search</Button>
+      {!runSearchButtonUI
+      && (
+        <Input
+          className='discovery-search'
+          prefix={<SearchOutlined />}
+          placeholder='Search studies by keyword...'
+          value={searchTerm}
+          onChange={handleSearchChange}
+          size='large'
+          allowClear
+        />
+      )}
+      {/* SEARCH MODE */}
+      {runSearchButtonUI && (
+        <Row gutter={16} align='middle'>
+          <Col span={19}>
+            <Input
+              className='discovery-search'
+              prefix={<SearchOutlined />}
+              placeholder='Search studies by keyword...'
+              value={inputValue}
+              onChange={handleInputChange}
+              size='large'
+              allowClear
+            />
+          </Col>
+          <Col span={5}>
+            <Button
+              type='default'
+              className='discovery-header__dropdown-tags-control-button'
+              onClick={handleButtonClick}
+            >Search
+            </Button>
+          </Col>
+        </Row>
+      )}
       <div className='discovery-input-subtitle'>{inputSubtitle}</div>
       {searchableAndSelectableTextFields && (
         <React.Fragment>
@@ -101,6 +148,14 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
           </div>
         </React.Fragment>
       )}
+      <div style={{
+        marginTop: '10px', padding: '10px', width: '100%', background: 'aliceblue',
+      }}
+      >  UI Test Modes:<br />
+        <a href='#'>#normal</a><br />
+        <a href='#checkbox'>#messages</a><br />
+        <a href='#searchButton'>#searchButton</a>
+      </div>
     </React.Fragment>
   );
 };
