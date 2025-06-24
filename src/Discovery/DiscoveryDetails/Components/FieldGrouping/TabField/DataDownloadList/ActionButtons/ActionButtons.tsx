@@ -15,6 +15,7 @@ import DownloadVariableMetadataInfo from './DownloadUtils/DownloadVariableMetada
 import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
+import assembleFileMetadata from '../../../../../../DiscoveryActionBar/utils/assembleFileMetadata';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -46,10 +47,7 @@ const ActionButtons = ({
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
   const enableExportFullMetadata: boolean = Boolean(discoveryConfig?.features.exportToWorkspace);
-  let fileManifest: any[] = [];
-  if (manifestFieldName) {
-    fileManifest = resourceInfo?.[manifestFieldName] || [];
-  }
+  const { fileManifest, externalFileMetadata } = assembleFileMetadata(manifestFieldName, [resourceInfo]);
 
   // Study level meta button should show only if the downloading study level metadata value is enabled
   // and resourceInfo includes the study metadata field name reference from the discovery config
@@ -252,6 +250,7 @@ const ActionButtons = ({
                     missingRequiredIdentityProviders,
                     verifyExternalLoginsNeeded,
                     fileManifest,
+                    externalFileMetadata,
                   )}
                 >
                   Download All Files
