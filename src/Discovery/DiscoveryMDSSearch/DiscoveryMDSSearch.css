@@ -1,0 +1,9 @@
+.discovery-search-radio-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.discovery-search-checkbox-container .discovery-search-checkbox-item {
+  margin-left: 0px;
+  padding-right: 10px;
+}
