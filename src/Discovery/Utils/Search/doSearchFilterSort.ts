@@ -15,7 +15,6 @@ interface ParametersForDoSearchFilterSort {
 }
 
 const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSearchFilterSort) => {
-  const startTime = performance.now();
   const {
     props,
     jsSearch,
@@ -63,8 +62,5 @@ const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSear
     return 0;
   });
   setVisibleResources(filteredResources);
-  const endTime = performance.now();
-  const timeTakenInSeconds = (endTime - startTime) / 1000;
-  console.log(`doSearchFilterSort  Execution Time: ${timeTakenInSeconds} seconds`);
 };
 export default doSearchFilterSort;
