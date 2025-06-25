@@ -11,3 +11,5 @@ __generated__/
 *.log
 .DS_Store
 .idea/
+*storybook.log
+storybook-static
