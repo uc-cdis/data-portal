@@ -1,0 +1,86 @@
+.mini-app {
+  background-color: var(--g3-color__bg-cloud);
+  padding: 30px;
+  margin-top: 20px;
+}
+
+.p-spacing {
+  margin-bottom: 10px;
+}
+
+.button-exit {
+  border: 1px solid var(--pcdc-color__primary);
+  background-color: var(--g3-color__white);
+  height: 25px;
+  width: 25px;
+  float: right;
+  text-align: center;
+}
+
+.container {
+  width: 73%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.group-inline {
+  display: flex;
+  align-items: center;
+}
+
+.group-inline label {
+  width: 60px;
+  font-weight: 500;
+}
+
+.full-width {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  margin-left: 10px;
+}
+
+input,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+.button-group-inline {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  margin-bottom: 10px;
+  width: 102%;
+}
+
+.button-assign {
+  display: inline-block;
+  width: 100px;
+  background-color: var(--g3-color__white);
+  color: inherit;
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 5px;
+  border: 1px solid var(--g3-color__gray);
+}
+
+.button-assign:hover {
+  color: var(--g3-color__black);
+  border-color: var(--g3-color__black);
+}
+
+.button-assign:active {
+  color: var(--pcdc-color__secondary);
+  border-color: var(--g3-color__black);
+}
+
+#output {
+  color: var(--g3-color__black);
+  font-weight: var(--g3-font__semi-bold-weight);
+}

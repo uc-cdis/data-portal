@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.css';
+import Button from '../../Button/index';
+import UnitCalculator from './UnitCalculator/UnitCalculator';
 
 /**
  * @callback AfterDragHandler
@@ -50,6 +52,8 @@ const RangeFilter = forwardRef(
       upperBound: upperBound <= max ? upperBound : max,
     });
     const [inputRange, setInputRange] = useState(range);
+
+    const [showCalculator, setShowCalculator] = useState(false);
 
     /** @type {React.ChangeEventHandler<HTMLInputElement>} */
     function handleLowerBoundInputChange({ currentTarget: { value } }) {
@@ -111,9 +115,40 @@ const RangeFilter = forwardRef(
           newRange.upperBound,
           min,
           max,
-          rangeStep
+          rangeStep,
         );
       }
+    }
+
+    // used to update min and max directly using "Assign to min" and "Assign to max" buttons
+    function updateBound(value, boundType) {
+      let newRange;
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue)) return;
+
+      if (boundType == 'upper') {
+        const newUpper = parsedValue < max ? parsedValue : max;
+        newRange = {
+          lowerBound: range.lowerBound,
+          upperBound: newUpper,
+        };
+      } else if (boundType == 'lower') {
+        const newLower = parsedValue < min ? min : parsedValue;
+        newRange = {
+          lowerBound: newLower,
+          upperBound: range.upperBound,
+        };
+      }
+
+      setInputRange(newRange);
+      setRange(newRange);
+      onAfterDrag(
+        newRange.lowerBound,
+        newRange.upperBound,
+        min,
+        max,
+        rangeStep,
+      );
     }
 
     /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
@@ -146,61 +181,86 @@ const RangeFilter = forwardRef(
         : Number.parseFloat(num.toFixed(decimalDigitsLen));
     }
 
+    const params = {
+      quantity: 'age',
+      desiredUnit: 'days',
+      selectUnits: { months: 30, years: 365 },
+    };
+
     return (
-      <div className='g3-range-filter'>
-        {label && <p className='g3-range-filter__title'>{label}</p>}
-        <div className='g3-range-filter__bounds'>
-          <label htmlFor={`${label}-lower-bound-input`}>
-            Min:&nbsp;
-            <input
-              type='number'
-              id={`${label}-lower-bound-input`}
-              min={min}
-              max={range.upperBound !== undefined ? range.upperBound : max}
-              value={inputRange.lowerBound}
-              onChange={handleLowerBoundInputChange}
-              onKeyPress={(ev) => {
-                if (ev.key === 'Enter') handleInputSubmit();
-              }}
-              onBlur={handleInputSubmit}
-              className='g3-range-filter__bound g3-range-filter__bound--lower'
+      <>
+        <div className='g3-range-filter'>
+          <p>
+            Don’t know the {params.quantity} in {params.desiredUnit}?
+          </p>
+          <Button
+            onClick={() => setShowCalculator(true)}
+            label={`Compute ${params.quantity} (in ${params.desiredUnit})`}
+            buttonType='default'
+          />
+
+          {showCalculator && (
+            <UnitCalculator
+              setShowCalculator={setShowCalculator}
+              parameters={params}
+              updateBound={updateBound}
             />
-          </label>
-          <label htmlFor={`${label}-upper-bound-input`}>
-            Max:&nbsp;
-            <input
-              type='number'
-              id={`${label}-upper-bound-input`}
-              min={range.lowerBound !== undefined ? range.lowerBound : min}
-              max={max}
-              value={inputRange.upperBound}
-              onChange={handleUpperBoundInputChange}
-              onKeyPress={(ev) => {
-                if (ev.key === 'Enter') handleInputSubmit();
-              }}
-              onBlur={handleInputSubmit}
-              className='g3-range-filter__bound g3-range-filter__bound--lower'
-            />
-          </label>
+          )}
+
+          {label && <p className='g3-range-filter__title'>{label}</p>}
+          <div className='g3-range-filter__bounds'>
+            <label htmlFor={`${label}-lower-bound-input`}>
+              Min:&nbsp;
+              <input
+                type='number'
+                id={`${label}-lower-bound-input`}
+                min={min}
+                max={range.upperBound !== undefined ? range.upperBound : max}
+                value={inputRange.lowerBound}
+                onChange={handleLowerBoundInputChange}
+                onKeyPress={(ev) => {
+                  if (ev.key === 'Enter') handleInputSubmit();
+                }}
+                onBlur={handleInputSubmit}
+                className='g3-range-filter__bound g3-range-filter__bound--lower'
+              />
+            </label>
+            <label htmlFor={`${label}-upper-bound-input`}>
+              Max:&nbsp;
+              <input
+                type='number'
+                id={`${label}-upper-bound-input`}
+                min={range.lowerBound !== undefined ? range.lowerBound : min}
+                max={max}
+                value={inputRange.upperBound}
+                onChange={handleUpperBoundInputChange}
+                onKeyPress={(ev) => {
+                  if (ev.key === 'Enter') handleInputSubmit();
+                }}
+                onBlur={handleInputSubmit}
+                className='g3-range-filter__bound g3-range-filter__bound--lower'
+              />
+            </label>
+          </div>
+          <Slider
+            range
+            className={`g3-range-filter__slider ${
+              inactive ? 'g3-range-filter__slider--inactive' : ''
+            }`}
+            min={getNumberToFixed(min)}
+            max={getNumberToFixed(max)}
+            value={[
+              getNumberToFixed(range.lowerBound),
+              getNumberToFixed(range.upperBound),
+            ]}
+            onChange={onSliderChange}
+            onAfterChange={onAfterSliderChange}
+            step={rangeStep}
+          />
         </div>
-        <Slider
-          range
-          className={`g3-range-filter__slider ${
-            inactive ? 'g3-range-filter__slider--inactive' : ''
-          }`}
-          min={getNumberToFixed(min)}
-          max={getNumberToFixed(max)}
-          value={[
-            getNumberToFixed(range.lowerBound),
-            getNumberToFixed(range.upperBound),
-          ]}
-          onChange={onSliderChange}
-          onAfterChange={onAfterSliderChange}
-          step={rangeStep}
-        />
-      </div>
+      </>
     );
-  }
+  },
 );
 
 RangeFilter.propTypes = {
