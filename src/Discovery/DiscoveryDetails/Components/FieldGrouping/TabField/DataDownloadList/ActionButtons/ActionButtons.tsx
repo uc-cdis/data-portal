@@ -197,7 +197,8 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-manifest'
-                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData)}
+                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData
+                    || downloadStatus.inProgress || !userHasAccessToDownload)}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
