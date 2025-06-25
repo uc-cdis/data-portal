@@ -11,5 +11,11 @@ __generated__/
 *.log
 .DS_Store
 .idea/
+<<<<<<< PEDS-912
+
+# Local-only mock data
+/src/GuppyDataExplorer/ExplorerExploreExternalButton/config.json
+=======
 *storybook.log
 storybook-static
+>>>>>>> pcdc_dev
