@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerExploreExternalButton.css';
 import Spinner from '../../components/Spinner';
+
 
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 
@@ -47,17 +48,24 @@ function ExplorerExploreExternalButton({ filter }) {
   const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [commonsInfo, setCommonsInfo] = useState(
-    /** @type {ExternalCommonsInfo} */ (null)
+    /** @type {ExternalCommonsInfo} */(null)
   );
   const [externalConfig, setExternalConfig] = useState(
-    /** @type {ExternalConfig} */ (null)
+    /** @type {ExternalConfig} */(null)
   );
   const [isFileDownloaded, setIsFileDownloaded] = useState(false);
 
+  // Run on page load
+  // Determine if the top-level "Explore in..." button should be disabled
+  useEffect(() => {
+    handleFetchExternalConfig();
+    checkDataForExplore();
+  }, [externalConfig]);
+
   function openPopup() {
     setShow(true);
-    handleFetchExternalConfig();
   }
 
   function closePopup() {
@@ -69,11 +77,18 @@ function ExplorerExploreExternalButton({ filter }) {
     setIsFileDownloaded(false);
   }
 
+  // Determine if the top-level "Explore in..." button should be disabled
+  function checkDataForExplore() {
+    if (externalConfig?.commons?.length > 0) {
+      setIsDisabled(false); // Enable otherwise
+    } else {
+      setIsDisabled(true); // Disable if commonsInfo is not available
+    }
+  }
+
   function handleFetchExternalConfig() {
     setIsLoading(true);
-    fetchWithCreds({
-      path: '/analysis/tools/external/config',
-    })
+    fetchWithCreds({ path: '/analysis/tools/external/config' })
       .then(({ data }) => {
         setExternalConfig(data);
       })
@@ -119,15 +134,10 @@ function ExplorerExploreExternalButton({ filter }) {
   }
 
   function isOpenInNewTabButtonEnabled() {
-    if (!commonsInfo) {
-      return false;
-    } else if (commonsInfo.type === 'file') {
-      return commonsInfo.data ? isFileDownloaded : false;
-    } else if (commonsInfo.type === 'redirect') {
-      return commonsInfo.link ? true : false;
-    } else {
-      return true;
-    }
+    if (!commonsInfo) return false;
+    if (commonsInfo.type === 'file') return commonsInfo.data ? isFileDownloaded : false;
+    if (commonsInfo.type === 'redirect') return !!commonsInfo.link;
+    return true;
   }
 
   return (
@@ -137,6 +147,7 @@ function ExplorerExploreExternalButton({ filter }) {
         rightIcon='external-link'
         buttonType='secondary'
         onClick={openPopup}
+        enabled={!isDisabled}
       />
       {show && (
         <SimplePopup>
@@ -158,11 +169,8 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
-              {((commonsInfo &&
-                commonsInfo.type === 'file' &&
-                !commonsInfo.data) || (commonsInfo &&
-                  commonsInfo.type === 'redirect' &&
-                  !commonsInfo.link)) && (
+              {((commonsInfo?.type === 'file' && !commonsInfo.data)
+                || (commonsInfo?.type === 'redirect' && !commonsInfo.link)) && (
                   <p className='no-data-info'>
                     There is no data for this cohort of subjects in the{' '}
                     {selected.value.toUpperCase()} platform
@@ -174,14 +182,14 @@ function ExplorerExploreExternalButton({ filter }) {
                 </div>
               )}
             </form>
-            {commonsInfo?.type === 'file' && commonsInfo?.data ? (
+            {commonsInfo?.type === 'file' && commonsInfo?.data && (
               <div className='explorer-explore-external__download-manifest'>
                 <p>
                   <FontAwesomeIcon
                     icon='triangle-exclamation'
                     color='var(--pcdc-color__secondary)'
                   />
-                  Download a manifest file and upload it to the select commons
+                  Download a manifest file and upload it to the selected commons
                   to use the current cohort.
                 </p>
                 <Button
@@ -189,7 +197,7 @@ function ExplorerExploreExternalButton({ filter }) {
                   onClick={handleDownloadManifest}
                 />
               </div>
-            ) : null}
+            )}
             <div>
               <Button
                 className='explorer-explore-external__button'
