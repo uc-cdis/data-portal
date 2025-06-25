@@ -131,17 +131,12 @@ const ActionButtons = ({
     if (noData) return true;
     const downloadInProgress = downloadStatus.inProgress;
     if (downloadInProgress) return true;
-    const eachSelectedResourcesIsMissingManifest = resourceInfo.every(
-      (resource: DiscoveryResource) => {
-        let isExternalFileManifestMissing = false;
-        // put some hard-coded field names here, so this button can be properly enabled for external files
-        // TODO: see similar logics in DiscoveryListView.tsx
-        if (enableExportFullMetadata) {
-          isExternalFileManifestMissing = !resource.external_file_metadata || resource.external_file_metadata.length === 0;
-        }
-        return isManifestDataMissing(resource, manifestFieldName) && isExternalFileManifestMissing;
-      },
-    );
+    if (!resourceInfo) return true;
+    let isExternalFileManifestMissing = false;
+    if (enableExportFullMetadata) {
+      isExternalFileManifestMissing = !resourceInfo.external_file_metadata || resourceInfo.external_file_metadata.length === 0;
+    }
+    const eachSelectedResourcesIsMissingManifest = isManifestDataMissing(resourceInfo, manifestFieldName) && isExternalFileManifestMissing;
     if (eachSelectedResourcesIsMissingManifest) return true;
     return false;
   };
