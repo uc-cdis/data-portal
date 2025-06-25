@@ -128,11 +128,11 @@ const ActionButtons = ({
   };
 
   const checkIfDownloadAllFilesButtonDisabled = () => {
-    if (noData) return true;
+    // if (noData) return true;
     const downloadInProgress = downloadStatus.inProgress;
     if (downloadInProgress) return true;
     if (!resourceInfo) return true;
-    let isExternalFileManifestMissing = false;
+    let isExternalFileManifestMissing = true;
     if (enableExportFullMetadata) {
       isExternalFileManifestMissing = !resourceInfo.external_file_metadata || resourceInfo.external_file_metadata.length === 0;
     }
@@ -197,7 +197,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-manifest'
-                  disabled={checkIfDownloadAllFilesButtonDisabled()}
+                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData)}
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
@@ -234,8 +234,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-all-files'
-                  disabled={Boolean(isManifestDataMissing(resourceInfo, manifestFieldName) || noData
-                    || downloadStatus.inProgress || !userHasAccessToDownload)}
+                  disabled={Boolean(checkIfDownloadAllFilesButtonDisabled() || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
                     downloadStatus,
