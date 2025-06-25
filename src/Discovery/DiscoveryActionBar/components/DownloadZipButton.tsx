@@ -14,9 +14,17 @@ const DownloadZipButton = ({
     if (noSelectedResources) return true;
     const downloadInProgress = downloadStatus.inProgress;
     if (downloadInProgress) return true;
-    const { manifestFieldName } = props.config.features.exportToWorkspace;
+    const { manifestFieldName, enableExportFullMetadata } = props.config.features.exportToWorkspace;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: DiscoveryResource) => isManifestDataMissing(resource, manifestFieldName),
+      (resource: DiscoveryResource) => {
+        let isExternalFileManifestMissing = false;
+        // put some hard-coded field names here, so this button can be properly enabled for external files
+        // TODO: see similar logics in DiscoveryListView.tsx
+        if (enableExportFullMetadata) {
+          isExternalFileManifestMissing = !resource.external_file_metadata || resource.external_file_metadata.length === 0;
+        }
+        return isManifestDataMissing(resource, manifestFieldName) && isExternalFileManifestMissing;
+      },
     );
     if (eachSelectedResourcesIsMissingManifest) return true;
     return false;

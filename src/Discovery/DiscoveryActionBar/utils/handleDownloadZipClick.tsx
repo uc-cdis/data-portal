@@ -9,7 +9,7 @@ import {
 } from '../DiscoveryActionBarConstants';
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
-import assembleFileManifest from './assembleFileManifest';
+import assembleFileMetadata from './assembleFileMetadata';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
@@ -42,13 +42,13 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
+  const { fileManifest, externalFileMetadata } = assembleFileMetadata(manifestFieldName, selectedResources);
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_manifest: manifest },
+      input: { file_manifest: fileManifest, external_file_metadata: externalFileMetadata },
     }),
   })
     .then((dispatchResponse) => {

@@ -46,12 +46,6 @@ const DataDownloadList = ({
   if (discoveryConfig.features?.authorization?.enabled) {
     userHasAccessToDownload = resourceInfo[accessibleFieldName] === AccessLevel.ACCESSIBLE;
   }
-  // disable user's access if there's no manifest found for this study
-  const exportToWorkspaceConfig = discoveryConfig.features.exportToWorkspace;
-  const { manifestFieldName } = exportToWorkspaceConfig;
-  if (!resourceInfo[manifestFieldName] || resourceInfo[manifestFieldName].length === 0) {
-    userHasAccessToDownload = false;
-  }
 
   return (
     <div className='discovery-modal__data-download-list'>

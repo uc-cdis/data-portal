@@ -15,6 +15,7 @@ const DownloadDataFiles = async (
   missingRequiredIdentityProviders: string[],
   verifyExternalLoginsNeeded: boolean | undefined,
   fileManifest: any[],
+  externalFileMetadata: any[],
 ) => {
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
@@ -35,7 +36,7 @@ const DownloadDataFiles = async (
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_manifest: fileManifest || [] },
+      input: { file_manifest: fileManifest || [], external_file_metadata: externalFileMetadata || [] },
     }),
   })
     .then((dispatchResponse) => {
