@@ -1,21 +1,29 @@
+# Node modules
 node_modules/*
+
+# Build output
 src/bundle.js
-src/gqlHelper.js
 *bundle.js*
+
+# Generated files
+__generated__/
+*.log
+
+# OS and IDE files
+.DS_Store
+.idea/
+
+# Project-specific ignored files
+src/gqlHelper.js
+src/params.js
 index.html*
 data/schema.graphql
 data/schema.json
 data/graphvizLayout.json
-src/params.js
-__generated__/
-*.log
-.DS_Store
-.idea/
-<<<<<<< PEDS-912
 
-# Local-only mock data
+# Local-only mock data for dev testing
 /src/GuppyDataExplorer/ExplorerExploreExternalButton/config.json
-=======
+
+# Storybook
 *storybook.log
 storybook-static
->>>>>>> pcdc_dev
