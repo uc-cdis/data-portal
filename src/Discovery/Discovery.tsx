@@ -305,11 +305,15 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
     // Choose which fields in the data to make searchable.
     // If `searchableFields` are configured, enable search over only those fields.
+    // If `searchableAndSelectableTextFields` is configured and fields are selected,
+    //  enable search over only those fields.
     // Otherwise, default behavior: enable search over all non-numeric fields
     // in the table and the study description.
     // ---
-    const searchableFields = selectedSearchableTextFields;
-    if (searchableFields.length > 0) {
+    const searchableFields = selectedSearchableTextFields.length > 0
+      ? selectedSearchableTextFields
+      : config.features.search.searchBar.searchableTextFields;
+    if (searchableFields) {
       searchableFields.forEach((field) => {
         const formattedFields = formatSearchIndex(field);
         search.addIndex(formattedFields);
