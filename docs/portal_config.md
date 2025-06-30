@@ -359,7 +359,7 @@ Below is an example, with inline comments describing what each JSON block config
           "rightIcon": "download"
         }
       ],
-      "loginForDownload": true, //optional; redirects user to login page if they tries to download data without logging in.
+      "loginForDownload": true, // optional; redirects logged out users to the login page when they try to download data/manifests from the Explorer
       "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
         "dataType": "case", // required; must match the index “type” in the guppy configuration block in the manifest.json
         "tierAccessLevel": "regular", // optional; must match the index “tier_access_level” in the guppy configuration block in the manifest.json; see data-portal and guppy READMEs for more information
