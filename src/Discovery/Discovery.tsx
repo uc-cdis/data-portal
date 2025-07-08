@@ -36,6 +36,7 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
+import WorkerComponent from './WorkerComponent';
 
 export const accessibleFieldName = '__accessible';
 
@@ -623,6 +624,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       {(config.features.pageTitle && config.features.pageTitle.enabled)
         && <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>}
 
+        <WorkerComponent />
       <DiscoveryAccessibilityLinks ref={discoveryAccessibilityLinksRef} />
 
       {/* Header with stats */}
