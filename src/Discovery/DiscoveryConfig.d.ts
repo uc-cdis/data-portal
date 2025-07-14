@@ -39,7 +39,8 @@ export interface DiscoveryConfig {
             searchBar: {
                 enabled: boolean,
                 inputSubtitle?: string,
-                placeholder?: string
+                placeholder?: string,
+                searchableAndSelectableTextFields?: {[key: string]: string;},
                 searchableTextFields?: string[] // list of properties in data to make searchable.
                                                 // if not present, only fields visible in the table
                                                 // will be searchable.

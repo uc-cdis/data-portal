@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import Popup from '../components/Popup';
 import { logoutAPI } from '../actions';
 
@@ -75,6 +76,11 @@ const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispa
   ({
     authPopup, inactivityWarningPopup, inactivityWarningTime, logOut, closeWarnPopup,
   }) => {
+    // check if user is on login page
+    let location = useLocation();
+    if (location?.pathname?.includes('/login')) {
+      return null;
+    }
     if (authPopup) {
       return (<AuthPopup />);
     } if (inactivityWarningPopup) {

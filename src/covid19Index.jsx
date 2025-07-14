@@ -73,6 +73,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
+import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 // monitor user's session
 sessionMonitor.start();
@@ -500,6 +501,7 @@ async function init() {
                 privacyPolicy={components.privacyPolicy}
               />
             </div>
+            <ReduxAuthTimeoutPopup />
           </BrowserRouter>
         </ThemeProvider>
       </Provider>

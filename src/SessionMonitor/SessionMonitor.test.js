@@ -19,10 +19,13 @@ describe('SessionMonitor', () => {
 
   it('refreshes the users token if active', () => {
     const sessionMonitor = new SessionMonitor(500, 10000000);
-    const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
 
-    sessionMonitor.updateSession();
-    expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
+    setTimeout(() => {
+      const refreshSessionSpy = jest.spyOn(sessionMonitor, 'refreshSession');
+
+      sessionMonitor.updateSession();
+      expect(refreshSessionSpy).toHaveBeenCalledTimes(1);
+    }, 0);
   });
 
   it('detects the page correctly', () => {

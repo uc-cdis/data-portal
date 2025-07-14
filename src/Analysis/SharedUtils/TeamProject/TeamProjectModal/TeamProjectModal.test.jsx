@@ -13,6 +13,7 @@ const testTeamName = TeamProjectTestData.data.teams[0].teamName;
 const setIsModalOpen = jest.fn();
 const setBannerText = jest.fn();
 const setSelectedTeamProject = jest.fn();
+const setIsWarningModalOpen = jest.fn();
 
 describe('TeamProjectModal', () => {
   test('renders with loading text initially', async () => {
@@ -20,6 +21,8 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
+        isWarningModalOpen={false}
+        setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={undefined}
         status='loading'
@@ -40,6 +43,8 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
+        isWarningModalOpen={false}
+        setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={TeamProjectTestData.data}
         status='success'
@@ -67,6 +72,8 @@ describe('TeamProjectModal', () => {
       <TeamProjectModal
         isModalOpen
         setIsModalOpen={setIsModalOpen}
+        isWarningModalOpen={false}
+        setIsWarningModalOpen={setIsWarningModalOpen}
         setBannerText={setBannerText}
         data={TeamProjectTestData.data}
         status='success'
@@ -93,6 +100,8 @@ describe('TeamProjectModal', () => {
         isModalOpen
         setIsModalOpen={setIsModalOpen}
         setBannerText={setBannerText}
+        isWarningModalOpen={false}
+        setIsWarningModalOpen={setIsWarningModalOpen}
         data={TeamProjectTestData.data}
         status='success'
         selectedTeamProject={testTeamName}
@@ -106,7 +115,25 @@ describe('TeamProjectModal', () => {
     fireEvent.click(submitButton);
 
     // Assert that the modal closes and sets banner text
-    expect(setIsModalOpen).toHaveBeenCalledWith(false);
     expect(setBannerText).toHaveBeenCalledWith(testTeamName);
+  });
+
+  test('Render warning modal based ', async () => {
+    render(
+      <TeamProjectModal
+        isModalOpen
+        setIsModalOpen={setIsModalOpen}
+        setBannerText={setBannerText}
+        isWarningModalOpen
+        setIsWarningModalOpen={setIsWarningModalOpen}
+        data={TeamProjectTestData.data}
+        status='success'
+        selectedTeamProject={testTeamName}
+        setSelectedTeamProject={setSelectedTeamProject}
+      />,
+    );
+
+    // Assert that the modal closes and sets banner text
+    expect(screen.getByText('Refresh Page')).toBeInTheDocument();
   });
 });

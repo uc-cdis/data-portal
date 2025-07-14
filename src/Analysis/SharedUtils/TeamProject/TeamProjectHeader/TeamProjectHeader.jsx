@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { BroadcastChannel } from 'broadcast-channel';
 import EditIcon from './Icons/EditIcon';
 import isEnterOrSpace from '../../AccessibilityUtils/IsEnterOrSpace';
 import TeamProjectModal from '../TeamProjectModal/TeamProjectModal';
@@ -27,6 +28,26 @@ const TeamProjectHeader = ({ isEditable }) => {
       history.push('/analysis');
     }
   };
+
+  const channel = new BroadcastChannel('teamProjectChannel');
+
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const showWarningModal = () => {
+    setIsWarningModalOpen(true);
+  };
+
+  useEffect(() => {
+    const handleMessage = () => {
+      showWarningModal();
+    };
+
+    channel.onmessage = handleMessage;
+
+    // Clean up the channel when the component unmounts
+    return () => {
+      channel.close();
+    };
+  }, [channel, showWarningModal]);
 
   const { data, status } = useQuery(
     'teamprojects',
@@ -76,11 +97,26 @@ const TeamProjectHeader = ({ isEditable }) => {
           </button>
         )}
       </div>
+      {isWarningModalOpen && (
+        <TeamProjectModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setBannerText={setBannerText}
+          isWarningModalOpen={isWarningModalOpen}
+          setIsWarningModalOpen={setIsWarningModalOpen}
+          data={data}
+          status={status}
+          selectedTeamProject={selectedTeamProject}
+          setSelectedTeamProject={setSelectedTeamProject}
+        />
+      )}
       {isEditable && (
         <TeamProjectModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setBannerText={setBannerText}
+          isWarningModalOpen={isWarningModalOpen}
+          setIsWarningModalOpen={setIsWarningModalOpen}
           data={data}
           status={status}
           selectedTeamProject={selectedTeamProject}
