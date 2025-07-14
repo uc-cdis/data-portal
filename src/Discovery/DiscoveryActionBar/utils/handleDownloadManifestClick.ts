@@ -2,7 +2,7 @@ import { datadogRum } from '@datadog/browser-rum';
 import { faro } from '@grafana/faro-core';
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
-import assembleFileManifest from './assembleFileManifest';
+import assembleFileMetadata from './assembleFileMetadata';
 
 const handleDownloadManifestClick = (
   config: DiscoveryConfig,
@@ -20,7 +20,7 @@ const handleDownloadManifestClick = (
     return;
   }
   // combine manifests from all selected studies
-  const manifest = assembleFileManifest(manifestFieldName, selectedResources);
+  const { fileManifest } = assembleFileMetadata(manifestFieldName, selectedResources);
   const projectNumber = selectedResources.map((study) => study.project_number || []);
   const studyName = selectedResources.map((study) => study.study_metadata?.minimal_info?.study_name || []);
   const repositoryName = selectedResources.map((study) => study.commons || []);
@@ -40,7 +40,7 @@ const handleDownloadManifestClick = (
   );
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
-  const blob = new Blob([JSON.stringify(manifest, null, 2)], {
+  const blob = new Blob([JSON.stringify(fileManifest, null, 2)], {
     type: 'text/json',
   });
   FileSaver.saveAs(blob, MANIFEST_FILENAME);
