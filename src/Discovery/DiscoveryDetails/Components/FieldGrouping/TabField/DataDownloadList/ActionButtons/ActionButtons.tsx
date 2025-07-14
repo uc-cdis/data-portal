@@ -15,6 +15,7 @@ import DownloadVariableMetadataInfo from './DownloadUtils/DownloadVariableMetada
 import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
+import assembleFileMetadata from '../../../../../../DiscoveryActionBar/utils/assembleFileMetadata';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -45,10 +46,8 @@ const ActionButtons = ({
 
   const studyMetadataFieldNameReference: string | undefined = discoveryConfig?.features.exportToWorkspace.studyMetadataFieldName;
   const manifestFieldName: string = discoveryConfig?.features.exportToWorkspace.manifestFieldName || '';
-  let fileManifest: any[] = [];
-  if (manifestFieldName) {
-    fileManifest = resourceInfo?.[manifestFieldName] || [];
-  }
+  const enableExportFullMetadata: boolean = Boolean(discoveryConfig?.features.exportToWorkspace);
+  const { fileManifest, externalFileMetadata } = assembleFileMetadata(manifestFieldName, [resourceInfo]);
 
   // Study level meta button should show only if the downloading study level metadata value is enabled
   // and resourceInfo includes the study metadata field name reference from the discovery config
@@ -126,6 +125,20 @@ const ActionButtons = ({
       );
     }
     return children;
+  };
+
+  const checkIfDownloadAllFilesButtonDisabled = () => {
+    // if (noData) return true;
+    const downloadInProgress = downloadStatus.inProgress;
+    if (downloadInProgress) return true;
+    if (!resourceInfo) return true;
+    let isExternalFileManifestMissing = true;
+    if (enableExportFullMetadata) {
+      isExternalFileManifestMissing = !resourceInfo.external_file_metadata || resourceInfo.external_file_metadata.length === 0;
+    }
+    const eachSelectedResourcesIsMissingManifest = isManifestDataMissing(resourceInfo, manifestFieldName) && isExternalFileManifestMissing;
+    if (eachSelectedResourcesIsMissingManifest) return true;
+    return false;
   };
 
   const isHEALLoginNeeded = Boolean(missingRequiredIdentityProviders.length);
@@ -222,8 +235,7 @@ const ActionButtons = ({
                 <Button
                   className='discovery-action-bar-button'
                   data-testid='download-all-files'
-                  disabled={Boolean(isManifestDataMissing(resourceInfo) || noData
-                    || downloadStatus.inProgress || !userHasAccessToDownload)}
+                  disabled={Boolean(checkIfDownloadAllFilesButtonDisabled() || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
                   onClick={() => DownloadDataFiles(
                     downloadStatus,
@@ -233,6 +245,7 @@ const ActionButtons = ({
                     missingRequiredIdentityProviders,
                     verifyExternalLoginsNeeded,
                     fileManifest,
+                    externalFileMetadata,
                   )}
                 >
                   Download All Files
