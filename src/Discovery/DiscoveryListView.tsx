@@ -122,6 +122,13 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               disabled = true;
             }
           }
+
+          const exportToDataLibraryConfig = props.config.features.exportToDataLibrary;
+          const { enabled, dataObjectFieldName } = exportToDataLibraryConfig;
+          if (enabled && record[dataObjectFieldName] && record[dataObjectFieldName].length > 0) {
+            disabled = false;
+          }
+
           return { disabled };
         },
       }}
