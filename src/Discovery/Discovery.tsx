@@ -297,6 +297,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     return indexArr;
   };
 
+  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
   // Used to cache generated JS search object for studies and selected fields combinations
   const [searchCache, setSearchCache] = useState({}); // Cache for search objects
 
