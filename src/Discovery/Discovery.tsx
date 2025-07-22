@@ -36,6 +36,7 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
+import isColumnSearchable from './Utils/Search/isColumnSearchable';
 
 export const accessibleFieldName = '__accessible';
 
@@ -394,9 +395,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           renderedCell = 'Not available';
         }
       } else {
-        const columnIsSearchable = config.features.search.searchBar.searchableTextFields
-          ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
-          : !column.contentType || column.contentType === 'string';
+        const columnIsSearchable = isColumnSearchable(column, config, selectedSearchableTextFields);
         if (columnIsSearchable && props.searchTerm) {
           value = value.join(', '); // "value" will always be an array from jsonpath.query()
           renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
