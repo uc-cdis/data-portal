@@ -8,6 +8,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
 
 interface Props {
+  selectedSearchableTextFields: string[],
   config: DiscoveryConfig;
   studies: DiscoveryResource[];
   columns: [];
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
-  const { searchTerm, config } = props;
+  const { searchTerm, config, selectedSearchableTextFields } = props;
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
   const [onHeightChange, setOnHeightChange] = useState(true);
 
@@ -32,6 +33,15 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
     props.config.tableScrollHeight
       ? { scroll: { y: props.config.tableScrollHeight } } : {}
   );
+
+  const isHighlightingEnabled = () => {
+    if (selectedSearchableTextFields.length > 0
+       && !selectedSearchableTextFields.includes('studyPreviewField.field')) {
+      return false;
+    }
+    return true;
+  };
+
   return (
     <Table
       {...scroll}
@@ -149,7 +159,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
               }
             }
 
-            if (searchTerm) {
+            if (searchTerm && isHighlightingEnabled()) {
               // get index of this.props.searchTerm match
               const matchIndex = value.toLowerCase().indexOf(
                 props.searchTerm.toLowerCase());
