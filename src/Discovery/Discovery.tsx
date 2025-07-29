@@ -321,7 +321,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         const formattedFields = formatSearchIndex(field);
         search.addIndex(formattedFields);
       });
-      if (config.studyPreviewField && searchableFields.includes('studyPreviewField.field')) {
+      if (config.studyPreviewField && searchableFields.includes(config.studyPreviewField.field)) {
         search.addIndex(studyPreviewFieldArr);
       }
     } else {

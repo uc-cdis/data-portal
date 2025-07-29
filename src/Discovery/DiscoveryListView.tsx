@@ -36,7 +36,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   const isHighlightingEnabled = () => {
     if (selectedSearchableTextFields.length > 0
-       && !selectedSearchableTextFields.includes('studyPreviewField.field')) {
+       && !selectedSearchableTextFields.includes(config.studyPreviewField.field)) {
       return false;
     }
     return true;
