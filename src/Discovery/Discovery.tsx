@@ -36,6 +36,7 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
+import isColumnSearchable from './Utils/Search/isColumnSearchable';
 
 export const accessibleFieldName = '__accessible';
 
@@ -298,17 +299,21 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
+
+  // Load studies into JS Search.
   useEffect(() => {
-    // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
     search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-
     // Choose which fields in the data to make searchable.
     // If `searchableFields` are configured, enable search over only those fields.
+    // If `searchableAndSelectableTextFields` is configured and fields are selected,
+    //  enable search over only those fields.
     // Otherwise, default behavior: enable search over all non-numeric fields
     // in the table and the study description.
     // ---
-    const searchableFields = config.features.search.searchBar.searchableTextFields;
+    const searchableFields = selectedSearchableTextFields.length > 0
+      ? selectedSearchableTextFields
+      : config.features.search.searchBar.searchableTextFields;
     if (searchableFields) {
       searchableFields.forEach((field) => {
         const formattedFields = formatSearchIndex(field);
@@ -332,7 +337,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     search.addDocuments(props.studies);
     // expose the search function
     setJsSearch(search);
-  }, [props.studies]);
+    // Reinitialize search
+    props.onSearchChange(props.searchTerm);
+  }, [props.studies, selectedSearchableTextFields.length]);
 
   useEffect(() => {
     // If opening to a study by default, open that study
@@ -388,9 +395,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           renderedCell = 'Not available';
         }
       } else {
-        const columnIsSearchable = config.features.search.searchBar.searchableTextFields
-          ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
-          : !column.contentType || column.contentType === 'string';
+        const columnIsSearchable = isColumnSearchable(column, config, selectedSearchableTextFields);
         if (columnIsSearchable && props.searchTerm) {
           value = value.join(', '); // "value" will always be an array from jsonpath.query()
           renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
@@ -750,6 +755,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : 'discovery-table-container--expanded '}`}>
             <Space direction={'vertical'} style={{ width: '100%' }}>
               <DiscoveryListView
+                selectedSearchableTextFields={selectedSearchableTextFields}
                 config={config}
                 studies={props.studies}
                 visibleResources={
