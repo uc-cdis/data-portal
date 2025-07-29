@@ -307,7 +307,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       studies: props.studies,
       fields: selectedSearchableTextFields,
     });
-
     // Check if the search object is already cached
     if (searchCache[cacheKey]) {
       setJsSearch(searchCache[cacheKey]);
@@ -343,14 +342,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           search.addIndex(studyPreviewFieldArr);
         }
       }
-      // ---
-
       search.addDocuments(props.studies);
       // expose the search function
       setJsSearch(search);
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
-
       // Cache the newly created search object
       setSearchCache((prevSearchCache) => ({
         ...prevSearchCache,
