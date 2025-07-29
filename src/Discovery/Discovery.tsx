@@ -346,16 +346,16 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // ---
 
       search.addDocuments(props.studies);
+      // expose the search function
+      setJsSearch(search);
+      // Reinitialize search
+      props.onSearchChange(props.searchTerm);
+
       // Cache the newly created search object
       setSearchCache((prevSearchCache) => ({
         ...prevSearchCache,
         [cacheKey]: search,
       }));
-
-      // expose the search function
-      setJsSearch(search);
-      // Reinitialize search?
-      props.onSearchChange(props.searchTerm);
     }
   }, [props.studies, selectedSearchableTextFields.length]);
 
