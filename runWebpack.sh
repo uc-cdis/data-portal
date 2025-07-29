@@ -147,7 +147,7 @@ fi
 # this script copies files from custom/ to src/ based
 # on the current APP environment - ugh
 #
-bash custom/customize.sh
+bash customize.sh
 
 # workspace bundle does not currently deploy sheepdog
 if [[ "$GEN3_BUNDLE" != "workspace" ]]; then
