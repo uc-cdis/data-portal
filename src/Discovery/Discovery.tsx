@@ -304,8 +304,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   useEffect(() => {
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
     search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-    const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
-
     // Choose which fields in the data to make searchable.
     // If `searchableFields` are configured, enable search over only those fields.
     // If `searchableAndSelectableTextFields` is configured and fields are selected,
@@ -321,9 +319,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         const formattedFields = formatSearchIndex(field);
         search.addIndex(formattedFields);
       });
-      if (config.studyPreviewField && searchableFields.includes(config.studyPreviewField.field)) {
-        search.addIndex(studyPreviewFieldArr);
-      }
     } else {
       config.studyColumns.forEach((column) => {
         if (!column.contentType || column.contentType === 'string') {
@@ -333,6 +328,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       });
       // Also enable search over preview field if present
       if (config.studyPreviewField) {
+        const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
         search.addIndex(studyPreviewFieldArr);
       }
     }
