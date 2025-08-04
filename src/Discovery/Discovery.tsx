@@ -300,7 +300,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
   // Used to cache generated JS search object for studies and selected fields combinations
-  const [searchCache, setSearchCache] = useState({}); // Cache for search objects
+  const [searchCache, setSearchCache] = useState({});
 
   useEffect(() => {
     const cacheKey = JSON.stringify({
