@@ -309,6 +309,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     });
     // Check if the search object is already cached
     if (searchCache[cacheKey]) {
+      console.log(searchCache);
       setJsSearch(searchCache[cacheKey]);
       props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
     } else {
@@ -347,11 +348,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       setJsSearch(search);
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
-      // Cache the newly created search object
-      setSearchCache((prevSearchCache) => ({
-        ...prevSearchCache,
-        [cacheKey]: search,
-      }));
+      // Cache only the most recent Full Text Search object
+      if(selectedSearchableTextFields.length === 0 ) {
+        setSearchCache(() => ({
+          [cacheKey]: search,
+        }));
+      }
     }
   }, [props.studies, selectedSearchableTextFields.length]);
 
