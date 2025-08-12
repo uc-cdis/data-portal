@@ -299,46 +299,61 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
+  // Used to cache generated JS search object for studies and selected fields combinations
+  const [searchCache, setSearchCache] = useState({});
 
-  // Load studies into JS Search.
   useEffect(() => {
-    const search = new JsSearch.Search(config.minimalFieldMapping.uid);
-    search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-    // Choose which fields in the data to make searchable.
-    // If `searchableFields` are configured, enable search over only those fields.
-    // If `searchableAndSelectableTextFields` is configured and fields are selected,
-    //  enable search over only those fields.
-    // Otherwise, default behavior: enable search over all non-numeric fields
-    // in the table and the study description.
-    // ---
-    const searchableFields = selectedSearchableTextFields.length > 0
-      ? selectedSearchableTextFields
-      : config.features.search.searchBar.searchableTextFields;
-    if (searchableFields) {
-      searchableFields.forEach((field) => {
-        const formattedFields = formatSearchIndex(field);
-        search.addIndex(formattedFields);
-      });
+    const cacheKey = JSON.stringify({
+      studies: props.studies,
+      fields: selectedSearchableTextFields,
+    });
+    // Check if the search object is already cached
+    if (searchCache[cacheKey]) {
+      setJsSearch(searchCache[cacheKey]);
+      props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
     } else {
-      config.studyColumns.forEach((column) => {
-        if (!column.contentType || column.contentType === 'string') {
-          const studyColumnFieldsArr = formatSearchIndex(column.field);
-          search.addIndex(studyColumnFieldsArr);
+      const search = new JsSearch.Search(config.minimalFieldMapping.uid);
+      search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+      // Choose which fields in the data to make searchable.
+      // If `searchableFields` are configured, enable search over only those fields.
+      // If `searchableAndSelectableTextFields` is configured and fields are selected,
+      //  enable search over only those fields.
+      // Otherwise, default behavior: enable search over all non-numeric fields
+      // in the table and the study description.
+      // ---
+      const searchableFields = selectedSearchableTextFields;
+      if (searchableFields.length > 0) {
+        searchableFields.forEach((field) => {
+          const formattedFields = formatSearchIndex(field);
+          search.addIndex(formattedFields);
+        });
+      } else {
+        config.studyColumns.forEach((column) => {
+          if (!column.contentType || column.contentType === 'string') {
+            const studyColumnFieldsArr = formatSearchIndex(column.field);
+            search.addIndex(studyColumnFieldsArr);
+          }
+        });
+        // Also enable search over preview field if present
+        if (config.studyPreviewField) {
+          const studyPreviewFieldArr = formatSearchIndex(
+            config.studyPreviewField.field,
+          );
+          search.addIndex(studyPreviewFieldArr);
         }
-      });
-      // Also enable search over preview field if present
-      if (config.studyPreviewField) {
-        const studyPreviewFieldArr = formatSearchIndex(config.studyPreviewField.field);
-        search.addIndex(studyPreviewFieldArr);
+      }
+      search.addDocuments(props.studies);
+      // expose the search function
+      setJsSearch(search);
+      // Reinitialize search
+      props.onSearchChange(props.searchTerm);
+      // Cache only the Full Text Search object
+      if(selectedSearchableTextFields.length === 0 ) {
+        setSearchCache(() => ({
+          [cacheKey]: search,
+        }));
       }
     }
-    // ---
-
-    search.addDocuments(props.studies);
-    // expose the search function
-    setJsSearch(search);
-    // Reinitialize search
-    props.onSearchChange(props.searchTerm);
   }, [props.studies, selectedSearchableTextFields.length]);
 
   useEffect(() => {
