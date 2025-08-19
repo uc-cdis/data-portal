@@ -298,11 +298,16 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     return indexArr;
   };
 
-  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
+  const { searchableTextFields = [], searchableAndSelectableTextFields = {} } = config?.features?.search?.searchBar || {};
+  const allSearchableFields = [...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)] as string[];
+  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState(allSearchableFields);
   // Used to cache generated JS search object for studies and selected fields combinations
   const [searchCache, setSearchCache] = useState({});
 
   useEffect(() => {
+    if (!props.studies.length) {
+      return;
+    }
     const cacheKey = JSON.stringify({
       studies: props.studies,
       fields: selectedSearchableTextFields,
@@ -348,7 +353,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
       // Cache only the Full Text Search object
-      if(selectedSearchableTextFields.length === 0 ) {
+      if (selectedSearchableTextFields === allSearchableFields) {
         setSearchCache(() => ({
           [cacheKey]: search,
         }));
