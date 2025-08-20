@@ -87,6 +87,7 @@ const StandaloneDataDownloadButton = ({
           missingRequiredIdentityProviders,
           verifyExternalLoginsNeeded,
           selectedFileManifest,
+          [],
         )}
       >
         Download File

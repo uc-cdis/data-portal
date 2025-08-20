@@ -251,7 +251,8 @@ describe('Table', () => {
 
     const isSelectedTag = (n) => n.hasClass('discovery-tag--selected');
     tag = wrapper.findWhere(isSelectedTag).first();
-    expect(store.getActions()).toHaveLength(0);
+    // expect search to reset onload
+    expect(store.getActions()).toStrictEqual([{ searchTerm: undefined, type: 'SEARCH_TERM_SET' }]);
     tag.simulate('click');
 
     const expectedTagClearedAction = { type: 'TAGS_SELECTED', selectedTags: { [targetTagValue]: undefined } };
