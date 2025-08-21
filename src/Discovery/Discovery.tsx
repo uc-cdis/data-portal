@@ -306,8 +306,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     if (!props.studies.length) {
+      console.log('null');
       return;
     }
+    console.log(`af len: ${allSearchableFields.length}, ssf len: ${selectedSearchableTextFields.length}`);
     const cacheKey = JSON.stringify({
       studies: props.studies,
       fields: selectedSearchableTextFields,
@@ -353,7 +355,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
       // Cache only the Full Text Search object
-      if (selectedSearchableTextFields === allSearchableFields) {
+      if (selectedSearchableTextFields.length === allSearchableFields.length) {
         setSearchCache(() => ({
           [cacheKey]: search,
         }));
@@ -665,8 +667,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   && (
                     <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                       <DiscoveryMDSSearch
+                        searchableTextFields={config.features.search.searchBar.searchableTextFields}
                         searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
-                        selectedSearchableTextFields={selectedSearchableTextFields}
                         setSelectedSearchableTextFields={setSelectedSearchableTextFields}
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
@@ -731,6 +733,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           && (
             <div className='discovery-search-container discovery-search-container__standalone'>
               <DiscoveryMDSSearch
+                searchableTextFields={config.features.search.searchBar.searchableTextFields}
+                searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
+                setSelectedSearchableTextFields={setSelectedSearchableTextFields}
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
                 inputSubtitle={config.features.search.searchBar.inputSubtitle}
