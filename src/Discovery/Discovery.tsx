@@ -53,6 +53,11 @@ export enum AccessSortDirection {
   ASCENDING = 'sort ascending', DESCENDING = 'sort descending', NONE = 'cancel sorting'
 }
 
+export enum SearchMode {
+  FULL_TEXT = 'fullTextSearch',
+  RESTRICTED = 'restrictSearch'
+}
+
 const { Panel } = Collapse;
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
@@ -303,6 +308,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState(allSearchableFields);
   // Used to cache generated JS search object for studies and selected fields combinations
   const [searchCache, setSearchCache] = useState({});
+  const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
   useEffect(() => {
     if (!props.studies.length) {
@@ -327,7 +333,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // in the table and the study description.
       // ---
       const searchableFields = selectedSearchableTextFields;
-      if (searchableFields.length > 0) {
+      if (searchableFields.length > 0 || searchMode === SearchMode.RESTRICTED) {
         searchableFields.forEach((field) => {
           const formattedFields = formatSearchIndex(field);
           search.addIndex(formattedFields);
@@ -668,6 +674,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         searchableTextFields={config.features.search.searchBar.searchableTextFields}
                         searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
                         setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                        searchMode={searchMode}
+                        setSearchMode={setSearchMode}
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
                         inputSubtitle={config.features.search.searchBar.inputSubtitle}
@@ -734,6 +742,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 searchableTextFields={config.features.search.searchBar.searchableTextFields}
                 searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
                 setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                searchMode={searchMode}
+                setSearchMode={setSearchMode}
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
                 inputSubtitle={config.features.search.searchBar.inputSubtitle}

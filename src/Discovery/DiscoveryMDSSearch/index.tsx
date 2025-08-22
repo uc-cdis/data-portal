@@ -1,9 +1,10 @@
-import React, { ChangeEventHandler, useState, useEffect } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import {
   Input, Radio, Checkbox, RadioChangeEvent,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
+import { SearchMode } from '../Discovery';
 
 interface SearchableAndSelectableTextFields {
   [key: string]: string;
@@ -13,6 +14,8 @@ interface DiscoveryMDSSearchProps {
   searchableTextFields?: string[];
   searchableAndSelectableTextFields?: SearchableAndSelectableTextFields;
   setSelectedSearchableTextFields?: Function;
+  searchMode: string;
+  setSearchMode: Function;
   searchTerm: string;
   handleSearchChange: ChangeEventHandler<HTMLInputElement>;
   inputSubtitle: string | undefined;
@@ -22,16 +25,17 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
   searchableTextFields = [],
   searchableAndSelectableTextFields = {},
   setSelectedSearchableTextFields = () => null,
+  searchMode,
+  setSearchMode,
   searchTerm,
   handleSearchChange,
   inputSubtitle,
 }) => {
-  const [radioValue, setRadioValue] = useState('fullTextSearch');
-  const [checkboxGroupValues, setCheckboxGroupValues] = useState(Object.values(searchableAndSelectableTextFields));
+  const [checkboxGroupValues, setCheckboxGroupValues] = useState([]);
 
   const onRadioChange = (e: RadioChangeEvent) => {
-    setRadioValue(e.target.value);
-    if (e.target.value === 'fullTextSearch') {
+    setSearchMode(e.target.value);
+    if (e.target.value === SearchMode.FULL_TEXT) {
       setSelectedSearchableTextFields([...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)]);
     } else {
       setCheckboxGroupValues(checkboxGroupValues);
@@ -61,11 +65,11 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
       {searchableAndSelectableTextFields && (
         <React.Fragment>
           <div className='discovery-search-radio-container'>
-            <Radio.Group onChange={onRadioChange} value={radioValue}>
-              <Radio value='fullTextSearch' className='discovery-search-radio-left'>
+            <Radio.Group onChange={onRadioChange} value={searchMode}>
+              <Radio value={SearchMode.FULL_TEXT} className='discovery-search-radio-left'>
                 Full Text Search
               </Radio>
-              <Radio value='restrictSearch' className='discovery-search-radio-right'>
+              <Radio value={SearchMode.RESTRICTED} className='discovery-search-radio-right'>
                 Restrict Search to Selected Fields
               </Radio>
             </Radio.Group>
@@ -73,7 +77,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
           <div className='discovery-search-checkbox-container'>
             <Checkbox.Group
               options={checkboxGroupOptions}
-              disabled={radioValue === 'fullTextSearch'}
+              disabled={searchMode === SearchMode.FULL_TEXT}
               defaultValue={checkboxGroupValues}
               onChange={onCheckboxGroupChange}
             />
