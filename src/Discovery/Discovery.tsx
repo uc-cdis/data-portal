@@ -306,10 +306,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     if (!props.studies.length) {
-      console.log('null');
       return;
     }
-    console.log(`af len: ${allSearchableFields.length}, ssf len: ${selectedSearchableTextFields.length}`);
     const cacheKey = JSON.stringify({
       studies: props.studies,
       fields: selectedSearchableTextFields,
