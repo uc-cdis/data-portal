@@ -53,6 +53,11 @@ export enum AccessSortDirection {
   ASCENDING = 'sort ascending', DESCENDING = 'sort descending', NONE = 'cancel sorting'
 }
 
+export enum SearchMode {
+  FULL_TEXT = 'fullTextSearch',
+  RESTRICTED = 'restrictSearch'
+}
+
 const { Panel } = Collapse;
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
@@ -298,11 +303,17 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     return indexArr;
   };
 
-  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
+  const { searchableTextFields = [], searchableAndSelectableTextFields = {} } = config?.features?.search?.searchBar || {};
+  const allSearchableFields = [...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)] as string[];
+  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState(allSearchableFields);
   // Used to cache generated JS search object for studies and selected fields combinations
   const [searchCache, setSearchCache] = useState({});
+  const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
   useEffect(() => {
+    if (!props.studies.length) {
+      return;
+    }
     const cacheKey = JSON.stringify({
       studies: props.studies,
       fields: selectedSearchableTextFields,
@@ -322,7 +333,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // in the table and the study description.
       // ---
       const searchableFields = selectedSearchableTextFields;
-      if (searchableFields.length > 0) {
+      if (searchableFields.length > 0 || searchMode === SearchMode.RESTRICTED) {
         searchableFields.forEach((field) => {
           const formattedFields = formatSearchIndex(field);
           search.addIndex(formattedFields);
@@ -348,7 +359,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
       // Cache only the Full Text Search object
-      if(selectedSearchableTextFields.length === 0 ) {
+      if (selectedSearchableTextFields.length === allSearchableFields.length) {
         setSearchCache(() => ({
           [cacheKey]: search,
         }));
@@ -660,9 +671,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   && (
                     <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                       <DiscoveryMDSSearch
+                        searchableTextFields={config.features.search.searchBar.searchableTextFields}
                         searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
-                        selectedSearchableTextFields={selectedSearchableTextFields}
                         setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                        searchMode={searchMode}
+                        setSearchMode={setSearchMode}
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
                         inputSubtitle={config.features.search.searchBar.inputSubtitle}
@@ -726,6 +739,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           && (
             <div className='discovery-search-container discovery-search-container__standalone'>
               <DiscoveryMDSSearch
+                searchableTextFields={config.features.search.searchBar.searchableTextFields}
+                searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
+                setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                searchMode={searchMode}
+                setSearchMode={setSearchMode}
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
                 inputSubtitle={config.features.search.searchBar.inputSubtitle}
