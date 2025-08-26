@@ -62,7 +62,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
         allowClear
       />
       <div className='discovery-input-subtitle'>{inputSubtitle}</div>
-      {searchableAndSelectableTextFields && (
+      {searchableAndSelectableTextFields.length && (
         <React.Fragment>
           <div className='discovery-search-radio-container'>
             <Radio.Group onChange={onRadioChange} value={searchMode}>
