@@ -13,7 +13,7 @@ interface SearchableAndSelectableTextFields {
 interface DiscoveryMDSSearchProps {
   searchableTextFields?: string[];
   searchableAndSelectableTextFields?: SearchableAndSelectableTextFields;
-  setSelectedSearchableTextFields?: Function;
+  setSelectedFieldsForSearchIndexing?: Function;
   searchMode: string;
   setSearchMode: Function;
   searchTerm: string;
@@ -24,7 +24,7 @@ interface DiscoveryMDSSearchProps {
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
   searchableTextFields = [],
   searchableAndSelectableTextFields = {},
-  setSelectedSearchableTextFields = () => null,
+  setSelectedFieldsForSearchIndexing = () => null,
   searchMode,
   setSearchMode,
   searchTerm,
@@ -36,16 +36,16 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
   const onRadioChange = (e: RadioChangeEvent) => {
     setSearchMode(e.target.value);
     if (e.target.value === SearchMode.FULL_TEXT) {
-      setSelectedSearchableTextFields([...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)]);
+      setSelectedFieldsForSearchIndexing([...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)]);
     } else {
       setCheckboxGroupValues(checkboxGroupValues);
-      setSelectedSearchableTextFields(checkboxGroupValues);
+      setSelectedFieldsForSearchIndexing(checkboxGroupValues);
     }
   };
 
   const onCheckboxGroupChange = (currentCheckedValues) => {
     setCheckboxGroupValues(currentCheckedValues);
-    setSelectedSearchableTextFields(currentCheckedValues);
+    setSelectedFieldsForSearchIndexing(currentCheckedValues);
   };
 
   const checkboxGroupOptions = Object.entries(searchableAndSelectableTextFields).map(([key, value]) => ({ label: key, value }));
@@ -91,7 +91,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
 DiscoveryMDSSearch.defaultProps = {
   searchableTextFields: [],
   searchableAndSelectableTextFields: undefined,
-  setSelectedSearchableTextFields: () => null,
+  setSelectedFieldsForSearchIndexing: () => null,
 };
 
 export default DiscoveryMDSSearch;

@@ -305,18 +305,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const { searchableTextFields = [], searchableAndSelectableTextFields = {} } = config?.features?.search?.searchBar || {};
   const allSearchableFields = [...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)] as string[];
-  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState(allSearchableFields);
+  const [selectedFieldsForSearchIndexing, setSelectedFieldsForSearchIndexing] = useState(allSearchableFields);
   // Used to cache generated JS search object for studies and selected fields combinations
   const [searchCache, setSearchCache] = useState({});
   const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
   useEffect(() => {
-    if (!props.studies.length) {
+    if (!props.allBatchesAreReady) {
       return;
     }
     const cacheKey = JSON.stringify({
       studies: props.studies,
-      fields: selectedSearchableTextFields,
+      fields: selectedFieldsForSearchIndexing,
     });
     // Check if the search object is already cached
     if (searchCache[cacheKey]) {
@@ -332,9 +332,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Otherwise, default behavior: enable search over all non-numeric fields
       // in the table and the study description.
       // ---
-      const searchableFields = selectedSearchableTextFields;
-      if (searchableFields.length > 0 || searchMode === SearchMode.RESTRICTED) {
-        searchableFields.forEach((field) => {
+      if (selectedFieldsForSearchIndexing.length > 0 || searchMode === SearchMode.RESTRICTED) {
+        selectedFieldsForSearchIndexing.forEach((field) => {
           const formattedFields = formatSearchIndex(field);
           search.addIndex(formattedFields);
         });
@@ -359,13 +358,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       // Reinitialize search
       props.onSearchChange(props.searchTerm);
       // Cache only the Full Text Search object
-      if (selectedSearchableTextFields.length === allSearchableFields.length) {
+      if (searchMode === SearchMode.FULL_TEXT) {
         setSearchCache(() => ({
           [cacheKey]: search,
         }));
       }
     }
-  }, [props.studies, selectedSearchableTextFields.length]);
+  }, [props.studies, selectedFieldsForSearchIndexing, searchMode]);
 
   useEffect(() => {
     // If opening to a study by default, open that study
@@ -421,7 +420,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           renderedCell = 'Not available';
         }
       } else {
-        const columnIsSearchable = isColumnSearchable(column, config, selectedSearchableTextFields);
+        const columnIsSearchable = isColumnSearchable(column, config, selectedFieldsForSearchIndexing);
         if (columnIsSearchable && props.searchTerm) {
           value = value.join(', '); // "value" will always be an array from jsonpath.query()
           renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
@@ -671,9 +670,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   && (
                     <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                       <DiscoveryMDSSearch
-                        searchableTextFields={config.features.search.searchBar.searchableTextFields}
-                        searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
-                        setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                        searchableTextFields={searchableTextFields}
+                        searchableAndSelectableTextFields={searchableAndSelectableTextFields}
+                        setSelectedFieldsForSearchIndexing={setSelectedFieldsForSearchIndexing}
                         searchMode={searchMode}
                         setSearchMode={setSearchMode}
                         searchTerm={props.searchTerm}
@@ -739,9 +738,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           && (
             <div className='discovery-search-container discovery-search-container__standalone'>
               <DiscoveryMDSSearch
-                searchableTextFields={config.features.search.searchBar.searchableTextFields}
-                searchableAndSelectableTextFields={config.features.search.searchBar.searchableAndSelectableTextFields}
-                setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+                searchableTextFields={searchableTextFields}
+                searchableAndSelectableTextFields={searchableAndSelectableTextFields}
+                setSelectedFieldsForSearchIndexing={setSelectedFieldsForSearchIndexing}
                 searchMode={searchMode}
                 setSearchMode={setSearchMode}
                 searchTerm={props.searchTerm}
@@ -788,7 +787,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : 'discovery-table-container--expanded '}`}>
             <Space direction={'vertical'} style={{ width: '100%' }}>
               <DiscoveryListView
-                selectedSearchableTextFields={selectedSearchableTextFields}
+                selectedFieldsForSearchIndexing={selectedFieldsForSearchIndexing}
                 config={config}
                 studies={props.studies}
                 visibleResources={
