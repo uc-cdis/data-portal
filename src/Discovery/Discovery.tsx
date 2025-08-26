@@ -311,7 +311,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
   useEffect(() => {
-    if (!props.studies.length) {
+    if (!props.allBatchesAreReady) {
       return;
     }
     const cacheKey = JSON.stringify({

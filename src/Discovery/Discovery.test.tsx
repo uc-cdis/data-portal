@@ -42,6 +42,7 @@ const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
       <Discovery
         config={config}
         studies={testStudies}
+        allBatchesAreReady
         {...store.getState().discovery}
         params={params}
         onSearchChange={(searchTerm) => store.dispatch({ type: 'SEARCH_TERM_SET', searchTerm })}
