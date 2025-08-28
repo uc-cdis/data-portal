@@ -17,7 +17,7 @@ const searchableAndSelectableTextFields = {
 
 const MockTemplate = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSearchableTextFields, setSelectedSearchableTextFields] = useState([] as string[]);
+  const [selectedFieldsForSearchIndexing, setSelectedFieldsForSearchIndexing] = useState([] as string[]);
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -27,8 +27,8 @@ const MockTemplate = () => {
     <div style={{ margin: '40px auto', width: '800px' }}>
       <DiscoveryMDSSearch
         searchableAndSelectableTextFields={searchableAndSelectableTextFields}
-        selectedSearchableTextFields={selectedSearchableTextFields}
-        setSelectedSearchableTextFields={setSelectedSearchableTextFields}
+        selectedFieldsForSearchIndexing={selectedFieldsForSearchIndexing}
+        setSelectedFieldsForSearchIndexing={setSelectedFieldsForSearchIndexing}
         searchTerm={searchTerm}
         handleSearchChange={handleSearchChange}
         inputSubtitle='subtitle'
