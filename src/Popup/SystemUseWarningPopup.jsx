@@ -5,7 +5,7 @@ import Popup from '../components/Popup';
 import { components } from '../params';
 import { hostnameWithSubdomain } from '../localconf';
 import { updateSystemUseNotice } from '../actions';
-// import './popUpStyles.css';
+import './popUpStyles.css';
 
 const handleAcceptWarning = () => {
   /**

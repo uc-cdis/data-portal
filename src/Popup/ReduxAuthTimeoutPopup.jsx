@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import Popup from '../components/Popup';
 import { logoutAPI } from '../actions';
-// import './popUpStyles.css';
+import './popUpStyles.css';
 
 const goToLogin = (history) => {
   history.push('/login');
