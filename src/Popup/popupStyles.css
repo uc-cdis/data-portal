@@ -1,0 +1,11 @@
+.popup-wrapper {
+    position: absolute;
+}
+
+.popup-high {
+    z-index: 120;
+}
+
+.popup-low {
+    z-index: 110;
+}
