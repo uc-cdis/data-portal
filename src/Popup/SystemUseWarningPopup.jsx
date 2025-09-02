@@ -59,7 +59,7 @@ const updatePopupMapDispatch = (dispatch) => ({ onAccept: () => dispatch(handleA
 
 const ReduxSystemUseWarningPopup = connect(showPopupMapState, updatePopupMapDispatch)(
   ({ systemUseWarnPopup, onAccept }) => {
-    if (systemUseWarnPopup || 1==1) {
+    if (systemUseWarnPopup) {
       return (
         <div className='popup-wrapper popup-high'>
           <SystemUsePopup

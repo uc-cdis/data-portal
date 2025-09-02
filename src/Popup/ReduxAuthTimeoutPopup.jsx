@@ -84,7 +84,7 @@ const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispa
     }
     if (authPopup) {
       return (<AuthPopup />);
-    } if (inactivityWarningPopup || 1==1 ) {
+    } if (inactivityWarningPopup) {
       return (
         <div className='popup-wrapper popup-low'>
           <WarnPopup logOut={logOut}
