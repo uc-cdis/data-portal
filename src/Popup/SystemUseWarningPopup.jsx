@@ -5,6 +5,7 @@ import Popup from '../components/Popup';
 import { components } from '../params';
 import { hostnameWithSubdomain } from '../localconf';
 import { updateSystemUseNotice } from '../actions';
+import './popupStyles.css';
 
 const handleAcceptWarning = () => {
   /**
@@ -60,7 +61,12 @@ const ReduxSystemUseWarningPopup = connect(showPopupMapState, updatePopupMapDisp
   ({ systemUseWarnPopup, onAccept }) => {
     if (systemUseWarnPopup) {
       return (
-        <SystemUsePopup titleText={components.systemUse.systemUseTitle} messageText={components.systemUse.systemUseText} onAccept={onAccept} />);
+        <div className='popup-wrapper popup-high'>
+          <SystemUsePopup
+            titleText={components.systemUse.systemUseTitle}
+            messageText={components.systemUse.systemUseText} onAccept={onAccept} />
+        </div>
+      );
     }
     return null;
   },

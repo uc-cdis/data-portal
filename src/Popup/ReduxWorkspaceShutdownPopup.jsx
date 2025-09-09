@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Popup from '../components/Popup';
 import { SessionMonitor } from '../SessionMonitor';
-
 import { workspaceTerminateUrl } from '../localconf';
 import { fetchWithCreds } from '../actions';
+import './popupStyles.css';
 
 const workspaceShutdownPopupMapState = (state) => ({
   showShutdownPopup: state.popups.showShutdownPopup,
@@ -32,15 +32,17 @@ const ReduxWorkspaceShutdownPopup = connect(workspaceShutdownPopupMapState, work
     };
 
     return (
-      <Popup
-        message={[`Your workspace has been terminated because it has been inactive for longer than ${idleTimeLimit / 60 / 1000} minutes.`]}
-        rightButtons={[
-          {
-            caption: 'Close',
-            fn: handleClose,
-          },
-        ]}
-      />
+      <div className='popup-wrapper popup-low'>
+        <Popup
+          message={[`Your workspace has been terminated because it has been inactive for longer than ${idleTimeLimit / 60 / 1000} minutes.`]}
+          rightButtons={[
+            {
+              caption: 'Close',
+              fn: handleClose,
+            },
+          ]}
+        />
+      </div>
     );
   },
 );

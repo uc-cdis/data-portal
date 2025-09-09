@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import Popup from '../components/Popup';
 import { logoutAPI } from '../actions';
+import './popupStyles.css';
 
 const goToLogin = (history) => {
   history.push('/login');
@@ -84,7 +85,13 @@ const ReduxAuthTimeoutPopup = connect(timeoutPopupMapState, timeoutPopupMapDispa
     if (authPopup) {
       return (<AuthPopup />);
     } if (inactivityWarningPopup) {
-      return (<WarnPopup logOut={logOut} closeWarnPopup={closeWarnPopup} inactivityWarningTime={inactivityWarningTime} />);
+      return (
+        <div className='popup-wrapper popup-low'>
+          <WarnPopup logOut={logOut}
+            closeWarnPopup={closeWarnPopup}
+            inactivityWarningTime={inactivityWarningTime} />
+        </div>
+      );
     }
     return null;
   },
