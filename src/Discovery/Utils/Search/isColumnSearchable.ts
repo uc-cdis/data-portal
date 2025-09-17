@@ -14,12 +14,12 @@ interface Column {
 const isColumnSearchable = (
   column: Column,
   config: DiscoveryConfig,
-  selectedSearchableTextFields: string[],
+  selectedFieldsForSearchIndexing: string[],
 ): boolean => {
   const allConfiguredSearchableTextFields = config.features.search.searchBar.searchableTextFields;
   if (allConfiguredSearchableTextFields) {
-    const searchableTextFields = selectedSearchableTextFields.length > 0
-      ? selectedSearchableTextFields : allConfiguredSearchableTextFields;
+    const searchableTextFields = selectedFieldsForSearchIndexing.length > 0
+      ? selectedFieldsForSearchIndexing : allConfiguredSearchableTextFields;
     const isSearchableField = searchableTextFields ? searchableTextFields.includes(column.field) : false;
     return isSearchableField;
   }

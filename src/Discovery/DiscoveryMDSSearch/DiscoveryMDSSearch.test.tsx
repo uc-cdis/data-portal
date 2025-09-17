@@ -2,17 +2,21 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DiscoveryMDSSearch from '.';
+import { SearchMode } from '../Discovery';
 
 describe('DiscoveryMDSSearch Component', () => {
   const mockSetSelectedSearchableTextFields = jest.fn();
   const mockHandleSearchChange = jest.fn();
+  const mockSetSearchMode = jest.fn();
   const defaultProps = {
     searchableAndSelectableTextFields: {
       field1: 'value1',
       field2: 'value2',
     },
-    selectedSearchableTextFields: [],
-    setSelectedSearchableTextFields: mockSetSelectedSearchableTextFields,
+    selectedFieldsForSearchIndexing: [],
+    setSelectedFieldsForSearchIndexing: mockSetSelectedSearchableTextFields,
+    searchMode: SearchMode.FULL_TEXT,
+    setSearchMode: mockSetSearchMode,
     searchTerm: '',
     handleSearchChange: mockHandleSearchChange,
     inputSubtitle: 'Subtitle',
@@ -34,26 +38,20 @@ describe('DiscoveryMDSSearch Component', () => {
     expect(mockHandleSearchChange).toHaveBeenCalled();
   });
 
-  test('selects checkbox and updates when in restrict search mode', () => {
+  test('toggle to restrict search mode', () => {
     render(<DiscoveryMDSSearch {...defaultProps} />);
     const radioRestrictSearch = screen.getByLabelText('Restrict Search to Selected Fields');
     // Click on the restrict search radio button
     fireEvent.click(radioRestrictSearch);
+    expect(mockSetSearchMode).toHaveBeenCalledWith(SearchMode.RESTRICTED);
+  });
+
+  test('selects checkbox and updates when in restrict search mode', () => {
+    const updatedProps = { ...defaultProps, searchMode: SearchMode.RESTRICTED };
+    render(<DiscoveryMDSSearch {...updatedProps} />);
     // Click on the checkbox
     const checkbox = screen.getByLabelText('field1');
     fireEvent.click(checkbox);
     expect(mockSetSelectedSearchableTextFields).toHaveBeenCalledWith(['value1']);
-  });
-
-  test('changes radio button and clears selected fields', () => {
-    render(<DiscoveryMDSSearch {...defaultProps} />);
-    const radioFullText = screen.getByLabelText('Full Text Search');
-    const radioRestrictSearch = screen.getByLabelText('Restrict Search to Selected Fields');
-    // Click on the restrict search radio button
-    fireEvent.click(radioRestrictSearch);
-    expect(mockSetSelectedSearchableTextFields).not.toHaveBeenCalled();
-    // Click on the full text search radio button
-    fireEvent.click(radioFullText);
-    expect(mockSetSelectedSearchableTextFields).toHaveBeenCalledWith([]);
   });
 });

@@ -4,47 +4,51 @@ import {
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
+import { SearchMode } from '../Discovery';
 
 interface SearchableAndSelectableTextFields {
   [key: string]: string;
 }
 
 interface DiscoveryMDSSearchProps {
+  searchableTextFields?: string[];
   searchableAndSelectableTextFields?: SearchableAndSelectableTextFields;
-  selectedSearchableTextFields?: string[];
-  setSelectedSearchableTextFields?: Function;
+  setSelectedFieldsForSearchIndexing?: Function;
+  searchMode: string;
+  setSearchMode: Function;
   searchTerm: string;
   handleSearchChange: ChangeEventHandler<HTMLInputElement>;
   inputSubtitle: string | undefined;
 }
 
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
-  searchableAndSelectableTextFields = undefined,
-  selectedSearchableTextFields = [],
-  setSelectedSearchableTextFields = () => null,
+  searchableTextFields = [],
+  searchableAndSelectableTextFields = {},
+  setSelectedFieldsForSearchIndexing = () => null,
+  searchMode,
+  setSearchMode,
   searchTerm,
   handleSearchChange,
   inputSubtitle,
 }) => {
-  const [radioValue, setRadioValue] = useState('fullTextSearch');
+  const [checkboxGroupValues, setCheckboxGroupValues] = useState([]);
 
   const onRadioChange = (e: RadioChangeEvent) => {
-    setRadioValue(e.target.value);
-    if (e.target.value === 'fullTextSearch') {
-      setSelectedSearchableTextFields([]);
+    setSearchMode(e.target.value);
+    if (e.target.value === SearchMode.FULL_TEXT) {
+      setSelectedFieldsForSearchIndexing([...searchableTextFields, ...Object.values(searchableAndSelectableTextFields)]);
+    } else {
+      setCheckboxGroupValues(checkboxGroupValues);
+      setSelectedFieldsForSearchIndexing(checkboxGroupValues);
     }
   };
 
-  const onCheckboxChange = (currentCheckedValue: string) => {
-    if (selectedSearchableTextFields.includes(currentCheckedValue)) {
-      const selectionsWithCurrentCheckedValueRemoved = selectedSearchableTextFields.filter(
-        (value) => value !== currentCheckedValue,
-      );
-      setSelectedSearchableTextFields(selectionsWithCurrentCheckedValueRemoved);
-    } else {
-      setSelectedSearchableTextFields([...selectedSearchableTextFields, currentCheckedValue]);
-    }
+  const onCheckboxGroupChange = (currentCheckedValues) => {
+    setCheckboxGroupValues(currentCheckedValues);
+    setSelectedFieldsForSearchIndexing(currentCheckedValues);
   };
+
+  const checkboxGroupOptions = Object.entries(searchableAndSelectableTextFields).map(([key, value]) => ({ label: key, value }));
 
   return (
     <React.Fragment>
@@ -58,33 +62,25 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
         allowClear
       />
       <div className='discovery-input-subtitle'>{inputSubtitle}</div>
-      {searchableAndSelectableTextFields && (
+      {!!(Object.keys(searchableAndSelectableTextFields).length) && (
         <React.Fragment>
           <div className='discovery-search-radio-container'>
-            <Radio.Group onChange={onRadioChange} value={radioValue}>
-              <Radio value='fullTextSearch' className='discovery-search-radio-left'>
+            <Radio.Group onChange={onRadioChange} value={searchMode}>
+              <Radio value={SearchMode.FULL_TEXT} className='discovery-search-radio-left'>
                 Full Text Search
               </Radio>
-              <Radio value='restrictSearch' className='discovery-search-radio-right'>
+              <Radio value={SearchMode.RESTRICTED} className='discovery-search-radio-right'>
                 Restrict Search to Selected Fields
               </Radio>
             </Radio.Group>
           </div>
           <div className='discovery-search-checkbox-container'>
-            {Object.entries(searchableAndSelectableTextFields).map(
-              ([key, value]) => (
-                <React.Fragment key={key}>
-                  <Checkbox
-                    className='discovery-search-checkbox-item'
-                    disabled={radioValue === 'fullTextSearch'}
-                    checked={selectedSearchableTextFields.includes(value)}
-                    onChange={() => onCheckboxChange(value)}
-                  >
-                    {key}
-                  </Checkbox>
-                </React.Fragment>
-              ),
-            )}
+            <Checkbox.Group
+              options={checkboxGroupOptions}
+              disabled={searchMode === SearchMode.FULL_TEXT}
+              defaultValue={checkboxGroupValues}
+              onChange={onCheckboxGroupChange}
+            />
           </div>
         </React.Fragment>
       )}
@@ -93,9 +89,9 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
 };
 
 DiscoveryMDSSearch.defaultProps = {
+  searchableTextFields: [],
   searchableAndSelectableTextFields: undefined,
-  selectedSearchableTextFields: [],
-  setSelectedSearchableTextFields: () => null,
+  setSelectedFieldsForSearchIndexing: () => null,
 };
 
 export default DiscoveryMDSSearch;
