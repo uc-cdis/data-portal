@@ -34,6 +34,9 @@ class TopBar extends Component {
   isActive = (id) => this.props.activeTab === id;
 
   render() {
+    const { user } = this.props;
+    // Prefer email, then preferred_username, then name, then username
+    const userLabel = (user && (user.email || user.preferred_username || user.name || user.username)) || '';
     return (
       <div className='top-bar'>
         <div className='top-bar__header'>
@@ -113,7 +116,7 @@ class TopBar extends Component {
                   >
                     <TopIconButton
                       icon='user-circle'
-                      name={this.props.user.username}
+                      name={userLabel}
                       isActive={this.isActive('/identity')}
                     />
                   </Link>
@@ -130,7 +133,7 @@ class TopBar extends Component {
               this.props.user.username !== undefined && this.props.useProfileDropdown === true
               && (
                 <Popover
-                  title={this.props.user.username}
+                  title={userLabel}
                   placement='bottomRight'
                   content={(
                     <React.Fragment>
@@ -215,7 +218,12 @@ class TopBar extends Component {
 TopBar.propTypes = {
   topItems: PropTypes.array.isRequired,
   useProfileDropdown: PropTypes.bool,
-  user: PropTypes.shape({ username: PropTypes.string }).isRequired,
+  user: PropTypes.shape({
+    username: PropTypes.string,
+    email: PropTypes.string,
+    preferred_username: PropTypes.string,
+    name: PropTypes.string,
+  }).isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
