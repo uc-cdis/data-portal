@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import React from 'react';
-import EyeIcon from '../../Icons/EyeIcon';
-import InfoIcon from '../../Icons/InfoIcon';
+import IconComponent from '../../../../../../components/Icon';
+import dictIcons from '../../../../../../img/icons/index';
 import showSearchBarMessage from './showSearchBarMessage';
 import { IColumnManagementData, IRowData } from '../../../Interfaces/Interfaces';
 
@@ -18,10 +18,10 @@ const SearchBarMessage = ({
   if (showSearchBarMessage(searchTerm, paginatedData, columnManagementData)) {
     return (
       <div className='search-bar-message'>
-        <span><InfoIcon /></span>
+        <span><IconComponent iconName='info' dictIcons={dictIcons} height='1em' /></span>
             Matches found in hidden columns.
         <Button
-          leftIcon={<EyeIcon />}
+          leftIcon={<IconComponent iconName='gwas-eyeIcon' dictIcons={dictIcons} height='1em' />}
           data-testid='show-all-button'
           variant='outline'
           onClick={() => columnManagementReset()}
