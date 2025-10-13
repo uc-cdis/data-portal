@@ -35,8 +35,8 @@ class TopBar extends Component {
 
   render() {
     const { user } = this.props;
-    // Prefer email, then preferred_username, then name, then username
-    const userLabel = (user && (user.email || user.preferred_username || user.name || user.username)) || '';
+    // Prefer: preferred_username > display_name > name > username > email
+    const userLabel = (user && (user.preferred_username || user.display_name || user.name || user.username || user.email)) || '';
     return (
       <div className='top-bar'>
         <div className='top-bar__header'>
@@ -222,6 +222,7 @@ TopBar.propTypes = {
     username: PropTypes.string,
     email: PropTypes.string,
     preferred_username: PropTypes.string,
+    display_name: PropTypes.string,
     name: PropTypes.string,
   }).isRequired,
   userAuthMapping: PropTypes.object.isRequired,
