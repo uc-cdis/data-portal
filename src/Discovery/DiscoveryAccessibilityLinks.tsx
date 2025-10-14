@@ -37,23 +37,6 @@ const DiscoveryAccessibilityLinks = forwardRef((props, ref) => (
         <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
       </span>
     </Tooltip>
-
-    <a
-      className='g3-accessibility-nav-link g3-ring-on-focus'
-      href='#discovery-summary-statistics'
-      onClick={() => viewLinkedElement('discovery-summary-statistics')}
-    >
-      <span>Summary Statistics</span>
-    </a> |
-
-    <a
-      className='g3-accessibility-nav-link g3-ring-on-focus'
-      href='#discovery-tag-filters'
-      onClick={() => viewLinkedElement('discovery-tag-filters')}
-    >
-      <span>Tags</span>
-    </a> |
-
     <a
       className='g3-accessibility-nav-link g3-ring-on-focus'
       href='#discovery-table-of-records'
