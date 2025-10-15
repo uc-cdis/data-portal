@@ -75,7 +75,7 @@ import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer'
 import NotFound from './components/NotFound';
 import AccessDenied from './components/AccessDenied';
 import ErrorPage403 from './components/ErrorPage403';
-import GenericAccessRequestForm from './GenericAccessRequestForm/GenericAccessRequestForm';
+import ReduxGenericAccessRequestForm from './GenericAccessRequestForm/ReduxGenericAccessRequestForm';
 import ReduxAuthTimeoutPopup from './Popup/ReduxAuthTimeoutPopup';
 
 // monitor user's session
@@ -402,7 +402,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={GenericAccessRequestForm}
+                                component={ReduxGenericAccessRequestForm}
                                 {...props}
                               />
                             )
