@@ -39,6 +39,15 @@ export const checkJobStatus = (dispatch, getState) => {
   if (state.analysis.job) {
     jobId = state.analysis.job.uid;
   }
+  // If jobId is null or undefined, clear the interval and exit
+  if (!jobId) {
+    clearInterval(state.analysis.jobStatusInterval);
+    dispatch({
+      type: 'FETCH_ERROR',
+      error: 'Job ID not found',
+    });
+    return Promise.resolve();
+  }
   return fetchWithCreds({
     path: `${jobAPIPath}status?UID=${jobId}`,
     method: 'GET',
