@@ -26,11 +26,11 @@ const updateList = async (list: { name: string, items: any[] }, listId: string =
   try {
     const response = await fetchWithCreds({
       path: listId ? `${userDataLibraryUrl}/lists/${listId}` : `${userDataLibraryUrl}/lists`,
-      method: 'PUT',
+      method: listId ? 'PATCH' : 'PUT',
       customHeaders: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(listId ? list : { lists: [list] }),
+      body: JSON.stringify(listId ? list.items : { lists: [list] }),
     });
     switch (response.status) {
     case 200:
