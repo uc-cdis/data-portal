@@ -39,7 +39,13 @@ const NonTabbedDiscoveryDetails = ({ props }) => {
           {props.config.studyPageFields.fieldsToShow.map(
             (fieldGroup, i: number) => {
               const fieldGroupWrapperClassName = determineFieldGroupWrapperClassName(fieldGroup.groupWidth);
-              return (
+              const hasNonEmptyField = fieldGroup.fields.some((field) => {
+                  const fieldValue = jsonpath.query(props.modalData, `$.${field.field}`);
+                  return (                          
+                    fieldValue[0].length > 0                           
+                  );
+              });
+              return ( hasNonEmptyField &&
                 <div key={i} className={fieldGroupWrapperClassName}>
                   {fieldGroup.includeName && (
                     <h3 className='discovery-modal__attribute-group-name'>
