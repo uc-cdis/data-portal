@@ -39,11 +39,15 @@ const NonTabbedDiscoveryDetails = ({ props }) => {
           {props.config.studyPageFields.fieldsToShow.map(
             (fieldGroup, i: number) => {
               const fieldGroupWrapperClassName = determineFieldGroupWrapperClassName(fieldGroup.groupWidth);
-              const hasNonEmptyField = fieldGroup.fields.some((field) => {
-                  const fieldValue = jsonpath.query(props.modalData, `$.${field.field}`);
-                  return (                          
-                    fieldValue[0].length > 0                           
-                  );
+              const hasNonEmptyField = fieldGroup.fields.some(({ field }) => {
+                const results = jsonpath.query(props.modalData, `$['${field}']`);
+                const v = results[0]; 
+                if (typeof v === 'string') return v.trim().length > 0;
+                if (Array.isArray(v)) return v.length > 0;
+                if (typeof v === 'number') return !Number.isNaN(v);
+                if (typeof v === 'boolean') return true;
+                if (typeof v === 'object') return Object.keys(v).length > 0;
+                return false;
               });
               return ( hasNonEmptyField &&
                 <div key={i} className={fieldGroupWrapperClassName}>
