@@ -676,16 +676,14 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
+    let fileCount;
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
         (btnCfg) => isFileButton(btnCfg) && btnCfg.enabled)) {
       if (this.props.guppyConfig.fileCountField) {
         // if "fileCountField" is set, just ask for sum of file_count field
-        const totalFileCount = await this.getFileCountSum();
-        this.setState(() => ({
-          manifestEntryCount: totalFileCount,
-        }));
+        fileCount = await this.getFileCountSum();
       } else {
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
@@ -702,34 +700,32 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
             throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
           }
           if (this.props.guppyConfig.manifestMapping.useFilterForCounts) {
-            const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType,
+            fileCount = await this.props.getTotalCountsByTypeAndFilter(fileType,
               this.props.filter,
             );
-            this.setState({
-              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
-            });
           } else {
             let caseIDList = caseIDResult.map((i) => i[caseField]);
             caseIDList = _.uniq(caseIDList);
-            let countResult;
             if (caseIDList.length <= ES_MAX_QUERY_TERMS) {
-              countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
+              fileCount = await this.props.getTotalCountsByTypeAndFilter(fileType, {
                 [caseFieldInFileIndex]: {
                   selectedValues: caseIDList,
                 },
               });
             } else {
-              // this will disable the button, preventing download attemps that would fail
-              countResult = 'too-many-terms';
+              fileCount = ES_MAX_QUERY_TERMS + 1; // to trigger 'too-many-terms' logic below
             }
-            this.setState({
-              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
-            });
           }
         } else {
           throw Error('Error when downloading data');
         }
       }
+
+      // this will disable the button, preventing download attemps that would fail
+      fileCount = fileCount <= ES_MAX_QUERY_TERMS ? fileCount : 'too-many-terms';
+      this.setState({
+        manifestEntryCount: fileCount, downloadingInProgress: { manifest: false },
+      });
     }
   };
 
