@@ -70,10 +70,28 @@ const handleExportToWorkspaceClick = async (
   const projectNumber = selectedResources.map((study) => study.project_number || []);
   const studyName = selectedResources.map((study) => study.study_metadata?.minimal_info?.study_name || []);
   const repositoryName = selectedResources.map((study) => study.commons || []);
+  const objectIDsInManifest: any[] = [];
+  selectedResources.forEach(
+    ((study) => {
+      if (study.__manifest && Array.isArray(study.__manifest)) {
+        objectIDsInManifest.push(study.__manifest.map((manifestObj) => manifestObj.object_id));
+      }
+    }),
+  );
+  const externalFileMetadataInManifest: any[] = [];
+  selectedResources.forEach(
+    ((study) => {
+      if (study.external_file_metadata && Array.isArray(study.external_file_metadata)) {
+        externalFileMetadataInManifest.push(...study.external_file_metadata);
+      }
+    }),
+  );
   datadogRum.addAction('exportToWorkspace', {
     exportToWorkspaceProjectNumber: projectNumber,
     exportToWorkspaceStudyName: studyName,
     exportToWorkspaceRepositoryName: repositoryName,
+    exportToWorkspaceObjectIDsinManifest: objectIDsInManifest,
+    exportToWorkspaceExternalFileMetadataInManifest: externalFileMetadataInManifest,
   });
   faro.api.pushEvent(
     'exportToWorkspace',
@@ -82,6 +100,8 @@ const handleExportToWorkspaceClick = async (
       exportToWorkspaceProjectNumber: projectNumber.join(','),
       exportToWorkspaceStudyName: studyName.join(','),
       exportToWorkspaceRepositoryName: repositoryName.join(','),
+      exportToWorkspaceObjectIDsinManifest: objectIDsInManifest.join(','),
+      exportToWorkspaceExternalFileMetadataInManifest: JSON.stringify(externalFileMetadataInManifest),
     },
   );
 
