@@ -176,7 +176,7 @@ Below is an example, with inline comments describing what each JSON block config
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
         "src": "/src/img/gen3.png", // required; src path for the image
-        "href": "https://ctds.uchicago.edu/gen3", // required; link for image
+        "href": "https://gen3.org", // required; link for image
         // The alt text for certain cross-commons logos, such as the Gen3 and CTDS logos, are non-configurable so as to avoid redundancy.
         // Note that this alt text is applied on the basis of link destination, not logo filename.
       },
@@ -678,7 +678,7 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
-  "userAccessToSite": { // optional: user must have access to a resorces to acess the site, including public pages
+  "userAccessToSite": { // optional: user must have access to a resource to acess the site, including public pages
     "enabled": true,// optional: enable ristricted access
     "noAccessMessage": "Access to this site requires special permission.",// optional: defaults to this value, first email addresses will be turned into mailto link if used
     "deniedPageURL": "/access-denied",//optional: defaults to this value
