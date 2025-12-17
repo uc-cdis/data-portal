@@ -504,7 +504,7 @@ function buildConfig(opts) {
 
   const commonsWideAltText = {
     portalLogo: portalLogoAltText(),
-    'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
+    'https://gen3.org': 'Gen3 Data Commons - information and resources',
     'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
 
   };
