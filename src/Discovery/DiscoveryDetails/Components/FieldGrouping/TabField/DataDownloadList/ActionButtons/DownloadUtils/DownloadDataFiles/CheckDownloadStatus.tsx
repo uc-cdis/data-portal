@@ -72,22 +72,22 @@ const CheckDownloadStatus = (
                 const repositoryName = resourceInfo?.commons || '';
                 const objectIDsInManifest: any[] = [];
                 objectIDsInManifest.push(fileManifest.map((manifestObj) => manifestObj.object_id));
-                datadogRum.addAction('datasetDownload', {
-                  datasetDownloadProjectNumber: projectNumber,
-                  datasetDownloadStudyName: studyName,
-                  datasetDownloadRepositoryName: repositoryName,
-                  datasetDownloadObjectIDsinManifest: objectIDsInManifest,
-                  datasetDownloadExternalFileMetadataInManifest: externalFileMetadata,
+                datadogRum.addAction('dataFileDownload', {
+                  dataFileDownloadProjectNumber: projectNumber,
+                  dataFileDownloadStudyName: studyName,
+                  dataFileDownloadRepositoryName: repositoryName,
+                  dataFileDownloadObjectIDsinManifest: objectIDsInManifest,
+                  dataFileDownloadExternalFileMetadataInManifest: externalFileMetadata,
                 });
                 faro.api.pushEvent(
-                  'datasetDownload',
+                  'dataFileDownload',
                   // Faro only accept string-string pairs in payload
                   {
-                    datasetDownloadProjectNumber: projectNumber,
-                    datasetDownloadStudyName: studyName,
-                    datasetDownloadRepositoryName: repositoryName,
-                    datasetDownloadObjectIDsinManifest: objectIDsInManifest.join(','),
-                    datasetDownloadExternalFileMetadataInManifest: JSON.stringify(externalFileMetadata),
+                    dataFileDownloadProjectNumber: projectNumber,
+                    dataFileDownloadStudyName: studyName,
+                    dataFileDownloadRepositoryName: repositoryName,
+                    dataFileDownloadObjectIDsinManifest: objectIDsInManifest.join(','),
+                    dataFileDownloadExternalFileMetadataInManifest: JSON.stringify(externalFileMetadata),
                   },
                 );
               } catch (err) {
