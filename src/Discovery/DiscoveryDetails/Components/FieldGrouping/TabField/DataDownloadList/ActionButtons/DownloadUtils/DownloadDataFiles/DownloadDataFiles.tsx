@@ -6,6 +6,7 @@ import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
 import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from '../Constants';
+import { DiscoveryResource } from '../../../../../../../../Discovery';
 
 const DownloadDataFiles = async (
   downloadStatus: DownloadStatus,
@@ -16,6 +17,7 @@ const DownloadDataFiles = async (
   verifyExternalLoginsNeeded: boolean | undefined,
   fileManifest: any[],
   externalFileMetadata: any[],
+  resourceInfo: DiscoveryResource,
 ) => {
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
@@ -78,6 +80,9 @@ const DownloadDataFiles = async (
           uid,
           downloadStatus,
           setDownloadStatus,
+          resourceInfo,
+          fileManifest,
+          externalFileMetadata,
         );
       }
     })
