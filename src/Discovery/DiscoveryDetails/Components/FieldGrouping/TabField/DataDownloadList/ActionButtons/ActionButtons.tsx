@@ -246,6 +246,7 @@ const ActionButtons = ({
                     verifyExternalLoginsNeeded,
                     fileManifest,
                     externalFileMetadata,
+                    resourceInfo,
                   )}
                 >
                   Download All Files
