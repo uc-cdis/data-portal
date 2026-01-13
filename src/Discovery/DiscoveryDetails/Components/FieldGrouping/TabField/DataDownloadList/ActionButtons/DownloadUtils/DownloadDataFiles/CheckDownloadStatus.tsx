@@ -1,4 +1,6 @@
 import React from 'react';
+import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 import { fetchWithCreds } from '../../../../../../../../../actions';
 import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
@@ -6,11 +8,15 @@ import {
   DOWNLOAD_FAIL_STATUS,
   JOB_POLLING_INTERVAL,
 } from '../Constants';
+import { DiscoveryResource } from '../../../../../../../../Discovery';
 
 const CheckDownloadStatus = (
   uid: string,
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
+  resourceInfo: DiscoveryResource,
+  fileManifest: any[],
+  externalFileMetadata: any[],
 ) => {
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
@@ -61,7 +67,30 @@ const CheckDownloadStatus = (
                   },
                 });
                 setTimeout(() => window.open(output), 2000);
-              } catch {
+                const projectNumber = resourceInfo?.project_number || '';
+                const studyName = resourceInfo?.study_metadata?.minimal_info?.study_name || '';
+                const repositoryName = resourceInfo?.commons || '';
+                const objectIDsInManifest: any[] = [];
+                objectIDsInManifest.push(fileManifest.map((manifestObj) => manifestObj.object_id));
+                datadogRum.addAction('dataFileDownload', {
+                  dataFileDownloadProjectNumber: projectNumber,
+                  dataFileDownloadStudyName: studyName,
+                  dataFileDownloadRepositoryName: repositoryName,
+                  dataFileDownloadObjectIDsinManifest: objectIDsInManifest,
+                  dataFileDownloadExternalFileMetadataInManifest: externalFileMetadata,
+                });
+                faro.api.pushEvent(
+                  'dataFileDownload',
+                  // Faro only accept string-string pairs in payload
+                  {
+                    dataFileDownloadProjectNumber: projectNumber,
+                    dataFileDownloadStudyName: studyName,
+                    dataFileDownloadRepositoryName: repositoryName,
+                    dataFileDownloadObjectIDsinManifest: objectIDsInManifest.join(','),
+                    dataFileDownloadExternalFileMetadataInManifest: JSON.stringify(externalFileMetadata),
+                  },
+                );
+              } catch (err) {
                 // job output is not a url -> is an error message
                 setDownloadStatus({
                   inProgress: false,
@@ -82,6 +111,9 @@ const CheckDownloadStatus = (
           uid,
           downloadStatus,
           setDownloadStatus,
+          resourceInfo,
+          fileManifest,
+          externalFileMetadata,
         );
       }
     },

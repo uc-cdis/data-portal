@@ -88,6 +88,7 @@ const StandaloneDataDownloadButton = ({
           verifyExternalLoginsNeeded,
           selectedFileManifest,
           [],
+          resourceInfo,
         )}
       >
         Download File
