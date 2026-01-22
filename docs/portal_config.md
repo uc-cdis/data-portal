@@ -448,6 +448,7 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "authorization": {
         "enabled": true, // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+        "columnTooltip": "Filter by data access", // no default; this is to clarify availability versus accessibility using tooltip
         "supportedValues": { // no default; should be configured if `authorization.enabled=true`
           "accessible": {
             "enabled": true,
@@ -489,6 +490,24 @@ Below is an example, with inline comments describing what each JSON block config
     "tagSelector": {
       "title": "Associated tags organized by category"
     },
+    "studies": [ // optional, this configures addition of tutorial nbs to specific studies. Shown here in BRH example. For HEAL, set to []
+      {
+        "match": {
+          "short_name": "Methodology and Advanced Analytics Resource Center"
+        },
+        "fieldsToValues": [
+          {
+            "data_access_method": "API, Manifest"
+          },
+          {
+            "tutorial_notebook": "YES"
+          },
+          {
+            "tutorial_notebook_link": "/dashboard/Public/notebooks/JCOIN_MOUD_accessibility_jupyter_notebook_BRH.html"
+          }
+        ]
+      },
+    ],
     "studyColumns": [ // configures the columns of the table of studies.
       {
         "name": "Study Name",
