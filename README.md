@@ -102,11 +102,6 @@ After that you can visit the local development portal from https://qa.planx-pla.
 
 If this environmental variable is set in production bundle then portal should be accessed from https://qa.planx-pla.net/portal
 
-### Component story books
-
-To run Storybook:
-`npm run storybook`
-
 ### Run Windmill using Docker
 
 Build the container image first
