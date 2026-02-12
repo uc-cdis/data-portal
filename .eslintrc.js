@@ -46,7 +46,6 @@ module.exports = {
       'error',
       {
         'devDependencies': [
-          'src/stories/**',
           '**/*.test.*',
         ],
         "peerDependencies": true
