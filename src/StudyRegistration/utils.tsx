@@ -253,7 +253,7 @@ export const loadCDEInfoFromMDS = async (guidType = 'cde_metadata') => {
   }
 };
 
-export const updateCDEMetadataInMDS = async (metadataID: string, updatedCDEInfo: {option:string, guid:string}[]) => {
+export const updateCDEMetadataInMDS = async (metadataID: string, updatedCDEInfo: {option:string, guid:string}[], selectedCoreCDEs: string[]) => {
   try {
     const queryURL = `${mdsURL}/${metadataID}`;
     const queryRes = await fetch(queryURL);
@@ -296,7 +296,8 @@ export const updateCDEMetadataInMDS = async (metadataID: string, updatedCDEInfo:
       }
       // remove any existing CDE filters first
       const updatedFilters = metadataToUpdate[STUDY_DATA_FIELD][filterField].filter((entry) => entry.key !== 'Common Data Elements');
-      Object.keys(cdeMetadataToUpdate).forEach((cdeKey) => updatedFilters.push({ value: cdeKey, key: 'Common Data Elements' }));
+      // only create filter entries on core CDEs
+      selectedCoreCDEs.forEach((coreCDEKey) => updatedFilters.push({ value: coreCDEKey, key: 'Common Data Elements' }));
       metadataToUpdate[STUDY_DATA_FIELD][filterField] = updatedFilters;
     }
     await updateStudyInMDS(metadataID, metadataToUpdate);
