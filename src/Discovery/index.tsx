@@ -83,8 +83,6 @@ const DiscoveryWithMDSBackend: React.FC<{
   const expectedNumberOfTotalBatches = 2;
   // if loading with both unregistered and registered studies, load 5 for each (10 total)
   const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
-  const numberOfSmallBatchesToBeLoaded = isEnabled('studyRegistration') ? 2 : 1;
-  //   const totalNumberOfStudiesFromSmallBatches = numberOfStudiesForSmallerBatch * numberOfSmallBatchesToBeLoaded;
   const numberOfStudiesForAllStudiesBatch = 2000;
 
   useEffect(() => {
@@ -94,13 +92,12 @@ const DiscoveryWithMDSBackend: React.FC<{
     } else {
       return;
     }
-    let isLoadingSmallBatch:Boolean;
+    let isLoadingSmallBatch;
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
       let loadStudiesFunction: Function;
       let loadStudiesParameters: any[] = [];
       isLoadingSmallBatch = numberOfBatchesLoaded === 0;
-
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
         loadStudiesParameters.push(isLoadingSmallBatch
@@ -134,7 +131,6 @@ const DiscoveryWithMDSBackend: React.FC<{
         );
       }
       const result = _.union(rawStudiesRegistered, rawStudiesUnregistered);
-
       if (!isLoadingSmallBatch) {
         allStudies = result;
       }
@@ -227,19 +223,10 @@ const DiscoveryWithMDSBackend: React.FC<{
     props.onDiscoveryPageActive();
   }, [props, numberOfBatchesLoaded, numberOfStudiesForSmallerBatch]);
 
-
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }
-  /*
-    const allBatchesAreReady = studies === null
-    ? false
-    : (studies as Array<any>)?.length !== totalNumberOfStudiesFromSmallBatches;
-
-   const allBatchesAreReady = studies !== null
-    && numberOfBatchesLoaded === expectedNumberOfTotalBatches;
-  */
 
   return (
     <Discovery
