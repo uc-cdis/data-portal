@@ -86,7 +86,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
     }
 
     const selectedCDEInfo = cdeInfoFromMDS.filter((entry) => formValues.selectedCDEs.includes(entry.option));
-    updateCDEMetadataInMDS(props.studyUID, selectedCDEInfo).then(() => {
+    updateCDEMetadataInMDS(props.studyUID, selectedCDEInfo, selectedCoreCDEs).then(() => {
       const subject = `CDE submission for ${props.studyNumber} ${props.studyName}`;
       const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
       const email = formValues['E-mail Address'];
