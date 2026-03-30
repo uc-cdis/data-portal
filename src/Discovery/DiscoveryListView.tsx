@@ -224,7 +224,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                       }
                       return (
                         <Tag
-                          key={record.name + name}
+                          key={record.name + category + name}
                           role='button'
                           tabIndex={0}
                           aria-pressed={isSelected ? 'true' : 'false'}
