@@ -8,7 +8,7 @@
     "@babel/polyfill": "^7.8.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "css-loader": "^4.0.0",
+    "css-loader": "^6.0.0",
     "less": "^3.11.1",
     "less-loader": "^4.1.0",
     "mapbox-gl": "^1.9.1",
@@ -18,7 +18,7 @@
     "react-dom": "16.8.6",
     "react-map-gl": "^5.2.3",
     "react-redux": "^5.0.7",
-    "style-loader": "^0.21.0"
+    "style-loader": "^3.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
