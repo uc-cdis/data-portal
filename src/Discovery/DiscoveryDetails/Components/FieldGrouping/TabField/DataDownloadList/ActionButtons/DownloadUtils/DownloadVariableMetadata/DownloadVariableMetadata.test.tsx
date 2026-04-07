@@ -3,7 +3,6 @@ import { act } from 'react-dom/test-utils';
 import DownloadVariableMetadata from './DownloadVariableMetadata';
 import { fetchWithCreds } from '../../../../../../../../../actions';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
-import { DiscoveryResource } from '../../../../../../../../Discovery';
 
 /* eslint global-require: 0 */ // --> OFF
 jest.mock('../../../../../../../../../actions', () => ({
@@ -42,7 +41,8 @@ describe('DownloadVariableMetadata', () => {
     await act(async () => {
       await DownloadVariableMetadata(
         mockVariableLevelMetadata,
-        mockResourceInfo as unknown as DiscoveryResource,
+        mockResourceInfo.project_title,
+        mockResourceInfo._hdp_uid,
         mockSetDownloadStatus,
       );
     });
@@ -67,7 +67,8 @@ describe('DownloadVariableMetadata', () => {
     await act(async () => {
       await DownloadVariableMetadata(
         mockVariableLevelMetadata,
-        mockResourceInfo as unknown as DiscoveryResource,
+        mockResourceInfo.project_title,
+        mockResourceInfo._hdp_uid,
         mockSetDownloadStatus,
       );
     });

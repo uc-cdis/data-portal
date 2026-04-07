@@ -8,6 +8,7 @@ import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../../../Discovery';
 import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
+import GenerateFilename from '../GenerateFilename';
 
 enum fetchType {
   CDE = 'cde',
@@ -16,7 +17,8 @@ enum fetchType {
 
 const DownloadVariableMetadata = async (
   variableLevelMetadataRecords: VariableLevelMetadata,
-  resourceInfo: DiscoveryResource,
+  resourceName: string,
+  resourceUID: string,
   setDownloadStatus: Function,
 ) => {
   const zip = new JSZip();
@@ -29,7 +31,7 @@ const DownloadVariableMetadata = async (
       content: (
         <React.Fragment>
           <p>
-              Study with name <strong>{resourceInfo.study_metadata?.minimal_info?.study_name || 'N/A'}</strong>
+              Study with name <strong>{resourceName || 'N/A'}</strong>
               &nbsp;cannot download data dictionary with name <strong>{key}</strong>.
           </p>
           <p>Please try again later and contact support.</p>
@@ -72,8 +74,9 @@ const DownloadVariableMetadata = async (
         ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, fetchType.CDE),
         )],
       ).then(() => {
+        const filename = GenerateFilename('vlmd', resourceUID || '');
         zip.generateAsync({ type: 'blob' }).then((content) => {
-          FileSaver.saveAs(content, 'variable-level-metadata.zip');
+          FileSaver.saveAs(content, filename);
         });
         setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       });
