@@ -5,7 +5,6 @@ import { fetchWithCreds } from '../../../../../../../../../actions';
 import { mdsURL } from '../../../../../../../../../localconf';
 import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
-import { DiscoveryResource } from '../../../../../../../../Discovery';
 import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
 import GenerateFilename from '../GenerateFilename';
