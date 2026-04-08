@@ -16,6 +16,7 @@ import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
 import assembleFileMetadata from '../../../../../../DiscoveryActionBar/utils/assembleFileMetadata';
+import GenerateFilename from './DownloadUtils/GenerateFilename';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -163,7 +164,8 @@ const ActionButtons = ({
               onClick={() => {
                 DownloadVariableMetadata(
                   variableMetadataInfo.variableLevelMetadataRecords,
-                  resourceInfo,
+                  resourceInfo.study_metadata?.minimal_info?.study_name,
+                  uid,
                   setDownloadStatus,
                 );
               }}
@@ -179,11 +181,14 @@ const ActionButtons = ({
               className='discovery-action-bar-button'
               data-testid='download-study-level-metadata'
               disabled={Boolean(downloadStatus.inProgress)}
-              onClick={() => DownloadJsonFile(
-                'study-level-metadata',
-                studyMetadataFieldNameReference
+              onClick={() => {
+                const filename = GenerateFilename('metadata', uid);
+                DownloadJsonFile(
+                  filename,
+                  studyMetadataFieldNameReference
                       && resourceInfo[studyMetadataFieldNameReference],
-              )}
+                );
+              }}
             >
                 Download <br />
                 Study-Level Metadata

@@ -8,7 +8,7 @@ jest.mock('file-saver', () => ({
 describe('DownloadJsonFile', () => {
   test('downloads JSON file with correct title', () => {
     // Set up mock data
-    const fileName = 'testFile';
+    const fileName = 'testFile.json';
     const testData = { key: 'value' };
 
     // Call the DownloadJsonFile function
