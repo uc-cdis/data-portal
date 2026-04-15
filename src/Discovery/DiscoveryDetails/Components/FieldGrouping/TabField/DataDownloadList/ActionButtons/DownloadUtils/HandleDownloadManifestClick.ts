@@ -1,3 +1,5 @@
+import { datadogRum } from '@datadog/browser-rum';
+import { faro } from '@grafana/faro-core';
 import { hostname } from '../../../../../../../../localconf';
 import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
 import DownloadJsonFile from './DownloadJsonFile';
@@ -22,13 +24,30 @@ const HandleDownloadManifestClick = (
     return;
   }
 
+  const projectNumber = selectedResource.project_number || '';
+  const studyName = selectedResource.study_metadata?.minimal_info?.study_name || '';
+  const repositoryName = selectedResource.commons || '';
+  datadogRum.addAction('manifestDownload', {
+    manifestDownloadProjectNumber: projectNumber,
+    manifestDownloadStudyName: studyName,
+    manifestDownloadRepositoryName: repositoryName,
+  });
+  faro.api.pushEvent(
+    'manifestDownload',
+    // Faro only accept string-string pairs in payload
+    {
+      manifestDownloadProjectNumber: projectNumber,
+      manifestDownloadStudyName: studyName,
+      manifestDownloadRepositoryName: repositoryName,
+    },
+  );
+
   // since this button is from Discovery Details component, there will only be one study being selected at a time
   const uid = selectedResource[config.minimalFieldMapping.uid];
   const filename = GenerateFilename('manifest', uid);
   const manifest: any = [];
   if ('commons_url' in selectedResource && !hostname.includes(selectedResource.commons_url)) {
     // PlanX addition to allow hostname based DRS in manifest download clients
-    // like FUSE
     manifest.push(
       ...selectedResource[manifestFieldName].map((x) => ({
         ...x,
