@@ -224,7 +224,8 @@ Below is an example, with inline comments describing what each JSON block config
         },
         "ethnicity": {
           "chartType": "fullPie", // required; full pie chart type
-          "title": "Ethnicity"
+          "title": "Ethnicity",
+          "maximumDisplayItem": 5 // optional; shows how many items are displayed in the chart legend. Default to 15 if omitted
         },
         "race": {
           "chartType": "bar", // required; bar chart type

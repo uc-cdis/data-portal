@@ -57,7 +57,7 @@ describe('HandleDownloadManifestClick', () => {
     HandleDownloadManifestClick(config, selectedResources, missingRequiredIdentityProviders);
 
     // Assertions
-    expect(DownloadJsonFile).toHaveBeenCalledWith('manifest', [
+    expect(DownloadJsonFile).toHaveBeenCalledWith('manifest.json', [
       { item: 'value' },
     ]);
   });
