@@ -71,6 +71,12 @@ describe('GenerateFilename', () => {
       );
     });
 
+    test('omits studyID segment for "all_manifests"', () => {
+      expect(GenerateFilename('all_manifests')).toBe(
+        `${HOST}-${DATE}-manifests.zip`,
+      );
+    });
+
     test('omits studyID segment for "file"', () => {
       expect(GenerateFilename('file')).toBe(
         `${HOST}-${DATE}-file.zip`,
