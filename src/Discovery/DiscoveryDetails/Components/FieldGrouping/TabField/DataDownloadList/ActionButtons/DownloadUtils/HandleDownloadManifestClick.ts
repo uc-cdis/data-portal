@@ -16,6 +16,8 @@ const HandleDownloadManifestClick = (
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
   }
+  const uidFieldName = config.minimalFieldMapping?.uid || '';
+
   if (missingRequiredIdentityProviders.length) {
     return;
   }
@@ -43,7 +45,7 @@ const HandleDownloadManifestClick = (
   );
 
   // since this button is from Discovery Details component, there will only be one study being selected at a time
-  const uid = selectedResource[config.minimalFieldMapping.uid];
+  const uid = selectedResource[uidFieldName];
   const filename = GenerateFilename('manifest', uid);
   const manifest: any = [];
   if ('commons_url' in selectedResource && !hostname.includes(selectedResource.commons_url)) {

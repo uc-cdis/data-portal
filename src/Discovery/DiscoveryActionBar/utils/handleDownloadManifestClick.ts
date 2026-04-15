@@ -18,12 +18,7 @@ const handleDownloadManifestClick = (
     );
   }
 
-  const uidFieldName = config.minimalFieldMapping?.uid;
-  if (!uidFieldName) {
-    throw new Error(
-      'Missing required configuration field `config.minimalFieldMapping.uid`',
-    );
-  }
+  const uidFieldName = config.minimalFieldMapping?.uid || '';
 
   if (healIDPLoginNeeded) {
     return;
