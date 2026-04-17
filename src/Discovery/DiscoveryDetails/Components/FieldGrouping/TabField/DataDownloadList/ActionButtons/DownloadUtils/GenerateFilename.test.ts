@@ -1,4 +1,3 @@
-import moment from 'moment';
 import GenerateFilename from './GenerateFilename';
 
 jest.mock('../../../../../../../../localconf', () => ({
