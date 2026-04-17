@@ -1,4 +1,3 @@
-import moment from 'moment';
 import GenerateFilename from './GenerateFilename';
 
 jest.mock('../../../../../../../../localconf', () => ({
@@ -68,6 +67,12 @@ describe('GenerateFilename', () => {
     test('omits studyID segment for "manifest"', () => {
       expect(GenerateFilename('manifest')).toBe(
         `${HOST}-${DATE}-manifest.json`,
+      );
+    });
+
+    test('omits studyID segment for "all_manifests"', () => {
+      expect(GenerateFilename('all_manifests')).toBe(
+        `${HOST}-${DATE}-manifests.zip`,
       );
     });
 

@@ -11,6 +11,8 @@ const GenerateFilename = (fileCategory: string, studyID: string = ''): string =>
     return `${filenamePrefix}-vars.zip`;
   case 'manifest':
     return `${filenamePrefix}-manifest.json`;
+  case 'all_manifests':
+    return `${filenamePrefix}-manifests.zip`;
   case 'file':
     return `${filenamePrefix}-file.zip`;
   case 'all_files':
