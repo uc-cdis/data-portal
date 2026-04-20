@@ -8,6 +8,7 @@ jobs:
     uses: uc-cdis/.github/.github/workflows/integration_tests.yaml@master
     with:
       SERVICE_TO_TEST: frontend
+      TEST_REPO_BRANCH: chore/enable_gen3workflow_for_select_prs
     secrets:
       CI_TEST_ORCID_USERID: ${{ secrets.CI_TEST_ORCID_USERID }}
       CI_TEST_ORCID_PASSWORD: ${{ secrets.CI_TEST_ORCID_PASSWORD }}
