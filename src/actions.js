@@ -273,7 +273,7 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
       },
     });
   } else if (document.location.pathname.includes('/dev.html')) {
-    window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}`;
+    window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}dev.html`;
   } else {
     window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}`;
   }
