@@ -1,9 +1,32 @@
 import HandleDownloadManifestClick from './HandleDownloadManifestClick';
 import DownloadJsonFile from './DownloadJsonFile';
 import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
+import GenerateFilename from './GenerateFilename';
 
 // Mock the DownloadJsonFile module
 jest.mock('./DownloadJsonFile');
+
+// Mock GenerateFilename()
+jest.mock('moment', () => () => ({ format: () => '2026-04-15' }));
+jest.mock('../../../../../../../../localconf', () => ({
+  hostname: 'localhost',
+  hostnameWithSubdomain: 'data-portal',
+}));
+
+// Mock RUN events
+jest.mock('@datadog/browser-rum', () => ({
+  datadogRum: {
+    addAction: jest.fn(),
+  },
+}));
+
+jest.mock('@grafana/faro-core', () => ({
+  faro: {
+    api: {
+      pushEvent: jest.fn(),
+    },
+  },
+}));
 
 describe('HandleDownloadManifestClick', () => {
   it('should not call DownloadJsonFile when missingRequiredIdentityProviders has IDP names', () => {
@@ -15,11 +38,11 @@ describe('HandleDownloadManifestClick', () => {
         },
       },
     } as DiscoveryConfig;
-    const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
+    const selectedResource = { manifestFieldName: [{ item: 'value' }] };
     const missingRequiredIdentityProviders = ['InCommon'];
 
     // Call the function
-    HandleDownloadManifestClick(config, selectedResources, missingRequiredIdentityProviders);
+    HandleDownloadManifestClick(config, selectedResource, missingRequiredIdentityProviders);
 
     // Assertions
     expect(DownloadJsonFile).not.toHaveBeenCalled();
@@ -32,11 +55,11 @@ describe('HandleDownloadManifestClick', () => {
         exportToWorkspace: {},
       },
     } as DiscoveryConfig;
-    const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
+    const selectedResource = { manifestFieldName: [{ item: 'value' }] };
     const missingRequiredIdentityProviders = [];
 
     // Assertions
-    expect(() => HandleDownloadManifestClick(config, selectedResources, missingRequiredIdentityProviders),
+    expect(() => HandleDownloadManifestClick(config, selectedResource, missingRequiredIdentityProviders),
     ).toThrowError(
       'Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`',
     );
@@ -50,14 +73,14 @@ describe('HandleDownloadManifestClick', () => {
         },
       },
     } as DiscoveryConfig;
-    const selectedResources = [{ manifestFieldName: [{ item: 'value' }] }];
+    const selectedResource = { manifestFieldName: [{ item: 'value' }] };
     const missingRequiredIdentityProviders = [];
 
     // Call the function
-    HandleDownloadManifestClick(config, selectedResources, missingRequiredIdentityProviders);
-
+    HandleDownloadManifestClick(config, selectedResource, missingRequiredIdentityProviders);
+    const filename = GenerateFilename('manifest');
     // Assertions
-    expect(DownloadJsonFile).toHaveBeenCalledWith('manifest.json', [
+    expect(DownloadJsonFile).toHaveBeenCalledWith(filename, [
       { item: 'value' },
     ]);
   });

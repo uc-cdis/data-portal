@@ -207,7 +207,7 @@ const ActionButtons = ({
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
-                      [resourceInfo],
+                      resourceInfo,
                       missingRequiredIdentityProviders,
                     );
                   }}
