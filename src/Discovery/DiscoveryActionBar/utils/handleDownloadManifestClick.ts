@@ -4,7 +4,7 @@ import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import processFileMetadata from './processFileMetadata';
-import GenerateFilename from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilename';
+import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
 const handleDownloadManifestClick = (
   config: DiscoveryConfig,
@@ -24,7 +24,8 @@ const handleDownloadManifestClick = (
     return;
   }
 
-  const fileManifestsWithNames = processFileMetadata(uidFieldName, manifestFieldName, selectedResources);
+  const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'manifest', selectedResources);
+  const fileManifestsWithNames = fileMetadata.file_manifest;
   if (!Object.keys(fileManifestsWithNames).length) {
     return;
   }
@@ -52,17 +53,17 @@ const handleDownloadManifestClick = (
     const blob = new Blob([JSON.stringify(fileManifestsWithNames[manifestFilename], null, 2)], {
       type: 'text/json',
     });
-    FileSaver.saveAs(blob, manifestFilename);
+    FileSaver.saveAs(blob, `${manifestFilename}.json`);
   } else {
     // otherwise, we zip all manifests into a zip
     const zip = new JSZip();
     Object.entries(fileManifestsWithNames).forEach(([manifestFilename, manifestBody]) => {
-      zip.file(`${manifestFilename}`, JSON.stringify(manifestBody, null, 2));
+      zip.file(`${manifestFilename}.json`, JSON.stringify(manifestBody, null, 2));
     });
-    const manifestsBundleFilename = GenerateFilename('all_manifests');
+    const manifestsBundleFilename = GenerateFilenameWithoutPrefix('all_manifests');
     zip.generateAsync({ type: 'blob' })
       .then((content) => {
-        FileSaver.saveAs(content, manifestsBundleFilename);
+        FileSaver.saveAs(content, `${manifestsBundleFilename}.zip`);
       });
   }
 };

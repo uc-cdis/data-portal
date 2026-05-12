@@ -9,7 +9,7 @@ import {
 } from '../DiscoveryActionBarConstants';
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
-import assembleFileMetadata from './assembleFileMetadata';
+import processFileMetadata from './processFileMetadata';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
@@ -25,6 +25,7 @@ const handleDownloadZipClick = async (
     + 'it will begin automatically. You can close this window.';
 
   const { manifestFieldName } = config.features.exportToWorkspace;
+  const uidFieldName = config.minimalFieldMapping?.uid || '';
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
       setDownloadStatus,
@@ -42,13 +43,13 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const { fileManifest, externalFileMetadata } = assembleFileMetadata(manifestFieldName, selectedResources);
+  const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'all_files', selectedResources);
   fetchWithCreds({
-    path: `${jobAPIPath}dispatch`,
+    path: `${jobAPIPath}dispatch1212121`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_manifest: fileManifest, external_file_metadata: externalFileMetadata },
+      input: { file_metadata: fileMetadata },
     }),
   })
     .then((dispatchResponse) => {

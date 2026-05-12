@@ -1,12 +1,12 @@
 import HandleDownloadManifestClick from './HandleDownloadManifestClick';
 import DownloadJsonFile from './DownloadJsonFile';
 import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
-import GenerateFilename from './GenerateFilename';
+import GenerateFilenameWithoutPrefix from './GenerateFilenameWithoutPrefix';
 
 // Mock the DownloadJsonFile module
 jest.mock('./DownloadJsonFile');
 
-// Mock GenerateFilename()
+// Mock GenerateFilenameWithoutPrefix()
 jest.mock('moment', () => () => ({ format: () => '2026-04-15' }));
 jest.mock('../../../../../../../../localconf', () => ({
   hostname: 'localhost',
@@ -78,7 +78,7 @@ describe('HandleDownloadManifestClick', () => {
 
     // Call the function
     HandleDownloadManifestClick(config, selectedResource, missingRequiredIdentityProviders);
-    const filename = GenerateFilename('manifest');
+    const filename = GenerateFilenameWithoutPrefix('manifest');
     // Assertions
     expect(DownloadJsonFile).toHaveBeenCalledWith(filename, [
       { item: 'value' },
