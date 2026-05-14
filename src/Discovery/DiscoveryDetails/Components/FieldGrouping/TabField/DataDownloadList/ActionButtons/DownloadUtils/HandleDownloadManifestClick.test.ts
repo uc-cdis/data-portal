@@ -80,7 +80,7 @@ describe('HandleDownloadManifestClick', () => {
     HandleDownloadManifestClick(config, selectedResource, missingRequiredIdentityProviders);
     const filename = GenerateFilenameWithoutPrefix('manifest');
     // Assertions
-    expect(DownloadJsonFile).toHaveBeenCalledWith(filename, [
+    expect(DownloadJsonFile).toHaveBeenCalledWith(`${filename}.json`, [
       { item: 'value' },
     ]);
   });
