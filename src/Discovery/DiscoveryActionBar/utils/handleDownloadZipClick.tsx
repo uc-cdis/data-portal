@@ -10,6 +10,7 @@ import {
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
 import processFileMetadata from './processFileMetadata';
+import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
@@ -44,12 +45,18 @@ const handleDownloadZipClick = async (
   }
 
   const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'all_files', selectedResources);
+  let zipFilename;
+  if (Object.keys(fileMetadata).length === 1) {
+    zipFilename = GenerateFilenameWithoutPrefix('all_files', Object.keys(fileMetadata)[0]);
+  } else {
+    zipFilename = GenerateFilenameWithoutPrefix('all_files');
+  }
   fetchWithCreds({
-    path: `${jobAPIPath}dispatch1212121`,
+    path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_metadata: fileMetadata },
+      input: { file_metadata: fileMetadata, zip_filename: zipFilename },
     }),
   })
     .then((dispatchResponse) => {
