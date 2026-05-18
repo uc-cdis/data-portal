@@ -56,7 +56,7 @@ const handleDownloadZipClick = async (
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_metadata: fileMetadata, zip_filename: zipFilename },
+      input: { file_metadata: fileMetadata, zip_filename: `${zipFilename}.zip` },
     }),
   })
     .then((dispatchResponse) => {
