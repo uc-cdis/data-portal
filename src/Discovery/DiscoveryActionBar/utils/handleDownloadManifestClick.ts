@@ -50,7 +50,7 @@ const handleDownloadManifestClick = (
   // if there is only 1 manifest, do not zip, save as JSON directly
   if (Object.keys(fileMetadata).length === 1) {
     const manifestFilename = Object.keys(fileMetadata)[0];
-    if (fileMetadata[manifestFilename].file_manifest) {
+    if (fileMetadata[manifestFilename].file_manifest?.length > 0) {
       const blob = new Blob([JSON.stringify(fileMetadata[manifestFilename].file_manifest, null, 2)], {
         type: 'text/json',
       });
