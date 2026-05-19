@@ -12,6 +12,7 @@ import { UseHandleRedirectToLoginClickNonResumable } from '../../../../../../Uti
 import { DiscoveryConfig } from '../../../../../../DiscoveryConfig';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import { DiscoveryResource } from '../../../../../../Discovery';
+import GenerateFilenameWithoutPrefix from './DownloadUtils/GenerateFilenameWithoutPrefix';
 
 interface StandaloneDataDownloadButtonProps {
     discoveryConfig: DiscoveryConfig;
@@ -70,8 +71,10 @@ const StandaloneDataDownloadButton = ({
   if (isEcosystemPortal && useBatchExportForDataDownloadButton) {
     const fileManifestFromStudyMetadata: any[] = resourceInfo?.[manifestFieldName] || [];
     let selectedFileManifest: any[] = [];
+    let filenameForDownloadable = '';
     if (item.guid && fileManifestFromStudyMetadata) {
       selectedFileManifest = [fileManifestFromStudyMetadata.find((element: any) => element.object_id === item.guid)];
+      filenameForDownloadable = GenerateFilenameWithoutPrefix('file', uid);
     }
     return (
       <Button
@@ -88,6 +91,7 @@ const StandaloneDataDownloadButton = ({
           verifyExternalLoginsNeeded,
           selectedFileManifest,
           [],
+          filenameForDownloadable,
           resourceInfo,
         )}
       >

@@ -242,17 +242,21 @@ const ActionButtons = ({
                   data-testid='download-all-files'
                   disabled={Boolean(checkIfDownloadAllFilesButtonDisabled() || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
-                  onClick={() => DownloadDataFiles(
-                    downloadStatus,
-                    setDownloadStatus,
-                    history,
-                    location,
-                    missingRequiredIdentityProviders,
-                    verifyExternalLoginsNeeded,
-                    fileManifest,
-                    externalFileMetadata,
-                    resourceInfo,
-                  )}
+                  onClick={() => {
+                    const filenameForDownloadable = GenerateFilenameWithoutPrefix('all_files', uid);
+                    DownloadDataFiles(
+                      downloadStatus,
+                      setDownloadStatus,
+                      history,
+                      location,
+                      missingRequiredIdentityProviders,
+                      verifyExternalLoginsNeeded,
+                      fileManifest,
+                      externalFileMetadata,
+                      filenameForDownloadable,
+                      resourceInfo,
+                    );
+                  }}
                 >
                   Download All Files
                 </Button>
