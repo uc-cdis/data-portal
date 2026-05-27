@@ -138,7 +138,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
             // This is the CLI command to kick off the argo wf from AdminVM
             const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${props.studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-            createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createZendeskTicket(subject, fullName, email, contents).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });

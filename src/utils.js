@@ -1,4 +1,4 @@
-import { submissionApiPath, gen3ZendeskURL } from './localconf';
+import { submissionApiPath } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
 
 const ZENDESK_MAX_SUBJECT_LENGTH = 255;
@@ -234,15 +234,8 @@ export const isFooterHidden = (pathname) => (!!((pathname
   || pathname.toLowerCase().startsWith('/dd/')
   ))));
 
-export const createZendeskTicket = async (subject, fullName, email, contents, zendeskSubdomainName) => {
+export const createZendeskTicket = async (subject, fullName, email, contents) => {
   try {
-    let zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
-    if (zendeskSubdomainName) {
-      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
-    } else {
-      // This is the default Gen3 helpdesk subdomain
-      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
-    }
     let ticketSubject = subject;
     if (subject.length > ZENDESK_MAX_SUBJECT_LENGTH) {
       ticketSubject = `${subject.substring(
@@ -250,11 +243,11 @@ export const createZendeskTicket = async (subject, fullName, email, contents, ze
         ZENDESK_MAX_SUBJECT_LENGTH - 3,
       )}...`;
     }
-    await fetch(zendeskTicketCreationURL, {
+    await fetch('/zendesk/ticket', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        request: {
+        ticket: {
           subject: ticketSubject,
           comment: {
             body: contents,

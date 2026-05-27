@@ -95,7 +95,6 @@ const handleRegisterFormSubmission = async (
             fullName,
             email,
             contents,
-            zendeskConfig?.zendeskSubdomainName,
           ).then(
             () => setFormSubmissionStatus({ status: 'success' }),
             (err) => setFormSubmissionStatus({
