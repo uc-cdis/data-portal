@@ -4,7 +4,7 @@ import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import processFileMetadata from './processFileMetadata';
-import GenerateFilename from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilename';
+import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
 const handleDownloadManifestClick = (
   config: DiscoveryConfig,
@@ -24,8 +24,9 @@ const handleDownloadManifestClick = (
     return;
   }
 
-  const fileManifestsWithNames = processFileMetadata(uidFieldName, manifestFieldName, selectedResources);
-  if (!Object.keys(fileManifestsWithNames).length) {
+  const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'manifest', selectedResources);
+  console.log(fileMetadata);
+  if (!Object.keys(fileMetadata).length) {
     return;
   }
 
@@ -47,22 +48,26 @@ const handleDownloadManifestClick = (
     },
   );
   // if there is only 1 manifest, do not zip, save as JSON directly
-  if (Object.keys(fileManifestsWithNames).length === 1) {
-    const manifestFilename = Object.keys(fileManifestsWithNames)[0];
-    const blob = new Blob([JSON.stringify(fileManifestsWithNames[manifestFilename], null, 2)], {
-      type: 'text/json',
-    });
-    FileSaver.saveAs(blob, manifestFilename);
+  if (Object.keys(fileMetadata).length === 1) {
+    const manifestFilename = Object.keys(fileMetadata)[0];
+    if (fileMetadata[manifestFilename].file_manifest?.length > 0) {
+      const blob = new Blob([JSON.stringify(fileMetadata[manifestFilename].file_manifest, null, 2)], {
+        type: 'text/json',
+      });
+      FileSaver.saveAs(blob, `${manifestFilename}.json`);
+    }
   } else {
     // otherwise, we zip all manifests into a zip
     const zip = new JSZip();
-    Object.entries(fileManifestsWithNames).forEach(([manifestFilename, manifestBody]) => {
-      zip.file(`${manifestFilename}`, JSON.stringify(manifestBody, null, 2));
+    Object.entries(fileMetadata).forEach(([manifestFilename, fileMetadataContent]) => {
+      if (fileMetadataContent.file_manifest) {
+        zip.file(`${manifestFilename}.json`, JSON.stringify(fileMetadataContent, null, 2));
+      }
     });
-    const manifestsBundleFilename = GenerateFilename('all_manifests');
+    const manifestsBundleFilename = GenerateFilenameWithoutPrefix('all_manifests');
     zip.generateAsync({ type: 'blob' })
       .then((content) => {
-        FileSaver.saveAs(content, manifestsBundleFilename);
+        FileSaver.saveAs(content, `${manifestsBundleFilename}.zip`);
       });
   }
 };
