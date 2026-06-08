@@ -78,7 +78,40 @@
 .popup__message {
   font-size: 0.875rem;
   padding: 40px 30px 18px 30px;
-  white-space: pre-wrap;
+}
+
+#popup .popup__message .popup__message-markdown {
+  white-space: normal !important;
+
+  ul {
+    list-style: disc outside !important;
+    padding-left: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  ol {
+    list-style: decimal outside !important;
+    padding-left: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  li {
+    display: list-item !important;
+    margin-bottom: 5px !important;
+  }
+
+  li > p {
+    margin-bottom: 0 !important;
+    display: inline !important;
+  }
+
+  p {
+    margin-bottom: 10px !important;
+  }
+
+  p:last-child {
+    margin-bottom: 0 !important;
+  }
 }
 
 .popup__foot {
