@@ -10,7 +10,7 @@ import dictIcons from '../img/icons/index';
 import './Popup.less';
 
 const marked = new Marked();
-marked.use({ gfm: true, breaks: true });
+marked.use({ gfm: true, breaks: false });
 
 DOMPurify.addHook('afterSanitizeAttributes', function (node) {
   if ('target' in node || node.tagName === 'A') {
@@ -79,7 +79,7 @@ class Popup extends React.Component {
           <div className='popup__message' id='popup__message'>
             { this.props.message && (
               <div className='high-light popup__message-markdown'>
-                {parse(DOMPurify.sanitize(marked.parse(this.props.message.join('\n'))), {
+                {parse(DOMPurify.sanitize(marked.parse(this.props.message.filter(line => typeof line === 'string' && line.trim() !== '').join('\n\n'))), {
                   replace: (domNode) => {
                     if (domNode.name === 'a') {
                       const clonedNode = { ...domNode };
