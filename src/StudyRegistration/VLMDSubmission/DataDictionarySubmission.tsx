@@ -162,21 +162,41 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
     setOverwriteConfirmModalVisible(false);
   };
 
-  const onSubmitButtonClick = () => {
+  const onSubmitButtonClick = async () => {
     setUploading(true);
-    const ddName = form.getFieldValue('Data Dictionary Name');
-    if (existingDataDictionaryName?.includes(ddName)) {
-      setDuplicatedDataDictionaryName(ddName);
-      setOverwriteConfirmModalVisible(true);
-    } else {
-      form.submit();
+    try {
+      const values = await form.validateFields();
+      const ddName = values['Data Dictionary Name'];
+      if (existingDataDictionaryName?.includes(ddName)) {
+        setDuplicatedDataDictionaryName(ddName);
+        setOverwriteConfirmModalVisible(true);
+      } else {
+        handleUpload(values);
+      }
+    } catch (error) {
+      setUploading(false);
     }
   };
 
+  const allowedFileExtensions = ['.csv', '.tsv', '.json'];
   const uploadProps: UploadProps = {
-    accept: '.csv,.tsv,.json',
+    accept: allowedFileExtensions.join(','),
     maxCount: 1,
-    beforeUpload: () => false,
+    beforeUpload: (file: File) => {
+      const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!allowedFileExtensions.includes(fileExtension)) {
+        form.setFields([
+          {
+            name: 'fileList_doNotInclude',
+            errors: [`${file.name} is not a valid CSV, TSV, or JSON file.`],
+          },
+        ]);
+        return Upload.LIST_IGNORE;
+      }
+
+      form.setFields([{ name: 'fileList_doNotInclude', errors: [] }]);
+      return false;
+    },
   };
 
   const onFinish = (values) => {
@@ -290,7 +310,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
               }]}
             extra={'Supported file types: CSV, TSV, JSON; Maximum file size: 10MB'}
           >
-            <Upload {...uploadProps}>
+            <Upload {...uploadProps} onRemove={() => form.setFields([{ name: 'fileList_doNotInclude', errors: [] }])}>
               <Button
                 icon={<PlusOutlined />}
               >
