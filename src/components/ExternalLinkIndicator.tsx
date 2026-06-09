@@ -1,8 +1,6 @@
 import React from 'react';
-// import { ExternalLinkSVG } from '../img/icons/external-link-indicator.svg';
 import ExternalLinkIcon from '../img/icons/external-link-indicator.svg';
 
-// 2. Apply the type to the props object
 const ExternalLinkIndicator = ({ className = '' }) => (
   <React.Fragment>
     <span
