@@ -8,7 +8,6 @@ const ExternalLinkIndicator = ({ className = '' }) => (
       className={`inline-block ${className}`.trim()}
       data-testid='external-link-indicator'
       aria-label='opens in a new window'
-      style={{ marginTop: '5px' }}
     >
       <ExternalLinkIcon />
     </span>
