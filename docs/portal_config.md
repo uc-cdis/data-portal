@@ -145,7 +145,8 @@ Below is an example, with inline comments describing what each JSON block config
         },
         {
           "link": "https://docs.gen3.org/gen3-resources/user-guide/",
-          "name": "Documentation"
+          "name": "Documentation",
+          "newWindow": true // Optional: sets the link to open in a new window or tab
         }
       ],
       "useProfileDropdown": false // optional; enables experimental profile UI; defaults false, may change in future releases
