@@ -336,6 +336,20 @@ module.exports = {
       test: /\.flow$/,
       loader: 'ignore-loader',
     },
+    // .mjs parsing needed on webpack 4 for fuse.js
+    {
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+      use: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      ]
+    }
     ],
   },
   resolve: {
