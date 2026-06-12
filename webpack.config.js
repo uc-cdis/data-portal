@@ -310,7 +310,7 @@ module.exports = {
     },
     {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
         'less-loader',
@@ -318,7 +318,10 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      loader: 'style-loader!css-loader',
+      use: [
+        'style-loader',
+        'css-loader',
+      ],
     },
     {
       test: /\.svg$/,
@@ -345,11 +348,11 @@ module.exports = {
         {
           loader: 'babel-loader',
           query: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      ]
-    }
+            presets: ['@babel/preset-env'],
+          },
+        },
+      ],
+    },
     ],
   },
   resolve: {
