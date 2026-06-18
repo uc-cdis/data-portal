@@ -76,14 +76,14 @@ class TopBar extends Component {
                         className='top-bar__link g3-ring-on-focus'
                         key={itemHref}
                         href={itemHref}
-                        target='_blank'
+                        target={item.newWindow ? '_blank' : '_self'}
                         rel='noopener noreferrer'
-                        onActiveTab={() => this.props.onActiveTab(itemHref)}
                       >
                         <TopIconButton
                           name={buttonText}
                           icon={item.icon}
                           isActive={this.isActive(itemHref)}
+                          isExternalLink={!!item.newWindow}
                         />
                       </a>
                     );

@@ -7,7 +7,7 @@ import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import VariableLevelMetadata from '../../../Interfaces/VariableLevelMetadata';
 import SanitizeFileName from './SanitizeFileName';
-import GenerateFilename from '../GenerateFilename';
+import GenerateFilenameWithoutPrefix from '../GenerateFilenameWithoutPrefix';
 
 enum fetchType {
   CDE = 'cde',
@@ -73,9 +73,9 @@ const DownloadVariableMetadata = async (
         ...Object.entries(variableLevelMetadataRecords.cdeMetadata || []).map(([key, value]) => fetchData(key, value, fetchType.CDE),
         )],
       ).then(() => {
-        const filename = GenerateFilename('vlmd', resourceUID || '');
+        const filename = GenerateFilenameWithoutPrefix('vlmd', resourceUID || '');
         zip.generateAsync({ type: 'blob' }).then((content) => {
-          FileSaver.saveAs(content, filename);
+          FileSaver.saveAs(content, `${filename}.zip`);
         });
         setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       });

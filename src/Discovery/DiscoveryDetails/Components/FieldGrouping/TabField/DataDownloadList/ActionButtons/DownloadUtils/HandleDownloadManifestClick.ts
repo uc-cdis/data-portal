@@ -3,7 +3,7 @@ import { faro } from '@grafana/faro-core';
 import { hostname } from '../../../../../../../../localconf';
 import { DiscoveryConfig } from '../../../../../../../DiscoveryConfig';
 import DownloadJsonFile from './DownloadJsonFile';
-import GenerateFilename from './GenerateFilename';
+import GenerateFilenameWithoutPrefix from './GenerateFilenameWithoutPrefix';
 
 const HandleDownloadManifestClick = (
   config: DiscoveryConfig,
@@ -46,7 +46,7 @@ const HandleDownloadManifestClick = (
 
   // since this button is from Discovery Details component, there will only be one study being selected at a time
   const uid = selectedResource[uidFieldName];
-  const filename = GenerateFilename('manifest', uid);
+  const filename = GenerateFilenameWithoutPrefix('manifest', uid);
   const manifest: any = [];
   if ('commons_url' in selectedResource && !hostname.includes(selectedResource.commons_url)) {
     // PlanX addition to allow hostname based DRS in manifest download clients
@@ -59,7 +59,7 @@ const HandleDownloadManifestClick = (
   } else {
     manifest.push(...selectedResource[manifestFieldName]);
   }
-  DownloadJsonFile(filename, selectedResource[manifestFieldName]);
+  DownloadJsonFile(`${filename}.json`, selectedResource[manifestFieldName]);
 };
 
 export default HandleDownloadManifestClick;
