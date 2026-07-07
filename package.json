@@ -180,7 +180,10 @@
     "msw": {
       "cookie": "0.7.1"
     },
-    "uuid": "11.1.1"
+    "uuid": "11.1.1",
+    "less": {
+      "image-size": "file:./empty-directory"
+    }
   },
   "jest": {
     "verbose": true,
