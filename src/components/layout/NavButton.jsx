@@ -8,11 +8,12 @@ import ExternalLinkIndicator from '../ExternalLinkIndicator';
 const NavButton = ({ dictIcons, item }) => {
   if (item.link.startsWith('http')) {
     return (
-      <a href={item.link} className={'body-typo nav-button'}>
+      <a target={item.newWindow ? '_blank' : '_self'} href={item.link} className={'body-typo nav-button'} rel='noopener noreferrer'>
         <div className='nav-button__icon'>
           <IconComponent iconName={item.icon} dictIcons={dictIcons} />
         </div>
         {item.name}
+        {item.newWindow && <ExternalLinkIndicator />}
       </a>
     );
   }
