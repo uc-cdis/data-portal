@@ -282,7 +282,9 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
         <Form className='study-reg-form' {...FORM_LAYOUT} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={VALIDATE_MESSAGE}>
           <Divider plain>Data Dictionary Submission</Divider>
           <Typography style={{ textAlign: 'center' }}>
-          Data dictionaries must conform to the HEAL VLMD schema. View more information and VLMD templates <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
+          Data dictionaries must conform to the HEAL variable-level metadata (VLMD) schema.
+          View instructions for creating HEAL-compliant VLMD <a href='https://heal.github.io/platform-documentation/vlmd/vlmd_tools/' target='_blank' rel='noreferrer'>here</a>.
+          Examples of valid and invalid VLMD are available <a href='https://github.com/HEAL/heal-metadata-schemas/tree/main/variable-level-metadata-schema/examples' target='_blank' rel='noreferrer'>here</a>.
           </Typography>
           <Divider plain />
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
