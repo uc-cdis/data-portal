@@ -1,5 +1,6 @@
 import { submissionApiPath, zendeskTicketCreationURL, useZendeskWrapper } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
+import { fetchWithCreds } from './actions';
 
 const ZENDESK_MAX_SUBJECT_LENGTH = 255;
 
@@ -257,6 +258,16 @@ export const createZendeskTicket = async (subject, fullName, email, contents) =>
           },
         },
       });
+      await fetchWithCreds({
+        path: zendeskTicketCreationURL,
+        method: 'POST',
+        body: ticketBody,
+      }).then((response) => {
+        if (response.status !== 201) {
+          throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
+        }
+        return response;
+      });
     } else {
       ticketBody = JSON.stringify({
         request: {
@@ -270,17 +281,17 @@ export const createZendeskTicket = async (subject, fullName, email, contents) =>
           },
         },
       });
+      await fetch(zendeskTicketCreationURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: ticketBody,
+      }).then((response) => {
+        if (response.status !== 201) {
+          throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
+        }
+        return response;
+      });
     }
-    await fetch(zendeskTicketCreationURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: ticketBody,
-    }).then((response) => {
-      if (response.status !== 201) {
-        throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
-      }
-      return response;
-    });
   } catch (err) {
     throw new Error(`Request for create Zendesk ticket failed: ${err}`);
   }
