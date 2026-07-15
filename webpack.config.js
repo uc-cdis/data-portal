@@ -310,7 +310,7 @@ module.exports = {
     },
     {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
         'less-loader',
@@ -318,7 +318,10 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      loader: 'style-loader!css-loader',
+      use: [
+        'style-loader',
+        'css-loader',
+      ],
     },
     {
       test: /\.svg$/,
@@ -335,6 +338,20 @@ module.exports = {
     {
       test: /\.flow$/,
       loader: 'ignore-loader',
+    },
+    // .mjs parsing needed on webpack 4 for fuse.js
+    {
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+      use: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      ],
     },
     ],
   },

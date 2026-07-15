@@ -4,8 +4,8 @@ const webpack = require('webpack');
 
 module.exports = {
   module: {
-      rules: [
-        {
+    rules: [
+      {
         test: /\.js$|\.jsx?$|\.tsx?$/,
         exclude: /(node_modules\/(?!marked)|bower_component)/,
         use: {
@@ -18,7 +18,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loaders: [
+        use: [
           'style-loader',
           'css-loader',
           'less-loader',
@@ -26,7 +26,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
       },
       {
         test: /\.svg$/,
@@ -44,13 +47,13 @@ module.exports = {
         test: /\.flow$/,
         loader: 'ignore-loader',
       },
-      ],
+    ],
+  },
+  resolve: {
+    alias: {
+      graphql: path.resolve('./node_modules/graphql'),
+      react: path.resolve('./node_modules/react'), // Same issue.
     },
-    resolve: {
-      alias: {
-        graphql: path.resolve('./node_modules/graphql'),
-        react: path.resolve('./node_modules/react'), // Same issue.
-      },
-      extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
-    }
+    extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
+  }
 };
