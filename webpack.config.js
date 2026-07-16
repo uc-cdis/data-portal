@@ -288,7 +288,7 @@ module.exports = {
     // },
     // {
       test: /\.jsx?$|\.tsx?$/,
-      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
+      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser|web-vitals)\/).*/,
       use: {
         loader: 'babel-loader',
         options: {
