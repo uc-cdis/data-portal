@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "Gen3 Data Portal",
   "main": "index.js",
-  "workspaces": [
-    "src/Covid19Dashboard/standalone"
-  ],
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "@datadog/browser-rum": "^2.16.0",
