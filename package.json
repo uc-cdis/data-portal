@@ -178,6 +178,9 @@
       "cookie": "0.7.1"
     },
     "uuid": "11.1.1",
+    "brace-expansion": "1.1.16",
+    "js-yaml": "3.15.0",
+    "linkify-it": "5.0.2",
     "less": {
       "image-size": "file:./empty-directory"
     },
