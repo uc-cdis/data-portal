@@ -21,7 +21,7 @@ export const getUrlForRedirectLocation = (location) => {
   if (location.state && location.state.from) {
     next = `${basename}${location.state.from}`;
   }
-  // clean up url: no double slashes
+  // clean up url: no double slashess
   next = next.replace(/\/+/g, '/');
   const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
   if (queryParams.next) {
