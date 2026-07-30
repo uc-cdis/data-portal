@@ -178,6 +178,7 @@
       "cookie": "0.7.1"
     },
     "uuid": "11.1.1",
+    "linkify-it": "4.0.1",
     "less": {
       "image-size": "file:./empty-directory"
     },
