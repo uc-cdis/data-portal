@@ -41,7 +41,7 @@
     "file-saver": "^1.3.3",
     "focus-trap": "^6.5.0",
     "fuse.js": "^7.0.0",
-    "graphiql": "1.11.5",
+    "graphiql": "3.2.0",
     "graphql": "^15.0.0",
     "graphql-language-service-interface": "^2.8.2",
     "graphql-language-service-parser": "^1.9.0",
@@ -185,9 +185,8 @@
       "react-router": "$react-router-dom"
     },
     "relay-compiler": {
-      "immutable": "^3.8.2"
-    },
-    "linkify-it": "^5.0.2"
+      "immutable": "^4.3.9"
+    }
   },
   "jest": {
     "verbose": true,
