@@ -183,6 +183,9 @@
     },
     "@grafana/faro-react": {
       "react-router": "$react-router-dom"
+    },
+    "graphiql": {
+      "linkify-it": "^5.0.2"
     }
   },
   "jest": {
