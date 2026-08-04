@@ -86,7 +86,7 @@
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
     "regenerator-runtime": "^0.13.11",
-    "relay-compiler": "^13.0.0",
+    "relay-compiler": "^10.0.0",
     "relay-runtime": "^10.0.0",
     "semver": "^7.5.4",
     "string-similarity": "^3.0.0",
@@ -185,8 +185,7 @@
       "react-router": "$react-router-dom"
     },
     "graphiql": {
-      "linkify-it": "^5.0.2",
-      "markdown-it": "^14.2.0"
+      "linkify-it": "^5.0.2"
     }
   },
   "jest": {
@@ -208,7 +207,7 @@
   },
   "scripts": {
     "test": "jest",
-    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && ./node_modules/.bin/relay-compiler",
+    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && ./node_modules/.bin/relay-compiler --verbose --src src --exclude '**/__generated__/**' --exclude '**/node_modules/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --ignore-pattern '**/formHooks.jsx' --ignore-pattern '**/*.stories.jsx' --fix src data",
