@@ -184,6 +184,7 @@
     "@grafana/faro-react": {
       "react-router": "$react-router-dom"
     },
+    "markdown-it": "^14.1.1",
     "linkify-it": "^5.0.2"
   },
   "jest": {
