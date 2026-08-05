@@ -73,7 +73,7 @@
     "react-map-gl": "^5.2.3",
     "react-query": "^3.39.3",
     "react-redux": "^6.0.0",
-    "react-relay": "^13.2.0",
+    "react-relay": "^14.1.0",
     "react-responsive": "^6.1.1",
     "react-router-dom": "^5.0.0",
     "react-select": "^3.1.0",
@@ -86,8 +86,8 @@
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
     "regenerator-runtime": "^0.13.11",
-    "relay-compiler": "^13.2.0",
-    "relay-runtime": "^13.2.0",
+    "relay-compiler": "^14.1.0",
+    "relay-runtime": "^14.1.0",
     "semver": "^7.5.4",
     "string-similarity": "^3.0.0",
     "styled-components": "^5.3.7",
@@ -116,7 +116,7 @@
     "babel-jest": "^29.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-dev-expression": "^0.2.3",
-    "babel-plugin-relay": "^13.2.0",
+    "babel-plugin-relay": "^14.1.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "css-loader": "^5.2.7",
     "eslint": "^7.32.0",
@@ -219,7 +219,8 @@
   },
   "relay": {
     "src": "./src",
-    "schema": "./data/schema.graphql"
+    "schema": "./data/schema.graphql",
+    "language": "flow"
   },
   "repository": {
     "type": "git",
