@@ -288,7 +288,7 @@ module.exports = {
     // },
     // {
       test: /\.jsx?$|\.tsx?$/,
-      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser|web-vitals|graphql-ws|@graphiql\/toolkit|markdown-it|linkify-it)\/).*/,
+      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser|web-vitals)\/).*/,
       use: {
         loader: 'babel-loader',
         options: {
@@ -361,8 +361,6 @@ module.exports = {
       react: path.resolve('./node_modules/react'), // Same issue.
       graphiql: path.resolve('./node_modules/graphiql'),
       'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser'),
-      'markdown-it': path.resolve('./vendor/markdown-it.cjs.js'),
-      'linkify-it': path.resolve('./vendor/linkify-it.cjs.js'),
     },
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
