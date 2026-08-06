@@ -214,7 +214,8 @@
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "npm run params && start-storybook -p 6006 -s .storybook/public",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
-    "sanity-check": "node ./sanity-check"
+    "sanity-check": "node ./sanity-check",
+    "postinstall": "node src/bundle-esm-deps.js"
   },
   "graphql": {
     "file": "./data/schema.json"
