@@ -721,16 +721,17 @@ Below is an example, with inline comments describing what each JSON block config
           "cdeSubmissionDisclaimerField": "some disclaimer text"  // optional, the disclaimer text that appears under the submit button on the CDE submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
-        "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
-        "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
-        "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
-          "link": "/discovery",
-          "text": "Go to Discovery Page"
+          "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
+          "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
+          "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+            "link": "/discovery",
+            "text": "Go to Discovery Page"
+          }
         }
-      }
       },
       "zendeskConfig":{ // Optional; add this if you want to customize the subdomain that Zendesk is using in either of the study/workspace registration feature
-        "zendeskSubdomainName": "projectSupport"  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
+        "zendeskSubdomainName": "projectSupport",  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
+        "useZendeskWrapper": false // Optional; whether to use Zendesk Wrapper service (if deployed). If set to true, "zendeskSubdomainName" will be ignored (since it is configured from the wrapper service instead). If omitted, will default to 'false'
       }
     }
 }

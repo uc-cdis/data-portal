@@ -23,7 +23,7 @@ import {
 } from './VLMDSubmissionConstants';
 import { VLMDSubmissionProps } from './VLMDSubmissionTypes';
 import {
-  hostname, zendeskConfig, studyRegistrationConfig,
+  hostname, studyRegistrationConfig,
 } from '../../localconf';
 import { createZendeskTicket } from '../../utils';
 import { FormSubmissionState } from '../StudyRegistration';
@@ -91,7 +91,7 @@ const CDESubmission: React.FunctionComponent<VLMDSubmissionProps> = (props: VLMD
       const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
       const email = formValues['E-mail Address'];
       const contents = `Grant Number: ${props.studyNumber}\nStudy Name: ${props.studyName}\nEnvironment: ${hostname}\nStudy UID: ${props.studyUID}\nSelected CDEs: ${formValues.selectedCDEs}\n`;
-      createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
+      createZendeskTicket(subject, fullName, email, contents).then(() => setFormSubmissionStatus({ status: 'success' }),
         (err) => {
           setFormSubmissionStatus({ status: 'error', text: err.message });
         });
