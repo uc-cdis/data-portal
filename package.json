@@ -185,7 +185,9 @@
       "react-router": "$react-router-dom"
     },
     "markdown-it": "^14.1.1",
-    "linkify-it": "^5.0.2"
+    "linkify-it": "^5.0.2",
+    "fast-uri": "^3.1.5",
+    "nanoid": "^3.3.18"
   },
   "jest": {
     "verbose": true,
