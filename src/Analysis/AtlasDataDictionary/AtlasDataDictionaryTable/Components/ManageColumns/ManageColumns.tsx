@@ -8,12 +8,11 @@ import {
   Grid,
   Space,
 } from '@mantine/core';
-import ManageColumnsIcon from '../Icons/ManageColumnsIcon';
-import RestoreIcon from '../Icons/RestoreIcon';
-import HolderIcon from '../Icons/HolderIcon';
 import { IColumnManagementData } from '../../Interfaces/Interfaces';
 import './ManageColumns.css';
 import ColumnsItems from '../../Utils/ColumnItems';
+import IconComponent from '../../../../../components/Icon';
+import dictIcons from '../../../../../img/icons/index';
 
 interface IManageColumns {
   handleTableChange: Function;
@@ -65,7 +64,7 @@ const ManageColumns = ({
       <Popover opened={opened} onChange={setOpened}>
         <Popover.Target>
           <Button
-            leftIcon={<ManageColumnsIcon />}
+            leftIcon={<IconComponent iconName='gwas-manageColumnsIcon' dictIcons={dictIcons} height='1em' />}
             onClick={() => setOpened(!opened)}
             variant='white'
             size='compact-md'
@@ -84,7 +83,7 @@ const ManageColumns = ({
           >
             <Grid align='flex-start'>
               <Grid.Col span={iconSpanSize}>
-                <RestoreIcon />
+                <IconComponent iconName='gwas-restoreIcon' dictIcons={dictIcons} height='1em' />
               </Grid.Col>
               <Grid.Col span={columnManagementResetButtonSpanSize} className={'column-label'}>
                 Restore Defaults
@@ -104,7 +103,7 @@ const ManageColumns = ({
             >
               <Grid align='flex-start'>
                 <Grid.Col span={iconSpanSize}>
-                  <HolderIcon />
+                  <IconComponent iconName='gwas-holderIcon' dictIcons={dictIcons} height='1em' />
                 </Grid.Col>
                 <Grid.Col className={'column-label'} span={columnLabelSpanSize}>
                   {formatJSX(item.jsx)}

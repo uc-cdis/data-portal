@@ -1,7 +1,5 @@
 import React from 'react';
 import { ISortConfig } from '../../Interfaces/Interfaces';
-import CaretUp from '../Icons/CaretUp';
-import CaretDown from '../Icons/CaretDown';
 
 interface IHeaderProps {
   handleSort: Function;
@@ -47,18 +45,14 @@ const Header = ({
             className={`table-column-sorter-up ${
               getSortDirectionForCurrentColumn() === 'ascending' && 'active'
             }`}
-          >
-            <CaretUp />
-          </span>
+          />
           <span
             role='presentation'
             aria-label='caret-down'
             className={`table-column-sorter-down ${
               getSortDirectionForCurrentColumn() === 'descending' && 'active'
             }`}
-          >
-            <CaretDown />
-          </span>
+          />
         </span>
       </div>
     </th>
