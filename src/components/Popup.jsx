@@ -1,10 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createFocusTrap } from 'focus-trap';
+import DOMPurify from 'dompurify';
+import parse from 'html-react-parser';
+import { Marked } from 'marked';
 import Button from '@gen3/ui-component/dist/components/Button';
 import IconComponent from './Icon';
 import dictIcons from '../img/icons/index';
 import './Popup.less';
+
+const marked = new Marked();
+marked.use({ gfm: true, breaks: false });
+
+DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+  if ('target' in node || node.tagName === 'A') {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+});
 
 class Popup extends React.Component {
   componentDidMount() {
@@ -64,7 +77,19 @@ class Popup extends React.Component {
             }
           </div>
           <div className='popup__message' id='popup__message'>
-            { this.props.message && <div className='high-light'>{this.props.message.map((text, i) => <p key={i}>{text}</p>)}</div> }
+            { this.props.message && (
+              <div className='high-light popup__message-markdown'>
+                {parse(DOMPurify.sanitize(marked.parse(this.props.message.filter(line => typeof line === 'string' && line.trim() !== '').join('\n\n'))), {
+                  replace: (domNode) => {
+                    if (domNode.name === 'a') {
+                      const clonedNode = { ...domNode };
+                      clonedNode.attribs = { ...clonedNode.attribs, target: '_blank', rel: 'noopener noreferrer' };
+                      return clonedNode;
+                    }
+                  }
+                })}
+              </div>
+            )}
             {
               this.props.lines.length > 0
               && (
