@@ -10,7 +10,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@gen3/guppy": "^0.20.1",
+    "@gen3/guppy": "^0.24.0",
     "@gen3/ui-component": "^0.11.5",
     "@grafana/faro-core": "^2.8.2",
     "@grafana/faro-react": "^2.8.2",
