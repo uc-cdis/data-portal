@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ValidState from '../../TestData/States/ValidState';
 import JobInputModal from './JobInputModal';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
 export default {
@@ -72,18 +72,16 @@ export const MockedErrorInvalidData = MockTemplate.bind({});
 MockedErrorInvalidData.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(
-            ctx.delay(twoSecondsInMilliseconds),
-            ctx.json({
-              workflow_run: 'invalid',
-              workflow_limit: '...also invalid',
-            })
-          );
+          await delay(twoSecondsInMilliseconds);
+          return HttpResponse.json({
+            workflow_run: 'invalid',
+            workflow_limit: '...also invalid',
+          });
         }
       ),
     ],
@@ -94,15 +92,13 @@ export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(
-            ctx.delay(twoSecondsInMilliseconds),
-            ctx.json({ workflow_run: 12, workflow_limit: 50 })
-          );
+          await delay(twoSecondsInMilliseconds);
+          return HttpResponse.json({ workflow_run: 12, workflow_limit: 50 });
         }
       ),
     ],
@@ -113,15 +109,13 @@ export const MockedSuccessLimitExceeded = MockTemplate.bind({});
 MockedSuccessLimitExceeded.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(
-            ctx.delay(twoSecondsInMilliseconds / 2),
-            ctx.json({ workflow_run: 50, workflow_limit: 50 })
-          );
+          await delay(twoSecondsInMilliseconds / 2);
+          return HttpResponse.json({ workflow_run: 50, workflow_limit: 50 });
         }
       ),
     ],

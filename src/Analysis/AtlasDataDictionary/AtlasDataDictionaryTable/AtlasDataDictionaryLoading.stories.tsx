@@ -1,6 +1,5 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import AtlasDataDictionaryLoading from './AtlasDataDictionaryLoading';
 import TableData from './TestData/TableData';
 import { cohortMiddlewarePath } from '../../../localconf';
@@ -24,9 +23,7 @@ export const MockedValidData = MockTemplate.bind({});
 MockedValidData.parameters = {
   msw: {
     handlers: [
-      rest.get(endpoint, (req, res, ctx) => res(
-        ctx.json(TableData),
-      )),
+      http.get(endpoint, ({ params }) => HttpResponse.json(TableData)),
     ],
   },
 };
@@ -35,8 +32,7 @@ export const Mocked403Response = MockTemplate.bind({});
 Mocked403Response.parameters = {
   msw: {
     handlers: {
-      auth: rest.get(endpoint, (req, res, ctx) => res(ctx.status(403),
-        ctx.json({ errorMessage: 'Error 403' }))),
+      auth: http.get(endpoint, ({ params }) => HttpResponse.json({ errorMessage: 'Error 403' }, { status: 403 })),
     },
   },
 };
@@ -45,8 +41,10 @@ export const Mocked504Response = MockTemplate.bind({});
 Mocked504Response.parameters = {
   msw: {
     handlers: {
-      auth: rest.get(endpoint, (req, res, ctx) => res(ctx.delay(3000),
-        ctx.status(504), ctx.json('server timeout'))),
+      auth: http.get(endpoint, async ({ params }) => {
+        await delay(3000);
+        return HttpResponse.json('server timeout', { status: 504 });
+      }),
     },
   },
 };
