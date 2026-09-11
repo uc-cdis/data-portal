@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import WorkflowLimitsDashboard from './WorkflowLimitsDashboard';
 
 export default {
@@ -35,12 +35,13 @@ export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(ctx.delay(oneSecondInMilliseconds), ctx.json(getValidMockWorkflowLimitsInfo()));
+          await delay(oneSecondInMilliseconds);
+          return HttpResponse.json(getValidMockWorkflowLimitsInfo());
         }
       ),
     ],
@@ -51,15 +52,13 @@ export const MockedSuccessOverLimit = MockTemplate.bind({});
 MockedSuccessOverLimit.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(
-            ctx.delay(oneSecondInMilliseconds * 2),
-            ctx.json(exceedsWorkflowLimitObject)
-          );
+          await delay(oneSecondInMilliseconds * 2);
+          return HttpResponse.json(exceedsWorkflowLimitObject);
         }
       ),
     ],
@@ -70,15 +69,13 @@ export const MockedLoading = MockTemplate.bind({});
 MockedLoading.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(
-            ctx.delay(fifteenMinutesInMilliseconds),
-            ctx.json(getValidMockWorkflowLimitsInfo())
-          );
+          await delay(fifteenMinutesInMilliseconds);
+          return HttpResponse.json(getValidMockWorkflowLimitsInfo());
         }
       ),
     ],
@@ -89,12 +86,13 @@ export const MockedError500 = MockTemplate.bind({});
 MockedError500.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(ctx.delay(oneSecondInMilliseconds), ctx.status(500), ctx.json(invalidWorkflowLimitObject));
+          await delay(oneSecondInMilliseconds);
+          return HttpResponse.json(invalidWorkflowLimitObject, { status: 500 });
         }
       ),
     ],
@@ -104,12 +102,13 @@ export const MockedErrorInvalidData = MockTemplate.bind({});
 MockedErrorInvalidData.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(ctx.delay(oneSecondInMilliseconds), ctx.json(invalidWorkflowLimitObject));
+          await delay(oneSecondInMilliseconds);
+          return HttpResponse.json(invalidWorkflowLimitObject);
         }
       ),
     ],

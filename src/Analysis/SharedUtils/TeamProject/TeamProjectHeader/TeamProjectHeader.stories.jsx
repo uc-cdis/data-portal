@@ -1,7 +1,7 @@
 import React from 'react';
 import TeamProjectHeader from './TeamProjectHeader';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 
 export default {
   title: 'TESTS1/SharedUtils/TeamProjectHeader',
@@ -20,30 +20,28 @@ const Template = (args) => (
 const successParameters = {
   msw: {
     handlers: [
-      rest.get('http://:arboristapi/authz/mapping', (req, res, ctx) => {
-        return res(
-          ctx.delay(3000),
-          ctx.json({
-            '/gwas_projects/project11': [
-              {
-                service: 'atlas-argo-wrapper-and-cohort-middleware',
-                method: 'access',
-              },
-            ],
-            '/gwas_projects/project22': [
-              {
-                service: 'atlas-argo-wrapper-and-cohort-middleware',
-                method: 'access',
-              },
-            ],
-            '/somethingelse': [
-              {
-                service: 'requestor',
-                method: 'create',
-              },
-            ],
-          })
-        );
+      http.get('http://:arboristapi/authz/mapping', async ({ params }) => {
+        await delay(3000);
+        return HttpResponse.json({
+          '/gwas_projects/project11': [
+            {
+              service: 'atlas-argo-wrapper-and-cohort-middleware',
+              method: 'access',
+            },
+          ],
+          '/gwas_projects/project22': [
+            {
+              service: 'atlas-argo-wrapper-and-cohort-middleware',
+              method: 'access',
+            },
+          ],
+          '/somethingelse': [
+            {
+              service: 'requestor',
+              method: 'create',
+            },
+          ],
+        });
       }),
     ],
   },
@@ -68,9 +66,10 @@ MockedError403.args = {
 MockedError403.parameters = {
   msw: {
     handlers: [
-      rest.get('http://:arboristapi/authz/mapping', (req, res, ctx) =>
-        res(ctx.delay(800), ctx.status(403))
-      ),
+      http.get('http://:arboristapi/authz/mapping', async ({ params }) => {
+        await delay(800);
+        return new HttpResponse(null, { status: 403 });
+      }),
     ],
   },
 };
