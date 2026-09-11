@@ -12,7 +12,6 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/react'],
-            plugins: ['@babel/plugin-proposal-class-properties'],
           },
         },
       },
@@ -38,10 +37,12 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|woff|ttf|eot)$/,
-        loaders: 'url-loader',
-        query: {
-          limit: 8192,
-        },
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 8192,
+          },
+        }],
       },
       {
         test: /\.flow$/,
@@ -57,7 +58,7 @@ module.exports = {
       // which webpack 4 can't handle when they re-export from CJS modules.
       'msw/node': path.resolve('./node_modules/msw/lib/node/index.js'),
       'msw/native': path.resolve('./node_modules/msw/lib/native/index.js'),
-      'headers-polyfill': path.resolve('./node_modules/headers-polyfill/lib/index.js'),
+      'headers-polyfill': path.resolve('./node_modules/headers-polyfill/lib/index.cjs'),
       'outvariant': path.resolve('./node_modules/outvariant/lib/index.js'),
       'is-node-process': path.resolve('./node_modules/is-node-process/lib/index.js'),
     },
