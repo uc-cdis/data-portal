@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
 import { SourceContextProvider } from '../../Utils/Source';
 import {
@@ -68,72 +68,67 @@ WithConceptOutcome.args = {
 WithConceptOutcome.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/concept-stats/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinition/breakdown-by-concept-id/:breakdownconceptid',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinition } = req.params;
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinition } = params;
           rowCount++;
           if (rowCount == 12) {
             // simulate empty response scenario:
-            return res(
-              ctx.delay(200 * rowCount),
-              ctx.json({
-                concept_breakdown: null,
-              })
-            );
+            await delay(200 * rowCount);
+            return HttpResponse.json({
+              concept_breakdown: null,
+            });
           }
-          return res(
-            ctx.delay(200 * rowCount),
-            ctx.json({
-              concept_breakdown: [
-                {
-                  concept_value: 'ASN',
-                  concept_value_as_concept_id: 2000007029,
-                  concept_value_name: 'non-Hispanic Asian',
-                  persons_in_cohort_with_value: 40178 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
-                },
-                {
-                  concept_value: 'EUR',
-                  concept_value_as_concept_id: 2000007031,
-                  concept_value_name: 'non-Hispanic White',
-                  persons_in_cohort_with_value: 39648 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
-                },
-                {
-                  concept_value: 'AFR',
-                  concept_value_as_concept_id: 2000007030,
-                  concept_value_name: 'non-Hispanic Black',
-                  persons_in_cohort_with_value: 40107 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
-                },
-                {
-                  concept_value: 'HIS',
-                  concept_value_as_concept_id: 2000007028,
-                  concept_value_name: 'Hispanic',
-                  persons_in_cohort_with_value: 40038 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
-                },
-              ],
-            })
-          );
+          await delay(200 * rowCount);
+          return HttpResponse.json({
+            concept_breakdown: [
+              {
+                concept_value: 'ASN',
+                concept_value_as_concept_id: 2000007029,
+                concept_value_name: 'non-Hispanic Asian',
+                persons_in_cohort_with_value: 40178 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
+              },
+              {
+                concept_value: 'EUR',
+                concept_value_as_concept_id: 2000007031,
+                concept_value_name: 'non-Hispanic White',
+                persons_in_cohort_with_value: 39648 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
+              },
+              {
+                concept_value: 'AFR',
+                concept_value_as_concept_id: 2000007030,
+                concept_value_name: 'non-Hispanic Black',
+                persons_in_cohort_with_value: 40107 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
+              },
+              {
+                concept_value: 'HIS',
+                concept_value_as_concept_id: 2000007028,
+                concept_value_name: 'Hispanic',
+                persons_in_cohort_with_value: 40038 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
+              },
+            ],
+          });
         }
       ),
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
-        (req, res, ctx) => {
-          return res(
-            ctx.delay(2000),
-            ctx.json({
-              bins: generateHistogramTestData(),
-            })
-          );
+        async ({ params }) => {
+          await delay(2000);
+          return HttpResponse.json({
+            bins: generateHistogramTestData(),
+          });
         }
       ),
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinitionA } = req.params;
-          const { cohortdefinitionB } = req.params;
-          return res(ctx.delay(1100), ctx.json(generateEulerTestData()));
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinitionA } = params;
+          const { cohortdefinitionB } = params;
+          await delay(1100);
+          return HttpResponse.json(generateEulerTestData());
         }
       ),
     ],

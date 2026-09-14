@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
 import { SourceContextProvider } from '../../../Utils/Source';
 import { generateEulerTestData } from '../../../TestData/generateDiagramTestData';
@@ -52,13 +52,14 @@ SuccessCase.parameters = {
   // msw mocking:
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinitionA } = req.params;
-          const { cohortdefinitionB } = req.params;
-          return res(ctx.delay(1100), ctx.json(generateEulerTestData()));
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinitionA } = params;
+          const { cohortdefinitionB } = params;
+          await delay(1100);
+          return HttpResponse.json(generateEulerTestData());
         }
       ),
     ],
@@ -82,30 +83,28 @@ SuccessCase2.parameters = {
   // msw mocking:
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinitionA } = req.params;
-          const { cohortdefinitionB } = req.params;
-          return res(
-            ctx.delay(500),
-            ctx.json({
-              cohort_overlap: {
-                case_control_overlap:
-                  cohortdefinitionA ==
-                    selectedStudyPopulationCohort.cohort_definition_id &&
-                  cohortdefinitionB == selectedCaseCohort.cohort_definition_id
-                    ? variableOverlap--
-                    : cohortdefinitionA ==
-                        selectedCaseCohort.cohort_definition_id &&
-                      cohortdefinitionB ==
-                        selectedControlCohort.cohort_definition_id
-                    ? 1000
-                    : Math.floor(Math.random() * 500),
-              },
-            })
-          );
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinitionA } = params;
+          const { cohortdefinitionB } = params;
+          await delay(500);
+          return HttpResponse.json({
+            cohort_overlap: {
+              case_control_overlap:
+                cohortdefinitionA ==
+                  selectedStudyPopulationCohort.cohort_definition_id &&
+                cohortdefinitionB == selectedCaseCohort.cohort_definition_id
+                  ? variableOverlap--
+                  : cohortdefinitionA ==
+                      selectedCaseCohort.cohort_definition_id &&
+                    cohortdefinitionB ==
+                      selectedControlCohort.cohort_definition_id
+                  ? 1000
+                  : Math.floor(Math.random() * 500),
+            },
+          });
         }
       ),
     ],
@@ -127,14 +126,12 @@ ErrorCase.args = {
 ErrorCase.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) =>
-          res(
-            ctx.delay(800),
-            ctx.status(403),
-            ctx.json({ errorMessage: `Error` })
-          )
+        async ({ params }) => {
+          await delay(800);
+          return HttpResponse.json({ errorMessage: `Error` }, { status: 403 });
+        }
       ),
     ],
   },
@@ -155,10 +152,12 @@ TimeoutCase.args = {
 TimeoutCase.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) =>
-          res(ctx.delay(3000), ctx.status(504), ctx.json('server timeout'))
+        async ({ params }) => {
+          await delay(3000);
+          return HttpResponse.json('server timeout', { status: 504 });
+        }
       ),
     ],
   },
