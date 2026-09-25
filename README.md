@@ -211,7 +211,7 @@ All the configurations of necessary certificates are define in src/<common-name>
 "components": {
   "certs": {
     "<certificate-name>": {
-      "title": "BloodPAC User agreement",
+      "title": "User agreement",
       "description": "The agreement on what you can and need to do in a Commons.",
       "questions": [
         {
