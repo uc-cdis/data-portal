@@ -4,7 +4,9 @@ import {
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Icons from './TableIcons/Icons';
@@ -74,8 +76,8 @@ const HomeTable = ({ data }) => {
   const handleDateSelectionChange = (event, dateType) => {
     if (dateType === 'submittedAtSelection') {
       if (event && event.length === 2) {
-        const startDate = moment.utc(event[0]._d);
-        const endDate = moment.utc(event[1]._d);
+        const startDate = dayjs.utc(event[0].toDate());
+        const endDate = dayjs.utc(event[1].toDate());
         return setHomeTableState({
           ...homeTableState,
           currentPage: 1,
@@ -90,8 +92,8 @@ const HomeTable = ({ data }) => {
     }
     if (dateType === 'finishedAtSelection') {
       if (event && event.length === 2) {
-        const startDate = moment.utc(event[0]._d);
-        const endDate = moment.utc(event[1]._d);
+        const startDate = dayjs.utc(event[0].toDate());
+        const endDate = dayjs.utc(event[1].toDate());
         return setHomeTableState({
           ...homeTableState,
           currentPage: 1,
