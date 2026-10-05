@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 
@@ -174,6 +175,7 @@ const plugins = [
   }),
   */
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
+  new AntdDayjsWebpackPlugin(),
 ];
 
 const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';

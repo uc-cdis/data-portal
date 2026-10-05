@@ -1,4 +1,10 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+dayjs.extend(utc);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[key]
   .toString()
@@ -9,7 +15,7 @@ const filterBySearchTerm = (data, key, searchTerm) => data.filter((obj) => obj[k
 const filterByJobStatuses = (data, jobStatusSelections) => data.filter((item) => jobStatusSelections.includes(item.phase));
 
 const filterByDateRange = (data, key, dateSelection) => data.filter((obj) => {
-  const utcDate = moment.utc(obj[key]);
+  const utcDate = dayjs.utc(obj[key]);
   return (
     utcDate.isSameOrAfter(dateSelection[0], 'day')
       && utcDate.isSameOrBefore(dateSelection[1], 'day')
