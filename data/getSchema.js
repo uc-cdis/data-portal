@@ -53,12 +53,8 @@ const schemaUrl = `${gdcSubPath}getschema`;
 const schemaPath = `${__dirname}/schema.json`;
 const dictUrl = `${gdcSubPath}_dictionary/_all`;
 const dictPath = `${__dirname}/dictionary.json`;
-const httpAgent = new http.Agent({
-  rejectUnauthorized: false,
-});
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-});
+const httpAgent = new http.Agent();
+const httpsAgent = new https.Agent();
 
 const retryBackoff = [2000, 4000, 8000, 16000];
 
