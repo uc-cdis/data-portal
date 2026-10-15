@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import Home from './Home';
 import PHASES from '../../Utils/PhasesEnumeration';
 import TableData from '../../TestData/TableData';
@@ -96,31 +96,28 @@ export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(2000);
+          return HttpResponse.json(getMockWorkflowList());
         }
       ),
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(1000),
-            ctx.json({ workflow_run: 5, workflow_limit: 50 })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(1000);
+          return HttpResponse.json({ workflow_run: 5, workflow_limit: 50 });
         }
       ),
-      rest.post(
+      http.post(
         'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflow } = req.params;
-          return res(
-            ctx.delay(800),
-            ctx.text(`${workflow} retried sucessfully`)
-          );
+        async ({ params }) => {
+          const { argowrapperpath, workflow } = params;
+          await delay(800);
+          return HttpResponse.text(`${workflow} retried sucessfully`);
         }
       ),
     ],
@@ -131,32 +128,28 @@ export const MockedSuccessButFailedRetry = MockTemplate.bind({});
 MockedSuccessButFailedRetry.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(2000);
+          return HttpResponse.json(getMockWorkflowList());
         }
       ),
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(1000),
-            ctx.json({ workflow_run: 5, workflow_limit: 50 })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(1000);
+          return HttpResponse.json({ workflow_run: 5, workflow_limit: 50 });
         }
       ),
-      rest.post(
+      http.post(
         'http://:argowrapperpath/ga4gh/wes/v2/retry/:workflow',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflow } = req.params;
-          return res(
-            ctx.delay(800),
-            ctx.status(500),
-            ctx.text(`${workflow} retry failed`)
-          );
+        async ({ params }) => {
+          const { argowrapperpath, workflow } = params;
+          await delay(800);
+          return HttpResponse.text(`${workflow} retry failed`, { status: 500 });
         }
       ),
     ],
@@ -167,12 +160,13 @@ export const MockedError = MockTemplate.bind({});
 MockedError.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           console.log(argowrapperpath);
-          return res(ctx.delay(1000), ctx.status(500), ctx.json({ test: 123 }));
+          await delay(1000);
+          return HttpResponse.json({ test: 123 }, { status: 500 });
         }
       ),
     ],
@@ -184,21 +178,20 @@ export const MockedSuccessButExceededWorkflowLimitForRetries =
 MockedSuccessButExceededWorkflowLimitForRetries.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(2000);
+          return HttpResponse.json(getMockWorkflowList());
         }
       ),
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(1000),
-            ctx.json({ workflow_run: 50, workflow_limit: 50 })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(1000);
+          return HttpResponse.json({ workflow_run: 50, workflow_limit: 50 });
         }
       ),
     ],
@@ -210,24 +203,23 @@ export const MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries =
 MockedSuccessButWorkflowLimitReturnsMalformedDataForRetries.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(2000);
+          return HttpResponse.json(getMockWorkflowList());
         }
       ),
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(3000),
-            ctx.json({
-              workflow_run: 'a string and an array?',
-              workflow_limit: [],
-            })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(3000);
+          return HttpResponse.json({
+            workflow_run: 'a string and an array?',
+            workflow_limit: [],
+          });
         }
       ),
     ],
@@ -239,18 +231,20 @@ export const MockedSuccessButWorkflowLimitReturns500ForRetries =
 MockedSuccessButWorkflowLimitReturns500ForRetries.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(2000), ctx.json(getMockWorkflowList()));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(2000);
+          return HttpResponse.json(getMockWorkflowList());
         }
       ),
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/workflows/user-monthly',
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(3000), ctx.status(500), ctx.json('error'));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(3000);
+          return HttpResponse.json('error', { status: 500 });
         }
       ),
     ],

@@ -1,8 +1,8 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { hostnameWithSubdomain } from '../../../../../../../../localconf';
 
 const GenerateFilenameWithoutPrefix = (fileCategory: string, studyID: string = ''): string => {
-  const currentDateString = moment().format('YYYY-MM-DD');
+  const currentDateString = dayjs().format('YYYY-MM-DD');
   const filenamePrefix = `${hostnameWithSubdomain}${(studyID) ? `-${studyID}` : ''}-${currentDateString}`;
   switch (fileCategory) {
   case 'metadata':

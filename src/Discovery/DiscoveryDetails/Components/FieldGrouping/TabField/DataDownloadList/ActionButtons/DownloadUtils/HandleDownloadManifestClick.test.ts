@@ -7,7 +7,7 @@ import GenerateFilenameWithoutPrefix from './GenerateFilenameWithoutPrefix';
 jest.mock('./DownloadJsonFile');
 
 // Mock GenerateFilenameWithoutPrefix()
-jest.mock('moment', () => () => ({ format: () => '2026-04-15' }));
+jest.mock('dayjs', () => () => ({ format: () => '2026-04-15' }));
 jest.mock('../../../../../../../../localconf', () => ({
   hostname: 'localhost',
   hostnameWithSubdomain: 'data-portal',

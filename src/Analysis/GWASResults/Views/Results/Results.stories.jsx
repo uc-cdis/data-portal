@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import SharedContext from '../../Utils/SharedContext';
 import Results from './Results';
 import imageFile from '../../TestData/dummy_result1.png'; // not a Manhattan plot...but will do for now
@@ -49,29 +49,28 @@ MockedSuccess.args = selectedRowData1;
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflowname } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath, workflowname } = params;
           console.log(argowrapperpath);
           console.log(workflowname);
-          return res(ctx.delay(500), ctx.json(WorkflowStatusResponse));
+          await delay(500);
+          return HttpResponse.json(WorkflowStatusResponse);
         }
       ),
-      rest.get(
+      http.get(
         'http://:server/user/data/download/:index_did',
-        (req, res, ctx) => {
-          const { index_did } = req.params;
+        async ({ params }) => {
+          const { index_did } = params;
           console.log(index_did);
-          return res(
-            ctx.delay(500),
-            ctx.json({
-              url:
-                index_did === '999-8888-7777-aaaa123456-777777'
-                  ? imageFile
-                  : imageFile + '.zip',
-            }) // note: the .zip here is fake and although its download will be initiated in this storybook, it won't really work or download any .zip file
-          );
+          await delay(500);
+          return HttpResponse.json({
+            url:
+              index_did === '999-8888-7777-aaaa123456-777777'
+                ? imageFile
+                : imageFile + '.zip',
+          }); // note: the .zip here is fake and although its download will be initiated in this storybook, it won't really work or download any .zip file
         }
       ),
     ],
@@ -99,39 +98,40 @@ const determineEndPointURL = (index_did) => {
 MockedSuccess2.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflowname } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath, workflowname } = params;
           console.log(argowrapperpath);
           console.log(workflowname);
-          return res(ctx.delay(500), ctx.json(WorkflowStatusResponse2));
+          await delay(500);
+          return HttpResponse.json(WorkflowStatusResponse2);
         }
       ),
-      rest.get(
+      http.get(
         'http://:server/user/data/download/:index_did',
-        (req, res, ctx) => {
-          const { index_did } = req.params;
+        async ({ params }) => {
+          const { index_did } = params;
           console.log(index_did);
-          return res(
-            ctx.delay(500),
-            ctx.json({
-              url: determineEndPointURL(index_did),
-            })
-          );
+          await delay(500);
+          return HttpResponse.json({
+            url: determineEndPointURL(index_did),
+          });
         }
       ),
-      rest.get(dummyS3BucketLocation, (req, res, ctx) => {
-        const { index_did } = req.params;
+      http.get(dummyS3BucketLocation, async ({ params }) => {
+        const { index_did } = params;
         console.log('pheWeb JSON DID:', index_did);
-        return res(ctx.delay(500), ctx.json(manhattanPheWebJsonFile));
+        await delay(500);
+        return HttpResponse.json(manhattanPheWebJsonFile);
       }),
 
-      rest.get(dummyS3BucketLocation2, (req, res, ctx) => {
-        const { index_did } = req.params;
+      http.get(dummyS3BucketLocation2, async ({ params }) => {
+        const { index_did } = params;
         console.log('QQ did:', index_did);
         console.log('qqPlotJSON', qqPlotJsonFile);
-        return res(ctx.delay(500), ctx.json(qqPlotJsonFile));
+        await delay(500);
+        return HttpResponse.json(qqPlotJsonFile);
       }),
     ],
   },
@@ -142,9 +142,12 @@ MockedError.args = selectedRowData2;
 MockedError.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (_, res, ctx) => res(ctx.delay(800), ctx.status(403))
+        async ({ params }) => {
+          await delay(800);
+          return new HttpResponse(null, { status: 403 });
+        }
       ),
     ],
   },
@@ -155,21 +158,23 @@ MockedError2WhenPng.args = selectedRowData3;
 MockedError2WhenPng.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflowname } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath, workflowname } = params;
           console.log(argowrapperpath);
           console.log(workflowname);
-          return res(ctx.delay(500), ctx.json(WorkflowStatusResponse));
+          await delay(500);
+          return HttpResponse.json(WorkflowStatusResponse);
         }
       ),
-      rest.get(
+      http.get(
         'http://:server/user/data/download/:manhattan_plot_index_did',
-        (req, res, ctx) => {
-          const { manhattan_plot_index_did } = req.params;
+        async ({ params }) => {
+          const { manhattan_plot_index_did } = params;
           console.log(manhattan_plot_index_did);
-          return res(ctx.delay(500), ctx.json({ url: imageFile + '.invalid' }));
+          await delay(500);
+          return HttpResponse.json({ url: imageFile + '.invalid' });
         }
       ),
     ],
@@ -181,21 +186,23 @@ MockedError2WhenPheweb.args = selectedRowData6;
 MockedError2WhenPheweb.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflowname } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath, workflowname } = params;
           console.log(argowrapperpath);
           console.log(workflowname);
-          return res(ctx.delay(500), ctx.json(WorkflowStatusResponse2));
+          await delay(500);
+          return HttpResponse.json(WorkflowStatusResponse2);
         }
       ),
-      rest.get(
+      http.get(
         'http://:server/user/data/download/:manhattan_plot_index_did',
-        (req, res, ctx) => {
-          const { manhattan_plot_index_did } = req.params;
+        async ({ params }) => {
+          const { manhattan_plot_index_did } = params;
           console.log(manhattan_plot_index_did);
-          return res(ctx.delay(500), ctx.json({ someerror: 'error' }));
+          await delay(500);
+          return HttpResponse.json({ someerror: 'error' });
         }
       ),
     ],
@@ -207,16 +214,14 @@ MockedError3.args = selectedRowData4;
 MockedError3.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowname',
-        (req, res, ctx) => {
-          const { argowrapperpath, workflowname } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath, workflowname } = params;
           console.log(argowrapperpath);
           console.log(workflowname);
-          return res(
-            ctx.delay(500),
-            ctx.json({ some_dummy: 'and-wrong-response-format' })
-          );
+          await delay(500);
+          return HttpResponse.json({ some_dummy: 'and-wrong-response-format' });
         }
       ),
     ],

@@ -1,5 +1,9 @@
 import React, { useContext } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 import SharedContext from '../../../Utils/SharedContext';
 import DateForTable from '../../../Components/DateForTable/DateForTable';
 
@@ -12,7 +16,7 @@ const subtractDates = (endDate, startDate) => {
   const diffInMs = timestampEnd - timestampStart;
   // See here for more info:
   // https://momentjscom.readthedocs.io/en/latest/moment/08-durations/03-humanize/
-  return moment.duration(diffInMs).humanize();
+  return dayjs.duration(diffInMs).humanize();
 };
 
 const ExecutionTable = () => {
