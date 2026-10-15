@@ -71,6 +71,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     onRedirectForAction: (redirectState: object) => any,
     params: { studyUID?: string | null },
     history: any,
+    systemPopupActivated: boolean,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -283,6 +284,11 @@ const DiscoveryWithMDSBackend: React.FC<{
           <ReduxDiscoveryDetails
             modalVisible={singleStudyVisible}
             setModalVisible={(visible) => {
+              // the drawer is hidden behind the system use (DUA) popup; ignore close requests
+              // until it is accepted so we don't navigate away from the study
+              if (!visible && props.systemPopupActivated) {
+                return;
+              }
               setSingleStudyVisible(visible);
               if (!visible) {
                 // route change remounts this component without a study id, loading the full Discovery page
@@ -312,6 +318,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 const mapStateToProps = (state) => ({
   userAuthMapping: state.userAuthMapping,
   userAggregateAuthMappings: state.userAggregateAuthMappings,
+  systemPopupActivated: !!state.popups?.systemUseWarnPopup,
   config: discoveryConfig,
   ...state.discovery,
 });
