@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Execution from './Execution';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import './../../GWASResultsContainer.css';
 
 export default {
@@ -81,11 +81,12 @@ export const MockedFailure = MockTemplateFailure.bind({});
 MockedFailure.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(100), ctx.json(MockedFailureJSON));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          return HttpResponse.json(MockedFailureJSON);
         }
       ),
     ],
@@ -96,12 +97,13 @@ export const MockedSuccess = MockTemplateSuccess.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
+        async ({ params }) => {
+          const { argowrapperpath } = params;
           // Successful executions return an empty array
-          return res(ctx.delay(100), ctx.json([]));
+          await delay(100);
+          return HttpResponse.json([]);
         }
       ),
     ],
@@ -112,15 +114,13 @@ export const MockedErrorObject = MockTemplateFailure.bind({});
 MockedErrorObject.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(100),
-            // Some errroneous responses can return an error object
-            ctx.json({ error: 'Mocked Server error response' })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          // Some errroneous responses can return an error object
+          return HttpResponse.json({ error: 'Mocked Server error response' });
         }
       ),
     ],
@@ -130,14 +130,12 @@ export const MockedError403Response = MockTemplateFailure.bind({});
 MockedError403Response.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/logs/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(100),
-            ctx.status(403)
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          return new HttpResponse(null, { status: 403 });
         }
       ),
     ],

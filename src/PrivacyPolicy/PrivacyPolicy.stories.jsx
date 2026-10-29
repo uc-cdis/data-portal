@@ -1,5 +1,5 @@
 import React from 'react';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { components } from '../params';
@@ -44,7 +44,7 @@ export default {
   component: ReduxPrivacyPolicy,
   parameters: {
     msw: [
-      rest.get(components.privacyPolicy.file, (req, res, ctx) => res(ctx.status(200), ctx.body(data))),
+      http.get(components.privacyPolicy.file, ({ params }) => new HttpResponse(data, { status: 200 })),
     ],
   },
 };

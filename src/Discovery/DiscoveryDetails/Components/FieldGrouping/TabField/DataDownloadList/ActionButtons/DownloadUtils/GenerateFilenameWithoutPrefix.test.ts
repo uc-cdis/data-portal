@@ -4,14 +4,14 @@ jest.mock('../../../../../../../../localconf', () => ({
   hostnameWithSubdomain: 'test-portal',
 }));
 
-jest.mock('moment', () => {
-  const mockMoment = () => ({
+jest.mock('dayjs', () => {
+  const mockDayjs = () => ({
     format: (fmt: string) => {
       if (fmt === 'YYYY-MM-DD') return '2026-04-08';
       return '';
     },
   });
-  return mockMoment;
+  return mockDayjs;
 });
 
 const DATE = '2026-04-08';

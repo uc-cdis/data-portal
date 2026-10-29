@@ -1,4 +1,8 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(utc);
+dayjs.extend(isSameOrBefore);
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -21,7 +25,7 @@ class PlotChartAxisTick extends React.Component {
 
     let formattedValue = payload.value;
     if (type === 'date') {
-      formattedValue = `${moment(formattedValue).month() + 1}/${moment(formattedValue).date()}`;
+      formattedValue = `${dayjs(formattedValue).month() + 1}/${dayjs(formattedValue).date()}`;
     } else if (type === 'number') {
       formattedValue = Number(formattedValue).toLocaleString();
     } else if (type === 'string' && labelMaxLength) {
@@ -68,13 +72,9 @@ PlotChartAxisTick.defaultProps = {
 
 function getDates(startDate, endDate, days) {
   const dates = [];
-  let currentDate = moment(startDate);
-  const endingDate = moment(endDate);
-  const addDaysToDate = (date) => {
-    const newDate = moment(date);
-    newDate.add(days, 'days');
-    return newDate;
-  };
+  let currentDate = dayjs(startDate);
+  const endingDate = dayjs(endDate);
+  const addDaysToDate = (date) => dayjs(date).add(days, 'day');
   while (currentDate.isSameOrBefore(endingDate)) {
     dates.push(currentDate.utc().format('YYYY-MM-DD HH:mm:ssZ'));
     currentDate = addDaysToDate(currentDate);
@@ -98,7 +98,7 @@ function formatChartDataFromProps(plots) {
     });
   });
   let sortedData = Object.values(dateToData);
-  sortedData = sortedData.sort((a, b) => moment(a.date) - moment(b.date));
+  sortedData = sortedData.sort((a, b) => dayjs(a.date) - dayjs(b.date));
   return {
     data: sortedData,
     ticks: getDates(sortedData[0].date, sortedData[sortedData.length - 1].date, 7),
@@ -316,7 +316,7 @@ class PlotChart extends PureComponent {
 
   renderTooltip = (props) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = moment(props.label);
+    const date = dayjs(props.label);
     const nColumns = Math.ceil(props.payload.length / 5); // up to 5 items per column
     return (
       <div className='plot-chart__tooltip'>

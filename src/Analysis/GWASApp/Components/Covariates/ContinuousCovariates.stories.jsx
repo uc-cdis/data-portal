@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import ContinuousCovariates from './ContinuousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
 import '../../GWASApp.css';
@@ -89,43 +89,39 @@ export const SuccessCase = Template.bind({});
 SuccessCase.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { sourceid } = req.params;
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { sourceid } = params;
           console.log(cohortmiddlewarepath);
           console.log(sourceid);
-          return res(
-            ctx.delay(1100),
-            ctx.json({
-              concepts: mockConcepts,
-            })
-          );
+          await delay(1100);
+          return HttpResponse.json({
+            concepts: mockConcepts,
+          });
         }
       ),
-      rest.post(
+      http.post(
         //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
         'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinitionId } = req.params;
-          return res(
-            ctx.delay(1100),
-            ctx.json({
-              bins: [
-                { start: 1.4564567, end: 10.45642, personCount: 100 },
-                { start: 10.45642, end: 20, personCount: 200 },
-                { start: 20, end: 30, personCount: 300 },
-                { start: 30, end: 40, personCount: 400 },
-                { start: 40, end: 50, personCount: 500 },
-                { start: 50, end: 60, personCount: 400 },
-                { start: 60, end: 70, personCount: 350 },
-                { start: 70, end: 80, personCount: 100 },
-                { start: 80, end: 90, personCount: 50 },
-              ],
-            })
-          );
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinitionId } = params;
+          await delay(1100);
+          return HttpResponse.json({
+            bins: [
+              { start: 1.4564567, end: 10.45642, personCount: 100 },
+              { start: 10.45642, end: 20, personCount: 200 },
+              { start: 20, end: 30, personCount: 300 },
+              { start: 30, end: 40, personCount: 400 },
+              { start: 40, end: 50, personCount: 500 },
+              { start: 50, end: 60, personCount: 400 },
+              { start: 60, end: 70, personCount: 350 },
+              { start: 70, end: 80, personCount: 100 },
+              { start: 80, end: 90, personCount: 50 },
+            ],
+          });
         }
       ),
     ],
@@ -136,33 +132,29 @@ export const EmptyDataCase = Template.bind({});
 EmptyDataCase.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { sourceid } = req.params;
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { sourceid } = params;
           console.log(cohortmiddlewarepath);
           console.log(sourceid);
-          return res(
-            ctx.delay(1100),
-            ctx.json({
-              concepts: mockConcepts,
-            })
-          );
+          await delay(1100);
+          return HttpResponse.json({
+            concepts: mockConcepts,
+          });
         }
       ),
-      rest.post(
+      http.post(
         //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
         'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
-        (req, res, ctx) => {
-          const { cohortmiddlewarepath } = req.params;
-          const { cohortdefinitionId } = req.params;
-          return res(
-            ctx.delay(1100),
-            ctx.json({
-              bins: null, // simulates empty data response
-            })
-          );
+        async ({ params }) => {
+          const { cohortmiddlewarepath } = params;
+          const { cohortdefinitionId } = params;
+          await delay(1100);
+          return HttpResponse.json({
+            bins: null, // simulates empty data response
+          });
         }
       ),
     ],
@@ -173,9 +165,12 @@ export const ErrorCase = Template.bind({});
 ErrorCase.parameters = {
   msw: {
     handlers: [
-      rest.post(
+      http.post(
         'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
-        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+        async ({ params }) => {
+          await delay(800);
+          return new HttpResponse(null, { status: 403 });
+        }
       ),
     ],
   },
