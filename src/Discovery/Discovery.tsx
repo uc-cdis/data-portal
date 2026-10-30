@@ -206,7 +206,7 @@ export interface Props {
   config: DiscoveryConfig,
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
-  params?: { studyUID: string | null }, // from React Router
+  params?: { studyUID: string | null | undefined }, // from React Router
   selectedResources: DiscoveryResource,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
