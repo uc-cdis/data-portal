@@ -9,6 +9,38 @@ import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../../.
 const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
   t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
+const unpackAggMDSEntry = (entry, studyId, commonsName, index) => {
+  const entryUnpacked = entry[studyId].gen3_discovery;
+  entryUnpacked.study_id = studyId;
+  entryUnpacked.commons = commonsName;
+  entryUnpacked.frontend_uid = `${commonsName}_${index}`;
+  entryUnpacked.tags = entryUnpacked.tags || [];
+  entryUnpacked.tags.push(Object({ category: 'Commons', name: commonsName }));
+
+  // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
+  // add the value of that field as a tag.
+
+  discoveryConfig?.tagCategories.forEach((tag) => {
+    if (tag.name in entryUnpacked) {
+      if (typeof entryUnpacked[tag.name] === 'string') {
+        const tagValue = entryUnpacked[tag.name];
+        entryUnpacked.tags.push(Object({ category: tag.name, name: tagValue }));
+      } else if (Array.isArray(entryUnpacked[tag.name])) {
+        entryUnpacked.tags = entryUnpacked.tags.concat(
+          entryUnpacked[tag.name].map((name) => ({ category: tag.name, name })),
+        );
+      }
+    }
+  });
+  entryUnpacked.tags = [...getUniqueTags(entryUnpacked.tags).entries()].map((e) => (e[1]));
+
+  // copy VLMD info if exists
+  if (studyRegistrationConfig?.variableMetadataField && entry[studyId][studyRegistrationConfig.variableMetadataField]) {
+    entryUnpacked[studyRegistrationConfig.variableMetadataField] = entry[studyId][studyRegistrationConfig.variableMetadataField];
+  }
+  return entryUnpacked;
+};
+
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
@@ -28,38 +60,8 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
     const studies = metadataResponse[commonsName];
 
     const editedStudies = studies.map((entry, index) => {
-      const keys = Object.keys(entry);
-      const studyId = keys[0];
-
-      const entryUnpacked = entry[studyId].gen3_discovery;
-      entryUnpacked.study_id = studyId;
-      entryUnpacked.commons = commonsName;
-      entryUnpacked.frontend_uid = `${commonsName}_${index}`;
-      entryUnpacked.tags = entryUnpacked.tags || [];
-      entryUnpacked.tags.push(Object({ category: 'Commons', name: commonsName }));
-
-      // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
-      // add the value of that field as a tag.
-
-      discoveryConfig?.tagCategories.forEach((tag) => {
-        if (tag.name in entryUnpacked) {
-          if (typeof entryUnpacked[tag.name] === 'string') {
-            const tagValue = entryUnpacked[tag.name];
-            entryUnpacked.tags.push(Object({ category: tag.name, name: tagValue }));
-          } else if (Array.isArray(entryUnpacked[tag.name])) {
-            entryUnpacked.tags = entryUnpacked.tags.concat(
-              entryUnpacked[tag.name].map((name) => ({ category: tag.name, name })),
-            );
-          }
-        }
-      });
-      entryUnpacked.tags = [...getUniqueTags(entryUnpacked.tags).entries()].map((e) => (e[1]));
-
-      // copy VLMD info if exists
-      if (studyRegistrationConfig?.variableMetadataField && entry[studyId][studyRegistrationConfig.variableMetadataField]) {
-        entryUnpacked[studyRegistrationConfig.variableMetadataField] = entry[studyId][studyRegistrationConfig.variableMetadataField];
-      }
-      return entryUnpacked;
+      const studyId = Object.keys(entry)[0];
+      return unpackAggMDSEntry(entry, studyId, commonsName, index);
     });
 
     allStudies = allStudies.concat(editedStudies);
@@ -72,6 +74,20 @@ const loadStudiesFromAggMDS = async (limit = 2000) => {
   const offset = 0; // For pagination
   const studies = await loadStudiesFromAggMDSRequests(offset, limit);
   return studies;
+};
+
+// Loads a single study by GUID from the aggregate MDS.
+export const loadStudyFromAggMDS = async (guid) => {
+  const url = `${aggMDSDataURL}/guid/${encodeURIComponent(guid)}`;
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed with status ${res.status}`);
+  }
+  const body = await res.json();
+  if (!body?.gen3_discovery) {
+    throw new Error(`Study ${guid} not found in aggregate MDS`);
+  }
+  return unpackAggMDSEntry({ [guid]: body }, guid, body.commons_name || 'unknown', 0);
 };
 
 export default loadStudiesFromAggMDS;

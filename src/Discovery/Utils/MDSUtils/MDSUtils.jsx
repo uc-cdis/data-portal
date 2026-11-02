@@ -42,4 +42,19 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata', fetchSize = 2
   }
 };
 
+// Loads the metadata of a single study from MDS, rather than the full list.
+export const loadStudyFromMDS = async (guid) => {
+  const url = `${mdsURL}/${encodeURIComponent(guid)}`;
+  const res = await fetch(url);
+  if (res.status !== 200) {
+    throw new Error(`Request for study data at ${url} failed with status ${res.status}`);
+  }
+  const entry = await res.json();
+  const study = { ...entry[STUDY_DATA_FIELD] };
+  if (studyRegistrationConfig?.variableMetadataField && entry[studyRegistrationConfig.variableMetadataField]) {
+    study[studyRegistrationConfig.variableMetadataField] = entry[studyRegistrationConfig.variableMetadataField];
+  }
+  return study;
+};
+
 export default loadStudiesFromMDS;
