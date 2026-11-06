@@ -37,7 +37,7 @@ import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
 import isColumnSearchable from './Utils/Search/isColumnSearchable';
-import { loadStudyFromMDS } from './Utils/MDSUtils/MDSUtils';
+import { loadStudyFromMDS, mergeStudyWithMDSMetadata } from './Utils/MDSUtils/MDSUtils';
 
 export const accessibleFieldName = '__accessible';
 
@@ -250,9 +250,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     }
     loadStudyFromMDS(guid).then((study) => {
       if (latestRequestedStudyGUID.current !== guid) return; // user opened another study meanwhile
-      // keep frontend-only fields from the record (e.g. __accessible), MDS values take precedence,
-      // except for tags: keep the record's tags (e.g. the "Commons" tag added by the aggregate MDS)
-      setModalData({ ...record, ...study, tags: record.tags ?? study.tags });
+      setModalData(mergeStudyWithMDSMetadata(record, study));
     }).catch((err) => {
       // eslint-disable-next-line no-console
       console.error(`Could not load study ${guid} from MDS, showing table data instead: `, err);

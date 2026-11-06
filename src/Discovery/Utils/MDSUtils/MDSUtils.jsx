@@ -53,4 +53,27 @@ export const loadStudyFromMDS = async (guid) => {
   return study;
 };
 
+// Combines a study record shown in the Discovery table (which may come from the aggregate MDS)
+// with its full metadata from MDS. MDS values take precedence, but fields that only exist on the
+// table record are kept (e.g. __accessible, commons, commons_url), and so are the record's tags
+// (e.g. the "Commons" tag added by the aggregate MDS).
+export const mergeStudyWithMDSMetadata = (record, mdsStudy) => ({
+  ...record,
+  ...mdsStudy,
+  tags: record.tags ?? mdsStudy.tags,
+});
+
+// Fetches the full metadata from MDS (never the aggregate MDS) for each of the given study records,
+// using `record[uidFieldName]` as the metadata GUID.
+export const loadSelectedStudiesFromMDS = (selectedResources, uidFieldName) => Promise.all(
+  selectedResources.map(async (record) => {
+    const guid = record[uidFieldName];
+    if (!guid) {
+      throw new Error(`Selected study is missing its UID field "${uidFieldName}"`);
+    }
+    const mdsStudy = await loadStudyFromMDS(guid);
+    return mergeStudyWithMDSMetadata(record, mdsStudy);
+  }),
+);
+
 export default loadStudiesFromMDS;

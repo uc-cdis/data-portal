@@ -10,11 +10,12 @@ import {
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
 import processFileMetadata from './processFileMetadata';
+import { loadSelectedStudiesFromMDS } from '../../Utils/MDSUtils/MDSUtils';
 import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
-  selectedResources: any[],
+  selectedStudyRecords: any[],
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history,
@@ -27,6 +28,23 @@ const handleDownloadZipClick = async (
 
   const { manifestFieldName } = config.features.exportToWorkspace;
   const uidFieldName = config.minimalFieldMapping?.uid || '';
+
+  if (healIDPLoginNeeded) {
+    return;
+  }
+
+  // table records may not contain the file manifests / external file metadata
+  // (e.g. when loaded from the aggregate MDS), so fetch the full metadata of the selected studies from MDS
+  let selectedResources: any[];
+  try {
+    selectedResources = await loadSelectedStudiesFromMDS(selectedStudyRecords, uidFieldName);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Could not load metadata of the selected studies from MDS: ', err);
+    setDownloadStatus(DOWNLOAD_FAIL_STATUS);
+    return;
+  }
+
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
       setDownloadStatus,
@@ -38,10 +56,6 @@ const handleDownloadZipClick = async (
     if (!isLinked) {
       return;
     }
-  }
-
-  if (healIDPLoginNeeded) {
-    return;
   }
 
   const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'all_files', selectedResources);

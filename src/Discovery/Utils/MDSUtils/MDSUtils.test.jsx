@@ -1,4 +1,4 @@
-import loadStudiesFromMDS from './MDSUtils';
+import loadStudiesFromMDS, { mergeStudyWithMDSMetadata, loadSelectedStudiesFromMDS } from './MDSUtils';
 import { mdsURL } from '../../../localconf';
 
 global.fetch = jest.fn();
@@ -113,6 +113,66 @@ describe('MDS Data Loading Functions', () => {
       const studies = await loadStudiesFromMDS();
       expect(fetch).toHaveBeenCalledTimes(2);
       expect(studies.length).toBe(2500);
+    });
+  });
+
+  describe('mergeStudyWithMDSMetadata', () => {
+    it('should let MDS values win but keep record-only fields and the record tags', () => {
+      const record = {
+        _hdp_uid: 'study1', name: 'old name', __accessible: 'accessible', commons: 'commons1', tags: [{ category: 'Commons', name: 'commons1' }],
+      };
+      const mdsStudy = { name: 'new name', __manifest: [{ object_id: 'obj1' }], tags: [] };
+      expect(mergeStudyWithMDSMetadata(record, mdsStudy)).toEqual({
+        _hdp_uid: 'study1',
+        name: 'new name',
+        __accessible: 'accessible',
+        commons: 'commons1',
+        __manifest: [{ object_id: 'obj1' }],
+        tags: [{ category: 'Commons', name: 'commons1' }],
+      });
+    });
+
+    it('should use the MDS tags when the record has none', () => {
+      expect(mergeStudyWithMDSMetadata({}, { tags: [{ name: 'tag' }] }).tags).toEqual([{ name: 'tag' }]);
+    });
+  });
+
+  describe('loadSelectedStudiesFromMDS', () => {
+    it('should fetch each selected study from MDS by its UID', async () => {
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce({ gen3_discovery: { name: 'Study 1', __manifest: [{ object_id: 'a' }] } }),
+      });
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce({ gen3_discovery: { name: 'Study 2', __manifest: [] } }),
+      });
+      const studies = await loadSelectedStudiesFromMDS(
+        [{ uid: 'study/1', file_manifest_size: 1 }, { uid: 'study2', file_manifest_size: 0 }],
+        'uid',
+      );
+
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch).toHaveBeenNthCalledWith(1, `${mdsURL}/study%2F1`);
+      expect(fetch).toHaveBeenNthCalledWith(2, `${mdsURL}/study2`);
+      expect(studies).toEqual([
+        {
+          uid: 'study/1', file_manifest_size: 1, name: 'Study 1', __manifest: [{ object_id: 'a' }], tags: undefined,
+        },
+        {
+          uid: 'study2', file_manifest_size: 0, name: 'Study 2', __manifest: [], tags: undefined,
+        },
+      ]);
+    });
+
+    it('should reject if any study cannot be loaded', async () => {
+      fetch.mockResolvedValueOnce({ status: 404, json: jest.fn() });
+      await expect(loadSelectedStudiesFromMDS([{ uid: 'study1' }], 'uid')).rejects.toThrow('failed with status 404');
+    });
+
+    it('should reject if a selected study is missing its UID', async () => {
+      await expect(loadSelectedStudiesFromMDS([{ name: 'no uid' }], 'uid')).rejects.toThrow('missing its UID field');
+      expect(fetch).not.toHaveBeenCalled();
     });
   });
 });
