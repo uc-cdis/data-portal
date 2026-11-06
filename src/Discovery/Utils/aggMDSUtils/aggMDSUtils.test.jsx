@@ -71,4 +71,48 @@ describe('loadStudiesFromAggMDS', () => {
     const result = await loadStudiesFromAggMDS();
     expect(result).toEqual([]);
   });
+
+  it('should page through studies until a page is not full', async () => {
+    const makeEntry = (id) => ({ [id]: { gen3_discovery: { name: id } } });
+    // page size 2: first page full (2), second page short (1)
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: jest.fn().mockResolvedValueOnce({
+        commons1: [makeEntry('study1'), makeEntry('study2')],
+      }),
+    });
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: jest.fn().mockResolvedValueOnce({
+        commons1: [makeEntry('study3')],
+      }),
+    });
+    const result = await loadStudiesFromAggMDS(2);
+
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenNthCalledWith(1, `${aggMDSDataURL}?data=True&limit=2&offset=0`);
+    expect(global.fetch).toHaveBeenNthCalledWith(2, `${aggMDSDataURL}?data=True&limit=2&offset=2`);
+    expect(result.map((s) => s.study_id)).toEqual(['study1', 'study2', 'study3']);
+    // frontend_uid must stay unique across pages
+    expect(result.map((s) => s.frontend_uid)).toEqual(['commons1_0', 'commons1_1', 'commons1_2']);
+  });
+
+  it('should make one extra request when the last page is exactly full', async () => {
+    const makeEntry = (id) => ({ [id]: { gen3_discovery: { name: id } } });
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: jest.fn().mockResolvedValueOnce({
+        commons1: [makeEntry('study1')],
+        commons2: [makeEntry('study2')],
+      }),
+    });
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: jest.fn().mockResolvedValueOnce({}),
+    });
+    const result = await loadStudiesFromAggMDS(2);
+
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(result).toHaveLength(2);
+  });
 });

@@ -26,23 +26,54 @@ describe('MDS Data Loading Functions', () => {
       );
     });
 
-    it('should load studies successfully with limit of 3 with loadAllMetadata false', async () => {
-      const mockResponse = {
-        0: { gen3_discovery: { name: 'Study 1' } },
-        1: { gen3_discovery: { name: 'Study 2' } },
-        2: { gen3_discovery: { name: 'Study 3' } },
-      };
+    it('should page through studies using a custom fetchSize', async () => {
+      // first page is full (3 of 3), second page is short (1 of 3), so loading stops
       fetch.mockResolvedValueOnce({
         status: 200,
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
+        json: jest.fn().mockResolvedValueOnce({
+          0: { gen3_discovery: { name: 'Study 1' } },
+          1: { gen3_discovery: { name: 'Study 2' } },
+          2: { gen3_discovery: { name: 'Study 3' } },
+        }),
       });
-      const studies = await loadStudiesFromMDS('discovery_metadata', 3, false);
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce({
+          3: { gen3_discovery: { name: 'Study 4' } },
+        }),
+      });
+      const studies = await loadStudiesFromMDS('unregistered_discovery_metadata', 3);
 
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(
-        `${mdsURL}?data=True&_guid_type=discovery_metadata&limit=3&offset=0`,
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch).toHaveBeenNthCalledWith(
+        1,
+        `${mdsURL}?data=True&_guid_type=unregistered_discovery_metadata&limit=3&offset=0`,
       );
-      expect(studies).toEqual([{ name: 'Study 1' },{ name: 'Study 2' },{ name: 'Study 3' }]);
+      expect(fetch).toHaveBeenNthCalledWith(
+        2,
+        `${mdsURL}?data=True&_guid_type=unregistered_discovery_metadata&limit=3&offset=3`,
+      );
+      expect(studies).toEqual([
+        { name: 'Study 1' }, { name: 'Study 2' }, { name: 'Study 3' }, { name: 'Study 4' },
+      ]);
+    });
+
+    it('should make one extra request when the last page is exactly full', async () => {
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce({
+          0: { gen3_discovery: { name: 'Study 1' } },
+          1: { gen3_discovery: { name: 'Study 2' } },
+        }),
+      });
+      fetch.mockResolvedValueOnce({
+        status: 200,
+        json: jest.fn().mockResolvedValueOnce({}),
+      });
+      const studies = await loadStudiesFromMDS('discovery_metadata', 2);
+
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(studies).toEqual([{ name: 'Study 1' }, { name: 'Study 2' }]);
     });
 
     it('should throw an error on fetch failure', async () => {

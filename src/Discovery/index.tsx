@@ -48,8 +48,6 @@ const populateStudiesWithConfigInfo = (studies, config) => {
   });
 };
 
-let allStudies;
-
 const DiscoveryWithMDSBackend: React.FC<{
     userAggregateAuthMappings: any,
     config: DiscoveryConfig,
@@ -79,16 +77,8 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
-  // Downloads and processes studies in two separate batches
-  // to improve load time & usability
-  // Initially uses a smaller batch to load interface quickly
-  // Then a batch with all the studies
-  const [numberOfBatchesLoaded, setNumberOfBatchesLoaded] = useState(0);
+  // All studies are loaded in a single batch; this flips to true once they are ready
   const [allBatchesAreReady, setAllBatchesAreReady] = useState(false);
-  const expectedNumberOfTotalBatches = 2;
-  // if loading with both unregistered and registered studies, load 5 for each (10 total)
-  const numberOfStudiesForSmallerBatch = isEnabled('studyRegistration') ? 5 : 10;
-  const numberOfStudiesForAllStudiesBatch = 2000;
 
   const processStudies = (rawStudies) => {
     let studiesToSet;
@@ -194,63 +184,39 @@ const DiscoveryWithMDSBackend: React.FC<{
     if (studyUID) {
       return; // full list is not needed to show a single study
     }
-    // Update the numberOfBatchesLoaded to enable calling of different batch sizes with different parameters
-    if (numberOfBatchesLoaded < expectedNumberOfTotalBatches) {
-      setNumberOfBatchesLoaded(numberOfBatchesLoaded + 1);
-    } else {
-      return;
-    }
-    let isLoadingSmallBatch;
+    let cancelled = false;
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
-      let loadStudiesFunction: Function;
-      let loadStudiesParameters: any[] = [];
-      isLoadingSmallBatch = numberOfBatchesLoaded === 0;
-      if (isEnabled('discoveryUseAggMDS')) {
-        loadStudiesFunction = loadStudiesFromAggMDS;
-        loadStudiesParameters.push(isLoadingSmallBatch
-          ? numberOfStudiesForSmallerBatch
-          : numberOfStudiesForAllStudiesBatch);
-      } else {
-        loadStudiesFunction = loadStudiesFromMDS;
-        loadStudiesParameters = (isLoadingSmallBatch
-          ? [props.config?.features?.guidType, 10, false] : [props.config?.features?.guidType, 2000, true]);
-      }
-      const rawStudiesRegistered = await loadStudiesFunction(
-        ...loadStudiesParameters,
-      );
-      let rawStudiesUnregistered: any[] = [];
+      // load all metadata in one batch, from either the aggregate MDS or the MDS
+      const rawStudies: any[] = isEnabled('discoveryUseAggMDS')
+        ? await loadStudiesFromAggMDS()
+        : await loadStudiesFromMDS(props.config?.features?.guidType);
 
-      if (isEnabled('studyRegistration')) {
-        // Load fewer raw studies if on the first studies batch
-        // Otherwise load them all
-        rawStudiesUnregistered = isLoadingSmallBatch
-          ? (rawStudiesUnregistered = await loadStudiesFromMDS(
-            'unregistered_discovery_metadata',
-            numberOfStudiesForSmallerBatch,
-            false,
-          ))
-          : await loadStudiesFromMDS('unregistered_discovery_metadata');
-        rawStudiesUnregistered = rawStudiesUnregistered.map(
-          (unregisteredStudy) => ({
-            ...unregisteredStudy,
+      if (!isEnabled('studyRegistration') || !studyRegistrationValidationField) {
+        return rawStudies;
+      }
+
+      // split studies into registered / unregistered based on the validation field
+      const rawStudiesRegistered: any[] = [];
+      const rawStudiesUnregistered: any[] = [];
+      rawStudies.forEach((study) => {
+        if (study[studyRegistrationValidationField]) {
+          rawStudiesRegistered.push(study);
+        } else {
+          // normalize to a strict `false`, downstream components check `!== false`
+          rawStudiesUnregistered.push({
+            ...study,
             [studyRegistrationValidationField]: false,
-          }),
-        );
-      }
-      const result = _.union(rawStudiesRegistered, rawStudiesUnregistered);
-      if (!isLoadingSmallBatch) {
-        allStudies = result;
-      }
-      return allStudies || result;
+          });
+        }
+      });
+      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
     fetchRawStudies().then((rawStudies) => {
+      if (cancelled) return;
       const studiesToSet = processStudies(rawStudies);
       setStudies(studiesToSet);
-      if (!isLoadingSmallBatch) {
-        allStudies = studiesToSet;
-        setAllBatchesAreReady(true);
-      }
+      setAllBatchesAreReady(true);
       // resume action in progress if redirected from login
       const urlParams = decodeURIComponent(window.location.search);
       if (urlParams.startsWith('?state=')) {
@@ -269,7 +235,10 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props, studyUID, numberOfBatchesLoaded, numberOfStudiesForSmallerBatch]);
+    return () => { cancelled = true; }; // eslint-disable-line consistent-return
+    // only (re)load when switching between single-study and full-list views;
+    // depending on `props` would refetch all metadata on every redux update
+  }, [studyUID]); // eslint-disable-line react-hooks/exhaustive-deps
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
