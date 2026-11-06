@@ -156,16 +156,27 @@ const DiscoveryWithMDSBackend: React.FC<{
       return;
     }
     let cancelled = false;
+    // The details modal always loads its metadata from MDS. When the aggregate MDS is enabled,
+    // it is also queried (in parallel) only for the commons info and tags, which MDS does not have.
     const loadStudy = async () => {
-      if (isEnabled('discoveryUseAggMDS')) {
-        try {
-          return await loadStudyFromAggMDS(studyUID);
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.warn(`Could not load study ${studyUID} from aggregate MDS, falling back to MDS: `, err);
-        }
+      const [mdsStudy, aggMDSStudy] = await Promise.all([
+        loadStudyFromMDS(studyUID),
+        isEnabled('discoveryUseAggMDS')
+          ? loadStudyFromAggMDS(studyUID).catch((err) => {
+            // eslint-disable-next-line no-console
+            console.warn(`Could not load commons info for study ${studyUID} from aggregate MDS: `, err);
+            return null;
+          })
+          : null,
+      ]);
+      if (!aggMDSStudy) {
+        return mdsStudy;
       }
-      return loadStudyFromMDS(studyUID);
+      return {
+        ...mdsStudy,
+        ..._.pick(aggMDSStudy, ['commons', 'commons_url']),
+        tags: aggMDSStudy.tags ?? mdsStudy.tags,
+      };
     };
     loadStudy().then((rawStudy) => {
       if (cancelled) return;

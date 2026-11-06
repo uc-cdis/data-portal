@@ -36,7 +36,7 @@ const initStoreData = {
 
 const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 ? AccessLevel.ACCESSIBLE : AccessLevel.NOT_AVAILABLE }));
 
-const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
+const getDiscoveryComponent = (store, config: DiscoveryConfig) => (
   <Provider store={store}>
     <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
       <Discovery
@@ -44,7 +44,6 @@ const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
         studies={testStudies}
         allBatchesAreReady
         {...store.getState().discovery}
-        params={params}
         onSearchChange={(searchTerm) => store.dispatch({ type: 'SEARCH_TERM_SET', searchTerm })}
         onTagsSelected={(selectedTags) => store.dispatch({ type: 'TAGS_SELECTED', selectedTags })}
         onAccessFilterSet={(accessFilters) => store.dispatch({ type: 'ACCESS_FILTER_SET', accessFilters })}
@@ -202,24 +201,6 @@ describe('Modal', () => {
         fieldIdx += 1;
       });
     });
-
-    wrapper.unmount();
-  });
-
-  test('Discovery page opens modal with correct data on permalink', () => {
-    const permalinkStudyIndex = 5;
-    const permalinkStudyData = testStudies[permalinkStudyIndex];
-    const permalinkStudyUID = permalinkStudyData[testConfig.minimalFieldMapping.uid];
-    const store = mockStore(initStoreData);
-    const wrapper = mount(
-      getDiscoveryComponent(store, testConfig, { studyUID: permalinkStudyUID }),
-    );
-
-    testConfig.studyPageFields.header = { field: testConfig.minimalFieldMapping.uid };
-    const modal = wrapper.find('.discovery-modal').first();
-
-    // Check to see if the modal header shows the study's UID; other tests already test the fields.
-    expect(modal.find('.discovery-modal__header-text').first().text()).toBe(permalinkStudyUID);
 
     wrapper.unmount();
   });

@@ -37,6 +37,7 @@ import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
 import isColumnSearchable from './Utils/Search/isColumnSearchable';
+import { loadStudyFromMDS } from './Utils/MDSUtils/MDSUtils';
 
 export const accessibleFieldName = '__accessible';
 
@@ -206,7 +207,6 @@ export interface Props {
   config: DiscoveryConfig,
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
-  params?: { studyUID: string | null | undefined }, // from React Router
   selectedResources: DiscoveryResource,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
@@ -235,6 +235,29 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [filterState, setFilterState] = useState({} as FilterState);
   const [filterMultiSelectionLogic, setFilterMultiSelectionLogic] = useState('AND');
   const [modalData, setModalData] = useState({} as DiscoveryResource);
+  // GUID of the most recently opened study, used to ignore stale MDS responses
+  const latestRequestedStudyGUID = useRef(null);
+
+  // Opens the details modal for a table record. The record is shown right away, then
+  // its metadata (gen3_discovery + variable-level metadata) is fetched from MDS,
+  // even when the table itself was loaded from the aggregate MDS.
+  const showStudyDetails = (record: DiscoveryResource) => {
+    setModalData(record);
+    const guid = record[config.minimalFieldMapping.uid];
+    latestRequestedStudyGUID.current = guid;
+    if (!guid) {
+      return;
+    }
+    loadStudyFromMDS(guid).then((study) => {
+      if (latestRequestedStudyGUID.current !== guid) return; // user opened another study meanwhile
+      // keep frontend-only fields from the record (e.g. __accessible), MDS values take precedence,
+      // except for tags: keep the record's tags (e.g. the "Commons" tag added by the aggregate MDS)
+      setModalData({ ...record, ...study, tags: record.tags ?? study.tags });
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error(`Could not load study ${guid} from MDS, showing table data instead: `, err);
+    });
+  };
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [searchableTagCollapsed, setSearchableTagCollapsed] = useState(
@@ -365,24 +388,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       }
     }
   }, [props.studies, selectedFieldsForSearchIndexing, searchMode, props.allBatchesAreReady]);
-
-  useEffect(() => {
-    // If opening to a study by default, open that study
-    if (props.params.studyUID && props.studies.length > 0) {
-      const studyID = decodeURIComponent(props.params.studyUID);
-      const defaultModalData = props.studies.find(
-        (r) => r[config.minimalFieldMapping.uid] === studyID);
-
-      if (defaultModalData) {
-        setPermalinkCopied(false);
-        setModalData(defaultModalData);
-        setModalVisible(true);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(`Could not find data with UID ${studyID}.`);
-      }
-    }
-  }, [props.params.studyUID, props.studies]);
 
   useEffect(() => {
     const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
@@ -798,7 +803,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 }
                 searchTerm={props.searchTerm}
                 setPermalinkCopied={setPermalinkCopied}
-                setModalData={setModalData}
+                setModalData={showStudyDetails}
                 setModalVisible={setModalVisible}
                 columns={columns}
                 selectedTags={props.selectedTags}
@@ -830,10 +835,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       </div>
     </div>
   );
-};
-
-Discovery.defaultProps = {
-  params: { studyUID: null },
 };
 
 export default Discovery;

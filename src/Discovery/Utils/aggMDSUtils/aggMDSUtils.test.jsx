@@ -1,4 +1,4 @@
-import loadStudiesFromAggMDS from './aggMDSUtils';
+import loadStudiesFromAggMDS, { loadStudyFromAggMDS } from './aggMDSUtils';
 import { aggMDSDataURL } from '../../../localconf';
 
 describe('loadStudiesFromAggMDS', () => {
@@ -114,5 +114,45 @@ describe('loadStudiesFromAggMDS', () => {
 
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(result).toHaveLength(2);
+  });
+});
+
+describe('loadStudyFromAggMDS', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should load a single study with its commons info', async () => {
+    global.fetch.mockResolvedValueOnce({
+      status: 200,
+      json: jest.fn().mockResolvedValueOnce({
+        commons_name: 'commons1',
+        gen3_discovery: { name: 'Study 1', commons_url: 'commons1.org', tags: [] },
+      }),
+    });
+    const study = await loadStudyFromAggMDS('study/1');
+
+    expect(global.fetch).toHaveBeenCalledWith(`${aggMDSDataURL}/guid/study%2F1`);
+    expect(study).toMatchObject({
+      name: 'Study 1',
+      study_id: 'study/1',
+      commons: 'commons1',
+      commons_url: 'commons1.org',
+      tags: [{ category: 'Commons', name: 'commons1' }],
+    });
+  });
+
+  it('should throw when the request fails', async () => {
+    global.fetch.mockResolvedValueOnce({ status: 404, json: jest.fn() });
+    await expect(loadStudyFromAggMDS('study1')).rejects.toThrow('failed with status 404');
+  });
+
+  it('should throw when the study has no gen3_discovery data', async () => {
+    global.fetch.mockResolvedValueOnce({ status: 200, json: jest.fn().mockResolvedValueOnce({}) });
+    await expect(loadStudyFromAggMDS('study1')).rejects.toThrow('not found in aggregate MDS');
   });
 });
