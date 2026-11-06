@@ -33,6 +33,10 @@ const handleDownloadZipClick = async (
     return;
   }
 
+  // show the loading state on the button while the selected studies are fetched from MDS;
+  // every exit path below either resets inProgress or hands over to the job status polling
+  setDownloadStatus({ ...downloadStatus, inProgress: true });
+
   // table records may not contain the file manifests / external file metadata
   // (e.g. when loaded from the aggregate MDS), so fetch the full metadata of the selected studies from MDS
   let selectedResources: any[];
