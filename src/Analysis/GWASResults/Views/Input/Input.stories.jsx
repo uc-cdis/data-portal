@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Input from './Input';
-import { rest } from 'msw';
+import { http, HttpResponse, delay } from 'msw';
 import MockedSuccessJSON from '../../TestData/InputViewData/MockedSuccessJSON';
 import MockedFailureJSON from '../../TestData/InputViewData/MockedFailureJSON';
 import AttritionTableJSON from '../../TestData/InputViewData/AttritionTableJSON';
@@ -56,11 +56,12 @@ export const MockedFailure = MockTemplate.bind({});
 MockedFailure.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/status/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(100), ctx.json(MockedFailureJSON));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          return HttpResponse.json(MockedFailureJSON);
         }
       ),
     ],
@@ -73,30 +74,30 @@ export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/status/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(100), ctx.json(MockedSuccessJSON));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          return HttpResponse.json(MockedSuccessJSON);
         }
       ),
-      rest.get(
+      http.get(
         'http://:server/user/data/download/:index_did',
-        (req, res, ctx) => {
-          const { index_did } = req.params;
+        async ({ params }) => {
+          const { index_did } = params;
           console.log(index_did);
-          return res(
-            ctx.delay(500),
-            ctx.json({
-              url: dummyS3BucketLocation + '?X-Amz-Algorithm=AWS4-ETC',
-            })
-          );
+          await delay(500);
+          return HttpResponse.json({
+            url: dummyS3BucketLocation + '?X-Amz-Algorithm=AWS4-ETC',
+          });
         }
       ),
-      rest.get(dummyS3BucketLocation, (req, res, ctx) => {
-        const { index_did } = req.params;
+      http.get(dummyS3BucketLocation, async ({ params }) => {
+        const { index_did } = params;
         console.log(index_did);
-        return res(ctx.delay(500), ctx.json(AttritionTableJSON));
+        await delay(500);
+        return HttpResponse.json(AttritionTableJSON);
       }),
     ],
   },
@@ -106,16 +107,13 @@ export const MockedError500Response = MockTemplate.bind({});
 MockedError500Response.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/status/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(
-            ctx.delay(100),
-            ctx.status(500),
-            // Some errroneous responses can return an error object
-            ctx.json({ error: 'Mocked Server error response' })
-          );
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          // Some errroneous responses can return an error object
+          return HttpResponse.json({ error: 'Mocked Server error response' }, { status: 500 });
         }
       ),
     ],
@@ -125,11 +123,12 @@ export const MockedError403Response = MockTemplate.bind({});
 MockedError403Response.parameters = {
   msw: {
     handlers: [
-      rest.get(
+      http.get(
         `http://:argowrapperpath/ga4gh/wes/v2/status/${name}?uid=${uid}`,
-        (req, res, ctx) => {
-          const { argowrapperpath } = req.params;
-          return res(ctx.delay(100), ctx.status(403));
+        async ({ params }) => {
+          const { argowrapperpath } = params;
+          await delay(100);
+          return new HttpResponse(null, { status: 403 });
         }
       ),
     ],

@@ -10,10 +10,7 @@ const https = require('https');
 const http = require('http');
 const fetch = require('node-fetch');
 const fs = require('fs');
-const {
-  buildClientSchema,
-  printSchema,
-} = require('graphql/utilities/index');
+const { writeSchemaSDL } = require('./generateSchemaSDL');
 
 const { gdcSubPath } = (function () {
   function addSlash(path) { return (`${path}/`).replace(/\/+$/, '/'); }
@@ -135,8 +132,7 @@ actionList.push(
     fs.writeFileSync(schemaPath, JSON.stringify(schema, null, 2));
 
     // Save user readable type system shorthand of schema
-    const graphQLSchema = buildClientSchema(schema.data);
-    fs.writeFileSync(`${__dirname}/schema.graphql`, printSchema(graphQLSchema));
+    writeSchemaSDL(schema);
   }),
 );
 

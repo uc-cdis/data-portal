@@ -16,6 +16,7 @@ export const TAIL_LAYOUT = {
 
 /* eslint-disable no-template-curly-in-string */
 export const VALIDATE_MESSAGE = {
+  default: '',
   required: '${label} is required',
 };
 /* eslint-enable no-template-curly-in-string */

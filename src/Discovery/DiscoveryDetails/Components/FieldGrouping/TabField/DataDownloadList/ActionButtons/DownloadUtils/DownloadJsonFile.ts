@@ -4,7 +4,7 @@ const DownloadJsonFile = (fileName: string, data: object) => {
   const blob = new Blob([JSON.stringify(data, null, 2)], {
     type: 'text/json',
   });
-  FileSaver.saveAs(blob, `${fileName}.json`);
+  FileSaver.saveAs(blob, fileName);
 };
 
 export default DownloadJsonFile;

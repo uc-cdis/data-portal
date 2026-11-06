@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "Gen3 Data Portal",
   "main": "index.js",
-  "workspaces": [
-    "src/Covid19Dashboard/standalone"
-  ],
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "@datadog/browser-rum": "^2.16.0",
@@ -13,10 +10,10 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@gen3/guppy": "^0.20.1",
-    "@gen3/ui-component": "^0.11.4",
-    "@grafana/faro-core": "^1.9.1",
-    "@grafana/faro-react": "^1.9.0",
+    "@gen3/guppy": "^0.24.0",
+    "@gen3/ui-component": "^0.11.5",
+    "@grafana/faro-core": "^2.8.2",
+    "@grafana/faro-react": "^2.8.2",
     "@mantine/core": "^6.0.21",
     "@reactour/tour": "^2.12.0",
     "@upsetjs/venn.js": "^1.4.2",
@@ -26,7 +23,6 @@
     "clipboard-plus": "^1.1.0",
     "core-js": "^3.31.1",
     "crawler-user-agents": "^1.0.115",
-    "css-loader": "^3.4.2",
     "d3-array": "^1.2.0",
     "d3-axis": "^3.0.0",
     "d3-ease": "^1.0.5",
@@ -38,7 +34,7 @@
     "d3-tip": "0.9.1",
     "d3-transition": "^1.1.3",
     "d3-zoom": "^1.7.3",
-    "dompurify": "^3.2.5",
+    "dompurify": "^3.4.0",
     "echarts-for-react": "^3.0.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.7",
@@ -55,11 +51,9 @@
     "isomorphic-fetch": "^3.0.0",
     "jest-fetch-mock": "^2.1.1",
     "js-search": "^2.0.1",
-    "jsonpath": "^1.1.1",
+    "jsonpath": "^1.3.0",
     "jszip": "^3.10.1",
-    "less": "^3.11.1",
-    "less-loader": "^4.1.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "mapbox-gl": "^1.9.1",
     "marked": "^15.0.8",
     "moment": "^2.29.4",
@@ -79,7 +73,7 @@
     "react-map-gl": "^5.2.3",
     "react-query": "^3.39.3",
     "react-redux": "^6.0.0",
-    "react-relay": "^7.1.0",
+    "react-relay": "^14.1.0",
     "react-responsive": "^6.1.1",
     "react-router-dom": "^5.0.0",
     "react-select": "^3.1.0",
@@ -92,11 +86,10 @@
     "redux-persist": "^4.7.1",
     "redux-thunk": "^2.4.2",
     "regenerator-runtime": "^0.13.11",
-    "relay-compiler": "^10.0.0",
-    "relay-runtime": "^10.0.0",
+    "relay-compiler": "^14.1.0",
+    "relay-runtime": "^14.1.0",
     "semver": "^7.5.4",
     "string-similarity": "^3.0.0",
-    "style-loader": "^0.21.0",
     "styled-components": "^5.3.7",
     "viz.js": "2.1.2"
   },
@@ -107,10 +100,12 @@
     "@babel/plugin-transform-runtime": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@babel/runtime-corejs3": "^7.22.6",
-    "@storybook/addon-actions": "^6.0.0",
-    "@storybook/cli": "^7.1.1",
-    "@storybook/react": "^6.5.15",
+    "@storybook/addon-essentials": "^7.6.24",
+    "@storybook/react": "^7.6.24",
+    "@storybook/react-webpack5": "^7.6.24",
+    "storybook": "^7.6.24",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^12.1.5",
     "@types/core-js": "^2.5.5",
@@ -123,8 +118,9 @@
     "babel-jest": "^29.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-dev-expression": "^0.2.3",
-    "babel-plugin-relay": "^10.0.0",
+    "babel-plugin-relay": "^14.1.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "css-loader": "^5.2.7",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-import-resolver-typescript": "^2.7.1",
@@ -132,20 +128,23 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "~7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.6.13",
+    "eslint-plugin-storybook": "^0.9.0",
     "html-webpack-plugin": "^4.0.0",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-localstorage-mock": "^2.4.26",
+    "less": "^4.6.4",
+    "less-loader": "^7.3.0",
     "mock-local-storage": "^1.1.24",
-    "msw": "^0.49.3",
-    "msw-storybook-addon": "^1.8.0",
+    "msw": "^2.15.0",
+    "msw-storybook-addon": "^2.0.7",
     "postcss-less": "^6.0.0",
     "redux-mock-store": "^1.5.4",
+    "style-loader": "^2.0.0",
     "stylelint": "^15.10.2",
     "svg-react-loader": "^0.4.6",
     "typescript": "^4.9.3",
-    "url-loader": "^1.1.2",
+    "url-loader": ">=1.1.2",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^4.0.0",
@@ -155,16 +154,7 @@
     "html-webpack-plugin": {
       "strip-ansi": "6.0.1"
     },
-    "@storybook/cli": {
-      "trim": "0.0.3"
-    },
-    "remark-parse": {
-      "trim": "0.0.3"
-    },
-    "default-browser-id": {
-      "meow": "6.1.0"
-    },
-    "@upsetjs/venn.js": {
+"@upsetjs/venn.js": {
       "uglify-js": "3.14.3",
       "ansi-regex": "3.0.1"
     },
@@ -174,8 +164,26 @@
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
     "@reactour/mask": "0.5.1",
-    "msw": {
-      "cookie": "0.7.1"
+    "enzyme": {
+      "cheerio": "1.0.0-rc.12"
+    },
+    "uuid": "11.1.1",
+    "less": {
+      "image-size": "file:./empty-directory"
+    },
+    "@grafana/faro-react": {
+      "react-router": "$react-router-dom"
+    },
+    "markdown-it": "^14.1.1",
+    "linkify-it": "^5.0.2",
+    "fast-uri": "^3.1.5",
+    "nanoid": "^3.3.18",
+    "js-yaml": "^3.15.1",
+    "cosmiconfig@8.3.6": {
+      "js-yaml": "^4.3.1"
+    },
+    "cosmiconfig@8.0.0": {
+      "js-yaml": "^4.3.1"
     }
   },
   "jest": {
@@ -197,18 +205,23 @@
   },
   "scripts": {
     "test": "jest",
-    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && ./node_modules/.bin/relay-compiler --verbose --src src --exclude '**/__generated__/**' --exclude '**/node_modules/**' --schema ./data/schema.json --extensions js jsx",
+    "relay": "node ./data/generateSchemaSDL.js && node ./data/gqlSetup.js > src/gqlHelper.js && ./node_modules/.bin/relay-compiler",
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --ignore-pattern '**/formHooks.jsx' --ignore-pattern '**/*.stories.jsx' --fix src data",
     "eslint-new": "./node_modules/.bin/eslint  --no-error-on-unmatched-pattern  --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.ejs' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --ignore-pattern '**/formHooks.jsx'  --ignore-pattern '**/*.json'   --ignore-pattern '**/Dockerfile'  --ignore-pattern '**/*.png'  --ignore-pattern '**/*.ico' --ignore-pattern '**/*.stories.jsx' --ignore-pattern '**/*.css' --ignore-pattern '**/*.less'  --ignore-pattern '**/*.md'  --ignore-pattern '**/*.yml' --ignore-pattern '**/*.conf' --quiet --fix $(git diff --name-only master | xargs)",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
-    "storybook": "npm run params && start-storybook -p 6006 -s .storybook/public",
+    "storybook": "npm run params && storybook dev -p 6006",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check"
   },
   "graphql": {
     "file": "./data/schema.json"
+  },
+  "relay": {
+    "src": "./src",
+    "schema": "./data/schema.graphql",
+    "language": "flow"
   },
   "repository": {
     "type": "git",

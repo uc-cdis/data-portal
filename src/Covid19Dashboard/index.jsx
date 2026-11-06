@@ -257,6 +257,11 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
             {/* illinois tab */}
             <TabPanel className='covid19-dashboard_panel'>
+              <div>
+                <p className='covid19-dashboard_message'>
+                  COVID-19 data updates ended May 10, 2023 (IDPH stopped publishing vaccination and mobility data)
+                </p>
+              </div>
               <div className='covid19-dashboard_counts'>
                 <CountWidget
                   label='Total Confirmed'

@@ -36,7 +36,7 @@ export const getTransactionList = () => {
           state
       }
   }`;
-  fetchQuery(environment, query, {})
+  fetchQuery(environment, query, {}).toPromise()
     .then(
       (data) => {
         const { transactionList } = data;
@@ -133,7 +133,7 @@ const updateProjectDetailToRedux = (projInfo) => {
 
 const getProjectDetail = (projectList) => {
   projectList.forEach((project) => {
-    fetchQuery(environment, gqlHelper.projectDetailQuery, { name: project.name })
+    fetchQuery(environment, gqlHelper.projectDetailQuery, { name: project.name }).toPromise()
       .then((data) => {
         const projInfo = {
           ...data.project[0],
@@ -168,7 +168,7 @@ export const getProjectsList = () => {
   checkHomepageState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
-        fetchQuery(environment, gqlHelper.homepageQuery, {})
+        fetchQuery(environment, gqlHelper.homepageQuery, {}).toPromise()
           .then(
             (data) => {
               const { projectList, summaryCounts } = transformRelayProps(data);

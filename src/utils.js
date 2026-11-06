@@ -1,5 +1,6 @@
-import { submissionApiPath, gen3ZendeskURL } from './localconf';
+import { submissionApiPath, zendeskTicketCreationURL, useZendeskWrapper } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
+import { fetchWithCreds } from './actions';
 
 const ZENDESK_MAX_SUBJECT_LENGTH = 255;
 
@@ -234,15 +235,8 @@ export const isFooterHidden = (pathname) => (!!((pathname
   || pathname.toLowerCase().startsWith('/dd/')
   ))));
 
-export const createZendeskTicket = async (subject, fullName, email, contents, zendeskSubdomainName) => {
+export const createZendeskTicket = async (subject, fullName, email, contents) => {
   try {
-    let zendeskTicketCreationURL = `${gen3ZendeskURL}/api/v2/requests`;
-    if (zendeskSubdomainName) {
-      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
-    } else {
-      // This is the default Gen3 helpdesk subdomain
-      zendeskTicketCreationURL = zendeskTicketCreationURL.replace('<SUBDOMAIN_NAME>', 'gen3support');
-    }
     let ticketSubject = subject;
     if (subject.length > ZENDESK_MAX_SUBJECT_LENGTH) {
       ticketSubject = `${subject.substring(
@@ -250,10 +244,32 @@ export const createZendeskTicket = async (subject, fullName, email, contents, ze
         ZENDESK_MAX_SUBJECT_LENGTH - 3,
       )}...`;
     }
-    await fetch(zendeskTicketCreationURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    let ticketBody;
+    if (useZendeskWrapper) {
+      ticketBody = JSON.stringify({
+        ticket: {
+          subject: ticketSubject,
+          comment: {
+            body: contents,
+          },
+          requester: {
+            name: fullName,
+            email,
+          },
+        },
+      });
+      await fetchWithCreds({
+        path: zendeskTicketCreationURL,
+        method: 'POST',
+        body: ticketBody,
+      }).then((response) => {
+        if (response.status !== 201) {
+          throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
+        }
+        return response;
+      });
+    } else {
+      ticketBody = JSON.stringify({
         request: {
           subject: ticketSubject,
           comment: {
@@ -264,13 +280,18 @@ export const createZendeskTicket = async (subject, fullName, email, contents, ze
             email,
           },
         },
-      }),
-    }).then((response) => {
-      if (response.status !== 201) {
-        throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
-      }
-      return response;
-    });
+      });
+      await fetch(zendeskTicketCreationURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: ticketBody,
+      }).then((response) => {
+        if (response.status !== 201) {
+          throw new Error(`Request for create Zendesk ticket failed with status ${response.status}`);
+        }
+        return response;
+      });
+    }
   } catch (err) {
     throw new Error(`Request for create Zendesk ticket failed: ${err}`);
   }

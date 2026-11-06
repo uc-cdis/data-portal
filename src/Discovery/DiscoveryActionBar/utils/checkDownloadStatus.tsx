@@ -72,10 +72,28 @@ const checkDownloadStatus = (
                 const repositoryName = selectedResources.map(
                   (study) => study.commons || [],
                 );
+                const objectIDsInManifest: any[] = [];
+                selectedResources.forEach(
+                  ((study) => {
+                    if (study.__manifest && Array.isArray(study.__manifest)) {
+                      objectIDsInManifest.push(study.__manifest.map((manifestObj) => manifestObj.object_id));
+                    }
+                  }),
+                );
+                const externalFileMetadataInManifest: any[] = [];
+                selectedResources.forEach(
+                  ((study) => {
+                    if (study.external_file_metadata && Array.isArray(study.external_file_metadata)) {
+                      externalFileMetadataInManifest.push(...study.external_file_metadata);
+                    }
+                  }),
+                );
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
                   datasetDownloadStudyName: studyName,
                   datasetDownloadRepositoryName: repositoryName,
+                  datasetDownloadObjectIDsinManifest: objectIDsInManifest,
+                  datasetDownloadExternalFileMetadataInManifest: externalFileMetadataInManifest,
                 });
                 faro.api.pushEvent(
                   'datasetDownload',
@@ -84,6 +102,8 @@ const checkDownloadStatus = (
                     datasetDownloadProjectNumber: projectNumber.join(','),
                     datasetDownloadStudyName: studyName.join(','),
                     datasetDownloadRepositoryName: repositoryName.join(','),
+                    datasetDownloadObjectIDsinManifest: objectIDsInManifest.join(','),
+                    datasetDownloadExternalFileMetadataInManifest: JSON.stringify(externalFileMetadataInManifest),
                   },
                 );
               } catch {

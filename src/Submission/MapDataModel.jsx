@@ -147,7 +147,7 @@ class MapDataModel extends React.Component {
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
         { project_id: this.state.projectId },
-      ).then((data) => {
+      ).toPromise().then((data) => {
         if (data && data[this.state.parentNodeType]) {
           this.setState((prevState) => ({ validParentIds: data[prevState.parentNodeType] }));
         }

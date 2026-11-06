@@ -364,7 +364,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         }));
       }
     }
-  }, [props.studies, selectedFieldsForSearchIndexing, searchMode]);
+  }, [props.studies, selectedFieldsForSearchIndexing, searchMode, props.allBatchesAreReady]);
 
   useEffect(() => {
     // If opening to a study by default, open that study

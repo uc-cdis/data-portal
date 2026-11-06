@@ -24,7 +24,7 @@ import {
 import '../StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  hostname, zendeskConfig, studyRegistrationConfig,
+  hostname, studyRegistrationConfig,
 } from '../../localconf';
 import { cleanUpFileRecord, generatePresignedURL, handleDataDictionaryNameValidation } from '../utils';
 import { createZendeskTicket } from '../../utils';
@@ -138,7 +138,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
             // This is the CLI command to kick off the argo wf from AdminVM
             const cliCmd = `argo submit -n argo --watch HEAL-Workflows/vlmd_submission_workflows/vlmd_submission_wrapper.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${props.studyUID}`;
             contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
-            createZendeskTicket(subject, fullName, email, contents, zendeskConfig?.zendeskSubdomainName).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createZendeskTicket(subject, fullName, email, contents).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });
@@ -162,21 +162,41 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
     setOverwriteConfirmModalVisible(false);
   };
 
-  const onSubmitButtonClick = () => {
+  const onSubmitButtonClick = async () => {
     setUploading(true);
-    const ddName = form.getFieldValue('Data Dictionary Name');
-    if (existingDataDictionaryName?.includes(ddName)) {
-      setDuplicatedDataDictionaryName(ddName);
-      setOverwriteConfirmModalVisible(true);
-    } else {
-      form.submit();
+    try {
+      const values = await form.validateFields();
+      const ddName = values['Data Dictionary Name'];
+      if (existingDataDictionaryName?.includes(ddName)) {
+        setDuplicatedDataDictionaryName(ddName);
+        setOverwriteConfirmModalVisible(true);
+      } else {
+        handleUpload(values);
+      }
+    } catch (error) {
+      setUploading(false);
     }
   };
 
+  const allowedFileExtensions = ['.csv', '.tsv', '.json'];
   const uploadProps: UploadProps = {
-    accept: '.csv,.tsv,.json',
+    accept: allowedFileExtensions.join(','),
     maxCount: 1,
-    beforeUpload: () => false,
+    beforeUpload: (file: File) => {
+      const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!allowedFileExtensions.includes(fileExtension)) {
+        form.setFields([
+          {
+            name: 'fileList_doNotInclude',
+            errors: [`${file.name} is not a valid CSV, TSV, or JSON file.`],
+          },
+        ]);
+        return Upload.LIST_IGNORE;
+      }
+
+      form.setFields([{ name: 'fileList_doNotInclude', errors: [] }]);
+      return false;
+    },
   };
 
   const onFinish = (values) => {
@@ -262,7 +282,9 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
         <Form className='study-reg-form' {...FORM_LAYOUT} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={VALIDATE_MESSAGE}>
           <Divider plain>Data Dictionary Submission</Divider>
           <Typography style={{ textAlign: 'center' }}>
-          Data dictionaries must conform to the HEAL VLMD schema. View more information and VLMD templates <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
+          Data dictionaries must conform to the HEAL variable-level metadata (VLMD) schema.
+          View instructions for creating HEAL-compliant VLMD <a href='https://heal.github.io/platform-documentation/vlmd/vlmd_tools/' target='_blank' rel='noreferrer'>here</a>.
+          Examples of valid and invalid VLMD are available <a href='https://github.com/HEAL/heal-metadata-schemas/tree/main/variable-level-metadata-schema/examples' target='_blank' rel='noreferrer'>here</a>.
           </Typography>
           <Divider plain />
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
@@ -290,7 +312,7 @@ const DataDictionarySubmission: React.FunctionComponent<VLMDSubmissionProps> = (
               }]}
             extra={'Supported file types: CSV, TSV, JSON; Maximum file size: 10MB'}
           >
-            <Upload {...uploadProps}>
+            <Upload {...uploadProps} onRemove={() => form.setFields([{ name: 'fileList_doNotInclude', errors: [] }])}>
               <Button
                 icon={<PlusOutlined />}
               >

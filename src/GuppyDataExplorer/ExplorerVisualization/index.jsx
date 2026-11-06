@@ -55,6 +55,7 @@ class ExplorerVisualization extends React.Component {
           type: chartConfig[`${field}`].chartType,
           title: chartConfig[`${field}`].title,
           data: histogram.map((i) => ({ name: i.key, value: i.count })),
+          maximumDisplayItem: chartConfig[`${field}`].maximumDisplayItem || undefined,
         };
         if (chartConfig[`${field}`].chartType === 'stackedBar') {
           stackedBarCharts.push(dataItem);
@@ -240,7 +241,7 @@ class ExplorerVisualization extends React.Component {
                 fields: tableColumns,
                 ordered: tableColumnsOrdered,
                 linkFields: this.props.tableConfig.linkFields || [],
-                dicomServerUrl: this.props.tableConfig.dicomServerUrl,
+                dicomServerURL: this.props.tableConfig.dicomServerURL,
                 dicomViewerUrl: this.props.tableConfig.dicomViewerUrl,
                 dicomViewerId: this.props.tableConfig.dicomViewerId,
               }}

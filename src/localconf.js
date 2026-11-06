@@ -359,7 +359,8 @@ function buildConfig(opts) {
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
     ? registrationConfigs.features.workspaceRegistrationConfig : null;
-  const zendeskConfig = registrationConfigs ? registrationConfigs.zendeskConfig : null;
+  const zendeskSubdomainName = registrationConfigs?.zendeskConfig?.zendeskSubdomainName || 'gen3support';
+  const useZendeskWrapper = registrationConfigs?.zendeskConfig?.useZendeskWrapper || false;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -496,7 +497,13 @@ function buildConfig(opts) {
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
   const cedarWrapperURL = `${hostname}cedar`;
-  const gen3ZendeskURL = 'https://<SUBDOMAIN_NAME>.zendesk.com';
+
+  let zendeskTicketCreationURL;
+  if (useZendeskWrapper) {
+    zendeskTicketCreationURL = `${hostname}zendesk/ticket`;
+  } else {
+    zendeskTicketCreationURL = 'https://<SUBDOMAIN_NAME>.zendesk.com/api/v2/requests'.replace('<SUBDOMAIN_NAME>', zendeskSubdomainName);
+  }
 
   const portalLogoAltText = () => {
     if (components?.logoAltText) return `${components.logoAltText} - home`;
@@ -505,7 +512,7 @@ function buildConfig(opts) {
 
   const commonsWideAltText = {
     portalLogo: portalLogoAltText(),
-    'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
+    'https://gen3.org': 'Gen3 Data Commons - information and resources',
     'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
 
   };
@@ -600,8 +607,8 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
-    zendeskConfig,
     studyRegistrationConfig,
+    useZendeskWrapper,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
@@ -617,7 +624,7 @@ function buildConfig(opts) {
     mdsURL,
     aggMDSDataURL,
     cedarWrapperURL,
-    gen3ZendeskURL,
+    zendeskTicketCreationURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,

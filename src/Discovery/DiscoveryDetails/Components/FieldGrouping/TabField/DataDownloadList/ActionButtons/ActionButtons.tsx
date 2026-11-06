@@ -16,6 +16,7 @@ import VariableLevelMetadata from '../Interfaces/VariableLevelMetadata';
 import DownloadStatus from '../Interfaces/DownloadStatus';
 import isManifestDataMissing from '../../../../../../Utils/isManifestDataMissing';
 import assembleFileMetadata from '../../../../../../DiscoveryActionBar/utils/assembleFileMetadata';
+import GenerateFilenameWithoutPrefix from './DownloadUtils/GenerateFilenameWithoutPrefix';
 
 interface ActionButtonsProps {
   isUserLoggedIn: boolean;
@@ -163,7 +164,8 @@ const ActionButtons = ({
               onClick={() => {
                 DownloadVariableMetadata(
                   variableMetadataInfo.variableLevelMetadataRecords,
-                  resourceInfo,
+                  resourceInfo.study_metadata?.minimal_info?.study_name,
+                  uid,
                   setDownloadStatus,
                 );
               }}
@@ -179,11 +181,14 @@ const ActionButtons = ({
               className='discovery-action-bar-button'
               data-testid='download-study-level-metadata'
               disabled={Boolean(downloadStatus.inProgress)}
-              onClick={() => DownloadJsonFile(
-                'study-level-metadata',
-                studyMetadataFieldNameReference
+              onClick={() => {
+                const filename = GenerateFilenameWithoutPrefix('metadata', uid);
+                DownloadJsonFile(
+                  `${filename}.json`,
+                  studyMetadataFieldNameReference
                       && resourceInfo[studyMetadataFieldNameReference],
-              )}
+                );
+              }}
             >
                 Download <br />
                 Study-Level Metadata
@@ -202,7 +207,7 @@ const ActionButtons = ({
                   onClick={() => {
                     HandleDownloadManifestClick(
                       discoveryConfig,
-                      [resourceInfo],
+                      resourceInfo,
                       missingRequiredIdentityProviders,
                     );
                   }}
@@ -237,16 +242,21 @@ const ActionButtons = ({
                   data-testid='download-all-files'
                   disabled={Boolean(checkIfDownloadAllFilesButtonDisabled() || !userHasAccessToDownload)}
                   loading={downloadStatus.inProgress === 'DownloadDataFiles'}
-                  onClick={() => DownloadDataFiles(
-                    downloadStatus,
-                    setDownloadStatus,
-                    history,
-                    location,
-                    missingRequiredIdentityProviders,
-                    verifyExternalLoginsNeeded,
-                    fileManifest,
-                    externalFileMetadata,
-                  )}
+                  onClick={() => {
+                    const filenameForDownloadable = GenerateFilenameWithoutPrefix('all_files', uid);
+                    DownloadDataFiles(
+                      downloadStatus,
+                      setDownloadStatus,
+                      history,
+                      location,
+                      missingRequiredIdentityProviders,
+                      verifyExternalLoginsNeeded,
+                      fileManifest,
+                      externalFileMetadata,
+                      filenameForDownloadable,
+                      resourceInfo,
+                    );
+                  }}
                 >
                   Download All Files
                 </Button>

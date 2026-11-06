@@ -1,6 +1,6 @@
 import { doesUserHaveRequestPending } from '../StudyRegistration/utils';
 import {
-  zendeskConfig, hostname, workspaceRegistrationConfig, requestorPath,
+  hostname, workspaceRegistrationConfig, requestorPath,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import { createZendeskTicket } from '../utils';
@@ -95,7 +95,6 @@ const handleRegisterFormSubmission = async (
             fullName,
             email,
             contents,
-            zendeskConfig?.zendeskSubdomainName,
           ).then(
             () => setFormSubmissionStatus({ status: 'success' }),
             (err) => setFormSubmissionStatus({

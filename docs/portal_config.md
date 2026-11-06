@@ -116,7 +116,8 @@ Below is an example, with inline comments describing what each JSON block config
         {
           "icon": "dictionary", // required; icon from /img/icons for the button
           "link": "/DD", // required; the link for the button
-          "name": "Dictionary" // required; text for the button
+          "name": "Dictionary", // required; text for the button
+          "newWindow": true // Optional: sets the link to open in a new window or tab
         },
         {
           "icon": "exploration",
@@ -144,7 +145,8 @@ Below is an example, with inline comments describing what each JSON block config
         },
         {
           "link": "https://docs.gen3.org/gen3-resources/user-guide/",
-          "name": "Documentation"
+          "name": "Documentation",
+          "newWindow": true // Optional: sets the link to open in a new window or tab
         }
       ],
       "useProfileDropdown": false // optional; enables experimental profile UI; defaults false, may change in future releases
@@ -176,7 +178,7 @@ Below is an example, with inline comments describing what each JSON block config
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
         "src": "/src/img/gen3.png", // required; src path for the image
-        "href": "https://ctds.uchicago.edu/gen3", // required; link for image
+        "href": "https://gen3.org", // required; link for image
         // The alt text for certain cross-commons logos, such as the Gen3 and CTDS logos, are non-configurable so as to avoid redundancy.
         // Note that this alt text is applied on the basis of link destination, not logo filename.
       },
@@ -224,7 +226,8 @@ Below is an example, with inline comments describing what each JSON block config
         },
         "ethnicity": {
           "chartType": "fullPie", // required; full pie chart type
-          "title": "Ethnicity"
+          "title": "Ethnicity",
+          "maximumDisplayItem": 5 // optional; shows how many items are displayed in the chart legend. Default to 15 if omitted
         },
         "race": {
           "chartType": "bar", // required; bar chart type
@@ -684,7 +687,7 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
-  "userAccessToSite": { // optional: user must have access to a resorces to acess the site, including public pages
+  "userAccessToSite": { // optional: user must have access to a resource to acess the site, including public pages
     "enabled": true,// optional: enable ristricted access
     "noAccessMessage": "Access to this site requires special permission.",// optional: defaults to this value, first email addresses will be turned into mailto link if used
     "deniedPageURL": "/access-denied",//optional: defaults to this value
@@ -724,16 +727,17 @@ Below is an example, with inline comments describing what each JSON block config
           "cdeSubmissionDisclaimerField": "some disclaimer text"  // optional, the disclaimer text that appears under the submit button on the CDE submission page. Defaults to undefined
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
-        "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
-        "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
-        "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
-          "link": "/discovery",
-          "text": "Go to Discovery Page"
+          "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
+          "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
+          "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+            "link": "/discovery",
+            "text": "Go to Discovery Page"
+          }
         }
-      }
       },
       "zendeskConfig":{ // Optional; add this if you want to customize the subdomain that Zendesk is using in either of the study/workspace registration feature
-        "zendeskSubdomainName": "projectSupport"  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
+        "zendeskSubdomainName": "projectSupport",  // Optional; the subdomain name of the Zendesk server. Refer to User Service team to get more info. If omitted, will default to 'gen3support'
+        "useZendeskWrapper": false // Optional; whether to use Zendesk Wrapper service (if deployed). If set to true, "zendeskSubdomainName" will be ignored (since it is configured from the wrapper service instead). If omitted, will default to 'false'
       }
     }
 }

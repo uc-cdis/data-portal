@@ -9,7 +9,8 @@ import {
 } from '../DiscoveryActionBarConstants';
 import { fetchWithCreds } from '../../../actions';
 import checkFederatedLoginStatus from './checkFederatedStatus';
-import assembleFileMetadata from './assembleFileMetadata';
+import processFileMetadata from './processFileMetadata';
+import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
 const handleDownloadZipClick = async (
   config: DiscoveryConfig,
@@ -25,6 +26,7 @@ const handleDownloadZipClick = async (
     + 'it will begin automatically. You can close this window.';
 
   const { manifestFieldName } = config.features.exportToWorkspace;
+  const uidFieldName = config.minimalFieldMapping?.uid || '';
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
       setDownloadStatus,
@@ -42,13 +44,19 @@ const handleDownloadZipClick = async (
     return;
   }
 
-  const { fileManifest, externalFileMetadata } = assembleFileMetadata(manifestFieldName, selectedResources);
+  const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'all_files', selectedResources);
+  let zipFilename;
+  if (Object.keys(fileMetadata).length === 1) {
+    zipFilename = GenerateFilenameWithoutPrefix('all_files', Object.keys(fileMetadata)[0]);
+  } else {
+    zipFilename = GenerateFilenameWithoutPrefix('all_files');
+  }
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
     body: JSON.stringify({
       action: 'batch-export',
-      input: { file_manifest: fileManifest, external_file_metadata: externalFileMetadata },
+      input: { file_metadata: fileMetadata, zip_filename: `${zipFilename}.zip` },
     }),
   })
     .then((dispatchResponse) => {

@@ -288,12 +288,11 @@ module.exports = {
     // },
     // {
       test: /\.jsx?$|\.tsx?$/,
-      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
+      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser|web-vitals)\/).*/,
       use: {
         loader: 'babel-loader',
         options: {
           presets: ['@babel/preset-env', '@babel/react'],
-          plugins: ['@babel/plugin-proposal-class-properties'],
         },
       },
     },
@@ -304,13 +303,12 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: ['@babel/preset-env', '@babel/react'],
-          plugins: ['@babel/plugin-proposal-class-properties'],
         },
       },
     },
     {
       test: /\.less$/,
-      loaders: [
+      use: [
         'style-loader',
         'css-loader',
         'less-loader',
@@ -318,7 +316,10 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      loader: 'style-loader!css-loader',
+      use: [
+        'style-loader',
+        'css-loader',
+      ],
     },
     {
       test: /\.svg$/,
@@ -335,6 +336,20 @@ module.exports = {
     {
       test: /\.flow$/,
       loader: 'ignore-loader',
+    },
+    // .mjs parsing needed on webpack 4 for fuse.js
+    {
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+      use: [
+        {
+          loader: 'babel-loader',
+          query: {
+            presets: ['@babel/preset-env'],
+          },
+        },
+      ],
     },
     ],
   },
