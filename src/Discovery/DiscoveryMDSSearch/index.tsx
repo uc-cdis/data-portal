@@ -2,7 +2,7 @@ import React, { ChangeEventHandler, useState } from 'react';
 import {
   Input, Radio, Checkbox, RadioChangeEvent,
 } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, LoadingOutlined } from '@ant-design/icons';
 import './DiscoveryMDSSearch.css';
 import { SearchMode } from '../Discovery';
 
@@ -19,6 +19,8 @@ interface DiscoveryMDSSearchProps {
   searchTerm: string;
   handleSearchChange: ChangeEventHandler<HTMLInputElement>;
   inputSubtitle: string | undefined;
+  // while true, the search index is still being built: the input is disabled and shows a spinner
+  searchIndexIsBuilding?: boolean;
 }
 
 const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
@@ -30,6 +32,7 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
   searchTerm,
   handleSearchChange,
   inputSubtitle,
+  searchIndexIsBuilding = false,
 }) => {
   const [checkboxGroupValues, setCheckboxGroupValues] = useState([]);
 
@@ -55,11 +58,14 @@ const DiscoveryMDSSearch: React.FC<DiscoveryMDSSearchProps> = ({
       <Input
         className='discovery-search'
         prefix={<SearchOutlined />}
-        placeholder='Search studies by keyword...'
+        placeholder={searchIndexIsBuilding ? 'Preparing search...' : 'Search studies by keyword...'}
         value={searchTerm}
         onChange={handleSearchChange}
         size='large'
         allowClear
+        disabled={searchIndexIsBuilding}
+        aria-busy={searchIndexIsBuilding}
+        suffix={searchIndexIsBuilding ? <LoadingOutlined aria-label='Preparing search' /> : undefined}
       />
       <div className='discovery-input-subtitle'>{inputSubtitle}</div>
       {!!(Object.keys(searchableAndSelectableTextFields).length) && (
@@ -92,6 +98,7 @@ DiscoveryMDSSearch.defaultProps = {
   searchableTextFields: [],
   searchableAndSelectableTextFields: undefined,
   setSelectedFieldsForSearchIndexing: () => null,
+  searchIndexIsBuilding: false,
 };
 
 export default DiscoveryMDSSearch;

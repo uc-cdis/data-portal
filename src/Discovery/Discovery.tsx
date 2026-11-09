@@ -3,6 +3,7 @@ import React, {
   useRef,
 } from 'react';
 import * as JsSearch from 'js-search';
+import ReactDOM from 'react-dom';
 import jsonpath from 'jsonpath';
 import {
   Tag, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
@@ -34,6 +35,7 @@ import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
+import indexDocumentsInChunks from './Utils/Search/indexDocumentsInChunks';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
 import isColumnSearchable from './Utils/Search/isColumnSearchable';
@@ -331,9 +333,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [searchCache, setSearchCache] = useState({});
   const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
+  // true while the js-search index is being (re)built in the background. The table is
+  // usable in the meantime; only the search bar is disabled until the index is ready.
+  const [searchIndexIsBuilding, setSearchIndexIsBuilding] = useState(true);
+
   useEffect(() => {
     if (!props.allBatchesAreReady) {
-      return;
+      return undefined;
     }
     const cacheKey = JSON.stringify({
       studies: props.studies,
@@ -341,50 +347,60 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     });
     // Check if the search object is already cached
     if (searchCache[cacheKey]) {
-      setJsSearch(searchCache[cacheKey]);
-      props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
+      ReactDOM.unstable_batchedUpdates(() => {
+        setJsSearch(searchCache[cacheKey]);
+        setSearchIndexIsBuilding(false);
+        props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
+      });
+      return undefined;
+    }
+    const search = new JsSearch.Search(config.minimalFieldMapping.uid);
+    search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+    // Choose which fields in the data to make searchable.
+    // If `searchableFields` are configured, enable search over only those fields.
+    // If `searchableAndSelectableTextFields` is configured and fields are selected,
+    //  enable search over only those fields.
+    // Otherwise, default behavior: enable search over all non-numeric fields
+    // in the table and the study description.
+    // ---
+    if (selectedFieldsForSearchIndexing.length > 0 || searchMode === SearchMode.RESTRICTED) {
+      selectedFieldsForSearchIndexing.forEach((field) => {
+        const formattedFields = formatSearchIndex(field);
+        search.addIndex(formattedFields);
+      });
     } else {
-      const search = new JsSearch.Search(config.minimalFieldMapping.uid);
-      search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-      // Choose which fields in the data to make searchable.
-      // If `searchableFields` are configured, enable search over only those fields.
-      // If `searchableAndSelectableTextFields` is configured and fields are selected,
-      //  enable search over only those fields.
-      // Otherwise, default behavior: enable search over all non-numeric fields
-      // in the table and the study description.
-      // ---
-      if (selectedFieldsForSearchIndexing.length > 0 || searchMode === SearchMode.RESTRICTED) {
-        selectedFieldsForSearchIndexing.forEach((field) => {
-          const formattedFields = formatSearchIndex(field);
-          search.addIndex(formattedFields);
-        });
-      } else {
-        config.studyColumns.forEach((column) => {
-          if (!column.contentType || column.contentType === 'string') {
-            const studyColumnFieldsArr = formatSearchIndex(column.field);
-            search.addIndex(studyColumnFieldsArr);
-          }
-        });
-        // Also enable search over preview field if present
-        if (config.studyPreviewField) {
-          const studyPreviewFieldArr = formatSearchIndex(
-            config.studyPreviewField.field,
-          );
-          search.addIndex(studyPreviewFieldArr);
+      config.studyColumns.forEach((column) => {
+        if (!column.contentType || column.contentType === 'string') {
+          const studyColumnFieldsArr = formatSearchIndex(column.field);
+          search.addIndex(studyColumnFieldsArr);
         }
-      }
-      search.addDocuments(props.studies);
-      // expose the search function
-      setJsSearch(search);
-      // Reinitialize search
-      props.onSearchChange(props.searchTerm);
-      // Cache only the Full Text Search object
-      if (searchMode === SearchMode.FULL_TEXT) {
-        setSearchCache(() => ({
-          [cacheKey]: search,
-        }));
+      });
+      // Also enable search over preview field if present
+      if (config.studyPreviewField) {
+        const studyPreviewFieldArr = formatSearchIndex(
+          config.studyPreviewField.field,
+        );
+        search.addIndex(studyPreviewFieldArr);
       }
     }
+    // Index in the background. Any previously built index stays active until the new one
+    // is ready; the search bar is disabled meanwhile, so the search term can't change.
+    setSearchIndexIsBuilding(true);
+    return indexDocumentsInChunks(search, props.studies, () => {
+      ReactDOM.unstable_batchedUpdates(() => {
+        // expose the search function
+        setJsSearch(search);
+        setSearchIndexIsBuilding(false);
+        // Reinitialize search
+        props.onSearchChange(props.searchTerm);
+        // Cache only the Full Text Search object
+        if (searchMode === SearchMode.FULL_TEXT) {
+          setSearchCache(() => ({
+            [cacheKey]: search,
+          }));
+        }
+      });
+    });
   }, [props.studies, selectedFieldsForSearchIndexing, searchMode, props.allBatchesAreReady]);
 
   useEffect(() => {
@@ -681,6 +697,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
                         inputSubtitle={config.features.search.searchBar.inputSubtitle}
+                        searchIndexIsBuilding={searchIndexIsBuilding}
                       />
                     </div>
                   )}
@@ -749,6 +766,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
                 inputSubtitle={config.features.search.searchBar.inputSubtitle}
+                searchIndexIsBuilding={searchIndexIsBuilding}
               />
             </div>
           )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -207,7 +208,7 @@ describe('Modal', () => {
 });
 
 describe('Table', () => {
-  test('Table filters records by tags', () => {
+  test('Table filters records by tags', async () => {
     testConfig.features.authorization.enabled = true;
     let store = mockStore(initStoreData);
     let wrapper = mount(getDiscoveryComponent(store, testConfig));
@@ -233,7 +234,10 @@ describe('Table', () => {
 
     const isSelectedTag = (n) => n.hasClass('discovery-tag--selected');
     tag = wrapper.findWhere(isSelectedTag).first();
-    // expect search to reset onload
+    // expect search to reset onload, once the search index has been built in the background
+    await act(async () => {
+      await new Promise((resolve) => { setTimeout(resolve, 50); });
+    });
     expect(store.getActions()).toStrictEqual([{ searchTerm: undefined, type: 'SEARCH_TERM_SET' }]);
     tag.simulate('click');
 
