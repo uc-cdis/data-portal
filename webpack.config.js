@@ -290,7 +290,7 @@ module.exports = {
     // },
     // {
       test: /\.jsx?$|\.tsx?$/,
-      exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser|web-vitals)\/).*/,
+      exclude: /node_modules\/(?!(graphiql|web-vitals)\/).*/,
       use: {
         loader: 'babel-loader',
         options: {
@@ -360,7 +360,6 @@ module.exports = {
       graphql: path.resolve('./node_modules/graphql'),
       react: path.resolve('./node_modules/react'), // Same issue.
       graphiql: path.resolve('./node_modules/graphiql'),
-      'graphql-language-service-parser': path.resolve('./node_modules/graphql-language-service-parser'),
     },
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
