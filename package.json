@@ -166,6 +166,7 @@
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
     "@reactour/mask": "0.5.1",
+    "body-parser": "^2.4.0",
     "enzyme": {
       "cheerio": "1.0.0-rc.12"
     },
@@ -176,7 +177,7 @@
     "@grafana/faro-react": {
       "react-router": "$react-router-dom"
     },
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.3.3",
     "linkify-it": "^5.0.2",
     "fast-uri": "^3.1.5",
     "nanoid": "^3.3.18",
