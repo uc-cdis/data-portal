@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { fetchWithCreds } from '../../../../../../../../../actions';
 import { externalLoginOptionsUrl } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
+import { INITIAL_DOWNLOAD_STATUS } from '../Constants';
 
 /* eslint-disable camelcase */
 interface Iprovider {
@@ -15,6 +16,9 @@ interface Iprovider {
 }
 
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//;
+// Resolves to whether the user is logged in to all the external data resources needed
+// to download the files. If not, the download status is reset (with an "Authorization
+// Required" message when the user needs to log in to some resources).
 const CheckFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   fileManifest: any[],
@@ -26,6 +30,7 @@ const CheckFederatedLoginStatus = async (
 })
   .then(async ({ data, status }) => {
     if (status !== 200) {
+      setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
       return false;
     }
     const { providers } = data;
@@ -112,6 +117,9 @@ const CheckFederatedLoginStatus = async (
     }
     return true;
   })
-  .catch(() => false);
+  .catch(() => {
+    setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
+    return false;
+  });
 
 export default CheckFederatedLoginStatus;
