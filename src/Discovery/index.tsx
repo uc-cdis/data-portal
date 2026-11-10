@@ -153,7 +153,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
   useEffect(() => {
     if (!studyUID) {
-      return;
+      return undefined;
     }
     let cancelled = false;
     // The details modal always loads its metadata from MDS. When the aggregate MDS is enabled,
@@ -188,12 +188,12 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (!cancelled) props.history?.replace('/discovery');
     });
     props.onDiscoveryPageActive();
-    return () => { cancelled = true; }; // eslint-disable-line consistent-return
+    return () => { cancelled = true; };
   }, [studyUID]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (studyUID) {
-      return; // full list is not needed to show a single study
+      return undefined; // full list is not needed to show a single study
     }
     let cancelled = false;
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
@@ -246,7 +246,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-    return () => { cancelled = true; }; // eslint-disable-line consistent-return
+    return () => { cancelled = true; };
     // only (re)load when switching between single-study and full-list views;
     // depending on `props` would refetch all metadata on every redux update
   }, [studyUID]); // eslint-disable-line react-hooks/exhaustive-deps
