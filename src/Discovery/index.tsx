@@ -279,6 +279,7 @@ const DiscoveryWithMDSBackend: React.FC<{
             setPermalinkCopied={() => {}}
             config={props.config}
             modalData={singleStudy}
+            modalDataLoading={false}
           />
         )}
       </div>

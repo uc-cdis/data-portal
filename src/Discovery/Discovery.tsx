@@ -237,25 +237,53 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [filterState, setFilterState] = useState({} as FilterState);
   const [filterMultiSelectionLogic, setFilterMultiSelectionLogic] = useState('AND');
   const [modalData, setModalData] = useState({} as DiscoveryResource);
+  const [modalDataLoading, setModalDataLoading] = useState(false);
   // GUID of the most recently opened study, used to ignore stale MDS responses
   const latestRequestedStudyGUID = useRef(null);
+  // MDS request (and, once it succeeds, its result) for the most recently opened study, so that
+  // reopening the same study does not fetch it again
+  const lastStudyRequest = useRef<{ guid: string, request: Promise<any>, study?: any } | null>(null);
 
-  // Opens the details modal for a table record. The record is shown right away, then
-  // its metadata (gen3_discovery + variable-level metadata) is fetched from MDS,
-  // even when the table itself was loaded from the aggregate MDS.
+  // Opens the details modal for a table record. Its metadata (gen3_discovery + variable-level
+  // metadata) is fetched from MDS, even when the table itself was loaded from the aggregate MDS.
+  // The modal shows a spinner until then, rather than briefly showing the (possibly different)
+  // table record. The table record is only shown if the MDS request fails.
   const showStudyDetails = (record: DiscoveryResource) => {
-    setModalData(record);
     const guid = record[config.minimalFieldMapping.uid];
     latestRequestedStudyGUID.current = guid;
     if (!guid) {
+      setModalData(record);
+      setModalDataLoading(false);
       return;
     }
-    loadStudyFromMDS(guid).then((study) => {
+    // same study as last time, and already loaded: show it without fetching again
+    if (lastStudyRequest.current?.guid === guid && lastStudyRequest.current.study) {
+      setModalData(mergeStudyWithMDSMetadata(record, lastStudyRequest.current.study));
+      setModalDataLoading(false);
+      return;
+    }
+    // reuse the request for this study if it is still in flight, otherwise start a new one
+    if (lastStudyRequest.current?.guid !== guid) {
+      const cacheEntry = { guid, request: loadStudyFromMDS(guid) };
+      lastStudyRequest.current = cacheEntry;
+      cacheEntry.request.then((study) => {
+        if (lastStudyRequest.current === cacheEntry) cacheEntry.study = study;
+      }, () => {
+        // don't cache failures, so that the study is fetched again the next time it is opened
+        if (lastStudyRequest.current === cacheEntry) lastStudyRequest.current = null;
+      });
+    }
+    setModalDataLoading(true);
+    lastStudyRequest.current.request.then((study) => {
       if (latestRequestedStudyGUID.current !== guid) return; // user opened another study meanwhile
       setModalData(mergeStudyWithMDSMetadata(record, study));
+      setModalDataLoading(false);
     }).catch((err) => {
+      if (latestRequestedStudyGUID.current !== guid) return;
       // eslint-disable-next-line no-console
       console.error(`Could not load study ${guid} from MDS, showing table data instead: `, err);
+      setModalData(record);
+      setModalDataLoading(false);
     });
   };
   const [permalinkCopied, setPermalinkCopied] = useState(false);
@@ -847,6 +875,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setPermalinkCopied={setPermalinkCopied}
           config={config}
           modalData={modalData}
+          modalDataLoading={modalDataLoading}
         />
       </div>
     </div>
