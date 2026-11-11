@@ -295,6 +295,14 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: ['@babel/preset-env', '@babel/react'],
+          // turns `import Icon from './icon.svg'` into a React component at build time
+          plugins: [
+            ['inline-react-svg', {
+              svgo: {
+                plugins: [{ name: 'preset-default', params: { overrides: { removeViewBox: false } } }],
+              },
+            }],
+          ],
         },
       },
     },
@@ -322,11 +330,6 @@ module.exports = {
         'style-loader',
         'css-loader',
       ],
-    },
-    {
-      test: /\.svg$/,
-      // loaders: ['babel-loader', 'react-svg-loader'], // to address the `css-what` vulnerability issue, after updating to webpack 5 and latest `react-svg-loader` we can switch back to this
-      loader: 'svg-react-loader',
     },
     {
       test: /\.(png|jpg|gif|woff|ttf|eot)$/,
