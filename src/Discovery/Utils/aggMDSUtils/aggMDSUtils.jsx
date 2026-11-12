@@ -41,6 +41,10 @@ const unpackAggMDSEntry = (entry, studyId, commonsName, index) => {
   return entryUnpacked;
 };
 
+const AGG_MDS_PAGE_SIZE = 2000;
+
+// Fetches one page of studies from the aggregate MDS.
+// Returns the unpacked studies and the raw number of entries in the page.
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
@@ -54,26 +58,36 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   // According to the API: https://petstore.swagger.io/?url=https://gist.githubusercontent.com/craigrbarnes/3ac95d4d6b5dd08d280a28ec0ae2a12d/raw/58a562c9b3a343e535849ad4085a3b27942b2b57/openapi.yaml#/Query/metadata_metadata_get
   const commons = Object.keys(metadataResponse);
 
-  let allStudies = [];
+  let studies = [];
 
   commons.forEach((commonsName) => {
-    const studies = metadataResponse[commonsName];
-
-    const editedStudies = studies.map((entry, index) => {
+    const editedStudies = metadataResponse[commonsName].map((entry, index) => {
       const studyId = Object.keys(entry)[0];
-      return unpackAggMDSEntry(entry, studyId, commonsName, index);
+      // offset the index so frontend_uid stays unique across pages
+      return unpackAggMDSEntry(entry, studyId, commonsName, offset + index);
     });
 
-    allStudies = allStudies.concat(editedStudies);
+    studies = studies.concat(editedStudies);
   });
-  return allStudies;
+  return studies;
 };
 
-const loadStudiesFromAggMDS = async (limit = 2000) => {
-  // Retrieve from aggregate MDS
-  const offset = 0; // For pagination
-  const studies = await loadStudiesFromAggMDSRequests(offset, limit);
-  return studies;
+// Loads all studies from the aggregate MDS, requesting `pageSize` studies at a time
+// until a page comes back with fewer than `pageSize` entries.
+const loadStudiesFromAggMDS = async (pageSize = AGG_MDS_PAGE_SIZE) => {
+  let allStudies = [];
+  let offset = 0;
+  let shouldContinue = true;
+  while (shouldContinue) {
+    // requests are intentionally sequential: we only need the next page if this one was full
+    // eslint-disable-next-line no-await-in-loop
+    const studies = await loadStudiesFromAggMDSRequests(offset, pageSize);
+    allStudies = allStudies.concat(studies);
+    // stop once a page comes back with fewer than pageSize studies
+    shouldContinue = studies.length >= pageSize;
+    offset += pageSize;
+  }
+  return allStudies;
 };
 
 // Loads a single study by GUID from the aggregate MDS.

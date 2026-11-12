@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Drawer, Tabs } from 'antd';
+import { Drawer, Spin, Tabs } from 'antd';
 import { User } from './DiscoveryDetailsInterfaces';
 import { DiscoveryConfig } from '../DiscoveryConfig';
 import { DiscoveryResource } from '../Discovery';
@@ -10,9 +10,11 @@ import StudyHeader from './Components/StudyHeader';
 
 interface Props {
   modalVisible: boolean;
-  setModalVisible: (boolean) => void;
-  // setPermalinkCopied: (boolean) => void;
+  setModalVisible: (visible: boolean) => void;
+  // setPermalinkCopied: (copied: boolean) => void;
   modalData: DiscoveryResource;
+  // true while the study's metadata is being fetched; the drawer shows a spinner meanwhile
+  modalDataLoading: boolean;
   config: DiscoveryConfig;
   // permalinkCopied: boolean;
   user: User;
@@ -35,37 +37,45 @@ const DiscoveryDetails = (props: Props) => {
         setTabActiveKey('0');
       }}
     >
-      <HeaderButtons props={props} setTabActiveKey={setTabActiveKey} />
-      {props.config.detailView?.tabs ? (
-        // Here is the tabbed version of discovery details page
-        <div className='discovery-modal-content'>
-          <StudyHeader props={props} />
-          <Tabs
-            type={'card'}
-            activeKey={tabActiveKey}
-            onChange={(activeKey) => {
-              setTabActiveKey(activeKey);
-            }}
-            items={props.config.detailView.tabs.map(
-              ({ tabName, groups }, tabIndex) => ({
-                label: <span className='discovery-modal__tablabel'>{tabName}</span>,
-                key: `${tabIndex}`,
-                children: (groups || []).map((group, i) => (
-                  <div key={i}>
-                    <FieldGrouping
-                      user={props.user}
-                      group={group}
-                      discoveryConfig={props.config}
-                      resource={props.modalData}
-                    />
-                  </div>
-                )),
-              }),
-            )}
-          />
+      {props.modalDataLoading ? (
+        <div className='discovery-modal__loading'>
+          <Spin />
         </div>
       ) : (
-        <NonTabbedDiscoveryDetails props={props} />
+        <React.Fragment>
+          <HeaderButtons props={props} setTabActiveKey={setTabActiveKey} />
+          {/* Here is the tabbed version of discovery details page */}
+          {props.config.detailView?.tabs ? (
+            <div className='discovery-modal-content'>
+              <StudyHeader props={props} />
+              <Tabs
+                type={'card'}
+                activeKey={tabActiveKey}
+                onChange={(activeKey) => {
+                  setTabActiveKey(activeKey);
+                }}
+                items={props.config.detailView.tabs.map(
+                  ({ tabName, groups }, tabIndex) => ({
+                    label: <span className='discovery-modal__tablabel'>{tabName}</span>,
+                    key: `${tabIndex}`,
+                    children: (groups || []).map((group, i) => (
+                      <div key={i}>
+                        <FieldGrouping
+                          user={props.user}
+                          group={group}
+                          discoveryConfig={props.config}
+                          resource={props.modalData}
+                        />
+                      </div>
+                    )),
+                  }),
+                )}
+              />
+            </div>
+          ) : (
+            <NonTabbedDiscoveryDetails props={props} />
+          )}
+        </React.Fragment>
       )}
     </Drawer>
   );

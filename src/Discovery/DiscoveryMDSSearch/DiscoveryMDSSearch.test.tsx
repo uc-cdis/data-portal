@@ -54,4 +54,17 @@ describe('DiscoveryMDSSearch Component', () => {
     fireEvent.click(checkbox);
     expect(mockSetSelectedSearchableTextFields).toHaveBeenCalledWith(['value1']);
   });
+
+  test('disables the input and shows a spinner while the search index is building', () => {
+    render(<DiscoveryMDSSearch {...defaultProps} searchIndexIsBuilding />);
+    const input = screen.getByPlaceholderText('Preparing search...');
+    expect(input).toBeDisabled();
+    expect(screen.getByLabelText('Preparing search')).toBeInTheDocument();
+  });
+
+  test('enables the input once the search index is ready', () => {
+    render(<DiscoveryMDSSearch {...defaultProps} searchIndexIsBuilding={false} />);
+    expect(screen.getByPlaceholderText('Search studies by keyword...')).toBeEnabled();
+    expect(screen.queryByLabelText('Preparing search')).not.toBeInTheDocument();
+  });
 });

@@ -3,6 +3,7 @@ import React, {
   useRef,
 } from 'react';
 import * as JsSearch from 'js-search';
+import ReactDOM from 'react-dom';
 import jsonpath from 'jsonpath';
 import {
   Tag, Space, Collapse, Button, Dropdown, Pagination, Tooltip, Spin,
@@ -34,9 +35,11 @@ import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
+import indexDocumentsInChunks from './Utils/Search/indexDocumentsInChunks';
 import './Discovery.css';
 import DiscoveryDataAvailabilityTooltips from './DiscoveryDataAvailabilityTooltips';
 import isColumnSearchable from './Utils/Search/isColumnSearchable';
+import { loadStudyFromMDS, mergeStudyWithMDSMetadata } from './Utils/MDSUtils/MDSUtils';
 
 export const accessibleFieldName = '__accessible';
 
@@ -206,7 +209,6 @@ export interface Props {
   config: DiscoveryConfig,
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
-  params?: { studyUID: string | null | undefined }, // from React Router
   selectedResources: DiscoveryResource,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
@@ -235,6 +237,56 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [filterState, setFilterState] = useState({} as FilterState);
   const [filterMultiSelectionLogic, setFilterMultiSelectionLogic] = useState('AND');
   const [modalData, setModalData] = useState({} as DiscoveryResource);
+  const [modalDataLoading, setModalDataLoading] = useState(false);
+  // GUID of the most recently opened study, used to ignore stale MDS responses
+  const latestRequestedStudyGUID = useRef(null);
+  // MDS request (and, once it succeeds, its result) for the most recently opened study, so that
+  // reopening the same study does not fetch it again
+  type StudyRequest = { guid: string, request: Promise<any>, study?: any };
+  const lastStudyRequest = useRef<StudyRequest | null>(null);
+
+  // Opens the details modal for a table record. Its metadata (gen3_discovery + variable-level
+  // metadata) is fetched from MDS, even when the table itself was loaded from the aggregate MDS.
+  // The modal shows a spinner until then, rather than briefly showing the (possibly different)
+  // table record. The table record is only shown if the MDS request fails.
+  const showStudyDetails = (record: DiscoveryResource) => {
+    const guid = record[config.minimalFieldMapping.uid];
+    latestRequestedStudyGUID.current = guid;
+    if (!guid) {
+      setModalData(record);
+      setModalDataLoading(false);
+      return;
+    }
+    // same study as last time, and already loaded: show it without fetching again
+    if (lastStudyRequest.current?.guid === guid && lastStudyRequest.current.study) {
+      setModalData(mergeStudyWithMDSMetadata(record, lastStudyRequest.current.study));
+      setModalDataLoading(false);
+      return;
+    }
+    // reuse the request for this study if it is still in flight, otherwise start a new one
+    if (lastStudyRequest.current?.guid !== guid) {
+      const cacheEntry: StudyRequest = { guid, request: loadStudyFromMDS(guid) };
+      lastStudyRequest.current = cacheEntry;
+      cacheEntry.request.then((study) => {
+        if (lastStudyRequest.current === cacheEntry) cacheEntry.study = study;
+      }, () => {
+        // don't cache failures, so that the study is fetched again the next time it is opened
+        if (lastStudyRequest.current === cacheEntry) lastStudyRequest.current = null;
+      });
+    }
+    setModalDataLoading(true);
+    lastStudyRequest.current.request.then((study) => {
+      if (latestRequestedStudyGUID.current !== guid) return; // user opened another study meanwhile
+      setModalData(mergeStudyWithMDSMetadata(record, study));
+      setModalDataLoading(false);
+    }).catch((err) => {
+      if (latestRequestedStudyGUID.current !== guid) return;
+      // eslint-disable-next-line no-console
+      console.error(`Could not load study ${guid} from MDS, showing table data instead: `, err);
+      setModalData(record);
+      setModalDataLoading(false);
+    });
+  };
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [searchableTagCollapsed, setSearchableTagCollapsed] = useState(
@@ -310,9 +362,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [searchCache, setSearchCache] = useState({});
   const [searchMode, setSearchMode] = useState(SearchMode.FULL_TEXT);
 
+  // true while the js-search index is being (re)built in the background. The table is
+  // usable in the meantime; only the search bar is disabled until the index is ready.
+  const [searchIndexIsBuilding, setSearchIndexIsBuilding] = useState(true);
+
   useEffect(() => {
     if (!props.allBatchesAreReady) {
-      return;
+      return undefined;
     }
     const cacheKey = JSON.stringify({
       studies: props.studies,
@@ -320,69 +376,61 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     });
     // Check if the search object is already cached
     if (searchCache[cacheKey]) {
-      setJsSearch(searchCache[cacheKey]);
-      props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
+      ReactDOM.unstable_batchedUpdates(() => {
+        setJsSearch(searchCache[cacheKey]);
+        setSearchIndexIsBuilding(false);
+        props.onSearchChange(props.searchTerm); // Reinitialize search with the cached object
+      });
+      return undefined;
+    }
+    const search = new JsSearch.Search(config.minimalFieldMapping.uid);
+    search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+    // Choose which fields in the data to make searchable.
+    // If `searchableFields` are configured, enable search over only those fields.
+    // If `searchableAndSelectableTextFields` is configured and fields are selected,
+    //  enable search over only those fields.
+    // Otherwise, default behavior: enable search over all non-numeric fields
+    // in the table and the study description.
+    // ---
+    if (selectedFieldsForSearchIndexing.length > 0 || searchMode === SearchMode.RESTRICTED) {
+      selectedFieldsForSearchIndexing.forEach((field) => {
+        const formattedFields = formatSearchIndex(field);
+        search.addIndex(formattedFields);
+      });
     } else {
-      const search = new JsSearch.Search(config.minimalFieldMapping.uid);
-      search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-      // Choose which fields in the data to make searchable.
-      // If `searchableFields` are configured, enable search over only those fields.
-      // If `searchableAndSelectableTextFields` is configured and fields are selected,
-      //  enable search over only those fields.
-      // Otherwise, default behavior: enable search over all non-numeric fields
-      // in the table and the study description.
-      // ---
-      if (selectedFieldsForSearchIndexing.length > 0 || searchMode === SearchMode.RESTRICTED) {
-        selectedFieldsForSearchIndexing.forEach((field) => {
-          const formattedFields = formatSearchIndex(field);
-          search.addIndex(formattedFields);
-        });
-      } else {
-        config.studyColumns.forEach((column) => {
-          if (!column.contentType || column.contentType === 'string') {
-            const studyColumnFieldsArr = formatSearchIndex(column.field);
-            search.addIndex(studyColumnFieldsArr);
-          }
-        });
-        // Also enable search over preview field if present
-        if (config.studyPreviewField) {
-          const studyPreviewFieldArr = formatSearchIndex(
-            config.studyPreviewField.field,
-          );
-          search.addIndex(studyPreviewFieldArr);
+      config.studyColumns.forEach((column) => {
+        if (!column.contentType || column.contentType === 'string') {
+          const studyColumnFieldsArr = formatSearchIndex(column.field);
+          search.addIndex(studyColumnFieldsArr);
         }
-      }
-      search.addDocuments(props.studies);
-      // expose the search function
-      setJsSearch(search);
-      // Reinitialize search
-      props.onSearchChange(props.searchTerm);
-      // Cache only the Full Text Search object
-      if (searchMode === SearchMode.FULL_TEXT) {
-        setSearchCache(() => ({
-          [cacheKey]: search,
-        }));
+      });
+      // Also enable search over preview field if present
+      if (config.studyPreviewField) {
+        const studyPreviewFieldArr = formatSearchIndex(
+          config.studyPreviewField.field,
+        );
+        search.addIndex(studyPreviewFieldArr);
       }
     }
+    // Index in the background. Any previously built index stays active until the new one
+    // is ready; the search bar is disabled meanwhile, so the search term can't change.
+    setSearchIndexIsBuilding(true);
+    return indexDocumentsInChunks(search, props.studies, () => {
+      ReactDOM.unstable_batchedUpdates(() => {
+        // expose the search function
+        setJsSearch(search);
+        setSearchIndexIsBuilding(false);
+        // Reinitialize search
+        props.onSearchChange(props.searchTerm);
+        // Cache only the Full Text Search object
+        if (searchMode === SearchMode.FULL_TEXT) {
+          setSearchCache(() => ({
+            [cacheKey]: search,
+          }));
+        }
+      });
+    });
   }, [props.studies, selectedFieldsForSearchIndexing, searchMode, props.allBatchesAreReady]);
-
-  useEffect(() => {
-    // If opening to a study by default, open that study
-    if (props.params.studyUID && props.studies.length > 0) {
-      const studyID = decodeURIComponent(props.params.studyUID);
-      const defaultModalData = props.studies.find(
-        (r) => r[config.minimalFieldMapping.uid] === studyID);
-
-      if (defaultModalData) {
-        setPermalinkCopied(false);
-        setModalData(defaultModalData);
-        setModalVisible(true);
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(`Could not find data with UID ${studyID}.`);
-      }
-    }
-  }, [props.params.studyUID, props.studies]);
 
   useEffect(() => {
     const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
@@ -678,6 +726,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         searchTerm={props.searchTerm}
                         handleSearchChange={handleSearchChange}
                         inputSubtitle={config.features.search.searchBar.inputSubtitle}
+                        searchIndexIsBuilding={searchIndexIsBuilding}
                       />
                     </div>
                   )}
@@ -746,6 +795,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 searchTerm={props.searchTerm}
                 handleSearchChange={handleSearchChange}
                 inputSubtitle={config.features.search.searchBar.inputSubtitle}
+                searchIndexIsBuilding={searchIndexIsBuilding}
               />
             </div>
           )}
@@ -798,7 +848,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 }
                 searchTerm={props.searchTerm}
                 setPermalinkCopied={setPermalinkCopied}
-                setModalData={setModalData}
+                setModalData={showStudyDetails}
                 setModalVisible={setModalVisible}
                 columns={columns}
                 selectedTags={props.selectedTags}
@@ -826,14 +876,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setPermalinkCopied={setPermalinkCopied}
           config={config}
           modalData={modalData}
+          modalDataLoading={modalDataLoading}
         />
       </div>
     </div>
   );
-};
-
-Discovery.defaultProps = {
-  params: { studyUID: null },
 };
 
 export default Discovery;

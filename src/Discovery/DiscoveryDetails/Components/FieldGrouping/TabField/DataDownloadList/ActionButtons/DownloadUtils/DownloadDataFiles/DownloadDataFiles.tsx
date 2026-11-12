@@ -5,7 +5,7 @@ import { jobAPIPath } from '../../../../../../../../../localconf';
 import DownloadStatus from '../../../Interfaces/DownloadStatus';
 import CheckFederatedLoginStatus from './CheckFederatedLoginStatus';
 import CheckDownloadStatus from './CheckDownloadStatus';
-import { DOWNLOAD_FAIL_STATUS, JOB_POLLING_INTERVAL } from '../Constants';
+import { DOWNLOAD_FAIL_STATUS, INITIAL_DOWNLOAD_STATUS, JOB_POLLING_INTERVAL } from '../Constants';
 import { DiscoveryResource } from '../../../../../../../../Discovery';
 
 const DownloadDataFiles = async (
@@ -20,6 +20,13 @@ const DownloadDataFiles = async (
   filenameForDownloadable: string,
   resourceInfo: DiscoveryResource,
 ) => {
+  // Mark the download as in progress right away, so the download buttons are disabled and
+  // show a spinner while the checks below are running (e.g. the external GUID resolution
+  // in CheckFederatedLoginStatus can take a while), not only once the job is dispatched.
+  setDownloadStatus({
+    ...INITIAL_DOWNLOAD_STATUS,
+    inProgress: 'DownloadDataFiles',
+  });
   if (verifyExternalLoginsNeeded) {
     const isLinked = await CheckFederatedLoginStatus(
       setDownloadStatus,
@@ -28,10 +35,12 @@ const DownloadDataFiles = async (
       location,
     );
     if (!isLinked) {
+      // CheckFederatedLoginStatus has already reset the download status
       return;
     }
   }
   if (missingRequiredIdentityProviders.length) {
+    setDownloadStatus(INITIAL_DOWNLOAD_STATUS);
     return;
   }
   fetchWithCreds({

@@ -4,7 +4,7 @@ import { Popover, Button } from 'antd';
 import handleDownloadManifestClick from '../utils/handleDownloadManifestClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
 import { DiscoveryResource } from '../../Discovery';
-import isManifestDataMissing from '../../Utils/isManifestDataMissing';
+import { hasFileManifest } from '../../Utils/hasFileMetadata';
 
 const DownloadManifestButton = ({
   props, healIDPLoginNeeded, onlyInCommonMsg, history, location,
@@ -14,7 +14,7 @@ const DownloadManifestButton = ({
     if (noSelectedResources) return true;
     const { manifestFieldName } = props.config.features.exportToWorkspace;
     const eachSelectedResourcesIsMissingManifest = props.discovery.selectedResources.every(
-      (resource: DiscoveryResource) => isManifestDataMissing(resource, manifestFieldName),
+      (resource: DiscoveryResource) => !hasFileManifest(resource, manifestFieldName),
     );
     if (eachSelectedResourcesIsMissingManifest) return true;
     return false;

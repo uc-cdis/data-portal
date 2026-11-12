@@ -6,6 +6,17 @@ import { externalLoginOptionsUrl } from '../../../localconf';
 import { DownloadStatus } from '../DiscoveryActionBarInterfaces';
 import { GUID_PREFIX_PATTERN } from '../DiscoveryActionBarConstants';
 
+// Shown when the external login status itself cannot be checked, so callers that are
+// displaying a loading state (e.g. Download Zip) don't keep spinning.
+const LOGIN_STATUS_CHECK_FAIL_STATUS: DownloadStatus = {
+  inProgress: false,
+  message: {
+    title: 'Unable to verify authorization',
+    content: <p>There was a problem checking your external login status. Please try again later.</p>,
+    active: true,
+  },
+};
+
 const checkFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   selectedResources: any[],
@@ -18,6 +29,7 @@ const checkFederatedLoginStatus = async (
 })
   .then(async ({ data, status }) => {
     if (status !== 200) {
+      setDownloadStatus(LOGIN_STATUS_CHECK_FAIL_STATUS);
       return false;
     }
     const { providers } = data;
@@ -104,6 +116,9 @@ const checkFederatedLoginStatus = async (
     }
     return true;
   })
-  .catch(() => false);
+  .catch(() => {
+    setDownloadStatus(LOGIN_STATUS_CHECK_FAIL_STATUS);
+    return false;
+  });
 
 export default checkFederatedLoginStatus;

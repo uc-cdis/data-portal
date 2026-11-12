@@ -3,7 +3,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Popover, Button, Modal } from 'antd';
 import handleDownloadZipClick from '../utils/handleDownloadZipClick';
 import { handleRedirectToLoginClickResumable } from '../../Utils/HandleRedirectToLoginClick';
-import isManifestDataMissing from '../../Utils/isManifestDataMissing';
+import { hasFileManifest, hasExternalFileMetadata } from '../../Utils/hasFileMetadata';
 import { DiscoveryResource } from '../../Discovery';
 
 const DownloadZipButton = ({
@@ -21,9 +21,9 @@ const DownloadZipButton = ({
         // put some hard-coded field names here, so this button can be properly enabled for external files
         // TODO: see similar logics in DiscoveryListView.tsx
         if (enableExportFullMetadata) {
-          isExternalFileManifestMissing = !resource.external_file_metadata || resource.external_file_metadata.length === 0;
+          isExternalFileManifestMissing = !hasExternalFileMetadata(resource);
         }
-        return isManifestDataMissing(resource, manifestFieldName) && isExternalFileManifestMissing;
+        return !hasFileManifest(resource, manifestFieldName) && isExternalFileManifestMissing;
       },
     );
     if (eachSelectedResourcesIsMissingManifest) return true;

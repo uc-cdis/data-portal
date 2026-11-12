@@ -4,15 +4,17 @@ import '@testing-library/jest-dom';
 import DiscoveryLoadingProgressBar from './DiscoveryLoadingProgressBar';
 
 describe('DiscoveryLoadingProgressBar', () => {
-  it('renders the progress bar and loading text when displayProgressBar is true', () => {
-    render(<DiscoveryLoadingProgressBar allBatchesAreReady={false} />);
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  it('renders an active (pending) full progress bar while loading', () => {
+    const { container } = render(<DiscoveryLoadingProgressBar allBatchesAreReady={false} />);
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
     expect(screen.getByText('Loading studies...')).toBeInTheDocument();
+    expect(container.querySelector('.ant-progress-status-active')).toBeInTheDocument();
   });
 
-  it('sets progress to 100% when allBatchesAreReady is true', () => {
-    render(<DiscoveryLoadingProgressBar allBatchesAreReady />);
-    const progressBar = screen.getByRole('progressbar');
-    expect(progressBar).toHaveAttribute('aria-valuenow', '100');
+  it('disappears immediately once loading completes', () => {
+    const { rerender } = render(<DiscoveryLoadingProgressBar allBatchesAreReady={false} />);
+    rerender(<DiscoveryLoadingProgressBar allBatchesAreReady />);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.queryByText('Loading studies...')).not.toBeInTheDocument();
   });
 });
