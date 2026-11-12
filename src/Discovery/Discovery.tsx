@@ -242,7 +242,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const latestRequestedStudyGUID = useRef(null);
   // MDS request (and, once it succeeds, its result) for the most recently opened study, so that
   // reopening the same study does not fetch it again
-  const lastStudyRequest = useRef<{ guid: string, request: Promise<any>, study?: any } | null>(null);
+  type StudyRequest = { guid: string, request: Promise<any>, study?: any };
+  const lastStudyRequest = useRef<StudyRequest | null>(null);
 
   // Opens the details modal for a table record. Its metadata (gen3_discovery + variable-level
   // metadata) is fetched from MDS, even when the table itself was loaded from the aggregate MDS.
@@ -264,7 +265,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     }
     // reuse the request for this study if it is still in flight, otherwise start a new one
     if (lastStudyRequest.current?.guid !== guid) {
-      const cacheEntry = { guid, request: loadStudyFromMDS(guid) };
+      const cacheEntry: StudyRequest = { guid, request: loadStudyFromMDS(guid) };
       lastStudyRequest.current = cacheEntry;
       cacheEntry.request.then((study) => {
         if (lastStudyRequest.current === cacheEntry) cacheEntry.study = study;
