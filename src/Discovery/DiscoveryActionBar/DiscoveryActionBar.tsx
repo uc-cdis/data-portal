@@ -21,9 +21,9 @@ interface Props {
   config: DiscoveryConfig;
   // eslint-disable-next-line react/no-unused-prop-types
   exportingToWorkspace: boolean; // this prop is being used by a child component
-  setExportingToWorkspace: (boolean) => void;
+  setExportingToWorkspace: (exporting: boolean) => void;
   filtersVisible: boolean;
-  setFiltersVisible: (boolean) => void;
+  setFiltersVisible: (visible: boolean) => void;
   disableFilterButton: boolean;
   user: User;
   discovery: {

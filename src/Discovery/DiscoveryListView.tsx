@@ -16,9 +16,9 @@ interface Props {
   visibleResources: any[];
   accessibleFieldName: string;
   searchTerm: string;
-  setPermalinkCopied: (boolean) => void;
-  setModalVisible: (boolean) => void;
-  setModalData: (boolean) => void;
+  setPermalinkCopied: (copied: boolean) => void;
+  setModalVisible: (visible: boolean) => void;
+  setModalData: (record: DiscoveryResource) => void;
   selectedResources: any[];
   selectedTags: any[];
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;

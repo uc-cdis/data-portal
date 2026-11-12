@@ -10,8 +10,8 @@ import StudyHeader from './Components/StudyHeader';
 
 interface Props {
   modalVisible: boolean;
-  setModalVisible: (boolean) => void;
-  // setPermalinkCopied: (boolean) => void;
+  setModalVisible: (visible: boolean) => void;
+  // setPermalinkCopied: (copied: boolean) => void;
   modalData: DiscoveryResource;
   // true while the study's metadata is being fetched; the drawer shows a spinner meanwhile
   modalDataLoading: boolean;
