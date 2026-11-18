@@ -36,12 +36,43 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   const isHighlightingEnabled = () => {
     if (selectedFieldsForSearchIndexing.length > 0
-       && !selectedFieldsForSearchIndexing.includes(config.studyPreviewField.field)) {
+        && !selectedFieldsForSearchIndexing.includes(config.studyPreviewField.field)) {
       return false;
     }
     return true;
   };
 
+  const getCheckboxTooltipTitle = (record, node) => {
+    const exportToDataLibraryConfig = props.config.features.exportToDataLibrary;
+    const enableDataLibrary = exportToDataLibraryConfig.enabled;
+    const { dataObjectFieldName } = exportToDataLibraryConfig;
+    const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
+    const enableWorkspaces = exportToWorkspaceConfig.enabled;
+    const {
+      enableFillRequestForm, fillRequestFormDisplayText, enableDownloadManifest, enableDownloadZip,
+    } = exportToWorkspaceConfig;
+    if (!node.props.disabled) {
+      return `Click to select item for ${
+        [
+          enableFillRequestForm
+            ? fillRequestFormDisplayText?.toLowerCase()
+            : '',
+          (enableDownloadManifest || enableDownloadZip)
+            ? 'download'
+            : '',
+          enableWorkspaces ? 'open in workspace' : '',
+          enableDataLibrary ? 'adding to a list for export' : '',
+        ]
+          .filter(Boolean)
+          .join(' or ')
+      }`;
+    }
+    if (enableDataLibrary) {
+      if (!(dataObjectFieldName in record) || record[dataObjectFieldName].length === 0) {
+        return 'No objects available for export';
+      }
+    }
+  };
   return (
     <Table
       {...scroll}
@@ -68,19 +99,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         ),
         renderCell: (_checked, _record, _index, node) => (
           <Tooltip
-            title={`Click to select item for ${
-              [
-                props.config.features.exportToWorkspace.enableFillRequestForm
-                  ? props.config.features.exportToWorkspace.fillRequestFormDisplayText?.toLowerCase()
-                  : '',
-                (props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip)
-                  ? 'download'
-                  : '',
-                'open in workspace',
-              ]
-                .filter(Boolean)
-                .join(' or ')
-            }`}
+            title={getCheckboxTooltipTitle(_record, node)}
             overlayStyle={{ maxWidth: '150px' }}
           >
             {node}
