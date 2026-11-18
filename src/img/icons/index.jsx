@@ -44,8 +44,40 @@ import IcoAcctPlanning from './acct-icons/acct-planning.svg';
 import IcoAcctAccess from './acct-icons/acct-access.svg';
 import IcoAcctExplore from './acct-icons/acct-explore.svg';
 import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
+import GWASBarChart from './gwas-icons/barChart.svg';
+import GWASEulerDiagram from './gwas-icons/eulerDiagram.svg';
+import GWASEyeIcon from './gwas-icons/eyeIcon.svg';
+import InfoIcon from './gwas-icons/infoIcon.svg';
+import HolderIcon from './gwas-icons/holderIcon.svg';
+import ManageColumnsIcon from './gwas-icons/manageColumnsIcon.svg';
+import RestoreIcon from './gwas-icons/restoreIcon.svg';
+import SearchIcon from './gwas-icons/searchIcon.svg';
 
 const dictIcons = {
+  'gwas-barChart': (height, customedStyles) => (
+    <GWASBarChart height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-eulerDiagram': (height, customedStyles) => (
+    <GWASEulerDiagram height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-eyeIcon': (height, customedStyles) => (
+    <GWASEyeIcon height={height} style={{ ...customedStyles }} />
+  ),
+  info: (height, customedStyles) => (
+    <InfoIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-holderIcon': (height, customedStyles) => (
+    <HolderIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-manageColumnsIcon': (height, customedStyles) => (
+    <ManageColumnsIcon height={height} style={{ ...customedStyles }} />
+  ),
+  'gwas-restoreIcon': (height, customedStyles) => (
+    <RestoreIcon height={height} style={{ ...customedStyles }} />
+  ),
+  search: (height, customedStyles) => (
+    <SearchIcon height={height} style={{ ...customedStyles }} />
+  ),
   analysis: (height, customedStyles) => (
     <IcoAnalysis
       height={height}
