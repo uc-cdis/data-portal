@@ -264,24 +264,22 @@ export const refreshUser = () => fetchUser;
 
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '');
-  fetch(`${userAPIPath}logout?next=${hostname}${cleanBasename}`)
-    .then((response) => {
-      if (displayAuthPopup) {
-        dispatch({
-          type: 'UPDATE_POPUP',
-          data: {
-            authPopup: true,
-          },
-        });
-      } else if (document.location.pathname.includes('/dev.html')) {
-        document.location.replace(`${response.url}dev.html`);
-      } else {
-        document.location.replace(response.url);
-      }
+
+  if (displayAuthPopup) {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        authPopup: true,
+      },
     });
+  } else if (document.location.pathname.includes('/dev.html')) {
+    window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}dev.html`;
+  } else {
+    window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}`;
+  }
 };
 /**
- * Determine if we need to display the system Use Message
+ * Determine if we need to dis  play the system Use Message
  * For all protected content, so sites require display of
  * a use message. This is enabled by defining a object in
  * gitops.json:

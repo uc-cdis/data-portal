@@ -1,3 +1,8 @@
+import {
+  userAPIPath,
+  hostname,
+  basename,
+} from '../configs';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -6,10 +11,9 @@ import Popup from '../components/Popup';
 import { logoutAPI } from '../actions';
 import './popupStyles.css';
 
-const goToLogin = (history) => {
-  history.push('/login');
-  // Refresh the page.jsx.
-  window.location.reload();
+const goToLogin = (history, userAPIPath, hostname, basename) => {
+  const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '');
+  window.location.href = `${userAPIPath}logout?next=${hostname}${cleanBasename}`;
 };
 
 const AuthPopup = withRouter(
@@ -20,7 +24,7 @@ const AuthPopup = withRouter(
       rightButtons={[
         {
           caption: 'Go to Login',
-          fn: () => { goToLogin(history); },
+          fn: () => { goToLogin(history, userAPIPath, hostname, basename); },
         },
       ]}
     />
