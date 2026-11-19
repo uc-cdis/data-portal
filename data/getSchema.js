@@ -53,11 +53,16 @@ const schemaUrl = `${gdcSubPath}getschema`;
 const schemaPath = `${__dirname}/schema.json`;
 const dictUrl = `${gdcSubPath}_dictionary/_all`;
 const dictPath = `${__dirname}/dictionary.json`;
-const httpAgent = new http.Agent({
-  rejectUnauthorized: false,
-});
+// TLS certificates are verified by default. For environments with self-signed
+// certificates either set NODE_EXTRA_CA_CERTS=/path/to/ca.pem (preferred) or
+// GETSCHEMA_ALLOW_INSECURE=true to skip verification.
+const allowInsecure = process.env.GETSCHEMA_ALLOW_INSECURE === 'true';
+if (allowInsecure) {
+  console.warn('WARNING: GETSCHEMA_ALLOW_INSECURE=true, TLS certificates will not be verified');
+}
+const httpAgent = new http.Agent();
 const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
+  rejectUnauthorized: !allowInsecure,
 });
 
 const retryBackoff = [2000, 4000, 8000, 16000];
