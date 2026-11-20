@@ -1,3 +1,4 @@
+import React from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import { faro } from '@grafana/faro-core';
 import { manifestServiceApiPath, hostname } from '../../../../localconf';
@@ -6,10 +7,12 @@ import { fetchWithCreds } from '../../../../actions';
 import { DownloadStatus } from '../../DiscoveryActionBarInterfaces';
 import checkFederatedLoginStatus from '../checkFederatedStatus';
 import { assembleAndExportMetadata } from './assembleAndExportMetadata';
+import { loadSelectedStudiesFromMDS } from '../../../Utils/MDSUtils/MDSUtils';
+import { DOWNLOAD_FAIL_STATUS } from '../../DiscoveryActionBarConstants';
 
 const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
-  selectedResources: any[],
+  selectedStudyRecords: any[],
   setExportingToWorkspace: (arg0: boolean) => void,
   setDownloadStatus: (arg0: DownloadStatus) => void,
   history: any,
@@ -27,6 +30,30 @@ const handleExportToWorkspaceClick = async (
     return;
   }
 
+  setExportingToWorkspace(true);
+  // table records may not contain the file manifests / external file metadata
+  // (e.g. when loaded from the aggregate MDS), so fetch the full metadata of the selected studies from MDS
+  let selectedResources: any[];
+  try {
+    selectedResources = await loadSelectedStudiesFromMDS(
+      selectedStudyRecords,
+      config.minimalFieldMapping?.uid || '',
+    );
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Could not load metadata of the selected studies from MDS: ', err);
+    setExportingToWorkspace(false);
+    setDownloadStatus({
+      ...DOWNLOAD_FAIL_STATUS,
+      message: {
+        ...DOWNLOAD_FAIL_STATUS.message,
+        title: 'Export failed',
+        content: React.createElement('p', null, 'There was a problem loading the metadata of the selected studies. Please try again later.'),
+      },
+    });
+    return;
+  }
+
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
       setDownloadStatus,
@@ -36,11 +63,11 @@ const handleExportToWorkspaceClick = async (
       location,
     );
     if (!isLinked) {
+      setExportingToWorkspace(false);
       return;
     }
   }
 
-  setExportingToWorkspace(true);
   // export metadata first, if enabled
   const enableExportFullMetadata = config.features.exportToWorkspace?.enableExportFullMetadata;
   if (enableExportFullMetadata) {

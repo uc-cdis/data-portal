@@ -440,6 +440,12 @@
   box-sizing: inherit;
 }
 
+.discovery-modal__loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 25vh;
+}
+
 .discovery-modal__close-button {
   color: var(--g3-color__base-blue);
   text-transform: uppercase;

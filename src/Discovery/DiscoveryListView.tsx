@@ -6,6 +6,7 @@ import jsonpath from 'jsonpath';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';
+import { hasFileManifest, hasExternalFileMetadata } from './Utils/hasFileMetadata';
 
 interface Props {
   selectedFieldsForSearchIndexing: string[],
@@ -15,9 +16,9 @@ interface Props {
   visibleResources: any[];
   accessibleFieldName: string;
   searchTerm: string;
-  setPermalinkCopied: (boolean) => void;
-  setModalVisible: (boolean) => void;
-  setModalData: (boolean) => void;
+  setPermalinkCopied: (copied: boolean) => void;
+  setModalVisible: (visible: boolean) => void;
+  setModalData: (record: DiscoveryResource) => void;
   selectedResources: any[];
   selectedTags: any[];
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
@@ -109,14 +110,14 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           // disable checkbox if there's no manifest or git external file metadata (if metadata handoff is enabled) found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
           const { manifestFieldName, enableExportFullMetadata } = exportToWorkspaceConfig;
-          if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+          if (!hasFileManifest(record, manifestFieldName)) {
             // put some hard-coded field names here, so that only checkboxes in proper table rows will be enabled
             // TODO: this can be addressed by the cart feature
             // if export full metadata is not enabled, disable the checkbox if no manifest
             if (!enableExportFullMetadata) {
               disabled = true;
             // otherwise, check if there is external file metadata
-            } else if (!record.external_file_metadata || record.external_file_metadata.length === 0) {
+            } else if (!hasExternalFileMetadata(record)) {
               disabled = true;
             }
           }

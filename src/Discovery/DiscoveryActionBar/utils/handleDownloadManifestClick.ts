@@ -4,11 +4,12 @@ import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 import { DiscoveryConfig } from '../../DiscoveryConfig';
 import processFileMetadata from './processFileMetadata';
+import { loadSelectedStudiesFromMDS } from '../../Utils/MDSUtils/MDSUtils';
 import GenerateFilenameWithoutPrefix from '../../DiscoveryDetails/Components/FieldGrouping/TabField/DataDownloadList/ActionButtons/DownloadUtils/GenerateFilenameWithoutPrefix';
 
-const handleDownloadManifestClick = (
+const handleDownloadManifestClick = async (
   config: DiscoveryConfig,
-  selectedResources: any[],
+  selectedStudyRecords: any[],
   healIDPLoginNeeded: boolean,
 ) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
@@ -24,8 +25,18 @@ const handleDownloadManifestClick = (
     return;
   }
 
+  // table records may not contain the file manifests (e.g. when loaded from the aggregate MDS),
+  // so fetch the full metadata of the selected studies from MDS
+  let selectedResources: any[];
+  try {
+    selectedResources = await loadSelectedStudiesFromMDS(selectedStudyRecords, uidFieldName);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Could not load metadata of the selected studies from MDS: ', err);
+    return;
+  }
+
   const fileMetadata = processFileMetadata(uidFieldName, manifestFieldName, 'manifest', selectedResources);
-  console.log(fileMetadata);
   if (!Object.keys(fileMetadata).length) {
     return;
   }

@@ -3,12 +3,21 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
+import { waitFor } from '@testing-library/react';
 
 import Discovery, { AccessLevel, AccessSortDirection } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
 import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
+import { loadStudyFromMDS } from './Utils/MDSUtils/MDSUtils';
+
+// The details modal fetches the selected study from MDS. By default, MDS returns no extra
+// metadata, so the modal shows the table record.
+jest.mock('./Utils/MDSUtils/MDSUtils', () => ({
+  ...jest.requireActual('./Utils/MDSUtils/MDSUtils'),
+  loadStudyFromMDS: jest.fn(() => Promise.resolve({})),
+}));
 
 const mockStore = configureMockStore();
 const initStoreData = {
@@ -36,7 +45,16 @@ const initStoreData = {
 
 const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 ? AccessLevel.ACCESSIBLE : AccessLevel.NOT_AVAILABLE }));
 
-const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
+// Clicks a table row and waits for the details modal to finish loading the study from MDS
+const openStudyDetails = async (wrapper, rowIndex: number) => {
+  wrapper.find('.discovery-table__row').at(rowIndex).simulate('click');
+  await waitFor(() => {
+    wrapper.update();
+    expect(wrapper.exists('.discovery-modal__loading')).toBe(false);
+  });
+};
+
+const getDiscoveryComponent = (store, config: DiscoveryConfig) => (
   <Provider store={store}>
     <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
       <Discovery
@@ -44,7 +62,6 @@ const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
         studies={testStudies}
         allBatchesAreReady
         {...store.getState().discovery}
-        params={params}
         onSearchChange={(searchTerm) => store.dispatch({ type: 'SEARCH_TERM_SET', searchTerm })}
         onTagsSelected={(selectedTags) => store.dispatch({ type: 'TAGS_SELECTED', selectedTags })}
         onAccessFilterSet={(accessFilters) => store.dispatch({ type: 'ACCESS_FILTER_SET', accessFilters })}
@@ -105,8 +122,8 @@ describe('Configuration', () => {
     });
   });
 
-  test('Authorization checking can be enabled/disabled', () => {
-    [true, false].forEach((enabled) => {
+  test('Authorization checking can be enabled/disabled', async () => {
+    for (const enabled of [true, false]) { // eslint-disable-line no-restricted-syntax
       testConfig.features.authorization.enabled = enabled;
       const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
 
@@ -116,22 +133,80 @@ describe('Configuration', () => {
 
       // access info in modal should be present/hidden
       // Open modal to a study by clicking on the first row
-      wrapper.find('.discovery-table__row').first().simulate('click');
+      await openStudyDetails(wrapper, 0); // eslint-disable-line no-await-in-loop
       expect(wrapper.exists('.discovery-modal__access-alert')).toBe(true);
 
       wrapper.unmount();
-    });
+    }
   });
 });
 
 describe('Modal', () => {
-  test('Modal header field shows configured field', () => {
+  test('Modal shows a spinner until the study is loaded from MDS', async () => {
+    let resolveStudy;
+    (loadStudyFromMDS as jest.Mock).mockImplementationOnce(
+      () => new Promise((resolve) => { resolveStudy = resolve; }),
+    );
+    const modalDataIndex = 2;
+    const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
+    wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+    wrapper.update();
+    expect(wrapper.exists('.discovery-modal__loading')).toBe(true);
+    expect(wrapper.exists('.discovery-modal__header-text')).toBe(false);
+
+    const mdsTitle = 'Title from MDS';
+    resolveStudy({ [testConfig.studyPageFields.header.field]: mdsTitle });
+    await waitFor(() => {
+      wrapper.update();
+      expect(wrapper.exists('.discovery-modal__loading')).toBe(false);
+    });
+    expect(wrapper.find('.discovery-modal__header-text').first().text()).toBe(mdsTitle);
+
+    wrapper.unmount();
+  });
+
+  test('Modal only fetches the study from MDS if it is not the last opened study', async () => {
+    const mockedLoadStudyFromMDS = loadStudyFromMDS as jest.Mock;
+    mockedLoadStudyFromMDS.mockClear();
+    const uidField = testConfig.minimalFieldMapping.uid;
+    const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
+
+    await openStudyDetails(wrapper, 0);
+    await openStudyDetails(wrapper, 0); // same study: served from the cache
+    expect(mockedLoadStudyFromMDS.mock.calls).toEqual([[testStudies[0][uidField]]]);
+
+    await openStudyDetails(wrapper, 1); // different study: fetched
+    await openStudyDetails(wrapper, 0); // only the last opened study is cached: fetched again
+    expect(mockedLoadStudyFromMDS.mock.calls).toEqual([
+      [testStudies[0][uidField]],
+      [testStudies[1][uidField]],
+      [testStudies[0][uidField]],
+    ]);
+
+    wrapper.unmount();
+  });
+
+  test('Modal fetches the study again if the last MDS request failed', async () => {
+    const mockedLoadStudyFromMDS = loadStudyFromMDS as jest.Mock;
+    mockedLoadStudyFromMDS.mockClear();
+    mockedLoadStudyFromMDS.mockImplementationOnce(() => Promise.reject(new Error('MDS is down')));
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {});
+    const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
+
+    await openStudyDetails(wrapper, 0);
+    await openStudyDetails(wrapper, 0);
+    expect(mockedLoadStudyFromMDS).toHaveBeenCalledTimes(2);
+
+    wrapper.unmount();
+  });
+
+  test('Modal header field shows configured field', async () => {
     const modalDataIndex = 2;
     const headerField = testConfig.minimalFieldMapping.uid;
     testConfig.studyPageFields.header = { field: headerField };
     const subHeaderField = testConfig.studyPageFields.subHeader?.field;
     const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
-    wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+    await openStudyDetails(wrapper, modalDataIndex);
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
     expect(modal.find('.discovery-modal__header-text').first().text()).toBe(modalData[headerField]);
@@ -140,10 +215,10 @@ describe('Modal', () => {
     wrapper.unmount();
   });
 
-  test('Modal fields show selected study\'s data with correct configuration', () => {
+  test('Modal fields show selected study\'s data with correct configuration', async () => {
     const modalDataIndex = 2;
     const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
-    wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
+    await openStudyDetails(wrapper, modalDataIndex);
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
 
@@ -205,28 +280,10 @@ describe('Modal', () => {
 
     wrapper.unmount();
   });
-
-  test('Discovery page opens modal with correct data on permalink', () => {
-    const permalinkStudyIndex = 5;
-    const permalinkStudyData = testStudies[permalinkStudyIndex];
-    const permalinkStudyUID = permalinkStudyData[testConfig.minimalFieldMapping.uid];
-    const store = mockStore(initStoreData);
-    const wrapper = mount(
-      getDiscoveryComponent(store, testConfig, { studyUID: permalinkStudyUID }),
-    );
-
-    testConfig.studyPageFields.header = { field: testConfig.minimalFieldMapping.uid };
-    const modal = wrapper.find('.discovery-modal').first();
-
-    // Check to see if the modal header shows the study's UID; other tests already test the fields.
-    expect(modal.find('.discovery-modal__header-text').first().text()).toBe(permalinkStudyUID);
-
-    wrapper.unmount();
-  });
 });
 
 describe('Table', () => {
-  test('Table filters records by tags', () => {
+  test('Table filters records by tags', async () => {
     testConfig.features.authorization.enabled = true;
     let store = mockStore(initStoreData);
     let wrapper = mount(getDiscoveryComponent(store, testConfig));
@@ -252,8 +309,10 @@ describe('Table', () => {
 
     const isSelectedTag = (n) => n.hasClass('discovery-tag--selected');
     tag = wrapper.findWhere(isSelectedTag).first();
-    // expect search to reset onload
-    expect(store.getActions()).toStrictEqual([{ searchTerm: undefined, type: 'SEARCH_TERM_SET' }]);
+    // expect search to reset onload, once the search index has been built in the background
+    await waitFor(() => {
+      expect(store.getActions()).toStrictEqual([{ searchTerm: undefined, type: 'SEARCH_TERM_SET' }]);
+    });
     tag.simulate('click');
 
     const expectedTagClearedAction = { type: 'TAGS_SELECTED', selectedTags: { [targetTagValue]: undefined } };

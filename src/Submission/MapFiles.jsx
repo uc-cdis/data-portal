@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
@@ -32,8 +31,7 @@ const CONCURRENCY_LIMIT = 10;
 
 class MapFiles extends React.Component {
   constructor(props) {
-    const params = queryString.parse(window.location.search);
-    const message = params && params.message ? params.message : null;
+    const message = new URLSearchParams(window.location.search).get('message') || null;
     super(props);
     this.state = {
       selectedFilesByGroup: {},

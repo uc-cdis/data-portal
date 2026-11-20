@@ -342,7 +342,6 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               <Option value='GitHub'>GitHub</Option>
               <Option value='Harvard Dataverse'>Harvard Dataverse</Option>
               <Option value='ICPSR'>ICPSR</Option>
-              <Option value='openICPSR'>openICPSR</Option>
               <Option value='JCOIN'>JCOIN</Option>
               <Option value='MassIVE'>MassIVE</Option>
               <Option value='Mendeley Data'>Mendeley Data</Option>
